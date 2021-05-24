@@ -27,7 +27,7 @@ export { ReactComponent as Heart20Svg } from './heart-20.svg';
 export { ReactComponent as LayoutGrid16x16Svg } from './layout-grid-16x16.svg';
 export { ReactComponent as LayoutGridWithDetails16x16Svg } from './layout-grid-with-details-16x16.svg';
 export { ReactComponent as LayoutList16x16Svg } from './layout-list-16x16.svg';
-export { ReactComponent as LogoSvg } from './logo_black_word.svg';
+export { ReactComponent as LogoSvg } from './myshops.svg';
 export { ReactComponent as LogoSmallSvg } from './logo_black_word_small.svg';
 export { ReactComponent as Logout20Svg } from './logout-20.svg';
 export { ReactComponent as Menu18x14Svg } from './menu-18x14.svg';

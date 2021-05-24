@@ -11,7 +11,7 @@ function Currency(props) {
 
   return <React.Fragment>
     {/* {`${currency} ${value.toFixed(2)}`} */}
-  {`${currentCurrency.code} ${value === 'number' ? value.toFixed( 2 ) : value}`}
+  {`RM ${value === 'number' ? value.toFixed( 2 ) : value}`}
     </React.Fragment>;
 }
 

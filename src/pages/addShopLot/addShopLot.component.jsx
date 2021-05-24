@@ -13,7 +13,7 @@ import placeHolder from "../../assets/logo_white_word.png";
 import { Show360 } from "../../components/360/360";
 import Dropzone from "react-dropzone";
 import axios from "axios";
-import Logo from "../../assets/MCITC.png"
+import Logo from "../../assets/myshops.png"
 import { toast } from "react-toastify";
 
 function mapStateToProps(state) {

@@ -24,7 +24,7 @@ import categories from '../../data/shopBlockCategories';
 import posts from '../../data/blogPosts';
 import theme from '../../data/theme';
 
-function HomePageTwo() {
+function HomePageTwo(props) {
     /**
      * Featured products.
      */
@@ -58,9 +58,24 @@ function HomePageTwo() {
         (tab) => shopApi.getLatestProducts({ limit: 8, category: tab.categorySlug }),
     );
 
+    const allProducts = useProductTabs(
+        useMemo(
+            () => [
+                { id: 1, name: "", categorySlug: undefined },
+                // { id: 2, name: "Power Tools", categorySlug: "power-tools" },
+                // { id: 3, name: "Hand Tools", categorySlug: "hand-tools" },
+                // { id: 4, name: "Plumbing", categorySlug: "plumbing" },
+            ],
+            []
+        ),
+        (tab) => shopApi.getAllProducts()
+    );
+
     /**
      * Product columns.
      */
+    let allProductsCategoryData = props.allcategories;
+    let allProductsData = props.allproducts;
     const columns = useProductColumns(
         useMemo(() => [
             {
@@ -86,6 +101,27 @@ function HomePageTwo() {
 
             {useMemo(() => <BlockSlideShow />, [])}
 
+
+
+            {/* {useMemo(() => (
+                <BlockCategories
+                    title="Popular Categories"
+                    layout="compact"
+                    categories={categories}
+                />
+            ), [])} */}
+
+            {useMemo(() => (
+                <BlockProductsCarousel
+                    title="New Arrivals"
+                    layout="grid-5"
+                    products={allProducts.data}
+                    loading={allProducts.isLoading}
+                    groups={allProducts.tabs}
+                    onGroupClick={allProducts.handleTabChange}
+                />
+            ), [allProducts])}
+
             {useMemo(() => <BlockFeatures layout="boxed" />, [])}
 
             {useMemo(() => (
@@ -93,48 +129,32 @@ function HomePageTwo() {
                     title="Featured Products"
                     layout="grid-5"
                     rows={2}
-                    products={featuredProducts.data}
-                    loading={featuredProducts.isLoading}
-                    groups={featuredProducts.tabs}
-                    onGroupClick={featuredProducts.handleTabChange}
+                    products={allProducts.data}
+                    loading={allProducts.isLoading}
+                    groups={allProducts.tabs}
+                    onGroupClick={allProducts.handleTabChange}
                 />
-            ), [featuredProducts])}
+            ), [allProducts])}
 
             {useMemo(() => <BlockBanner />, [])}
 
-            {useMemo(() => (
-                <BlockProducts
-                    title="Bestsellers"
-                    layout="large-last"
-                    featuredProduct={bestsellers.data[0]}
-                    products={bestsellers.data.slice(1, 7)}
-                />
-            ), [bestsellers.data])}
+            {useMemo(
+                () => (
+                    <BlockProducts
+                        title="Bestsellers"
+                        layout="large-first"
+                        featuredProduct={allProducts.data}
+                        products={allProducts.data.slice(1, 7)}
+                    />
+                ),
+                [allProductsData]
+            )}
 
-            {useMemo(() => (
-                <BlockCategories
-                    title="Popular Categories"
-                    layout="compact"
-                    categories={categories}
-                />
-            ), [])}
+            {/* {useMemo(() => <BlockPosts title="Latest News" layout="grid-nl" posts={posts} />, [])} */}
 
-            {useMemo(() => (
-                <BlockProductsCarousel
-                    title="New Arrivals"
-                    layout="grid-5"
-                    products={latestProducts.data}
-                    loading={latestProducts.isLoading}
-                    groups={latestProducts.tabs}
-                    onGroupClick={latestProducts.handleTabChange}
-                />
-            ), [latestProducts])}
+            {/* {useMemo(() => <BlockBrands />, [])} */}
 
-            {useMemo(() => <BlockPosts title="Latest News" layout="grid-nl" posts={posts} />, [])}
-
-            {useMemo(() => <BlockBrands />, [])}
-
-            {useMemo(() => <BlockProductColumns columns={columns} />, [columns])}
+            {/* {useMemo(() => <BlockProductColumns columns={columns} />, [columns])} */}
         </React.Fragment>
     );
 }

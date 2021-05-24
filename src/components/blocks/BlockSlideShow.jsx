@@ -29,7 +29,7 @@ class BlockSlideShow extends Component {
   slides = [
     {
       title: "11.11<br>Hardware products Sale",
-      text: "The MCTIC 11.11 Big Show will also be held during the big sale.",
+      text: "11.11 Big Show will also be held during the big sale.",
       image_classic: {
         ltr: "images/slides/slide_1.jpg",
         rtl: "images/slides/slide_1.jpg",

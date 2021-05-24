@@ -122,9 +122,9 @@ class PageCompleted extends Component {
           <div className="container">
             <div className="card mb-0">
               <div className="card-body">
-                <h3 className="card-title">MCITC</h3>
+                <h3 className="card-title">MyShops</h3>
                 <h5 >
-                  Address: Sejingkat, 93050 Kuching, Sarawak | Tel No. : (60) 012-850 9198
+                  {/* Address: Sejingkat, 93050 Kuching, Sarawak | Tel No. : (60) 012-850 9198 */}
                 </h5>
                 {/* <h5 >
                  Delivery Address: { localStorage.getItem("address")}

@@ -28,7 +28,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Logo from "../../assets/MCITC.png";
+import Logo from "../../assets/myshops.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { cartRemoveItem } from "../../store/cart";
 

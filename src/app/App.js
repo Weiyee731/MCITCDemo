@@ -111,7 +111,7 @@ class App extends Component {
         <GlobalStyles />
         {/* <Toggle toggleTheme={this.themeToggler} /> */}
         <IntlProvider locale={locale} messages={messages}>
-          <BrowserRouter basename="MCITC">
+          <BrowserRouter basename="MyShops">
             <HelmetProvider>
               <Helmet htmlAttributes={{ lang: locale, dir: direction }} />
               <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}>
@@ -132,7 +132,7 @@ class App extends Component {
                       <Layout
                         {...props}
                         headerLayout="default"
-                        homeComponent={HomePageOne}
+                        homeComponent={HomePageTwo}
                       />
                     )}
                   />

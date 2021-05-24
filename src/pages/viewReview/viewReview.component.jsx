@@ -5,7 +5,7 @@ import "../../app/App.scss";
 import "react-table/react-table.css";
 import MaterialTable from "material-table";
 import Rating from "@material-ui/lab/Rating";
-import Logo from "../../assets/MCITC.png";
+import Logo from "../../assets/myshops.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 
 function mapStateToProps(state) {

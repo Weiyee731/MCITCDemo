@@ -43,12 +43,12 @@ function SitePageContactUs() {
                     <div className="contact-us__address">
                       <p>
                         <h5>
-                          Malaysia-China International Trading Centre <br />
-                          Sejingkat, 93050 Kuching, Sarawak
+                          {/* Malaysia-China International Trading Centre <br />
+                          Sejingkat, 93050 Kuching, Sarawak */}
                           <br />
-                          Email: MCITC@MCITC.asia
+                          {/* Email: MCITC@MCITC.asia */}
                           <br />
-                          Phone Number: (60) 12-850 9198
+                          {/* Phone Number: (60) 12-850 9198 */}
                         </h5>
                       </p>
                       <br />

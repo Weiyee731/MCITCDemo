@@ -22,7 +22,7 @@ import Typography from "@material-ui/core/Typography";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import AddIcon from "@material-ui/icons/Add";
-import Logo from "../../assets/MCITC.png";
+import Logo from "../../assets/myshops.png";
 import Dropzone from "react-dropzone";
 import {
   Card,

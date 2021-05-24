@@ -5,7 +5,7 @@ import { GitAction } from "../../store/action/gitAction";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Cookies from "universal-cookie";
-import Logo from "../../assets/MCITC.png";
+import Logo from "../../assets/myshops.png";
 import { toast } from "react-toastify";
 function mapStateToProps(state) {
   return {

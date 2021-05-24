@@ -13,24 +13,24 @@ import appstore from "../../assets/appstore.png";
 
 export default function Footer() {
   const informationLinks = [
-    { title: "About MCITC", url: "/site/about-us" },
-    { title: "Afﬁliate Program", url: "/site/affiliate" },
-    { title: "Careers", url: "/site/careers" },
+    { title: "About MyShops", url: "/site/about-us" },
+    // { title: "Afﬁliate Program", url: "/site/affiliate" },
+    // { title: "Careers", url: "/site/careers" },
     { title: "Terms & Conditions", url: "/site/terms" },
     { title: "Privacy Policy", url: "/site/policy" },
-    { title: "Campaign Terms & Conditions", url: "/site/campaigncondition" },
+    // { title: "Campaign Terms & Conditions", url: "/site/campaigncondition" },
     { title: "Contact Us", url: "/site/contact-us" },
-    { title: "Form", url: "/site/Form" },
+    // { title: "Form", url: "/site/Form" },
   ];
 
   const otherInformationLinks = [
     { title: "Help Center", url: "/site/faq" },
     { title: "How to Buy", url: "/site/howtobuy" },
     { title: "Shipping & Delivery", url: "/site/shippingdelivery" },
-    { title: "International Product Policy", url: "" },
-    { title: "How to Return", url: "/site/howtoreturn" },
+    // { title: "International Product Policy", url: "" },
+    // { title: "How to Return", url: "/site/howtoreturn" },
     { title: "Question?", url: "/site/contact-us" },
-    { title: "Contact Us", url: "/site/contact-us" },
+    // { title: "Contact Us", url: "/site/contact-us" },
   ];
 
   return (
@@ -42,12 +42,12 @@ export default function Footer() {
               <FooterContacts />
             </div>
             <div className="col-6 col-md-3 col-lg-2">
-              <FooterLinks title="MCITC" items={informationLinks} />
+              <FooterLinks title="MyShops" items={informationLinks} />
             </div>
             <div className="col-6 col-md-3 col-lg-2">
               <FooterLinks title="Information" items={otherInformationLinks} />
             </div>
-            <div className="lzd-footer-app-downloads">
+            {/* <div className="lzd-footer-app-downloads">
               <div>
                 <div className="title">Go where your heart beats</div>
                 <div className="text">Download the App</div>
@@ -58,7 +58,7 @@ export default function Footer() {
               <div>
                 <img width="200" src={appstore} alt="App Store"></img>
               </div>
-            </div>
+            </div> */}
             <div className="col-12 col-md-12 col-lg-4">
                             <FooterNewsletter />
                         </div>

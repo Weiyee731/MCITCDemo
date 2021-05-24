@@ -117,7 +117,7 @@ const SideBarMenu = ({
 
   const logout = () => {
     propsData.callLogout({ UserID: localStorage.getItem("id") });
-    browserHistory.push("/MCITC/");
+    browserHistory.push("/MyShops/");
     localStorage.clear();
     cookies.set("isLogin", false);
     window.location.reload(false);

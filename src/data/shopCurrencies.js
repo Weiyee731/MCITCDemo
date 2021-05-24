@@ -10,9 +10,9 @@ export default [
     {
         ProductCategory: '$ US Dollar',
         currency: {
-            code: 'USD',
-            symbol: '$',
-            name: 'US Dollar',
+            code: 'RM',
+            symbol: 'RM',
+            name: 'Ringgit Malaysia',
         },
     },
     {

@@ -8,8 +8,8 @@ export default {
     profile_url: "https://www.facebook.com/PCCDemak/",
   },
   contacts: {
-    address: "Sejingkat, 93050 Kuching, Sarawak",
-    email: "MCITC@MCITC.asia",
-    phone: "(60) 012-850 9198",
+    address: "",
+    email: "",
+    phone: "",
   },
 };

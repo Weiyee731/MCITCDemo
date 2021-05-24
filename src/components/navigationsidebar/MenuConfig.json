@@ -7,7 +7,7 @@
     {
       "title": "Dashboard",
       "icon": "fa fa-tachometer-alt",
-      "page": "/MCITC/dashboard",
+      "page": "/MyShops/dashboard",
       "active": false,
       "type": "simple"
     },
@@ -23,7 +23,7 @@
       "submenus": [
         {
           "title": "Products Endorsement",
-          "page": "/MCITC/viewProductEndorsement",
+          "page": "/MyShops/viewProductEndorsement",
           "badge": {
             "text": "3",
             "class": "badge-danger"
@@ -31,7 +31,7 @@
         },
         {
           "title": "Products",
-          "page": "/MCITC/viewProduct",
+          "page": "/MyShops/viewProduct",
           "badge": {
             "text": "3",
             "class": "badge-secondary"
@@ -39,19 +39,19 @@
         },
         {
           "title": "Purchase Order List",
-          "page": "/MCITC/viewPurchaseOrderList"
+          "page": "/MyShops/viewPurchaseOrderList"
         },
 
         {
           "title": "Product Promotion",
-          "page": "/MCITC/viewproductpromotion"
+          "page": "/MyShops/viewproductpromotion"
         }
       ]
     },
     {
       "title": "Stocks",
       "icon": "fa fa-check-square",
-      "page": "/MCITC/productStocksIn",
+      "page": "/MyShops/productStocksIn",
       "active": false,
       "type": "simple"
     },
@@ -63,7 +63,7 @@
       "submenus": [
         {
           "title": "Suppliers Endorsement",
-          "page": "/MCITC/viewSupplierEndorsement",
+          "page": "/MyShops/viewSupplierEndorsement",
           "badge": {
             "text": "3",
             "class": "badge-danger"
@@ -71,7 +71,7 @@
         },
         {
           "title": "Suppliers",
-          "page": "/MCITC/viewSupplier",
+          "page": "/MyShops/viewSupplier",
           "badge": {
             "text": "3",
             "class": "badge-danger"
@@ -87,15 +87,15 @@
       "submenus": [
         {
           "title": "Products Quotation",
-          "page": "/MCITC/viewProductQuotation"
+          "page": "/MyShops/viewProductQuotation"
         },
         {
           "title": "Quotation List",
-          "page": "/MCITC/quotationList"
+          "page": "/MyShops/quotationList"
         },
         {
           "title": "Products Purchase Order",
-          "page": "/MCITC/viewProductPurchaseOrder"
+          "page": "/MyShops/viewProductPurchaseOrder"
         }
       ]
     },
@@ -107,27 +107,27 @@
       "submenus": [
         {
           "title": "Sale by Product",
-          "page": "/MCITC/viewSaleByProduct"
+          "page": "/MyShops/viewSaleByProduct"
         },
         {
           "title": "Target Customer",
-          "page": "/MCITC/viewTargetCustomer"
+          "page": "/MyShops/viewTargetCustomer"
         },
         {
           "title": "Price Analysis",
-          "page": "/MCITC/viewPriceAnalysis"
+          "page": "/MyShops/viewPriceAnalysis"
         },
         {
           "title": "Product Analysis",
-          "page": "/MCITC/viewProductAnalysis"
+          "page": "/MyShops/viewProductAnalysis"
         },
         {
           "title": "Orders",
-          "page": "/MCITC/viewOrder"
+          "page": "/MyShops/viewOrder"
         },
         {
           "title": "Transaction",
-          "page": "/MCITC/viewTransaction"
+          "page": "/MyShops/viewTransaction"
         }
       ]
     },
@@ -139,15 +139,15 @@
       "submenus": [
         {
           "title": "Sales By Category",
-          "page": "/MCITC/viewSalesByCategory"
+          "page": "/MyShops/viewSalesByCategory"
         },
         {
           "title": "Sales",
-          "page": "/MCITC/viewSales"
+          "page": "/MyShops/viewSales"
         },
         {
           "title": "Items wishlisted",
-          "page": "/MCITC/viewWishlist"
+          "page": "/MyShops/viewWishlist"
         }
       ]
     },
@@ -155,7 +155,7 @@
       "title": "Customer Reviews",
       "icon": "fa fa-star",
       "active": false,
-      "page": "/MCITC/viewReviews",
+      "page": "/MyShops/viewReviews",
       "type": "simple"
     },
     {
@@ -166,27 +166,27 @@
       "submenus": [
         {
           "title": "Product Categories",
-          "page": "/MCITC/viewProductCategories"
+          "page": "/MyShops/viewProductCategories"
         },
         {
           "title": "Product Variations",
-          "page": "/MCITC/viewProductVariation"
+          "page": "/MyShops/viewProductVariation"
         },
         {
           "title": "Shoplots",
-          "page": "/MCITC/viewShoplots"
+          "page": "/MyShops/viewShoplots"
         },
         {
           "title": "Gridstorages",
-          "page": "/MCITC/viewGridStorages"
+          "page": "/MyShops/viewGridStorages"
         },
         {
           "title": "Colors",
-          "page": "/MCITC/viewColor"
+          "page": "/MyShops/viewColor"
         },
         {
           "title": "Promotion Banner",
-          "page": "/MCITC/addPromotionBanner"
+          "page": "/MyShops/addPromotionBanner"
         }
         
       ]
@@ -195,13 +195,13 @@
       "title": "Settings",
       "icon": "fa fa-wrench",
       "active": false,
-      "page": "/MCITC/viewSettings",
+      "page": "/MyShops/viewSettings",
       "type": "simple"
     },
     {
       "title": "Back to Ecommerce",
       "icon": "fa fa-shopping-bag",
-      "page": "/MCITC/",
+      "page": "/MyShops/",
       "active": false,
       "type": "simple"
     }

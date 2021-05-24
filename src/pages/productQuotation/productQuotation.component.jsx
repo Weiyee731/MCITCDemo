@@ -31,7 +31,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ProductQuotationPDF from "../productQuotationPDF/productQuotationPDF.component";
 // import { render } from "@testing-library/react";
 import Input from "@material-ui/core/Input";
-import Logo from "../../assets/MCITC.png";
+import Logo from "../../assets/myshops.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 
 function mapStateToProps(state) {

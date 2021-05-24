@@ -10,7 +10,7 @@ import logo from "../../assets/logo_white_word.png";
 import PDF from "./productPurchaseOrderPDF.component";
 import { CardMedia } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
-import Logo from "../../assets/MCITC.png";
+import Logo from "../../assets/myshops.png";
 import Select from "@material-ui/core/Select";
 import FormHelperText from "@material-ui/core/FormHelperText";
 

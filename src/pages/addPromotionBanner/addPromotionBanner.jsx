@@ -19,7 +19,7 @@ import Paper from "@material-ui/core/Paper";
 import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import Input from "@material-ui/core/Input";
-import Logo from "../../assets/MCITC.png";
+import Logo from "../../assets/myshops.png";
 // -------------------------------------------------ADD PRODUCT THINGS--------------------------------------------------------
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
