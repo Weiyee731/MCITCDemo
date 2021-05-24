@@ -1,0 +1,30 @@
+.TopCards {
+  margin: 20px;
+  width: 100%;
+}
+.card-stats {
+  width: 330px;
+  margin-left: 35px;
+}
+.card-category {
+  font-size: large;
+  font-weight: bold;
+}
+.card-userPerformance {
+  margin: 20px;
+  width: 100%;
+}
+.card-body {
+  font-size: 40px;
+  text-align: center;
+}
+.card-ProductPie {
+  margin-left: 20px;
+}
+.card-CompareGraph {
+  margin: 20px;
+  width: 820px;
+}
+.legend {
+  font-style: "#333";
+}

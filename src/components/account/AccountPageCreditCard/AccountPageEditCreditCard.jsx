@@ -1,0 +1,199 @@
+// react
+import React, { Component } from "react";
+// import "./AccountPageProfile.component.css";
+import { connect } from "react-redux";
+import { GitAction } from "../../../store/action/gitAction";
+import Cards from "react-credit-cards";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import "react-credit-cards/es/styles-compiled.css";
+import "react-credit-cards/lib/styles.scss";
+import "./creditcardstyle.css";
+import {
+  formatCreditCardNumber,
+  formatCVC,
+  formatExpirationDate,
+  formatFormData,
+} from "./utils";
+
+function mapStateToProps(state) {
+  return {
+    creditcard: state.counterReducer["creditcards"],
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    CallAllCreditCard: (prodData) =>
+      dispatch(GitAction.CallAllCreditCard(prodData)),
+
+    CallUpdateCreditCard: (prodData) =>
+      dispatch(GitAction.CallUpdateCreditCard(prodData)),
+
+    CallDeleteCreditCard: (prodData) =>
+      dispatch(GitAction.CallDeleteCreditCard(prodData)),
+  };
+}
+
+class AccountPageEditCreditCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      USERID: window.localStorage.getItem("id"),
+      cvc: "",
+      expiry: "",
+      focus: "",
+      name: "",
+      number: "",
+      cardtype: "",
+      cardAdded: false,
+      USERPAYMENTMETHODID: this.props.UserPaymentMethodID,
+    };
+
+    this.handleInputFocus = this.handleInputFocus.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleUpdateCreditCard = this.handleUpdateCreditCard.bind(this);
+  }
+
+  handleInputFocus = (e) => {
+    this.setState({ focus: e.target.name });
+  };
+
+  handleInputChange = ({ target }) => {
+    if (target.name === "number") {
+      target.value = formatCreditCardNumber(target.value).replace(/\s+/g, "");
+    } else if (target.name === "expiry") {
+      target.value = formatExpirationDate(target.value);
+    } else if (target.name === "cvc") {
+      target.value = formatCVC(target.value);
+    }
+
+    this.setState({ [target.name]: target.value });
+  };
+
+  handleChange = (e) => {
+    const { value } = e.target;
+
+    this.setState({
+      cardtype: value,
+    });
+  };
+
+  handleUpdateCreditCard() {
+    console.log(this.state);
+    this.props.CallUpdateCreditCard(this.state);
+    // this.props.parentCallback(false);
+    setTimeout(function () {
+      window.location.reload();
+    }, 1000);
+  }
+
+  render() {
+    return (
+      <div id="PaymentForm">
+        <Cards
+          cvc={this.state.cvc}
+          expiry={this.state.expiry}
+          focused={this.state.focus}
+          name={this.state.name}
+          number={this.state.number}
+        />
+        <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
+          <div className="form-group">
+            <input
+              type="tel"
+              name="number"
+              className="form-control"
+              placeholder="Card Number"
+              pattern="[\d| ]{16,22}"
+              required
+              onChange={this.handleInputChange}
+              onFocus={this.handleInputFocus}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              name="name"
+              className="form-control"
+              placeholder="Name"
+              required
+              onChange={this.handleInputChange}
+              onFocus={this.handleInputFocus}
+            />
+          </div>
+          {console.log(this.props)}
+          {console.log(this.state)}
+          <div className="row">
+            <div className="col-6">
+              <input
+                type="tel"
+                name="expiry"
+                className="form-control"
+                placeholder="Valid Thru"
+                pattern="\d\d/\d\d"
+                required
+                onChange={this.handleInputChange}
+                onFocus={this.handleInputFocus}
+              />
+            </div>
+
+            <div className="col-6">
+              <input
+                type="tel"
+                name="cvc"
+                className="form-control"
+                placeholder="CVC"
+                pattern="\d{3,4}"
+                required
+                onChange={this.handleInputChange}
+                onFocus={this.handleInputFocus}
+              />
+            </div>
+          </div>
+          <div>
+            <br />
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Card Type</FormLabel>
+              <RadioGroup
+                aria-label="cardtype"
+                name="cardtype"
+                value={this.state.cardtype}
+                onChange={this.handleChange}
+              >
+                <FormControlLabel
+                  value="MasterCard"
+                  control={<Radio />}
+                  label="Master Card"
+                />
+                <FormControlLabel
+                  value="VisaCard"
+                  control={<Radio />}
+                  label="Visa Card"
+                />
+              </RadioGroup>
+            </FormControl>
+          </div>
+          <div className="form-actions">
+            <button
+              onClick={this.handleUpdateCreditCard}
+              className="btn btn-primary btn-block"
+              type="button"
+            >
+              Save the changes on this credit card
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountPageEditCreditCard);

@@ -1,0 +1,209 @@
+{
+  "menus": [
+    {
+      "title": "General",
+      "type": "header"
+    },
+    {
+      "title": "Dashboard",
+      "icon": "fa fa-tachometer-alt",
+      "page": "/MCITC/dashboard",
+      "active": false,
+      "type": "simple"
+    },
+    {
+      "title": "Products",
+      "icon": "fa fa-truck",
+      "active": false,
+      "type": "dropdown",
+      "badge": {
+        "text": "3",
+        "class": "badge-danger"
+      },
+      "submenus": [
+        {
+          "title": "Products Endorsement",
+          "page": "/MCITC/viewProductEndorsement",
+          "badge": {
+            "text": "3",
+            "class": "badge-danger"
+          }
+        },
+        {
+          "title": "Products",
+          "page": "/MCITC/viewProduct",
+          "badge": {
+            "text": "3",
+            "class": "badge-secondary"
+          }
+        },
+        {
+          "title": "Purchase Order List",
+          "page": "/MCITC/viewPurchaseOrderList"
+        },
+
+        {
+          "title": "Product Promotion",
+          "page": "/MCITC/viewproductpromotion"
+        }
+      ]
+    },
+    {
+      "title": "Stocks",
+      "icon": "fa fa-check-square",
+      "page": "/MCITC/productStocksIn",
+      "active": false,
+      "type": "simple"
+    },
+    {
+      "title": "Suppliers",
+      "icon": "fa fa-address-book",
+      "active": false,
+      "type": "dropdown",
+      "submenus": [
+        {
+          "title": "Suppliers Endorsement",
+          "page": "/MCITC/viewSupplierEndorsement",
+          "badge": {
+            "text": "3",
+            "class": "badge-danger"
+          }
+        },
+        {
+          "title": "Suppliers",
+          "page": "/MCITC/viewSupplier",
+          "badge": {
+            "text": "3",
+            "class": "badge-danger"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Merchants",
+      "icon": "fa fa-address-card",
+      "active": false,
+      "type": "dropdown",
+      "submenus": [
+        {
+          "title": "Products Quotation",
+          "page": "/MCITC/viewProductQuotation"
+        },
+        {
+          "title": "Quotation List",
+          "page": "/MCITC/quotationList"
+        },
+        {
+          "title": "Products Purchase Order",
+          "page": "/MCITC/viewProductPurchaseOrder"
+        }
+      ]
+    },
+    {
+      "title": "Sales Analytic",
+      "icon": "far fa-chart-bar",
+      "active": false,
+      "type": "dropdown",
+      "submenus": [
+        {
+          "title": "Sale by Product",
+          "page": "/MCITC/viewSaleByProduct"
+        },
+        {
+          "title": "Target Customer",
+          "page": "/MCITC/viewTargetCustomer"
+        },
+        {
+          "title": "Price Analysis",
+          "page": "/MCITC/viewPriceAnalysis"
+        },
+        {
+          "title": "Product Analysis",
+          "page": "/MCITC/viewProductAnalysis"
+        },
+        {
+          "title": "Orders",
+          "page": "/MCITC/viewOrder"
+        },
+        {
+          "title": "Transaction",
+          "page": "/MCITC/viewTransaction"
+        }
+      ]
+    },
+    {
+      "title": "Reports",
+      "icon": "fa fa-folder",
+      "active": false,
+      "type": "dropdown",
+      "submenus": [
+        {
+          "title": "Sales By Category",
+          "page": "/MCITC/viewSalesByCategory"
+        },
+        {
+          "title": "Sales",
+          "page": "/MCITC/viewSales"
+        },
+        {
+          "title": "Items wishlisted",
+          "page": "/MCITC/viewWishlist"
+        }
+      ]
+    },
+    {
+      "title": "Customer Reviews",
+      "icon": "fa fa-star",
+      "active": false,
+      "page": "/MCITC/viewReviews",
+      "type": "simple"
+    },
+    {
+      "title": "Components Setting",
+      "icon": "fa fa-cogs",
+      "active": false,
+      "type": "dropdown",
+      "submenus": [
+        {
+          "title": "Product Categories",
+          "page": "/MCITC/viewProductCategories"
+        },
+        {
+          "title": "Product Variations",
+          "page": "/MCITC/viewProductVariation"
+        },
+        {
+          "title": "Shoplots",
+          "page": "/MCITC/viewShoplots"
+        },
+        {
+          "title": "Gridstorages",
+          "page": "/MCITC/viewGridStorages"
+        },
+        {
+          "title": "Colors",
+          "page": "/MCITC/viewColor"
+        },
+        {
+          "title": "Promotion Banner",
+          "page": "/MCITC/addPromotionBanner"
+        }
+        
+      ]
+    },
+    {
+      "title": "Settings",
+      "icon": "fa fa-wrench",
+      "active": false,
+      "page": "/MCITC/viewSettings",
+      "type": "simple"
+    },
+    {
+      "title": "Back to Ecommerce",
+      "icon": "fa fa-shopping-bag",
+      "page": "/MCITC/",
+      "active": false,
+      "type": "simple"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+.imagecontainer {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 80%;
+  bottom: 0;
+  left: 50%;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.3s ease;
+  background-color: grey;
+  cursor: pointer;
+  margin: 0 auto;
+  margin-left: -48%;
+  text-align: center;
+  color: white;
+}
+
+.imagecontainer:hover .overlay {
+  opacity: 0.7;
+}
+
+.icon {
+  color: white;
+  font-size: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.fa-user:hover {
+  color: #eee;
+}
+
+.dividerbottom {
+  margin-bottom: 1rem!important;
+}
+
+.rowStyle {
+  width: 16vw;
+  text-align: left!important;
+  padding-left: 3rem!important;
+}
