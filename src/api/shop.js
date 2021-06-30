@@ -177,9 +177,9 @@ const shopApi = {
   getLatestProducts: (options = {}) => {
     console.log(
       "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemListByCategorySlug?ProductCategorySlug=" +
-        options.ProductCategorySlug +
+        options.categorySlug +
         "&ProductPerPage=" +
-        options.ProductPerPage +
+        options.limit +
         "&Page=1&Filter=1"
     );
     return fetch(
@@ -191,7 +191,7 @@ const shopApi = {
     )
       .then((response) => response.json())
       .then((json) => {
-        json = JSON.parse(json);
+        // json = JSON.parse(json);
         // alert(json);
         return json;
       });
