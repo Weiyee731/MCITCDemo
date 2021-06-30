@@ -191,7 +191,7 @@ const shopApi = {
     )
       .then((response) => response.json())
       .then((json) => {
-        json = JSON.parse(json);
+        // json = JSON.parse(json);
         // alert(json);
         return json;
       });
