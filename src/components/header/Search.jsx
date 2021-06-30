@@ -167,8 +167,7 @@ function Search(props) {
     return (
         <div className={rootClasses} ref={wrapper} onBlur={handleBlur}>
             <div className="search__body">
-                <form className="search__form" action="">
-                
+                <div className="search__form" action="">
                     <input
                         ref={inputRef}
                         onChange={handleChangeQuery}
@@ -177,7 +176,7 @@ function Search(props) {
                         value={query}
                         className="search__input"
                         name="search"
-                        placeholder="Search over 10,000 products"
+                        placeholder="Search in Emporia"
                         aria-label="Site search"
                         type="text"
                         autoComplete="off"
@@ -187,8 +186,7 @@ function Search(props) {
                     </button>
                     {closeButton}
                     <div className="search__border" />
-                </form>
-                
+                </div>
                 <Suggestions className="search__suggestions" context={context} products={suggestedProducts} />
             </div>
         </div>

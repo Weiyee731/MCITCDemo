@@ -156,7 +156,7 @@
     ]
   },
   "devDependencies": {
-    "node-sass": "^4.14.1",
-    "json-loader": "^0.5.7"
+    "json-loader": "^0.5.7",
+    "node-sass": "^4.14.1"
   }
 }

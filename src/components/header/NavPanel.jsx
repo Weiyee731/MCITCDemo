@@ -22,6 +22,11 @@ function NavPanel(props) {
   let departments = null;
   let searchIndicator;
 
+  const categoryStyle = {
+    backgroundColor: "#fff",
+    display: "flex"
+  }
+
   if (layout === "compact") {
     logo = (
       <div className="nav-panel__logo">

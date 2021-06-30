@@ -1,6 +1,6 @@
 export default {
-  name: "MCTIC - Biggest Shipping Store in Asia",
-  fullName: "MCTIC - Biggest Shipping Store in Asia",
+  name: "Emporia - Biggest Shopping Store in Asia",
+  fullName: "Emporia - Biggest Shopping Store in Asia",
   url:
     "https://www.propsocial.my/developments/malaysia-china-international-trade-centre-9730",
   author: {

@@ -9,6 +9,18 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Cookies from "universal-cookie";
 import userImage from "../../assets/user.jpg";
+
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+
+import CloseIcon from '@material-ui/icons/Close';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import IconButton from "@material-ui/core/IconButton";
+
 const cookies = new Cookies();
 function mapStateToProps(state) {
   return {
@@ -27,6 +39,33 @@ const backtoinventory = (e) => {
   localStorage.setItem("management", true);
 };
 
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
 class IndicatorAccount extends Component {
   constructor() {
     super();
@@ -37,6 +76,8 @@ class IndicatorAccount extends Component {
     email: "",
     password: "",
     rememberMe: false,
+    isToLogin: false,
+    isStateSet: false
   };
 
   OnSubmitLogin(e) {
@@ -149,6 +190,31 @@ class IndicatorAccount extends Component {
             </ul>
           </div>
         ) : (
+          // <div>
+          //   {
+          //     this.state.isStateSet == false ?
+          //       this.setState({ isToLogin: true,  isStateSet: true}) : ""
+          //   }
+          //   <Dialog open={this.state.isToLogin} onClose={() => { this.setState({ isToLogin: false, isStateSet: false }) }} fullWidth={true} maxWidth="md">
+          //     <DialogTitle onClose={() => this.setState({ isToLogin: false, isStateSet: false })} id="submit-list-confirmation-dialog">Upload User Data</DialogTitle>
+          //     <DialogContent dividers>
+          //       <DialogContentText id="confirmation-dialog">
+          //         <div id="confirm-upload-dialog" className="row pt-3">
+          //           <label><b>Are you sure you want to upload this user data list?</b></label>
+          //         </div>
+          //       </DialogContentText>
+          //     </DialogContent>
+          //     <DialogActions>
+          //       <Button onClick={(e) => this.OnUploadRealData(e)} color="primary">
+          //         Submit
+          //       </Button>
+          //       <Button onClick={() => { this.setState({ isToLogin: false, isStateSet: false }) }} color="secondary">
+          //         Close
+          //       </Button>
+          //     </DialogActions>
+          //   </Dialog>
+          // </div>
+
           <form className="account-menu__form" onSubmit={this.OnSubmitLogin}>
             <div className="account-menu__form-title">
               Log In to Your Account

@@ -18,17 +18,25 @@ import { Cart20Svg, Cross10Svg } from "../../svg";
 
 function Header(props) {
   const { layout } = props;
+
+  const backgroundColor = {
+    backgroundColor: "#99bc3b",
+    overflow: "hidden",
+    position: "fixed",
+    top: 0
+  }
+  
   let bannerSection;
 
   if (layout === "default") {
     bannerSection = (
       <div className="site-header__middle container">
-        <div className="site-header__logo">
+        <div>
           <Link to="/">
             <LogoSvg />
           </Link>
         </div>
-        <div className="site-header__search">
+        <div className="site-header__search" style={{margin: "0 16px"}}>
           <Search context="header" />
         </div>
         <div className="nav-panel__indicators">
@@ -50,12 +58,12 @@ function Header(props) {
   }
 
   return (
-    <div className="site-header">
+    <div className="site-header w-100" style={backgroundColor}>
       {/* <Topbar /> */}
       {bannerSection}
-      <div className="site-header__nav-panel">
+      {/* <div className="site-header__nav-panel">
         <NavPanel layout={layout} />
-      </div>
+      </div> */}
     </div>
   );
 }

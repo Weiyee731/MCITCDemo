@@ -8,7 +8,6 @@ import { ScrollContext } from "react-router-scroll-4";
 import languages from "../i18n";
 import { localeChange } from "../store/locale";
 import Layout from "../components/Layout";
-import HomePageOne from "../components/home/HomePageOne";
 import HomePageTwo from "../components/home/HomePageTwo";
 import "./App.scss";
 
@@ -18,40 +17,12 @@ import { lightTheme, darkTheme } from "../components/Themes";
 import { useDarkMode } from "../components/useDarkMode";
 import Toggle from "../components/Toggler";
 
-// function AppMain() {
-//   const [theme, themeToggler, mountedComponent] = useDarkMode();
-//   const themeMode = theme === "light" ? lightTheme : darkTheme;
-//   const [locale, setLocale] = useState("en");
-//   if (!mountedComponent) return <div />;
-//   return (
-//     <ThemeProvider theme={themeMode}>
-//       <>
-//         <GlobalStyles />
-//         <div>
-//           <Toggle theme={theme} toggleTheme={themeToggler} />
-//           theme = {theme}
-//           <IntlProvider locale={locale} messages={messages[locale]}>
-//             <Layout setLocale={setLocale} />
-//           </IntlProvider>
-//         </div>
-//       </>
-//     </ThemeProvider>
-//   );
-// }
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       locale: "en",
       toggled: true,
-      // theme: window.localStorage.getItem("theme")
-      //   ? window.localStorage.getItem("theme")
-      //   : "light",
-      // themebackground: JSON.parse(
-      //   window.localStorage.getItem("themebackground")
-      // )
-      //   ? JSON.parse(window.localStorage.getItem("themebackground"))
-      //   : lightTheme,
     };
     this.themeToggler = this.themeToggler.bind(this);
   }
@@ -105,27 +76,15 @@ class App extends Component {
     const { locale } = this.props;
     console.log(locale);
     const { messages, direction } = languages[locale];
-    // console.log(this.state.themebackground);
     return (
       <ThemeProvider theme={lightTheme}>
         <GlobalStyles />
-        {/* <Toggle toggleTheme={this.themeToggler} /> */}
         <IntlProvider locale={locale} messages={messages}>
           <BrowserRouter basename="MyShops">
             <HelmetProvider>
               <Helmet htmlAttributes={{ lang: locale, dir: direction }} />
               <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}>
                 <Switch>
-                  <Route
-                    path="/home-two"
-                    render={(props) => (
-                      <Layout
-                        {...props}
-                        headerLayout="compact"
-                        homeComponent={HomePageTwo}
-                      />
-                    )}
-                  />
                   <Route
                     path="/"
                     render={(props) => (
