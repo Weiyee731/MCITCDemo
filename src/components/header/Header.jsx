@@ -21,6 +21,9 @@ function Header(props) {
 
   const backgroundColor = {
     backgroundColor: "#99bc3b",
+    overflow: "hidden",
+    position: "fixed",
+    top: 0
   }
   
   let bannerSection;
@@ -55,7 +58,7 @@ function Header(props) {
   }
 
   return (
-    <div className="site-header" style={backgroundColor}>
+    <div className="site-header w-100" style={backgroundColor}>
       {/* <Topbar /> */}
       {bannerSection}
       {/* <div className="site-header__nav-panel">

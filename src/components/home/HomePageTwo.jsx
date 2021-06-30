@@ -1,5 +1,5 @@
 // react
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 // third-party
 import { Helmet } from 'react-helmet-async';
@@ -18,7 +18,8 @@ import BlockProductColumns from '../blocks/BlockProductColumns';
 import BlockProducts from '../blocks/BlockProducts';
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import BlockSlideShow from '../blocks/BlockSlideShow';
-import NavPanel from '../header/NavPanel';
+import BlockMainCategories from '../blocks/BlockMainCategories';
+import BlockMoreButton from '../blocks/BlockMoreButton';
 
 // data stubs
 import categories from '../../data/shopBlockCategories';
@@ -91,45 +92,56 @@ function HomePageTwo(props) {
     ], []),
   );
 
-  console.log(allProducts)
+  const [rows, setMoreRows] = useState(6)
+
+  const viewMore = (row) => {
+    setMoreRows(row)
+  }
 
   return (
     <React.Fragment>
-      <Helmet>
-        <title>{theme.name}</title>
-      </Helmet>
+      <div style={{marginTop: "130px"}}>
+        <Helmet>
+          <title>{theme.name}</title>
+        </Helmet>
 
-      {useMemo(() => <BlockSlideShow />, [])}
+        {useMemo(() => <BlockSlideShow />, [])}
 
-      {useMemo(() => <NavPanel />, [])}
+        {useMemo(() => <BlockMainCategories />, [])}
 
-      {useMemo(() => (
-        <BlockProductsCarousel
-          title="New Arrivals"
-          layout="grid-4"
-          rows={2}
-          products={allProducts.data}
-          loading={allProducts.isLoading}
-          groups={allProducts.tabs}
-          onGroupClick={allProducts.handleTabChange}
-        />
-      ), [allProducts])}
+        {useMemo(() => (
+          <BlockProductsCarousel
+            title="New Arrivals"
+            layout="grid-4"
+            rows={2}
+            products={allProducts.data}
+            loading={allProducts.isLoading}
+            groups={allProducts.tabs}
+            onGroupClick={allProducts.handleTabChange}
+          />
+        ), [allProducts])}
 
-      {useMemo(() => (
-        <BlockProductsCarousel
-          title="Featured Products"
-          layout="grid-4"
-          rows={2}
-          products={allProducts.data}
-          loading={allProducts.isLoading}
-          groups={allProducts.tabs}
-          onGroupClick={allProducts.handleTabChange}
-        />
-      ), [allProducts])}
+        {useMemo(() => (
+          <BlockProductsCarousel
+            title="Featured Products"
+            layout="grid-4"
+            rows={rows}
+            products={allProducts.data}
+            loading={allProducts.isLoading}
+            groups={allProducts.tabs}
+            onGroupClick={allProducts.handleTabChange}
+          />
+        ), [allProducts])}
 
-      {useMemo(() => <BlockFeatures layout="boxed" />, [])}
+        {useMemo(() =>
+          <div className="my-4">
+            <BlockMoreButton viewMore={viewMore} />
+          </div>
+        )}
 
-      {/* {useMemo(() => <BlockBanner />, [])}
+        {/* {useMemo(() => <BlockFeatures layout="boxed" />, [])} */}
+
+        {/* {useMemo(() => <BlockBanner />, [])}
 
       {useMemo(
         () => (
@@ -142,6 +154,7 @@ function HomePageTwo(props) {
         ),
         [allProductsData]
       )} */}
+      </div>
     </React.Fragment>
   );
 }

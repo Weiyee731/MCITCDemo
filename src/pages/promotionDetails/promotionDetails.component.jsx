@@ -125,9 +125,9 @@ function TransferList(props) {
   };
 
   const updateSearch = (title, e) => {
-    if (title == "Products Left") {
+    if (title === "Products Left") {
       props.setSearchValue(e.target.value, "add");
-    } else if (title == "Chosen Products") {
+    } else if (title === "Chosen Products") {
       props.setSearchValue(e.target.value, "remove");
     }
   };
@@ -1232,14 +1232,14 @@ class PromotionDetailsComponent extends Component {
 
     const Search = (type) => {
       var newList = [];
-      if (type == "add") {
+      if (type === "add") {
         newList = allProductsData;
 
         newList.map((productLeft) => {
           this.state.fullChosenProducts.map((chosen) => {
-            if (productLeft.ProductName != chosen.ProductName) {
+            if (productLeft.ProductName !== chosen.ProductName) {
               newList = newList.filter(
-                (item) => item.ProductName != chosen.ProductName
+                (item) => item.ProductName !== chosen.ProductName
               );
             }
           });
@@ -1263,11 +1263,11 @@ class PromotionDetailsComponent extends Component {
           productsDisplayed: items,
           imagesLeft: newItemsImages,
         });
-      } else if (type == "remove") {
+      } else if (type === "remove") {
         var chosenItems = allProductsData;
         this.state.productsLeft.map((product) => {
           chosenItems = chosenItems.filter(
-            (listItem) => listItem.ProductName != product
+            (listItem) => listItem.ProductName !== product
           );
         });
         chosenItems.map((product) => {
@@ -1292,11 +1292,11 @@ class PromotionDetailsComponent extends Component {
     };
 
     const setSearchValue = (value, type) => {
-      if (type == "add") {
+      if (type === "add") {
         this.setState({
           searchWordAdd: value,
         });
-      } else if (type == "remove") {
+      } else if (type === "remove") {
         this.setState({
           searchWordRemove: value,
         });
@@ -1315,7 +1315,7 @@ class PromotionDetailsComponent extends Component {
       var newProductList = [];
       this.state.chosenProductsNames.map((chosenProduct) => {
         allProductsData.map((product) => {
-          if (product.ProductName == chosenProduct) {
+          if (product.ProductName === chosenProduct) {
             newProductList.push(product);
           }
         });
@@ -1324,7 +1324,7 @@ class PromotionDetailsComponent extends Component {
       var chosenItems = allProductsData;
       this.state.productsLeft.map((product) => {
         chosenItems = chosenItems.filter(
-          (listItem) => listItem.ProductName != product
+          (listItem) => listItem.ProductName !== product
         );
       });
       chosenItems.map((product) => {
