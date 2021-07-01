@@ -15,7 +15,7 @@ import PageHeader from '../shared/PageHeader';
 import { cartRemoveItem, cartUpdateQuantities } from '../../store/cart';
 import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
-import Logo from "../../assets/myshops.png"
+import Logo from "../../assets/Emporia.png"
 
 // data stubs
 import theme from '../../data/theme';

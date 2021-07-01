@@ -115,6 +115,7 @@ export function getFeaturedProducts(options = {}) {
 }
 
 export function getLatestProducts(options = {}) {
+  alert('')
   return getProducts(0, options);
 }
 

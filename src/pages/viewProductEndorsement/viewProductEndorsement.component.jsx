@@ -28,7 +28,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import EditIcon from "@material-ui/icons/Edit";
-import Logo from "../../assets/myshops.png";
+import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 
 function mapStateToProps(state) {

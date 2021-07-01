@@ -8,7 +8,7 @@ export class GitEpic {
   getAllUserByTypeId = (action$) =>
     action$.ofType(GitAction.GetUser).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ProfileListByUserType?UserTypeID=17"
+        "http://tourism.denoo.my/emporia/api/emporia/User_ProfileListByUserType?UserTypeID=17"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -28,7 +28,7 @@ export class GitEpic {
   LoginUser = (action$) =>
     action$.ofType(GitAction.Login).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_Login?username=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_Login?username=" +
           payload.email +
           "&password=" +
           payload.password
@@ -51,7 +51,7 @@ export class GitEpic {
   LogoutUser = (action$) =>
     action$.ofType(GitAction.Logout).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Audit_AddUserLogout?USERID=1"
+        "http://tourism.denoo.my/emporia/api/emporia/Audit_AddUserLogout?USERID=1"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -73,7 +73,7 @@ export class GitEpic {
   checkUser = (action$) =>
     action$.ofType(GitAction.CheckUser).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_CheckDuplicate?email=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_CheckDuplicate?email=" +
           payload
       )
         .then((response) => response.json())
@@ -94,7 +94,7 @@ export class GitEpic {
   getUserPage = (action$) =>
     action$.ofType(GitAction.GetPages).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewPage?ROLEGROUPID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_ViewPage?ROLEGROUPID=" +
           payload
       )
         .then((response) => response.json())
@@ -115,7 +115,7 @@ export class GitEpic {
   getUserProfile = (action$) =>
     action$.ofType(GitAction.GetUserProfile).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ProfileByID?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_ProfileByID?USERID=" +
           payload
       )
         .then((response) => response.json())
@@ -136,7 +136,7 @@ export class GitEpic {
   updateUserProfile = (action$) =>
     action$.ofType(GitAction.EditUserProfile).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_EditProfile?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_EditProfile?USERID=" +
           payload.USERID +
           "&USERFIRSTNAME=" +
           payload.USERFIRSTNAME +
@@ -187,7 +187,7 @@ export class GitEpic {
   updateProfileImage = (action$) =>
     action$.ofType(GitAction.UpdateProfileImage).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_UserUpdatePhoto?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_UserUpdatePhoto?USERID=" +
           payload.USERID +
           "&USERPROFILEIMAGE=" +
           payload.USERPROFILEIMAGE
@@ -214,7 +214,7 @@ export class GitEpic {
   getCountry = (action$) =>
     action$.ofType(GitAction.GetCountry).switchMap(({}) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/General_CountryList"
+        "http://tourism.denoo.my/emporia/api/emporia/General_CountryList"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -235,7 +235,7 @@ export class GitEpic {
   getAllCreditCard = (action$) =>
     action$.ofType(GitAction.GetCreditCard).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewUserPaymentMethod?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_ViewUserPaymentMethod?USERID=" +
           payload
       )
         .then((response) => response.json())
@@ -256,7 +256,7 @@ export class GitEpic {
   addCreditCard = (action$) =>
     action$.ofType(GitAction.AddCreditCard).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_AddPaymentMethod?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_AddPaymentMethod?USERID=" +
           payload.USERID +
           "&USERCARDNAME=" +
           payload.name +
@@ -276,7 +276,7 @@ export class GitEpic {
             returnVal = [];
           }
           return fetch(
-            "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewUserPaymentMethod?USERID=" +
+            "http://tourism.denoo.my/emporia/api/emporia/User_ViewUserPaymentMethod?USERID=" +
               payload.USERID
           )
             .then((response) => response.json())
@@ -300,7 +300,7 @@ export class GitEpic {
   updateCreditCard = (action$) =>
     action$.ofType(GitAction.UpdateCreditCard).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
           payload.USERPAYMENTMETHODID +
           "&USERID=" +
           payload.USERID +
@@ -323,7 +323,7 @@ export class GitEpic {
           }
 
           return fetch(
-            "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewUserPaymentMethod?USERID=" +
+            "http://tourism.denoo.my/emporia/api/emporia/User_ViewUserPaymentMethod?USERID=" +
               payload.USERID
           )
             .then((response) => response.json())
@@ -347,7 +347,7 @@ export class GitEpic {
   deleteCreditCard = (action$) =>
     action$.ofType(GitAction.DeleteCreditCard).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_DeletePaymentMethod?USERPAYMENTMETHODID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_DeletePaymentMethod?USERPAYMENTMETHODID=" +
           payload.cardId
       )
         .then((response) => response.json())
@@ -359,7 +359,7 @@ export class GitEpic {
             returnVal = [];
           }
           return fetch(
-            "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewUserPaymentMethod?USERID=" +
+            "http://tourism.denoo.my/emporia/api/emporia/User_ViewUserPaymentMethod?USERID=" +
               payload.userId
           )
             .then((response) => response.json())
@@ -384,7 +384,7 @@ export class GitEpic {
   getAllPromotion = (action$) =>
     action$.ofType(GitAction.GetPromotion).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_ViewPromotion?ACTIVEIND"
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_ViewPromotion?ACTIVEIND"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -404,7 +404,7 @@ export class GitEpic {
   AddPromotion = (action$) =>
     action$.ofType(GitAction.AddPromotion).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_AddPromotion?PROMOTIONTITLE=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_AddPromotion?PROMOTIONTITLE=" +
           payload.PromotionTitle +
           "&PROMOTIONDESC=" +
           payload.PromotionDesc +
@@ -435,7 +435,7 @@ export class GitEpic {
   getAllProducts = (action$) =>
     action$.ofType(GitAction.GetProduct).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemList"
+        "http://tourism.denoo.my/emporia/api/emporia/Product_ItemList"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -457,7 +457,7 @@ export class GitEpic {
       .ofType(GitAction.GetProductByProductStatus)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemListByProductStatus?PRODUCTSTATUS=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Product_ItemListByProductStatus?PRODUCTSTATUS=" +
             payload.ProductStatus +
             "&USERID=" +
             payload.UserID
@@ -480,7 +480,7 @@ export class GitEpic {
   addProduct = (action$) =>
     action$.ofType(GitAction.AddProduct).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddProductVariationMedia?name=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductVariationMedia?name=" +
           payload.name +
           "&manufacturer=1" +
           payload.manufacturer +
@@ -525,7 +525,7 @@ export class GitEpic {
   updateProduct = (action$) =>
     action$.ofType(GitAction.UpdateProduct).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_UpdateProduct?PRODUCTID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_UpdateProduct?PRODUCTID=" +
           payload.ProductID +
           "&name=" +
           payload.name +
@@ -572,7 +572,7 @@ export class GitEpic {
   deleteProduct = (action$) =>
     action$.ofType(GitAction.DeleteProduct).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_DeleteProducts?ProductIDs=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_DeleteProducts?ProductIDs=" +
           payload
       )
         .then((response) => response.json())
@@ -593,7 +593,7 @@ export class GitEpic {
   endorseProduct = (action$) =>
     action$.ofType(GitAction.EndorseProduct).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_EndorseProducts?ProductIDs=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_EndorseProducts?ProductIDs=" +
           payload
       )
         .then((response) => response.json())
@@ -614,7 +614,7 @@ export class GitEpic {
   checkProduct = (action$) =>
     action$.ofType(GitAction.CheckProduct).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_CheckDuplication?PRODUCTNAME=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_CheckDuplication?PRODUCTNAME=" +
           payload
       )
         .then((resposne) => resposne.json())
@@ -635,7 +635,7 @@ export class GitEpic {
   AddProductMedia = (action$) =>
     action$.ofType(GitAction.AddProductMedia).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddProductMedia?" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductMedia?" +
           "PRODUCTID=" +
           payload.productID +
           "&PRODUCTVARIATIONDETAILID=0&WIDTH=" +
@@ -652,7 +652,7 @@ export class GitEpic {
       .ofType(GitAction.AddProductVariationDetail)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddProductVariationDetail?PRODUCTIDVARIATION=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductVariationDetail?PRODUCTIDVARIATION=" +
             payload.ProductVariation +
             "&PRODUCTID=" +
             payload.ProductID +
@@ -681,7 +681,7 @@ export class GitEpic {
   getAllProductVariation = (action$) =>
     action$.ofType(GitAction.GetProductVariation).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ViewProductVariation"
+        "http://tourism.denoo.my/emporia/api/emporia/Product_ViewProductVariation"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -703,7 +703,7 @@ export class GitEpic {
       .ofType(GitAction.GetProductVariationByCategoryID)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" +
             payload
         )
           .then((response) => response.json())
@@ -724,7 +724,7 @@ export class GitEpic {
   addProductVariation = (action$) =>
     action$.ofType(GitAction.AddProductVariation).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddProductVariation?PRODUCTVARIATION=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductVariation?PRODUCTVARIATION=" +
           payload.ProductVariation +
           "&PRODUCTCATEGORYID=" +
           payload.ProductCategoryID +
@@ -751,7 +751,7 @@ export class GitEpic {
       .ofType(GitAction.UpdateProductVariation)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_UpdateProductVariation?PRODUCTVARIATIONID=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Product_UpdateProductVariation?PRODUCTVARIATIONID=" +
             payload.ProductVariationID +
             "&PRODUCTVARIATION=" +
             payload.ProductVariation +
@@ -780,7 +780,7 @@ export class GitEpic {
       .ofType(GitAction.DeleteProductVariation)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_DeleteProductVariation?PRODUCTVARIATIONID=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Product_DeleteProductVariation?PRODUCTVARIATIONID=" +
             payload.ProductVariationID
         )
           .then((response) => response.json())
@@ -803,7 +803,7 @@ export class GitEpic {
       .ofType(GitAction.AddProductPurchaseOrder)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddPurchaseOrder?PRODUCTIDS=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Product_AddPurchaseOrder?PRODUCTIDS=" +
             payload.ProductID +
             "&PRODUCTQUANTITYS=" +
             payload.ProductStock +
@@ -830,7 +830,7 @@ export class GitEpic {
   getNotification = (action$) =>
     action$.ofType(GitAction.GetNotification).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/General_NotificationList?UserID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/General_NotificationList?UserID=" +
           payload
       )
         .then((response) => {
@@ -855,7 +855,7 @@ export class GitEpic {
   getAllCategories = (action$) =>
     action$.ofType(GitAction.GetProductCategory).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_CategoryListByAll"
+        "http://tourism.denoo.my/emporia/api/emporia/Product_CategoryListByAll"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -877,7 +877,7 @@ export class GitEpic {
       .ofType(GitAction.GetProductCategoryListing)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_CategoryListing"
+          "http://tourism.denoo.my/emporia/api/emporia/Product_CategoryListing"
         )
           .then((response) => response.json())
           .then((json) => {
@@ -897,7 +897,7 @@ export class GitEpic {
   addProductCategory = (action$) =>
     action$.ofType(GitAction.AddProductCategory).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddProductCategory?PRODUCTCATEGORY=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductCategory?PRODUCTCATEGORY=" +
           payload.ProductCategory +
           "&PRODUCTCATEGORYIMAGE=" +
           payload.ProductCategoryImage +
@@ -924,7 +924,7 @@ export class GitEpic {
   updateProductCategory = (action$) =>
     action$.ofType(GitAction.UpdateProductCategory).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_UpdateProductCategory?PRODUCTCATEGORYID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_UpdateProductCategory?PRODUCTCATEGORYID=" +
           payload.ProductCategoryID +
           "&PRODUCTCATEGORY=" +
           payload.ProductCategory
@@ -947,7 +947,7 @@ export class GitEpic {
   deleteProductCategory = (action$) =>
     action$.ofType(GitAction.DeleteProductCategory).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_DeleteProductCategory?PRODUCTCATEGORYID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_DeleteProductCategory?PRODUCTCATEGORYID=" +
           payload
       )
         .then((response) => response.json())
@@ -972,7 +972,7 @@ export class GitEpic {
       .ofType(GitAction.GetSupplierByUserStatus)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ProfileListByUserStatus?UserStatus=" +
+          "http://tourism.denoo.my/emporia/api/emporia/User_ProfileListByUserStatus?UserStatus=" +
             payload +
             "&UserRoleID=15"
         )
@@ -994,7 +994,7 @@ export class GitEpic {
   registerSupplier = (action$) =>
     action$.ofType(GitAction.RegisterSupplier).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_SupplierRegister?USERNAME=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_SupplierRegister?USERNAME=" +
           payload.repUsername +
           "&USERPASSWORD=" +
           payload.repPassword +
@@ -1045,7 +1045,7 @@ export class GitEpic {
   endorseSupplier = (action$) =>
     action$.ofType(GitAction.EndorseSupplier).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_EndorseSupplier?USERIDS=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_EndorseSupplier?USERIDS=" +
           payload.selectedData +
           "&USERSTATUS=" +
           payload.status
@@ -1072,7 +1072,7 @@ export class GitEpic {
   getAllShoplots = (action$) =>
     action$.ofType(GitAction.GetShoplots).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_ShoplotList"
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_ShoplotList"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1092,7 +1092,7 @@ export class GitEpic {
   getAllShoplotsPolygon = (action$) =>
     action$.ofType(GitAction.GetShoplotsPoly).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_ShoplotList?SHOPLOTBLOCK=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_ShoplotList?SHOPLOTBLOCK=" +
           payload
       )
         .then((response) => response.json())
@@ -1113,7 +1113,7 @@ export class GitEpic {
   addShoplot = (action$) =>
     action$.ofType(GitAction.AddShoplots).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_AddShoplot?SHOPLOTNAME=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_AddShoplot?SHOPLOTNAME=" +
           payload.ShoplotName +
           "&CONTACTNO=" +
           payload.ContactNo +
@@ -1140,7 +1140,7 @@ export class GitEpic {
   updateShoplot = (action$) =>
     action$.ofType(GitAction.UpdateShoplots).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_UpdateShoplot?SHOPLOTID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_UpdateShoplot?SHOPLOTID=" +
           payload.ShoplotID +
           "&SHOPLOTNAME=" +
           payload.ShoplotName +
@@ -1169,7 +1169,7 @@ export class GitEpic {
   deleteShoplot = (action$) =>
     action$.ofType(GitAction.DeleteShoplots).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_DeleteShoplot?SHOPLOTID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_DeleteShoplot?SHOPLOTID=" +
           payload.ShoplotID
       )
         .then((response) => response.json())
@@ -1191,7 +1191,7 @@ export class GitEpic {
   getAllGridStorages = (action$) =>
     action$.ofType(GitAction.GetGridStorages).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_GridStorageList"
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_GridStorageList"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1211,7 +1211,7 @@ export class GitEpic {
   addGridStorages = (action$) =>
     action$.ofType(GitAction.AddGridStorages).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_AddGridStorage?GRIDSTORAGECODE=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_AddGridStorage?GRIDSTORAGECODE=" +
           payload.GridStorageCode +
           "&SHOPLOTID=" +
           payload.ShoplotID +
@@ -1236,7 +1236,7 @@ export class GitEpic {
   updateGridStorages = (action$) =>
     action$.ofType(GitAction.UpdateGridStorages).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_UpdateGridStorage?GRIDSTORAGEID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_UpdateGridStorage?GRIDSTORAGEID=" +
           payload.GirdStorageID +
           "&GRIDSTORAGECODE=" +
           payload.GridStorageCode +
@@ -1263,7 +1263,7 @@ export class GitEpic {
   deleteGridStorages = (action$) =>
     action$.ofType(GitAction.DeleteGridStorages).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Storage_DeleteGridStorage?GRIDSTORAGEID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Storage_DeleteGridStorage?GRIDSTORAGEID=" +
           payload
       )
         .then((response) => response.json())
@@ -1285,7 +1285,7 @@ export class GitEpic {
   viewOverallSummary = (action$) =>
     action$.ofType(GitAction.GetOverallSummary).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Report_OverallSummary?STARTDATETIME112=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Report_OverallSummary?STARTDATETIME112=" +
           payload.StartDateTime +
           "&ENDDATETIME112=" +
           payload.StartDateTime
@@ -1313,7 +1313,7 @@ export class GitEpic {
       .ofType(GitAction.GetProductReviewByProductID)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ViewReviewByProductID?PRODUCTID=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Product_ViewReviewByProductID?PRODUCTID=" +
             payload.ProductID +
             "&PARENTPRODUCTREVIEWID=" +
             payload.ParentProductReviewID
@@ -1336,7 +1336,7 @@ export class GitEpic {
   viewProductReview = (action$) =>
     action$.ofType(GitAction.GetProductReview).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ViewProductReview?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_ViewProductReview?USERID=" +
           payload.UserID
       )
         .then((response) => response.json())
@@ -1358,7 +1358,7 @@ export class GitEpic {
   getAllColor = (action$) =>
     action$.ofType(GitAction.GetColor).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/General_ColorList"
+        "http://tourism.denoo.my/emporia/api/emporia/General_ColorList"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1378,7 +1378,7 @@ export class GitEpic {
   addColor = (action$) =>
     action$.ofType(GitAction.AddColor).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/General_AddColor?COLORNAME=" +
+        "http://tourism.denoo.my/emporia/api/emporia/General_AddColor?COLORNAME=" +
           payload.Color +
           "&COLORHEX=" +
           payload.ColorHex +
@@ -1409,7 +1409,7 @@ export class GitEpic {
   updateColor = (action$) =>
     action$.ofType(GitAction.UpdateColor).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/General_UpdateColor?COLORID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/General_UpdateColor?COLORID=" +
           payload.ColorID +
           "&COLORNAME=" +
           payload.Color +
@@ -1442,7 +1442,7 @@ export class GitEpic {
   deleteColor = (action$) =>
     action$.ofType(GitAction.DeleteColor).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/General_DeleteColor?COLORID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/General_DeleteColor?COLORID=" +
           payload
       )
         .then((response) => response.json())
@@ -1464,7 +1464,7 @@ export class GitEpic {
   AddProductQuotation = (action$) =>
     action$.ofType(GitAction.AddProductQuotation).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddQuotation?PRODUCTIDS=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_AddQuotation?PRODUCTIDS=" +
           payload.ProductIDs +
           "&PRODUCTQUANTITYS=" +
           payload.ProductQuantities +
@@ -1490,7 +1490,7 @@ export class GitEpic {
   AddedProductQuotation = (action$) =>
     action$.ofType(GitAction.AddedProductQuotation).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddQuotation?PRODUCTIDS=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_AddQuotation?PRODUCTIDS=" +
           payload.ProductIDs +
           "&PRODUCTQUANTITYS=" +
           payload.ProductQuantities +
@@ -1516,7 +1516,7 @@ export class GitEpic {
   ViewProductQuotation = (action$) =>
     action$.ofType(GitAction.GetProductQuotation).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ViewQuotation?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_ViewQuotation?USERID=" +
           payload.USERID
       )
         .then((response) => response.json())
@@ -1556,7 +1556,7 @@ export class GitEpic {
   ViewAddress = (action$) =>
     action$.ofType(GitAction.GetAddress).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewAddressBook?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_ViewAddressBook?USERID=" +
           payload
       )
         .then((response) => response.json())
@@ -1577,7 +1577,7 @@ export class GitEpic {
   addAddress = (action$) =>
     action$.ofType(GitAction.AddAddress).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_AddAddressBook?USERADDRESSNAME=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_AddAddressBook?USERADDRESSNAME=" +
           payload.Address +
           "&USERID=" +
           payload.USERID +
@@ -1607,7 +1607,7 @@ export class GitEpic {
             returnVal = [];
           }
           return fetch(
-            "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewAddressBook?USERID=" +
+            "http://tourism.denoo.my/emporia/api/emporia/User_ViewAddressBook?USERID=" +
               payload.USERID
           )
             .then((response) => response.json())
@@ -1631,7 +1631,7 @@ export class GitEpic {
   updateAddress = (action$) =>
     action$.ofType(GitAction.UpdateAddress).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_UpdateAddressBook?USERADDRESSBOOKID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_UpdateAddressBook?USERADDRESSBOOKID=" +
           payload.AddressBookNo +
           "&USERADDRESSNAME=" +
           payload.Address +
@@ -1663,7 +1663,7 @@ export class GitEpic {
           returnVal = [];
         }
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewAddressBook?USERID=" +
+          "http://tourism.denoo.my/emporia/api/emporia/User_ViewAddressBook?USERID=" +
             payload.USERID
         )
           .then((response) => response.json())
@@ -1687,7 +1687,7 @@ export class GitEpic {
   deleteAddress = (action$) =>
     action$.ofType(GitAction.DeleteAddress).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_DeleteAddressBook?USERADDRESSBOOKID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/User_DeleteAddressBook?USERADDRESSBOOKID=" +
           payload.AddressBookNo
       )
       .then((response) => response.json())
@@ -1699,7 +1699,7 @@ export class GitEpic {
           returnVal = [];
         }
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ViewAddressBook?USERID=" +
+          "http://tourism.denoo.my/emporia/api/emporia/User_ViewAddressBook?USERID=" +
             payload.USERID
         )
           .then((response) => response.json())
@@ -1724,7 +1724,7 @@ export class GitEpic {
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_AddOrder?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Order_AddOrder?USERID=" +
           payload.UserID +
           "&USERADDRESSID=-&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" +
           payload.Products
@@ -1749,7 +1749,7 @@ export class GitEpic {
   getDeliverableList = (action$) =>
     action$.ofType(GitAction.GetDeliverableList).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewOrderByIncomplete"
+        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderByIncomplete"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1771,7 +1771,7 @@ export class GitEpic {
   getAllPromotion = (action$) =>
     action$.ofType(GitAction.GetPromotion).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_ViewPromotion?ACTIVEIND"
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_ViewPromotion?ACTIVEIND"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1792,7 +1792,7 @@ export class GitEpic {
   AddPromotion = (action$) =>
     action$.ofType(GitAction.AddPromotion).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_AddPromotion?PROMOTIONTITLE=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_AddPromotion?PROMOTIONTITLE=" +
           payload.PromotionTitle +
           "&PROMOTIONDESC=" +
           payload.PromotionDesc +
@@ -1823,7 +1823,7 @@ export class GitEpic {
   UpdatePromotion = (action$) =>
     action$.ofType(GitAction.UpdatePromotion).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_UpdatePromotion?PROMOTIONID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_UpdatePromotion?PROMOTIONID=" +
           // "http://localhost/LoopApi/api/LoopApi/Promo_UpdatePromotion?PROMOTIONID&=idPROMOTIONTITLE=title&PROMOTIONDESC=desc&PROMOTIONSTARTDATE=20201117&PROMOTIONENDDATE=20201117&PRODUCTID=[100,90,99]"
           payload.PromotionID +
           "&PROMOTIONTITLE=" +
@@ -1858,7 +1858,7 @@ export class GitEpic {
   DeletePromotion = (action$) =>
     action$.ofType(GitAction.DeletePromotion).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_DeletePromotion?PROMOTIONID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_DeletePromotion?PROMOTIONID=" +
           payload
       )
         .then((response) => response.json())
@@ -1876,7 +1876,7 @@ export class GitEpic {
   getAllProductPromos = (action$) =>
     action$.ofType(GitAction.GetPromo).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_ViewPromotion?ACTIVEIND=0"
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_ViewPromotion?ACTIVEIND=0"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1896,7 +1896,7 @@ export class GitEpic {
   getAllPromoCodes = (action$) =>
     action$.ofType(GitAction.GetPromoCode).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/loopApi/api/loopApi/Promo_ViewPromoCode?ACTIVEIND=0"
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_ViewPromoCode?ACTIVEIND=0"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1916,7 +1916,7 @@ export class GitEpic {
   addPromoCode = (action$) =>
     action$.ofType(GitAction.AddPromoCode).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_AddPromoCode?PROMOTIONID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_AddPromoCode?PROMOTIONID=" +
           payload.promo +
           "&PROMOCODE=" +
           payload.promoCode +
@@ -1945,7 +1945,7 @@ export class GitEpic {
   updatePromoCode = (action$) =>
     action$.ofType(GitAction.UpdatePromoCode).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_UpdatePromoCode?PROMOCODEID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_UpdatePromoCode?PROMOCODEID=" +
           payload.promoCodeId +
           "&PROMOTIONID=" +
           payload.promo +
@@ -1976,7 +1976,7 @@ export class GitEpic {
   deletePromoCode = (action$) =>
     action$.ofType(GitAction.DeletePromoCode).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Promo_DeletePromoCode?PROMOCODEID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Promo_DeletePromoCode?PROMOCODEID=" +
           payload
       )
         .then((response) => response.json())
@@ -1998,7 +1998,7 @@ export class GitEpic {
   getAllTransactions = (action$) =>
     action$.ofType(GitAction.GetTransactions).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewOrder?TRACKINGSTATUS=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrder?TRACKINGSTATUS=" +
           payload
       )
         .then((response) => response.json())
@@ -2021,7 +2021,7 @@ export class GitEpic {
       .ofType(GitAction.GetTransactionsWithDelivery)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewOrderByDelivery"
+          "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderByDelivery"
         )
           .then((response) => response.json())
           .then((json) => {
@@ -2041,7 +2041,7 @@ export class GitEpic {
   getAllTransactionStatus = (action$) =>
     action$.ofType(GitAction.GetTransactionStatus).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewOrderStatus"
+        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderStatus"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2061,7 +2061,7 @@ export class GitEpic {
   getAllPayableList = (action$) =>
     action$.ofType(GitAction.GetReceivableList).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Account_ViewReceivableList"
+        "http://tourism.denoo.my/emporia/api/emporia/Account_ViewReceivableList"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2081,7 +2081,7 @@ export class GitEpic {
   getAllReceivableList = (action$) =>
     action$.ofType(GitAction.GetPayableList).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Account_ViewPayableList"
+        "http://tourism.denoo.my/emporia/api/emporia/Account_ViewPayableList"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2101,7 +2101,7 @@ export class GitEpic {
   updateProductStock = (action$) =>
     action$.ofType(GitAction.UpdateInventory).switchMap(({ payload }) => {
       fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Inventory_UpdateProductStock?PRODUCTIDS=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Inventory_UpdateProductStock?PRODUCTIDS=" +
           payload.SelectedProductID +
           "&PRODUCTSTOCK=" +
           payload.SelectedProductStock
@@ -2121,7 +2121,7 @@ export class GitEpic {
         .catch((error) => toast.error(JSON.stringify(error)));
 
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemListByProductStatus?PRODUCTSTATUS=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_ItemListByProductStatus?PRODUCTSTATUS=" +
           payload.ProductStatus +
           "&USERID=" +
           payload.UserID
@@ -2146,7 +2146,7 @@ export class GitEpic {
       .ofType(GitAction.EndorseInventoryProductStock)
       .switchMap(({ payload }) => {
         fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_EndorseOrderProductStock?PRODUCTIDS=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Order_EndorseOrderProductStock?PRODUCTIDS=" +
             payload.ProductID +
             "&PRODUCTSTOCKAMOUNT=" +
             payload.ProductStockAmount
@@ -2166,7 +2166,7 @@ export class GitEpic {
           .catch((error) => toast.error(JSON.stringify(error)));
 
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
             payload.ProductStockStatus +
             "&USERID=" +
             payload.UserID
@@ -2189,7 +2189,7 @@ export class GitEpic {
   updateProductStockOut = (action$) =>
     action$.ofType(GitAction.UpdateProductStockOut).switchMap(({ payload }) => {
       fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_UpdateOrderStockOut?ORDERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Order_UpdateOrderStockOut?ORDERID=" +
           payload.OrderID +
           "&PRODUCTIDS=" +
           payload.ProductID +
@@ -2211,7 +2211,7 @@ export class GitEpic {
         .catch((error) => toast.error(JSON.stringify(error)));
 
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewOrderByDelivery"
+        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderByDelivery"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2232,7 +2232,7 @@ export class GitEpic {
   getAllSubs = (action$) =>
     action$.ofType(GitAction.GetSubs).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Subcriber_ViewSubcriber"
+        "http://tourism.denoo.my/emporia/api/emporia/Subcriber_ViewSubcriber"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2252,7 +2252,7 @@ export class GitEpic {
   AddSubs = (action$) =>
     action$.ofType(GitAction.AddSubcs).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Subcriber_AddNew?SUBSCRIBEREMAIL=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Subcriber_AddNew?SUBSCRIBEREMAIL=" +
           payload.SubsMail
       )
         .then((response) => response.json())
@@ -2274,7 +2274,7 @@ export class GitEpic {
   getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/User_ProfileListByUserType?UserTypeID=16"
+        "http://tourism.denoo.my/emporia/api/emporia/User_ProfileListByUserType?UserTypeID=16"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2294,7 +2294,7 @@ export class GitEpic {
   getAllMerchantOrders = (action$) =>
     action$.ofType(GitAction.GetMerchantOrders).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewOrderByUserID?TRACKINGSTATUS=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderByUserID?TRACKINGSTATUS=" +
           payload.trackingStatus +
           "&USERID=" +
           payload.UserID
@@ -2318,7 +2318,7 @@ export class GitEpic {
   getAllProductOrders = (action$) =>
     action$.ofType(GitAction.GetProductOrders).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewSummaryOrderProduct"
+        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewSummaryOrderProduct"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2339,7 +2339,7 @@ export class GitEpic {
       .ofType(GitAction.GetProductStockByStatus)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
             payload.ProductStockStatus +
             "&USERID=" +
             payload.UserID
@@ -2361,7 +2361,7 @@ export class GitEpic {
   sendSalesOrder = (action$) =>
     action$.ofType(GitAction.SendSalesOrder).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ReplyPurchaseOrderWithSaleOrder?PRODUCTPURCHASEORDERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_ReplyPurchaseOrderWithSaleOrder?PRODUCTPURCHASEORDERID=" +
           payload.ProductPurchaseOrderID +
           "&SALEORDERNO=" +
           payload.salesOrderNo +
@@ -2388,7 +2388,7 @@ export class GitEpic {
   addPurchaseOrder = (action$) =>
     action$.ofType(GitAction.AddPurchaseOrder).switchMap(({ payload }) => {
       fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_AddPurchaseOrderByBatch?PRODUCTIDS=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_AddPurchaseOrderByBatch?PRODUCTIDS=" +
           payload.ProductIDs +
           "&PRODUCTQUANTITYS=" +
           payload.ProductQuantities +
@@ -2410,7 +2410,7 @@ export class GitEpic {
         .catch((error) => toast.error(JSON.stringify(error)));
 
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_ViewSummaryOrderProduct"
+        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewSummaryOrderProduct"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2430,7 +2430,7 @@ export class GitEpic {
   getAllPurchaseOrders = (action$) =>
     action$.ofType(GitAction.GetPurchaseOrders).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ViewPurchaseOrder?USERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_ViewPurchaseOrder?USERID=" +
           payload
       )
         .then((response) => response.json())
@@ -2453,7 +2453,7 @@ export class GitEpic {
       .ofType(GitAction.UpdateOrderProductStatus)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
             payload.OrderProductDetailID +
             "&PRODUCTSTATUS=Delivered"
         )
@@ -2477,7 +2477,7 @@ export class GitEpic {
       .ofType(GitAction.UpdatePurchaseOrderStatus)
       .switchMap(({ payload }) => {
         return fetch(
-          "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_UpdatePurchaseOrderStatus?PRODUCTPURCHASEORDERID=" +
+          "http://tourism.denoo.my/emporia/api/emporia/Product_UpdatePurchaseOrderStatus?PRODUCTPURCHASEORDERID=" +
             payload.ProductPurchaseOrderID +
             "&PRODUCTPURCHASEORDERSTATUS=Payable"
         )
@@ -2499,7 +2499,7 @@ export class GitEpic {
   deletePurchaseOrder = (action$) =>
     action$.ofType(GitAction.DeletePurchaseOrder).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_DeletePurchaseOrder?PRODUCTPURCHASEORDERID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Product_DeletePurchaseOrder?PRODUCTPURCHASEORDERID=" +
           payload
       )
         .then((response) => response.json())
@@ -2520,7 +2520,7 @@ export class GitEpic {
   updateProductStatus = (action$) =>
     action$.ofType(GitAction.UpdateProductStatus).switchMap(({ payload }) => {
       return fetch(
-        "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
+        "http://tourism.denoo.my/emporia/api/emporia/Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
           payload.orderProductID +
           "&PRODUCTSTATUS=" +
           payload.productStatus

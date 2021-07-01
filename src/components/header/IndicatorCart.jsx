@@ -13,7 +13,7 @@ import Indicator from "./Indicator";
 import { Cart20Svg, Cross10Svg } from "../../svg";
 import { cartRemoveItem } from "../../store/cart";
 import { url } from "../../services/utils";
-import Logo from "../../assets/myshops.png";
+import Logo from "../../assets/Emporia.png";
 import shopApi from "../../api/shop";
 import { Button } from "@material-ui/core";
 

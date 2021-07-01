@@ -106,159 +106,156 @@ class Dashboard extends Component {
       ],
     };
 
+    console.log(this.props.statistic)
     this.props.statistic.map((row) => {
-      this.state.RevenueAndProfit = JSON.parse(row.RevenueAndProfit);
-      this.state.TopProduct = JSON.parse(row.TopProduct);
-      this.state.TopCategory = JSON.parse(row.TopCategory);
-      this.state.Transaction = JSON.parse(row.Transaction);
+      if (Array.isArray(this.state.RevenueAndProfit) && this.state.RevenueAndProfit.length === 0)
+        this.setState({ RevenueAndProfit: JSON.parse(row.RevenueAndProfit), })
+
+      if (Array.isArray(this.state.TopProduct) && this.state.TopProduct.length === 0) {
+        let topProduct = JSON.parse(row.TopProduct)
+        topProduct.map((d, i) => {
+          d.ProductImage = (
+            <div>
+              <img height={50} src={d.ProductImage} />
+            </div>
+          );
+
+          d.ProductRating = parseFloat(d.ProductRating).toFixed(2)
+        })
+        this.setState({ TopProduct: topProduct, })
+      }
+
+      if (Array.isArray(this.state.TopCategory) && this.state.TopCategory.length === 0)
+        this.setState({ TopCategory: JSON.parse(row.TopCategory), })
+
+      if (Array.isArray(this.state.Transaction) && this.state.Transaction.length === 0)
+        this.setState({ Transaction: JSON.parse(row.Transaction), })
+      // this.state.RevenueAndProfit = JSON.parse(row.RevenueAndProfit);
+      // this.state.TopProduct = JSON.parse(row.TopProduct);
+      // this.state.TopCategory = JSON.parse(row.TopCategory);
+      // this.state.Transaction = JSON.parse(row.Transaction);
     });
 
-    this.state.TopProduct.map((d, i) => {
-      d.ProductImage = (
-        <div>
-          <img height={50} src={d.ProductImage} />
-        </div>
-      );
-    });
+    // this.state.TopProduct.map((d, i) => {
+    //   d.ProductImage = (
+    //     <div>
+    //       <img height={50} src={d.ProductImage} />
+    //     </div>
+    //   );
+
+    //   d.ProductRating = parseFloat(d.ProductRating).toFixed(2)
+    // });
 
     return (
       <div>
         {this.state.RevenueAndProfit.map((RevenueData) => {
           return (
-            <Row className="TopCards">
-              <Card className="card-stats" style={{ height: "200px" }}>
-                <CardBody className="card-body">
-                  <Row>
-                    <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-globe text-warning" />
-                    </div>
+            <Row className="mt-3">
+              <Col md="3">
+                <Card className="card-stats" style={{ height: "150px", }}>
+                  <CardBody className="card-body">
+                    <Row>
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-globe text-warning" />
+                      </div>
 
-                    <div className="numbers">
-                      <p className="card-category">
-                        {RevenueData.OverallRevenueTitle}
-                      </p>
-                      <CardTitle tag="p">
-                        RM {RevenueData.OverallRevenue}
-                      </CardTitle>
-                      <p />
-                    </div>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  {/* <div className="stats">
-                    <i className="fas fa-sync-alt" /> In last day
-                    
-                  </div> */}
-                </CardFooter>
-              </Card>
-              <Card className="card-stats" style={{ height: "200px" }}>
-                <CardBody className="card-body">
-                  <Row>
-                    <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-money-coins text-success" />
-                    </div>
+                      <div className="numbers">
+                        <p className="card-category">
+                          {RevenueData.OverallRevenueTitle}
+                        </p>
+                        <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
+                          RM {RevenueData.OverallRevenue}
+                        </CardTitle>
+                        <p />
+                      </div>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
 
-                    <div className="numbers">
-                      <p className="card-category">
-                        {RevenueData.OverallProfitTitle}
-                      </p>
-                      <CardTitle tag="p">
-                        RM {RevenueData.OverallProfit}
-                      </CardTitle>
-                      <p />
-                    </div>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  {/* <div className="stats">
-                    <i className="far fa-calendar" /> In last day
-                  </div> */}
-                </CardFooter>
-              </Card>
-              <Card className="card-stats" style={{ height: "200px" }}>
-                <CardBody className="card-body">
-                  <Row>
-                    <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-vector text-danger" />
-                    </div>
-                    <div className="numbers">
-                      <p className="card-category">
-                        {RevenueData.MonthlyProfitTitle}
-                      </p>
-                      <CardTitle tag="p">
-                        RM {RevenueData.MonthlyProfit}
-                      </CardTitle>
-                      <p />
-                    </div>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  {/* <div className="stats">
-                    <i className="far fa-clock" /> In the last hour
-                  </div> */}
-                </CardFooter>
-              </Card>
-              <Card className="card-stats" style={{ height: "200px" }}>
-                <CardBody className="card-body">
-                  <Row>
-                    <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-favourite-28 text-primary" />
-                    </div>
+              <Col md="3">
 
-                    <div className="numbers">
-                      <p className="card-category">
-                        {RevenueData.WeeklyProfitTitle}
-                      </p>
-                      <CardTitle tag="p">
-                        RM {RevenueData.WeeklyProfit}
-                      </CardTitle>
-                      <p />
-                    </div>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  {/* <div className="stats">
-                    <i className="fas fa-sync-alt" /> In last day
-                  </div> */}
-                </CardFooter>
-              </Card>
+                <Card className="card-stats" style={{ height: "150px", }}>
+                  <CardBody className="card-body">
+                    <Row>
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-money-coins text-success" />
+                      </div>
+
+                      <div className="numbers">
+                        <p className="card-category">
+                          {RevenueData.OverallProfitTitle}
+                        </p>
+                        <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
+                          RM {RevenueData.OverallProfit}
+                        </CardTitle>
+                        <p />
+                      </div>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col md="3">
+                <Card className="card-stats" style={{ height: "150px", }}>
+                  <CardBody className="card-body">
+                    <Row>
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-vector text-danger" />
+                      </div>
+                      <div className="numbers">
+                        <p className="card-category">
+                          {RevenueData.MonthlyProfitTitle}
+                        </p>
+                        <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
+                          RM {RevenueData.MonthlyProfit}
+                        </CardTitle>
+                        <p />
+                      </div>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col md="3">
+                <Card className="card-stats" style={{ height: "150px", }}>
+                  <CardBody className="card-body">
+                    <Row>
+                      <div className="icon-big text-center icon-warning">
+                        <i className="nc-icon nc-favourite-28 text-primary" />
+                      </div>
+
+                      <div className="numbers">
+                        <p className="card-category">
+                          {RevenueData.WeeklyProfitTitle}
+                        </p>
+                        <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
+                          RM {RevenueData.WeeklyProfit}
+                        </CardTitle>
+                        <p />
+                      </div>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
             </Row>
           );
         })}
 
         <Row>
-          <Card
-            className="card-stats"
-            style={{ width: "50%", height: "400px" }}
-          >
-            <CardHeader>
-              <CardTitle tag="h5">Transaction</CardTitle>
-            </CardHeader>
-            <CardBody>
-              <Line data={data} width={380} height={100} />
-            </CardBody>
-            <CardFooter>
-              <hr />
-              {/* <div className="stats">
-                <i className="fa fa-history" /> Updated 3 minutes ago
-              </div> */}
-            </CardFooter>
-          </Card>
-          <Card
-            className="card-ProductPie"
-            style={{ width: "25%", height: "400px" }}
-          >
-            <CardHeader>
-              <CardTitle tag="h5" style={{ fontSize: 30 }}>
-                Preference Statistics
-              </CardTitle>
-              <p className="card-category">Last Quarter Performance</p>
-            </CardHeader>
-            <CardBody>
+          <Col md="7">
+            <div className="py-2">
+              <h5 className="ml-3"><b>Sales Made</b></h5>
+              <Line data={data} width={280} height={100} />
+            </div>
+            <div className="py-2">
+              <h5 className="ml-3"><b>Visitor</b></h5>
+              <Line data={data} width={280} height={100} />
+            </div>
+          </Col>
+
+
+          <Col md="5">
+            <div>
+              <h5><b>Preference Statistics</b></h5>
               <div className="TopProduct">
                 <Pie
                   label={Label}
@@ -266,52 +263,40 @@ class Dashboard extends Component {
                   options={dashboardEmailStatisticsChart.options}
                 />
               </div>
-            </CardBody>
-          </Card>
-        </Row>
-        <Row>
-          <Card className="card-stats" style={{ width: "100%" }}>
-            <CardHeader>
-              <CardTitle style={{ fontSize: 30 }} tag="h5">
-                Top Grossing Product
-              </CardTitle>
-              <p className="card-category"></p>
-            </CardHeader>
-            <CardBody>
-              <div className="" style={{ fontSize: 12 }}>
-                <MaterialTable
-                  title="Top Product"
-                  columns={[
-                    {
-                      title: "Product Image",
-                      field: "ProductImage",
-                    },
-                    {
-                      title: "Product Name",
-                      field: "ProductName",
-                    },
-                    {
-                      title: "Brand",
-                      field: "Brand",
-                    },
-                    {
-                      title: "Current Stock",
-                      field: "ProductStockAmountInital",
-                    },
-                    {
-                      title: "Product Rating",
-                      field: "ProductRating",
-                    },
-                  ]}
-                  data={this.state.TopProduct}
-                  options={{
-                    paging: false,
-                    search: false,
-                  }}
-                />
-              </div>
-            </CardBody>
-          </Card>
+            </div>
+            <div className="" style={{ fontSize: 12, width: '95%', height: "40vh", overflowY: 'auto' }} >
+              <MaterialTable
+                title="Top Grossing Product"
+                columns={[
+                  {
+                    title: "Product",
+                    field: "ProductImage",
+                  },
+                  {
+                    title: "Name",
+                    field: "ProductName",
+                  },
+                  {
+                    title: "Stocks",
+                    field: "ProductStockAmountInital",
+                  },
+                  {
+                    title: "Ratings",
+                    field: "ProductRating",
+                  },
+                ]}
+                data={this.state.TopProduct}
+                options={{
+                  paging: false,
+                  search: false,
+                  headerStyle: {
+                    backgroundColor: '#333333',
+                    color: '#FFF'
+                  }
+                }}
+              />
+            </div>
+          </Col>
         </Row>
       </div>
     );

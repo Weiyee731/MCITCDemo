@@ -29,7 +29,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Logo from "../../assets/myshops.png";
+import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";

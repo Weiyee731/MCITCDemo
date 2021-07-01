@@ -14,7 +14,7 @@ import CloseIcon from "@material-ui/icons/Close";
 // import image from "../../assets/logo_white_word.png";
 import Dropzone from "react-dropzone";
 import axios from "axios";
-import Logo from "../../assets/myshops.png"
+import Logo from "../../assets/Emporia.png"
 import { toast } from "react-toastify";
 function mapStateToProps(state) {
   return {

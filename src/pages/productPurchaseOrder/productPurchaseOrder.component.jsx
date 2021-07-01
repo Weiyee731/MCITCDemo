@@ -10,7 +10,7 @@ import logo from "../../assets/logo_white_word.png";
 import PDF from "./productPurchaseOrderPDF.component";
 import { CardMedia } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
-import Logo from "../../assets/myshops.png";
+import Logo from "../../assets/Emporia.png";
 import Select from "@material-ui/core/Select";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";

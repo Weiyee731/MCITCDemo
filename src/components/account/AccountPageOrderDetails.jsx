@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 // data stubs
 import theme from "../../data/theme";
-import Logo from "../../assets/myshops.png";
+import Logo from "../../assets/Emporia.png";
 
 export default function AccountPageOrderDetails(props) {
   const orderDetail = props.location.orderdetails;

@@ -42,7 +42,7 @@ const shopApi = {
     return getCategories(options);
   },
   getAllProducts: () => {
-    return fetch("http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemList")
+    return fetch("http://tourism.denoo.my/emporia/api/emporia/Product_ItemList")
       .then((response) => response.json())
       .then((json) => {
         json = JSON.parse(json);
@@ -61,7 +61,7 @@ const shopApi = {
    */
   getCategoryBySlug: (slug, options = {}) => {
     return fetch(
-      `http://tourism.denoo.my/LoopApi/api/LoopApi/Product_CategoryListByProductCategorySlug?ProductCategorySlug=${slug}`
+      `http://tourism.denoo.my/emporia/api/emporia/Product_CategoryListByProductCategorySlug?ProductCategorySlug=${slug}`
     ).then((response) => response.json());
   },
   /**
@@ -123,7 +123,7 @@ const shopApi = {
    * @return {Promise<object>}
    */
   getProductsList: (options = {}, filters = {}) => {
-    return fetch("http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemList")
+    return fetch("http://tourism.denoo.my/emporia/api/emporia/Product_ItemList")
       .then((response) => response.json())
       .then((json) => {
         json = JSON.parse(json);
@@ -134,10 +134,10 @@ const shopApi = {
 
   getProductsListByCategory: (productCategoryID) => {
     console.log(
-      `http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemListByCategory?ProductCategoryID=${productCategoryID}&ProductPerPage=2&Page=1&Filter=1`
+      `http://tourism.denoo.my/emporia/api/emporia/Product_ItemListByCategory?ProductCategoryID=${productCategoryID}&ProductPerPage=2&Page=1&Filter=1`
     );
     return fetch(
-      `http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemListByCategory?ProductCategoryID=${productCategoryID}&ProductPerPage=2&Page=1&Filter=1`
+      `http://tourism.denoo.my/emporia/api/emporia/Product_ItemListByCategory?ProductCategoryID=${productCategoryID}&ProductPerPage=2&Page=1&Filter=1`
     ).then((response) => response.json());
   },
   /**
@@ -176,17 +176,17 @@ const shopApi = {
    */
   getLatestProducts: (options = {}) => {
     console.log(
-      "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemListByCategorySlug?ProductCategorySlug=" +
-        options.ProductCategorySlug +
+      "http://tourism.denoo.my/emporia/api/emporia/Product_ItemListByCategorySlug?ProductCategorySlug=" +
+        options.categorySlug +
         "&ProductPerPage=" +
-        options.ProductPerPage +
+        options.limit +
         "&Page=1&Filter=1"
     );
     return fetch(
-      "http://tourism.denoo.my/LoopApi/api/LoopApi/Product_ItemListByCategorySlug?ProductCategorySlug=" +
-        options.ProductCategorySlug +
+      "http://tourism.denoo.my/emporia/api/emporia/Product_ItemListByCategorySlug?ProductCategorySlug=" +
+        options.categorySlug +
         "&ProductPerPage=" +
-        options.ProductPerPage +
+        options.limit +
         "&Page=1&Filter=1"
     )
       .then((response) => response.json())
@@ -234,7 +234,7 @@ const shopApi = {
 
   addOrder: (options = {}) => {
     console.log(
-      "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_AddOrder?USERID=" +
+      "http://tourism.denoo.my/emporia/api/emporia/Order_AddOrder?USERID=" +
         options.UserID +
         "&USERADDRESSID=-&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" +
         options.Products +
@@ -242,7 +242,7 @@ const shopApi = {
         options.ProductQuantity
     );
     return fetch(
-      "http://tourism.denoo.my/LoopApi/api/LoopApi/Order_AddOrder?USERID=" +
+      "http://tourism.denoo.my/emporia/api/emporia/Order_AddOrder?USERID=" +
         options.UserID +
         "&USERADDRESSID=0&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" +
         options.Products +

@@ -6,7 +6,7 @@ import DropdownMenu from "../navigationsidebar/DropdownMenu";
 import SimpleMenu from "../navigationsidebar/SimpleMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 import userImage from "../../assets/user.jpg";
-import logo from "../../assets/logo_white_word.png";
+import logo from "../../assets/Emporia.png";
 import { ProSidebar, SidebarFooter, SidebarContent } from "react-pro-sidebar";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
@@ -117,7 +117,7 @@ const SideBarMenu = ({
 
   const logout = () => {
     propsData.callLogout({ UserID: localStorage.getItem("id") });
-    browserHistory.push("/MyShops/");
+    browserHistory.push("/Emporia/");
     localStorage.clear();
     cookies.set("isLogin", false);
     window.location.reload(false);
@@ -138,10 +138,10 @@ const SideBarMenu = ({
               <Scrollbars renderThumbVertical={renderCustomHorizontalThumb}>
                 <div
                   className="sidebar-item sidebar-brand"
-                  style={{ height: "auto", textAlign: "center" }}
+                  style={{ height: "auto", textAlign: "center", backgroundColor: 'rgba(77, 77, 77, 1)' }}
                 >
                   <a href="/">
-                    <img src={logo} width="50%" />
+                    <img src={logo} width="80%" alt="logo" />
                   </a>
                 </div>
                 <div className="sidebar-item sidebar-header d-flex flex-nowrap">
