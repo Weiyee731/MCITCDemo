@@ -166,12 +166,12 @@ const Access = () => {
     localStorage.getItem("isLogin") === null
   ) {
     return (
-      <Router basename={"/MyShops"}>
+      <Router basename={"/Emporia"}>
         <div className="App">
           <nav className="navbar navbar-expand-lg navbar-light fixed-top">
             <div className="container">
-              <Link className="navbar-brand" to={"/MyShops/sign-in"}>
-              MyShops
+              <Link className="navbar-brand" to={"/Emporia/sign-in"}>
+              Emporia
               </Link>
               <div
                 className="collapse navbar-collapse"

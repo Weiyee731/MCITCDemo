@@ -6,7 +6,7 @@ import DropdownMenu from "../navigationsidebar/DropdownMenu";
 import SimpleMenu from "../navigationsidebar/SimpleMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 import userImage from "../../assets/user.jpg";
-import logo from "../../assets/myshops.png";
+import logo from "../../assets/Emporia.png";
 import { ProSidebar, SidebarFooter, SidebarContent } from "react-pro-sidebar";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
@@ -117,7 +117,7 @@ const SideBarMenu = ({
 
   const logout = () => {
     propsData.callLogout({ UserID: localStorage.getItem("id") });
-    browserHistory.push("/MyShops/");
+    browserHistory.push("/Emporia/");
     localStorage.clear();
     cookies.set("isLogin", false);
     window.location.reload(false);

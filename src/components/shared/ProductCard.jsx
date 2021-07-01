@@ -17,7 +17,7 @@ import { compareAddItem } from "../../store/compare";
 import { quickviewOpen } from "../../store/quickview";
 import { url } from "../../services/utils";
 import { wishlistAddItem } from "../../store/wishlist";
-import Logo from "../../assets/myshops.png"
+import Logo from "../../assets/Emporia.png"
 
 function ProductCard(props) {
   const {

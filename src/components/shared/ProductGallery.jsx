@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import languages from "../../i18n";
 import StroykaSlick from "./StroykaSlick";
 import { ZoomIn24Svg } from "../../svg";
-import Logo from "../../assets/myshops.png";
+import Logo from "../../assets/Emporia.png";
 const slickSettingsFeatured = {
   dots: false,
   arrows: false,

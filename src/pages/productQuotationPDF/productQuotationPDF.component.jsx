@@ -12,7 +12,7 @@ import {
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import logo from "../../assets/myshops.png";
+import logo from "../../assets/Emporia.png";
 import { GitAction } from "../../store/action/gitAction";
 // import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";

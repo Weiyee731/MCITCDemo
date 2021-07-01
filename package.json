@@ -1,7 +1,7 @@
 {
   "name": "react-redux-boilerplate",
   "version": "0.1.0",
-  "homepage": "/MyShops/",
+  "homepage": "/Emporia/",
   "private": true,
   "dependencies": {
     "@atlaskit/css-reset": "^6.0.4",

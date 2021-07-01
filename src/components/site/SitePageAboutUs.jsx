@@ -11,7 +11,7 @@ import StroykaSlick from "../shared/StroykaSlick";
 // data stubs
 import theme from "../../data/theme";
 import bg from "../../assets/bg.jpg";
-// import logo from "../../assets/myshops.png";
+// import logo from "../../assets/Emporia.png";
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
