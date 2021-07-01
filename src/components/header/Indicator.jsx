@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { GridColumnsPanel } from "@material-ui/data-grid";
 
 class Indicator extends Component {
   constructor(props) {
@@ -50,7 +51,8 @@ class Indicator extends Component {
   };
 
   handleButtonClick = (event) => {
-    const { onClick, dropdown } = this.props;
+    const { onClick, dropdown, handleOnLogin } = this.props;
+    console.log(this.props)
 
     if (dropdown) {
       event.preventDefault();
@@ -60,6 +62,10 @@ class Indicator extends Component {
 
     if (onClick) {
       onClick(event);
+    }
+
+    if (handleOnLogin) {
+      this.props.handleOnLogin();
     }
   };
 

@@ -1,25 +1,35 @@
+// React
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 import { Link } from "react-router-dom";
-import { Person20Svg } from "../../svg";
 import { browserHistory } from "react-router";
+
+// Application
+import { Person20Svg } from "../../svg";
 import Indicator from "./Indicator";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import Cookies from "universal-cookie";
 import userImage from "../../assets/user.jpg";
 
+// Third-party
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-
 import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import IconButton from "@material-ui/core/IconButton";
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 const cookies = new Cookies();
 function mapStateToProps(state) {
@@ -69,22 +79,33 @@ const DialogTitle = withStyles(styles)((props) => {
 class IndicatorAccount extends Component {
   constructor() {
     super();
-    this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
-  }
 
-  state = {
-    email: "",
-    password: "",
-    rememberMe: false,
-    isToLogin: false,
-    isStateSet: false
-  };
+    this.state = {
+      username: "",
+      password: "",
+      usernameErr: false,
+      passwordErr: false,
+      rememberMe: false,
+      isToLogin: false,
+      hidden: true
+    };
+
+    this.handleOnLogin = this.handleOnLogin.bind(this);
+    this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
+    this.toggleShow = this.toggleShow.bind(this);
+  }
 
   OnSubmitLogin(e) {
     e.preventDefault();
     var email = e.target.firstChild.value;
     var password = e.target.firstChild.value;
     this.props.loginUser(this.state);
+  }
+
+  handleOnLogin() {
+    this.setState({
+      isToLogin: !this.state.isToLogin
+    })
   }
 
   handleChange(e, type) {
@@ -113,6 +134,10 @@ class IndicatorAccount extends Component {
     window.location.reload(false);
   };
 
+  toggleShow() {
+    this.setState({ hidden: !this.state.hidden });
+  }
+
   render() {
     // console.log(this.props.currentUser[0]);
     if (this.props.currentUser[0]) {
@@ -129,7 +154,7 @@ class IndicatorAccount extends Component {
 
     const dropdown = (
       <div className="account-menu">
-        {localStorage.getItem("isLogin") != "false" ? (
+        {localStorage.getItem("isLogin") !== "false" && (
           <div>
             <div className="account-menu__divider" />
             <Link to="/account/dashboard" className="account-menu__user">
@@ -189,93 +214,95 @@ class IndicatorAccount extends Component {
               </li>
             </ul>
           </div>
-        ) : (
-          // <div>
-          //   {
-          //     this.state.isStateSet == false ?
-          //       this.setState({ isToLogin: true,  isStateSet: true}) : ""
-          //   }
-          //   <Dialog open={this.state.isToLogin} onClose={() => { this.setState({ isToLogin: false, isStateSet: false }) }} fullWidth={true} maxWidth="md">
-          //     <DialogTitle onClose={() => this.setState({ isToLogin: false, isStateSet: false })} id="submit-list-confirmation-dialog">Upload User Data</DialogTitle>
-          //     <DialogContent dividers>
-          //       <DialogContentText id="confirmation-dialog">
-          //         <div id="confirm-upload-dialog" className="row pt-3">
-          //           <label><b>Are you sure you want to upload this user data list?</b></label>
-          //         </div>
-          //       </DialogContentText>
-          //     </DialogContent>
-          //     <DialogActions>
-          //       <Button onClick={(e) => this.OnUploadRealData(e)} color="primary">
-          //         Submit
-          //       </Button>
-          //       <Button onClick={() => { this.setState({ isToLogin: false, isStateSet: false }) }} color="secondary">
-          //         Close
-          //       </Button>
-          //     </DialogActions>
-          //   </Dialog>
-          // </div>
-
-          <form className="account-menu__form" onSubmit={this.OnSubmitLogin}>
-            <div className="account-menu__form-title">
-              Log In to Your Account
-            </div>
-            <div className="form-group">
-              <label htmlFor="header-signin-email" className="sr-only">
-                Email address
-              </label>
-              <TextField
-                className="form-control"
-                id="text-field-controlled"
-                hintText="Email"
-                value={this.state.email}
-                onChange={({ target }) => {
-                  this.setState({ email: target.value });
-                }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="header-signin-password" className="sr-only">
-                Password
-              </label>
-              <div className="account-menu__form-forgot">
-                <TextField
-                  className="form-control"
-                  id="text-field-controlled1"
-                  hintText="Password"
-                  value={this.state.password}
-                  type="password"
-                  onChange={({ target }) => {
-                    this.setState({ password: target.value });
-                  }}
-                />
-                <Link
-                  to="/account/login"
-                  className="account-menu__form-forgot-link"
-                >
-                  Forgot?
-                </Link>
-              </div>
-            </div>
-            <div className="form-group account-menu__form-button">
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                className="btn btn-block"
-              >
-                login
-              </Button>
-            </div>
-            <div className="account-menu__form-link">
-              <Link to="/account/login">Create An Account</Link>
-            </div>
-          </form>
         )}
+
+        <>
+          {console.log(this.state.isToLogin)}
+          <Dialog Dialog open={this.state.isToLogin} onClose={() => { this.setState({ isToLogin: false }) }} fullWidth={true} maxWidth="sm">
+            <DialogTitle onClose={() => this.setState({ isToLogin: false })} id="login">Login</DialogTitle>
+            <DialogContent dividers>
+              <DialogContentText id="confirmation-dialog">
+                <TextField id="username" label="Username" variant="outlined" className="w-100 my-2" value={this.state.username} onChange={({ target }) => { this.setState({ username: target.value }) }} error={this.state.usernameErr} helperText={this.state.usernameErr && "Invalid username"} />
+
+                <FormControl variant="outlined" className="w-100 my-2">
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <OutlinedInput
+                    id="password"
+                    error={this.state.passwordErr}
+                    type={this.state.hidden ? 'password' : 'text'}
+                    value={this.state.password}
+                    onChange={({ target }) => { this.setState({ password: target.value }) }}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={this.toggleShow}
+                        >
+                          {this.state.hidden ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  {this.state.passwordErr && <FormHelperText style={{ color: "red" }}>Invalid password</FormHelperText>}
+                </FormControl>
+                {/* <div className="form-group">
+                  <label htmlFor="header-signin-email" className="sr-only">
+                    Username
+                  </label>
+                  <TextField
+                    className="form-control"
+                    id="text-field-controlled"
+                    type="text"
+                    hintText="Email"
+                    value={this.state.email}
+                    onChange={({ target }) => {
+                      this.setState({ email: target.value });
+                    }}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="header-signin-password" className="sr-only">
+                    Password
+                  </label>
+                  <div className="account-menu__form-forgot">
+                    <TextField
+                      className="form-control"
+                      id="text-field-controlled1"
+                      hintText="Password"
+                      value={this.state.password}
+                      type="password"
+                      onChange={({ target }) => {
+                        this.setState({ password: target.value });
+                      }}
+                    />
+                    <Link
+                      to="/account/login"
+                      className="account-menu__form-forgot-link"
+                    >
+                      Forgot?
+                    </Link>
+                  </div>
+                </div>
+                <div className="account-menu__form-link">
+                  <Link to="/account/login">Create An Account</Link>
+                </div> */}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={(e) => this.handleOnLogin(e)} color="secondary">
+                Cancel
+              </Button>
+              <Button onClick={() => this.OnSubmitLogin} color="primary">
+                Login
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
       </div>
     );
 
     return (
-      <Indicator url="/account" dropdown={dropdown} icon={<Person20Svg />} />
+      <Indicator url="/account" dropdown={dropdown} handleOnLogin={this.handleOnLogin} icon={<Person20Svg />} />
     );
   }
 }
