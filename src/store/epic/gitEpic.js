@@ -1,18 +1,19 @@
 import { Observable } from "rxjs";
-
 import { ActionsObservable } from "redux-observable";
 import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
+
+const url = "http://tourism.denoo.my/emporia/api/emporia/"
 export class GitEpic {
   //==================USER==========================//
   getAllUserByTypeId = (action$) =>
     action$.ofType(GitAction.GetUser).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_ProfileListByUserType?UserTypeID=17"
+      return fetch(url +
+        "User_ProfileListByUserType?UserTypeID=17"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -22,20 +23,20 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   LoginUser = (action$) =>
     action$.ofType(GitAction.Login).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_Login?username=" +
-          payload.email +
-          "&password=" +
-          payload.password
+      return fetch(url +
+        "User_Login?username=" +
+        payload.email +
+        "&password=" +
+        payload.password
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -45,17 +46,17 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   LogoutUser = (action$) =>
     action$.ofType(GitAction.Logout).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Audit_AddUserLogout?USERID=1"
+      return fetch(url +
+        "Audit_AddUserLogout?USERID=1"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -72,13 +73,13 @@ export class GitEpic {
 
   checkUser = (action$) =>
     action$.ofType(GitAction.CheckUser).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_CheckDuplicate?email=" +
-          payload
+      return fetch(url +
+        "User_CheckDuplicate?email=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -93,13 +94,13 @@ export class GitEpic {
 
   getUserPage = (action$) =>
     action$.ofType(GitAction.GetPages).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_ViewPage?ROLEGROUPID=" +
-          payload
+      return fetch(url +
+        "User_ViewPage?ROLEGROUPID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -109,18 +110,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getUserProfile = (action$) =>
     action$.ofType(GitAction.GetUserProfile).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_ProfileByID?USERID=" +
-          payload
+      return fetch(url +
+        "User_ProfileByID?USERID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -130,48 +131,48 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateUserProfile = (action$) =>
     action$.ofType(GitAction.EditUserProfile).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_EditProfile?USERID=" +
-          payload.USERID +
-          "&USERFIRSTNAME=" +
-          payload.USERFIRSTNAME +
-          "&USERLASTNAME=" +
-          payload.USERLASTNAME +
-          "&USERCONTACTNO=" +
-          payload.USERCONTACTNO +
-          "&USERDATEBIRTH=" +
-          payload.USERDATEBIRTH +
-          "&USEREMAIL=" +
-          payload.USEREMAIL +
-          "&USERGENDER=" +
-          payload.USERGENDER +
-          "&USERADDRESSLINE1=" +
-          payload.USERADDRESSLINE1 +
-          "&USERADDRESSLINE2=" +
-          payload.USERADDRESSLINE2 +
-          "&USERPOSCODE=" +
-          payload.USERPOSCODE +
-          "&USERCITY=" +
-          payload.USERCITY +
-          "&USERSTATE=" +
-          payload.USERSTATE +
-          "&USERCOUNTRYID=" +
-          payload.USERCOUNTRYID +
-          "&USERNOTIFICATIONIND=" +
-          payload.USERNOTIFICATIONIND +
-          "&USERLANGCODE=" +
-          payload.USERLANGCODE +
-          "&USERAPPDARKMODE=" +
-          payload.USERAPPDARKMODE
+      return fetch(url +
+        "User_EditProfile?USERID=" +
+        payload.USERID +
+        "&USERFIRSTNAME=" +
+        payload.USERFIRSTNAME +
+        "&USERLASTNAME=" +
+        payload.USERLASTNAME +
+        "&USERCONTACTNO=" +
+        payload.USERCONTACTNO +
+        "&USERDATEBIRTH=" +
+        payload.USERDATEBIRTH +
+        "&USEREMAIL=" +
+        payload.USEREMAIL +
+        "&USERGENDER=" +
+        payload.USERGENDER +
+        "&USERADDRESSLINE1=" +
+        payload.USERADDRESSLINE1 +
+        "&USERADDRESSLINE2=" +
+        payload.USERADDRESSLINE2 +
+        "&USERPOSCODE=" +
+        payload.USERPOSCODE +
+        "&USERCITY=" +
+        payload.USERCITY +
+        "&USERSTATE=" +
+        payload.USERSTATE +
+        "&USERCOUNTRYID=" +
+        payload.USERCOUNTRYID +
+        "&USERNOTIFICATIONIND=" +
+        payload.USERNOTIFICATIONIND +
+        "&USERLANGCODE=" +
+        payload.USERLANGCODE +
+        "&USERAPPDARKMODE=" +
+        payload.USERAPPDARKMODE
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -181,22 +182,22 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateProfileImage = (action$) =>
     action$.ofType(GitAction.UpdateProfileImage).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_UserUpdatePhoto?USERID=" +
-          payload.USERID +
-          "&USERPROFILEIMAGE=" +
-          payload.USERPROFILEIMAGE
+      return fetch(url +
+        "User_UserUpdatePhoto?USERID=" +
+        payload.USERID +
+        "&USERPROFILEIMAGE=" +
+        payload.USERPROFILEIMAGE
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
-            if (json.map((val) => val.ReturnVal == 1)) {
+            if (json.map((val) => val.ReturnVal === 1)) {
               toast.success("Upload Successful");
             }
           } else {
@@ -207,18 +208,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //==================Country==========================//
   getCountry = (action$) =>
-    action$.ofType(GitAction.GetCountry).switchMap(({}) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/General_CountryList"
+    action$.ofType(GitAction.GetCountry).switchMap(() => {
+      return fetch(url +
+        "General_CountryList"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -228,19 +229,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=================CREDIT CARD=============================//
   getAllCreditCard = (action$) =>
     action$.ofType(GitAction.GetCreditCard).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_ViewUserPaymentMethod?USERID=" +
-          payload
+      return fetch(url +
+        "User_ViewUserPaymentMethod?USERID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -250,38 +251,38 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   addCreditCard = (action$) =>
     action$.ofType(GitAction.AddCreditCard).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_AddPaymentMethod?USERID=" +
-          payload.USERID +
-          "&USERCARDNAME=" +
-          payload.name +
-          "&USERCARDNO=" +
-          payload.number +
-          "&USERCARDEXPIREDATE=" +
-          payload.expiry +
-          "&USERCARDTYPE=" +
-          payload.issuer
+      return fetch(url +
+        "User_AddPaymentMethod?USERID=" +
+        payload.USERID +
+        "&USERCARDNAME=" +
+        payload.name +
+        "&USERCARDNO=" +
+        payload.number +
+        "&USERCARDEXPIREDATE=" +
+        payload.expiry +
+        "&USERCARDTYPE=" +
+        payload.issuer
       )
         .then((response) => response.json())
         .then((returnVal) => {
-          if (returnVal != "fail") {
+          if (returnVal !== "fail") {
             returnVal = JSON.parse(returnVal);
             toast.success("Credit Card successfully added")
           } else {
             returnVal = [];
           }
-          return fetch(
-            "http://tourism.denoo.my/emporia/api/emporia/User_ViewUserPaymentMethod?USERID=" +
-              payload.USERID
+          return fetch(url +
+            "User_ViewUserPaymentMethod?USERID=" +
+            payload.USERID
           )
             .then((response) => response.json())
             .then((AllCreditCards) => {
-              if (AllCreditCards != "fail") {
+              if (AllCreditCards !== "fail") {
                 AllCreditCards = JSON.parse(AllCreditCards);
               } else {
                 AllCreditCards = [];
@@ -292,43 +293,43 @@ export class GitEpic {
                 payloadValue: AllCreditCards,
               };
             })
-            .catch((error) => toast.error(JSON.stringify(error)));
+            .catch((error) => toast.error(error));
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateCreditCard = (action$) =>
     action$.ofType(GitAction.UpdateCreditCard).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
-          payload.USERPAYMENTMETHODID +
-          "&USERID=" +
-          payload.USERID +
-          "&USERCARDNAME=" +
-          payload.name +
-          "&USERCARDNO=" +
-          payload.number +
-          "&USERCARDEXPIREDATE=" +
-          payload.expiry +
-          "&USERCARDTYPE=" +
-          payload.cardtype
+      return fetch(url +
+        "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
+        payload.USERPAYMENTMETHODID +
+        "&USERID=" +
+        payload.USERID +
+        "&USERCARDNAME=" +
+        payload.name +
+        "&USERCARDNO=" +
+        payload.number +
+        "&USERCARDEXPIREDATE=" +
+        payload.expiry +
+        "&USERCARDTYPE=" +
+        payload.cardtype
       )
         .then((response) => response.json())
         .then((returnVal) => {
-          if (returnVal != "fail") {
+          if (returnVal !== "fail") {
             returnVal = JSON.parse(returnVal);
             toast.success("Credit Card successfully updated")
           } else {
             returnVal = [];
           }
 
-          return fetch(
-            "http://tourism.denoo.my/emporia/api/emporia/User_ViewUserPaymentMethod?USERID=" +
-              payload.USERID
+          return fetch(url +
+            "User_ViewUserPaymentMethod?USERID=" +
+            payload.USERID
           )
             .then((response) => response.json())
             .then((AllCreditCards) => {
-              if (AllCreditCards != "fail") {
+              if (AllCreditCards !== "fail") {
                 AllCreditCards = JSON.parse(AllCreditCards);
               } else {
                 AllCreditCards = [];
@@ -339,32 +340,32 @@ export class GitEpic {
                 payloadValue: AllCreditCards,
               };
             })
-            .catch((error) => toast.error(JSON.stringify(error)));
+            .catch((error) => toast.error(error));
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   deleteCreditCard = (action$) =>
     action$.ofType(GitAction.DeleteCreditCard).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_DeletePaymentMethod?USERPAYMENTMETHODID=" +
-          payload.cardId
+      return fetch(url +
+        "User_DeletePaymentMethod?USERPAYMENTMETHODID=" +
+        payload.cardId
       )
         .then((response) => response.json())
         .then((returnVal) => {
-          if (returnVal != "fail") {
+          if (returnVal !== "fail") {
             returnVal = JSON.parse(returnVal);
             toast.success("Credit Card selected successfully deleted")
           } else {
             returnVal = [];
           }
-          return fetch(
-            "http://tourism.denoo.my/emporia/api/emporia/User_ViewUserPaymentMethod?USERID=" +
-              payload.userId
+          return fetch(url +
+            "User_ViewUserPaymentMethod?USERID=" +
+            payload.userId
           )
             .then((response) => response.json())
             .then((AllCreditCards) => {
-              if (AllCreditCards != "fail") {
+              if (AllCreditCards !== "fail") {
                 AllCreditCards = JSON.parse(AllCreditCards);
               } else {
                 AllCreditCards = [];
@@ -375,20 +376,20 @@ export class GitEpic {
                 payloadValue: AllCreditCards,
               };
             })
-            .catch((error) => toast.error(JSON.stringify(error)));
+            .catch((error) => toast.error(error));
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=============================================PROMOTION===========================================================//
   getAllPromotion = (action$) =>
     action$.ofType(GitAction.GetPromotion).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_ViewPromotion?ACTIVEIND"
+      return fetch(url +
+        "Promo_ViewPromotion?ACTIVEIND"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -398,26 +399,26 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   AddPromotion = (action$) =>
     action$.ofType(GitAction.AddPromotion).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_AddPromotion?PROMOTIONTITLE=" +
-          payload.PromotionTitle +
-          "&PROMOTIONDESC=" +
-          payload.PromotionDesc +
-          "&PROMOTIONSTARTDATE=" +
-          payload.PromotionStartDate +
-          "&PROMOTIONENDDATE=" +
-          payload.PromotionEndDate +
-          "&PRODUCTID=" +
-          payload.ProductID // {98,99,100}
+      return fetch(url +
+        "Promo_AddPromotion?PROMOTIONTITLE=" +
+        payload.PromotionTitle +
+        "&PROMOTIONDESC=" +
+        payload.PromotionDesc +
+        "&PROMOTIONSTARTDATE=" +
+        payload.PromotionStartDate +
+        "&PROMOTIONENDDATE=" +
+        payload.PromotionEndDate +
+        "&PRODUCTID=" +
+        payload.ProductID // {98,99,100}
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -427,19 +428,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //==================PRODUCT==========================//
 
   getAllProducts = (action$) =>
     action$.ofType(GitAction.GetProduct).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_ItemList"
+      return fetch(url +
+        "Product_ItemList"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -449,22 +450,22 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllProductsByStatus = (action$) =>
     action$
       .ofType(GitAction.GetProductByProductStatus)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_ItemListByProductStatus?PRODUCTSTATUS=" +
-            payload.ProductStatus +
-            "&USERID=" +
-            payload.UserID
+        return fetch(url +
+          "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
+          payload.ProductStatus +
+          "&USERID=" +
+          payload.UserID
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -474,42 +475,42 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   addProduct = (action$) =>
     action$.ofType(GitAction.AddProduct).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductVariationMedia?name=" +
-          payload.name +
-          "&manufacturer=1" +
-          payload.manufacturer +
-          "&description=" +
-          payload.description +
-          "&productCategory=" +
-          payload.productCategory +
-          "&productSupplier=1" +
-          payload.productSupplier +
-          "&productShoplot=1&productGrid=1&height=" +
-          payload.height +
-          "&width=" +
-          payload.width +
-          "&depth=" +
-          payload.depth +
-          "&weight=" +
-          payload.weight +
-          "&sku=" +
-          payload.sku +
-          "&brand=" +
-          payload.brand +
-          "&model=" +
-          payload.model +
-          "&tags=" +
-          payload.tags
+      return fetch(url +
+        "Product_AddProductVariationMedia?name=" +
+        payload.name +
+        "&manufacturer=1" +
+        payload.manufacturer +
+        "&description=" +
+        payload.description +
+        "&productCategory=" +
+        payload.productCategory +
+        "&productSupplier=1" +
+        payload.productSupplier +
+        "&productShoplot=1&productGrid=1&height=" +
+        payload.height +
+        "&width=" +
+        payload.width +
+        "&depth=" +
+        payload.depth +
+        "&weight=" +
+        payload.weight +
+        "&sku=" +
+        payload.sku +
+        "&brand=" +
+        payload.brand +
+        "&model=" +
+        payload.model +
+        "&tags=" +
+        payload.tags
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -519,44 +520,44 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateProduct = (action$) =>
     action$.ofType(GitAction.UpdateProduct).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_UpdateProduct?PRODUCTID=" +
-          payload.ProductID +
-          "&name=" +
-          payload.name +
-          "&manufacturer=1" +
-          payload.manufacturer +
-          "&description=" +
-          payload.description +
-          "&productCategory=" +
-          payload.productCategory +
-          "&productSupplier=1" +
-          payload.productSupplier +
-          "&productShoplot=1&productGrid=1&height=" +
-          payload.height +
-          "&width=" +
-          payload.width +
-          "&depth=" +
-          payload.depth +
-          "&weight=" +
-          payload.weight +
-          "&sku=" +
-          payload.sku +
-          "&brand=" +
-          payload.brand +
-          "&model=" +
-          payload.model +
-          "&tags=" +
-          payload.tags
+      return fetch(url +
+        "Product_UpdateProduct?PRODUCTID=" +
+        payload.ProductID +
+        "&name=" +
+        payload.name +
+        "&manufacturer=1" +
+        payload.manufacturer +
+        "&description=" +
+        payload.description +
+        "&productCategory=" +
+        payload.productCategory +
+        "&productSupplier=1" +
+        payload.productSupplier +
+        "&productShoplot=1&productGrid=1&height=" +
+        payload.height +
+        "&width=" +
+        payload.width +
+        "&depth=" +
+        payload.depth +
+        "&weight=" +
+        payload.weight +
+        "&sku=" +
+        payload.sku +
+        "&brand=" +
+        payload.brand +
+        "&model=" +
+        payload.model +
+        "&tags=" +
+        payload.tags
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -566,18 +567,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   deleteProduct = (action$) =>
     action$.ofType(GitAction.DeleteProduct).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_DeleteProducts?ProductIDs=" +
-          payload
+      return fetch(url +
+        "Product_DeleteProducts?ProductIDs=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -587,18 +588,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   endorseProduct = (action$) =>
     action$.ofType(GitAction.EndorseProduct).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_EndorseProducts?ProductIDs=" +
-          payload
+      return fetch(url +
+        "Product_EndorseProducts?ProductIDs=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -608,18 +609,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   checkProduct = (action$) =>
     action$.ofType(GitAction.CheckProduct).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_CheckDuplication?PRODUCTNAME=" +
-          payload
+      return fetch(url +
+        "Product_CheckDuplication?PRODUCTNAME=" +
+        payload
       )
         .then((resposne) => resposne.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -629,19 +630,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   AddProductMedia = (action$) =>
     action$.ofType(GitAction.AddProductMedia).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductMedia?" +
-          "PRODUCTID=" +
-          payload.productID +
-          "&PRODUCTVARIATIONDETAILID=0&WIDTH=" +
-          payload.width +
-          "&HEIGHT=" +
-          payload.height
+      return fetch(url +
+        "Product_AddProductMedia?" +
+        "PRODUCTID=" +
+        payload.productID +
+        "&PRODUCTVARIATIONDETAILID=0&WIDTH=" +
+        payload.width +
+        "&HEIGHT=" +
+        payload.height
       );
     });
 
@@ -651,19 +652,19 @@ export class GitEpic {
     action$
       .ofType(GitAction.AddProductVariationDetail)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductVariationDetail?PRODUCTIDVARIATION=" +
-            payload.ProductVariation +
-            "&PRODUCTID=" +
-            payload.ProductID +
-            "&CUSTOMIZABLE=" +
-            payload.Customizable +
-            "&VALUE=" +
-            payload.Value
+        return fetch(url +
+          "Product_AddProductVariationDetail?PRODUCTIDVARIATION=" +
+          payload.ProductVariation +
+          "&PRODUCTID=" +
+          payload.ProductID +
+          "&CUSTOMIZABLE=" +
+          payload.Customizable +
+          "&VALUE=" +
+          payload.Value
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -673,19 +674,19 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   //Product Variation
 
   getAllProductVariation = (action$) =>
     action$.ofType(GitAction.GetProductVariation).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_ViewProductVariation"
+      return fetch(url +
+        "Product_ViewProductVariation"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -695,20 +696,20 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllProductVariationByCategoryID = (action$) =>
     action$
       .ofType(GitAction.GetProductVariationByCategoryID)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" +
-            payload
+        return fetch(url +
+          "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" +
+          payload
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -718,22 +719,22 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   addProductVariation = (action$) =>
     action$.ofType(GitAction.AddProductVariation).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductVariation?PRODUCTVARIATION=" +
-          payload.ProductVariation +
-          "&PRODUCTCATEGORYID=" +
-          payload.ProductCategoryID +
-          "&CUSTOMIZABLE=" +
-          payload.CustomizableIndicator
+      return fetch(url +
+        "Product_AddProductVariation?PRODUCTVARIATION=" +
+        payload.ProductVariation +
+        "&PRODUCTCATEGORYID=" +
+        payload.ProductCategoryID +
+        "&CUSTOMIZABLE=" +
+        payload.CustomizableIndicator
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -743,26 +744,26 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateProductVariation = (action$) =>
     action$
       .ofType(GitAction.UpdateProductVariation)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_UpdateProductVariation?PRODUCTVARIATIONID=" +
-            payload.ProductVariationID +
-            "&PRODUCTVARIATION=" +
-            payload.ProductVariation +
-            "&PRODUCTCATEGORYID=" +
-            payload.ProductCategoryID +
-            "&CUSTOMIZABLE=" +
-            payload.Customizable
+        return fetch(url +
+          "Product_UpdateProductVariation?PRODUCTVARIATIONID=" +
+          payload.ProductVariationID +
+          "&PRODUCTVARIATION=" +
+          payload.ProductVariation +
+          "&PRODUCTCATEGORYID=" +
+          payload.ProductCategoryID +
+          "&CUSTOMIZABLE=" +
+          payload.Customizable
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -772,20 +773,20 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   deleteProductVariation = (action$) =>
     action$
       .ofType(GitAction.DeleteProductVariation)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_DeleteProductVariation?PRODUCTVARIATIONID=" +
-            payload.ProductVariationID
+        return fetch(url +
+          "Product_DeleteProductVariation?PRODUCTVARIATIONID=" +
+          payload.ProductVariationID
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -795,26 +796,26 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   addProductPurchaseOrder = (action$) =>
     action$
       .ofType(GitAction.AddProductPurchaseOrder)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_AddPurchaseOrder?PRODUCTIDS=" +
-            payload.ProductID +
-            "&PRODUCTQUANTITYS=" +
-            payload.ProductStock +
-            "&SUPPLIERID=" +
-            payload.SupplierID
+        return fetch(url +
+          "Product_AddPurchaseOrder?PRODUCTIDS=" +
+          payload.ProductID +
+          "&PRODUCTQUANTITYS=" +
+          payload.ProductStock +
+          "&SUPPLIERID=" +
+          payload.SupplierID
         )
           .then((response) => {
             return response.json();
           })
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -824,20 +825,20 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
   // notification list
   getNotification = (action$) =>
     action$.ofType(GitAction.GetNotification).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/General_NotificationList?UserID=" +
-          payload
+      return fetch(url +
+        "General_NotificationList?UserID=" +
+        payload
       )
         .then((response) => {
           return response.json();
         })
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -847,19 +848,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //Product Category
 
   getAllCategories = (action$) =>
     action$.ofType(GitAction.GetProductCategory).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_CategoryListByAll"
+      return fetch(url +
+        "Product_CategoryListByAll"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -869,19 +870,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllCategoriesListing = (action$) =>
     action$
       .ofType(GitAction.GetProductCategoryListing)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_CategoryListing"
+        return fetch(url +
+          "Product_CategoryListing"
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -891,24 +892,24 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   addProductCategory = (action$) =>
     action$.ofType(GitAction.AddProductCategory).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_AddProductCategory?PRODUCTCATEGORY=" +
-          payload.ProductCategory +
-          "&PRODUCTCATEGORYIMAGE=" +
-          payload.ProductCategoryImage +
-          "&HIERARCHYID=" +
-          payload.HierarchyID +
-          "&PARENTPRODUCTCATEGORYID=" +
-          payload.ParentProductCategoryID
+      return fetch(url +
+        "Product_AddProductCategory?PRODUCTCATEGORY=" +
+        payload.ProductCategory +
+        "&PRODUCTCATEGORYIMAGE=" +
+        payload.ProductCategoryImage +
+        "&HIERARCHYID=" +
+        payload.HierarchyID +
+        "&PARENTPRODUCTCATEGORYID=" +
+        payload.ParentProductCategoryID
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -918,20 +919,20 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateProductCategory = (action$) =>
     action$.ofType(GitAction.UpdateProductCategory).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_UpdateProductCategory?PRODUCTCATEGORYID=" +
-          payload.ProductCategoryID +
-          "&PRODUCTCATEGORY=" +
-          payload.ProductCategory
+      return fetch(url +
+        "Product_UpdateProductCategory?PRODUCTCATEGORYID=" +
+        payload.ProductCategoryID +
+        "&PRODUCTCATEGORY=" +
+        payload.ProductCategory
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -941,18 +942,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   deleteProductCategory = (action$) =>
     action$.ofType(GitAction.DeleteProductCategory).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_DeleteProductCategory?PRODUCTCATEGORYID=" +
-          payload
+      return fetch(url +
+        "Product_DeleteProductCategory?PRODUCTCATEGORYID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -962,7 +963,7 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=================SUPPLIER=============================//
@@ -971,14 +972,14 @@ export class GitEpic {
     action$
       .ofType(GitAction.GetSupplierByUserStatus)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/User_ProfileListByUserStatus?UserStatus=" +
-            payload +
-            "&UserRoleID=15"
+        return fetch(url +
+          "User_ProfileListByUserStatus?UserStatus=" +
+          payload +
+          "&UserRoleID=15"
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -988,48 +989,48 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   registerSupplier = (action$) =>
     action$.ofType(GitAction.RegisterSupplier).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_SupplierRegister?USERNAME=" +
-          payload.repUsername +
-          "&USERPASSWORD=" +
-          payload.repPassword +
-          "&USERFIRSTNAME=" +
-          payload.repFirstName +
-          "&USERLASTNAME=" +
-          payload.repLastName +
-          "&USERCONTACTNO=" +
-          payload.repContact +
-          "&USERDATEBIRTH=" +
-          payload.repDOB +
-          "&USEREMAIL=" +
-          payload.repEmail +
-          "&SUPPLIERNAME=" +
-          payload.supplierName +
-          "&SUPPLIERCONTACTNUMBER=" +
-          payload.supplierContact +
-          "&SUPPLIERWEBSITE=" +
-          payload.supplierWebsite +
-          "&SUPPLIERADDRESSLINE1=" +
-          payload.supplierAddress1 +
-          "&SUPPLIERADDRESSLINE2=" +
-          payload.supplierAddress2 +
-          "&SUPPLIERPOSCODE=" +
-          payload.supplierPostal +
-          "&SUPPLIERCITY=" +
-          payload.supplierCity +
-          "&SUPPLIERSTATE=" +
-          payload.supplierState +
-          "&SUPPLIERCOUNTRYID=2"
+      return fetch(url +
+        "User_SupplierRegister?USERNAME=" +
+        payload.repUsername +
+        "&USERPASSWORD=" +
+        payload.repPassword +
+        "&USERFIRSTNAME=" +
+        payload.repFirstName +
+        "&USERLASTNAME=" +
+        payload.repLastName +
+        "&USERCONTACTNO=" +
+        payload.repContact +
+        "&USERDATEBIRTH=" +
+        payload.repDOB +
+        "&USEREMAIL=" +
+        payload.repEmail +
+        "&SUPPLIERNAME=" +
+        payload.supplierName +
+        "&SUPPLIERCONTACTNUMBER=" +
+        payload.supplierContact +
+        "&SUPPLIERWEBSITE=" +
+        payload.supplierWebsite +
+        "&SUPPLIERADDRESSLINE1=" +
+        payload.supplierAddress1 +
+        "&SUPPLIERADDRESSLINE2=" +
+        payload.supplierAddress2 +
+        "&SUPPLIERPOSCODE=" +
+        payload.supplierPostal +
+        "&SUPPLIERCITY=" +
+        payload.supplierCity +
+        "&SUPPLIERSTATE=" +
+        payload.supplierState +
+        "&SUPPLIERCOUNTRYID=2"
         // payload.supplierCountry
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1039,20 +1040,20 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   endorseSupplier = (action$) =>
     action$.ofType(GitAction.EndorseSupplier).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_EndorseSupplier?USERIDS=" +
-          payload.selectedData +
-          "&USERSTATUS=" +
-          payload.status
+      return fetch(url +
+        "User_EndorseSupplier?USERIDS=" +
+        payload.selectedData +
+        "&USERSTATUS=" +
+        payload.status
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1063,7 +1064,7 @@ export class GitEpic {
           };
           // }
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //==================STORAGE==========================//
@@ -1071,12 +1072,12 @@ export class GitEpic {
   // Storage
   getAllShoplots = (action$) =>
     action$.ofType(GitAction.GetShoplots).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_ShoplotList"
+      return fetch(url +
+        "Storage_ShoplotList"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1086,18 +1087,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllShoplotsPolygon = (action$) =>
     action$.ofType(GitAction.GetShoplotsPoly).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_ShoplotList?SHOPLOTBLOCK=" +
-          payload
+      return fetch(url +
+        "Storage_ShoplotList?SHOPLOTBLOCK=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1107,24 +1108,24 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   addShoplot = (action$) =>
     action$.ofType(GitAction.AddShoplots).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_AddShoplot?SHOPLOTNAME=" +
-          payload.ShoplotName +
-          "&CONTACTNO=" +
-          payload.ContactNo +
-          "&LONGITUDE=" +
-          payload.Longitude +
-          "&LATITUDE=" +
-          payload.Latitude
+      return fetch(url +
+        "Storage_AddShoplot?SHOPLOTNAME=" +
+        payload.ShoplotName +
+        "&CONTACTNO=" +
+        payload.ContactNo +
+        "&LONGITUDE=" +
+        payload.Longitude +
+        "&LATITUDE=" +
+        payload.Latitude
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1134,26 +1135,26 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateShoplot = (action$) =>
     action$.ofType(GitAction.UpdateShoplots).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_UpdateShoplot?SHOPLOTID=" +
-          payload.ShoplotID +
-          "&SHOPLOTNAME=" +
-          payload.ShoplotName +
-          "&CONTACTNO=" +
-          payload.ContactNo +
-          "&LONGITUDE=" +
-          payload.Longitude +
-          "&LATITUDE=" +
-          payload.Latitude
+      return fetch(url +
+        "Storage_UpdateShoplot?SHOPLOTID=" +
+        payload.ShoplotID +
+        "&SHOPLOTNAME=" +
+        payload.ShoplotName +
+        "&CONTACTNO=" +
+        payload.ContactNo +
+        "&LONGITUDE=" +
+        payload.Longitude +
+        "&LATITUDE=" +
+        payload.Latitude
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1163,18 +1164,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   deleteShoplot = (action$) =>
     action$.ofType(GitAction.DeleteShoplots).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_DeleteShoplot?SHOPLOTID=" +
-          payload.ShoplotID
+      return fetch(url +
+        "Storage_DeleteShoplot?SHOPLOTID=" +
+        payload.ShoplotID
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1184,18 +1185,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   // GridStorages
   getAllGridStorages = (action$) =>
     action$.ofType(GitAction.GetGridStorages).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_GridStorageList"
+      return fetch(url +
+        "Storage_GridStorageList"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1205,22 +1206,22 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   addGridStorages = (action$) =>
     action$.ofType(GitAction.AddGridStorages).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_AddGridStorage?GRIDSTORAGECODE=" +
-          payload.GridStorageCode +
-          "&SHOPLOTID=" +
-          payload.ShoplotID +
-          "&RENTALPRICE=" +
-          payload.RentalPricePerMonth
+      return fetch(url +
+        "Storage_AddGridStorage?GRIDSTORAGECODE=" +
+        payload.GridStorageCode +
+        "&SHOPLOTID=" +
+        payload.ShoplotID +
+        "&RENTALPRICE=" +
+        payload.RentalPricePerMonth
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1230,24 +1231,24 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateGridStorages = (action$) =>
     action$.ofType(GitAction.UpdateGridStorages).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_UpdateGridStorage?GRIDSTORAGEID=" +
-          payload.GirdStorageID +
-          "&GRIDSTORAGECODE=" +
-          payload.GridStorageCode +
-          "&SHOPLOTID=" +
-          payload.ShoplotID +
-          "&RENTALPRICE=" +
-          payload.RentalPrice
+      return fetch(url +
+        "Storage_UpdateGridStorage?GRIDSTORAGEID=" +
+        payload.GirdStorageID +
+        "&GRIDSTORAGECODE=" +
+        payload.GridStorageCode +
+        "&SHOPLOTID=" +
+        payload.ShoplotID +
+        "&RENTALPRICE=" +
+        payload.RentalPrice
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1257,18 +1258,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   deleteGridStorages = (action$) =>
     action$.ofType(GitAction.DeleteGridStorages).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Storage_DeleteGridStorage?GRIDSTORAGEID=" +
-          payload
+      return fetch(url +
+        "Storage_DeleteGridStorage?GRIDSTORAGEID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1278,21 +1279,21 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
   //=================REPORT=============================//
   // Reports
   viewOverallSummary = (action$) =>
     action$.ofType(GitAction.GetOverallSummary).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Report_OverallSummary?STARTDATETIME112=" +
-          payload.StartDateTime +
-          "&ENDDATETIME112=" +
-          payload.StartDateTime
+      return fetch(url +
+        "Report_OverallSummary?STARTDATETIME112=" +
+        payload.StartDateTime +
+        "&ENDDATETIME112=" +
+        payload.StartDateTime
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1302,7 +1303,7 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=================REVIEW=============================//
@@ -1312,15 +1313,15 @@ export class GitEpic {
     action$
       .ofType(GitAction.GetProductReviewByProductID)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_ViewReviewByProductID?PRODUCTID=" +
-            payload.ProductID +
-            "&PARENTPRODUCTREVIEWID=" +
-            payload.ParentProductReviewID
+        return fetch(url +
+          "Product_ViewReviewByProductID?PRODUCTID=" +
+          payload.ProductID +
+          "&PARENTPRODUCTREVIEWID=" +
+          payload.ParentProductReviewID
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -1330,18 +1331,18 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   viewProductReview = (action$) =>
     action$.ofType(GitAction.GetProductReview).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_ViewProductReview?USERID=" +
-          payload.UserID
+      return fetch(url +
+        "Product_ViewProductReview?USERID=" +
+        payload.UserID
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1351,18 +1352,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=================COLOR=============================//
   getAllColor = (action$) =>
     action$.ofType(GitAction.GetColor).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/General_ColorList"
+      return fetch(url +
+        "General_ColorList"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1372,28 +1373,28 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   addColor = (action$) =>
     action$.ofType(GitAction.AddColor).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/General_AddColor?COLORNAME=" +
-          payload.Color +
-          "&COLORHEX=" +
-          payload.ColorHex +
-          "&COLORR=" +
-          payload.color.r +
-          "&COLORG=" +
-          payload.color.g +
-          "&COLORB=" +
-          payload.color.b +
-          "&COLORA=" +
-          payload.color.a
+      return fetch(url +
+        "General_AddColor?COLORNAME=" +
+        payload.Color +
+        "&COLORHEX=" +
+        payload.ColorHex +
+        "&COLORR=" +
+        payload.color.r +
+        "&COLORG=" +
+        payload.color.g +
+        "&COLORB=" +
+        payload.color.b +
+        "&COLORA=" +
+        payload.color.a
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1403,30 +1404,30 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateColor = (action$) =>
     action$.ofType(GitAction.UpdateColor).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/General_UpdateColor?COLORID=" +
-          payload.ColorID +
-          "&COLORNAME=" +
-          payload.Color +
-          "&COLORHEX=" +
-          payload.ColorHex +
-          "&COLORR=" +
-          payload.color.r +
-          "&COLORG=" +
-          payload.color.g +
-          "&COLORB=" +
-          payload.color.b +
-          "&COLORA=" +
-          payload.color.a
+      return fetch(url +
+        "General_UpdateColor?COLORID=" +
+        payload.ColorID +
+        "&COLORNAME=" +
+        payload.Color +
+        "&COLORHEX=" +
+        payload.ColorHex +
+        "&COLORR=" +
+        payload.color.r +
+        "&COLORG=" +
+        payload.color.g +
+        "&COLORB=" +
+        payload.color.b +
+        "&COLORA=" +
+        payload.color.a
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1436,18 +1437,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   deleteColor = (action$) =>
     action$.ofType(GitAction.DeleteColor).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/General_DeleteColor?COLORID=" +
-          payload
+      return fetch(url +
+        "General_DeleteColor?COLORID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1457,24 +1458,24 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=================QUOTATION=============================//
   AddProductQuotation = (action$) =>
     action$.ofType(GitAction.AddProductQuotation).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_AddQuotation?PRODUCTIDS=" +
-          payload.ProductIDs +
-          "&PRODUCTQUANTITYS=" +
-          payload.ProductQuantities +
-          "&PRODUCTPRICES=" +
-          payload.ProductPrices +
-          "&SUPPLIERID=1"
+      return fetch(url +
+        "Product_AddQuotation?PRODUCTIDS=" +
+        payload.ProductIDs +
+        "&PRODUCTQUANTITYS=" +
+        payload.ProductQuantities +
+        "&PRODUCTPRICES=" +
+        payload.ProductPrices +
+        "&SUPPLIERID=1"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1484,23 +1485,23 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   AddedProductQuotation = (action$) =>
     action$.ofType(GitAction.AddedProductQuotation).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_AddQuotation?PRODUCTIDS=" +
-          payload.ProductIDs +
-          "&PRODUCTQUANTITYS=" +
-          payload.ProductQuantities +
-          "&PRODUCTPRICES=" +
-          payload.ProductPrices +
-          "&SUPPLIERID=1"
+      return fetch(url +
+        "Product_AddQuotation?PRODUCTIDS=" +
+        payload.ProductIDs +
+        "&PRODUCTQUANTITYS=" +
+        payload.ProductQuantities +
+        "&PRODUCTPRICES=" +
+        payload.ProductPrices +
+        "&SUPPLIERID=1"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1510,18 +1511,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   ViewProductQuotation = (action$) =>
     action$.ofType(GitAction.GetProductQuotation).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_ViewQuotation?USERID=" +
-          payload.USERID
+      return fetch(url +
+        "Product_ViewQuotation?USERID=" +
+        payload.USERID
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1531,15 +1532,15 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   deleteQuotation = (action$) =>
     action$.ofType(GitAction.DeleteQuotation).switchMap(({ payload }) => {
-      return fetch("Product_DeleteQuotation?PRODUCTQUOTATIONID=" + payload)
+      return fetch(url + "Product_DeleteQuotation?PRODUCTQUOTATIONID=" + payload)
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1549,19 +1550,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=================USER_ADDRESS=============================//
   ViewAddress = (action$) =>
     action$.ofType(GitAction.GetAddress).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_ViewAddressBook?USERID=" +
-          payload
+      return fetch(url +
+        "User_ViewAddressBook?USERID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1571,48 +1572,48 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   addAddress = (action$) =>
     action$.ofType(GitAction.AddAddress).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_AddAddressBook?USERADDRESSNAME=" +
-          payload.Address +
-          "&USERID=" +
-          payload.USERID +
-          "&USERCONTACTNO=" +
-          payload.ContactNo +
-          "&USEREMAIL=" +
-          payload.email +
-          "&USERADDRESSLINE1=" +
-          payload.USERADDRESSLINE1 +
-          "&USERADDRESSLINE2=" +
-          payload.USERADDRESSLINE2 +
-          "&USERPOSCODE=" +
-          payload.USERPOSCODE +
-          "&USERSTATE=" +
-          payload.USERSTATE +
-          "&USERCITY=" +
-          payload.USERCITY +
-          "&COUNTRYID=" +
-          payload.USERCOUNTRYID
+      return fetch(url +
+        "User_AddAddressBook?USERADDRESSNAME=" +
+        payload.Address +
+        "&USERID=" +
+        payload.USERID +
+        "&USERCONTACTNO=" +
+        payload.ContactNo +
+        "&USEREMAIL=" +
+        payload.email +
+        "&USERADDRESSLINE1=" +
+        payload.USERADDRESSLINE1 +
+        "&USERADDRESSLINE2=" +
+        payload.USERADDRESSLINE2 +
+        "&USERPOSCODE=" +
+        payload.USERPOSCODE +
+        "&USERSTATE=" +
+        payload.USERSTATE +
+        "&USERCITY=" +
+        payload.USERCITY +
+        "&COUNTRYID=" +
+        payload.USERCOUNTRYID
       )
         .then((response) => response.json())
         .then((returnVal) => {
-          if (returnVal != "fail") {
+          if (returnVal !== "fail") {
             returnVal = JSON.parse(returnVal);
             toast.success("Address successfully added")
           } else {
             returnVal = [];
           }
-          return fetch(
-            "http://tourism.denoo.my/emporia/api/emporia/User_ViewAddressBook?USERID=" +
-              payload.USERID
+          return fetch(url +
+            "User_ViewAddressBook?USERID=" +
+            payload.USERID
           )
             .then((response) => response.json())
             .then((AllAddress) => {
-              if (AllAddress != "fail") {
+              if (AllAddress !== "fail") {
                 AllAddress = JSON.parse(AllAddress);
               } else {
                 AllAddress = [];
@@ -1623,116 +1624,116 @@ export class GitEpic {
                 payloadValue: AllAddress,
               };
             })
-            .catch((error) => toast.error(JSON.stringify(error)));
+            .catch((error) => toast.error(error));
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateAddress = (action$) =>
     action$.ofType(GitAction.UpdateAddress).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_UpdateAddressBook?USERADDRESSBOOKID=" +
-          payload.AddressBookNo +
-          "&USERADDRESSNAME=" +
-          payload.Address +
-          "&USERID=" +
-          payload.USERID +
-          "&USERCONTACTNO=" +
-          payload.ContactNo +
-          "&USEREMAIL=" +
-          payload.email +
-          "&USERADDRESSLINE1=" +
-          payload.USERADDRESSLINE1 +
-          "&USERADDRESSLINE2=" +
-          payload.USERADDRESSLINE2 +
-          "&USERPOSCODE=" +
-          payload.USERPOSCODE +
-          "&USERSTATE=" +
-          payload.USERSTATE +
-          "&USERCITY=" +
-          payload.USERCITY +
-          "&COUNTRYID=" +
-          payload.COUNTRYID
+      return fetch(url +
+        "User_UpdateAddressBook?USERADDRESSBOOKID=" +
+        payload.AddressBookNo +
+        "&USERADDRESSNAME=" +
+        payload.Address +
+        "&USERID=" +
+        payload.USERID +
+        "&USERCONTACTNO=" +
+        payload.ContactNo +
+        "&USEREMAIL=" +
+        payload.email +
+        "&USERADDRESSLINE1=" +
+        payload.USERADDRESSLINE1 +
+        "&USERADDRESSLINE2=" +
+        payload.USERADDRESSLINE2 +
+        "&USERPOSCODE=" +
+        payload.USERPOSCODE +
+        "&USERSTATE=" +
+        payload.USERSTATE +
+        "&USERCITY=" +
+        payload.USERCITY +
+        "&COUNTRYID=" +
+        payload.COUNTRYID
       )
-      .then((response) => response.json())
-      .then((returnVal) => {
-        if (returnVal != "fail") {
-          returnVal = JSON.parse(returnVal);
-          toast.success("Address successfully updated")
-        } else {
-          returnVal = [];
-        }
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/User_ViewAddressBook?USERID=" +
+        .then((response) => response.json())
+        .then((returnVal) => {
+          if (returnVal !== "fail") {
+            returnVal = JSON.parse(returnVal);
+            toast.success("Address successfully updated")
+          } else {
+            returnVal = [];
+          }
+          return fetch(url +
+            "User_ViewAddressBook?USERID=" +
             payload.USERID
-        )
-          .then((response) => response.json())
-          .then((AllAddress) => {
-            if (AllAddress != "fail") {
-              AllAddress = JSON.parse(AllAddress);
-            } else {
-              AllAddress = [];
-            }
-            return {
-              type: GitAction.UpdatedAddress,
-              payloadCondition: returnVal,
-              payloadValue: AllAddress,
-            };
-          })
-          .catch((error) => toast.error(JSON.stringify(error)));
-      })
-      .catch((error) => toast.error(JSON.stringify(error)));
-  });
+          )
+            .then((response) => response.json())
+            .then((AllAddress) => {
+              if (AllAddress !== "fail") {
+                AllAddress = JSON.parse(AllAddress);
+              } else {
+                AllAddress = [];
+              }
+              return {
+                type: GitAction.UpdatedAddress,
+                payloadCondition: returnVal,
+                payloadValue: AllAddress,
+              };
+            })
+            .catch((error) => toast.error(error));
+        })
+        .catch((error) => toast.error(error));
+    });
 
   deleteAddress = (action$) =>
     action$.ofType(GitAction.DeleteAddress).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_DeleteAddressBook?USERADDRESSBOOKID=" +
-          payload.AddressBookNo
+      return fetch(url +
+        "User_DeleteAddressBook?USERADDRESSBOOKID=" +
+        payload.AddressBookNo
       )
-      .then((response) => response.json())
-      .then((returnVal) => {
-        if (returnVal != "fail") {
-          returnVal = JSON.parse(returnVal);
-          toast.success("Address successfully deleted")
-        } else {
-          returnVal = [];
-        }
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/User_ViewAddressBook?USERID=" +
+        .then((response) => response.json())
+        .then((returnVal) => {
+          if (returnVal !== "fail") {
+            returnVal = JSON.parse(returnVal);
+            toast.success("Address successfully deleted")
+          } else {
+            returnVal = [];
+          }
+          return fetch(url +
+            "User_ViewAddressBook?USERID=" +
             payload.USERID
-        )
-          .then((response) => response.json())
-          .then((AllAddress) => {
-            if (AllAddress != "fail") {
-              AllAddress = JSON.parse(AllAddress);
-            } else {
-              AllAddress = [];
-            }
-            return {
-              type: GitAction.DeletedAddress,
-              payloadCondition: returnVal,
-              payloadValue: AllAddress,
-            };
-          })
-          .catch((error) => toast.error(JSON.stringify(error)));
-      })
-      .catch((error) => toast.error(JSON.stringify(error)));
-  });
+          )
+            .then((response) => response.json())
+            .then((AllAddress) => {
+              if (AllAddress !== "fail") {
+                AllAddress = JSON.parse(AllAddress);
+              } else {
+                AllAddress = [];
+              }
+              return {
+                type: GitAction.DeletedAddress,
+                payloadCondition: returnVal,
+                payloadValue: AllAddress,
+              };
+            })
+            .catch((error) => toast.error(error));
+        })
+        .catch((error) => toast.error(error));
+    });
 
   //=================ORDER=============================//
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_AddOrder?USERID=" +
-          payload.UserID +
-          "&USERADDRESSID=-&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" +
-          payload.Products
+      return fetch(url +
+        "Order_AddOrder?USERID=" +
+        payload.UserID +
+        "&USERADDRESSID=-&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" +
+        payload.Products
       )
         .then((response) => response.json())
         .then((json) => {
           // alert(json);
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1742,19 +1743,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=================DELIVERY=============================//
   getDeliverableList = (action$) =>
     action$.ofType(GitAction.GetDeliverableList).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderByIncomplete"
+      return fetch(url +
+        "Order_ViewOrderByIncomplete"
       )
         .then((response) => response.json())
         .then((json) => {
           // alert(json);
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1764,19 +1765,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
   //=================PROMOTIONS====================//
 
   getAllPromotion = (action$) =>
     action$.ofType(GitAction.GetPromotion).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_ViewPromotion?ACTIVEIND"
+      return fetch(url +
+        "Promo_ViewPromotion?ACTIVEIND"
       )
         .then((response) => response.json())
         .then((json) => {
           // alert(json);
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1786,28 +1787,28 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   AddPromotion = (action$) =>
     action$.ofType(GitAction.AddPromotion).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_AddPromotion?PROMOTIONTITLE=" +
-          payload.PromotionTitle +
-          "&PROMOTIONDESC=" +
-          payload.PromotionDesc +
-          "&PROMOTIONSTARTDATE=" +
-          payload.promoStart +
-          "&PROMOTIONENDDATE=" +
-          payload.promoEnd +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&PROMOTIONDISCOUNTPERCENTAGE=" +
-          payload.DiscountPercentage // {98,99,100}
+      return fetch(url +
+        "Promo_AddPromotion?PROMOTIONTITLE=" +
+        payload.PromotionTitle +
+        "&PROMOTIONDESC=" +
+        payload.PromotionDesc +
+        "&PROMOTIONSTARTDATE=" +
+        payload.promoStart +
+        "&PROMOTIONENDDATE=" +
+        payload.promoEnd +
+        "&PRODUCTID=" +
+        payload.ProductID +
+        "&PROMOTIONDISCOUNTPERCENTAGE=" +
+        payload.DiscountPercentage // {98,99,100}
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1817,32 +1818,32 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   UpdatePromotion = (action$) =>
     action$.ofType(GitAction.UpdatePromotion).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_UpdatePromotion?PROMOTIONID=" +
-          // "http://localhost/LoopApi/api/LoopApi/Promo_UpdatePromotion?PROMOTIONID&=idPROMOTIONTITLE=title&PROMOTIONDESC=desc&PROMOTIONSTARTDATE=20201117&PROMOTIONENDDATE=20201117&PRODUCTID=[100,90,99]"
-          payload.PromotionID +
-          "&PROMOTIONTITLE=" +
-          payload.PromotionTitle +
-          "&PROMOTIONDESC=" +
-          payload.PromotionDesc +
-          "&PROMOTIONSTARTDATE=" +
-          payload.promoStart +
-          "&PROMOTIONENDDATE=" +
-          payload.promoEnd +
-          "&PROMOTIONITEMID=" +
-          payload.ProductID +
-          "&PROMOTIONDISCOUNTPERCENTAGE=" +
-          payload.DiscountPercentage // {98,99,100}
+      return fetch(url +
+        "Promo_UpdatePromotion?PROMOTIONID=" +
+        // "http://localhost/LoopApi/api/LoopApi/Promo_UpdatePromotion?PROMOTIONID&=idPROMOTIONTITLE=title&PROMOTIONDESC=desc&PROMOTIONSTARTDATE=20201117&PROMOTIONENDDATE=20201117&PRODUCTID=[100,90,99]"
+        payload.PromotionID +
+        "&PROMOTIONTITLE=" +
+        payload.PromotionTitle +
+        "&PROMOTIONDESC=" +
+        payload.PromotionDesc +
+        "&PROMOTIONSTARTDATE=" +
+        payload.promoStart +
+        "&PROMOTIONENDDATE=" +
+        payload.promoEnd +
+        "&PROMOTIONITEMID=" +
+        payload.ProductID +
+        "&PROMOTIONDISCOUNTPERCENTAGE=" +
+        payload.DiscountPercentage // {98,99,100}
       )
         .then((response) => response.json())
         .then((json) => {
           // alert("hey");
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1852,14 +1853,14 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   DeletePromotion = (action$) =>
     action$.ofType(GitAction.DeletePromotion).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_DeletePromotion?PROMOTIONID=" +
-          payload
+      return fetch(url +
+        "Promo_DeletePromotion?PROMOTIONID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1870,17 +1871,17 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllProductPromos = (action$) =>
     action$.ofType(GitAction.GetPromo).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_ViewPromotion?ACTIVEIND=0"
+      return fetch(url +
+        "Promo_ViewPromotion?ACTIVEIND=0"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1890,17 +1891,17 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllPromoCodes = (action$) =>
     action$.ofType(GitAction.GetPromoCode).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_ViewPromoCode?ACTIVEIND=0"
+      return fetch(url +
+        "Promo_ViewPromoCode?ACTIVEIND=0"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1910,26 +1911,26 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   addPromoCode = (action$) =>
     action$.ofType(GitAction.AddPromoCode).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_AddPromoCode?PROMOTIONID=" +
-          payload.promo +
-          "&PROMOCODE=" +
-          payload.promoCode +
-          "&PROMOCODESTARTDATE=" +
-          payload.promoStart +
-          "&PROMOCODEENDDATE=" +
-          payload.promoEnd +
-          "&PRODUCTID=" +
-          payload.productID
+      return fetch(url +
+        "Promo_AddPromoCode?PROMOTIONID=" +
+        payload.promo +
+        "&PROMOCODE=" +
+        payload.promoCode +
+        "&PROMOCODESTARTDATE=" +
+        payload.promoStart +
+        "&PROMOCODEENDDATE=" +
+        payload.promoEnd +
+        "&PRODUCTID=" +
+        payload.productID
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1939,28 +1940,28 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updatePromoCode = (action$) =>
     action$.ofType(GitAction.UpdatePromoCode).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_UpdatePromoCode?PROMOCODEID=" +
-          payload.promoCodeId +
-          "&PROMOTIONID=" +
-          payload.promo +
-          "&PROMOCODE=" +
-          payload.promoCode +
-          "&PROMOCODESTARTDATE=" +
-          payload.promoStart +
-          "&PROMOCODEENDDATE=" +
-          payload.promoEnd +
-          "&PRODUCTID=" +
-          payload.productID
+      return fetch(url +
+        "Promo_UpdatePromoCode?PROMOCODEID=" +
+        payload.promoCodeId +
+        "&PROMOTIONID=" +
+        payload.promo +
+        "&PROMOCODE=" +
+        payload.promoCode +
+        "&PROMOCODESTARTDATE=" +
+        payload.promoStart +
+        "&PROMOCODEENDDATE=" +
+        payload.promoEnd +
+        "&PRODUCTID=" +
+        payload.productID
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1970,18 +1971,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   deletePromoCode = (action$) =>
     action$.ofType(GitAction.DeletePromoCode).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Promo_DeletePromoCode?PROMOCODEID=" +
-          payload
+      return fetch(url +
+        "Promo_DeletePromoCode?PROMOCODEID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -1991,19 +1992,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //=================TRANSACTIONS====================//
   getAllTransactions = (action$) =>
     action$.ofType(GitAction.GetTransactions).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrder?TRACKINGSTATUS=" +
-          payload
+      return fetch(url +
+        "Order_ViewOrder?TRACKINGSTATUS=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2013,19 +2014,19 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllDeliveryList = (action$) =>
     action$
       .ofType(GitAction.GetTransactionsWithDelivery)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderByDelivery"
+        return fetch(url +
+          "Order_ViewOrderByDelivery"
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -2035,17 +2036,17 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   getAllTransactionStatus = (action$) =>
     action$.ofType(GitAction.GetTransactionStatus).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderStatus"
+      return fetch(url +
+        "Order_ViewOrderStatus"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2055,17 +2056,17 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
   //=================ACCOUNT====================//
   getAllPayableList = (action$) =>
     action$.ofType(GitAction.GetReceivableList).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Account_ViewReceivableList"
+      return fetch(url +
+        "Account_ViewReceivableList"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2075,17 +2076,17 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllReceivableList = (action$) =>
     action$.ofType(GitAction.GetPayableList).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Account_ViewPayableList"
+      return fetch(url +
+        "Account_ViewPayableList"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2095,20 +2096,20 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
   //=================INVENTORY====================//
   updateProductStock = (action$) =>
     action$.ofType(GitAction.UpdateInventory).switchMap(({ payload }) => {
       fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Inventory_UpdateProductStock?PRODUCTIDS=" +
-          payload.SelectedProductID +
-          "&PRODUCTSTOCK=" +
-          payload.SelectedProductStock
+        "Inventory_UpdateProductStock?PRODUCTIDS=" +
+        payload.SelectedProductID +
+        "&PRODUCTSTOCK=" +
+        payload.SelectedProductStock
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2118,17 +2119,17 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
 
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_ItemListByProductStatus?PRODUCTSTATUS=" +
-          payload.ProductStatus +
-          "&USERID=" +
-          payload.UserID
+      return fetch(url +
+        "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
+        payload.ProductStatus +
+        "&USERID=" +
+        payload.UserID
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2138,7 +2139,7 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   endorseProductStock = (action$) =>
@@ -2146,14 +2147,14 @@ export class GitEpic {
       .ofType(GitAction.EndorseInventoryProductStock)
       .switchMap(({ payload }) => {
         fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Order_EndorseOrderProductStock?PRODUCTIDS=" +
-            payload.ProductID +
-            "&PRODUCTSTOCKAMOUNT=" +
-            payload.ProductStockAmount
+          "Order_EndorseOrderProductStock?PRODUCTIDS=" +
+          payload.ProductID +
+          "&PRODUCTSTOCKAMOUNT=" +
+          payload.ProductStockAmount
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -2163,17 +2164,17 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
 
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
-            payload.ProductStockStatus +
-            "&USERID=" +
-            payload.UserID
+        return fetch(url +
+          "Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
+          payload.ProductStockStatus +
+          "&USERID=" +
+          payload.UserID
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -2183,22 +2184,22 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   updateProductStockOut = (action$) =>
     action$.ofType(GitAction.UpdateProductStockOut).switchMap(({ payload }) => {
       fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_UpdateOrderStockOut?ORDERID=" +
-          payload.OrderID +
-          "&PRODUCTIDS=" +
-          payload.ProductID +
-          "&PRODUCTSTOCK=" +
-          payload.ProductStockAmount
+        "Order_UpdateOrderStockOut?ORDERID=" +
+        payload.OrderID +
+        "&PRODUCTIDS=" +
+        payload.ProductID +
+        "&PRODUCTSTOCK=" +
+        payload.ProductStockAmount
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2208,14 +2209,14 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
 
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderByDelivery"
+      return fetch(url +
+        "Order_ViewOrderByDelivery"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2225,14 +2226,14 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   // ================= Email Subscriber ===================== //
   getAllSubs = (action$) =>
     action$.ofType(GitAction.GetSubs).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Subcriber_ViewSubcriber"
+      return fetch(url +
+        "Subcriber_ViewSubcriber"
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2246,14 +2247,14 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   AddSubs = (action$) =>
     action$.ofType(GitAction.AddSubcs).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Subcriber_AddNew?SUBSCRIBEREMAIL=" +
-          payload.SubsMail
+      return fetch(url +
+        "Subcriber_AddNew?SUBSCRIBEREMAIL=" +
+        payload.SubsMail
       )
         .then((response) => response.json())
         .then((json) => {
@@ -2267,18 +2268,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //===================MERCHANTS=======================//
   getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/User_ProfileListByUserType?UserTypeID=16"
+      return fetch(url +
+        "User_ProfileListByUserType?UserTypeID=16"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2288,20 +2289,20 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllMerchantOrders = (action$) =>
     action$.ofType(GitAction.GetMerchantOrders).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewOrderByUserID?TRACKINGSTATUS=" +
-          payload.trackingStatus +
-          "&USERID=" +
-          payload.UserID
+      return fetch(url +
+        "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
+        payload.trackingStatus +
+        "&USERID=" +
+        payload.UserID
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2311,18 +2312,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   //===================PRODUCT ORDERS============================//
   getAllProductOrders = (action$) =>
     action$.ofType(GitAction.GetProductOrders).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewSummaryOrderProduct"
+      return fetch(url +
+        "Order_ViewSummaryOrderProduct"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2332,21 +2333,21 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
   getProductStockByStatus = (action$) =>
     action$
       .ofType(GitAction.GetProductStockByStatus)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
-            payload.ProductStockStatus +
-            "&USERID=" +
-            payload.UserID
+        return fetch(url +
+          "Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
+          payload.ProductStockStatus +
+          "&USERID=" +
+          payload.UserID
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -2356,23 +2357,23 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
   sendSalesOrder = (action$) =>
     action$.ofType(GitAction.SendSalesOrder).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_ReplyPurchaseOrderWithSaleOrder?PRODUCTPURCHASEORDERID=" +
-          payload.ProductPurchaseOrderID +
-          "&SALEORDERNO=" +
-          payload.salesOrderNo +
-          "&SALEORDERFILE=" +
-          payload.file +
-          "&REMARK=" +
-          payload.remark
+      return fetch(url +
+        "Product_ReplyPurchaseOrderWithSaleOrder?PRODUCTPURCHASEORDERID=" +
+        payload.ProductPurchaseOrderID +
+        "&SALEORDERNO=" +
+        payload.salesOrderNo +
+        "&SALEORDERFILE=" +
+        payload.file +
+        "&REMARK=" +
+        payload.remark
       )
         .then((response) => response.json())
         .then((json) => {
-          // if (json != "fail") {
+          // if (json !== "fail") {
           //   json = JSON.parse(json);
           // } else {
           json = [];
@@ -2382,22 +2383,22 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   addPurchaseOrder = (action$) =>
     action$.ofType(GitAction.AddPurchaseOrder).switchMap(({ payload }) => {
       fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_AddPurchaseOrderByBatch?PRODUCTIDS=" +
-          payload.ProductIDs +
-          "&PRODUCTQUANTITYS=" +
-          payload.ProductQuantities +
-          "&SUPPLIERID=" +
-          payload.SupplierIDs
+        "Product_AddPurchaseOrderByBatch?PRODUCTIDS=" +
+        payload.ProductIDs +
+        "&PRODUCTQUANTITYS=" +
+        payload.ProductQuantities +
+        "&SUPPLIERID=" +
+        payload.SupplierIDs
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2407,14 +2408,14 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
 
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_ViewSummaryOrderProduct"
+      return fetch(url +
+        "Order_ViewSummaryOrderProduct"
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2424,18 +2425,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   getAllPurchaseOrders = (action$) =>
     action$.ofType(GitAction.GetPurchaseOrders).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_ViewPurchaseOrder?USERID=" +
-          payload
+      return fetch(url +
+        "Product_ViewPurchaseOrder?USERID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2445,21 +2446,21 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateProductDetailStatus = (action$) =>
     action$
       .ofType(GitAction.UpdateOrderProductStatus)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
-            payload.OrderProductDetailID +
-            "&PRODUCTSTATUS=Delivered"
+        return fetch(url +
+          "Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
+          payload.OrderProductDetailID +
+          "&PRODUCTSTATUS=Delivered"
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -2469,21 +2470,21 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   updatePurchaseOrderStatus = (action$) =>
     action$
       .ofType(GitAction.UpdatePurchaseOrderStatus)
       .switchMap(({ payload }) => {
-        return fetch(
-          "http://tourism.denoo.my/emporia/api/emporia/Product_UpdatePurchaseOrderStatus?PRODUCTPURCHASEORDERID=" +
-            payload.ProductPurchaseOrderID +
-            "&PRODUCTPURCHASEORDERSTATUS=Payable"
+        return fetch(url +
+          "Product_UpdatePurchaseOrderStatus?PRODUCTPURCHASEORDERID=" +
+          payload.ProductPurchaseOrderID +
+          "&PRODUCTPURCHASEORDERSTATUS=Payable"
         )
           .then((response) => response.json())
           .then((json) => {
-            if (json != "fail") {
+            if (json !== "fail") {
               json = JSON.parse(json);
             } else {
               json = [];
@@ -2493,18 +2494,18 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(JSON.stringify(error)));
+          .catch((error) => toast.error(error));
       });
 
   deletePurchaseOrder = (action$) =>
     action$.ofType(GitAction.DeletePurchaseOrder).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Product_DeletePurchaseOrder?PRODUCTPURCHASEORDERID=" +
-          payload
+      return fetch(url +
+        "Product_DeletePurchaseOrder?PRODUCTPURCHASEORDERID=" +
+        payload
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2514,20 +2515,20 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 
   updateProductStatus = (action$) =>
     action$.ofType(GitAction.UpdateProductStatus).switchMap(({ payload }) => {
-      return fetch(
-        "http://tourism.denoo.my/emporia/api/emporia/Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
-          payload.orderProductID +
-          "&PRODUCTSTATUS=" +
-          payload.productStatus
+      return fetch(url +
+        "Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
+        payload.orderProductID +
+        "&PRODUCTSTATUS=" +
+        payload.productStatus
       )
         .then((response) => response.json())
         .then((json) => {
-          if (json != "fail") {
+          if (json !== "fail") {
             json = JSON.parse(json);
           } else {
             json = [];
@@ -2537,7 +2538,7 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(JSON.stringify(error)));
+        .catch((error) => toast.error(error));
     });
 }
 export let gitEpic = new GitEpic();
