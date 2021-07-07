@@ -124,7 +124,7 @@ class AccountPageProfile extends Component {
     };
     axios
       .post(
-        "http://tourism.denoo.my/LoopImage/uploaduserprofilepicture.php",
+        "http://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php",
         formData,
         {}
       )
