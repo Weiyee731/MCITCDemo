@@ -22,35 +22,55 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
+const initialState = {
+    selectedCategory: [],
+    productSubCategories: [],
+
+}
 
 class BlockCategoryDetails extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-
-        }
+        this.state = initialState;
 
         // this.props.CallAllProductCategoryListing()
     }
 
-    componentDidMount(){
-        if(Array.isArray(this.props.productCategories) && this.props.productCategories.length === 0) {
+    componentDidMount() {
+        if (Array.isArray(this.props.productCategories) && this.props.productCategories.length === 0) {
             this.props.CallAllProductCategoryListing();
         }
-        else{
+        else {
+            console.log(this.props.match.params.categorySlug)
+            let selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
 
+            try {
+                if (selectedCategory.length > 0) {
+                    let subCategories = JSON.parse(selectedCategory[0].HierarchyItem)
+                    console.log(subCategories)
+                }
+                else {
+                    this.setState({
+                        productSubCategories: [],
+                    })
+                }
+            }
+            catch (e) {
+                console.log(e);
+                this.setState({
+                    productSubCategories: [],
+                })
+            }
         }
     }
 
-    componentDidUpdate(prevProps){
-        
+    componentDidUpdate(prevProps) {
+
     }
 
     render() {
-        console.log(this.props.match.params.categorySlug)
         console.log(this.props.productCategories)
-        console.log(this.props.productCategories.filter(el => el.ProductCategory === "Automotive"))
         return (
             <div>
                 <div style={{ marginTop: "8rem" }}>
