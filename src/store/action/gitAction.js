@@ -530,6 +530,9 @@ export class GitAction {
 
   static GetProductReviewByProductID = "GET-PRODUCTREVIEWBYPRODUCTID";
   static GotProductReviewByProductID = "GOT-PRODUCTREVIEWBYPRODUCTID";
+  
+  static addProductReview = "ADD-PRODUCTREVIEW";
+  static addedProductReview = "ADDED-PRODUCTREVIEW";
 
   static CallProductReview(suppData) {
     return {
@@ -541,6 +544,13 @@ export class GitAction {
   static CallProductReviewByProductID(suppData) {
     return {
       type: GitAction.GetProductReviewByProductID,
+      payload: suppData,
+    };
+  }
+
+  static CallAddProductReview(suppData) {
+    return {
+      type: GitAction.addProductReview,
       payload: suppData,
     };
   }

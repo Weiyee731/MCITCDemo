@@ -146,7 +146,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         updatedCreditCard: action.payloadCondition,
         creditcards: action.payloadValue,
-       
+
       });
     //=======================PROMOTION========================//
     // case GitAction.GetPromotion:
@@ -556,6 +556,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.GetProductReviewByProductID:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotProductReviewByProductID:
+      return Object.assign({}, state, {
+        loading: false,
+        reviews: action.payload,
+      });
+
+    case GitAction.addProductReview:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.addedProductReview:
       return Object.assign({}, state, {
         loading: false,
         reviews: action.payload,
