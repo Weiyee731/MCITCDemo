@@ -52,9 +52,11 @@ class BlockMainCategories extends Component {
           {this.props.productCategories.map((data, index) => {
             return (
               <div key={index} style={categoryGrid} className="col-lg-2 col-md-2 p-2" onClick={() => console.log(data)}>
-                <img src={data.ProductCategoryImage} />
-                <br />
-                {data.ProductCategory}
+                <div>
+                  <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="150px" height="150px"/>
+                  <br />
+                  {data.ProductCategory}
+                </div>
               </div>
             )
           })}

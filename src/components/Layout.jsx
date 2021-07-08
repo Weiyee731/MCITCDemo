@@ -51,6 +51,7 @@ import SitePageTypography from "./site/SitePageTypography";
 import SitePageHowToBuy from "./site/SitePageHowToBuy";
 import SitePageHowToReturn from "./site/SitePageHowToReturn";
 import SitePageShippingDelivery from "./site/sitePageShippingDelivery";
+import BlockCategoryDetails from "./blocks/BlockCategoryDetails";
 
 // data stubs
 import theme from "../data/theme";
@@ -566,7 +567,18 @@ function Layout(props) {
                 exact
                 path="/site/typography"
                 component={SitePageTypography}
-              />
+                />
+                <Route
+                  exact
+                  path="/shop/ProductCategory/:categorySlug"
+                  render={(props) => (
+                    <BlockCategoryDetails
+                      {...props}
+                      layout="standard"
+                      categorySlug={props.match.params.categorySlug}
+                    />
+                  )}
+                />
               <Route component={SitePageNotFound} />
             </Switch>
           </div>
