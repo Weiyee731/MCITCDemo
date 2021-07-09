@@ -530,6 +530,9 @@ export class GitAction {
 
   static GetProductReviewByProductID = "GET-PRODUCTREVIEWBYPRODUCTID";
   static GotProductReviewByProductID = "GOT-PRODUCTREVIEWBYPRODUCTID";
+  
+  static addProductReview = "ADD-PRODUCTREVIEW";
+  static addedProductReview = "ADDED-PRODUCTREVIEW";
 
   static CallProductReview(suppData) {
     return {
@@ -541,6 +544,13 @@ export class GitAction {
   static CallProductReviewByProductID(suppData) {
     return {
       type: GitAction.GetProductReviewByProductID,
+      payload: suppData,
+    };
+  }
+
+  static CallAddProductReview(suppData) {
+    return {
+      type: GitAction.addProductReview,
       payload: suppData,
     };
   }
@@ -594,28 +604,6 @@ export class GitAction {
     return {
       type: GitAction.GetNotification,
       payload: prodData,
-    };
-  }
-
-  //=================PROMOTION====================//
-
-  static GetPromotion = "GET-PROMOTION";
-  static GotPromotion = "GOT-PROMOTION";
-
-  static AddPromotion = "ADD-PROMOTION";
-  static AddedPromotion = "ADDED-PROMOTION";
-
-  static CallAddPromotion(promoData) {
-    return {
-      type: GitAction.AddPromotion,
-      payload: promoData,
-    };
-  }
-
-  static CallViewPromotion(promoData) {
-    return {
-      type: GitAction.GetPromotion,
-      payload: promoData,
     };
   }
 
@@ -841,8 +829,6 @@ export class GitAction {
     };
   }
 
-  //==============TRANSACTIONS=================//
-
   static GetReceivableList = "GET-RECEIVABLELIST";
   static GotReceivableList = "GOT-RECEIVABLELIST";
 
@@ -923,6 +909,24 @@ export class GitAction {
   }
 
   //=======================PRODUCT ORDERS====================//
+  static GetProductOrders = "GET-PRODUCTORDERS";
+  static GotProductOrders = "GOT-PRODUCTORDERS";
+
+  static SendSalesOrder = "SEND-SALESORDER";
+  static SentSalesOrder = "SENT-SALESORDER";
+
+  static AddPurchaseOrder = "ADD-PURCHASEORDER";
+  static AddedPurchaseOrder = "ADDED-PURCHASEORDER";
+
+  static GetPurchaseOrders = "GET-PURCHASEORDERS";
+  static GotPurchaseOrders = "GOT-PURCHASEORDERS";
+
+  static DeletePurchaseOrder = "DELETE-PURCHASEORDER";
+  static DeletedPurchaseOrder = "DELETED-PURCHASEORDER";
+
+  static UpdateProductStatus = "UPDATE-PRODUCTSTATUS";
+  static UpdatedProductStatus = "UPDATED-PRODUCTSTATUS";
+
   static UpdateOrderProductStatus = "UPDATE-OrderProductStatus";
   static UpdatedOrderProductStatus = "UPDATED-OrderProductStatus";
 
@@ -942,24 +946,6 @@ export class GitAction {
       payload: orderData,
     };
   }
-  //=======================PRODUCT ORDERS====================//
-  static GetProductOrders = "GET-PRODUCTORDERS";
-  static GotProductOrders = "GOT-PRODUCTORDERS";
-
-  static SendSalesOrder = "SEND-SALESORDER";
-  static SentSalesOrder = "SENT-SALESORDER";
-
-  static AddPurchaseOrder = "ADD-PURCHASEORDER";
-  static AddedPurchaseOrder = "ADDED-PURCHASEORDER";
-
-  static GetPurchaseOrders = "GET-PURCHASEORDERS";
-  static GotPurchaseOrders = "GOT-PURCHASEORDERS";
-
-  static DeletePurchaseOrder = "DELETE-PURCHASEORDER";
-  static DeletedPurchaseOrder = "DELETED-PURCHASEORDER";
-
-  static UpdateProductStatus = "UPDATE-PRODUCTSTATUS";
-  static UpdatedProductStatus = "UPDATED-PRODUCTSTATUS";
 
   static CallGetProductOrders() {
     return {

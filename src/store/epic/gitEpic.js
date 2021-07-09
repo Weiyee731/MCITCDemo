@@ -1355,6 +1355,57 @@ export class GitEpic {
         .catch((error) => toast.error(error));
     });
 
+    addProductReview = (action$) =>
+    action$.ofType(GitAction.addProductReview).switchMap(({ payload }) => {
+
+      console.log(url +
+        "Product_AddReview?PARENTPRODUCTREVIEWID=" +  payload.parentProductReviewID
+        + "&PRODUCTID=" + payload.productID
+        + "&USERID=" + payload.UserID
+        + "&PRODUCTREVIEWRATING=" + payload.productReviewRating
+        + "&PRODUCTREVIEWCOMMENT=" + payload.productReviewComment)
+
+      return fetch(url +
+        "Product_AddReview?PARENTPRODUCTREVIEWID=" +  payload.parentProductReviewID
+        + "&PRODUCTID=" + payload.productID
+        + "&USERID=" + payload.UserID
+        + "&PRODUCTREVIEWRATING=" + payload.productReviewRating
+        + "&PRODUCTREVIEWCOMMENT=" + payload.productReviewComment
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+            console.log("DB", json)
+          } else {
+            json = [];
+          }
+
+      
+    return fetch(url +
+            "Product_ViewProductReview?USERID=" +
+            payload.UserID )
+            .then((response) => response.json())
+            .then((json) => {
+              if (json !== "fail") {
+                json = JSON.parse(json);
+              } else {
+                json = [];
+              }
+              return {
+                type: "ADDED-PRODUCTREVIEW",
+                payload: json,
+              };
+            })
+            .catch((error) => toast.error(error));
+          // return {
+          //   type: "ADDED-PRODUCTREVIEW",
+          //   payload: json,
+          // };
+        })
+        .catch((error) => toast.error(error));
+    });
+
   //=================COLOR=============================//
   getAllColor = (action$) =>
     action$.ofType(GitAction.GetColor).switchMap(({ payload }) => {

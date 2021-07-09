@@ -40,7 +40,7 @@ import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import SelectCurrency from '../../../src';
 import TimezonePicker from 'react-bootstrap-timezone-picker';
-import logo from "../../assets/logo_black_word.png";
+import logo from "../../assets/Emporia.png";
 import SocialLinks from '../../components/shared/SocialLinks';
 
 function mapStateToProps(state) {
