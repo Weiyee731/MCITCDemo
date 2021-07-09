@@ -96,6 +96,7 @@ function HomePageTwo(props) {
 
   const viewMore = (row) => {
     setMoreRows(row)
+    console.log(rows)
   }
 
   return (
@@ -131,7 +132,7 @@ function HomePageTwo(props) {
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
-        ), [allProducts])}
+        ), [allProducts.data, allProducts.handleTabChange, allProducts.isLoading, allProducts.tabs, rows])}
 
         {useMemo(() =>
           <div className="my-4">
