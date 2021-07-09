@@ -6,6 +6,7 @@ import { GitAction } from "../../store/action/gitAction";
 // third-party
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { url } from "../../services/utils";
 
 // application
 import BlockHeader from "../shared/BlockHeader";
@@ -51,9 +52,21 @@ class BlockMainCategories extends Component {
         <div style={categoryStyle} className="row mb-5">
           {this.props.productCategories.map((data, index) => {
             return (
-              <div key={index} style={categoryGrid} className="col-lg-2 col-md-2 p-2" onClick={() => console.log(data)}>
+              <div key={index} style={categoryGrid} className="col-lg-2 col-md-2 p-2"
+                onMouseDown={(e) => {
+                  if (e.button === 1) {
+                    window.open("/shop/ProductCategory/" + data.ProductCategory)
+                  }
+                }}
+
+                onClick={(e) => {
+                  window.location.href = "/shop/ProductCategory/" + data.ProductCategory
+                }}
+
+
+              >
                 <div>
-                  <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="150px" height="150px"/>
+                  <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="150px" height="150px" />
                   <br />
                   {data.ProductCategory}
                 </div>

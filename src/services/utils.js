@@ -6,6 +6,8 @@ export const url = {
   category: (category) => `/shop/catalog/${category.slug}`,
 
   product: (product) => `/shop/products/${product.slug}`,
+
+  productcateogory: (category) => `/shop/ProductCategory/${category.slug}`,
 };
 
 export function getCategoryParents(category) {

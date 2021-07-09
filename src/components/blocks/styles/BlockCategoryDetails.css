@@ -1,13 +1,36 @@
-.sub-category-items{
+.sub-category-items {
     cursor: pointer;
     margin-bottom: 5px;
 }
 
-.sub-category-items.active{
+.sub-category-items.active {
     font-weight: 600;
     color: #407036;
 }
 
-.sub-category-items:hover{
+.sub-category-items:hover {
     font-weight: 600;
+}
+
+.location-segment-checkboxes {
+    font-size: 10pt;
+    width: 100%;
+    margin-bottom: 0;
+    height: 20px;
+}
+
+.location-segment-checkboxes span {
+    margin-bottom: 0;
+    font-size: 10pt;
+}
+
+.sorting-option-label {
+    font-size: 14pt;
+    font-weight: 600;
+}
+
+.sorting-options-panel {
+    /* padding: .5rem;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px; */
 }
