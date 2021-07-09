@@ -36,7 +36,7 @@ class ProductTabs extends Component {
       {
         key: "description",
         title: "Description",
-        content: <ProductTabDescription />,
+        content: <ProductTabDescription product={this.props.product} />,
       },
       {
         key: "specification",

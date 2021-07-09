@@ -1313,6 +1313,12 @@ export class GitEpic {
     action$
       .ofType(GitAction.GetProductReviewByProductID)
       .switchMap(({ payload }) => {
+
+        console.log(url +
+          "Product_ViewReviewByProductID?PRODUCTID=" +
+          payload.ProductID +
+          "&PARENTPRODUCTREVIEWID=" +
+          payload.ParentProductReviewID)
         return fetch(url +
           "Product_ViewReviewByProductID?PRODUCTID=" +
           payload.ProductID +
@@ -1355,18 +1361,10 @@ export class GitEpic {
         .catch((error) => toast.error(error));
     });
 
-    addProductReview = (action$) =>
+  addProductReview = (action$) =>
     action$.ofType(GitAction.addProductReview).switchMap(({ payload }) => {
-
-      console.log(url +
-        "Product_AddReview?PARENTPRODUCTREVIEWID=" +  payload.parentProductReviewID
-        + "&PRODUCTID=" + payload.productID
-        + "&USERID=" + payload.UserID
-        + "&PRODUCTREVIEWRATING=" + payload.productReviewRating
-        + "&PRODUCTREVIEWCOMMENT=" + payload.productReviewComment)
-
       return fetch(url +
-        "Product_AddReview?PARENTPRODUCTREVIEWID=" +  payload.parentProductReviewID
+        "Product_AddReview?PARENTPRODUCTREVIEWID=" + payload.parentProductReviewID
         + "&PRODUCTID=" + payload.productID
         + "&USERID=" + payload.UserID
         + "&PRODUCTREVIEWRATING=" + payload.productReviewRating
@@ -1381,10 +1379,10 @@ export class GitEpic {
             json = [];
           }
 
-      
-    return fetch(url +
-            "Product_ViewProductReview?USERID=" +
-            payload.UserID )
+          return fetch(url +
+            "Product_ViewReviewByProductID?PRODUCTID=" +
+            payload.productID +
+            "&PARENTPRODUCTREVIEWID=0")
             .then((response) => response.json())
             .then((json) => {
               if (json !== "fail") {
@@ -1398,10 +1396,6 @@ export class GitEpic {
               };
             })
             .catch((error) => toast.error(error));
-          // return {
-          //   type: "ADDED-PRODUCTREVIEW",
-          //   payload: json,
-          // };
         })
         .catch((error) => toast.error(error));
     });

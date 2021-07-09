@@ -9,7 +9,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import { GitAction } from "../../store/action/gitAction";
 import GoogleMaps from "../../components/googleMaps/googleMapsForPolygonCreation";
 import "../../app/App.scss";
-import placeHolder from "../../assets/logo_white_word.png";
+import placeHolder from "../../assets/Emporia.png";
 import { Show360 } from "../../components/360/360";
 import Dropzone from "react-dropzone";
 import axios from "axios";
