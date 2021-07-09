@@ -1,0 +1,13 @@
+.sub-category-items{
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.sub-category-items.active{
+    font-weight: 600;
+    color: #407036;
+}
+
+.sub-category-items:hover{
+    font-weight: 600;
+}

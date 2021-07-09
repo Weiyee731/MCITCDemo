@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import { GitAction } from "../../store/action/gitAction";
 import "./home.component.css";
 import "../../app/App.scss";
-import logo from "../../logo.svg";
+// import logo from "../../logo.svg";
 
 function mapStateToProps(state) {
   return {
