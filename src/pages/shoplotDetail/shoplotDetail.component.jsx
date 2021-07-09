@@ -11,7 +11,7 @@ import "../../app/App.scss";
 // import GoogleMaps from "../../components/googleMaps/googleMaps";
 import { Show360 } from "../../components/360/360";
 import CloseIcon from "@material-ui/icons/Close";
-// import image from "../../assets/logo_white_word.png";
+// import image from "../../assets/Emporia.png";
 import Dropzone from "react-dropzone";
 import axios from "axios";
 import Logo from "../../assets/Emporia.png"
