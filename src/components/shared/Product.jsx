@@ -71,7 +71,7 @@ class Product extends Component {
     // }
 
     return (
-      <div className="block">
+      <div className="block" >
         <div
           style={{ width: "100%" }}
           className={`product product--layout--${layout}`}
@@ -130,15 +130,14 @@ class Product extends Component {
                 <div className="product__rating-stars">
                   <Rating value={product.ProductRating} />
                 </div>
-                <div className="product__rating-legend">
+                <div className="product__rating-legend" style={{ fontSize: "13pt" }}>
                   <HashLink
                     onClick={this.changeCurrentTab.bind(this, "reviews")}
                     to="#reviews"
-                  >{`${
-                    product.ProductReview != null
-                      ? JSON.parse(product.ProductReview).length
-                      : "0"
-                  } Reviews`}</HashLink>
+                  >{`${product.ProductReview != null
+                    ? JSON.parse(product.ProductReview).length
+                    : "0"
+                    } Reviews`}</HashLink>
                   <span>/</span>
                   <HashLink
                     onClick={this.changeCurrentTab.bind(this, "reviews")}
@@ -148,9 +147,9 @@ class Product extends Component {
                   </HashLink>
                 </div>
               </div>
-              <div className="product__description">
+              {/* <div className="product__description">
                 {product.ProductDescription}
-              </div>
+              </div> */}
               {/* <ul className="product__features">
               <li>Speed: 750 RPM</li>
               <li>Power Source: Cordless-Electric</li>
@@ -158,7 +157,7 @@ class Product extends Component {
               <li>Voltage: 20 Volts</li>
               <li>Battery Capacity: 2 Ah</li>
             </ul> */}
-              <ul className="product__meta">
+              <ul className="product__meta" style={{ fontSize: "13pt" }}>
                 <li className="product__meta-availability">
                   Availability: <span className="text-success">In Stock</span>
                 </li>
@@ -178,7 +177,7 @@ class Product extends Component {
                 </span>
               </div>
 
-              <div className="product__prices">{prices}</div>
+              <div className="product__prices" style={{ fontSize: "28pt" }}>{prices}</div>
 
               <form className="product__options">
                 {/* <div className="form-group product__option">
@@ -243,25 +242,31 @@ class Product extends Component {
                   </div>
                 </div>
               </div> */}
-                <div className="form-group product__option">
-                  <label
-                    htmlFor="product-quantity"
-                    className="product__option-label"
-                  >
-                    Quantity
-                  </label>
-                  <div className="product__actions">
-                    <div className="product__actions-item">
-                      <InputNumber
-                        id="product-quantity"
-                        aria-label="Quantity"
-                        className="product__quantity"
-                        size="lg"
-                        min={1}
-                        value={quantity}
-                        onChange={this.handleChangeQuantity}
-                      />
-                    </div>
+                <div className="row form-group product__option" style={{ marginLeft: "-45pt" }}>
+                  <div className="col-3">
+                    <label
+                      htmlFor="product-quantity"
+                      className="product__option-label"
+                      style={{ fontSize: "14pt" , paddingTop: "9pt"}}
+                    >
+                      Quantity
+                    </label>
+                  </div>
+                  <div className="col-2 product__actions-item">
+                    <InputNumber
+                      id="product-quantity"
+                      aria-label="Quantity"
+                      className="product__quantity"
+                      size="lg"
+                      min={1}
+                      value={quantity}
+                      onChange={this.handleChangeQuantity}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group product__option" >
+                  <div className="product__actions" style={{ paddingTop:"10pt" , marginLeft: "-35pt"}}>
                     <div className="product__actions-item product__actions-item--addtocart">
                       <AsyncAction
                         action={() => cartAddItem(product, [], quantity)}
@@ -274,7 +279,6 @@ class Product extends Component {
                               "btn-loading": loading,
                             })}
                           >
-                            
                             Add to cart
                           </button>
                         )}
@@ -300,7 +304,7 @@ class Product extends Component {
                           </button>
                         )}
                       />
-                      
+
                     </div>
                     <div className="product__actions-item product__actions-item--compare">
                       <AsyncAction

@@ -13,10 +13,9 @@ function Rating(props) {
 
     const stars = [1, 2, 3, 4, 5].map((rating) => {
         const rootClasses = classNames('rating__star', {
-            'rating__star--active': value >= rating,
+            'rating__star--active': value >= rating
         });
-
-        return <Rating13x12Svg key={rating} className={rootClasses} />;
+        return <Rating13x12Svg  key={rating} className={rootClasses} />;
     });
 
     return (

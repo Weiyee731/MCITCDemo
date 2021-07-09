@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+// import logo from "../../assets/logo_white_word.png";
 import logo from "../../assets/Emporia.png";
 import PDF from "./productPurchaseOrderPDF.component";
 import { CardMedia } from "@material-ui/core";
