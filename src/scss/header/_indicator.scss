@@ -1,18 +1,16 @@
 /*
 // .indicator
 */
+
 @import '../variables';
 @import '../functions';
 @import '../mixins/direction';
-
-
 $local-open-transition-duration: .2s;
-
-
 .indicator {
     display: flex;
     color: $indicator-default-font-color;
 }
+
 .indicator__button {
     display: flex;
     align-items: center;
@@ -22,7 +20,6 @@ $local-open-transition-duration: .2s;
     padding: 0;
     color: inherit;
     fill: currentColor;
-
     &:focus {
         outline: none;
     }
@@ -30,6 +27,7 @@ $local-open-transition-duration: .2s;
         color: inherit;
     }
 }
+
 .indicator__area {
     background: $indicator-default-bg;
     transition: background-color .2s;
@@ -39,6 +37,7 @@ $local-open-transition-duration: .2s;
     display: flex;
     align-items: center;
 }
+
 .indicator__value {
     height: 15px;
     font-size: 10px;
@@ -49,23 +48,20 @@ $local-open-transition-duration: .2s;
     background: $indicator-default-counter-bg;
     color: $indicator-default-counter-font-color;
     font-weight: $font-weight-bold;
-
     @include direction {
         #{$margin-inline-start}: -5px;
         #{$margin-inline-end}: -8px;
     }
 }
+
 .indicator__dropdown {
-    top: 55%;
+    top: 70%;
     position: absolute;
     visibility: hidden;
     transform-origin: top;
     transform: rotateX(60deg);
     opacity: 0;
-    transition: transform $local-open-transition-duration,
-                opacity $local-open-transition-duration,
-                visibility 0s $local-open-transition-duration;
-
+    transition: transform $local-open-transition-duration, opacity $local-open-transition-duration, visibility 0s $local-open-transition-duration;
     @include direction {
         #{$inset-inline-end}: 0;
     }
@@ -94,22 +90,25 @@ $local-open-transition-duration: .2s;
         opacity: 1;
         visibility: visible;
         transform: rotateX(0deg);
+        right: 1%;
     }
 }
-
 
 .indicator__icon {
     transition: transform .2s, opacity .2s;
 }
+
 .indicator__icon--open {
     position: absolute;
 }
+
 .indicator--trigger--click:not(.indicator--opened) {
     .indicator__icon--open {
         transform: scale(0);
         opacity: 0;
     }
 }
+
 .indicator--trigger--click.indicator--opened {
     .indicator__icon:not(.indicator__icon--open) {
         transform: scale(0);
@@ -117,14 +116,12 @@ $local-open-transition-duration: .2s;
     }
 }
 
-
 .indicator--mobile {
     .indicator__area {
         height: 36px;
         padding: 0 10px;
     }
 }
-
 
 @media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(lg-end)) {
     .indicator__area {

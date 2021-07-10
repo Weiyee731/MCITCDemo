@@ -21,7 +21,7 @@ function Header(props) {
 
   const backgroundColor = {
     backgroundColor: "#99bc3b",
-    overflow: "hidden",
+    // overflow: "hidden",
     position: "fixed",
     top: 0
   }
