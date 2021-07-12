@@ -52,7 +52,6 @@ class Indicator extends Component {
 
   handleButtonClick = (event) => {
     const { onClick, dropdown, handleOnLogin } = this.props;
-    console.log(this.props)
 
     if (dropdown) {
       event.preventDefault();

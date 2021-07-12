@@ -30,14 +30,20 @@ export class GitEpic {
     action$.ofType(GitAction.Login).switchMap(({ payload }) => {
       return fetch(url +
         "User_Login?username=" +
-        payload.email +
+        payload.username +
         "&password=" +
         payload.password
       )
         .then((response) => response.json())
         .then((json) => {
           if (json !== "fail") {
-            json = JSON.parse(json);
+            try {
+              json = JSON.parse(json);
+              window.location.reload(false);
+            }
+            catch (e) {
+              alert("Invalid username or password")
+            }
           } else {
             json = [];
           }

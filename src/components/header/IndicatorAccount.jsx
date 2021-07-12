@@ -96,9 +96,7 @@ class IndicatorAccount extends Component {
   }
 
   OnSubmitLogin(e) {
-    e.preventDefault();
-    var email = e.target.firstChild.value;
-    var password = e.target.firstChild.value;
+    console.log(this.state)
     this.props.loginUser(this.state);
   }
 
@@ -125,7 +123,6 @@ class IndicatorAccount extends Component {
   }
 
   logout = () => {
-    alert("ww2");
     this.props.callLogout({ UserID: localStorage.getItem("id") });
     browserHistory.push("/");
     localStorage.clear();
@@ -154,7 +151,7 @@ class IndicatorAccount extends Component {
 
     const dropdown = (
       <div className="account-menu">
-        {localStorage.getItem("isLogin") !== "false" && (
+        {localStorage.getItem("isLogin") !== "false" ? (
           <div>
             <div className="account-menu__divider" />
             <Link to="/account/dashboard" className="account-menu__user">
@@ -214,10 +211,7 @@ class IndicatorAccount extends Component {
               </li>
             </ul>
           </div>
-        )}
-
-        <>
-          {console.log(this.state.isToLogin)}
+        ) : (
           <Dialog Dialog open={this.state.isToLogin} onClose={() => { this.setState({ isToLogin: false }) }} fullWidth={true} maxWidth="sm">
             <DialogTitle onClose={() => this.setState({ isToLogin: false })} id="login">Login</DialogTitle>
             <DialogContent dividers>
@@ -292,12 +286,12 @@ class IndicatorAccount extends Component {
               <Button onClick={(e) => this.handleOnLogin(e)} color="secondary">
                 Cancel
               </Button>
-              <Button onClick={() => this.OnSubmitLogin} color="primary">
+              <Button onClick={() => this.OnSubmitLogin()} color="primary">
                 Login
               </Button>
             </DialogActions>
           </Dialog>
-        </>
+        )}
       </div>
     );
 

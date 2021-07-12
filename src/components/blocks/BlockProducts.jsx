@@ -2,6 +2,7 @@
 import React from "react";
 
 // third-party
+import classNames from "classnames";
 import PropTypes from "prop-types";
 
 // application
@@ -9,7 +10,8 @@ import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
 
 export default function BlockProducts(props) {
-  const { title, layout, featuredProduct, products } = props;
+  const { title, layout, featuredProduct, products, loading } = props;
+  console.log(products)
 
   let large;
   let smalls;
@@ -25,8 +27,11 @@ export default function BlockProducts(props) {
   }
 
   if (products.length > 0) {
-    const productsList = products.slice(0, 6).map((product, index) => (
-      <div key={index} className="block-products__list-item">
+    const blockClasses = classNames("block-products__list-item", {
+      "block-products-carousel--loading": loading,
+    });
+    const productsList = products.map((product, index) => (
+      <div key={index} className={blockClasses}>
         <ProductCard product={product} />
       </div>
     ));

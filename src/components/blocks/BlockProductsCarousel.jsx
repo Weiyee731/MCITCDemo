@@ -236,7 +236,7 @@ export default class BlockProductsCarousel extends Component {
 
 BlockProductsCarousel.propTypes = {
   title: PropTypes.string.isRequired,
-  layout: PropTypes.oneOf(["grid-2-sm", "grid-4", "grid-4-sm", "grid-5", "horizontal"]),
+  layout: PropTypes.oneOf(["grid-4", "grid-4-sm", "grid-5", "horizontal"]),
   rows: PropTypes.number,
   products: PropTypes.array,
   groups: PropTypes.array,
