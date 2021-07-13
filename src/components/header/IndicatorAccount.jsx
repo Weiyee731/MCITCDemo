@@ -40,9 +40,7 @@ class IndicatorAccount extends Component {
   };
 
   OnSubmitLogin(e) {
-    e.preventDefault();
-    var email = e.target.firstChild.value;
-    var password = e.target.firstChild.value;
+    console.log(this.state)
     this.props.loginUser(this.state);
   }
 
@@ -63,7 +61,6 @@ class IndicatorAccount extends Component {
   }
 
   logout = () => {
-    alert("ww2");
     this.props.callLogout({ UserID: localStorage.getItem("id") });
     browserHistory.push("/");
     localStorage.clear();
