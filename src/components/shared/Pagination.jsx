@@ -15,7 +15,6 @@ class Pagination extends Component {
         if (value < 1 || value > total || value === current) {
             return;
         }
-
         if (onPageChange) {
             onPageChange(value);
         }
@@ -24,10 +23,10 @@ class Pagination extends Component {
     getPages() {
         const { siblings, current, total } = this.props;
         const pages = [];
-        const min = Math.max(1, current - siblings - Math.max(0, siblings - total + current));
+        const min = Math.max(1, current - siblings - Math.max(1, siblings - total + current));
         const max = Math.min(total, min + siblings * 2);
 
-        for (let i = min; i <= max; i += 1) {
+        for (let i = min  ; i <= max; i += 1) {
             pages.push(i);
         }
 
@@ -35,7 +34,7 @@ class Pagination extends Component {
     }
 
     render() {
-        const { current, total } = this.props;
+        const { current, total, page } = this.props;
         const firstLinkClasses = classNames('page-item', {
             disabled: current <= 1,
         });

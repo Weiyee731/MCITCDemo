@@ -266,7 +266,7 @@ class Product extends Component {
                 </div>
 
                 <div className="form-group product__option" >
-                  <div className="product__actions" style={{ paddingTop:"10pt" , marginLeft: "-35pt"}}>
+                  <div className="product__actions" style={{ paddingTop:"10pt" , float: "right", marginRight:"-37pt"}}>
                     <div className="product__actions-item product__actions-item--addtocart">
                       <AsyncAction
                         action={() => cartAddItem(product, [], quantity)}

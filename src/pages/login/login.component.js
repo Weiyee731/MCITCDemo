@@ -58,7 +58,7 @@ class LoginComponent extends Component {
   render() {
     if (this.props.currentUser[0]) {
       toast.success(JSON.stringify(this.props.currentUser));
-      browserHistory.push("/MCITC/dashboard");
+      browserHistory.push("/Emporia");
       localStorage.setItem("isLogin", true);
       localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
       localStorage.setItem("lastname", this.props.currentUser[0].LastName);
@@ -76,7 +76,7 @@ class LoginComponent extends Component {
 
       if (this.state.rememberMe === false) {
         toast.success(JSON.stringify(this.props.currentUser));
-        browserHistory.push("/MCITC/dashboard");
+        browserHistory.push("/Emporia");
         localStorage.setItem("isLogin", true);
         cookies.set("isLogin", true);
 
@@ -94,7 +94,7 @@ class LoginComponent extends Component {
         date.setTime(date.getTime() + 60 * 60 * 24 * 1000);
         const options = { path: "/", expires: date };
         toast.success(JSON.stringify(this.props.currentUser));
-        browserHistory.push("/MCITC/dashboard");
+        browserHistory.push("/Emporia");
         localStorage.setItem("isLogin", true);
         cookies.set("isLogin", true, options);
 
@@ -112,7 +112,7 @@ class LoginComponent extends Component {
       window.location.reload(false);
     }
     return (
-      <form onSubmit={this.OnSubmitLogin} className="container">
+      <form onSubmit={this.OnSubmitLogin} className="container" style={{marginTop:"130px"}}>
         <div style={{ flex: 1, alignContent: "center", marginBottom: "1.5em" }}>
           <div style={{ width: "250px", height: "120px", margin: "auto" }}>
             <img

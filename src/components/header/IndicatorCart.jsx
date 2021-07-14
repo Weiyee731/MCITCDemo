@@ -177,7 +177,7 @@ class IndicatorCart extends React.Component {
           </div>
 
           <div className="dropcart__buttons">
-            <Link className="btn btn-secondary" to="/shop/this.props.cart">
+          <Link className="btn btn-secondary" to="/shop/cart">
               View Cart
             </Link>
             {localStorage.getItem("id") ? (
@@ -198,7 +198,7 @@ class IndicatorCart extends React.Component {
       );
       return (
         <Indicator
-          url="/shop/this.props.cart"
+          url="/shop/cart"
           dropdown={dropdown}
           value={this.props.cart.items.length}
           icon={<Cart20Svg />}
@@ -214,7 +214,7 @@ class IndicatorCart extends React.Component {
       );
       return (
         <Indicator
-          url="/shop/this.props.cart"
+          url="/shop/cart"
           dropdown={dropdown}
           value={this.props.cart.items.length}
           icon={<Cart20Svg />}

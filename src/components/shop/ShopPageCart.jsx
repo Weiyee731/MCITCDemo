@@ -205,7 +205,7 @@ class ShopPageCart extends Component {
         );
 
         return (
-            <div className="cart block container_" style={{width:"100%"}}>
+            <div className="cart block container_" style={{width:"100%",  marginTop:"130px"}}>
                 <div className="container">
                     <table className="cart__table cart-table">
                         <thead className="cart-table__head">
