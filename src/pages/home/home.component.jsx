@@ -41,13 +41,13 @@ class HomeComponent extends Component {
     this.props.signupUser(this.state);
   }
   handleChange(e) {
-    if (e.target.type == "email") {
+    if (e.target.type === "email") {
       this.setState({
         email: e.target.value,
       });
     } else if (
-      e.target.type == "text" &&
-      e.target.placeholder.indexOf("password") == -1
+      e.target.type === "text" &&
+      e.target.placeholder.indexOf("password") === -1
     ) {
       this.setState({
         name: e.target.value,

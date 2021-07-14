@@ -42,7 +42,7 @@ export class GitEpic {
               window.location.reload(false);
             }
             catch (e) {
-              alert("Invalid username or password")
+              toast.error("Invalid username or password")
             }
           } else {
             json = [];

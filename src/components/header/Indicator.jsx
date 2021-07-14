@@ -50,27 +50,9 @@ class Indicator extends Component {
     }
   };
 
-  // handleButtonClick = (event) => {
-  //   const { onClick, dropdown, handleOnLogin } = this.props;
-  //   console.log(this.props)
-
-  //   if (dropdown) {
-  //     event.preventDefault();
-  //   }
-
-  //   this.toggle();
-
-  //   if (onClick) {
-  //     onClick(event);
-  //   }
-
-  //   if (handleOnLogin) {
-  //     this.props.handleOnLogin();
-  //   }
-  // };
-
   handleButtonClick = (event) => {
     const { onClick, dropdown } = this.props;
+    console.log(this.props)
 
     if (dropdown) {
       event.preventDefault();
@@ -82,7 +64,6 @@ class Indicator extends Component {
       onClick(event);
     }
   };
-  
 
   toggle() {
     this.setState((state) => ({

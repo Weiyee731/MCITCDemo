@@ -20,12 +20,11 @@ function Header(props) {
   const { layout } = props;
 
   const backgroundColor = {
-    backgroundColor: "#99bc3b",
-    // overflow: "hidden",
+    backgroundColor: "#C1D7AE",
     position: "fixed",
     top: 0
   }
-  
+
   let bannerSection;
 
   if (layout === "default") {
@@ -36,11 +35,11 @@ function Header(props) {
             <LogoSvg />
           </Link>
         </div>
-        <div className="site-header__search" style={{margin: "0 16px"}}>
+        <div className="site-header__search" style={{ margin: "0 16px" }}>
           <Search context="header" />
         </div>
         <div className="nav-panel__indicators">
-          {localStorage.getItem("id") ? (
+          {localStorage.getItem("isLogin") === true ? (
             <>
               <Indicator url="/shop/wishlist" value={0} icon={<Heart20Svg />} />
               <CartIndicator />

@@ -1,14 +1,38 @@
+// React
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 import { Link } from "react-router-dom";
-import { Person20Svg } from "../../svg";
 import { browserHistory } from "react-router";
+
+// Application
+import { Person20Svg } from "../../svg";
 import Indicator from "./Indicator";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import Cookies from "universal-cookie";
 import userImage from "../../assets/user.jpg";
+
+// Third-party
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import clsx from 'clsx';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CloseIcon from '@material-ui/icons/Close';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import IconButton from "@material-ui/core/IconButton";
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Divider from '@material-ui/core/Divider';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 const cookies = new Cookies();
 function mapStateToProps(state) {
   return {
@@ -27,21 +51,61 @@ const backtoinventory = (e) => {
   localStorage.setItem("management", true);
 };
 
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
 class IndicatorAccount extends Component {
   constructor() {
     super();
-    this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
-  }
 
-  state = {
-    email: "",
-    password: "",
-    rememberMe: false,
-  };
+    this.state = {
+      username: "",
+      password: "",
+      usernameErr: false,
+      passwordErr: false,
+      rememberMe: false,
+      isToLogin: false,
+      hidden: true
+    };
+
+    this.handleOnLogin = this.handleOnLogin.bind(this);
+    this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
+    this.toggleShow = this.toggleShow.bind(this);
+  }
 
   OnSubmitLogin(e) {
     console.log(this.state)
     this.props.loginUser(this.state);
+  }
+
+  handleOnLogin() {
+    this.setState({
+      isToLogin: !this.state.isToLogin
+    })
   }
 
   handleChange(e, type) {
@@ -69,10 +133,12 @@ class IndicatorAccount extends Component {
     window.location.reload(false);
   };
 
+  toggleShow() {
+    this.setState({ hidden: !this.state.hidden });
+  }
+
   render() {
-    // console.log(this.props.currentUser[0]);
     if (this.props.currentUser[0]) {
-      // alert(JSON.stringify(this.props.currentUser[0]));
       localStorage.setItem("isLogin", true);
       localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
       localStorage.setItem("lastname", this.props.currentUser[0].LastName);
@@ -85,7 +151,7 @@ class IndicatorAccount extends Component {
 
     const dropdown = (
       <div className="account-menu">
-        {localStorage.getItem("isLogin") != "false" ? (
+        {localStorage.getItem("isLogin") !== "false" && (
           <div>
             <div className="account-menu__divider" />
             <Link to="/account/dashboard" className="account-menu__user">
@@ -111,7 +177,7 @@ class IndicatorAccount extends Component {
               {/* {console.log(localStorage.getItem("roleid"))} */}
               {localStorage.getItem("roleid") <= 15 ? (
                 <li onClick={() => backtoinventory("Dashboard")}>
-                  <Link to="/dashboard">Inventory</Link>
+                  <Link to="/dashboard" target="_blank">Inventory</Link>
                 </li>
               ) : (
                 ""
@@ -145,68 +211,60 @@ class IndicatorAccount extends Component {
               </li>
             </ul>
           </div>
-        ) : (
-          <form className="account-menu__form" onSubmit={this.OnSubmitLogin}>
-            <div className="account-menu__form-title">
-              Log In to Your Account
-            </div>
-            <div className="form-group">
-              <label htmlFor="header-signin-email" className="sr-only">
-                Email address
-              </label>
-              <TextField
-                className="form-control"
-                id="text-field-controlled"
-                hintText="Email"
-                value={this.state.email}
-                onChange={({ target }) => {
-                  this.setState({ email: target.value });
-                }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="header-signin-password" className="sr-only">
-                Password
-              </label>
-              <div className="account-menu__form-forgot">
-                <TextField
-                  className="form-control"
-                  id="text-field-controlled1"
-                  hintText="Password"
-                  value={this.state.password}
-                  type="password"
-                  onChange={({ target }) => {
-                    this.setState({ password: target.value });
-                  }}
-                />
-                <Link
-                  to="/account/login"
-                  className="account-menu__form-forgot-link"
-                >
-                  Forgot?
-                </Link>
-              </div>
-            </div>
-            <div className="form-group account-menu__form-button">
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                className="btn btn-block"
-              >
-                login
-              </Button>
-            </div>
-            <div className="account-menu__form-link">
-              <Link to="/account/login">Create An Account</Link>
-            </div>
-          </form>
+          // : (
+          // <div className="form-group">
+          //   <label htmlFor="header-signin-email" className="sr-only">
+          //     Username
+          //   </label>
+          //   <TextField
+          //     className="form-control"
+          //     id="text-field-controlled"
+          //     type="text"
+          //     hintText="Email"
+          //     value={this.state.email}
+          //     onChange={({ target }) => {
+          //       this.setState({ email: target.value });
+          //     }}
+          //   />
+          // </div>
+          // <div className="form-group">
+          //   <label htmlFor="header-signin-password" className="sr-only">
+          //     Password
+          //   </label>
+          //   <div className="account-menu__form-forgot">
+          //     <TextField
+          //       className="form-control"
+          //       id="text-field-controlled1"
+          //       hintText="Password"
+          //       value={this.state.password}
+          //       type="password"
+          //       onChange={({ target }) => {
+          //         this.setState({ password: target.value });
+          //       }}
+          //     />
+          //     <Link
+          //       to="/account/login"
+          //       className="account-menu__form-forgot-link"
+          //     >
+          //       Forgot?
+          //     </Link>
+          //   </div>
+          // </div>
+          // <div className="account-menu__form-link">
+          //   <Link to="/account/login">Create An Account</Link>
+          // </div>
         )}
       </div>
     );
 
     return (
-      <Indicator url="/account" dropdown={dropdown} icon={<Person20Svg />} />
+      <>
+        {localStorage.getItem("isLogin") !== "false" ? (
+          <Indicator url="/account" dropdown={dropdown} icon={<Person20Svg />} />
+        ) : (
+          <Indicator url="/login" icon={<Person20Svg />} />
+        )}
+      </>
     );
   }
 }

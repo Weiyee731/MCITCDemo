@@ -61,20 +61,20 @@ class BlockSlideShow extends Component {
       },
     },
     {
-        title: 'One more<br>Unique header',
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
-        image_classic: {
-            ltr: 'images/slides/slide_3.jpg',
-            rtl: 'images/slides/slide_3.jpg',
-        },
-        image_full: {
-            ltr: 'images/slides/slide_3_full.jpg',
-            rtl: 'images/slides/slide_3_full.jpg',
-        },
-        image_mobile: {
-            ltr: 'images/slides/slide_3_mobile.jpg',
-            rtl: 'images/slides/slide_3_mobile.jpg',
-        },
+      title: 'One more<br>Unique header',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
+      image_classic: {
+        ltr: 'images/slides/slide_3.jpg',
+        rtl: 'images/slides/slide_3.jpg',
+      },
+      image_full: {
+        ltr: 'images/slides/slide_3_full.jpg',
+        rtl: 'images/slides/slide_3_full.jpg',
+      },
+      image_mobile: {
+        ltr: 'images/slides/slide_3_mobile.jpg',
+        rtl: 'images/slides/slide_3_mobile.jpg',
+      },
     },
   ];
 

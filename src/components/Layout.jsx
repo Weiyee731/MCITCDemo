@@ -88,7 +88,6 @@ import QuotationListComponent from "../pages/quotationList/quotationList.compone
 import addPromotionBannerComponent from "../pages/addPromotionBanner/addPromotionBanner";
 import ViewProductPromotionComponent from "../pages/viewProductPromotion/viewProductPromotion.component";
 import ViewSettingsComponent from "../pages/viewSettings/viewSettings.component";
-import loginComponent from "../pages/login/login.component";
 import addPromoCodeComponent from "../pages/addPromoCode/addPromoCode.component";
 import ViewTransactions from "../pages/viewTransactions/viewTransactions.component";
 import ViewPromoCodes from "../pages/viewPromoCodes/viewPromoCodes.component";
@@ -161,18 +160,14 @@ const productLayouts = [
 ));
 
 const Access = () => {
-  // alert(localStorage.getItem("isLogin"));
-  if (
-    localStorage.getItem("isLogin") === false ||
-    localStorage.getItem("isLogin") === null
-  ) {
+  if (localStorage.getItem("isLogin") === false || localStorage.getItem("isLogin") === null) {
     return (
       <Router basename={"/Emporia"}>
         <div className="App">
           <nav className="navbar navbar-expand-lg navbar-light fixed-top">
             <div className="container">
-              <Link className="navbar-brand" to={"/Emporia/sign-in"}>
-              Emporia
+              <Link className="navbar-brand" to={"/Emporia/login"}>
+                Emporia
               </Link>
               <div
                 className="collapse navbar-collapse"
@@ -180,12 +175,12 @@ const Access = () => {
               >
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
-                    <Link className="nav-link" to={"/sign-in"}>
+                    <Link className="nav-link" to={"/login"}>
                       Login
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to={"/sign-up"}>
+                    <Link className="nav-link" to={"/signup"}>
                       Sign up
                     </Link>
                   </li>
@@ -198,8 +193,8 @@ const Access = () => {
             <div className="auth-inner">
               <Switch>
                 <Route path="/" component={Login} />
-                <Route path="/sign-in" component={Login} />
-                <Route path="/sign-up" component={SignUp} />
+                <Route path="/login" component={Login} />
+                <Route path="/signup" component={SignUp} />
               </Switch>
             </div>
           </div>
@@ -242,8 +237,8 @@ const Access = () => {
             />
             <Route path="/addProduct" component={AddProductComponent} />
             <Route path="/addSuppliers" component={AddSuppliersComponent} />
-            <Route path="/sign-in" component={Login} />
-            <Route path="/sign-up" component={SignUp} />
+            <Route path="/login" component={Login} />
+            <Route path="/signup" component={SignUp} />
             <Route path="/viewSaleByProduct" component={ViewProductComponent} />
             <Route path="/viewSettings" component={ViewSettingsComponent} />
             <Route
@@ -511,7 +506,7 @@ function Layout(props) {
                 path="/blog/post-full"
                 render={(props) => <BlogPagePost {...props} layout="full" />}
               />
-              <Route exact path="/login" component={loginComponent} />
+              <Route exact path="/login" component={Login} />
               <Route path="/account" component={AccountLayout} />
 
               <Redirect exact from="/site" to="/site/about-us" />
@@ -567,18 +562,18 @@ function Layout(props) {
                 exact
                 path="/site/typography"
                 component={SitePageTypography}
-                />
-                <Route
-                  exact
-                  path="/shop/ProductCategory/:categorySlug"
-                  render={(props) => (
-                    <BlockCategoryDetails
-                      {...props}
-                      layout="standard"
-                      categorySlug={props.match.params.categorySlug}
-                    />
-                  )}
-                />
+              />
+              <Route
+                exact
+                path="/shop/ProductCategory/:categorySlug"
+                render={(props) => (
+                  <BlockCategoryDetails
+                    {...props}
+                    layout="standard"
+                    categorySlug={props.match.params.categorySlug}
+                  />
+                )}
+              />
               <Route component={SitePageNotFound} />
             </Switch>
           </div>

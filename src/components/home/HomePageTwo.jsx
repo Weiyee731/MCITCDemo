@@ -99,6 +99,10 @@ function HomePageTwo(props) {
   let tempArray = []
 
   const loopWithSlice = (start, end) => {
+    console.log(start)
+    console.log(end)
+    console.log(allProducts)
+    console.log(allProducts.isLoading)
     const slicedPosts = allProducts.data.slice(start, end);
     tempArray = [...tempArray, ...slicedPosts];
     setPostsToShow(tempArray);
@@ -111,13 +115,12 @@ function HomePageTwo(props) {
 
   useEffect(() => {
     loopWithSlice(0, postsPerPage);
-    console.log("Hello")
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <React.Fragment>
-      <div style={{ marginTop: "130px" }}>
+      <div className="block--top-margin">
         <Helmet>
           <title>{theme.name}</title>
         </Helmet>
