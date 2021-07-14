@@ -1,5 +1,5 @@
 // react
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 // third-party
 import { Helmet } from 'react-helmet-async';
@@ -92,16 +92,32 @@ function HomePageTwo(props) {
     ], []),
   );
 
-  const [rows, setMoreRows] = useState(6)
+  const [postsToShow, setPostsToShow] = useState([]);
+  const [next, setNext] = useState(3);
 
-  const viewMore = (row) => {
-    setMoreRows(row)
-    console.log(rows)
-  }
+  let postsPerPage = 3
+  let tempArray = []
+
+  const loopWithSlice = (start, end) => {
+    const slicedPosts = allProducts.data.slice(start, end);
+    tempArray = [...tempArray, ...slicedPosts];
+    setPostsToShow(tempArray);
+  };
+
+  const handleShowMorePosts = () => {
+    loopWithSlice(next, next + postsPerPage);
+    setNext(next + postsPerPage);
+  };
+
+  useEffect(() => {
+    loopWithSlice(0, postsPerPage);
+    console.log("Hello")
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <React.Fragment>
-      <div style={{marginTop: "130px"}}>
+      <div style={{ marginTop: "130px" }}>
         <Helmet>
           <title>{theme.name}</title>
         </Helmet>
@@ -120,23 +136,22 @@ function HomePageTwo(props) {
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
-        ), [allProducts])}
+        ), [allProducts.data, allProducts.handleTabChange, allProducts.isLoading, allProducts.tabs])}
 
         {useMemo(() => (
-          <BlockProductsCarousel
+          <BlockProducts
             title="Featured Products"
-            layout="grid-4"
-            rows={rows}
-            products={allProducts.data}
+            layout="large-first"
+            products={postsToShow}
             loading={allProducts.isLoading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
-        ), [allProducts.data, allProducts.handleTabChange, allProducts.isLoading, allProducts.tabs, rows])}
+        ), [allProducts.handleTabChange, allProducts.isLoading, allProducts.tabs, postsToShow])}
 
         {useMemo(() =>
           <div className="my-4">
-            <BlockMoreButton viewMore={viewMore} />
+            <BlockMoreButton viewMore={handleShowMorePosts} />
           </div>
         )}
 

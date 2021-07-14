@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 // react
 import React from "react";
 
@@ -15,7 +16,7 @@ export default function BlockCategories(props) {
     const classes = `block-categories__item category-card category-card--layout--${layout}`;
 
     const subcategories = categories.slice(1, 10).map((sub, subIndex) => {
-      if (sub.HierarchyID == 2) {
+      if (sub.HierarchyID === 2) {
         return (
           <li key={subIndex}>
             <Link to={sub.url}>{sub.ProductCategory}</Link>
