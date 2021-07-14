@@ -10,7 +10,7 @@ import theme from '../../data/theme';
 
 function SitePageNotFound() {
     return (
-        <div className="block">
+        <div className="block" style={{marginTop:"80pt"}}>
             <Helmet>
                 <title>{`404 Page Not Found — ${theme.name}`}</title>
             </Helmet>
