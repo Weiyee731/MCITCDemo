@@ -70,9 +70,9 @@ const initialState = {
 
 const GreenCheckbox = withStyles({
     root: {
-        color: green[400],
+        color: "#2b535d",
         '&$checked': {
-            color: green[600],
+            color: '#2b535d',
         },
     },
     checked: {},
@@ -253,7 +253,7 @@ class BlockCategoryDetails extends Component {
 
                         <div className="filtering-segment mt-3">
                             <div className="location-segment">
-                                <div><LocalShippingOutlinedIcon /> SHIPPED FROM</div>
+                                <div className="filter-options-label"><LocalShippingOutlinedIcon /> SHIPPED FROM</div>
                                 <div>
                                     <FormControlLabel
                                         control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="WM" />}
@@ -281,7 +281,7 @@ class BlockCategoryDetails extends Component {
                             <hr />
 
                             <div className="prices-segment mt-3">
-                                <div><MonetizationOnOutlinedIcon /> PRICE</div>
+                                <div className="filter-options-label"><MonetizationOnOutlinedIcon /> PRICE</div>
 
                                 <div className="d-flex w-75 mt-1">
                                     <TextField id="min-price" className="mr-auto" label="MIN" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
@@ -289,7 +289,7 @@ class BlockCategoryDetails extends Component {
                                     <TextField id="max-price" className="ml-auto" label="MAX" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
 
                                 </div>
-                                <Button id="filter-price-button" variant="contained" color="primary" disableElevation className="w-75 mt-1" style={{ backgroundColor: 'rgb(153, 188, 59)' }} onClick={() => this.handleFilterPriceButton()}>
+                                <Button id="filter-price-button" variant="contained" color="primary" disableElevation className="w-75 mt-1" style={{ backgroundColor: '#2b535d' }} onClick={() => this.handleFilterPriceButton()}>
                                     Filter Price
                                 </Button>
                             </div>
@@ -297,7 +297,7 @@ class BlockCategoryDetails extends Component {
                             <hr />
 
                             <div className="promotion-segment mt-3">
-                                <div><LocalOfferOutlinedIcon /> PROMOTION</div>
+                                <div className="filter-options-label"><LocalOfferOutlinedIcon /> PROMOTION</div>
                                 <div>
                                     <FormControlLabel
                                         control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="Mega Sales" />}
@@ -320,7 +320,7 @@ class BlockCategoryDetails extends Component {
                             <hr />
 
                             <div className="rating-segment mt-3">
-                                <div><StarBorderOutlinedIcon /> RATINGS</div>
+                                <div className="filter-options-label"><StarBorderOutlinedIcon /> RATINGS</div>
                                 <div>
                                     <div id="fllter-5-stars" className="d-flex mb-2 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={5} readOnly size="small" />
@@ -351,7 +351,7 @@ class BlockCategoryDetails extends Component {
 
                         <hr />
                         <div className="d-flex">
-                            <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: 'rgb(153, 188, 59)' }} onClick={() => this.resetFilter()}> Reset Fitlers</Button>
+                            <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: '#2b535d', width: "100%" }} onClick={() => this.resetFilter()}> Reset Fitlers</Button>
                         </div>
                     </div>
                     <div className="col-md-10 col-12">

@@ -105,7 +105,7 @@ $border-end-end-radius: border-bottom-+$inline-end+-radius !default;
 // ----------------------------------------
 // light
 $light-color: #fff !default;
-$light-opposite-color: #3d464d !default;
+$light-opposite-color: #C1D7AE !default;
 $light-opposite-muted-color: #999 !default;
 $light-opposite-alt-color: #6c757d !default;
 $light-divider-color: #ebebeb !default;
@@ -113,11 +113,11 @@ $light-divider-color: #ebebeb !default;
 $dark-color: $light-opposite-color !default;
 $dark-opposite-color: $light-color !default;
 // accent
-$accent-color: #C1D7AE !default;
+$accent-color: #2b535e !default;
 $accent-opposite-color: $light-opposite-color !default;
 //links
-$link-color: #C1D7AE !default;
-$link-hover-color: #C1D7AE !default;
+$link-color: #2b535e !default;
+$link-hover-color: #2b535e !default;
 // ----------------------------------------
 // -- helpers
 // ----------------------------------------
@@ -431,7 +431,7 @@ $table-th-bg: #f7f7f7 !default;
 // ----------------------------------------
 // -- price
 // ----------------------------------------
-$price-color: $light-opposite-color !default;
+$price-color: $accent-color !default;
 $price-new-color: #ff2626 !default;
 $price-old-color: #b3b3b3 !default;
 // ----------------------------------------
@@ -488,7 +488,7 @@ $breadcrumb-arrow-color: #d1d1d1 !default;
 // primary
 // default
 $btn-primary-bg-color: $accent-color !default;
-$btn-primary-font-color: $accent-opposite-color !default;
+$btn-primary-font-color: $light-color !default;
 $btn-primary-icon-color: $btn-primary-font-color !default;
 // hover
 $btn-primary-hover-bg-color: $dark-color !default;

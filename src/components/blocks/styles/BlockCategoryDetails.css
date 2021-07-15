@@ -5,7 +5,7 @@
 
 .sub-category-items.active {
     font-weight: 600;
-    color: #407036;
+    color: #2b535d;
 }
 
 .sub-category-items:hover {
@@ -33,4 +33,9 @@
     /* padding: .5rem;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 5px; */
+}
+
+.filter-options-label{
+    color: "#3d464d";
+    font-weight: 600;
 }

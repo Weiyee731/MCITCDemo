@@ -20,7 +20,7 @@ function Header(props) {
   const { layout } = props;
 
   const backgroundColor = {
-    backgroundColor: "#C1D7AE",
+    backgroundColor: "#fff",
     position: "fixed",
     top: 0
   }

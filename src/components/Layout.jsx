@@ -52,6 +52,7 @@ import SitePageHowToBuy from "./site/SitePageHowToBuy";
 import SitePageHowToReturn from "./site/SitePageHowToReturn";
 import SitePageShippingDelivery from "./site/sitePageShippingDelivery";
 import BlockCategoryDetails from "./blocks/BlockCategoryDetails";
+import BlockAllProductCategory from "./blocks/BlockAllProductCategory";
 
 // data stubs
 import theme from "../data/theme";
@@ -571,6 +572,16 @@ function Layout(props) {
                     {...props}
                     layout="standard"
                     categorySlug={props.match.params.categorySlug}
+                  />
+                )}
+              />
+               <Route
+                exact
+                path="/shop/AllProductCategory/"
+                render={(props) => (
+                  <BlockAllProductCategory
+                    {...props}
+                    layout="standard"
                   />
                 )}
               />
