@@ -58,11 +58,9 @@ function SitePageAboutUs() {
               <h1 className="about-us__title">About Us</h1>
               <div className="about-us__text typography">
                 <p>
-                  Founded in 2020, MCITC is first Malaysia eCommerce platform
-                  which mainly connect to China region. Our focus is supply
-                  hardware to other Southeast Asia country. This far-aparted
-                  country is connected using our logistics and technology. We
-                  aim to serve the customer from all around the world.
+                  Founded in 2020, Emporia is an online platform that focusing on retails in hardwares and tools in Kuching, Sarawak, Malaysia. 
+                  With our great experience in providing retail services on our top quality of hardwares and tools around the whole Sarawak, and
+                  we are proud to announcing our online platform to serve better.  
                 </p>
               </div>
               <div className="about-us__team">

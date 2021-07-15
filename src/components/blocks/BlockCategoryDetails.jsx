@@ -53,9 +53,19 @@ function mapDispatchToProps(dispatch) {
 }
 
 const initialState = {
+    products: [],
     selectedCategory: [],
     productSubCategories: [],
-    selectedSubCategory: ""
+    selectedSubCategory: "",
+    filterOptions: {
+        shippedFrom_checkbox: [false, false, false, false],
+        minPrice: 0,
+        maxPrice: 0,
+        promotion_checkbox: [false, false, false],
+        rating: 1
+    },
+    isDataBind: false,
+
 }
 
 const GreenCheckbox = withStyles({
@@ -74,6 +84,8 @@ class BlockCategoryDetails extends Component {
 
         this.state = initialState;
         this.props.CallAllProducts();
+        this.handleFilterOption = this.handleFilterOption.bind(this)
+        this.resetFilter = this.resetFilter.bind(this)
     }
 
     componentDidMount() {
@@ -81,7 +93,7 @@ class BlockCategoryDetails extends Component {
             this.props.CallAllProductCategoryListing();
         }
         else {
-            console.log(this.props.match.params.categorySlug)
+            // console.log(this.props.match.params.categorySlug)
             let selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
 
             try {
@@ -108,11 +120,110 @@ class BlockCategoryDetails extends Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (!this.state.isDataBind) {
+            this.setState({ products: this.props.products, isDataBind: true })
+        }
+    }
 
+    handleFilterOption(e) {
+        let tempObject = this.state.filterOptions
+        let tempList = this.props.products
+        switch (e.target.id) {
+            case "min-price":
+                tempObject.minPrice = Number(e.target.value)
+                this.setState({ filterOptions: tempObject })
+                break;
+
+            case "max-price":
+                tempObject.maxPrice = Number(e.target.value)
+                this.setState({ filterOptions: tempObject })
+                break;
+
+            case "fllter-5-stars":
+                tempObject.rating = 5
+                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+
+                tempList = tempList.filter(el => el.ProductRating >= 5)
+                this.setState({ filterOptions: tempObject, products: tempList })
+                break;
+
+            case "fllter-4-stars":
+                tempObject.rating = 4
+                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                tempList = tempList.filter(el => el.ProductRating >= 4 && el.ProductRating < 5)
+                this.setState({ filterOptions: tempObject, products: tempList })
+                break;
+
+            case "fllter-3-stars":
+                tempObject.rating = 3
+                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                tempList = tempList.filter(el => el.ProductRating >= 3 && el.ProductRating < 4)
+                this.setState({ filterOptions: tempObject, products: tempList })
+                break;
+
+            case "fllter-2-stars":
+                tempObject.rating = 2
+                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                tempList = tempList.filter(el => el.ProductRating >= 2 && el.ProductRating < 3)
+                this.setState({ filterOptions: tempObject, products: tempList })
+                break;
+
+            case "fllter-1-stars":
+                tempObject.rating = 1
+                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                tempList = tempList.filter(el => el.ProductRating >= 1 && el.ProductRating < 2)
+                this.setState({ filterOptions: tempObject, products: tempList })
+                break;
+
+            case "fllter-no-stars":
+                tempObject.rating = 0
+                tempList = tempList.filter(el => el.ProductRating >= 0 && el.ProductRating < 1)
+                this.setState({ filterOptions: tempObject, products: tempList })
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    handleFilterPriceButton() {
+        let minPrice = this.state.filterOptions.minPrice
+        let maxPrice = this.state.filterOptions.maxPrice
+        let list = this.props.products
+        if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+            if (minPrice > maxPrice) {
+                list = list.filter(el => el.ProductSellingPrice > minPrice)
+                this.setState({ products: list })
+            }
+            else if (minPrice < 0 && maxPrice < 0) {
+                let tempObject = this.state.filterOptions
+                tempObject.minPrice = 0
+                tempObject.maxPrice = 0
+                this.setState({ filterOptions: tempObject })
+            }
+            else {
+                list = list.filter(el => el.ProductSellingPrice >= minPrice && el.ProductSellingPrice <= maxPrice)
+                this.setState({ products: list })
+            }
+        }
+        else {
+            this.setState({ products: this.props.products })
+        }
+    }
+
+    resetFilter() {
+        this.setState({
+            filterOptions: initialState.filterOptions,
+            products: this.props.products
+        })
     }
 
     render() {
-        console.log(this.props.products)
         return (
             <div className="container-fluid px-5 block--margin-top">
                 <div className="row">
@@ -138,7 +249,6 @@ class BlockCategoryDetails extends Component {
                                 }
                             </div>
                         </div>
-
                         <hr />
 
                         <div className="filtering-segment mt-3">
@@ -174,12 +284,12 @@ class BlockCategoryDetails extends Component {
                                 <div><MonetizationOnOutlinedIcon /> PRICE</div>
 
                                 <div className="d-flex w-75 mt-1">
-                                    <TextField className="mr-auto" label="MIN" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} ></TextField>
+                                    <TextField id="min-price" className="mr-auto" label="MIN" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
                                     <span className="mx-2 my-auto"> - </span>
-                                    <TextField className="ml-auto" label="MAX" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} ></TextField>
+                                    <TextField id="max-price" className="ml-auto" label="MAX" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
 
                                 </div>
-                                <Button variant="contained" color="primary" disableElevation className="w-75 mt-1" style={{ backgroundColor: 'rgb(153, 188, 59)' }}>
+                                <Button id="filter-price-button" variant="contained" color="primary" disableElevation className="w-75 mt-1" style={{ backgroundColor: 'rgb(153, 188, 59)' }} onClick={() => this.handleFilterPriceButton()}>
                                     Filter Price
                                 </Button>
                             </div>
@@ -212,27 +322,36 @@ class BlockCategoryDetails extends Component {
                             <div className="rating-segment mt-3">
                                 <div><StarBorderOutlinedIcon /> RATINGS</div>
                                 <div>
-                                    <div className="d-flex mb-1">
+                                    <div id="fllter-5-stars" className="d-flex mb-2 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={5} readOnly size="small" />
                                     </div>
-                                    <div className="d-flex">
+                                    <div id="fllter-4-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={4} readOnly size="small" />
                                         <Typography component="legend"> & above</Typography>
                                     </div>
-                                    <div className="d-flex">
+                                    <div id="fllter-3-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={3} readOnly size="small" />
                                         <Typography component="legend"> & above</Typography>
                                     </div>
-                                    <div className="d-flex">
+                                    <div id="fllter-2-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)} >
                                         <Rating name="read-only" value={2} readOnly size="small" />
                                         <Typography component="legend"> & above</Typography>
                                     </div>
-                                    <div className="d-flex">
+                                    <div id="fllter-1-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={1} readOnly size="small" />
                                         <Typography component="legend"> & above</Typography>
                                     </div>
+                                    <div id="fllter-no-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                        <Rating name="read-only" value={0} readOnly size="small" />
+                                        <Typography component="legend"> - No Ratings</Typography>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <hr />
+                        <div className="d-flex">
+                            <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: 'rgb(153, 188, 59)' }} onClick={() => this.resetFilter()}> Reset Fitlers</Button>
                         </div>
                     </div>
                     <div className="col-md-10 col-12">
@@ -264,9 +383,9 @@ class BlockCategoryDetails extends Component {
                         <div className="product-list container-fluid">
                             <div className="row row-cols-5">
                                 {
-                                    this.props.products.length > 0
+                                    this.state.products.length > 0
                                         ?
-                                        this.props.products.map((el, idx) => {
+                                        this.state.products.map((el, idx) => {
                                             return (
                                                 <div className="col mb-3">
                                                     <ProductCard product={el}></ProductCard>
