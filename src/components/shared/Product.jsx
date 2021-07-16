@@ -247,7 +247,7 @@ class Product extends Component {
                     <label
                       htmlFor="product-quantity"
                       className="product__option-label"
-                      style={{ fontSize: "14pt" , paddingTop: "9pt"}}
+                      style={{ fontSize: "14pt", paddingTop: "9pt" }}
                     >
                       Quantity
                     </label>
@@ -266,8 +266,8 @@ class Product extends Component {
                 </div>
 
                 <div className="form-group product__option" >
-                  <div className="product__actions" style={{ paddingTop:"10pt" , float: "right", marginRight:"-37pt"}}>
-                    <div className="product__actions-item product__actions-item--addtocart">
+                  <div className="product__actions" style={{ paddingTop: "10pt", float: "right", marginRight: "-40pt" }}>
+                    <div className="product__actions-item product__actions-item--addtocart mx-1">
                       <AsyncAction
                         action={() => cartAddItem(product, [], quantity)}
                         render={({ run, loading }) => (
@@ -284,7 +284,7 @@ class Product extends Component {
                         )}
                       />
                     </div>
-                    <div className="product__actions-item product__actions-item--wishlist">
+                    <div className="product__actions-item product__actions-item--wishlist mx-1">
                       <AsyncAction
                         action={() => wishlistAddItem(product)}
                         render={({ run, loading }) => (
@@ -304,9 +304,8 @@ class Product extends Component {
                           </button>
                         )}
                       />
-
                     </div>
-                    <div className="product__actions-item product__actions-item--compare">
+                    <div className="product__actions-item product__actions-item--compare ml-1">
                       <AsyncAction
                         action={() => compareAddItem(product)}
                         render={({ run, loading }) => (

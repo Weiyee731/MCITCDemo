@@ -1,14 +1,15 @@
 /*
 // .block-banner
 */
+
 @import '../variables';
 @import '../mixins/preloader';
-
-
 .block-loader {
+    margin-top: $block-margin-top;
     position: relative;
     min-height: 320px;
 }
+
 .block-loader__spinner {
     @include preloader(80px);
 }

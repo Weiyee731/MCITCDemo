@@ -7,6 +7,8 @@ import { Helmet } from 'react-helmet-async';
 // application
 import shopApi from '../../api/shop';
 import { useDeferredData, useProductColumns, useProductTabs } from '../../services/hooks';
+import { connect } from "react-redux";
+import { GitAction } from "../../store/action/gitAction";
 
 // blocks
 import BlockBanner from '../blocks/BlockBanner';
@@ -25,6 +27,19 @@ import BlockMoreButton from '../blocks/BlockMoreButton';
 import categories from '../../data/shopBlockCategories';
 import posts from '../../data/blogPosts';
 import theme from '../../data/theme';
+
+function mapStateToProps(state) {
+  return {
+    loading: state.counterReducer["loading"],
+    products: state.counterReducer["products"],
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    CallAllProducts: (credentials) => dispatch(GitAction.CallAllProducts(credentials)),
+  };
+}
 
 function HomePageTwo(props) {
   /**
@@ -70,6 +85,10 @@ function HomePageTwo(props) {
     (tab) => shopApi.getAllProducts()
   );
 
+  // const viewMoreProducts = useDeferredData(() => (
+  //   shopApi.getViewMoreProducts()
+  // ), []);
+
   /**
    * Product columns.
    */
@@ -99,10 +118,10 @@ function HomePageTwo(props) {
   let tempArray = []
 
   const loopWithSlice = (start, end) => {
-    console.log(start)
-    console.log(end)
-    console.log(allProducts)
-    console.log(allProducts.isLoading)
+    // console.log(start)
+    // console.log(end)
+    // console.log(allProducts)
+    // console.log(allProducts.isLoading)
     const slicedPosts = allProducts.data.slice(start, end);
     tempArray = [...tempArray, ...slicedPosts];
     setPostsToShow(tempArray);
@@ -118,9 +137,11 @@ function HomePageTwo(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(props)
+
   return (
     <React.Fragment>
-      <div className="block--top-margin">
+      <div className="block--margin-top">
         <Helmet>
           <title>{theme.name}</title>
         </Helmet>
@@ -134,29 +155,27 @@ function HomePageTwo(props) {
             title="New Arrivals"
             layout="grid-4"
             rows={2}
-            products={allProducts.data}
-            loading={allProducts.isLoading}
+            products={props.products}
+            loading={props.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
-        ), [allProducts.data, allProducts.handleTabChange, allProducts.isLoading, allProducts.tabs])}
+        ), [allProducts.handleTabChange, allProducts.tabs, props.loading, props.products])}
 
         {useMemo(() => (
           <BlockProducts
             title="Featured Products"
             layout="large-first"
-            products={postsToShow}
-            loading={allProducts.isLoading}
+            products={props.products}
+            loading={props.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
-        ), [allProducts.handleTabChange, allProducts.isLoading, allProducts.tabs, postsToShow])}
+        ), [allProducts.handleTabChange, allProducts.tabs, props.loading, props.products])}
 
-        {useMemo(() =>
-          <div className="my-4">
-            <BlockMoreButton viewMore={handleShowMorePosts} />
-          </div>
-        )}
+        <div className="my-4">
+          <BlockMoreButton viewMore={handleShowMorePosts} />
+        </div>
 
         {/* {useMemo(() => <BlockFeatures layout="boxed" />, [])} */}
 
@@ -178,4 +197,4 @@ function HomePageTwo(props) {
   );
 }
 
-export default HomePageTwo;
+export default connect(mapStateToProps, mapDispatchToProps)(HomePageTwo);
