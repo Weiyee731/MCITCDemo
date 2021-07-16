@@ -23,45 +23,49 @@ function Suggestions(props) {
 
     const rootClasses = classNames(`suggestions suggestions--location--${context}`, className);
 
-    const list = (products && products.map((product) => (
-        <li key={product.id} className="suggestions__item">
-            {product.images && product.images.length > 0 && (
-                <div className="suggestions__item-image product-image">
-                    <div className="product-image__body">
-                        <img className="product-image__img" src={product.images[0]} alt="" />
+    const list = (products && products.map((product) => {
+        let images = JSON.parse(product.ProductImages)
+        return (
+            <li key={product.ProductID} className="suggestions__item">
+                {images && images.length > 0 && (
+                    <div className="suggestions__item-image product-image">
+                        <div className="product-image__body">
+                            <img className="product-image__img" src={images[0]} alt="" />
+                        </div>
                     </div>
+                )}
+                <div className="suggestions__item-info">
+                    <Link className="suggestions__item-name" to={url.product(product)}>
+                        {product.ProductName}
+                    </Link>
+                    <div className="suggestions__item-meta">SKU: 83690/32</div>
                 </div>
-            )}
-            <div className="suggestions__item-info">
-                <Link className="suggestions__item-name" to={url.product(product)}>
-                    {product.ProductName}
-                </Link>
-                <div className="suggestions__item-meta">SKU: 83690/32</div>
-            </div>
-            <div className="suggestions__item-price">
-                <Currency value={product.price} />
-            </div>
-            {context === 'header' && (
-                <div className="suggestions__item-actions">
-                    <AsyncAction
-                        action={() => cartAddItem(product)}
-                        render={({ run, loading }) => (
-                            <button
-                                type="button"
-                                onClick={run}
-                                title="Add to cart"
-                                className={classNames('btn btn-primary btn-sm btn-svg-icon', {
-                                    'btn-loading': loading,
-                                })}
-                            >
-                                <Cart16Svg />
-                            </button>
-                        )}
-                    />
+                <div className="suggestions__item-price">
+                    <Currency value={product.ProductSellingPrice} />
                 </div>
-            )}
-        </li>
-    )));
+                {context === 'header' && (
+                    <div className="suggestions__item-actions">
+                        <AsyncAction
+                            action={() => cartAddItem(product)}
+                            render={({ run, loading }) => (
+                                <button
+                                    type="button"
+                                    onClick={run}
+                                    title="Add to cart"
+                                    className={classNames('btn btn-primary btn-sm btn-svg-icon', {
+                                        'btn-loading': loading,
+                                    })}
+                                >
+                                    <Cart16Svg />
+                                </button>
+                            )}
+                        />
+                    </div>
+                )}
+            </li>
+        )
+    }
+    ));
 
     return (
         <div className={rootClasses}>

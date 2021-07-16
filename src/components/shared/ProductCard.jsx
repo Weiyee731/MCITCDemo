@@ -166,7 +166,7 @@ function ProductCard(props) {
                 >
                   Add To Cart
                 </button>
-                <button
+                {/* <button
                   type="button"
                   onClick={run}
                   className={classNames(
@@ -177,7 +177,7 @@ function ProductCard(props) {
                   )}
                 >
                   Add To Cart
-                </button>
+                </button> */}
               </React.Fragment>
             )}
           />

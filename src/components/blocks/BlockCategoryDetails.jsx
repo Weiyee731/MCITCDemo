@@ -224,8 +224,9 @@ class BlockCategoryDetails extends Component {
     }
 
     render() {
+        console.log(this.props)
         return (
-            <div className="container-fluid px-5 block--margin-top">
+            <div className="container-fluid px-5 block block--margin-top">
                 <div className="row">
                     <div className="col-md-2 col-12">
                         <div className="category-segment">
@@ -381,13 +382,13 @@ class BlockCategoryDetails extends Component {
 
                         {/* product catalog */}
                         <div className="product-list container-fluid">
-                            <div className="row row-cols-5">
+                            <div className="row">
                                 {
                                     this.state.products.length > 0
                                         ?
                                         this.state.products.map((el, idx) => {
                                             return (
-                                                <div className="col mb-3">
+                                                <div className="products__list-item">
                                                     <ProductCard product={el}></ProductCard>
                                                 </div>
                                             )
