@@ -39,7 +39,7 @@ function mapDispatchToProps(dispatch) {
 class AccountPageAddAddress extends Component {
   constructor(props) {
     super(props);
-    this.state = [
+    this.state =
       {
         Address: "",
         USERID: JSON.parse(window.localStorage.getItem("id")),
@@ -50,10 +50,9 @@ class AccountPageAddAddress extends Component {
         USERPOSCODE: "",
         USERSTATE: "",
         USERCITY: "",
-        USERCOUNTRYID: "",
+        USERCOUNTRYID: 1,
         // COUNTRYID: "1",
-      },
-    ];
+      };
     this.addAddress = this.addAddress.bind(this);
     this.selectCountry = this.selectCountry.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -183,6 +182,7 @@ class AccountPageAddAddress extends Component {
                   style={{ width: "100%" }}
                   size="small"
                   onChange={this.handleChange.bind(this, "Address")}
+                  required
                 />
               </div>
 
@@ -195,6 +195,7 @@ class AccountPageAddAddress extends Component {
                     style={{ width: "100%" }}
                     size="small"
                     onChange={this.handleChange.bind(this, "email")}
+                    required
                   />
                 </div>
 
@@ -206,6 +207,7 @@ class AccountPageAddAddress extends Component {
                     style={{ width: "100%" }}
                     size="small"
                     onChange={this.handleChange.bind(this, "ContactNo")}
+                    required
                   />
                 </div>
               </div>
@@ -218,6 +220,7 @@ class AccountPageAddAddress extends Component {
                   style={{ width: "100%" }}
                   size="small"
                   onChange={this.handleChange.bind(this, "USERADDRESSLINE1")}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -228,6 +231,7 @@ class AccountPageAddAddress extends Component {
                   style={{ width: "100%" }}
                   size="small"
                   onChange={this.handleChange.bind(this, "USERADDRESSLINE2")}
+                  required
                 />
               </div>
 
@@ -240,6 +244,7 @@ class AccountPageAddAddress extends Component {
                     style={{ width: "100%" }}
                     size="small"
                     onChange={this.handleChange.bind(this, "USERPOSCODE")}
+                    required
                   />
                 </div>
 
@@ -251,6 +256,7 @@ class AccountPageAddAddress extends Component {
                     style={{ width: "100%" }}
                     size="small"
                     onChange={this.handleChange.bind(this, "USERCITY")}
+                    required
                   />
                 </div>
               </div>
@@ -264,6 +270,7 @@ class AccountPageAddAddress extends Component {
                     style={{ width: "100%" }}
                     size="small"
                     onChange={this.handleChange.bind(this, "USERSTATE")}
+                    required
                   />
                 </div>
 

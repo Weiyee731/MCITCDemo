@@ -116,7 +116,7 @@ class PageCheckout extends Component {
                 {
                   label: "Check Order",
                   name: "step 1",
-                  content: step1Content,
+                  content: step1Content
                 },
                 {
                   label: "Place Order",

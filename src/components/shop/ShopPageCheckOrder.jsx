@@ -86,8 +86,16 @@ class PageCheckOrder extends Component {
   };
 
   handleRemoveClick = (e, AddressBookNo) => {
-    this.props.CallDeleteAddress(AddressBookNo);
+    console.log("ShopPageCheckOrder")
     console.log(AddressBookNo);
+
+    let deletedAddress = {
+      USERID: window.localStorage.getItem("id"),
+      AddressBookNo: AddressBookNo,
+    };
+
+    this.props.CallDeleteAddress(deletedAddress);
+    
   };
 
   goEdit = (e, AddressBookNo) => {
@@ -137,14 +145,14 @@ class PageCheckOrder extends Component {
             </div>
             <div className="address-card__footer">
               <Link
-                to="/account/addresses/5"
+                to="/account/addresses" 
+                // to="/account/addresses/5"
                 onClick={(e) => this.goEdit(e, address.UserAddressBookID)}
               >
                 Edit
               </Link>
               &nbsp;&nbsp;
               <Link
-                to="/"
                 onClick={(e) =>
                   this.handleRemoveClick(e, address.UserAddressBookID)
                 }
@@ -282,7 +290,6 @@ class PageCheckOrder extends Component {
       <div className="checkout block">
         <div className="container"></div>
       </div>
-      // </div>
     );
   }
 

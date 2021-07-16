@@ -199,7 +199,7 @@ class IndicatorCart extends React.Component {
       return (
         <Indicator
           url="/shop/cart"
-          dropdown={dropdown}
+          // dropdown={dropdown}
           value={this.props.cart.items.length}
           icon={<Cart20Svg />}
         />
@@ -208,14 +208,14 @@ class IndicatorCart extends React.Component {
       const dropdown = (
         <div className="dropcart">
           <div className="dropcart__empty">
-            Your shopping this.props.cart is empty!
+            Your shopping cart is empty!
           </div>
         </div>
       );
       return (
         <Indicator
           url="/shop/cart"
-          dropdown={dropdown}
+          // dropdown={dropdown}
           value={this.props.cart.items.length}
           icon={<Cart20Svg />}
         />

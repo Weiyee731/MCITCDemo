@@ -6,16 +6,20 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { browserHistory } from "react-router";
 
 // application
 import AsyncAction from '../shared/AsyncAction';
 import Currency from '../shared/Currency';
 import InputNumber from '../shared/InputNumber';
 import PageHeader from '../shared/PageHeader';
-import { cartRemoveItem, cartUpdateQuantities } from '../../store/cart';
+import { cartRemoveItem, cartUpdateQuantities, cartAddItem } from '../../store/cart';
 import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
 import Logo from "../../assets/Emporia.png"
+import { Button } from "@material-ui/core";
+import shopApi from "../../api/shop";
+// import { cartAddItem } from "../../store/cart";
 
 // data stubs
 import theme from '../../data/theme';
@@ -51,6 +55,7 @@ class ShopPageCart extends Component {
                 quantities: state.quantities,
             };
         });
+
     };
 
     cartNeedUpdate() {
@@ -64,20 +69,47 @@ class ShopPageCart extends Component {
         }).length > 0;
     }
 
-    renderItems() {
-        const { cart, cartRemoveItem } = this.props;
+    CheckOutOnClick = (items) => {
 
+        if (localStorage.getItem("id")) {
+            console.log("CHECKOUT")
+            let ProductIDs = [];
+            let ProductQuantity = [];
+            items.map((row) => {
+                ProductIDs.push(row.product.ProductID);
+                ProductQuantity.push(row.quantity);
+            });
+            shopApi
+                .addOrder({
+                    UserID: localStorage.getItem("id"),
+                    Products: ProductIDs,
+                    ProductQuantity: ProductQuantity,
+                })
+                .then((json) => {
+                    browserHistory.push("/shop/checkout?order=" + json[0].OrderID);
+                    window.location.reload(false);
+                });
+        }
+        else {
+            browserHistory.push("/login");
+            window.location.reload(false);
+        }
+
+    };
+
+    renderItems() {
+        const { cart, cartRemoveItem, cartAddItem, cartUpdateQuantities } = this.props;
         return cart.items.map((item) => {
             let image;
-            let options;
-            
+            let options = [];
+
             const productImage = JSON.parse(item.product.ProductImages)
 
             if (productImage.length > 0) {
                 image = (
                     <div className="product-image">
                         <Link to={url.product(item.product)} className="product-image__body">
-                            <img className="product-image__img" src={productImage[0].ProductMediaUrl} alt=""  onError={(e)=>{e.target.onerror = null; e.target.src=Logo}}/>
+                            <img className="product-image__img" src={productImage[0].ProductMediaUrl} alt="" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                         </Link>
                     </div>
                 );
@@ -110,8 +142,9 @@ class ShopPageCart extends Component {
                 />
             );
 
+
+
             return (
-     
                 <tr key={item.id} className="cart-table__row">
                     <td className="cart-table__column cart-table__column--image">
                         {image}
@@ -123,7 +156,7 @@ class ShopPageCart extends Component {
                         {options}
                     </td>
                     <td className="cart-table__column cart-table__column--price" data-title="Price">
-                        <Currency value={item.product.ProductSellingPrice} currency={"RM"}/>
+                        <Currency value={item.product.ProductSellingPrice} currency={"RM"} />
                     </td>
                     <td className="cart-table__column cart-table__column--quantity" data-title="Quantity">
                         <InputNumber
@@ -133,7 +166,22 @@ class ShopPageCart extends Component {
                         />
                     </td>
                     <td className="cart-table__column cart-table__column--total" data-title="Total">
-                        <Currency value={item.product.ProductSellingPrice * item.quantity} currency={"RM"}/>
+                        {
+                            this.state.quantities.length > 0 ?
+                                this.state.quantities.filter(x => x.itemId === item.id).length > 0 ?
+                                    this.state.quantities.filter(x => x.itemId === item.id).map((x) => {
+                                        cartUpdateQuantities(this.state.quantities)
+                                        return (
+                                            <>
+                                                <Currency value={item.product.ProductSellingPrice * x.value} currency={"RM"} />
+                                            </>
+                                        )
+                                    })
+                                    :
+                                    <Currency value={item.product.ProductSellingPrice * item.quantity} currency={"RM"} />
+                                :
+                                <Currency value={item.product.ProductSellingPrice * item.quantity} currency={"RM"} />
+                        }
                     </td>
                     <td className="cart-table__column cart-table__column--remove">
                         {removeButton}
@@ -161,7 +209,6 @@ class ShopPageCart extends Component {
                 <tr key={index}>
                     <th>{extraLine.title}</th>
                     <td>
-                        {/* <Currency value={extraLine.price} /> */}
                         {calcShippingLink}
                     </td>
                 </tr>
@@ -173,7 +220,6 @@ class ShopPageCart extends Component {
                 <thead className="cart__totals-header">
                     <tr>
                         <th style={{ textAlign: "right" }}>Subtotal</th>
-                        {/* <td><Currency value={cart.subtotal} /></td> */}
                     </tr>
                 </thead>
                 <tbody className="cart__totals-body">
@@ -205,7 +251,7 @@ class ShopPageCart extends Component {
         );
 
         return (
-            <div className="cart block container_" style={{width:"100%",  marginTop:"130px"}}>
+            <div className="cart block container_" style={{ width: "100%", marginTop: "130px" }}>
                 <div className="container">
                     <table className="cart__table cart-table">
                         <thead className="cart-table__head">
@@ -220,8 +266,42 @@ class ShopPageCart extends Component {
                         </thead>
                         <tbody className="cart-table__body">
                             {this.renderItems()}
+
                         </tbody>
+
+
                     </table>
+                    {
+                        this.props.history !== undefined ?
+                            <div style={{ textAlign: "right", padding: "30px 30px",backgroundColor:"white"}}>
+                                
+                                <div className="row">
+                                    <div className="col-10" style={{ fontWeight: "bold" }}>  Subtotal </div>
+                                    <div className="col-2" ><Currency value={this.props.cart.subtotal}></Currency></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-10" style={{ fontWeight: "bold" }}>  Shipping </div>
+                                    <div className="col-2" ><Currency value={this.props.cart.extraLines[0].price}></Currency></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-10" style={{ fontWeight: "bold" }}>  Tax </div>
+                                    <div className="col-2" ><Currency value={this.props.cart.extraLines[1].price}></Currency></div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-10" style={{ fontWeight: "bold" }}>  Total </div>
+                                    <div className="col-2" ><Currency value={this.props.cart.total}></Currency></div>
+                                </div>
+                                <div className="mt-5">
+                                        <Link className="btn btn-primary" variant="outlined" color="primary"
+                                            onClick={this.CheckOutOnClick.bind(this, this.props.cart.items)}
+                                        > Checkout
+                                        </Link>
+                                </div>
+                            </div>
+                            :
+                            ""
+                    }
+
                     {/* <div className="cart__actions">
                         <form className="cart__coupon-form">
                             <label htmlFor="input-coupon-code" className="sr-only">Password</label>
@@ -234,7 +314,7 @@ class ShopPageCart extends Component {
                         </div>
                     </div> */}
 
-                   
+
                 </div>
             </div>
         );
@@ -252,9 +332,10 @@ class ShopPageCart extends Component {
 
         if (cart.quantity) {
             content = this.renderCart();
+            console.log("hihi")
         } else {
             content = (
-                <div className="block block-empty">
+                <div className="block block-empty" style={{marginTop:"130px"}}>
                     <div className="container">
                         <div className="block-empty__body">
                             <div className="block-empty__message">Your shopping cart is empty!</div>
@@ -288,6 +369,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     cartRemoveItem,
     cartUpdateQuantities,
+    cartAddItem,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCart);

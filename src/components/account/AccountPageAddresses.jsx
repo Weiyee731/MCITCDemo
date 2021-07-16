@@ -109,6 +109,8 @@ class AccountPageAddresses extends Component {
   };
 
   onDeleteClick = (data) => {
+    console.log("DELETE", data)
+    console.log(this.state)
     let deletedAddress = {
       USERID: window.localStorage.getItem("id"),
       AddressBookNo: data,

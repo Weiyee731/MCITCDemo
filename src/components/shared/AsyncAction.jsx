@@ -19,6 +19,7 @@ class AsyncAction extends Component {
     this.canceled = true;
   }
 
+
   run = () => {
     const { action } = this.props;
     const { loading } = this.state;
@@ -27,6 +28,7 @@ class AsyncAction extends Component {
       return;
     }
     this.setState({ loading: true });
+
     action().then(() => {
       if (this.canceled) {
         return;
@@ -38,7 +40,7 @@ class AsyncAction extends Component {
   render() {
     const { render } = this.props;
     const { loading } = this.state;
-
+    console.log(this)
     if (render) {
       return render({ run: this.run, loading });
     }
