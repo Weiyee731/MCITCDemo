@@ -566,12 +566,13 @@ function Layout(props) {
               />
               <Route
                 exact
-                path="/shop/ProductCategory/:categorySlug"
+                path="/shop/ProductCategory/:categoryID/:categorySlug"
                 render={(props) => (
                   <BlockCategoryDetails
                     {...props}
                     layout="standard"
                     categorySlug={props.match.params.categorySlug}
+                    categoryID={props.match.params.categoryID}
                   />
                 )}
               />

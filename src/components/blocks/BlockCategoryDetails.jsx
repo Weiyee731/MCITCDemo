@@ -32,6 +32,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
+import { isNullOrEmptyString } from "../../Utilities/UtilRepo";
 
 // styles
 import './styles/BlockCategoryDetails.css'
@@ -48,6 +49,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
+        CallGetProductByProductCategorySlug: (propsData) => dispatch(GitAction.CallGetProductByProductCategorySlug(propsData)),
         CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
     };
 }
@@ -83,26 +85,43 @@ class BlockCategoryDetails extends Component {
         super(props);
 
         this.state = initialState;
-        this.props.CallAllProducts();
+        
         this.handleFilterOption = this.handleFilterOption.bind(this)
         this.resetFilter = this.resetFilter.bind(this)
     }
 
     componentDidMount() {
+        if(!isNullOrEmptyString(this.props.match.params.categoryID)){
+            let propsData = {
+                ProductCategoryID: Number(this.props.match.params.categoryID),
+                ProductPerPage: 30,
+                Page: 1,
+                Filter: "-"
+            }
+
+            this.props.CallGetProductByProductCategorySlug(propsData)
+        }
+
         if (Array.isArray(this.props.productCategories) && this.props.productCategories.length === 0) {
             this.props.CallAllProductCategoryListing();
         }
         else {
-            // console.log(this.props.match.params.categorySlug)
             let selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
 
             try {
                 if (selectedCategory.length > 0) {
-                    let subCategories = JSON.parse(selectedCategory[0].HierarchyItem)
-                    this.setState({
-                        productSubCategories: subCategories,
-                        selectedSubCategory: (subCategories.length > 0) ? subCategories[0].ProductCategory : ""
-                    })
+                    if(selectedCategory[0].HierarchyItem !== null){
+                        let subCategories = JSON.parse(selectedCategory[0].HierarchyItem)
+                        this.setState({
+                            productSubCategories: subCategories,
+                            selectedSubCategory: (subCategories.length > 0) ? subCategories[0].ProductCategory : ""
+                        })
+                    }
+                    else {
+                        this.setState({
+                            productSubCategories: [],
+                        })
+                    }
                 }
                 else {
                     this.setState({
@@ -224,13 +243,24 @@ class BlockCategoryDetails extends Component {
     }
 
     render() {
-        console.log(this.props)
+        // console.log(this.props.products)
         return (
             <div className="container-fluid px-5 block block--margin-top">
                 <div className="row">
                     <div className="col-md-2 col-12">
                         <div className="category-segment">
-                            <div style={{ cursor: "pointer", fontWeight: 600 }}>
+                            <div 
+                                style={{ cursor: "pointer", fontWeight: 600 }} 
+                                onMouseDown={(e) => {
+                                    if (e.button === 1) {
+                                      window.open("/shop/AllProductCategory/")
+                                    }
+                                  }}
+                  
+                                  onClick={(e) => {
+                                    window.location.href = "/shop/AllProductCategory/"
+                                  }}
+                            >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div>
                             <div style={{ fontSize: '10pt' }}>

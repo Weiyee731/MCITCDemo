@@ -180,6 +180,9 @@ export class GitAction {
   static AddProductPurchaseOrder = "ADD-PRODUCTPURCHASEORDER";
   static AddedProductPurchaseOrder = "ADDED-PRODUCTPURCHASEORDER";
 
+  static GetProductsByCategorySlug = "GET-PRODUCT-BY-CATEGORY-SLUG";
+  static GotProductsByCategorySlug = "GOT-PRODUCT-BY-CATEGORY-SLUG";
+
   static CallAllProducts() {
     return {
       type: GitAction.GetProduct,
@@ -241,6 +244,14 @@ export class GitAction {
       payload: prodData,
     };
   }
+
+  static CallGetProductByProductCategorySlug(prodData) {
+    return {
+      type: GitAction.GetProductsByCategorySlug,
+      payload: prodData,
+    };
+  }
+
 
   // Product Variation
   static GetProductVariation = "GET-PRODUCTVARIATION";

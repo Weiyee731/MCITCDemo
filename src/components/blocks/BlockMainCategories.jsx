@@ -55,12 +55,12 @@ class BlockMainCategories extends Component {
               <div key={index} style={categoryGrid} className="col-lg-2 col-md-2 p-2"
                 onMouseDown={(e) => {
                   if (e.button === 1) {
-                    window.open("/shop/ProductCategory/" + data.ProductCategory)
+                    window.open("/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory)
                   }
                 }}
 
                 onClick={(e) => {
-                  window.location.href = "/shop/ProductCategory/" + data.ProductCategory
+                  window.location.href = "/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory
                 }}
 
 

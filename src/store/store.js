@@ -69,6 +69,7 @@ const rootEpic = combineEpics(
   gitEpic.updateProductCategory,
   gitEpic.deleteProductCategory,
   gitEpic.addProductPurchaseOrder,
+  gitEpic.GetProduct_ItemListByCategorySlug,
   //=================PROMOTION=============================//
   gitEpic.getAllPromotion,
   gitEpic.AddPromotion,
