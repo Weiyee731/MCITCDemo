@@ -1878,6 +1878,10 @@ export class GitEpic {
         payload.PromotionTitle +
         "&PROMOTIONDESC=" +
         payload.PromotionDesc +
+        "&BANNERIMAGE=" +
+        payload.BannerImage +
+        "&SLIDEORDER=" +
+        payload.SlideOrder +
         "&PROMOTIONSTARTDATE=" +
         payload.promoStart +
         "&PROMOTIONENDDATE=" +
@@ -1912,6 +1916,10 @@ export class GitEpic {
         payload.PromotionTitle +
         "&PROMOTIONDESC=" +
         payload.PromotionDesc +
+        "&BANNERIMAGE=" +
+        payload.BannerImage +
+        "&SLIDEORDER=" +
+        payload.SlideOrder +
         "&PROMOTIONSTARTDATE=" +
         payload.promoStart +
         "&PROMOTIONENDDATE=" +

@@ -102,7 +102,6 @@ class AccountPageEditAddress extends Component {
   };
 
   editAddress() {
-    console.log(this.state);
     this.props.CallUpdateAddress(this.state);
     this.props.parentCallback(false);
   }
