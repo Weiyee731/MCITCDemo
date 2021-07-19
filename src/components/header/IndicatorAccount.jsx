@@ -177,7 +177,7 @@ class IndicatorAccount extends Component {
               {/* {console.log(localStorage.getItem("roleid"))} */}
               {localStorage.getItem("roleid") <= 15 ? (
                 <li onClick={() => backtoinventory("Dashboard")}>
-                  <Link to="/dashboard" target="_blank">Inventory</Link>
+                  <Link to="/dashboard">Inventory</Link>
                 </li>
               ) : (
                 ""

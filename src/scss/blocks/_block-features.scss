@@ -1,59 +1,59 @@
 /*
 // .block-features
 */
+
 @import '../variables';
 @import '../functions';
 @import '../mixins/card';
 @import '../mixins/direction';
-
-
 .block-features {}
+
 .block-features__list {
     @include card();
     display: flex;
 }
+
 .block-features__item {
     flex-basis: 0;
     flex-grow: 1;
     padding: 16px 24px;
     display: flex;
 }
+
 .block-features__divider {
     flex-shrink: 0;
 }
+
 .block-features__icon {
     flex-shrink: 0;
     width: 48px;
     height: 48px;
     fill: $block-features-icon-color;
-
     @include direction {
         #{$margin-inline-end}: 20px;
     }
-
     svg {
         display: block;
     }
 }
+
 .block-features__content {
     padding-top: 2px;
 }
+
 .block-features__title {
     font-size: 17px;
     line-height: 24px;
     font-weight: $font-weight-bold;
 }
+
 .block-features__subtitle {
     font-size: 14px;
 }
 
-
-
 .block-features--layout--boxed {
     $local-margin: 14px;
-
-    margin-top: -($block-margin-bottom - $local-margin);
-
+    // margin-top: -($block-margin-bottom - $local-margin);
     .block-features__list {
         border: none;
     }
@@ -70,12 +70,10 @@
     }
     .block-features__icon {
         margin-bottom: 12px;
-
         @include direction {
             #{$margin-inline-end}: 0;
         }
     }
-
     @media (min-width: 480px) and (max-width: breakpoint(md-end)) {
         .block-features__list {
             flex-wrap: wrap;
@@ -88,7 +86,6 @@
             height: $local-margin;
         }
     }
-
     @media (max-width: 479px) {
         .block-features__list {
             flex-wrap: wrap;
@@ -103,17 +100,15 @@
     }
 }
 
-
 .block-features--layout--classic {
-    margin-top: -($block-margin-bottom - 30px);
-
+    // margin-top: -($block-margin-bottom - 30px);
     .block-features__divider {
         flex-shrink: 0;
         width: 2px;
         background: $card-border-color;
     }
-
-    @media (max-width: breakpoint(lg-end)) and (min-width: breakpoint(lg-start)), (max-width: breakpoint(sm-end)) and (min-width: breakpoint(sm-start)){
+    @media (max-width: breakpoint(lg-end)) and (min-width: breakpoint(lg-start)),
+    (max-width: breakpoint(sm-end)) and (min-width: breakpoint(sm-start)) {
         .block-features__item {
             padding: 12px;
         }
@@ -126,7 +121,6 @@
             padding-top: 0;
         }
     }
-
     @media (max-width: breakpoint(md-end)) and (min-width: 420px) {
         .block-features__list {
             flex-wrap: wrap;
@@ -141,7 +135,6 @@
             height: 2px;
         }
     }
-
     @media (max-width: breakpoint(xs-end)) and (min-width: 420px) {
         .block-features__item {
             text-align: center;
@@ -152,13 +145,11 @@
             width: 100%;
             display: flex;
             justify-content: center;
-
             @include direction {
                 #{$margin-inline-end}: 0;
             }
         }
     }
-
     @media (max-width: 419px) {
         .block-features__list {
             flex-wrap: wrap;

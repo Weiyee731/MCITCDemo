@@ -111,33 +111,18 @@ function HomePageTwo(props) {
     ], []),
   );
 
-  const [postsToShow, setPostsToShow] = useState([]);
-  const [next, setNext] = useState(3);
-
-  let postsPerPage = 3
+  const [postsToShow, setPostsToShow] = useState(props.products);
   let tempArray = []
 
-  const loopWithSlice = (start, end) => {
-    // console.log(start)
-    // console.log(end)
-    // console.log(allProducts)
-    // console.log(allProducts.isLoading)
-    const slicedPosts = allProducts.data.slice(start, end);
-    tempArray = [...tempArray, ...slicedPosts];
-    setPostsToShow(tempArray);
+  const loopWithSlice = () => {
+    tempArray = [...postsToShow, ...props.products];
+    console.log(tempArray)
+    setPostsToShow(tempArray)
   };
 
   const handleShowMorePosts = () => {
-    loopWithSlice(next, next + postsPerPage);
-    setNext(next + postsPerPage);
+    loopWithSlice();
   };
-
-  useEffect(() => {
-    loopWithSlice(0, postsPerPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  console.log(props)
 
   return (
     <React.Fragment>
@@ -149,6 +134,8 @@ function HomePageTwo(props) {
         {useMemo(() => <BlockSlideShow />, [])}
 
         {useMemo(() => <BlockMainCategories />, [])}
+
+        {useMemo(() => <BlockFeatures layout="boxed" />, [])}
 
         {useMemo(() => (
           <BlockProductsCarousel
@@ -166,32 +153,30 @@ function HomePageTwo(props) {
           <BlockProducts
             title="Featured Products"
             layout="large-first"
-            products={props.products}
+            products={postsToShow}
             loading={props.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
-        ), [allProducts.handleTabChange, allProducts.tabs, props.loading, props.products])}
+        ), [allProducts.handleTabChange, allProducts.tabs, postsToShow, props.loading])}
 
         <div className="my-4">
           <BlockMoreButton viewMore={handleShowMorePosts} />
         </div>
 
-        {/* {useMemo(() => <BlockFeatures layout="boxed" />, [])} */}
+        {/* {useMemo(() => <BlockBanner />, [])} */}
 
-        {/* {useMemo(() => <BlockBanner />, [])}
-
-      {useMemo(
-        () => (
-          <BlockProducts
-            title="Bestsellers"
-            layout="large-first"
-            featuredProduct={allProducts.data}
-            products={allProducts.data.slice(1, 7)}
-          />
-        ),
-        [allProductsData]
-      )} */}
+        {/* {useMemo(
+          () => (
+            <BlockProducts
+              title="Bestsellers"
+              layout="large-first"
+              featuredProduct={props.products}
+              products={props.products.slice(1, 7)}
+            />
+          ),
+          [props.products]
+        )} */}
       </div>
     </React.Fragment>
   );
