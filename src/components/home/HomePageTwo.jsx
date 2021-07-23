@@ -37,7 +37,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProducts: (credentials) => dispatch(GitAction.CallAllProducts(credentials)),
+    CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
   };
 }
 
@@ -76,12 +76,12 @@ function HomePageTwo(props) {
   );
 
   const allProducts = useProductTabs(
-    useMemo(
-      () => [
-        { id: 1, name: "", categorySlug: undefined },
-      ],
-      []
-    ),
+    useMemo(() => [
+      { id: 1, name: 'All', categorySlug: undefined },
+      { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
+      { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
+      { id: 4, name: 'Plumbing', categorySlug: 'plumbing' },
+    ], []),
     (tab) => shopApi.getAllProducts()
   );
 
@@ -92,6 +92,7 @@ function HomePageTwo(props) {
   /**
    * Product columns.
    */
+  console.log(allProducts)
   let allProductsCategoryData = props.allcategories;
   let allProductsData = props.allproducts;
   const columns = useProductColumns(
@@ -132,9 +133,7 @@ function HomePageTwo(props) {
         </Helmet>
 
         {useMemo(() => <BlockSlideShow />, [])}
-
         {useMemo(() => <BlockMainCategories />, [])}
-
         {useMemo(() => <BlockFeatures layout="boxed" />, [])}
 
         {useMemo(() => (
@@ -142,7 +141,7 @@ function HomePageTwo(props) {
             title="New Arrivals"
             layout="grid-4"
             rows={2}
-            products={props.products}
+            products={allProducts.data}
             loading={props.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
@@ -153,7 +152,7 @@ function HomePageTwo(props) {
           <BlockProducts
             title="Featured Products"
             layout="large-first"
-            products={postsToShow}
+            products={allProducts.data}
             loading={props.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
@@ -163,20 +162,6 @@ function HomePageTwo(props) {
         <div className="my-4">
           <BlockMoreButton viewMore={handleShowMorePosts} />
         </div>
-
-        {/* {useMemo(() => <BlockBanner />, [])} */}
-
-        {/* {useMemo(
-          () => (
-            <BlockProducts
-              title="Bestsellers"
-              layout="large-first"
-              featuredProduct={props.products}
-              products={props.products.slice(1, 7)}
-            />
-          ),
-          [props.products]
-        )} */}
       </div>
     </React.Fragment>
   );
