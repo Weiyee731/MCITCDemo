@@ -62,15 +62,15 @@ class ProductTabReviews extends Component {
 
 
   onSubmitReviewReply() {
-    this.props.CallAddProductReview({
-      parentProductReviewID: this.state.replyid,
-      productID: this.props.product.ProductID,
-      UserID: "1",
-      productReviewRating: "0",
-      productReviewComment: this.state.productReviewComment
-    })
-
-    this.setState({reply : false })
+      this.props.CallAddProductReview({
+        parentProductReviewID: this.state.replyid,
+        productID: this.props.product.ProductID,
+        UserID: "1",
+        productReviewRating: "0",
+        productReviewComment: this.state.productReviewComment
+      })
+  
+      this.setState({reply : false })    
   }
 
   onSubmitReview() {
@@ -81,7 +81,8 @@ class ProductTabReviews extends Component {
       productReviewRating: this.state.productReviewRating,
       productReviewComment: this.state.productReviewComment
     })
-    this.setState({productReviewComment: "", productReviewRating: 0})
+    this.setState({productReviewComment: ""})
+    this.setState({productReviewRating: 0})
   }
 
   handlePageChange = (page) => {
@@ -90,7 +91,10 @@ class ProductTabReviews extends Component {
 
   render() {
 
-    console.log(this.props.reviews)
+    console.log("localStorage" ,localStorage)
+    console.log("this.props.loading" ,this.props.loading)
+    
+
     const { page } = this.state;
     if (this.props.reviews != null) {
       var reviewsList = (this.props.reviews)
@@ -142,7 +146,7 @@ class ProductTabReviews extends Component {
                             >
                               <div id="review_reply_author" className=" review__author">{reviewReply.Name}</div>
                               <div id="review_reply_text" className=" review__text">{reviewReply.ProductReviewComment}</div>
-                              <div id="review_reply_date" className=" review__date" style={{ display: "flex", width: "100%", justifyContent: "space-between" }} >
+                              <div id="review_reply_date" className=" review__date" style={{ display: "flex", width: "100%", justifyContent: "space-between" }}>
                                 <div>{reviewReply.CreatedDate}</div>
                               </div>
                             </div>
@@ -183,8 +187,7 @@ class ProductTabReviews extends Component {
     }
 
     return (
-
-      this.props.loading == false ?
+      this.props.loading === true ?
         <div div className="reviews-view" id="reviews" >
           <div className="reviews-view__list">
             <h3 className="reviews-view__header">Customer Reviews</h3>
@@ -193,15 +196,6 @@ class ProductTabReviews extends Component {
               <div className="reviews-list__pagination">
                 <Pagination
                   current={page}
-                  // siblings={3}
-                  // data={this.props.reviews}
-                  // page={this.props.product.ProductReview != null ? this.props.product.ProductReview : ""}
-                  
-                  // total={
-                  //   this.props.product.ProductReview != null
-                  //     ? parseInt(JSON.parse(this.props.product.ProductReview).length / 3)
-                  //     : ""
-                  // }
                   total={
                     this.props.product.ProductReview != null
                       ? parseInt(JSON.parse(this.props.product.ProductReview).length)

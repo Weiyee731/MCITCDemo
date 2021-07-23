@@ -63,7 +63,7 @@ class Pagination extends Component {
                     <button
                         type="button"
                         className="page-link page-link--with-arrow"
-                        aria-label="Previous"
+                        aria-label="Previous2"
                         onClick={() => this.setPage(current - 1)}
                     >
                         <ArrowRoundedLeft8x13Svg className="page-link__arrow page-link__arrow--left" aria-hidden="true" />

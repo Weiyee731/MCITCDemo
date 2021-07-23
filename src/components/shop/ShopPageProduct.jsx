@@ -42,7 +42,7 @@ function ShopPageProduct(props) {
         return;
       }
       product.map((productToBeUsed) => {
-        if (productToBeUsed.slug === productSlug) {
+        if (productToBeUsed.slug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_') === productSlug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')) {
           setProduct(productToBeUsed);
           setIsLoading(false);
         }
@@ -98,7 +98,7 @@ function ShopPageProduct(props) {
 
   const breadcrumb = [
     { title: "Home", url: url.home() },
-    { title: "Shop", url: url.catalog() },
+    // { title: "Shop", url: url.catalog() },
     { title: product.slug, url: url.product(product) },
   ];
 

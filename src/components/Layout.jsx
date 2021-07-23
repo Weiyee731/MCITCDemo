@@ -154,7 +154,8 @@ const productLayouts = [
       <ShopPageProduct
         {...props}
         {...options}
-        productSlug="brandix-screwdriver-screw1500acc"
+        productSlug={props.match.params.productSlug}
+        // productSlug="brandix-screwdriver-screw1500acc"
       />
     )}
   />

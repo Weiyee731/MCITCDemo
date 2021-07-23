@@ -11,7 +11,8 @@ import ProductCard from "../shared/ProductCard";
 
 export default function BlockProducts(props) {
   const { title, layout, featuredProduct, products, loading } = props;
-  console.log(products)
+  console.log("products", products)
+  console.log("props",props)
 
   let large;
   let smalls;

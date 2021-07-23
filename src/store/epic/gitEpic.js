@@ -459,6 +459,28 @@ export class GitEpic {
         .catch((error) => toast.error(error));
     });
 
+  getViewMoreProducts = (action$) =>
+    action$.ofType(GitAction.GetViewMoreProduct).switchMap(({ payload }) => {
+      return fetch(url +
+        "Product_ViewMoreItemList?PRODUCTPERPAGE=" + payload.ProductPerPage +
+        "&PAGE=" + payload.Page
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+          return {
+            type: "GOT-VIEWMORE-PRODUCT",
+            payload: json,
+          };
+        })
+        .catch((error) => toast.error(error));
+    });
+
+
   getAllProductsByStatus = (action$) =>
     action$
       .ofType(GitAction.GetProductByProductStatus)
@@ -496,7 +518,7 @@ export class GitEpic {
           "&Page=" +
           payload.Page +
           "&Filter=" +
-          payload.Filter 
+          payload.Filter
         )
           .then((response) => response.json())
           .then((json) => {

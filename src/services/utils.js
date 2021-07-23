@@ -5,7 +5,8 @@ export const url = {
 
   category: (category) => `/shop/catalog/${category.slug}`,
 
-  product: (product) => `/shop/products/${product.slug}`,
+  product: (product) => `/shop/products/${product.slug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')}`,
+  // product: (product) => `/shop/products/${product.slug}`,
 
   productcateogory: (category) => `/shop/ProductCategory/${category.slug}`,
 };

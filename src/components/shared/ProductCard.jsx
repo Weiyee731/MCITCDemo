@@ -40,7 +40,7 @@ function ProductCard(props) {
   let image;
   let price;
   let features;
-
+ 
   //   if (product.badges.includes("sale")) {
   //     badges.push(
   //       <div key="sale" className="product-card__badge product-card__badge--sale">
@@ -66,7 +66,6 @@ function ProductCard(props) {
   //   badges = badges.length ? (
   //     <div className="product-card__badges-list">{badges}</div>
   //   ) : null;
-
   if (product.ProductImages && product.ProductImages.length > 0) {
     image = (
       <div className="product-card__image product-image">

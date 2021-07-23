@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   supplier: [],
   statistic: [],
   products: [],
+  viewMoreProducts: [],
   reviews: [],
   categories: [],
   productCategories: [],
@@ -195,6 +196,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         products: action.payload,
+      });
+
+    case GitAction.GetViewMoreProduct:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotViewMoreProduct:
+      return Object.assign({}, state, {
+        loading: false,
+        viewMoreProducts: action.payload,
       });
 
     case GitAction.GetProductsByCategorySlug:

@@ -71,6 +71,9 @@ function Search(props) {
     onClose,
     location,
   } = props;
+
+  props.CallAllProducts();
+
   const [cancelFn, setCancelFn] = useState(() => () => { });
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [hasSuggestions, setHasSuggestions] = useState(false);
@@ -119,7 +122,6 @@ function Search(props) {
     };
 
     const query = event.target.value;
-
     setQuery(query);
 
     if (query === '') {
@@ -132,8 +134,20 @@ function Search(props) {
           options.category = category;
         }
 
+      //   shopApi.getSuggestions(query, options).then((products) => {
+      //     if (canceled) {
+      //       return;
+      //     }
+
+      //     setSuggestedProducts(products);
+      //     setHasSuggestions(products.length > 0);
+      //     setSuggestionsOpen(true);
+      //   });
+      // }, 100);
+
         let filteredProduct = props.products.filter(el =>
-          el.ProductName.toLowerCase().trim().includes(query.toLowerCase().trim()))
+          
+          el.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_').toLowerCase().trim().includes(query.toLowerCase().trim()))
 
         setSuggestedProducts(filteredProduct.slice(0, 5));
         setHasSuggestions(filteredProduct.length > 0);
@@ -142,8 +156,11 @@ function Search(props) {
         if (canceled) {
           return;
         }
+
       }, 100);
     }
+
+
 
     setCancelFn(() => newCancelFn);
   };
@@ -179,7 +196,6 @@ function Search(props) {
       <Cross20Svg />
     </button>
   );
-
   return (
     <div className={rootClasses} ref={wrapper} onBlur={handleBlur}>
       <div className="search__body">

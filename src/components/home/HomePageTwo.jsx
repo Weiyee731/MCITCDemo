@@ -92,7 +92,7 @@ function HomePageTwo(props) {
   /**
    * Product columns.
    */
-  console.log(allProducts)
+  console.log("allProducts",allProducts)
   let allProductsCategoryData = props.allcategories;
   let allProductsData = props.allproducts;
   const columns = useProductColumns(
@@ -142,7 +142,7 @@ function HomePageTwo(props) {
             layout="grid-4"
             rows={2}
             products={allProducts.data}
-            loading={props.loading}
+            loading={allProducts.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
@@ -153,7 +153,7 @@ function HomePageTwo(props) {
             title="Featured Products"
             layout="large-first"
             products={allProducts.data}
-            loading={props.loading}
+            loading={allProducts.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
