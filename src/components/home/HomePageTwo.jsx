@@ -32,12 +32,14 @@ function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
     products: state.counterReducer["products"],
+    viewMoreProducts: state.counterReducer["viewMoreProducts"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
+    CallViewMoreFunctionProduct: (propsData) => dispatch(GitAction.CallViewMoreFunctionProduct(propsData)),
   };
 }
 
@@ -85,6 +87,16 @@ function HomePageTwo(props) {
     (tab) => shopApi.getAllProducts()
   );
 
+  // const allProducts = useProductTabs(
+  //   useMemo(() => [
+  //     { id: 1, name: 'All', categorySlug: undefined },
+  //     { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
+  //     { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
+  //     { id: 4, name: 'Plumbing', categorySlug: 'plumbing' },
+  //   ], []),
+  //   (tab) => shopApi.getAllProducts()
+  // );
+
   // const viewMoreProducts = useDeferredData(() => (
   //   shopApi.getViewMoreProducts()
   // ), []);
@@ -92,7 +104,6 @@ function HomePageTwo(props) {
   /**
    * Product columns.
    */
-  console.log("allProducts",allProducts)
   let allProductsCategoryData = props.allcategories;
   let allProductsData = props.allproducts;
   const columns = useProductColumns(
@@ -112,18 +123,33 @@ function HomePageTwo(props) {
     ], []),
   );
 
-  const [postsToShow, setPostsToShow] = useState(props.products);
+  const [postsToShow, setPostsToShow] = useState(props.viewMoreProducts);
   let tempArray = []
+  let pages =1
+  const [Page, setPage] = useState(pages);
+  let ProductPerPage =3
 
   const loopWithSlice = () => {
-    tempArray = [...postsToShow, ...props.products];
-    console.log(tempArray)
+    tempArray = [...postsToShow, ...props.viewMoreProducts];
+
     setPostsToShow(tempArray)
+    console.log(tempArray)
+
+    // const newArray= postsToShow.filter(function(elem, pos) {
+    //   return postsToShow.indexOf(elem) == pos;
+    // });
+    // console.log(postsToShow)
   };
 
   const handleShowMorePosts = () => {
+    setPage(Page + 1)
+    props.CallViewMoreFunctionProduct({Page, ProductPerPage})
     loopWithSlice();
   };
+
+  useEffect(() => {
+    props.CallViewMoreFunctionProduct({Page, ProductPerPage})
+  })
 
   return (
     <React.Fragment>
@@ -138,7 +164,7 @@ function HomePageTwo(props) {
 
         {useMemo(() => (
           <BlockProductsCarousel
-            title="New Arrivals"
+            title="New Arrivals"  
             layout="grid-4"
             rows={2}
             products={allProducts.data}
@@ -152,7 +178,7 @@ function HomePageTwo(props) {
           <BlockProducts
             title="Featured Products"
             layout="large-first"
-            products={allProducts.data}
+            products={postsToShow}
             loading={allProducts.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
@@ -160,6 +186,7 @@ function HomePageTwo(props) {
         ), [allProducts.handleTabChange, allProducts.tabs, postsToShow, props.loading])}
 
         <div className="my-4">
+         
           <BlockMoreButton viewMore={handleShowMorePosts} />
         </div>
       </div>
