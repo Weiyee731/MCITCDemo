@@ -125,16 +125,14 @@ function HomePageTwo(props) {
 
   const [postsToShow, setPostsToShow] = useState(props.viewMoreProducts);
   let tempArray = []
-  let pages =1
-  const [Page, setPage] = useState(pages);
-  let ProductPerPage =3
+  const [page, setPage] = useState(1);
+  let productPerPage = 4
 
   const loopWithSlice = () => {
     tempArray = [...postsToShow, ...props.viewMoreProducts];
-
     setPostsToShow(tempArray)
-    console.log(tempArray)
 
+    console.log(tempArray)
     // const newArray= postsToShow.filter(function(elem, pos) {
     //   return postsToShow.indexOf(elem) == pos;
     // });
@@ -142,14 +140,25 @@ function HomePageTwo(props) {
   };
 
   const handleShowMorePosts = () => {
-    setPage(Page + 1)
-    props.CallViewMoreFunctionProduct({Page, ProductPerPage})
-    loopWithSlice();
+    setPage(page + 1)
+    props.CallViewMoreFunctionProduct({ page, productPerPage })
   };
 
+  // console.log("props.viewMoreProducts", props.viewMoreProducts)
+  // useEffect(() => {
+  //   props.CallViewMoreFunctionProduct({Page, ProductPerPage})
+  // })
+
   useEffect(() => {
-    props.CallViewMoreFunctionProduct({Page, ProductPerPage})
-  })
+    handleShowMorePosts()
+  }, [])
+
+  useEffect(() => {
+    loopWithSlice()
+    return (
+      console.log(props.viewMoreProducts)
+    )
+  }, [props.viewMoreProducts])
 
   return (
     <React.Fragment>
@@ -164,7 +173,7 @@ function HomePageTwo(props) {
 
         {useMemo(() => (
           <BlockProductsCarousel
-            title="New Arrivals"  
+            title="New Arrivals"
             layout="grid-4"
             rows={2}
             products={allProducts.data}
@@ -173,6 +182,7 @@ function HomePageTwo(props) {
             onGroupClick={allProducts.handleTabChange}
           />
         ), [allProducts.handleTabChange, allProducts.tabs, props.loading, props.products])}
+
 
         {useMemo(() => (
           <BlockProducts
@@ -183,10 +193,30 @@ function HomePageTwo(props) {
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
-        ), [allProducts.handleTabChange, allProducts.tabs, postsToShow, props.loading])}
+        ), [postsToShow])}
+
+        {/* {useMemo(() => (
+          <BlockProducts
+            title="Featured Products"
+            layout="large-first"
+            products={postsToShow}
+            loading={allProducts.loading}
+            groups={allProducts.tabs}
+            onGroupClick={allProducts.handleTabChange}
+          />
+        ), [allProducts.handleTabChange, allProducts.tabs, postsToShow, props.loading])} */}
+
+        {/* <BlockProducts
+          title="Featured Products"
+          layout="large-first"
+          products={postsToShow}
+          loading={allProducts.loading}
+          groups={allProducts.tabs}
+          onGroupClick={allProducts.handleTabChange}
+        /> */}
 
         <div className="my-4">
-         
+
           <BlockMoreButton viewMore={handleShowMorePosts} />
         </div>
       </div>

@@ -24,7 +24,7 @@ export default function BlockProducts(props) {
       </div>
     );
   }
-  console.log("BLOCK PRODUCT", props)
+  // console.log("BLOCK PRODUCT", props.products)
 
   if (products.length > 0) {
     const blockClasses = classNames("block-products__list-item", {

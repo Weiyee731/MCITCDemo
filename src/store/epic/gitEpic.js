@@ -461,13 +461,9 @@ export class GitEpic {
 
   getViewMoreProducts = (action$) =>
     action$.ofType(GitAction.GetViewMoreProduct).switchMap(({ payload }) => {
-      console.log(url +
-        "Product_ViewMoreItemList?PRODUCTPERPAGE=" ,payload.ProductPerPage+ 
-        "&PAGE=" + payload.Page)
-        console.log("payload", payload)
       return fetch(url +
-        "Product_ViewMoreItemList?PRODUCTPERPAGE=" + payload.ProductPerPage +
-        "&PAGE=" + payload.Page
+        "Product_ViewMoreItemList?PRODUCTPERPAGE=" + payload.productPerPage +
+        "&PAGE=" + payload.page
       )
         .then((response) => response.json())
         .then((json) => {
