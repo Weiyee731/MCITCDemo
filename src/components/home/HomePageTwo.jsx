@@ -33,6 +33,7 @@ function mapStateToProps(state) {
     loading: state.counterReducer["loading"],
     products: state.counterReducer["products"],
     viewMoreProducts: state.counterReducer["viewMoreProducts"],
+    productsByID: state.counterReducer["productsByID"],
   };
 }
 
@@ -41,6 +42,7 @@ function mapDispatchToProps(dispatch) {
     CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
     CallViewMoreFunctionProduct: (propsData) => dispatch(GitAction.CallViewMoreFunctionProduct(propsData)),
     CallViewMoreEmpty: () => dispatch(GitAction.CallViewMoreEmpty()),
+    CallGetProductByProductCategoryID: (propsData) => dispatch(GitAction.CallGetProductByProductCategoryID(propsData)),
   };
 }
 
@@ -82,12 +84,16 @@ function HomePageTwo(props) {
     useMemo(() => [
       { id: 1, name: 'All', categorySlug: undefined },
       { id: 404, name: 'Power Tools', ProductCategoryID: '404' },
-      { id: 403, name: 'Hand Tools', ProductCategoryID: '403' },
+      { id: 357, name: 'Hand Tools', ProductCategoryID: '357' },
       { id: 401, name: 'Plumbing', ProductCategoryID: '401' },
     ], []),
-    (tab) => shopApi.getAllProducts()
+    (tab) => shopApi.getAllProducts(),
+    // (tab) => props.CallGetProductByProductCategoryID({ProductCategoryID: tab.ProductCategoryID, ProductPerPage: 4, Page: 0, Filter:"-"} ),
+    // (tab) => tab,
+    // (handleTabChange) => 
   );
-
+  // props.CallGetProductByProductCategoryID({ProductCategoryID: 404, ProductPerPage: 4, Page: 0, Filter:"-"} )
+  // console.log("props.productsByID", props.productsByID)
   // const allProducts = useProductTabs(
   //   useMemo(() => [
   //     { id: 1, name: 'All', categorySlug: undefined },
@@ -141,7 +147,7 @@ function HomePageTwo(props) {
   };
 
   useEffect(() => {
-    if(page <= 1){
+    if (page <= 1) {
       setPage(page + 1)
       props.CallViewMoreFunctionProduct({ page, productPerPage })
     }
@@ -149,6 +155,8 @@ function HomePageTwo(props) {
       loopWithSlice()
     }
   }, [props.viewMoreProducts])
+
+  // console.log(allProducts)
 
   return (
     <React.Fragment>
@@ -159,6 +167,7 @@ function HomePageTwo(props) {
         {useMemo(() => <BlockSlideShow />, [])}
         {useMemo(() => <BlockMainCategories />, [])}
         {useMemo(() => <BlockFeatures layout="boxed" />, [])}
+
 
         {useMemo(() => (
           <BlockProductsCarousel
@@ -178,8 +187,8 @@ function HomePageTwo(props) {
             layout="large-first"
             products={postsToShow}
             // loading={allProducts.loading}
-            // groups={allProducts.tabs}
-            // onGroupClick={allProducts.handleTabChange}
+            groups={allProducts.tabs}
+          // onGroupClick={allProducts.handleTabChange}
           />
         ), [postsToShow])}
 
@@ -202,10 +211,15 @@ function HomePageTwo(props) {
           groups={allProducts.tabs}
           onGroupClick={allProducts.handleTabChange}
         /> */}
+        {
+          allProducts.data.length === 0 ? "" :
+            (
+              <div className="my-4">
+                <BlockMoreButton viewMore={handleShowMorePosts} />
+              </div>
+            )
+        }
 
-        <div className="my-4">
-          <BlockMoreButton viewMore={handleShowMorePosts} />
-        </div>
       </div>
     </React.Fragment>
   );

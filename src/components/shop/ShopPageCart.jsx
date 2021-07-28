@@ -233,6 +233,11 @@ class ShopPageCart extends Component {
         const { cart, cartUpdateQuantities } = this.props;
         const { quantities } = this.state;
 
+        const breadcrumb = [
+            { title: 'Home', url: '' },
+            { title: 'Shopping Cart', url: '' },
+        ];
+
         const updateCartButton = (
             <AsyncAction
                 action={() => cartUpdateQuantities(quantities)}
@@ -251,7 +256,11 @@ class ShopPageCart extends Component {
         );
 
         return (
-            <div className="cart block container_" style={{ width: "100%", marginTop: "130px" }}>
+            <div className="cart block container_" >
+                {
+                    this.props.history !== undefined ?
+                    <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
+                }
                 <div className="container">
                     <table className="cart__table cart-table">
                         <thead className="cart-table__head">
@@ -266,15 +275,12 @@ class ShopPageCart extends Component {
                         </thead>
                         <tbody className="cart-table__body">
                             {this.renderItems()}
-
                         </tbody>
-
-
                     </table>
                     {
                         this.props.history !== undefined ?
-                            <div style={{ textAlign: "right", padding: "30px 30px",backgroundColor:"white"}}>
-                                
+                            <div style={{ textAlign: "right", padding: "30px 30px", backgroundColor: "white" }}>
+
                                 <div className="row">
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Subtotal </div>
                                     <div className="col-2" ><Currency value={this.props.cart.subtotal}></Currency></div>
@@ -292,10 +298,10 @@ class ShopPageCart extends Component {
                                     <div className="col-2" ><Currency value={this.props.cart.total}></Currency></div>
                                 </div>
                                 <div className="mt-5">
-                                        <Link className="btn btn-primary" variant="outlined" color="primary"
-                                            onClick={this.CheckOutOnClick.bind(this, this.props.cart.items)}
-                                        > Checkout
-                                        </Link>
+                                    <Link className="btn btn-primary" variant="outlined" color="primary"
+                                        onClick={this.CheckOutOnClick.bind(this, this.props.cart.items)}
+                                    > Checkout
+                                    </Link>
                                 </div>
                             </div>
                             :
@@ -332,10 +338,10 @@ class ShopPageCart extends Component {
 
         if (cart.quantity) {
             content = this.renderCart();
-            console.log("hihi")
         } else {
             content = (
-                <div className="block block-empty" style={{marginTop:"130px"}}>
+                <div className="block block-empty" >
+                    <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} />
                     <div className="container">
                         <div className="block-empty__body">
                             <div className="block-empty__message">Your shopping cart is empty!</div>

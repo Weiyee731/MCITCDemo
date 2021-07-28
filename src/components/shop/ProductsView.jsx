@@ -93,7 +93,6 @@ function ProductsView(props) {
     );
   });
 
-  console.log(productsList)
   const productsListItems = productsList.items.map((product) => (
     <div key={product.ProductID} className="products-list__item">
       <ProductCard product={product} />

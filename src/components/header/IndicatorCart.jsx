@@ -161,7 +161,6 @@ class IndicatorCart extends React.Component {
       const dropdown = (
         <div className="dropcart">
           <div className="dropcart__products-list">{items}</div>
-
           <div className="dropcart__totals">
             <table>
               <tbody>
@@ -175,9 +174,8 @@ class IndicatorCart extends React.Component {
               </tbody>
             </table>
           </div>
-
           <div className="dropcart__buttons">
-          <Link className="btn btn-secondary" to="/shop/cart">
+            <Link className="btn btn-secondary" to="/shop/cart">
               View Cart
             </Link>
             {localStorage.getItem("id") ? (

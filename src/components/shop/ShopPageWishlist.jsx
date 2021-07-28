@@ -28,8 +28,9 @@ function ShopPageWishlist(props) {
     ];
 
     let content;
-
+    console.log("wishlist", wishlist.length)
     if (wishlist.length) {
+      
         const itemsList = wishlist.map((item) => {
             let image;
             const productImage = JSON.parse(item.ProductImages)
@@ -85,7 +86,7 @@ function ShopPageWishlist(props) {
                     </td>
                     <td className="wishlist__column wishlist__column--remove">
                         <AsyncAction
-                            action={() => wishlistRemoveItem(item.product.id)}
+                            action={() => wishlistRemoveItem(item.ProductID)}
                             render={renderRemoveButton}
                         />
                     </td>

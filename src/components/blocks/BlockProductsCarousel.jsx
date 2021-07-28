@@ -187,7 +187,10 @@ export default class BlockProductsCarousel extends Component {
       loading,
     } = this.props;
 
+    console.log(this.props)
+    { console.log(this.props.products.length == 0) }
     const columns = this.productsColumns().map((column, index) => {
+      console.log("column", column)
       const products = column.map((product) => (
         <div key={product.id} className="block-products-carousel__cell">
           <ProductCard product={product} />
@@ -211,24 +214,40 @@ export default class BlockProductsCarousel extends Component {
 
     return (
       <div className={blockClasses} data-layout={layout}>
-        <div className={containerClasses}>
-          <BlockHeader
-            title={title}
-            groups={groups}
-            arrows
-            onNext={this.handleNextClick}
-            onPrev={this.handlePrevClick}
-            onGroupClick={onGroupClick}
-          />
+        {
+          this.props.products.length === 0 ?
+            (
+              <div className={containerClasses} style={{ textAlign: "center" }}>
+                <label>Connection Has Times Out, Try Again Later</label>
+                <div className="form-group mb-0 text-center my-4">
+                  <button className="btn btn-primary btn-lg" onClick={() => window.location.reload(false)} >
+                    Try Again
+                  </button>
+                </div>
+              </div>
+            ) :
+            (
+              <div className={containerClasses}>
+                <BlockHeader
+                  title={title}
+                  groups={groups}
+                  arrows
+                  onNext={this.handleNextClick}
+                  onPrev={this.handlePrevClick}
+                  onGroupClick={onGroupClick}
+                />
 
-          <div className="block-products-carousel__slider">
-            <div className="block-products-carousel__preloader" />
+                <div className="block-products-carousel__slider">
+                  <div className="block-products-carousel__preloader" />
 
-            <StroykaSlick ref={this.setSlickRef} {...slickSettings[layout]}>
-              {columns}
-            </StroykaSlick>
-          </div>
-        </div>
+                  <StroykaSlick ref={this.setSlickRef} {...slickSettings[layout]}>
+                    {columns}
+                  </StroykaSlick>
+                </div>
+              </div>
+            )
+        }
+
       </div>
     );
   }

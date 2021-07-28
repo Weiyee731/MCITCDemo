@@ -451,6 +451,7 @@ export class GitEpic {
           } else {
             json = [];
           }
+          console.log(json)
           return {
             type: "GOT-PRODUCT",
             payload: json,
@@ -470,7 +471,7 @@ export class GitEpic {
       )
         .then((response) => response.json())
         .then((json) => {
-          
+
           if (json !== "fail") {
             json = JSON.parse(json);
           } else {
@@ -510,6 +511,47 @@ export class GitEpic {
           })
           .catch((error) => toast.error(error));
       });
+
+  GetProduct_ItemListByCategoryID = (action$) =>
+    action$
+      .ofType(GitAction.GetProductsByCategoryID)
+      .switchMap(({ payload }) => {
+
+        console.log(url +
+          "Product_ItemListByCategory?ProductCategoryID=" +
+          payload.ProductCategoryID +
+          "&ProductPerPage=" +
+          payload.ProductPerPage +
+          "&Page=" +
+          payload.Page +
+          "&Filter=" +
+          payload.Filter)
+          
+        return fetch(url +
+          "Product_ItemListByCategory?ProductCategoryID=" +
+          payload.ProductCategoryID +
+          "&ProductPerPage=" +
+          payload.ProductPerPage +
+          "&Page=" +
+          payload.Page +
+          "&Filter=" +
+          payload.Filter
+        )
+          .then((response) => response.json())
+          .then((json) => {
+            if (json !== "fail") {
+              json = JSON.parse(json);
+            } else {
+              json = [];
+            }
+            return {
+              type: GitAction.GotProductsByCategoryID,
+              payload: json,
+            };
+          })
+          .catch((error) => toast.error(error));
+      });
+
 
   GetProduct_ItemListByCategorySlug = (action$) =>
     action$
@@ -1663,6 +1705,9 @@ export class GitEpic {
   //=================USER_ADDRESS=============================//
   ViewAddress = (action$) =>
     action$.ofType(GitAction.GetAddress).switchMap(({ payload }) => {
+      console.log(url +
+        "User_ViewAddressBook?USERID=" +
+        payload)
       return fetch(url +
         "User_ViewAddressBook?USERID=" +
         payload

@@ -24,8 +24,6 @@ export default function BlockProducts(props) {
       </div>
     );
   }
-  // console.log("BLOCK PRODUCT", props.products)
-
   if (products.length > 0) {
     const blockClasses = classNames("block-products__list-item", {
       "block-products-carousel--loading": loading,
@@ -41,15 +39,22 @@ export default function BlockProducts(props) {
 
   return (
     <div className={`block block-products block-products--layout--${layout}`}>
-      <div className="container">
-        <BlockHeader title={title} />
+      {
+        products.length === 0 ? "" :
+          (
+            <div className="container">
+              <BlockHeader title={title} />
 
-        <div className="block-products__body">
-          {layout === "large-first" && large}
-          {smalls}
-          {layout === "large-last" && large}
-        </div>
-      </div>
+              <div className="block-products__body">
+                {layout === "large-first" && large}
+                {smalls}
+                {layout === "large-last" && large}
+              </div>
+            </div>
+          )
+
+      }
+
     </div>
   );
 }

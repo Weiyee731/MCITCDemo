@@ -1,7 +1,7 @@
 import { WISHLIST_ADD_ITEM, WISHLIST_REMOVE_ITEM } from './wishlistActionTypes';
 
 function addItem(state, product) {
-    const itemIndex = state.findIndex((x) => x.id === product.id);
+    const itemIndex = state.findIndex((x) => x.ProductID === product.ProductID);
 
     if (itemIndex === -1) {
         return [
@@ -13,6 +13,7 @@ function addItem(state, product) {
     return state;
 }
 
+
 const initialState = [];
 
 export default function wishlistReducer(state = initialState, action) {
@@ -21,7 +22,7 @@ export default function wishlistReducer(state = initialState, action) {
         return addItem(state, action.product);
 
     case WISHLIST_REMOVE_ITEM:
-        return state.filter((x) => x.id !== action.productId);
+        return state.filter((x) => x.ProductID !== action.productId);
 
     default:
         return state;

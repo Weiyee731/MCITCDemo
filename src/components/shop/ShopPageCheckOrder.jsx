@@ -171,8 +171,6 @@ class PageCheckOrder extends Component {
         <Helmet>
           <title>{`Address List — ${theme.name}`}</title>
         </Helmet>
-        
-
         <React.Fragment key={0}>
           <div className="addresses-list__item card address-card">
             {0 == this.state.defaultAddress.UserAddressBookID && (

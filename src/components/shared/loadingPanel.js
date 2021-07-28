@@ -27,7 +27,6 @@ class LoadingPanel extends Component {
             centerObject: {
                 margin: "auto"
             },
-
         }
 
         return (

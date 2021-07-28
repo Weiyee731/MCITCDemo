@@ -17,6 +17,7 @@ import { compareAddItem } from "../../store/compare";
 import { quickviewOpen } from "../../store/quickview";
 import { url } from "../../services/utils";
 import { wishlistAddItem } from "../../store/wishlist";
+import { mobileMenuOpen } from '../../store/mobile-menu';
 import Logo from "../../assets/Emporia.png"
 
 function ProductCard(props) {
@@ -114,6 +115,8 @@ function ProductCard(props) {
     );
   }
 
+  
+
   return (
     <div className={containerClasses}>
       <AsyncAction
@@ -180,6 +183,10 @@ function ProductCard(props) {
               </React.Fragment>
             )}
           />
+          {props.wishlist.map((wishlisting) => {
+            console.log(wishlisting)
+          })}
+          {console.log("props HERE", props)}
           <AsyncAction
             action={() => wishlistAddItem(product)}
             render={({ run, loading }) => (
@@ -238,13 +245,16 @@ ProductCard.propTypes = {
   ]),
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+  wishlist: state.wishlist,
+});
 
 const mapDispatchToProps = {
   cartAddItem,
   wishlistAddItem,
   compareAddItem,
   quickviewOpen,
+  openMobileMenu: mobileMenuOpen,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductCard);

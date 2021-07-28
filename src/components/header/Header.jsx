@@ -4,6 +4,7 @@ import React from "react";
 // third-party
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 // application
 import NavPanel from "./NavPanel";
@@ -15,6 +16,9 @@ import Indicator from "./Indicator";
 import CartIndicator from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
 import { Cart20Svg, Cross10Svg } from "../../svg";
+
+// import { wishlistListItem } from "../../store/wishlist";
+import { mobileMenuOpen } from '../../store/mobile-menu';
 
 function Header(props) {
   const { layout } = props;
@@ -39,23 +43,22 @@ function Header(props) {
           <Search context="header" />
         </div>
         <div className="nav-panel__indicators">
-          {localStorage.getItem("isLogin") === true ? (
+          {localStorage.getItem("isLogin") === "true" ? (
             <>
-              <Indicator url="/shop/wishlist" value={0} icon={<Heart20Svg />} />
+              <Indicator value={props.wishlist.length} icon={<Heart20Svg />} />
               <CartIndicator />
-              <IndicatorAccount />
+              <IndicatorAccount/>
             </>
           ) : (
             <>
               <CartIndicator />
-              <IndicatorAccount />
+              <IndicatorAccount/>
             </>
           )}
         </div>
       </div>
     );
   }
-
   return (
     <div className="site-header w-100" style={backgroundColor}>
       {/* <Topbar /> */}
@@ -76,4 +79,16 @@ Header.defaultProps = {
   layout: "default",
 };
 
-export default Header;
+// export default Header;
+
+
+const mapStateToProps = (state) => ({
+  wishlist: state.wishlist,
+});
+
+const mapDispatchToProps = {
+  openMobileMenu: mobileMenuOpen,
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -3,6 +3,7 @@ import { Component } from "react";
 
 // third-party
 import PropTypes from "prop-types";
+import { browserHistory } from "react-router";
 
 class AsyncAction extends Component {
   canceled = false;
@@ -21,20 +22,28 @@ class AsyncAction extends Component {
 
 
   run = () => {
-    const { action } = this.props;
-    const { loading } = this.state;
 
-    if (loading || !action) {
-      return;
-    }
-    this.setState({ loading: true });
-
-    action().then(() => {
-      if (this.canceled) {
+    if (localStorage.getItem("isLogin").toLowerCase() === "true") {
+      const { action } = this.props;
+      const { loading } = this.state;
+      if (loading || !action) {
         return;
       }
-      this.setState({ loading: false });
-    });
+      this.setState({ loading: true });
+
+      action().then(() => {
+        if (this.canceled) {
+          return;
+        }
+        this.setState({ loading: false });
+      });
+    }
+    else{
+      browserHistory.push("/login");
+       window.location.reload(false)
+
+    }
+
   };
 
   render() {

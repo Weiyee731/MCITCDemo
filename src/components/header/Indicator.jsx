@@ -92,19 +92,34 @@ class Indicator extends Component {
     if (value !== undefined) {
       value = <span className="indicator__value">{value}</span>;
     }
+
     const title = (
       <span className="indicator__area">
         {icon}
         {value}
+        {/* {url === "/shop/wishlist" ?
+          (value !== undefined ? (value.props.children) : value)
+          : value} */}
       </span>
     );
 
+    // if (value !== undefined ) {
+    //   console.log("value.props.children", value.props.children)
+    // }
+
+
+    // if (value !== undefined) {
+    //   console.log("this.state", value.props.children)
+    // }
+
     if (url) {
       button = (
+
         <Link
           to={url}
           className="indicator__button"
           onClick={this.handleButtonClick}
+        // value={value !== undefined}
         >
           {title}
         </Link>
@@ -140,8 +155,12 @@ class Indicator extends Component {
   }
 }
 
+
+
+
 Indicator.propTypes = {
   /** indicator value */
+  valuename: PropTypes.string,
   value: PropTypes.number,
   /** the component that will be shown in the dropdown */
   dropdown: PropTypes.node,
