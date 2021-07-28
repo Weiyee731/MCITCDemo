@@ -205,6 +205,11 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         viewMoreProducts: action.payload,
       });
+    case GitAction.GotViewMoreProductEmpty:
+      return Object.assign({}, state, {
+        loading: false,
+        viewMoreProducts: [],
+      });
 
     case GitAction.GetProductsByCategorySlug:
       return Object.assign({}, state, { loading: true });

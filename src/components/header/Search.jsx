@@ -146,9 +146,7 @@ function Search(props) {
       // }, 100);
 
         let filteredProduct = props.products.filter(el =>
-          
           el.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_').toLowerCase().trim().includes(query.toLowerCase().trim()))
-
         setSuggestedProducts(filteredProduct.slice(0, 5));
         setHasSuggestions(filteredProduct.length > 0);
         setSuggestionsOpen(true);
@@ -156,12 +154,8 @@ function Search(props) {
         if (canceled) {
           return;
         }
-
       }, 100);
     }
-
-
-
     setCancelFn(() => newCancelFn);
   };
 

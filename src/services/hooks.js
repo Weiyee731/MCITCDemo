@@ -37,6 +37,7 @@ export function useDeferredData(source, initialData, deps = []) {
 }
 
 export function useProductTabs(tabs, productsSource) {
+    
     const [currentTabId, setCurrentTabId] = useState(1);
     const memoizedTabs = useMemo(() => (
         tabs.map((tab) => ({
@@ -45,7 +46,9 @@ export function useProductTabs(tabs, productsSource) {
         }))
     ), [tabs, currentTabId]);
     const currentTab = memoizedTabs.find((x) => x.current);
+    
     const products = useDeferredData(() => productsSource(currentTab), [], [currentTab]);
+    // console.log(currentTab)
     const handleTabChange = useCallback((tab) => {
         setCurrentTabId(tab.id);
     }, [setCurrentTabId]);

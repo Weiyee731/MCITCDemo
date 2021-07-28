@@ -40,6 +40,7 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
     CallViewMoreFunctionProduct: (propsData) => dispatch(GitAction.CallViewMoreFunctionProduct(propsData)),
+    CallViewMoreEmpty: () => dispatch(GitAction.CallViewMoreEmpty()),
   };
 }
 
@@ -80,9 +81,9 @@ function HomePageTwo(props) {
   const allProducts = useProductTabs(
     useMemo(() => [
       { id: 1, name: 'All', categorySlug: undefined },
-      { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
-      { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
-      { id: 4, name: 'Plumbing', categorySlug: 'plumbing' },
+      { id: 404, name: 'Power Tools', ProductCategoryID: '404' },
+      { id: 403, name: 'Hand Tools', ProductCategoryID: '403' },
+      { id: 401, name: 'Plumbing', ProductCategoryID: '401' },
     ], []),
     (tab) => shopApi.getAllProducts()
   );
@@ -123,7 +124,7 @@ function HomePageTwo(props) {
     ], []),
   );
 
-  const [postsToShow, setPostsToShow] = useState(props.viewMoreProducts);
+  const [postsToShow, setPostsToShow] = useState([]);
   let tempArray = []
   const [page, setPage] = useState(1);
   let productPerPage = 4
@@ -131,12 +132,7 @@ function HomePageTwo(props) {
   const loopWithSlice = () => {
     tempArray = [...postsToShow, ...props.viewMoreProducts];
     setPostsToShow(tempArray)
-
-    console.log(tempArray)
-    // const newArray= postsToShow.filter(function(elem, pos) {
-    //   return postsToShow.indexOf(elem) == pos;
-    // });
-    // console.log(postsToShow)
+    props.CallViewMoreEmpty()
   };
 
   const handleShowMorePosts = () => {
@@ -144,20 +140,14 @@ function HomePageTwo(props) {
     props.CallViewMoreFunctionProduct({ page, productPerPage })
   };
 
-  // console.log("props.viewMoreProducts", props.viewMoreProducts)
-  // useEffect(() => {
-  //   props.CallViewMoreFunctionProduct({Page, ProductPerPage})
-  // })
-
   useEffect(() => {
-    handleShowMorePosts()
-  }, [])
-
-  useEffect(() => {
-    loopWithSlice()
-    return (
-      console.log(props.viewMoreProducts)
-    )
+    if(page <= 1){
+      setPage(page + 1)
+      props.CallViewMoreFunctionProduct({ page, productPerPage })
+    }
+    if (props.viewMoreProducts.length > 0) {
+      loopWithSlice()
+    }
   }, [props.viewMoreProducts])
 
   return (
@@ -166,7 +156,6 @@ function HomePageTwo(props) {
         <Helmet>
           <title>{theme.name}</title>
         </Helmet>
-
         {useMemo(() => <BlockSlideShow />, [])}
         {useMemo(() => <BlockMainCategories />, [])}
         {useMemo(() => <BlockFeatures layout="boxed" />, [])}
@@ -177,21 +166,20 @@ function HomePageTwo(props) {
             layout="grid-4"
             rows={2}
             products={allProducts.data}
-            loading={allProducts.loading}
+            // loading={props.loading}
             groups={allProducts.tabs}
             onGroupClick={allProducts.handleTabChange}
           />
         ), [allProducts.handleTabChange, allProducts.tabs, props.loading, props.products])}
-
 
         {useMemo(() => (
           <BlockProducts
             title="Featured Products"
             layout="large-first"
             products={postsToShow}
-            loading={allProducts.loading}
-            groups={allProducts.tabs}
-            onGroupClick={allProducts.handleTabChange}
+            // loading={allProducts.loading}
+            // groups={allProducts.tabs}
+            // onGroupClick={allProducts.handleTabChange}
           />
         ), [postsToShow])}
 
@@ -216,7 +204,6 @@ function HomePageTwo(props) {
         /> */}
 
         <div className="my-4">
-
           <BlockMoreButton viewMore={handleShowMorePosts} />
         </div>
       </div>

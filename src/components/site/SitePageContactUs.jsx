@@ -26,19 +26,14 @@ function SitePageContactUs() {
       <Helmet>
         <title>{`Contact Us — ${theme.name}`}</title>
       </Helmet>
-
-      <BlockMap />
-
       <PageHeader header="Contact Us" breadcrumb={breadcrumb} />
-
+      <BlockMap />
       <div className="block">
         <div className="container">
           <div className="card mb-0">
             <div className="card-body contact-us">
               <div className="contact-us__container">
                 <div className="row">
-
-
                   <div className="col-12 col-lg-8">
                     <h4 className="contact-us__header card-title" style={{ textAlign: "left", paddingLeft: "50pt" }}>
                       Send us a Message
@@ -126,7 +121,7 @@ function SitePageContactUs() {
                   </div>
 
                   <div className="col-12 col-lg-4 pb-4 pb-lg-0">
-                    <h4 className="contact-us__header card-title">
+                    <h4 className="contact-us__header card-title" style={{ textAlign: "left" }}>
                       Our Address
                     </h4>
                     {/* <strong className="contact-us__header card-title">
@@ -166,7 +161,7 @@ function SitePageContactUs() {
                         <label>info@emporia.com</label><br />
 
                         <label className="mt-3">MAILING ADDRESS:</label><br />
-                        <label>Penview Convention Centre Kuching</label><br /><label>Sejingkat, 93050 Kuching, Sarawak</label> 
+                        <label>Penview Convention Centre Kuching</label><br /><label>Sejingkat, 93050 Kuching, Sarawak</label>
                         {/* <strong>Opening Hours</strong>
                         <br />
                         <h5> Monday to Saturday: 10.00am - 07.00pm</h5>

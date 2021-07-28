@@ -159,6 +159,9 @@ export class GitAction {
   static GetViewMoreProduct = "GET-VIEWMORE-PRODUCT";
   static GotViewMoreProduct = "GOT-VIEWMORE-PRODUCT";
 
+  static GetViewMoreProductEmpty = "GET-VIEWMORE-PRODUCT-EMPTY";
+  static GotViewMoreProductEmpty = "GOT-VIEWMORE-PRODUCT-EMPTY";
+
   static GetProductByProductStatus = "GET-PRODUCT-BYPRODUCTSTATUS";
   static GotProductByProductStatus = "GOT-PRODUCT-BYPRODUCTSTATUS";
 
@@ -198,6 +201,13 @@ export class GitAction {
       payload: prodData,
     };
   }
+
+  static CallViewMoreEmpty() {
+    return {
+      type: GitAction.GotViewMoreProductEmpty
+    };
+  }
+  
 
   static CallAllProductsByProductStatus(prodData) {
     return {

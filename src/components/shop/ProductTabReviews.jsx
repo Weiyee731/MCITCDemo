@@ -47,6 +47,7 @@ class ProductTabReviews extends Component {
     this.state = {
       productReviewRating: 0,
       productReviewComment: "",
+      productReplyReviewComment: "",
       productID: "",
       userID: "",
       parentProductReviewID: 0,
@@ -54,6 +55,7 @@ class ProductTabReviews extends Component {
       replyid: "",
       page: 1,
       rowsPerPage: 5,
+      edited: false,
     }
     this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
     this.onSubmitReview = this.onSubmitReview.bind(this);
@@ -62,15 +64,15 @@ class ProductTabReviews extends Component {
 
 
   onSubmitReviewReply() {
-      this.props.CallAddProductReview({
-        parentProductReviewID: this.state.replyid,
-        productID: this.props.product.ProductID,
-        UserID: "1",
-        productReviewRating: "0",
-        productReviewComment: this.state.productReviewComment
-      })
-  
-      this.setState({reply : false })    
+    this.props.CallAddProductReview({
+      parentProductReviewID: this.state.replyid,
+      productID: this.props.product.ProductID,
+      UserID: "1",
+      productReviewRating: "0",
+      productReviewComment: this.state.productReplyReviewComment
+    })
+
+    this.setState({ reply: false })
   }
 
   onSubmitReview() {
@@ -81,8 +83,8 @@ class ProductTabReviews extends Component {
       productReviewRating: this.state.productReviewRating,
       productReviewComment: this.state.productReviewComment
     })
-    this.setState({productReviewComment: ""})
-    this.setState({productReviewRating: 0})
+
+    this.setState({ productReviewComment: "", productReviewRating: 0 })
   }
 
   handlePageChange = (page) => {
@@ -90,11 +92,6 @@ class ProductTabReviews extends Component {
   };
 
   render() {
-
-    console.log("localStorage" ,localStorage)
-    console.log("this.props.loading" ,this.props.loading)
-    
-
     const { page } = this.state;
     if (this.props.reviews != null) {
       var reviewsList = (this.props.reviews)
@@ -102,7 +99,6 @@ class ProductTabReviews extends Component {
         .map(
           (review, index) => (
             <li key={index} className="reviews-list__item">
-              {console.log("index", review)}
               <div id="review" className="review">
                 <div id="review_avatar" className="review__avatar">
                   <img src={review.avatar ? review.avatar : USER} alt={review.avatar} onError={(e) => (e.target.src = USER)} />
@@ -158,7 +154,7 @@ class ProductTabReviews extends Component {
 
                     <div id="reply_content" className="pt-3">
                       <div id="reply_msg" className="pt-3">
-                        <textarea className="form-control" placeholder="Tell us more about your comment on this review" id="review-reply-text" rows="6" onChange={({ target }) => { this.setState({ productReviewComment: target.value, productReviewRating: 0 }); }} required />
+                        <textarea className="form-control" placeholder="Tell us more about your comment on this review" id="review-reply-text" rows="6" value={this.state.productReplyReviewComment} onChange={({ target }) => { this.setState({ productReplyReviewComment: target.value, productReviewRating: 0 }); }} required />
                       </div>
                       <div id="reply_btn" className="pt-3" style={{ textAlign: "center" }} onClick={() => this.onSubmitReviewReply()} >
                         <button className="btn btn-primary btn-lg">
@@ -226,7 +222,7 @@ class ProductTabReviews extends Component {
               </Box>
             </div>
             <div className="form-group">
-              <textarea className="form-control" placeholder="Tell us more about your review on this product" id="review-text" rows="6" onChange={({ target }) => { this.setState({ productReviewComment: target.value, }); }} required />
+              <textarea className="form-control" placeholder="Tell us more about your review on this product" id="review-text" rows="6" value={this.state.productReviewComment} onChange={({ target }) => { this.setState({ productReviewComment: target.value, }); }} required />
             </div>
             <div className="form-group mb-0">
               <button className="btn btn-primary btn-lg" onClick={() => this.onSubmitReview()} >

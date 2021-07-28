@@ -5,6 +5,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Logo from "../../assets/Emporia.png";
 
 // application
 import AsyncAction from '../shared/AsyncAction';
@@ -26,11 +27,15 @@ function Suggestions(props) {
     const list = (products && products.map((product) => {
         let images = JSON.parse(product.ProductImages)
         return (
+          
             <li key={product.ProductID} className="suggestions__item">
+                {  console.log("images", images)}
                 {images && images.length > 0 && (
                     <div className="suggestions__item-image product-image">
                         <div className="product-image__body">
-                            <img className="product-image__img" src={images[0]} alt="" />
+                        <img  className="product-image__img" alt="" src={images[0].ProductMediaUrl ? images[0].ProductMediaUrl : Logo} onError={e => (e.target.src = Logo)} />
+                                    
+                            {/* <img className="product-image__img" src={images[0].ProductMediaUrl} alt={images[0].ProductMediaDesc} /> */}
                         </div>
                     </div>
                 )}
