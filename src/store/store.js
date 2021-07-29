@@ -35,6 +35,7 @@ const rootEpic = combineEpics(
   gitEpic.getAllUserByTypeId,
   gitEpic.LoginUser,
   gitEpic.LogoutUser,
+  gitEpic.RegisterUser,
   gitEpic.getUserPage,
   gitEpic.ViewAddress,
   gitEpic.addAddress,

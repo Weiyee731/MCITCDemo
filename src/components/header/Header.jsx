@@ -45,7 +45,7 @@ function Header(props) {
         <div className="nav-panel__indicators">
           {localStorage.getItem("isLogin") === "true" ? (
             <>
-              <Indicator value={props.wishlist.length} icon={<Heart20Svg />} />
+              <Indicator url="/shop/wishlist" value={props.wishlist.length} icon={<Heart20Svg />} />
               <CartIndicator />
               <IndicatorAccount/>
             </>

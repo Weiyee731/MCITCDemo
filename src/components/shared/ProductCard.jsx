@@ -16,7 +16,7 @@ import { Compare16Svg, Quickview16Svg, Wishlist16Svg } from "../../svg";
 import { compareAddItem } from "../../store/compare";
 import { quickviewOpen } from "../../store/quickview";
 import { url } from "../../services/utils";
-import { wishlistAddItem } from "../../store/wishlist";
+import { wishlistAddItem, wishlistRemoveItem } from "../../store/wishlist";
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Logo from "../../assets/Emporia.png"
 
@@ -27,6 +27,7 @@ function ProductCard(props) {
     quickviewOpen,
     cartAddItem,
     wishlistAddItem,
+    wishlistRemoveItem,
     compareAddItem,
   } = props;
   const containerClasses = classNames("product-card", {
@@ -41,7 +42,7 @@ function ProductCard(props) {
   let image;
   let price;
   let features;
- 
+
   //   if (product.badges.includes("sale")) {
   //     badges.push(
   //       <div key="sale" className="product-card__badge product-card__badge--sale">
@@ -74,7 +75,7 @@ function ProductCard(props) {
           <img
             className="product-image__img"
             src={JSON.parse(product.ProductImages)[0].ProductMediaUrl}
-            onError={(e)=>{e.target.onerror = null; e.target.src=Logo}}
+            onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
             alt=""
           />
         </Link>
@@ -89,7 +90,7 @@ function ProductCard(props) {
           <Currency value={product.price} currency={"RM"} />
         </span>{" "}
         <span className="product-card__old-price">
-          <Currency value={product.compareAtPrice}  currency={"RM"}/>
+          <Currency value={product.compareAtPrice} currency={"RM"} />
         </span>
       </div>
     );
@@ -115,7 +116,7 @@ function ProductCard(props) {
     );
   }
 
-  
+
 
   return (
     <div className={containerClasses}>
@@ -148,7 +149,7 @@ function ProductCard(props) {
       <div className="product-card__actions">
         <div className="product-card__availability">
           Availability:{" "}
-          <span style={{color: "#3d464d"}}>In Stock</span>
+          <span style={{ color: "#3d464d" }}>In Stock</span>
         </div>
         {price}
         <div className="product-card__buttons">
@@ -183,24 +184,42 @@ function ProductCard(props) {
               </React.Fragment>
             )}
           />
-          {props.wishlist.map((wishlisting) => {
-            console.log(wishlisting)
-          })}
-          {console.log("props HERE", props)}
+
           <AsyncAction
-            action={() => wishlistAddItem(product)}
+
+            action={() =>
+              // props.wishlist.length > 0 ?
+              //   props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+              //     props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+              //       wishlistRemoveItem(x.ProductID)
+              //     })
+              //     :
+              //     wishlistAddItem(product)
+              //   :
+              wishlistAddItem(product)
+            }
             render={({ run, loading }) => (
-              <button
-                type="button"
-                onClick={run}
-                className={classNames(
-                  "btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist",
-                  {
-                    "btn-loading": loading,
-                  }
-                )}
+
+              <button type="button" onClick={run}
+                className={
+                  classNames(
+                    "btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist", { "btn-loading": loading, }
+                  )
+                }
               >
-                <Wishlist16Svg />
+                {
+                  props.wishlist.length > 0 ?
+                    props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+                      props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+                        console.log(x.slug)
+                        return (<Wishlist16Svg fill="red" />)
+                      })
+                      :
+                      <Wishlist16Svg />
+                    :
+                    <Wishlist16Svg />
+                }
+
               </button>
             )}
           />
@@ -252,6 +271,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   cartAddItem,
   wishlistAddItem,
+  wishlistRemoveItem,
   compareAddItem,
   quickviewOpen,
   openMobileMenu: mobileMenuOpen,

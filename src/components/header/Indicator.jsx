@@ -119,7 +119,6 @@ class Indicator extends Component {
           to={url}
           className="indicator__button"
           onClick={this.handleButtonClick}
-        // value={value !== undefined}
         >
           {title}
         </Link>

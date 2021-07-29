@@ -509,6 +509,7 @@ function Layout(props) {
                 render={(props) => <BlogPagePost {...props} layout="full" />}
               />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/signup" component={SignUp} />
               <Route path="/account" component={AccountLayout} />
 
               <Redirect exact from="/site" to="/site/about-us" />

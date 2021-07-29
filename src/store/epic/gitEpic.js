@@ -77,6 +77,46 @@ export class GitEpic {
         });
     });
 
+  RegisterUser = (action$) =>
+    action$.ofType(GitAction.Register).switchMap(({ payload }) => {
+
+      console.log(url + "User_Register?username=" +
+      payload.Username +
+      "&password=" +
+      payload.Password +
+      "&userFirstName=" +
+      payload.FirstName +
+      "&userLastName=" +
+      payload.LastName +
+      "&userEmail=" +
+      payload.Email  )
+      return fetch(url +
+        "User_Register?username=" +
+        payload.Username +
+        "&password=" +
+        payload.Password +
+        "&userFirstName=" +
+        payload.FirstName +
+        "&userLastName=" +
+        payload.LastName +
+        "&userEmail=" +
+        payload.Email 
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+          return {
+            type: "SUCCESSFULLY-CREATED-USER",
+            payload: json,
+          };
+        })
+        .catch((error) => toast.error(error));
+    });
+
   checkUser = (action$) =>
     action$.ofType(GitAction.CheckUser).switchMap(({ payload }) => {
       return fetch(url +
@@ -526,7 +566,7 @@ export class GitEpic {
           payload.Page +
           "&Filter=" +
           payload.Filter)
-          
+
         return fetch(url +
           "Product_ItemListByCategory?ProductCategoryID=" +
           payload.ProductCategoryID +
