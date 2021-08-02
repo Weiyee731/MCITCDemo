@@ -115,13 +115,11 @@ function ProductCard(props) {
       </ul>
     );
   }
-
-
-
   return (
+    
     <div className={containerClasses}>
       <AsyncAction
-        action={() => quickviewOpen(product.slug)}
+        action={() => quickviewOpen(product)}
         render={({ run, loading }) => (
           <button
             type="button"
@@ -184,46 +182,49 @@ function ProductCard(props) {
               </React.Fragment>
             )}
           />
-
-          <AsyncAction
-
-            action={() =>
-              // props.wishlist.length > 0 ?
-              //   props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-              //     props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-              //       wishlistRemoveItem(x.ProductID)
-              //     })
-              //     :
-              //     wishlistAddItem(product)
-              //   :
-              wishlistAddItem(product)
-            }
-            render={({ run, loading }) => (
-
-              <button type="button" onClick={run}
-                className={
-                  classNames(
-                    "btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist", { "btn-loading": loading, }
+          {
+            props.wishlist.length > 0 ?
+              props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+                props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+                  return (
+                    <AsyncAction
+                      action={() => wishlistRemoveItem(x.ProductID)}
+                      render={({ run, loading }) => (
+                        <button type="button" onClick={run}
+                          className={classNames('btn btn-light btn-sm btn-svg-icon', { "btn-loading": loading, })}
+                        ><Wishlist16Svg fill="red" />
+                        </button>
+                      )}
+                    />
                   )
-                }
-              >
-                {
-                  props.wishlist.length > 0 ?
-                    props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-                      props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-                        console.log(x.slug)
-                        return (<Wishlist16Svg fill="red" />)
-                      })
-                      :
-                      <Wishlist16Svg />
-                    :
-                    <Wishlist16Svg />
-                }
+                })
+                :
+                (
+                  <AsyncAction
+                    action={() => wishlistAddItem(product)}
+                    render={({ run, loading }) => (
+                      <button type="button" onClick={run}
+                        className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist", { "btn-loading": loading, })}
+                      ><Wishlist16Svg />
+                      </button>
+                    )}
+                  />
+                )
+              :
+              (
+                <AsyncAction
+                  action={() => wishlistAddItem(product)}
+                  render={({ run, loading }) => (
+                    <button type="button" onClick={run}
+                      className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist", { "btn-loading": loading, })}
+                    ><Wishlist16Svg />
+                    </button>
+                  )}
+                />
+              )
+          }
 
-              </button>
-            )}
-          />
-          <AsyncAction
+          {/* <AsyncAction
             action={() => compareAddItem(product)}
             render={({ run, loading }) => (
               <button
@@ -239,7 +240,7 @@ function ProductCard(props) {
                 <Compare16Svg />
               </button>
             )}
-          />
+          /> */}
         </div>
       </div>
     </div>
@@ -263,6 +264,7 @@ ProductCard.propTypes = {
     "horizontal",
   ]),
 };
+
 
 const mapStateToProps = (state) => ({
   wishlist: state.wishlist,

@@ -29,7 +29,6 @@ function Suggestions(props) {
         return (
           
             <li key={product.ProductID} className="suggestions__item">
-                {  console.log("images", images)}
                 {images && images.length > 0 && (
                     <div className="suggestions__item-image product-image">
                         <div className="product-image__body">

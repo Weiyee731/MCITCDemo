@@ -10,6 +10,9 @@ import TextField from "@material-ui/core/TextField";
 
 import { toast } from "react-toastify";
 
+// Application
+import Logo from "../../assets/Emporia.png";
+
 function mapStateToProps(state) {
     return {
         currentUser: state.counterReducer["currentUser"],
@@ -52,11 +55,11 @@ const SignUp = (props) => {
     const [pass, setPass] = useState();
     const [confirmPass, setConfirmPass] = useState();
 
-    const breadcrumb = [
-        { title: "Home", url: "" },
-        { title: "Login", url: "/login" },
-        { title: "SignUp", url: "" },
-    ];
+    // const breadcrumb = [
+    //     { title: "Home", url: "" },
+    //     { title: "Login", url: "/login" },
+    //     { title: "SignUp", url: "" },
+    // ];
 
     const checkFormIsFilled = () => {
         verifyPassFormat();
@@ -101,10 +104,8 @@ const SignUp = (props) => {
 
     const verifyPass = () => {
         if (pass === confirmPass) {
-            console.log(pass, " = ", confirmPass)
             setPassErrorMatch(false);
         } else {
-            console.log(pass, " != ", confirmPass)
             setPassErrorMatch(true);
         }
     };
@@ -112,10 +113,8 @@ const SignUp = (props) => {
     const verifyPassFormat = () => {
         var reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$/;
         if (reg.test(pass)) {
-            console.log(pass, " PASS FORMAT OK")
             setPassWrongFormat(false);
         } else {
-            console.log(pass, " PASS FORMAT X OK")
             setPassWrongFormat(true);
         }
     };
@@ -174,10 +173,8 @@ const SignUp = (props) => {
             setEmailEmpty(false);
         }
         if ((userDetail.Email).includes("@")) {
-            console.log(userDetail.Email, " Email FORMAT OK")
             setEmailWrongFormat(false);
         } else {
-            console.log(userDetail.Email, " Email FORMAT X OK")
             setEmailWrongFormat(true);
         }
     };
@@ -286,7 +283,6 @@ const SignUp = (props) => {
         });
     }
 
-    console.log(props.currentUser)
     useEffect(() => {
         if (props.currentUser.length > 0 && submitRegisterForm === true) {
             browserHistory.push("/login");
@@ -295,10 +291,19 @@ const SignUp = (props) => {
     }, [props.currentUser], setSubmitRegisterForm);
 
     return (
-        <div className="block" style={{ width: "100%" }}>
-            <PageHeader header="Sign Up" breadcrumb={breadcrumb} />
+        <div className="block block--margin-top" style={{ width: "100%" }}>
+            <div className="text-center">
+                <img
+                    src={Logo}
+                    alt="Emporia"
+                    height="250px"
+                    width="auto"
+                    className="mx-auto"
+                ></img>
+            </div>
             <div className="container" style={{ width: "100%" }}>
-                <h4 className="mb-3">Personal's Information</h4>
+                <h4>Create a new Emporia's account</h4>
+                {/* <h4 className="mb-3">Personal's Information</h4> */}
                 <div className="row">
                     <div className="col-6 mt-3">
                         <TextField id="FirstName" label="First Name" variant="outlined" className="w-100 my-2" value={userDetail.FirstName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "fName")} />
@@ -387,7 +392,10 @@ const SignUp = (props) => {
                 </div>
             </div>
 
-            <div className="SignUpForm-Submit mt-5" style={{ textAlign: "center" }}>
+            <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
+                <div className="SignUpForm-Submit mb-2">
+                    Already have an account? <a href="/login"><b>Login</b></a>
+                </div>
                 <button
                     type="submit"
                     style={{ borderRadius: "5px" }}

@@ -23,6 +23,11 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import Button from "@material-ui/core/Button";
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 function mapStateToProps(state) {
   return {
@@ -50,6 +55,7 @@ class LoginComponent extends Component {
       rememberMe: false,
       isToLogin: false,
       hidden: true,
+      isForgetPassword: false
     };
     this.toggleShow = this.toggleShow.bind(this);
     this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
@@ -204,7 +210,7 @@ class LoginComponent extends Component {
               </button>
             </div>
             <p className="forgot-password text-right">
-              <a href="#">Forgot password?</a>
+              <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
             </p>
           </Col>
           <Divider orientation="vertical" flexItem />
@@ -234,7 +240,37 @@ class LoginComponent extends Component {
             </div>
           </Col>
         </Row>
+
+        <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState({ isForgetPassword: false }) }} fullWidth="true" maxWidth="xs">
+          <DialogContent dividers>
+            <div className="text-center">
+              <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>
+            </div>
+            <div className="text-center mt-2">
+              <h5>Forget Password</h5>
+            </div>
+            <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
+              <label>Enter your email address below to reset password</label>
+            </div>
+            <div className="text-center my-4">
+              <TextField id="username" label="Email Address" variant="outlined" className="w-100 my-2" value={this.state.resetEmail} onChange={({ target }) => { this.setState({ resetEmail: target.value }) }} error={this.state.resetEmailErr} helperText={this.state.resetEmailErr && "Invalid Email"} />
+            </div>
+            <div className="text-center mb-5">
+              <Button className="btn btn-primary" size="large" color="primary" variant="contained" onClick={() => { this.setState({ isForgetPassword: false }) }} >
+                Reset Password
+              </Button>
+            </div>
+          </DialogContent>
+          {/* <DialogActions >
+            <Button className="btn btn-primary" color="primary" variant="contained" onClick={() => { this.setState({ isForgetPassword: false }) }} >
+              Submit
+            </Button>
+          </DialogActions> */}
+        </Dialog>
+
       </form>
+
+
     );
   }
 }

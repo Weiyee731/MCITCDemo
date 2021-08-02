@@ -16,9 +16,10 @@ import Rating from "./Rating";
 import { cartAddItem } from "../../store/cart";
 import { compareAddItem } from "../../store/compare";
 import { Wishlist16Svg, Compare16Svg } from "../../svg";
-import { wishlistAddItem } from "../../store/wishlist";
+import { wishlistAddItem ,   wishlistRemoveItem,} from "../../store/wishlist";
 import { HashLink } from "react-router-hash-link";
 import ProductTabs from "../shop/ProductTabs";
+import { mobileMenuOpen } from '../../store/mobile-menu';
 
 class Product extends Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class Product extends Component {
       product,
       layout,
       wishlistAddItem,
+      wishlistRemoveItem,
       compareAddItem,
       cartAddItem,
     } = this.props;
@@ -79,7 +81,7 @@ class Product extends Component {
           <div className="product__content">
             <ProductGallery
               layout={layout}
-              images={JSON.parse(product.ProductImages)}
+              images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : product.ProductImages}
             />
 
             <div className="product__info">
@@ -285,7 +287,7 @@ class Product extends Component {
                       />
                     </div>
                     <div className="product__actions-item product__actions-item--wishlist mx-1">
-                      <AsyncAction
+                      {/* <AsyncAction
                         action={() => wishlistAddItem(product)}
                         render={({ run, loading }) => (
                           <button
@@ -300,12 +302,73 @@ class Product extends Component {
                               }
                             )}
                           >
-                            <Wishlist16Svg />
+                            {
+                              this.props.wishlist.length > 0 ?
+                                this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+                                  this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+                                    return (<Wishlist16Svg fill="red" />)
+                                  })
+                                  : <Wishlist16Svg />
+                                : <Wishlist16Svg />
+                            }
                           </button>
                         )}
-                      />
+                      /> */}
+                      {
+                        this.props.wishlist.length > 0 ?
+                          this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+                            this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+                              return (
+                                <AsyncAction
+                                  action={() => wishlistRemoveItem(x.ProductID)}
+                                  render={({ run, loading }) => (
+                                    <button type="button" data-toggle="tooltip" title="Wishlist" onClick={run} className={classNames(
+                                      "btn btn-secondary btn-svg-icon btn-lg",
+                                      {
+                                        "btn-loading": loading,
+                                      }
+                                    )}
+                                    ><Wishlist16Svg fill="red" />
+                                    </button>
+                                  )}
+                                />
+                              )
+                            })
+                            :
+                            (
+                              <AsyncAction
+                                action={() => wishlistAddItem(product)}
+                                render={({ run, loading }) => (
+                                  <button type="button" data-toggle="tooltip" title="Wishlist" onClick={run} className={classNames(
+                                    "btn btn-secondary btn-svg-icon btn-lg",
+                                    {
+                                      "btn-loading": loading,
+                                    }
+                                  )}
+                                  ><Wishlist16Svg />
+                                  </button>
+                                )}
+                              />
+                            )
+                          :
+                          (
+                            <AsyncAction
+                              action={() => wishlistAddItem(product)}
+                              render={({ run, loading }) => (
+                                <button type="button" data-toggle="tooltip" title="Wishlist" onClick={run} className={classNames(
+                                  "btn btn-secondary btn-svg-icon btn-lg",
+                                  {
+                                    "btn-loading": loading,
+                                  }
+                                )}
+                                ><Wishlist16Svg />
+                                </button>
+                              )}
+                            />
+                          )
+                      }
                     </div>
-                    <div className="product__actions-item product__actions-item--compare ml-1">
+                    {/* <div className="product__actions-item product__actions-item--compare ml-1">
                       <AsyncAction
                         action={() => compareAddItem(product)}
                         render={({ run, loading }) => (
@@ -325,7 +388,7 @@ class Product extends Component {
                           </button>
                         )}
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </form>
@@ -386,10 +449,17 @@ Product.defaultProps = {
   layout: "standard",
 };
 
+const mapStateToProps = (state) => ({
+  wishlist: state.wishlist,
+});
+
 const mapDispatchToProps = {
   cartAddItem,
   wishlistAddItem,
+  wishlistRemoveItem,
   compareAddItem,
+  openMobileMenu: mobileMenuOpen,
 };
 
-export default connect(() => ({}), mapDispatchToProps)(Product);
+// export default connect(() => ({}), mapDispatchToProps)(Product);
+export default connect(mapStateToProps, mapDispatchToProps)(Product);

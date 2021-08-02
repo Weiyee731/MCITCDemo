@@ -59,8 +59,6 @@ class ProductTabSpecification extends Component {
         <h3 className="spec__header">Specification</h3>
         <div className="spec__section">
           <h4 className="spec__section-title">General</h4>
-          {console.log(this.props)}
-          {console.log(this.props.products)}
 
           <div className="spec__row">
             <div className="spec__name">Brand</div>

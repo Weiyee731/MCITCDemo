@@ -85,13 +85,13 @@ class BlockCategoryDetails extends Component {
         super(props);
 
         this.state = initialState;
-        
+
         this.handleFilterOption = this.handleFilterOption.bind(this)
         this.resetFilter = this.resetFilter.bind(this)
     }
 
     componentDidMount() {
-        if(!isNullOrEmptyString(this.props.match.params.categoryID)){
+        if (!isNullOrEmptyString(this.props.match.params.categoryID)) {
             let propsData = {
                 ProductCategoryID: Number(this.props.match.params.categoryID),
                 ProductPerPage: 30,
@@ -110,7 +110,7 @@ class BlockCategoryDetails extends Component {
 
             try {
                 if (selectedCategory.length > 0) {
-                    if(selectedCategory[0].HierarchyItem !== null){
+                    if (selectedCategory[0].HierarchyItem !== null) {
                         let subCategories = JSON.parse(selectedCategory[0].HierarchyItem)
                         this.setState({
                             productSubCategories: subCategories,
@@ -249,17 +249,17 @@ class BlockCategoryDetails extends Component {
                 <div className="row">
                     <div className="col-md-2 col-12">
                         <div className="category-segment">
-                            <div 
-                                style={{ cursor: "pointer", fontWeight: 600 }} 
+                            <div
+                                style={{ cursor: "pointer", fontWeight: 600 }}
                                 onMouseDown={(e) => {
                                     if (e.button === 1) {
-                                      window.open("/shop/AllProductCategory/")
+                                        window.open("/shop/AllProductCategory/")
                                     }
-                                  }}
-                  
-                                  onClick={(e) => {
+                                }}
+
+                                onClick={(e) => {
                                     window.location.href = "/shop/AllProductCategory/"
-                                  }}
+                                }}
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div>
@@ -273,7 +273,9 @@ class BlockCategoryDetails extends Component {
                                                 </div>
                                                 :
                                                 <div key={el.ProductCategory} className="sub-category-items">
-                                                    <FiberManualRecordOutlinedIcon fontSize='sm' /> {el.ProductCategory}
+                                                    <FiberManualRecordOutlinedIcon fontSize='sm' 
+                                                    onClick={() => { this.setState({ selectedSubCategory: el.ProductCategory }); 
+                                                    window.location.href = "/shop/ProductCategory/" + el.ProductCategoryID + "/" + el.ProductCategory }} /> {el.ProductCategory}
                                                 </div>
                                         )
                                     })
@@ -412,17 +414,21 @@ class BlockCategoryDetails extends Component {
 
                         {/* product catalog */}
                         <div className="product-list container-fluid">
-                            <div className="row">
+                            {console.log(this.props)}
+                            <div className="row pl-2">
                                 {
                                     this.state.products.length > 0
                                         ?
-                                        this.state.products.map((el, idx) => {
-                                            return (
-                                                <div className="products__list-item">
-                                                    <ProductCard product={el}></ProductCard>
-                                                </div>
-                                            )
-                                        })
+                                        this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).length > 0 ?
+                                            this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).map((x) => {
+                                                return (
+                                                    <div className="products__list-item">
+                                                        {console.log("product", x)}
+                                                        <ProductCard product={x}></ProductCard>
+                                                    </div>
+                                                )
+                                            })
+                                            : <div><i>No products for this category</i></div>
                                         :
                                         <div><i>No products for this category</i></div>
                                 }

@@ -23,25 +23,38 @@ export function quickviewOpen(productSlug) {
     return new Promise((resolve) => {
       let canceled = false;
       // sending request to server, timeout is used as a stub
-      const timer = setTimeout(() => {
-        shopApi.getAllProducts().then((product) => {
-          if (canceled) {
-            return;
-          }
 
-          if (product) {
-            dispatch(quickviewOpenSuccess(product));
-          }
+      if (canceled) {
+        return;
+      }
 
-          resolve();
-        });
-      }, 350);
+      if (productSlug) {
+        dispatch(quickviewOpenSuccess(productSlug));
+      }
 
-      cancelPreviousRequest = () => {
-        canceled = true;
-        clearTimeout(timer);
-        resolve();
-      };
+      resolve();
+
+      // can remove the below api after all the codes are settle down
+      // const timer = setTimeout(() => {
+      //   shopApi.getAllProducts().then((product) => {
+      //     console.log(product)
+      //     if (canceled) {
+      //       return;
+      //     }
+
+      //     if (product) {
+      //       dispatch(quickviewOpenSuccess(product));
+      //     }
+
+      //     resolve();
+      //   });
+      // }, 350);
+
+      // cancelPreviousRequest = () => {
+      //   canceled = true;
+      //   clearTimeout(timer);
+      //   resolve();
+      // };
     });
   };
 }

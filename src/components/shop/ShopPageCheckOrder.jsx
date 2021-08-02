@@ -86,8 +86,6 @@ class PageCheckOrder extends Component {
   };
 
   handleRemoveClick = (e, AddressBookNo) => {
-    console.log("ShopPageCheckOrder")
-    console.log(AddressBookNo);
 
     let deletedAddress = {
       USERID: window.localStorage.getItem("id"),

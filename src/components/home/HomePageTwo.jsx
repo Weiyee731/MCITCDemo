@@ -157,6 +157,12 @@ function HomePageTwo(props) {
   }, [props.viewMoreProducts])
 
   // console.log(allProducts)
+  // console.log(props)
+  // console.log(allProducts)
+
+  function testing() {
+    console.log("testing")
+  }
 
   return (
     <React.Fragment>
@@ -176,8 +182,8 @@ function HomePageTwo(props) {
             rows={2}
             products={allProducts.data}
             // loading={props.loading}
-            groups={allProducts.tabs}
-            onGroupClick={allProducts.handleTabChange}
+            // groups={allProducts.tabs}
+            onGroupClick={testing}
           />
         ), [allProducts.handleTabChange, allProducts.tabs, props.loading, props.products])}
 

@@ -438,7 +438,6 @@ function ShopPageCategory(props) {
       </Helmet>
 
       <PageHeader header={pageTitle} breadcrumb={breadcrumb} />
-
       {content}
     </React.Fragment>
   );

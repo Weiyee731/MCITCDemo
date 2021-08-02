@@ -79,17 +79,6 @@ export class GitEpic {
 
   RegisterUser = (action$) =>
     action$.ofType(GitAction.Register).switchMap(({ payload }) => {
-
-      console.log(url + "User_Register?username=" +
-      payload.Username +
-      "&password=" +
-      payload.Password +
-      "&userFirstName=" +
-      payload.FirstName +
-      "&userLastName=" +
-      payload.LastName +
-      "&userEmail=" +
-      payload.Email  )
       return fetch(url +
         "User_Register?username=" +
         payload.Username +
@@ -491,7 +480,6 @@ export class GitEpic {
           } else {
             json = [];
           }
-          console.log(json)
           return {
             type: "GOT-PRODUCT",
             payload: json,
@@ -502,9 +490,6 @@ export class GitEpic {
 
   getViewMoreProducts = (action$) =>
     action$.ofType(GitAction.GetViewMoreProduct).switchMap(({ payload }) => {
-      console.log(url +
-        "Product_ViewMoreItemList?PRODUCTPERPAGE=" + payload.productPerPage +
-        "&PAGE=" + payload.page)
       return fetch(url +
         "Product_ViewMoreItemList?PRODUCTPERPAGE=" + payload.productPerPage +
         "&PAGE=" + payload.page
@@ -517,7 +502,6 @@ export class GitEpic {
           } else {
             json = [];
           }
-          console.log(json)
           return {
             type: "GOT-VIEWMORE-PRODUCT",
             payload: json,
@@ -1457,12 +1441,6 @@ export class GitEpic {
     action$
       .ofType(GitAction.GetProductReviewByProductID)
       .switchMap(({ payload }) => {
-
-        console.log(url +
-          "Product_ViewReviewByProductID?PRODUCTID=" +
-          payload.ProductID +
-          "&PARENTPRODUCTREVIEWID=" +
-          payload.ParentProductReviewID)
         return fetch(url +
           "Product_ViewReviewByProductID?PRODUCTID=" +
           payload.ProductID +
@@ -1518,7 +1496,6 @@ export class GitEpic {
         .then((json) => {
           if (json !== "fail") {
             json = JSON.parse(json);
-            console.log("DB", json)
           } else {
             json = [];
           }
@@ -1745,9 +1722,7 @@ export class GitEpic {
   //=================USER_ADDRESS=============================//
   ViewAddress = (action$) =>
     action$.ofType(GitAction.GetAddress).switchMap(({ payload }) => {
-      console.log(url +
-        "User_ViewAddressBook?USERID=" +
-        payload)
+
       return fetch(url +
         "User_ViewAddressBook?USERID=" +
         payload

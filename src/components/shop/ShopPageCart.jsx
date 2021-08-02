@@ -72,7 +72,6 @@ class ShopPageCart extends Component {
     CheckOutOnClick = (items) => {
 
         if (localStorage.getItem("id")) {
-            console.log("CHECKOUT")
             let ProductIDs = [];
             let ProductQuantity = [];
             items.map((row) => {

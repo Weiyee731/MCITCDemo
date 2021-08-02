@@ -33,20 +33,20 @@ class BlockAllProductCategory extends Component {
     }
 
     render() {
-        console.log(this.props.productCategories)
-
         return (
             <div className="container px-5 block--margin-top">
                 {
                     // level 1
+                    
                     this.props.productCategories.map((el, idx) => {
                         return (
                             <div className="row mb-5">
                                 <div className="col-md-2 col-xs-2 col-2">
                                     <div className="text-center category-item">
-                                        <img src={el.ProductCategoryImage} alt={el.ProductCategory} width="150px" height="150px" />
+                                        <img src={el.ProductCategoryImage} alt={el.ProductCategory} width="150px" height="150px" onClick={(e) => { window.location.href = "/shop/ProductCategory/" + el.ProductCategoryID + "/" + el.ProductCategory}}/>
                                         <br />
                                         {el.ProductCategory}
+                                     
                                     </div>
                                 </div>
 

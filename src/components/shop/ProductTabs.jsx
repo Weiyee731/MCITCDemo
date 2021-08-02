@@ -25,6 +25,8 @@ class ProductTabs extends Component {
   };
 
   render() {
+    console.log(this.props)
+
     const { currentTab } = this.state;
     const { withSidebar } = this.props;
     const classes = classNames("product-tabs", {

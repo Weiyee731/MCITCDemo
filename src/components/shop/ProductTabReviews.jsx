@@ -57,7 +57,8 @@ class ProductTabReviews extends Component {
       rowsPerPage: 5,
       edited: false,
     }
-    this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
+    console.log(this.props.product)
+    // this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
     this.onSubmitReview = this.onSubmitReview.bind(this);
     this.onSubmitReviewReply = this.onSubmitReviewReply.bind(this);
   }

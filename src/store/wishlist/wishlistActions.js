@@ -11,6 +11,7 @@ export function wishlistAddItemSuccess(product) {
 }
 
 export function wishlistRemoveItemSuccess(productId) {
+    toast.success(`Product removed from wish list!`);
     return {
         type: WISHLIST_REMOVE_ITEM,
         productId,

@@ -98,7 +98,6 @@ class IndicatorAccount extends Component {
   }
 
   OnSubmitLogin(e) {
-    console.log(this.state)
     this.props.loginUser(this.state);
   }
 

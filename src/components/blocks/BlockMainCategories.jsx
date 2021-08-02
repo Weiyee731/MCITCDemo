@@ -58,12 +58,9 @@ class BlockMainCategories extends Component {
                     window.open("/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory)
                   }
                 }}
-
                 onClick={(e) => {
                   window.location.href = "/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory
                 }}
-
-
               >
                 <div>
                   <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="150px" height="150px" />

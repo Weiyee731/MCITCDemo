@@ -173,7 +173,6 @@ export default class BlockProductsCarousel extends Component {
         columns.push(products.splice(0, rows));
       }
     }
-
     return columns;
   }
 
@@ -187,10 +186,7 @@ export default class BlockProductsCarousel extends Component {
       loading,
     } = this.props;
 
-    console.log(this.props)
-    { console.log(this.props.products.length == 0) }
     const columns = this.productsColumns().map((column, index) => {
-      console.log("column", column)
       const products = column.map((product) => (
         <div key={product.id} className="block-products-carousel__cell">
           <ProductCard product={product} />
@@ -211,7 +207,6 @@ export default class BlockProductsCarousel extends Component {
     const containerClasses = classNames({
       container: !withSidebar,
     });
-
     return (
       <div className={blockClasses} data-layout={layout}>
         {
@@ -239,7 +234,6 @@ export default class BlockProductsCarousel extends Component {
 
                 <div className="block-products-carousel__slider">
                   <div className="block-products-carousel__preloader" />
-
                   <StroykaSlick ref={this.setSlickRef} {...slickSettings[layout]}>
                     {columns}
                   </StroykaSlick>

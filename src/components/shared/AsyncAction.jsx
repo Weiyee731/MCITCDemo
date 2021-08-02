@@ -30,7 +30,8 @@ class AsyncAction extends Component {
         return;
       }
       this.setState({ loading: true });
-
+      console.log(action)
+      console.log(this.state)
       action().then(() => {
         if (this.canceled) {
           return;
@@ -38,9 +39,9 @@ class AsyncAction extends Component {
         this.setState({ loading: false });
       });
     }
-    else{
+    else {
       browserHistory.push("/login");
-       window.location.reload(false)
+      window.location.reload(false)
 
     }
 
