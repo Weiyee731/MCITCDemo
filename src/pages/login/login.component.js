@@ -89,10 +89,12 @@ class LoginComponent extends Component {
   }
 
   responseFacebook = (response) => {
+    console.log("facebook");
     console.log(response);
   }
 
   responseGoogle = (response) => {
+    console.log("google");
     console.log(response);
   }
 
@@ -221,7 +223,7 @@ class LoginComponent extends Component {
                 appId="1088597931155576"
                 autoLoad={false}
                 fields="name,email,picture"
-                callback={() => this.responseFacebook()}
+                callback={(e) => this.responseFacebook(e)}
                 cssClass="w-100 facebook-btn py-2 my-1"
                 icon="fa-facebook"
                 textButton="   FACEBOOK"
@@ -229,8 +231,8 @@ class LoginComponent extends Component {
               <GoogleLogin
                 clientId="111111213444444" //CLIENTID NOT CREATED YET
                 buttonText="GOOGLE"
-                onSuccess={() => this.responseGoogle()}
-                onFailure={() => this.responseGoogle()}
+                onSuccess={(e) => this.responseGoogle(e)}
+                onFailure={(e) => this.responseGoogle(e)}
                 className="w-100 justify-content-center my-1"
               />
               <hr />

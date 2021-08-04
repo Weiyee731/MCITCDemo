@@ -23,6 +23,7 @@ import shopApi from "../../api/shop";
 
 // data stubs
 import theme from '../../data/theme';
+import { toast } from 'react-toastify';
 
 class ShopPageCart extends Component {
     constructor(props) {
@@ -31,6 +32,8 @@ class ShopPageCart extends Component {
         this.state = {
             /** example: [{itemId: 8, value: 1}] */
             quantities: [],
+            SKUlimit: false,
+            overSKULimitID: []
         };
     }
 
@@ -71,29 +74,45 @@ class ShopPageCart extends Component {
 
     CheckOutOnClick = (items) => {
 
+
         if (localStorage.getItem("id")) {
             let ProductIDs = [];
             let ProductQuantity = [];
+            let checkSKU = [];
+            let overSKUlimit = false
             items.map((row) => {
-                ProductIDs.push(row.product.ProductID);
-                ProductQuantity.push(row.quantity);
+
+                if (row.product.SKU < row.quantity) {
+                    checkSKU.push(row.product.ProductID)
+                }
+
+                if (checkSKU.length > 0) {
+                    this.setState({ SKUlimit: true, overSKULimitID: checkSKU })
+                    overSKUlimit = true
+                }
+                else {
+                    ProductIDs.push(row.product.ProductID);
+                    ProductQuantity.push(row.quantity);
+                }
             });
-            shopApi
-                .addOrder({
-                    UserID: localStorage.getItem("id"),
-                    Products: ProductIDs,
-                    ProductQuantity: ProductQuantity,
-                })
-                .then((json) => {
-                    browserHistory.push("/shop/checkout?order=" + json[0].OrderID);
-                    window.location.reload(false);
-                });
+
+            if (overSKUlimit !== true) {
+                shopApi
+                    .addOrder({
+                        UserID: localStorage.getItem("id"),
+                        Products: ProductIDs,
+                        ProductQuantity: ProductQuantity,
+                    })
+                    .then((json) => {
+                        browserHistory.push("/shop/checkout?order=" + json[0].OrderID);
+                        window.location.reload(false);
+                    });
+            }
         }
         else {
             browserHistory.push("/login");
             window.location.reload(false);
         }
-
     };
 
     renderItems() {
@@ -141,8 +160,6 @@ class ShopPageCart extends Component {
                 />
             );
 
-
-
             return (
                 <tr key={item.id} className="cart-table__row">
                     <td className="cart-table__column cart-table__column--image">
@@ -153,16 +170,36 @@ class ShopPageCart extends Component {
                             {item.product.ProductName}
                         </Link>
                         {options}
+                        {
+                            this.state.overSKULimitID.length > 0 ?
+                                this.state.overSKULimitID.filter(x => x === item.product.ProductID).length > 0 ?
+                                    this.state.overSKULimitID.filter(x => x === item.product.ProductID).map((x) => {
+                                        return (
+                                            <>
+                                                <br></br>
+                                                <label style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.SKU} </label>
+                                            </>
+                                        )
+                                    })
+                                    : ""
+                                : ""
+                        }
                     </td>
+
                     <td className="cart-table__column cart-table__column--price" data-title="Price">
                         <Currency value={item.product.ProductSellingPrice} currency={"RM"} />
                     </td>
                     <td className="cart-table__column cart-table__column--quantity" data-title="Quantity">
-                        <InputNumber
-                            onChange={(quantity) => this.handleChangeQuantity(item, quantity)}
-                            value={this.getItemQuantity(item)}
-                            min={1}
-                        />
+                        {
+                            this.props.history !== undefined ?
+                                <InputNumber
+                                    onChange={(quantity) => this.handleChangeQuantity(item, quantity)}
+                                    value={this.getItemQuantity(item)}
+                                    min={1}
+                                /> :
+                                <label> {this.getItemQuantity(item)} </label>
+                        }
+
                     </td>
                     <td className="cart-table__column cart-table__column--total" data-title="Total">
                         {
@@ -258,7 +295,7 @@ class ShopPageCart extends Component {
             <div className="cart block container_" >
                 {
                     this.props.history !== undefined ?
-                    <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
+                        <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
                 }
                 <div className="container">
                     <table className="cart__table cart-table">
@@ -340,7 +377,10 @@ class ShopPageCart extends Component {
         } else {
             content = (
                 <div className="block block-empty" >
-                    <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} />
+                    {
+                        this.props.history !== undefined ?
+                            <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <br></br>
+                    }
                     <div className="container">
                         <div className="block-empty__body">
                             <div className="block-empty__message">Your shopping cart is empty!</div>

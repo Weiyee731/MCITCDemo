@@ -568,6 +568,7 @@ export class GitEpic {
             } else {
               json = [];
             }
+            console.log(json)
             return {
               type: GitAction.GotProductsByCategoryID,
               payload: json,

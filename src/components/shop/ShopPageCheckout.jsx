@@ -110,7 +110,9 @@ class PageCheckout extends Component {
             <StepProgressBar
               startingStep={0}
               className="row"
-              style={{ width: "100%" }}
+              primaryBtnClass ="btn-primary"
+              secondaryBtnClass  ="btn-link"
+              // style={{ width: "100%", color:"white" }}
               // onSubmit={onFormSubmit}
               steps={[
                 {

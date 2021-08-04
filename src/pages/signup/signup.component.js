@@ -37,6 +37,11 @@ const SignUp = (props) => {
         Email: "",
         Password: "",
         ConfirmPassword: "",
+        isFirstNameFill: false,
+        isLastNameFill: false,
+        isUsernameFill: false,
+        isEmailFill: false,
+        isConfirmPasswordFill: false,
 
     });
 
@@ -224,21 +229,25 @@ const SignUp = (props) => {
             setUserDetail({
                 ...userDetail,
                 FirstName: e.target.value,
+                isFirstNameFill: true
             });
         } else if (data === "lName") {
             setUserDetail({
                 ...userDetail,
                 LastName: e.target.value,
+                isLastNameFill: true
             });
         } else if (data === "userName") {
             setUserDetail({
                 ...userDetail,
                 Username: e.target.value,
+                isUsernameFill: true
             });
         } else if (data === "email") {
             setUserDetail({
                 ...userDetail,
                 Email: e.target.value,
+                isEmailFill: true
             });
         } else if (data === "password") {
             setUserDetail({
@@ -250,6 +259,7 @@ const SignUp = (props) => {
             setUserDetail({
                 ...userDetail,
                 ConfirmPassword: e.target.value,
+                isConfirmPasswordFill: true
             });
             setConfirmPass(e.target.value);
         }
@@ -302,15 +312,16 @@ const SignUp = (props) => {
                 ></img>
             </div>
             <div className="container" style={{ width: "100%" }}>
-                <h4>Create a new Emporia's account</h4>
-                {/* <h4 className="mb-3">Personal's Information</h4> */}
+                <div className="text-center">
+                    <h4>Create a new Emporia's account</h4>
+                </div>
                 <div className="row">
                     <div className="col-6 mt-3">
                         <TextField id="FirstName" label="First Name" variant="outlined" className="w-100 my-2" value={userDetail.FirstName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "fName")} />
 
                         {/* <label>First Name</label>
                         <input name="FirstName" value={userDetail.FirstName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "fName")} /> */}
-                        {FirstNameEmpty && (
+                        {FirstNameEmpty && userDetail.isFirstNameFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
                                 This is required
                             </p>
@@ -321,7 +332,7 @@ const SignUp = (props) => {
 
                         {/* <label>Last Name</label>
                         <input name="LastName" value={userDetail.LastName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "lName")} /> */}
-                        {LastNameEmpty && (
+                        {LastNameEmpty  && userDetail.isLastNameFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
                                 This is required
                             </p>
@@ -333,7 +344,7 @@ const SignUp = (props) => {
                         <TextField id="Username" label="Username" variant="outlined" className="w-100 my-2" value={userDetail.Username} ref={register({ required: true })} onChange={handleChangeData.bind(this, "userName")} />
                         {/* <label>Username</label>
                         <input name="Username" value={userDetail.Username} ref={register({ required: true })} onChange={handleChangeData.bind(this, "userName")} /> */}
-                        {UsernameEmpty && (
+                        {UsernameEmpty  && userDetail.isUsernameFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}   >
                                 This is required
                             </p>
@@ -345,7 +356,7 @@ const SignUp = (props) => {
                         {/* <label>Email</label>
                         <input name="Email" type="email" value={userDetail.Email} ref={register({ required: true })} onChange={handleChangeData.bind(this, "email")} /> */}
                         {checkDuplicate && userDetail.Email}
-                        {EmailEmpty && (
+                        {EmailEmpty  && userDetail.isEmailFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}  >
                                 This is required
                             </p>
@@ -383,7 +394,7 @@ const SignUp = (props) => {
                         <TextField id="ConfirmPassword" label="Confirm Password" variant="outlined" className="w-100 my-2" value={userDetail.ConfirmPassword} type="password" ref={register({ required: true })} onChange={handleChangeData.bind(this, "confirmPassword")} />
                         {/* <label>Confirm Password</label>
                         <input name="ConfirmPassword" value={userDetail.ConfirmPassword} type="password" ref={register({ required: true })} onChange={handleChangeData.bind(this, "confirmPassword")} /> */}
-                        {ConfirmPasswordEmpty && (
+                        {ConfirmPasswordEmpty  && userDetail.isConfirmPasswordFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
                                 This is required
                             </p>

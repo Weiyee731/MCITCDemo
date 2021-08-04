@@ -155,7 +155,7 @@ const productLayouts = [
         {...props}
         {...options}
         productSlug={props.match.params.productSlug}
-        // productSlug="brandix-screwdriver-screw1500acc"
+      // productSlug="brandix-screwdriver-screw1500acc"
       />
     )}
   />
@@ -570,15 +570,38 @@ function Layout(props) {
                 exact
                 path="/shop/ProductCategory/:categoryID/:categorySlug"
                 render={(props) => (
+                  <>
+                   {console.log("HERE")}
+                   {console.log(props.match.params)}
+                   {console.log(props)}
                   <BlockCategoryDetails
                     {...props}
                     layout="standard"
                     categorySlug={props.match.params.categorySlug}
                     categoryID={props.match.params.categoryID}
                   />
+                  </>
                 )}
               />
-               <Route
+              <Route
+                exact
+                path="/shop/ProductCategory/:parentCategoryID/:categorySlug/:categoryID/:childcategorySlug"
+                render={(props) => (
+                  <>
+                   {console.log("HERE")}
+                   {console.log(props.match.params)}
+                  <BlockCategoryDetails
+                    {...props}
+                    layout="standard"
+                    categorySlug={props.match.params.categorySlug}
+                    childcategorySlug={props.match.params.childcategorySlug}
+                    categoryID={props.match.params.categoryID}
+                    parentCategoryID={props.match.params.parentCategoryID}
+                  />
+                  </>
+                )}
+              />
+              <Route
                 exact
                 path="/shop/AllProductCategory/"
                 render={(props) => (

@@ -57,29 +57,27 @@ function addItem(state, product, options, quantity) {
   let newItems;
   let { lastItemId } = state;
 
-  console.log("HERE")
-  console.log(state)
-  console.log(product)
-  console.log(options)
-  console.log(quantity)
+  // console.log("HERE")
+  // console.log(state)
+  // console.log(product)
+  // console.log(options)
+  // console.log(quantity)
 
-  state.items.findIndex((x) => {
-    if (x.product.ProductID === product.ProductID) {
+  // state.items.findIndex((x) => {
+  //   if (x.product.ProductID === product.ProductID) {
+  //     console.log(x)
+  //     console.log(x.quantity)
+  //     console.log(quantity)
+  //     console.log(x.quantity + quantity > product.SKU)
 
+  //     if (x.quantity + quantity > product.SKU === false) {
 
-      console.log(x)
-      console.log(x.quantity)
-      console.log(quantity)
-      console.log(x.quantity + quantity > product.SKU)
-
-      if (x.quantity + quantity > product.SKU === false) {
-
-      }
-    }
-    if (product.ProductID !== x.product.ProductID) {
-      console.log(quantity > product.SKU)
-    }
-  })
+  //     }
+  //   }
+  //   if (product.ProductID !== x.product.ProductID) {
+  //     console.log(quantity > product.SKU)
+  //   }
+  // })
 
   if (itemIndex === -1) {
     lastItemId += 1;
@@ -106,7 +104,6 @@ function addItem(state, product, options, quantity) {
       },
       ...state.items.slice(itemIndex + 1),
     ];
-
   }
 
   const subtotal = calcSubtotal(newItems);

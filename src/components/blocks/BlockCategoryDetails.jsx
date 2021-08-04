@@ -49,7 +49,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
-        CallGetProductByProductCategorySlug: (propsData) => dispatch(GitAction.CallGetProductByProductCategorySlug(propsData)),
+        CallGetProductByProductCategoryID: (propsData) => dispatch(GitAction.CallGetProductByProductCategoryID(propsData)),
         CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
     };
 }
@@ -59,6 +59,7 @@ const initialState = {
     selectedCategory: [],
     productSubCategories: [],
     selectedSubCategory: "",
+    isHierarchyItemExist : false,
     filterOptions: {
         shippedFrom_checkbox: [false, false, false, false],
         minPrice: 0,
@@ -90,31 +91,55 @@ class BlockCategoryDetails extends Component {
         this.resetFilter = this.resetFilter.bind(this)
     }
 
+
     componentDidMount() {
         if (!isNullOrEmptyString(this.props.match.params.categoryID)) {
             let propsData = {
                 ProductCategoryID: Number(this.props.match.params.categoryID),
                 ProductPerPage: 30,
                 Page: 1,
-                Filter: "-"
+                Filter: "1"
             }
 
-            this.props.CallGetProductByProductCategorySlug(propsData)
+            this.props.CallGetProductByProductCategoryID(propsData)
         }
 
         if (Array.isArray(this.props.productCategories) && this.props.productCategories.length === 0) {
             this.props.CallAllProductCategoryListing();
         }
         else {
-            let selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
+
+            let selectedCategory = ""
+            let selectedParentCategory = ""
+            if (this.props.match.params.parentCategoryID === undefined)
+                selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
+            else {
+                selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.childcategorySlug)
+                selectedParentCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
+            }
 
             try {
-                if (selectedCategory.length > 0) {
+                if (selectedCategory.length > 0 && selectedParentCategory.length === 0) {
                     if (selectedCategory[0].HierarchyItem !== null) {
                         let subCategories = JSON.parse(selectedCategory[0].HierarchyItem)
                         this.setState({
                             productSubCategories: subCategories,
+                            isHierarchyItemExist: true,
                             selectedSubCategory: (subCategories.length > 0) ? subCategories[0].ProductCategory : ""
+                        })
+                    }
+                    else {
+                        this.setState({
+                            productSubCategories: [],
+                        })
+                    }
+                }
+                else if (selectedParentCategory.length > 0) {
+                    if (selectedParentCategory[0].HierarchyItem !== null) {
+                        let subCategories = JSON.parse(selectedParentCategory[0].HierarchyItem)
+                        this.setState({
+                            productSubCategories: subCategories,
+                            selectedSubCategory: (subCategories.length > 0) ? this.props.match.params.childcategorySlug : ""
                         })
                     }
                     else {
@@ -130,7 +155,6 @@ class BlockCategoryDetails extends Component {
                 }
             }
             catch (e) {
-                console.log(e);
                 this.setState({
                     productSubCategories: [],
                 })
@@ -243,7 +267,6 @@ class BlockCategoryDetails extends Component {
     }
 
     render() {
-        // console.log(this.props.products)
         return (
             <div className="container-fluid px-5 block block--margin-top">
                 <div className="row">
@@ -273,9 +296,13 @@ class BlockCategoryDetails extends Component {
                                                 </div>
                                                 :
                                                 <div key={el.ProductCategory} className="sub-category-items">
-                                                    <FiberManualRecordOutlinedIcon fontSize='sm' 
-                                                    onClick={() => { this.setState({ selectedSubCategory: el.ProductCategory }); 
-                                                    window.location.href = "/shop/ProductCategory/" + el.ProductCategoryID + "/" + el.ProductCategory }} /> {el.ProductCategory}
+                                                    <FiberManualRecordOutlinedIcon fontSize='sm'
+                                                        onClick={() => {
+                                                            this.setState({ selectedSubCategory: el.ProductCategory });
+                                                            window.location.href = "/shop/ProductCategory/" + this.props.categoryID + "/" + this.props.categorySlug + "/" + el.ProductCategoryID + "/" + el.ProductCategory
+                                                        }}
+                                                    />
+                                                    {el.ProductCategory}
                                                 </div>
                                         )
                                     })
@@ -390,7 +417,7 @@ class BlockCategoryDetails extends Component {
                     <div className="col-md-10 col-12">
                         <div className="d-flex sorting-options-panel align-middle  px-3 mb-2 ">
                             <div className="flex-grow-1 d-flex my-auto">
-                                <div className="sorting-option-label">{this.props.match.params.categorySlug}</div>
+                                <div className="sorting-option-label">{this.props.match.params.childcategorySlug !== undefined ? this.props.match.params.childcategorySlug : this.props.match.params.categorySlug}</div>
                             </div>
                             <div>
                                 <FormControl variant="outlined" style={{ width: 100, height: 40 }} size="small" >
@@ -414,7 +441,6 @@ class BlockCategoryDetails extends Component {
 
                         {/* product catalog */}
                         <div className="product-list container-fluid">
-                            {console.log(this.props)}
                             <div className="row pl-2">
                                 {
                                     this.state.products.length > 0
@@ -423,7 +449,6 @@ class BlockCategoryDetails extends Component {
                                             this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).map((x) => {
                                                 return (
                                                     <div className="products__list-item">
-                                                        {console.log("product", x)}
                                                         <ProductCard product={x}></ProductCard>
                                                     </div>
                                                 )
