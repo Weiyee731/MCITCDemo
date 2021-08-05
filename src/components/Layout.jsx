@@ -58,6 +58,7 @@ import BlockAllProductCategory from "./blocks/BlockAllProductCategory";
 import theme from "../data/theme";
 import SideBarMenu from "../components/navigationsidebar/SideBarMenu";
 import Login from "../pages/login/login.component";
+import ResetPassword from "../pages/login/resetPassword.component";
 import SignUp from "../pages/signup/signup.component";
 import ProductDetailsComponent from "../pages/productDetails/productDetails.component";
 import AddProductComponent from "../pages/addProduct/addProduct.component";
@@ -195,7 +196,18 @@ const Access = () => {
             <div className="auth-inner">
               <Switch>
                 <Route path="/" component={Login} />
+                <Route
+                exact
+                path="/resetPassword/:resetPasswordID"
+                render={(props) => (
+                  <ResetPassword
+                    {...props}
+                    resetPasswordID={props.match.params.resetPasswordID}
+                  />
+                )}
+              />
                 <Route path="/login" component={Login} />
+                {/* <Route path="/resetPassword" component={ResetPassword}/> */}
                 <Route path="/signup" component={SignUp} />
               </Switch>
             </div>
@@ -240,6 +252,17 @@ const Access = () => {
             <Route path="/addProduct" component={AddProductComponent} />
             <Route path="/addSuppliers" component={AddSuppliersComponent} />
             <Route path="/login" component={Login} />
+            <Route
+                exact
+                path="/resetPassword/:resetPasswordID"
+                render={(props) => (
+                  <ResetPassword
+                    {...props}
+                    resetPasswordID={props.match.params.resetPasswordID}
+                  />
+                )}
+              />
+            {/* <Route path="/resetPassword" component={ResetPassword}/> */}
             <Route path="/signup" component={SignUp} />
             <Route path="/viewSaleByProduct" component={ViewProductComponent} />
             <Route path="/viewSettings" component={ViewSettingsComponent} />
@@ -432,7 +455,7 @@ function Layout(props) {
                   />
                 )}
               />
-              {productLayouts}
+              {/* {productLayouts} */}
               <Route exact path="/shop/cart" component={PageCart} />
               <Route exact path="/shop/checkout" component={PageCheckout} />
               <Route
@@ -509,6 +532,17 @@ function Layout(props) {
                 render={(props) => <BlogPagePost {...props} layout="full" />}
               />
               <Route exact path="/login" component={Login} />
+              <Route
+                exact
+                path="/resetPassword/:resetPasswordID"
+                render={(props) => (
+                  <ResetPassword
+                    {...props}
+                    resetPasswordID={props.match.params.resetPasswordID}
+                  />
+                )}
+              />
+              {/* <Route path="/resetPassword" component={ResetPassword}/> */}
               <Route exact path="/signup" component={SignUp} />
               <Route path="/account" component={AccountLayout} />
 

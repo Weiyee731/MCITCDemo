@@ -58,7 +58,7 @@ class ProductTabReviews extends Component {
       edited: false,
     }
     console.log(this.props.product)
-    // this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
+    this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
     this.onSubmitReview = this.onSubmitReview.bind(this);
     this.onSubmitReviewReply = this.onSubmitReviewReply.bind(this);
   }
@@ -191,6 +191,8 @@ class ProductTabReviews extends Component {
             <div className="reviews-list">
               <ol className="reviews-list__content">{reviewsList}</ol>
               <div className="reviews-list__pagination">
+
+                {console.log("this.props.product", this.props.product)}
                 <Pagination
                   current={page}
                   total={

@@ -219,6 +219,12 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         products: action.payload,
       });
+    case GitAction.GetProductsByCategoryIDEmpty:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotProductsByCategoryIDEmpty:
+      return Object.assign({}, state, {
+        products: [],
+      });
 
     case GitAction.GetProductsByCategorySlug:
       return Object.assign({}, state, { loading: true });

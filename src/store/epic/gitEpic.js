@@ -108,6 +108,8 @@ export class GitEpic {
 
   checkUser = (action$) =>
     action$.ofType(GitAction.CheckUser).switchMap(({ payload }) => {
+      console.log("User_CheckDuplicate?email=" +
+      payload)
       return fetch(url +
         "User_CheckDuplicate?email=" +
         payload

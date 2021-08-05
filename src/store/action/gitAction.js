@@ -189,6 +189,9 @@ export class GitAction {
   static GetProductsByCategoryID = "GET-PRODUCT-BY-CATEGORY-ID";
   static GotProductsByCategoryID = "GOT-PRODUCT-BY-CATEGORY-ID";
 
+  static GetProductsByCategoryIDEmpty = "GET-PRODUCT-BY-CATEGORY-ID-EMPTY";
+  static GotProductsByCategoryIDEmpty = "GOT-PRODUCT-BY-CATEGORY-ID-EMPTY";
+
   static GetProductsByCategorySlug = "GET-PRODUCT-BY-CATEGORY-SLUG";
   static GotProductsByCategorySlug = "GOT-PRODUCT-BY-CATEGORY-SLUG";
 
@@ -210,7 +213,12 @@ export class GitAction {
       type: GitAction.GotViewMoreProductEmpty
     };
   }
-  
+
+  static CallProductByProductCategoryIDEmpty(){
+    return {
+      type: GitAction.GetProductsByCategoryIDEmpty
+    };
+  }
 
   static CallAllProductsByProductStatus(prodData) {
     return {

@@ -8,6 +8,15 @@ import React, { useState, useEffect, Component } from "react";
 import PageHeader from "../../components/shared/PageHeader";
 import TextField from "@material-ui/core/TextField";
 
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import clsx from 'clsx';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+
 import { toast } from "react-toastify";
 
 // Application
@@ -24,7 +33,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         CallSignup: (credentials) => dispatch(GitAction.CallSignup(credentials)),
-        checkUser: (credentials) => dispatch(GitAction.CallCheckUserExists(credentials)),
+        CallCheckUserExists: (credentials) => dispatch(GitAction.CallCheckUserExists(credentials)),
     };
 }
 
@@ -45,10 +54,13 @@ const SignUp = (props) => {
 
     });
 
+    const [passwordHidden, setPasswordHidden] = useState(true);
+    const [confirmPasswordHidden, setConfirmPasswordHidden] = useState(true);
     const [FirstNameEmpty, setFirstNameEmpty] = useState(false);
     const [LastNameEmpty, setLastNameEmpty] = useState(false);
     const [UsernameEmpty, setUsernameEmpty] = useState(false);
     const [EmailEmpty, setEmailEmpty] = useState(false);
+    // const [EmailDuplicate, setEmailDuplicate] = useState(false);
     const [PasswordEmpty, setPasswordEmpty] = useState(false);
     const [ConfirmPasswordEmpty, setConfirmPasswordEmpty] = useState(false);
     const [submitRegisterForm, setSubmitRegisterForm] = useState(false);
@@ -69,6 +81,8 @@ const SignUp = (props) => {
     const checkFormIsFilled = () => {
         verifyPassFormat();
         verifyPass();
+        // verifyEmail();
+        // checkReturn();
         if (
             FirstNameEmpty ||
             LastNameEmpty ||
@@ -79,12 +93,21 @@ const SignUp = (props) => {
             passErrorWrongFormat ||
             emailErrorWrongFormat ||
             passErrorMatch
+            // EmailDuplicate
         ) {
             toast.error("Please complete the form with correct information.");
         } else {
             toast.success("Form Submitted!");
             submitForm();
         }
+    };
+
+    const toggleShow = (value) => {
+
+        if (value === "password")
+            setPasswordHidden(!passwordHidden)
+        else
+            setConfirmPasswordHidden(!confirmPasswordHidden)
     };
 
 
@@ -106,6 +129,30 @@ const SignUp = (props) => {
         props.CallSignup(userDetail);
         setSubmitRegisterForm(true);
     };
+
+    // const verifyEmail = () => {
+    //     props.CallCheckUserExists(userDetail.Email)
+    //     // console.log(userDetail.Email)
+    //     // console.log(props.exist)
+    //     // if (props.exist > 0) {
+    //     //     console.log("SAME DATA EXIST")
+    //     // }
+    //     // else
+    //     //     console.log("NOT SAME DATA")
+    // }
+
+    // const checkReturn = () => {
+    //     // props.CallCheckUserExists(userDetail.Email)
+    //     console.log(userDetail.Email)
+    //     console.log(props.exist)
+    //     if (props.exist.length > 0) {
+    //         console.log("SAME DATA EXIST")
+    //         setEmailDuplicate(true)
+    //     }
+    //     else
+    //         console.log("NOT SAME DATA")
+    // }
+
 
     const verifyPass = () => {
         if (pass === confirmPass) {
@@ -213,7 +260,6 @@ const SignUp = (props) => {
         }
     };
 
-
     useEffect(() => {
         const timeOutId = setTimeout(() => verifyPass(), 1000);
         return () => clearTimeout(timeOutId);
@@ -311,6 +357,8 @@ const SignUp = (props) => {
                     className="mx-auto"
                 ></img>
             </div>
+            {console.log(props)}
+            {console.log(props.exist)}
             <div className="container" style={{ width: "100%" }}>
                 <div className="text-center">
                     <h4>Create a new Emporia's account</h4>
@@ -318,9 +366,6 @@ const SignUp = (props) => {
                 <div className="row">
                     <div className="col-6 mt-3">
                         <TextField id="FirstName" label="First Name" variant="outlined" className="w-100 my-2" value={userDetail.FirstName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "fName")} />
-
-                        {/* <label>First Name</label>
-                        <input name="FirstName" value={userDetail.FirstName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "fName")} /> */}
                         {FirstNameEmpty && userDetail.isFirstNameFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
                                 This is required
@@ -330,9 +375,7 @@ const SignUp = (props) => {
                     <div className="col-6 mt-3">
                         <TextField id="LastName" label="Last Name" variant="outlined" className="w-100 my-2" value={userDetail.LastName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "lName")} />
 
-                        {/* <label>Last Name</label>
-                        <input name="LastName" value={userDetail.LastName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "lName")} /> */}
-                        {LastNameEmpty  && userDetail.isLastNameFill === true && (
+                        {LastNameEmpty && userDetail.isLastNameFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
                                 This is required
                             </p>
@@ -342,9 +385,7 @@ const SignUp = (props) => {
                 <div className="row">
                     <div className="col-6 mt-3">
                         <TextField id="Username" label="Username" variant="outlined" className="w-100 my-2" value={userDetail.Username} ref={register({ required: true })} onChange={handleChangeData.bind(this, "userName")} />
-                        {/* <label>Username</label>
-                        <input name="Username" value={userDetail.Username} ref={register({ required: true })} onChange={handleChangeData.bind(this, "userName")} /> */}
-                        {UsernameEmpty  && userDetail.isUsernameFill === true && (
+                        {UsernameEmpty && userDetail.isUsernameFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}   >
                                 This is required
                             </p>
@@ -352,11 +393,8 @@ const SignUp = (props) => {
                     </div>
                     <div className="col-6 mt-3">
                         <TextField id="Email" label="Email" variant="outlined" className="w-100 my-2" type="email" value={userDetail.Email} ref={register({ required: true })} onChange={handleChangeData.bind(this, "email")} />
-
-                        {/* <label>Email</label>
-                        <input name="Email" type="email" value={userDetail.Email} ref={register({ required: true })} onChange={handleChangeData.bind(this, "email")} /> */}
                         {checkDuplicate && userDetail.Email}
-                        {EmailEmpty  && userDetail.isEmailFill === true && (
+                        {EmailEmpty && userDetail.isEmailFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}  >
                                 This is required
                             </p>
@@ -369,10 +407,54 @@ const SignUp = (props) => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-6 mt-3">
-                        <TextField id="Password" label="Password" variant="outlined" className="w-100 my-2" value={userDetail.Password} type="password" ref={register({ required: true })} onChange={handleChangeData.bind(this, "password")} />
-                        {/* <label>Password</label>
-                        <input name="Password" value={userDetail.Password} type="password" ref={register({ required: true })} onChange={handleChangeData.bind(this, "password")} /> */}
+                    <div className="col-6 mt-4">
+                        {/* 
+                        <TextField id="Password"
+                            label="Password"
+                            variant="outlined"
+                            className="w-100 my-2"
+                            value={userDetail.Password}
+                            type={passwordHidden ? 'password' : 'text'}
+                            ref={register({ required: true })}
+                            onChange={handleChangeData.bind(this, "password")}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={toggleShow}
+                                    >
+                                        {passwordHidden ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+
+                        >  <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={toggleShow}
+                        > */}
+
+                        <FormControl fullWidth variant="outlined">
+                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                            <OutlinedInput
+                                id="Password"
+                                label="Password"
+                                value={userDetail.Password}
+                                type={passwordHidden ? 'password' : 'text'}
+                                ref={register({ required: true })}
+                                onChange={handleChangeData.bind(this, "password")}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => toggleShow("password")}
+                                            edge="end"
+                                        >
+                                            {passwordHidden ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
                         {passErrorMatch && confirmPass && !PasswordEmpty && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }} >
                                 Passwords do not match.
@@ -390,11 +472,31 @@ const SignUp = (props) => {
                             </p>
                         )}
                     </div>
-                    <div className="col-6 mt-3">
-                        <TextField id="ConfirmPassword" label="Confirm Password" variant="outlined" className="w-100 my-2" value={userDetail.ConfirmPassword} type="password" ref={register({ required: true })} onChange={handleChangeData.bind(this, "confirmPassword")} />
-                        {/* <label>Confirm Password</label>
-                        <input name="ConfirmPassword" value={userDetail.ConfirmPassword} type="password" ref={register({ required: true })} onChange={handleChangeData.bind(this, "confirmPassword")} /> */}
-                        {ConfirmPasswordEmpty  && userDetail.isConfirmPasswordFill === true && (
+                    <div className="col-6 mt-4">
+                        <FormControl fullWidth variant="outlined">
+                            <InputLabel htmlFor="outlined-adornment-password">Confirm Password</InputLabel>
+                            <OutlinedInput
+                                id="ConfirmPassword"
+                                label="Password"
+                                value={userDetail.ConfirmPassword}
+                                type={confirmPasswordHidden ? 'password' : 'text'}
+                                ref={register({ required: true })}
+                                onChange={handleChangeData.bind(this, "confirmPassword")}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => toggleShow("confirmpassword")}
+                                            edge="end"
+                                        >
+                                            {confirmPasswordHidden ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+
+                        {ConfirmPasswordEmpty && userDetail.isConfirmPasswordFill === true && (
                             <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
                                 This is required
                             </p>
