@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import {
+  CART_RETRIEVE_ITEM,
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_UPDATE_QUANTITIES,
@@ -15,6 +16,15 @@ export function cartAddItemSuccess(product , options = [], quantity = 1) {
     quantity,
   };
 }
+
+// export function cartRetrieveItems(userId) {
+//   toast.success("here")
+//   console.log("HERE")
+//   return {
+//     type: CART_RETRIEVE_ITEM,
+//     userId
+//   };
+// }
 
 export function cartRemoveItemSuccess(itemId) {
   return {
@@ -63,3 +73,26 @@ export function cartUpdateQuantities(quantities) {
       }, 500);
     });
 }
+
+// export function cartItems(userId) {
+//   // sending request to server, timeout is used as a stub
+//   console.log("cartItems(userId)", userId)
+//   return (dispatch) =>
+//   new Promise((resolve) => {
+//     setTimeout(() => {
+//       dispatch(cartRetrieveItems(userId));
+//       resolve();
+//     }, 500);
+//   });
+
+  // return {
+
+  //   new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       cartRetrieveItems(userId);
+  //       resolve();
+  //     }, 500);
+  //   });
+  // }
+  
+// }

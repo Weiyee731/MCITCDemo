@@ -50,8 +50,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallViewSubs: (subscriber) =>
-      dispatch(GitAction.CallViewSubs(subscriber)),
+    // CallViewSubs: (subscriber) =>
+    //   dispatch(GitAction.CallViewSubs(subscriber)),
     CallDeleteSubs: (newSubsObj) =>
       dispatch(GitAction.CallDeleteSubs(newSubsObj)),
     CallUpdateSubs: (newSubsObj) =>
@@ -1025,7 +1025,7 @@ class viewUserMail extends Component {
       SubscriberEmailEmailFormat: false,
       error: false,
     };
-    this.props.CallViewSubs(); 
+    // this.props.CallViewSubs(); 
     this.ToggleSelectable = this.ToggleSelectable.bind(this);
     this.ToggleDelete = this.ToggleDelete.bind(this);
     this.handleRequestSort = this.handleRequestSort.bind(this);

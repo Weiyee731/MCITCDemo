@@ -40,6 +40,9 @@ const INITIAL_STATE = {
   addsubs: [],
   creditcards: [],
   updatedCreditCard: [],
+  productcart: [],
+  wishlist: []
+
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -897,6 +900,66 @@ export function counterReducer(state = INITIAL_STATE, action) {
       var newPromoObj = Object.assign({}, state);
       newPromoObj.loading = false;
       return newPromoObj;
+
+
+    case GitAction.DeleteProductCart:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.DeletedProductCart:
+      return Object.assign({}, state, {
+        loading: false,
+        productcart: action.payload,
+      });
+
+    case GitAction.UpdateProductCart:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedProductCart:
+      return Object.assign({}, state, {
+        loading: false,
+        productcart: action.payload,
+      });
+
+    case GitAction.AddProductCart:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.AddedProductCart:
+      return Object.assign({}, state, {
+        loading: false,
+        productcart: action.payload,
+      });
+
+    case GitAction.ViewProductCart:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ViewedProductCart:
+      return Object.assign({}, state, {
+        loading: false,
+        productcart: action.payload,
+      });
+
+
+    // Wishlist
+    case GitAction.DeleteProductWishlist:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.DeletedProductWishlist:
+      return Object.assign({}, state, {
+        loading: false,
+        wishlist: action.payload,
+      });
+
+    case GitAction.AddProductWishlist:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.AddedProductWishlist:
+      return Object.assign({}, state, {
+        loading: false,
+        wishlist: action.payload,
+      });
+
+    case GitAction.ViewProductWishlist:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ViewedProductWishlist:
+      return Object.assign({}, state, {
+        loading: false,
+        wishlist: action.payload,
+      });
+
 
     default:
       return state;

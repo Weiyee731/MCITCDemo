@@ -4,6 +4,7 @@ import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 
 const url = "http://tourism.denoo.my/emporia/api/emporia/"
+// const url = "localhost/emporia/api/emporia/"
 export class GitEpic {
   //==================USER==========================//
   getAllUserByTypeId = (action$) =>
@@ -89,7 +90,7 @@ export class GitEpic {
         "&userLastName=" +
         payload.LastName +
         "&userEmail=" +
-        payload.Email 
+        payload.Email
       )
         .then((response) => response.json())
         .then((json) => {
@@ -109,7 +110,7 @@ export class GitEpic {
   checkUser = (action$) =>
     action$.ofType(GitAction.CheckUser).switchMap(({ payload }) => {
       console.log("User_CheckDuplicate?email=" +
-      payload)
+        payload)
       return fetch(url +
         "User_CheckDuplicate?email=" +
         payload
@@ -472,6 +473,7 @@ export class GitEpic {
 
   getAllProducts = (action$) =>
     action$.ofType(GitAction.GetProduct).switchMap(({ payload }) => {
+
       return fetch(url +
         "Product_ItemList"
       )
@@ -2411,6 +2413,8 @@ export class GitEpic {
   // ================= Email Subscriber ===================== //
   getAllSubs = (action$) =>
     action$.ofType(GitAction.GetSubs).switchMap(({ payload }) => {
+
+
       return fetch(url +
         "Subcriber_ViewSubcriber"
       )
@@ -2719,5 +2723,247 @@ export class GitEpic {
         })
         .catch((error) => toast.error(error));
     });
+
+  //================= PRODUCT CART ================//
+
+  deleteProductCart = (action$) =>
+    action$.ofType(GitAction.DeleteProductCart).switchMap(({ payload }) => {
+      return fetch(url +
+        "Product_DeleteProductCart?USERCARTID=" +
+        payload.userCartID
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+            toast.success("Product " + payload.productName + " is removed from cart!");
+          } else {
+            json = [];
+          }
+          return fetch(url +
+            "Product_ItemListInCartByUserID?USERID=" +
+            payload.userID
+          )
+            .then((response) => response.json())
+            .then((json) => {
+              if (json !== "fail") {
+                json = JSON.parse(json);
+              } else {
+                json = [];
+              }
+              return {
+                type: "DELETED-PRODUCTCART",
+                payload: json,
+              };
+            })
+            .catch((error) => alert("Something went wrong. Error code: Product_ItemListInCartByUserID"));
+        })
+        .catch((error) => alert("Something went wrong. Error code: Product_DeleteProductCart"));
+    });
+
+  updateProductCart = (action$) =>
+    action$.ofType(GitAction.UpdateProductCart).switchMap(({ payload }) => {
+      return fetch(url +
+        "Product_UpdateProductCart?USERCARTID=" +
+        payload.userCartID +
+        "&PRODUCTQUANTITY=" +
+        payload.productQuantity
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+            toast.success("Product " + payload.productName + " quantity is updated in cart!");
+          } else {
+            json = [];
+          }
+
+          return fetch(url +
+            "Product_ItemListInCartByUserID?USERID=" +
+            payload.userID
+          )
+            .then((response) => response.json())
+            .then((json) => {
+              if (json !== "fail") {
+                json = JSON.parse(json);
+              } else {
+                json = [];
+              }
+              console.log("json in gitepic", json)
+              return {
+                type: "UPDATED-PRODUCTCART",
+                payload: json,
+              };
+            })
+            .catch((error) => alert("Something went wrong. Error code: Product_ItemListInCartByUserID"));
+        })
+        .catch((error) => alert("Something went wrong. Error code: Product_UpdateProductCart"));
+    });
+
+
+  addProductCart = (action$) =>
+    action$.ofType(GitAction.AddProductCart).switchMap(({ payload }) => {
+      return fetch(url +
+        "Product_AddProductCart?USERID=" +
+        payload.userID +
+        "&PRODUCTID=" +
+        payload.productID +
+        "&PRODUCTQUANTITY=" +
+        payload.productQuantity +
+        "&PRODUCTVARIATIONDETAILID=" +
+        payload.productVariationDetailID +
+        "&APPLYINGPROMOCODE=" +
+        payload.applyingPromoCode
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+            toast.success("Product " + payload.productName + " is added to cart!");
+          } else {
+            json = [];
+          }
+
+          return fetch(url +
+            "Product_ItemListInCartByUserID?USERID=" +
+            payload.userID
+          )
+            .then((response) => response.json())
+            .then((json) => {
+              if (json !== "fail") {
+                json = JSON.parse(json);
+                console.log("json", json)
+              } else {
+                json = [];
+              }
+              return {
+                type: "ADDED-PRODUCTCART",
+                payload: json,
+              };
+            })
+            .catch((error) => alert("Something went wrong. Error code: Product_ItemListInCartByUserID"));
+        })
+        .catch((error) => alert("Something went wrong. Error code: Product_AddProductCart"));
+    });
+
+
+  viewProductCartList = (action$) =>
+    action$.ofType(GitAction.ViewProductCart).switchMap(({ payload }) => {
+      return fetch(url +
+        "Product_ItemListInCartByUserID?USERID=" +
+        payload.userID
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+          return {
+            type: "VIEWED-PRODUCTCART",
+            payload: json,
+          };
+        })
+        .catch((error) => alert("Something went wrong. Error code: Product_ItemListInCartByUserID"));
+    });
+
+  //------------------------- PRODUCT WISHLIST ----------------------------
+
+  viewProductWishlist = (action$) =>
+    action$.ofType(GitAction.ViewProductWishlist).switchMap(({ payload }) => {
+      return fetch(url +
+        "Product_ItemListInWishlistByUserID?USERID=" +
+        payload.userID
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+          return {
+            type: "VIEWED-PRODUCTWISHLIST",
+            payload: json,
+          };
+        })
+        .catch((error) => alert("Something went wrong. Error code: Product_ItemListInWishlistByUserID"));
+    });
+
+  addProductWishlist = (action$) =>
+    action$.ofType(GitAction.AddProductWishlist).switchMap(({ payload }) => {
+      return fetch(url +
+        "Product_AddProductWishlist?USERID=" +
+        payload.userID +
+        "&PRODUCTID=" +
+        payload.productID
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+            toast.success("Product " + payload.productName + " is added to wishlist!");
+          } else {
+            json = [];
+          }
+
+          return fetch(url +
+            "Product_ItemListInWishlistByUserID?USERID=" + payload.userID
+          )
+            .then((response) => response.json())
+            .then((json) => {
+              if (json !== "fail") {
+                json = JSON.parse(json);
+                console.log("json", json)
+              } else {
+                json = [];
+              }
+              return {
+                type: "ADDED-PRODUCTWISHLIST",
+                payload: json,
+              };
+            })
+            .catch((error) => alert("Something went wrong. Error code: Product_ItemListInWishlistByUserID"));
+        })
+        .catch((error) => alert("Something went wrong. Error code: Product_AddProductWishlist"));
+    });
+
+  deleteProductWishlist = (action$) =>
+    action$.ofType(GitAction.DeleteProductWishlist).switchMap(({ payload }) => {
+      return fetch(url +
+        "Product_DeleteProductWishlist?USERWISHLISTID=" +
+        payload.userWishlistID
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+            toast.success("Product " + payload.productName + " is removed from cart!");
+          } else {
+            json = [];
+          }
+          return fetch(url +
+            "Product_ItemListInWishlistByUserID?USERID=" + payload.userID
+          )
+            .then((response) => response.json())
+            .then((json) => {
+              if (json !== "fail") {
+                json = JSON.parse(json);
+              } else {
+                json = [];
+              }
+              return {
+                type: "DELETED-PRODUCTWISHLIST",
+                payload: json,
+              };
+            })
+            .catch((error) => alert("Something went wrong. Error code: Product_ItemListInWishlistByUserID"));
+        })
+        .catch((error) => alert("Something went wrong. Error code: Product_DeleteProductWishlist"));
+    });
+
+
+
 }
 export let gitEpic = new GitEpic();

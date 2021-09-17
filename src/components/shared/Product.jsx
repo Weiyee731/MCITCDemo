@@ -16,10 +16,12 @@ import Rating from "./Rating";
 import { cartAddItem } from "../../store/cart";
 import { compareAddItem } from "../../store/compare";
 import { Wishlist16Svg, Compare16Svg } from "../../svg";
-import { wishlistAddItem ,   wishlistRemoveItem,} from "../../store/wishlist";
+import { wishlistAddItem, wishlistRemoveItem, } from "../../store/wishlist";
 import { HashLink } from "react-router-hash-link";
 import ProductTabs from "../shop/ProductTabs";
-import { mobileMenuOpen } from '../../store/mobile-menu';
+import { GitAction } from "../../store/action/gitAction";
+import { browserHistory } from "react-router";
+
 
 class Product extends Component {
   constructor(props) {
@@ -29,6 +31,10 @@ class Product extends Component {
       quantity: 1,
       currentTab: "description",
     };
+    this.addCart = this.addCart.bind(this)
+    this.handleWishlist = this.handleWishlist.bind(this)
+    this.wishlisting = this.wishlisting.bind(this)
+    this.login = this.login.bind(this)
   }
 
   handleChangeQuantity = (quantity) => {
@@ -40,37 +46,88 @@ class Product extends Component {
     });
 
   };
+
+  addCart = (product, quantity) => {
+    let found = false
+
+    this.props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+      found = true
+      this.props.CallUpdateProductCart({
+        userID: localStorage.getItem("id"),
+        userCartID: x.UserCartID,
+        productQuantity: parseInt(x.ProductQuantity) + quantity,
+        productName: product.ProductName
+      })
+    })
+
+    if (found === false) {
+      this.props.CallAddProductCart({
+        userID: window.localStorage.getItem("id"),
+        productID: product.ProductID,
+        productQuantity: quantity,
+        productVariationDetailID: 1,
+        applyingPromoCode: 0,
+        productName: product.ProductName
+      })
+    }
+  }
+
+  login() {
+    browserHistory.push("/login");
+    window.location.reload(false);
+  }
+
+  handleWishlist = (product) => {
+    let found = false
+
+    this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+      found = true
+      this.props.CallDeleteProductWishlist({
+        userID: localStorage.getItem("id"),
+        userWishlistID: x.UserWishlistID,
+        productName: product.ProductName
+      })
+    })
+    if (found === false) {
+      this.props.CallAddProductWishlist({
+        userID: window.localStorage.getItem("id"),
+        productID: product.ProductID,
+        productName: product.ProductName
+      })
+    }
+  }
+
+  wishlisting(product) {
+    return (
+      this.props.wishlist.length > 0 ?
+        this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+          return (
+            <button type="button" onClick={() => localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
+              className={classNames('btn btn-light btn-sm btn-svg-icon')}
+            ><Wishlist16Svg fill="red" />
+            </button>
+          )
+        })
+        :
+        (
+          <button type="button" onClick={() => localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
+            className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
+          ><Wishlist16Svg />
+          </button>
+        )
+    )
+  }
   render() {
     const {
       product,
       layout,
-      wishlistAddItem,
-      wishlistRemoveItem,
-      compareAddItem,
-      cartAddItem,
     } = this.props;
-    // var images = [];
-    // const images = [
-    //   ...images,
-    //   JSON.parse(product.ProductImages).map((image) => image.ProductMediaUrl),
-    // ];
     const { quantity } = this.state;
     let prices;
 
-    // if (product.compareAtPrice) {
-    //   prices = (
-    //     <React.Fragment>
-    //       <span className="product__new-price">
-    //         <Currency value={product.price} />
-    //       </span>{" "}
-    //       <span className="product__old-price">
-    //         <Currency value={product.compareAtPrice} />
-    //       </span>
-    //     </React.Fragment>
-    //   );
-    // } else {
     prices = <Currency value={product.ProductSellingPrice} currency={"RM"} />;
-    // }
+
+
 
     return (
       <div className="block" >
@@ -86,46 +143,7 @@ class Product extends Component {
 
             <div className="product__info">
               <div className="product__wishlist-compare">
-                <AsyncAction
-                  action={() => wishlistAddItem(product)}
-                  render={({ run, loading }) => (
-                    <button
-                      type="button"
-                      data-toggle="tooltip"
-                      data-placement="right"
-                      title="Wishlist"
-                      onClick={run}
-                      className={classNames(
-                        "btn btn-sm btn-light btn-svg-icon",
-                        {
-                          "btn-loading": loading,
-                        }
-                      )}
-                    >
-                      <Wishlist16Svg />
-                    </button>
-                  )}
-                />
-                <AsyncAction
-                  action={() => compareAddItem(product)}
-                  render={({ run, loading }) => (
-                    <button
-                      type="button"
-                      data-toggle="tooltip"
-                      data-placement="right"
-                      title="Compare"
-                      onClick={run}
-                      className={classNames(
-                        "btn btn-sm btn-light btn-svg-icon",
-                        {
-                          "btn-loading": loading,
-                        }
-                      )}
-                    >
-                      <Compare16Svg />
-                    </button>
-                  )}
-                />
+                {this.wishlisting(product)}
               </div>
               <h1 className="product__name">{product.ProductName}</h1>
               <div className="product__rating">
@@ -149,16 +167,6 @@ class Product extends Component {
                   </HashLink>
                 </div>
               </div>
-              {/* <div className="product__description">
-                {product.ProductDescription}
-              </div> */}
-              {/* <ul className="product__features">
-              <li>Speed: 750 RPM</li>
-              <li>Power Source: Cordless-Electric</li>
-              <li>Battery Cell Type: Lithium</li>
-              <li>Voltage: 20 Volts</li>
-              <li>Battery Capacity: 2 Ah</li>
-            </ul> */}
               <ul className="product__meta" style={{ fontSize: "13pt" }}>
                 <li className="product__meta-availability">
                   Availability: <span className="text-success">In Stock</span>
@@ -270,125 +278,17 @@ class Product extends Component {
                 <div className="form-group product__option" >
                   <div className="product__actions" style={{ paddingTop: "10pt", float: "right", marginRight: "-40pt" }}>
                     <div className="product__actions-item product__actions-item--addtocart mx-1">
-                      <AsyncAction
-                        action={() => cartAddItem(product, [], quantity)}
-                        render={({ run, loading }) => (
-                          <button
-                            type="button"
-                            onClick={run}
-                            disabled={!quantity}
-                            className={classNames("btn btn-primary btn-lg", {
-                              "btn-loading": loading,
-                            })}
-                          >
-                            Add to cart
-                          </button>
-                        )}
-                      />
+                      <button
+                        type="button"
+                        onClick={() => localStorage.getItem("id") ? this.addCart(product, quantity) : this.login()}
+                        className={classNames("btn btn-primary product-card__addtocart")}
+                      >
+                        Add To Cart
+                      </button>
                     </div>
                     <div className="product__actions-item product__actions-item--wishlist mx-1">
-                      {/* <AsyncAction
-                        action={() => wishlistAddItem(product)}
-                        render={({ run, loading }) => (
-                          <button
-                            type="button"
-                            data-toggle="tooltip"
-                            title="Wishlist"
-                            onClick={run}
-                            className={classNames(
-                              "btn btn-secondary btn-svg-icon btn-lg",
-                              {
-                                "btn-loading": loading,
-                              }
-                            )}
-                          >
-                            {
-                              this.props.wishlist.length > 0 ?
-                                this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-                                  this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-                                    return (<Wishlist16Svg fill="red" />)
-                                  })
-                                  : <Wishlist16Svg />
-                                : <Wishlist16Svg />
-                            }
-                          </button>
-                        )}
-                      /> */}
-                      {
-                        this.props.wishlist.length > 0 ?
-                          this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-                            this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-                              return (
-                                <AsyncAction
-                                  action={() => wishlistRemoveItem(x.ProductID)}
-                                  render={({ run, loading }) => (
-                                    <button type="button" data-toggle="tooltip" title="Wishlist" onClick={run} className={classNames(
-                                      "btn btn-secondary btn-svg-icon btn-lg",
-                                      {
-                                        "btn-loading": loading,
-                                      }
-                                    )}
-                                    ><Wishlist16Svg fill="red" />
-                                    </button>
-                                  )}
-                                />
-                              )
-                            })
-                            :
-                            (
-                              <AsyncAction
-                                action={() => wishlistAddItem(product)}
-                                render={({ run, loading }) => (
-                                  <button type="button" data-toggle="tooltip" title="Wishlist" onClick={run} className={classNames(
-                                    "btn btn-secondary btn-svg-icon btn-lg",
-                                    {
-                                      "btn-loading": loading,
-                                    }
-                                  )}
-                                  ><Wishlist16Svg />
-                                  </button>
-                                )}
-                              />
-                            )
-                          :
-                          (
-                            <AsyncAction
-                              action={() => wishlistAddItem(product)}
-                              render={({ run, loading }) => (
-                                <button type="button" data-toggle="tooltip" title="Wishlist" onClick={run} className={classNames(
-                                  "btn btn-secondary btn-svg-icon btn-lg",
-                                  {
-                                    "btn-loading": loading,
-                                  }
-                                )}
-                                ><Wishlist16Svg />
-                                </button>
-                              )}
-                            />
-                          )
-                      }
+                      {this.wishlisting(product)}
                     </div>
-                    {/* <div className="product__actions-item product__actions-item--compare ml-1">
-                      <AsyncAction
-                        action={() => compareAddItem(product)}
-                        render={({ run, loading }) => (
-                          <button
-                            type="button"
-                            data-toggle="tooltip"
-                            title="Compare"
-                            onClick={run}
-                            className={classNames(
-                              "btn btn-secondary btn-svg-icon btn-lg",
-                              {
-                                "btn-loading": loading,
-                              }
-                            )}
-                          >
-                            <Compare16Svg />
-                          </button>
-                        )}
-                      />
-                    </div> */}
                   </div>
                 </div>
               </form>
@@ -450,16 +350,19 @@ Product.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  wishlist: state.wishlist,
+  wishlist: state.counterReducer.wishlist,
+  productcart: state.counterReducer.productcart
 });
 
-const mapDispatchToProps = {
-  cartAddItem,
-  wishlistAddItem,
-  wishlistRemoveItem,
-  compareAddItem,
-  openMobileMenu: mobileMenuOpen,
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
+    CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
+    CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
+    CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
+  }
+
 };
 
-// export default connect(() => ({}), mapDispatchToProps)(Product);
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

@@ -31,7 +31,14 @@ class PageCheckOrder extends Component {
     this.state = {
       payment: "bank",
       defaultAddress: [],
+
+      cart: [],
+      subtotal: 0,
+      total: 0,
+      shipping: 25,
+      tax: 0,
     };
+    this.setDetails = this.setDetails.bind(this)
   }
 
   handlePaymentChange = (event) => {
@@ -40,21 +47,30 @@ class PageCheckOrder extends Component {
     }
   };
 
-  renderTotals() {
-    const { cart } = this.props;
+  setDetails(productcart) {
+    productcart.map((x) => {
+      this.state.cart.push(
+        {
+          id: x.UserCartID,
+          product: x,
+          options: [],
+          price: x.ProductSellingPrice,
+          total: x.ProductQuantity * x.ProductSellingPrice,
+          quantity: x.ProductQuantity
+        }
+      )
+    })
+    this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
+    this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+  }
 
-    if (cart.extraLines.length <= 0) {
-      return null;
+  componentDidMount() {
+    if (this.props.productcart !== undefined) {
+      this.setDetails(this.props.productcart)
     }
+  }
 
-    const extraLines = cart.extraLines.map((extraLine, index) => (
-      <tr key={index}>
-        <th style={{ textAlign: "right" }}>{extraLine.title}</th>
-        <td>
-          <Currency value={extraLine.price} />
-        </td>
-      </tr>
-    ));
+  renderTotals() {
 
     return (
       <React.Fragment>
@@ -62,10 +78,21 @@ class PageCheckOrder extends Component {
           <tr>
             <th style={{ textAlign: "right" }}>Subtotal</th>
             <td>
-              <Currency value={cart.subtotal} />
+              <Currency value={this.state.subtotal} />
             </td>
           </tr>
-          {extraLines}
+          <tr>
+            <th style={{ textAlign: "right" }}>Shipping</th>
+            <td>
+              <Currency value={this.state.shipping} />
+            </td>
+          </tr>
+          <tr>
+            <th style={{ textAlign: "right" }}>Tax</th>
+            <td>
+              <Currency value={this.state.tax} />
+            </td>
+          </tr>
         </tbody>
       </React.Fragment>
     );
@@ -79,10 +106,6 @@ class PageCheckOrder extends Component {
 
   handleClick = (e, data) => {
     this.setState({ defaultAddress: data });
-    // localStorage.setItem("address", this.state.defaultAddress)
-    // console.log(JSON.parse(localStorage.getItem("address")))
-    // console.log(data);
-    // console.log(this.state.defaultAddress)
   };
 
   handleRemoveClick = (e, AddressBookNo) => {
@@ -93,7 +116,7 @@ class PageCheckOrder extends Component {
     };
 
     this.props.CallDeleteAddress(deletedAddress);
-    
+
   };
 
   goEdit = (e, AddressBookNo) => {
@@ -110,13 +133,13 @@ class PageCheckOrder extends Component {
     }
 
     const addresses = this.props.addresses.map((address) => (
-      
+
       <React.Fragment key={address.UserAddressBookID}>
         <div className="addresses-list__item card address-card">
           {address.UserAddressBookID ==
             this.state.defaultAddress.UserAddressBookID && (
-            <div className="address-card__badge">Selected</div>
-          )}
+              <div className="address-card__badge">Selected</div>
+            )}
           <div
             className="address-card__body"
             onClick={(e) => this.handleClick(e, address)}
@@ -143,7 +166,7 @@ class PageCheckOrder extends Component {
             </div>
             <div className="address-card__footer">
               <Link
-                to="/account/addresses" 
+                to="/account/addresses"
                 // to="/account/addresses/5"
                 onClick={(e) => this.goEdit(e, address.UserAddressBookID)}
               >
@@ -174,7 +197,7 @@ class PageCheckOrder extends Component {
             {0 == this.state.defaultAddress.UserAddressBookID && (
               <div className="address-card__badge">Selected</div>
             )}
-            <div className="address-card__body"  style={{ margin: "auto" }} onClick={(e) => this.handleClick(e, selfCollect)}>  
+            <div className="address-card__body" style={{ margin: "auto" }} onClick={(e) => this.handleClick(e, selfCollect)}>
               <h4><b>Self Collect</b></h4>
             </div>
           </div>
@@ -185,7 +208,6 @@ class PageCheckOrder extends Component {
 
         <Link
           to="/account/address/6"
-          //  onClick={((e) => CallAddAddress(address.UserAddressBookID))}
           className="addresses-list__item addresses-list__item--new"
         >
           <div className="addresses-list__plus" />
@@ -199,7 +221,7 @@ class PageCheckOrder extends Component {
   renderCart() {
     const { cart } = this.props;
 
-    const items = cart.items.map((item) => (
+    const items = this.state.cart.map((item) => (
       <tr key={item.id}>
         <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
         <td>
@@ -222,7 +244,7 @@ class PageCheckOrder extends Component {
           <tr>
             <th style={{ textAlign: "right" }}>Total</th>
             <td>
-              <Currency value={cart.total} />
+              <Currency value={this.state.total} />
             </td>
           </tr>
         </tfoot>
@@ -292,7 +314,7 @@ class PageCheckOrder extends Component {
   render() {
     const { cart } = this.props;
 
-    if (cart.items.length < 1) {
+    if (this.props.productcart.length < 1) {
       return <Redirect to="cart" />;
     }
 
@@ -327,6 +349,7 @@ class PageCheckOrder extends Component {
 const mapStateToProps = (state) => ({
   cart: state.cart,
   addresses: state.counterReducer["addresses"],
+  productcart: state.counterReducer.productcart
 });
 
 const mapDispatchToProps = (dispatch) => ({

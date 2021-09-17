@@ -1,5 +1,5 @@
 // react
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // third-party
 import classNames from "classnames";
@@ -19,6 +19,14 @@ import { url } from "../../services/utils";
 import { wishlistAddItem, wishlistRemoveItem } from "../../store/wishlist";
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Logo from "../../assets/Emporia.png"
+import { GitAction } from "../../store/action/gitAction";
+
+// application
+import { Modal } from 'reactstrap';
+import Product from './Product';
+import { Cross20Svg } from '../../svg';
+import { browserHistory } from "react-router";
+
 
 function ProductCard(props) {
   const {
@@ -30,6 +38,9 @@ function ProductCard(props) {
     wishlistRemoveItem,
     compareAddItem,
   } = props;
+
+  const [isQuickViewOpen, setModal] = useState(false)
+  const [isCartSet, setCart] = useState(false)
   const containerClasses = classNames("product-card", {
     "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
     "product-card--layout--grid product-card--size--nl": layout === "grid-nl",
@@ -38,11 +49,74 @@ function ProductCard(props) {
     "product-card--layout--horizontal": layout === "horizontal",
   });
 
+  if (window.localStorage.getItem("id") && isCartSet === true)
+  {
+    console.log("HERE")
+    props.CallViewProductCart({ userID: localStorage.getItem("id") })
+    setCart(true)
+  }
+    
+
   let badges = [];
   let image;
   let price;
   let features;
+  let productView;
 
+  if (product !== null) {
+    productView = <Product product={product} layout="quickview" />;
+  }
+
+  const login = () => {
+    browserHistory.push("/login");
+    window.location.reload(false);
+  }
+
+  const handleCart = (product) => {
+    let found = false
+
+    props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+      found = true
+      props.CallUpdateProductCart({
+        userID: localStorage.getItem("id"),
+        userCartID: x.UserCartID,
+        productQuantity: parseInt(x.ProductQuantity) + 1,
+        productName: product.ProductName
+      })
+    })
+
+    if (found === false) {
+      props.CallAddProductCart({
+        userID: window.localStorage.getItem("id"),
+        productID: product.ProductID,
+        productQuantity: 1,
+        productVariationDetailID: 1,
+        applyingPromoCode: 0,
+        productName: product.ProductName
+      })
+    }
+  }
+
+  const handleWishlist = (product) => {
+    console.log("ADD", product)
+    let found = false
+
+    props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+      found = true
+      props.CallDeleteProductWishlist({
+        userID: localStorage.getItem("id"),
+        userWishlistID: x.UserWishlistID,
+        productName: product.ProductName
+      })
+    })
+    if (found === false) {
+      props.CallAddProductWishlist({
+        userID: window.localStorage.getItem("id"),
+        productID: product.ProductID,
+        productName: product.ProductName
+      })
+    }
+  }
   //   if (product.badges.includes("sale")) {
   //     badges.push(
   //       <div key="sale" className="product-card__badge product-card__badge--sale">
@@ -116,22 +190,21 @@ function ProductCard(props) {
     );
   }
   return (
-    
+
+
     <div className={containerClasses}>
-      <AsyncAction
+      {/* <AsyncAction
         action={() => quickviewOpen(product)}
-        render={({ run, loading }) => (
-          <button
-            type="button"
-            onClick={run}
-            className={classNames("product-card__quickview", {
-              "product-card__quickview--preload": loading,
-            })}
-          >
-            <Quickview16Svg />
-          </button>
-        )}
-      />
+        render={({ run, loading }) => ( */}
+      <button
+        type="button"
+        onClick={() => setModal(true)}
+        className={classNames("product-card__quickview")}
+      >
+        <Quickview16Svg />
+      </button>
+      {/* )}
+      /> */}
       {badges}
       {image}
       <div className="product-card__info">
@@ -144,87 +217,50 @@ function ProductCard(props) {
         </div>
         {features}
       </div>
-      <div className="product-card__actions">
-        <div className="product-card__availability">
-          Availability:{" "}
-          <span style={{ color: "#3d464d" }}>In Stock</span>
-        </div>
-        {price}
-        <div className="product-card__buttons">
-          <AsyncAction
-            action={() => cartAddItem(product)}
-            render={({ run, loading }) => (
-              <React.Fragment>
-                <button
-                  type="button"
-                  onClick={run}
-                  className={classNames(
-                    "btn btn-primary product-card__addtocart",
-                    {
-                      "btn-loading": loading,
-                    }
-                  )}
-                >
-                  Add To Cart
-                </button>
-                {/* <button
-                  type="button"
-                  onClick={run}
-                  className={classNames(
-                    "btn btn-secondary product-card__addtocart product-card__addtocart--list",
-                    {
-                      "btn-loading": loading,
-                    }
-                  )}
-                >
-                  Add To Cart
-                </button> */}
-              </React.Fragment>
-            )}
-          />
-          {
-            props.wishlist.length > 0 ?
-              props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-                props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-                  return (
-                    <AsyncAction
-                      action={() => wishlistRemoveItem(x.ProductID)}
-                      render={({ run, loading }) => (
-                        <button type="button" onClick={run}
-                          className={classNames('btn btn-light btn-sm btn-svg-icon', { "btn-loading": loading, })}
-                        ><Wishlist16Svg fill="red" />
-                        </button>
-                      )}
-                    />
-                  )
-                })
-                :
-                (
-                  <AsyncAction
-                    action={() => wishlistAddItem(product)}
-                    render={({ run, loading }) => (
-                      <button type="button" onClick={run}
-                        className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist", { "btn-loading": loading, })}
-                      ><Wishlist16Svg />
+      {
+        <div className="product-card__actions">
+          <div className="product-card__availability">
+            Availability:{" "}
+            <span style={{ color: "#3d464d" }}>In Stock</span>
+          </div>
+          {price}
+          <div className="product-card__buttons">
+            <button
+              type="button"
+              onClick={() => localStorage.getItem("id") ? handleCart(product) : login()}
+              className={classNames("btn btn-primary product-card__addtocart")}
+            >
+              Add To Cart
+            </button>
+
+            {
+              props.wishlist.length > 0 ?
+                props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+                  props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+                    return (
+                      <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
+                        className={classNames('btn btn-light btn-sm btn-svg-icon')}
+                      ><Wishlist16Svg fill="red" />
                       </button>
-                    )}
-                  />
-                )
-              :
-              (
-                <AsyncAction
-                  action={() => wishlistAddItem(product)}
-                  render={({ run, loading }) => (
-                    <button type="button" onClick={run}
-                      className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist", { "btn-loading": loading, })}
+                    )
+                  })
+                  :
+                  (
+                    <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
+                      className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
                     ><Wishlist16Svg />
                     </button>
-                  )}
-                />
-              )
-          }
+                  )
+                :
+                (
+                  <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
+                    className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
+                  ><Wishlist16Svg />
+                  </button>
+                )
+            }
 
-          {/* <AsyncAction
+            {/* <AsyncAction
             action={() => compareAddItem(product)}
             render={({ run, loading }) => (
               <button
@@ -241,10 +277,23 @@ function ProductCard(props) {
               </button>
             )}
           /> */}
+          </div>
         </div>
-      </div>
+      }
+
+      <Modal isOpen={isQuickViewOpen} centered size="xl">
+        <div className="quickview">
+          <button className="quickview__close" type="button" onClick={() => setModal(false)}>
+            <Cross20Svg />
+          </button>
+          {productView}
+        </div>
+      </Modal>
+
     </div>
   );
+
+
 }
 
 ProductCard.propTypes = {
@@ -267,16 +316,27 @@ ProductCard.propTypes = {
 
 
 const mapStateToProps = (state) => ({
-  wishlist: state.wishlist,
+  productcart: state.counterReducer.productcart,
+  wishlist: state.counterReducer.wishlist
+
 });
 
-const mapDispatchToProps = {
-  cartAddItem,
-  wishlistAddItem,
-  wishlistRemoveItem,
-  compareAddItem,
-  quickviewOpen,
-  openMobileMenu: mobileMenuOpen,
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // cartAddItem,
+    // compareAddItem,
+    // quickviewOpen,
+    // openMobileMenu: mobileMenuOpen,
+    CallDeleteProductCart: (prodData) => dispatch(GitAction.CallDeleteProductCart(prodData)),
+    CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
+    CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
+    CallViewProductCart: (prodData) => dispatch(GitAction.CallViewProductCart(prodData)),
+    // CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
+    CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
+    CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData))
+  }
+
 };
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductCard);

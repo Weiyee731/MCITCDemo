@@ -24,6 +24,7 @@ class AsyncAction extends Component {
   run = () => {
 
     if (localStorage.getItem("isLogin").toLowerCase() === "true") {
+      console.log("this.props", this.props)
       const { action } = this.props;
       const { loading } = this.state;
       if (loading || !action) {

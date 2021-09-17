@@ -1037,4 +1037,76 @@ export class GitAction {
       payload: orderData,
     };
   }
+
+   //================= PRODUCT CART ================//
+   static DeleteProductCart = "DELETE-PRODUCTCART";
+   static DeletedProductCart = "DELETED-PRODUCTCART";
+ 
+   static UpdateProductCart = "UPDATE-PRODUCTCART";
+   static UpdatedProductCart = "UPDATED-PRODUCTCART";
+ 
+   static AddProductCart = "ADD-PRODUCTCART";
+   static AddedProductCart = "ADDED-PRODUCTCART";
+ 
+   static ViewProductCart = "VIEW-PRODUCTCART";
+   static ViewedProductCart = "VIEWED-PRODUCTCART";
+ 
+   static CallDeleteProductCart(propsData) {
+     return {
+       type: GitAction.DeleteProductCart,
+       payload: propsData,
+     };
+   }
+ 
+   static CallUpdateProductCart(propsData) {
+     return {
+       type: GitAction.UpdateProductCart,
+       payload: propsData,
+     };
+   }
+ 
+   static CallAddProductCart(propsData) {
+     return {
+       type: GitAction.AddProductCart,
+       payload: propsData,
+     };
+   }
+ 
+   static CallViewProductCart(propsData) {
+     return {
+       type: GitAction.ViewProductCart,
+       payload: propsData,
+     };
+   }
+
+     //================= PRODUCT WIHSLIST ================//
+     static DeleteProductWishlist = "DELETE-PRODUCTWISHLIST";
+     static DeletedProductWishlist = "DELETED-PRODUCTWISHLIST";
+   
+     static AddProductWishlist = "ADD-PRODUCTWISHLIST";
+     static AddedProductWishlist = "ADDED-PRODUCTWISHLIST";
+   
+     static ViewProductWishlist = "VIEW-PRODUCTWISHLIST";
+     static ViewedProductWishlist = "VIEWED-PRODUCTWISHLIST";
+   
+     static CallDeleteProductWishlist(propsData) {
+       return {
+         type: GitAction.DeleteProductWishlist,
+         payload: propsData,
+       };
+     }
+   
+     static CallAddProductWishlist(propsData) {
+       return {
+         type: GitAction.AddProductWishlist,
+         payload: propsData,
+       };
+     }
+   
+     static CallViewProductWishlist(propsData) {
+       return {
+         type: GitAction.ViewProductWishlist,
+         payload: propsData,
+       };
+     }
 }
