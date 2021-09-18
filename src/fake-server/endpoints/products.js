@@ -49,8 +49,8 @@ export function getProductsList(options = {}, filterValues = {}) {
   ];
 
   let items = productsData.slice(0);
-  console.log(items);
-  console.log(filters);
+  // console.log(items);
+  // console.log(filters);
   filters.forEach((filter) =>
     filter.makeItems(items, filterValues[filter.slug])
   );

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 // React
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { connect } from "react-redux";
 import { browserHistory } from "react-router";
 import { GitAction } from "../../store/action/gitAction";
@@ -34,12 +34,16 @@ import { toast } from "react-toastify";
 function mapStateToProps(state) {
   return {
     currentUser: state.counterReducer["currentUser"],
+    productcart: state.counterReducer["productcart"],
+    wishlist: state.counterReducer["wishlist"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     loginUser: (credentials) => dispatch(GitAction.CallLogin(credentials)),
+    CallViewProductCart: (propsData) => dispatch(GitAction.CallViewProductCart(propsData)),
+    CallViewProductWishlist: (propsData) => dispatch(GitAction.CallViewProductWishlist(propsData)),
   };
 }
 
@@ -75,6 +79,17 @@ class LoginComponent extends Component {
     this.props.loginUser(this.state);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentUser !== this.props.currentUser) {
+      if (this.props.currentUser[0]) {
+        console.log("this.props.currentUser[0].UserID", this.props.currentUser[0].UserID)
+        this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
+        this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
+      }
+
+    }
+  }
+
   toggleShow() {
     this.setState({ hidden: !this.state.hidden });
   }
@@ -108,9 +123,9 @@ class LoginComponent extends Component {
   resetPassword(e) {
     // this.setState({ isForgetPassword: false })
     e.preventDefault()
-    console.log("HEHE")
-    console.log(e.target)
-    console.log(this.state)
+    // console.log("HEHE")
+    // console.log(e.target)
+    // console.log(this.state)
 
     if (this.state.resetEmail !== "" && this.state.resetEmail.includes("@")) {
       emailjs.sendForm('service_ph326fk', 'template_pwxl4tf', e.target, 'user_c793YoEph6xtuh3ctKtsY')
@@ -125,8 +140,10 @@ class LoginComponent extends Component {
     }
   }
 
+
   render() {
     if (this.props.currentUser[0]) {
+
       localStorage.setItem("isLogin", true);
       localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
       localStorage.setItem("lastname", this.props.currentUser[0].LastName);
@@ -176,6 +193,9 @@ class LoginComponent extends Component {
       browserHistory.push("/");
       window.location.reload(false);
     }
+
+
+    console.log("currentUser", this.props.currentUser)
 
     return (
       <div>

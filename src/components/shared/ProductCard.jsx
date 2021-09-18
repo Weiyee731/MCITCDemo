@@ -49,13 +49,12 @@ function ProductCard(props) {
     "product-card--layout--horizontal": layout === "horizontal",
   });
 
-  if (window.localStorage.getItem("id") && isCartSet === true)
-  {
-    console.log("HERE")
+  if (window.localStorage.getItem("id") && isCartSet === true) {
     props.CallViewProductCart({ userID: localStorage.getItem("id") })
+    props.CallViewProductWishlist({ userID: localStorage.getItem("id") })
     setCart(true)
   }
-    
+
 
   let badges = [];
   let image;
@@ -75,47 +74,55 @@ function ProductCard(props) {
   const handleCart = (product) => {
     let found = false
 
-    props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
-      found = true
-      props.CallUpdateProductCart({
-        userID: localStorage.getItem("id"),
-        userCartID: x.UserCartID,
-        productQuantity: parseInt(x.ProductQuantity) + 1,
-        productName: product.ProductName
+    if (props.productcart !== undefined) {
+      props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+        found = true
+        props.CallUpdateProductCart({
+          userID: localStorage.getItem("id"),
+          userCartID: x.UserCartID,
+          productQuantity: parseInt(x.ProductQuantity) + 1,
+          productName: product.ProductName
+        })
       })
-    })
 
-    if (found === false) {
-      props.CallAddProductCart({
-        userID: window.localStorage.getItem("id"),
-        productID: product.ProductID,
-        productQuantity: 1,
-        productVariationDetailID: 1,
-        applyingPromoCode: 0,
-        productName: product.ProductName
-      })
-    }
+      if (found === false) {
+        props.CallAddProductCart({
+          userID: window.localStorage.getItem("id"),
+          productID: product.ProductID,
+          productQuantity: 1,
+          productVariationDetailID: 1,
+          applyingPromoCode: 0,
+          productName: product.ProductName
+        })
+      }
+    } else
+      login()
+
   }
 
   const handleWishlist = (product) => {
-    console.log("ADD", product)
     let found = false
 
-    props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-      found = true
-      props.CallDeleteProductWishlist({
-        userID: localStorage.getItem("id"),
-        userWishlistID: x.UserWishlistID,
-        productName: product.ProductName
+    if (props.wishlist !== undefined) {
+      props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+        found = true
+        props.CallDeleteProductWishlist({
+          userID: localStorage.getItem("id"),
+          userWishlistID: x.UserWishlistID,
+          productName: product.ProductName
+        })
       })
-    })
-    if (found === false) {
-      props.CallAddProductWishlist({
-        userID: window.localStorage.getItem("id"),
-        productID: product.ProductID,
-        productName: product.ProductName
-      })
-    }
+      if (found === false) {
+        props.CallAddProductWishlist({
+          userID: window.localStorage.getItem("id"),
+          productID: product.ProductID,
+          productName: product.ProductName
+        })
+      }
+    } else
+      login()
+
+
   }
   //   if (product.badges.includes("sale")) {
   //     badges.push(
@@ -189,9 +196,8 @@ function ProductCard(props) {
       </ul>
     );
   }
+
   return (
-
-
     <div className={containerClasses}>
       {/* <AsyncAction
         action={() => quickviewOpen(product)}
@@ -227,7 +233,7 @@ function ProductCard(props) {
           <div className="product-card__buttons">
             <button
               type="button"
-              onClick={() => localStorage.getItem("id") ? handleCart(product) : login()}
+              onClick={() => window.localStorage.getItem("id") ? handleCart(product) : login()}
               className={classNames("btn btn-primary product-card__addtocart")}
             >
               Add To Cart
@@ -238,22 +244,20 @@ function ProductCard(props) {
                 props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
                   props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
                     return (
-                      <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
+                      <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
                         className={classNames('btn btn-light btn-sm btn-svg-icon')}
                       ><Wishlist16Svg fill="red" />
                       </button>
                     )
-                  })
-                  :
+                  }) :
                   (
-                    <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
+                    <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
                       className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
                     ><Wishlist16Svg />
                     </button>
-                  )
-                :
+                  ) :
                 (
-                  <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
+                  <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
                     className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
                   ><Wishlist16Svg />
                   </button>
@@ -323,15 +327,13 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // cartAddItem,
-    // compareAddItem,
-    // quickviewOpen,
-    // openMobileMenu: mobileMenuOpen,
+
     CallDeleteProductCart: (prodData) => dispatch(GitAction.CallDeleteProductCart(prodData)),
     CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
     CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
+    CallViewProductWishlist: (propsData) => dispatch(GitAction.CallViewProductWishlist(propsData)),
+
     CallViewProductCart: (prodData) => dispatch(GitAction.CallViewProductCart(prodData)),
-    // CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData))
   }

@@ -47,6 +47,7 @@ export class GitEpic {
             }
           } else {
             json = [];
+            toast.error("Invalid username or password")
           }
           return {
             type: "SUCCESSFULLY-LOGIN-WITH-DATA",
@@ -212,13 +213,28 @@ export class GitEpic {
         .then((json) => {
           if (json !== "fail") {
             json = JSON.parse(json);
+            toast.success("User Profile is updated successfully");
           } else {
             json = [];
           }
-          return {
-            type: "EDITED-USERPROFILE",
-            payload: json,
-          };
+
+          return fetch(url +
+            "User_ProfileByID?USERID=" +
+            payload.USERID
+          )
+            .then((response) => response.json())
+            .then((json) => {
+              if (json !== "fail") {
+                json = JSON.parse(json);
+              } else {
+                json = [];
+              }
+              return {
+                type: "EDITED-USERPROFILE",
+                payload: json,
+              };
+            })
+            .catch((error) => toast.error(error));
         })
         .catch((error) => toast.error(error));
     });
@@ -1501,6 +1517,7 @@ export class GitEpic {
         .then((json) => {
           if (json !== "fail") {
             json = JSON.parse(json);
+            toast.success("Sucessfully added a product review");
           } else {
             json = [];
           }
@@ -2865,13 +2882,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert("Something went wrong. Error code: Product_ItemListInCartByUserID"));
+        .catch((error) => console.log("error", error));
     });
 
   //------------------------- PRODUCT WISHLIST ----------------------------
 
   viewProductWishlist = (action$) =>
     action$.ofType(GitAction.ViewProductWishlist).switchMap(({ payload }) => {
+
+
+      console.log(url +
+        "Product_ItemListInWishlistByUserID?USERID=" +
+        payload.userID)
       return fetch(url +
         "Product_ItemListInWishlistByUserID?USERID=" +
         payload.userID
@@ -2883,12 +2905,15 @@ export class GitEpic {
           } else {
             json = [];
           }
+
+          console.log("json", json)
+
           return {
             type: "VIEWED-PRODUCTWISHLIST",
             payload: json,
           };
         })
-        .catch((error) => alert("Something went wrong. Error code: Product_ItemListInWishlistByUserID"));
+        .catch((error) => console.log("error", error));
     });
 
   addProductWishlist = (action$) =>

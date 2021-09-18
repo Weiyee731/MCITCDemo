@@ -1050,6 +1050,9 @@ export class GitAction {
  
    static ViewProductCart = "VIEW-PRODUCTCART";
    static ViewedProductCart = "VIEWED-PRODUCTCART";
+
+   static ClearProductCart = "CLEAR-PRODUCTCART";
+   static ClearedProductCart = "CLEARED-PRODUCTCART";
  
    static CallDeleteProductCart(propsData) {
      return {
@@ -1079,6 +1082,12 @@ export class GitAction {
      };
    }
 
+   static CallClearProductCart() {
+    return {
+      type: GitAction.ClearProductCart,
+    };
+  }
+
      //================= PRODUCT WIHSLIST ================//
      static DeleteProductWishlist = "DELETE-PRODUCTWISHLIST";
      static DeletedProductWishlist = "DELETED-PRODUCTWISHLIST";
@@ -1088,6 +1097,9 @@ export class GitAction {
    
      static ViewProductWishlist = "VIEW-PRODUCTWISHLIST";
      static ViewedProductWishlist = "VIEWED-PRODUCTWISHLIST";
+
+     static ClearProductWishlist = "CLEAR-PRODUCTWISHLIST";
+     static ClearedProductWishlist = "CLEARED-PRODUCTWISHLIST";
    
      static CallDeleteProductWishlist(propsData) {
        return {
@@ -1109,4 +1121,10 @@ export class GitAction {
          payload: propsData,
        };
      }
+
+     static CallClearProductWishlist() {
+      return {
+        type: GitAction.ClearProductWishlist,
+      };
+    }
 }

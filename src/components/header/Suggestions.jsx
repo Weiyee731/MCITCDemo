@@ -32,26 +32,29 @@ function Suggestions(props) {
     const handleCart = (product) => {
         let found = false
 
-        props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
-            found = true
-            props.CallUpdateProductCart({
-                userID: localStorage.getItem("id"),
-                userCartID: x.UserCartID,
-                productQuantity: parseInt(x.ProductQuantity) + 1,
-                productName: product.ProductName
+        if (props.productcart !== undefined) {
+            props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+                found = true
+                props.CallUpdateProductCart({
+                    userID: localStorage.getItem("id"),
+                    userCartID: x.UserCartID,
+                    productQuantity: parseInt(x.ProductQuantity) + 1,
+                    productName: product.ProductName
+                })
             })
-        })
 
-        if (found === false) {
-            props.CallAddProductCart({
-                userID: window.localStorage.getItem("id"),
-                productID: product.ProductID,
-                productQuantity: 1,
-                productVariationDetailID: 1,
-                applyingPromoCode: 0,
-                productName: product.ProductName
-            })
+            if (found === false) {
+                props.CallAddProductCart({
+                    userID: window.localStorage.getItem("id"),
+                    productID: product.ProductID,
+                    productQuantity: 1,
+                    productVariationDetailID: 1,
+                    applyingPromoCode: 0,
+                    productName: product.ProductName
+                })
+            }
         }
+
     }
     const rootClasses = classNames(`suggestions suggestions--location--${context}`, className);
 

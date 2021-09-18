@@ -21,7 +21,7 @@ import { GitAction } from "../../store/action/gitAction";
 
 // data stubs
 import theme from '../../data/theme';
-
+import { browserHistory } from "react-router";
 
 function ShopPageWishlist(props) {
     const { wishlist, cartAddItem, wishlistRemoveItem } = props;
@@ -30,14 +30,18 @@ function ShopPageWishlist(props) {
         { title: 'Wishlist', url: '' },
     ];
 
-    const [wishlisting, setWishlist] = useState("");
+    // const [wishlisting, setWishlist] = useState("");
 
     // Similar to componentDidMount and componentDidUpdate:
-    useEffect(() => {
-        props.CallViewProductWishlist({ userID: window.localStorage.getItem("id") })
-    }, [wishlist]);
+    // useEffect(() => {
+    //     props.CallViewProductWishlist({ userID: window.localStorage.getItem("id") })
+    // }, [wishlist]);
 
-
+    const login = () => {
+        browserHistory.push("/login");
+        window.location.reload(false);
+    }
+    
     const deleteWishlist = (product) => {
         console.log("item", product)
         props.CallDeleteProductWishlist({
@@ -49,30 +53,34 @@ function ShopPageWishlist(props) {
 
     const addCart = (product) => {
         let found = false
-        props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
-            found = true
-            props.CallUpdateProductCart({
-                userID: localStorage.getItem("id"),
-                userCartID: x.UserCartID,
-                productQuantity: parseInt(x.ProductQuantity) + 1,
-                productName: product.ProductName
+        if (props.productcart !== undefined) {
+            props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+                found = true
+                props.CallUpdateProductCart({
+                    userID: localStorage.getItem("id"),
+                    userCartID: x.UserCartID,
+                    productQuantity: parseInt(x.ProductQuantity) + 1,
+                    productName: product.ProductName
+                })
             })
-        })
 
-        if (found === false) {
-            props.CallAddProductCart({
-                userID: window.localStorage.getItem("id"),
-                productID: product.ProductID,
-                productQuantity: 1,
-                productVariationDetailID: 1,
-                applyingPromoCode: 0,
-                productName: product.ProductName
-            })
-        }
+            if (found === false) {
+                props.CallAddProductCart({
+                    userID: window.localStorage.getItem("id"),
+                    productID: product.ProductID,
+                    productQuantity: 1,
+                    productVariationDetailID: 1,
+                    applyingPromoCode: 0,
+                    productName: product.ProductName
+                })
+            }
+        } else
+            login()
+
     }
 
     let content;
-    if (props.wishlist.length) {
+    if (props.wishlist !== undefined && props.wishlist.length) {
 
         const itemsList = wishlist.map((item) => {
             let image;
@@ -199,7 +207,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         cartAddItem,
         wishlistRemoveItem,
-        CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
+        // CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
         CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
         CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
 

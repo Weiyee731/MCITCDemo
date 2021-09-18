@@ -312,7 +312,6 @@ class PageCheckOrder extends Component {
   }
 
   render() {
-    const { cart } = this.props;
 
     if (this.props.productcart.length < 1) {
       return <Redirect to="cart" />;
@@ -347,7 +346,6 @@ class PageCheckOrder extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  cart: state.cart,
   addresses: state.counterReducer["addresses"],
   productcart: state.counterReducer.productcart
 });
@@ -355,8 +353,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   CallAllAddress: (prodData) => dispatch(GitAction.CallAllAddress(prodData)),
   CallAddAddress: (prodData) => dispatch(GitAction.CallAddAddress(prodData)),
-  CallDeleteAddress: (prodData) =>
-    dispatch(GitAction.CallDeleteAddress(prodData)),
+  CallDeleteAddress: (prodData) => dispatch(GitAction.CallDeleteAddress(prodData)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageCheckOrder);

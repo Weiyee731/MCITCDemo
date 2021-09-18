@@ -31,7 +31,37 @@ class PagePayment extends Component {
 
     this.state = {
       payment: "bank",
+
+      cart: [],
+      subtotal: 0,
+      total: 0,
+      shipping: 25,
+      tax: 0,
     };
+    this.setDetails = this.setDetails.bind(this)
+  }
+
+  setDetails(productcart) {
+    productcart.map((x) => {
+      this.state.cart.push(
+        {
+          id: x.UserCartID,
+          product: x,
+          options: [],
+          price: x.ProductSellingPrice,
+          total: x.ProductQuantity * x.ProductSellingPrice,
+          quantity: x.ProductQuantity
+        }
+      )
+    })
+    this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
+    this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+  }
+
+  componentDidMount() {
+    if (this.props.productcart !== undefined) {
+      this.setDetails(this.props.productcart)
+    }
   }
 
   handlePaymentChange = (event) => {
@@ -64,20 +94,20 @@ class PagePayment extends Component {
   };
 
   renderTotals() {
-    const { cart } = this.props;
+    // const { cart } = this.props;
 
-    if (cart.extraLines.length <= 0) {
-      return null;
-    }
+    // if (cart.extraLines.length <= 0) {
+    //   return null;
+    // }
 
-    const extraLines = cart.extraLines.map((extraLine, index) => (
-      <tr key={index}>
-        <th style={{ textAlign: "right" }}>{extraLine.title}</th>
-        <td>
-          <Currency value={extraLine.price} />
-        </td>
-      </tr>
-    ));
+    // const extraLines = cart.extraLines.map((extraLine, index) => (
+    //   <tr key={index}>
+    //     <th style={{ textAlign: "right" }}>{extraLine.title}</th>
+    //     <td>
+    //       <Currency value={extraLine.price} />
+    //     </td>
+    //   </tr>
+    // ));
 
     return (
       <React.Fragment>
@@ -85,19 +115,28 @@ class PagePayment extends Component {
           <tr>
             <th style={{ textAlign: "right" }}>Subtotal</th>
             <td>
-              <Currency value={cart.subtotal} />
+              <Currency value={this.state.subtotal} />
             </td>
           </tr>
-          {extraLines}
+          <tr>
+            <th style={{ textAlign: "right" }}>Shipping</th>
+            <td>
+              <Currency value={this.state.shipping} />
+            </td>
+          </tr>
+          <tr>
+            <th style={{ textAlign: "right" }}>Tax</th>
+            <td>
+              <Currency value={this.state.tax} />
+            </td>
+          </tr>
         </tbody>
       </React.Fragment>
     );
   }
 
   renderCart() {
-    const { cart } = this.props;
-
-    const items = cart.items.map((item) => (
+    const items = this.state.cart.map((item) => (
       <tr key={item.id}>
         <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
         <td>
@@ -120,7 +159,7 @@ class PagePayment extends Component {
           <tr>
             <th style={{ textAlign: "right" }}>Total</th>
             <td>
-              <Currency value={cart.total} />
+              <Currency value={this.state.total} />
             </td>
           </tr>
         </tfoot>
@@ -344,9 +383,8 @@ class PagePayment extends Component {
   }
 
   render() {
-    const { cart } = this.props;
 
-    if (cart.items.length < 1) {
+    if (this.props.productcart.length < 1) {
       return <Redirect to="cart" />;
     }
 
@@ -376,7 +414,7 @@ class PagePayment extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  cart: state.cart,
+  productcart: state.counterReducer.productcart
 });
 
 const mapDispatchToProps = {};

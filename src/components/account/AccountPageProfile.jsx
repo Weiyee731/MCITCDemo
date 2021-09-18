@@ -34,6 +34,7 @@ import { toast } from "react-toastify";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import "./AccountPageProfile.css";
+import moment from 'moment';
 
 const TableCell = withStyles({
   root: {
@@ -68,24 +69,24 @@ class AccountPageProfile extends Component {
     super(props);
     this.props.CallUserProfile(window.localStorage.getItem("id"));
     this.props.CallCountry();
-    let userDetails = this.props.userprofiledata;
+
     this.state = {
       USERID: window.localStorage.getItem("id"),
-      USERFIRSTNAME: userDetails.FirstName,
-      USERLASTNAME: userDetails.LastName,
-      USERCONTACTNO: userDetails.UserContactNo,
-      USERDATEBIRTH: userDetails.UserDOB,
-      USEREMAIL: userDetails.UserEmailAddress,
-      USERGENDER: userDetails.UserGender,
-      // USERADDRESSLINE1: userDetails,
-      // USERADDRESSLINE2: userDetails,
-      // USERPOSCODE: userDetails,
-      // USERCITY: userDetails,
-      // USERSTATE: userDetails,
-      // USERCOUNTRYID: userDetails,
-      USERNOTIFICATIONIND: userDetails.UserNotificationInd,
-      USERLANGCODE: userDetails.UserLanguageCode,
-      USERAPPDARKMODE: userDetails.AppDarkMode,
+      USERFIRSTNAME: "",
+      USERLASTNAME: "",
+      USERCONTACTNO: "",
+      USERDATEBIRTH: "",
+      USEREMAIL: "",
+      USERGENDER: "",
+      USERADDRESSLINE1: "",
+      USERADDRESSLINE2: "",
+      USERPOSCODE: "",
+      USERCITY: "",
+      USERSTATE: "",
+      USERCOUNTRYID: "",
+      USERNOTIFICATIONIND: "",
+      USERLANGCODE: "",
+      USERAPPDARKMODE: "",
       CountryName: "-",
       open: false,
       open1: false,
@@ -104,6 +105,31 @@ class AccountPageProfile extends Component {
   }
   /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
 
+
+  componentDidMount() {
+    console.log()
+    if (this.props.userprofiledata !== null) {
+      let userDetails = this.props.userprofiledata[0];
+      this.setState({
+        USERFIRSTNAME: userDetails.FirstName !== null ? userDetails.FirstName : "-",
+        USERLASTNAME: userDetails.LastName !== null ? userDetails.LastName : "-",
+        USERCONTACTNO: userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
+        USERDATEBIRTH: userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
+        USEREMAIL: userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
+        USERGENDER: userDetails.UserGender !== null ? userDetails.UserGender : "-",
+        USERADDRESSLINE1: userDetails.UserAddressLine1 !== null ? userDetails.UserAddressLine1 : "-",
+        USERADDRESSLINE2: userDetails.UserAddressLine2 !== null ? userDetails.UserAddressLine2 : "-",
+        USERPOSCODE: userDetails.UserPoscode !== null ? userDetails.UserPoscode : "-",
+        USERCITY: userDetails.UserCity !== null ? userDetails.UserCity : "-",
+        USERSTATE: userDetails.UserState !== null ? userDetails.UserState : "-",
+        USERCOUNTRYID: userDetails.CountryID !== null ? userDetails.CountryID : "148",
+        USERNOTIFICATIONIND: userDetails.UserNotificationInd !== null ? userDetails.UserNotificationInd : "1",
+        USERLANGCODE: userDetails.UserLanguageCode !== null ? userDetails.UserLanguageCode : "en",
+        USERAPPDARKMODE: userDetails.AppDarkMode !== null ? userDetails.AppDarkMode : "1",
+        CountryName: "-",
+      })
+    }
+  }
   onFileUpload = () => {
     const formData = new FormData();
 
@@ -257,8 +283,11 @@ class AccountPageProfile extends Component {
     this.props.CallUpdateUserProfile(this.state);
   }
 
+
   render() {
     const rowStyle = { width: "16vw", textAlign: "left", paddingLeft: "3rem" };
+
+    console.log("this.state in user profile", this.state)
 
     const getUploadParams = () => {
       return { url: "http://pmappapi.com/Memo/uploads/uploads/" };
@@ -313,9 +342,23 @@ class AccountPageProfile extends Component {
                 Manage your personal information
               </Typography>
             </div>
+            <div
+              style={{
+                textAlign: "right",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.addProfile()}
+              >
+                Save
+              </Button>
+            </div>
           </div>
           <Divider variant="fullWidth" className="dividerbottom" />
 
+          {console.log("userprofiledata", this.props.userprofiledata)}
           {/* profile image */}
           <div onClick={() => this.modalOpen()} className="imagecontainer">
             <CardMedia
@@ -356,7 +399,7 @@ class AccountPageProfile extends Component {
               <Table>
                 <TableBody>
                   <TableRow style={{ width: "100%  " }}>
-                    <TableCell className = "rowStyle">First Name</TableCell>
+                    <TableCell className="rowStyle">First Name</TableCell>
                     <TableCell>
                       <TextField
                         variant="outlined"
@@ -369,7 +412,7 @@ class AccountPageProfile extends Component {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className = "rowStyle">Last Name</TableCell>
+                    <TableCell className="rowStyle">Last Name</TableCell>
                     <TableCell>
                       <TextField
                         variant="outlined"
@@ -382,7 +425,7 @@ class AccountPageProfile extends Component {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className = "rowStyle">Date of Birth</TableCell>
+                    <TableCell className="rowStyle">Date of Birth</TableCell>
                     <TableCell>
                       <TextField
                         variant="outlined"
@@ -397,7 +440,7 @@ class AccountPageProfile extends Component {
                   </TableRow>
 
                   <TableRow>
-                    <TableCell className = "rowStyle">Gender</TableCell>
+                    <TableCell className="rowStyle">Gender</TableCell>
                     <TableCell>
                       <FormControl component="fieldset">
                         <RadioGroup
@@ -433,16 +476,17 @@ class AccountPageProfile extends Component {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className = "rowStyle">Contact Number</TableCell>
+                    <TableCell className="rowStyle">Contact Number</TableCell>
                     <TableCell>
-                      {censorContact(row.UserContactNo)}
+                      {/* {row.UserContactNo !== null ? censorContact(row.UserContactNo) : "-"} */}
+                      {row.UserContactNo !== null ? row.UserContactNo : "-"}
                       <Button style={{ float: "right" }}>Change Contact</Button>
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className = "rowStyle">Email Address</TableCell>
+                    <TableCell className="rowStyle">Email Address</TableCell>
                     <TableCell>
-                      {censorEmail(row.UserEmailAddress)}
+                      {row.UserEmailAddress !== null ? censorEmail(row.UserEmailAddress) : "-"}
                       <Button style={{ float: "right" }}>Change Email</Button>
                     </TableCell>
                   </TableRow>
@@ -450,19 +494,7 @@ class AccountPageProfile extends Component {
               </Table>
             ))}
           </TableContainer>
-          <div
-            style={{
-              textAlign: "center",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => this.addProfile()}
-            >
-              Save
-            </Button>
-          </div>
+
         </CardContent>
 
         <div
@@ -480,7 +512,7 @@ class AccountPageProfile extends Component {
               <div
                 align="center"
                 className="form-content p-2"
-                // style={{ width: "100vw", height: "60vh"}}
+              // style={{ width: "100vw", height: "60vh"}}
               >
                 <div>
                   <Dropzone

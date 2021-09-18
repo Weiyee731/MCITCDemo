@@ -108,7 +108,7 @@ import ViewStockOutDetailsComponent from "../pages/viewStockOutDetails/viewStock
 import ViewPayableComponent from "../pages/viewPayable/viewPayable.component";
 import ViewReceivableComponent from "../pages/viewReceivable/viewReceivable.component";
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
-import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
+// import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
 import sendUserMail from "../pages/sendUserMail/sendUserMail.component";
 import DeliverableTransactionDetails from "../pages/deliverableTransactionDetails/deliverableTransactionDetails.component";
 
@@ -384,8 +384,8 @@ const Access = () => {
             <Route path="/supplierResponse" component={supplierResponse} />
 
             <Route path="/addProductsAllIn" component={AddProductAllInOne} />
-            <Route path="/viewUserMail" component={viewUserMail} />
-            <Route path="/sendUserMail" component={sendUserMail} />
+            {/* <Route path="/viewUserMail" component={viewUserMail} /> */}
+            {/* <Route path="/sendUserMail" component={sendUserMail} /> */}
           </Switch>
         </div>
       </div>
