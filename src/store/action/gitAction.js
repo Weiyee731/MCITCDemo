@@ -712,6 +712,8 @@ export class GitAction {
   //=================ORDER====================//
   static AddOrder = "ADD-ORDER";
   static AddedOrder = "ADDED-ORDER";
+  static ClearOrder = "CLEAR-ORDER";
+  static ClearedOrder = "CLEARED-ORDER";
   static GetProductStockByStatus = "GET-PRODUCTSTOCKBYSTATUS";
   static GotProductStockByStatus = "GOT-PRODUCTSTOCKBYSTATUS";
 
@@ -719,6 +721,12 @@ export class GitAction {
     return {
       type: GitAction.AddOrder,
       payload: prodData,
+    };
+  }
+
+  static CallClearOrder() {
+    return {
+      type: GitAction.AddOrder
     };
   }
 

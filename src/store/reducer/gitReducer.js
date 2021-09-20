@@ -41,7 +41,8 @@ const INITIAL_STATE = {
   creditcards: [],
   updatedCreditCard: [],
   productcart: [],
-  wishlist: []
+  wishlist: [],
+  order: []
 
 };
 
@@ -638,8 +639,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.AddedOrder:
       return Object.assign({}, state, {
         loading: false,
-        quotations: action.payload,
+        order: action.payload,
       });
+
+    case GitAction.ClearOrder:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ClearedOrder:
+      return Object.assign({}, state, {
+        loading: false,
+        order: [],
+      });
+
     case GitAction.GetProductStockByStatus:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotProductStockByStatus:
@@ -902,7 +912,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return newPromoObj;
 
     //================= PRODUCT CART ================//
-    
+
     case GitAction.DeleteProductCart:
       return Object.assign({}, state, { loading: true });
     case GitAction.DeletedProductCart:

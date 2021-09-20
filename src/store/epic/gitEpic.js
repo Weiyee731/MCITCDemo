@@ -320,7 +320,7 @@ export class GitEpic {
         "&USERCARDEXPIREDATE=" +
         payload.expiry +
         "&USERCARDTYPE=" +
-        payload.issuer
+        payload.cardtype
       )
         .then((response) => response.json())
         .then((returnVal) => {
@@ -1747,7 +1747,7 @@ export class GitEpic {
 
       return fetch(url +
         "User_ViewAddressBook?USERID=" +
-        payload
+        payload.USERID
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1914,24 +1914,36 @@ export class GitEpic {
   //=================ORDER=============================//
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(({ payload }) => {
+
       return fetch(url +
-        "Order_AddOrder?USERID=" +
-        payload.UserID +
-        "&USERADDRESSID=-&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" +
-        payload.Products
+        "Order_AddOrder?USERID=" + payload.UserID
+        + "&USERADDRESSID=" + payload.UserAddressID
+        + "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" + payload.ProductID
+        + "&PRODUCTQUANTITY=" + payload.ProductQuantity
       )
         .then((response) => response.json())
         .then((json) => {
-          // alert(json);
           if (json !== "fail") {
             json = JSON.parse(json);
+            toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
           } else {
             json = [];
           }
-          return {
-            type: "ADDED-ORDER",
-            payload: json,
-          };
+          return fetch(url + "Product_DeleteProductCart?USERCARTID=" + payload.UserCartID)
+            .then((response) => response.json())
+            .then((json2) => {
+
+              if (json2 !== "fail") {
+                json2 = json2;
+              } else {
+                json2 = [];
+              }
+              return {
+                type: "ADDED-ORDER",
+                payload: json,
+              };
+            })
+            .catch((error) => console.log(error));
         })
         .catch((error) => toast.error(error));
     });
@@ -2494,6 +2506,12 @@ export class GitEpic {
 
   getAllMerchantOrders = (action$) =>
     action$.ofType(GitAction.GetMerchantOrders).switchMap(({ payload }) => {
+
+      console.log(url +
+        "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
+        payload.trackingStatus +
+        "&USERID=" +
+        payload.UserID)
       return fetch(url +
         "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
         payload.trackingStatus +
@@ -2752,11 +2770,12 @@ export class GitEpic {
         .then((response) => response.json())
         .then((json) => {
           if (json !== "fail") {
-            json = JSON.parse(json);
+            json = json;
             toast.success("Product " + payload.productName + " is removed from cart!");
           } else {
             json = [];
           }
+          console.log("DELETE PRODUCT CART", json)
           return fetch(url +
             "Product_ItemListInCartByUserID?USERID=" +
             payload.userID

@@ -106,6 +106,8 @@ class PageCheckOrder extends Component {
 
   handleClick = (e, data) => {
     this.setState({ defaultAddress: data });
+    console.log("data", data)
+    this.props.handleGetAddressId(data.UserAddressBookID)
   };
 
   handleRemoveClick = (e, AddressBookNo) => {
@@ -114,7 +116,6 @@ class PageCheckOrder extends Component {
       USERID: window.localStorage.getItem("id"),
       AddressBookNo: AddressBookNo,
     };
-
     this.props.CallDeleteAddress(deletedAddress);
 
   };
@@ -124,7 +125,7 @@ class PageCheckOrder extends Component {
   };
 
   renderAddress() {
-    this.props.CallAllAddress("1");
+    this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
 
     const selfCollect = {
       CountryID: 1,
