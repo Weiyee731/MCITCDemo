@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { Link, Redirect } from "react-router-dom";
+import { browserHistory } from "react-router";
 
 // application
 import Collapse from "../shared/Collapse";
@@ -36,20 +37,20 @@ function step3Validator() {
   // return a boolean
 }
 
-function onFormSubmit() {
-  // handle the submit logic here
-  // This function will be executed at the last step
-  // when the submit button (next button in the previous steps) is pressed
-}
 
 function mapStateToProps(state) {
   return {
-    cart: state.cart,
+    // cart: state.cart,
+    productcart: state.counterReducer.productcart,
+    order: state.counterReducer.order
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    CallAddOrder: (propsData) => dispatch(GitAction.CallAddOrder(propsData)),
+    CallClearOrder: () => dispatch(GitAction.CallClearOrder()),
+  };
 }
 class PageCheckout extends Component {
   payments = payments;
@@ -59,10 +60,50 @@ class PageCheckout extends Component {
     this.state = {
       payment: "bank",
       tabvalue: 0,
+      ProductID: [],
+      ProductQuantity: [],
+      UserCartID: [],
+      address: 0
     };
+    this.onFormSubmit = this.onFormSubmit.bind(this)
+  }
+
+
+  onFormSubmit() {
+    console.log("ADDRESS", this.state.address)
+
+    this.props.productcart.map((x) => {
+      this.state.ProductID.push(x.ProductID)
+      this.state.UserCartID.push(x.UserCartID)
+      this.state.ProductQuantity.push(x.ProductQuantity)
+    })
+
+    this.props.CallAddOrder({
+      UserID: window.localStorage.getItem("id"),
+      ProductID: this.state.ProductID,
+      ProductQuantity: this.state.ProductQuantity,
+      UserCartID: this.state.UserCartID,
+      UserAddressID: this.state.address
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log("this.props.order",this.props.order)
+    if (prevProps.order !== this.props.order) {
+      // this.props.CallClearOrder()
+      browserHistory.push("/");
+      window.location.reload(false);
+    }
+
   }
 
   render() {
+
+    console.log("this.props.order", this.props.order)
+
+    console.log("this.state.checkout", this.state)
+    console.log("this.props.checkout", this.props)
+
     const breadcrumb = [
       { title: "Home", url: "" },
       { title: "Shopping Cart", url: "/shop/cart" },
@@ -77,6 +118,12 @@ class PageCheckout extends Component {
       this.setState({ tabvalue: newValue });
     };
 
+    const handleGetAddressId = (value) => {
+      // console.log(value)
+      if (value.length !== 0)
+        this.setState({ address: value })
+    }
+
     const step1Content = (
       <div style={{ width: "100%" }}>
         <PageCart />
@@ -84,7 +131,7 @@ class PageCheckout extends Component {
     );
     const step2Content = (
       <div style={{ width: "100%" }}>
-        <PageCheckOrder />
+        <PageCheckOrder handleGetAddressId={handleGetAddressId} />
       </div>
     );
     const step3Content = (
@@ -110,10 +157,10 @@ class PageCheckout extends Component {
             <StepProgressBar
               startingStep={0}
               className="row"
-              primaryBtnClass ="btn-primary"
-              secondaryBtnClass  ="btn-link"
+              primaryBtnClass="btn-lg"
+              secondaryBtnClass="btn-link"
               // style={{ width: "100%", color:"white" }}
-              // onSubmit={onFormSubmit}
+              onSubmit={() => this.onFormSubmit()}
               steps={[
                 {
                   label: "Check Order",

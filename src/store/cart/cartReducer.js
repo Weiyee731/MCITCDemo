@@ -2,6 +2,7 @@ import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_UPDATE_QUANTITIES,
+  CART_RETRIEVE_ITEM
 } from "./cartActionTypes";
 
 /**
@@ -10,6 +11,58 @@ import {
  * @param {array} options
  * @return {number}
  */
+
+ const url = "http://tourism.denoo.my/emporia/api/emporia/"
+//  const url = "localhost/emporia/api/emporia/"
+  
+ function retrieveItem(state, userId) {
+   console.log("statet in reducer upup", state)
+   let newItemsList = [];
+
+ 
+   fetch(url + "Product_ItemListInCartByUserID?USERID=" + userId)
+     .then((response) => response.json())
+     .then((json) => {
+       // console.log("retrieving data...", json)
+ 
+       if (json !== "fail") {
+         json = JSON.parse(json);
+       } else {
+         json = [];
+       }
+       if (json !== []) {
+         json.map((x) => {
+           newItemsList.push(
+             {
+               id: x.UserCartID,
+               product: x,
+               options: [],
+               price: x.ProductSellingPrice,
+               total: x.ProductQuantity * x.ProductSellingPrice,
+               quantity: x.ProductQuantity
+             }
+           )
+         })
+ 
+ 
+       }
+ 
+       console.log("json.length", json.length)
+       console.log("calcQuantity(newItemsList)", calcQuantity(newItemsList))
+       console.log("newItems", newItemsList)
+       console.log("statet in reducer", state)
+ 
+     })
+     .catch((error) => alert("Something went wrong. Error code: Product_ItemListInCartByUserID"));
+ 
+   return {
+     ...state,
+     items: newItemsList,
+     cartNewItem: newItemsList,
+     // cartItemList : json
+   };
+ }
+ 
 function findItemIndex(items, product, options) {
   return items.findIndex((item) => {
     if (
@@ -191,6 +244,7 @@ function updateQuantities(state, quantities) {
  * }
  */
 const initialState = {
+  cartNewItem: [],
   lastItemId: 0,
   quantity: 0,
   items: [],
@@ -221,6 +275,9 @@ export default function cartReducer(state = initialState, action) {
 
     case CART_UPDATE_QUANTITIES:
       return updateQuantities(state, action.quantities);
+
+    case CART_RETRIEVE_ITEM:
+      return retrieveItem(state, action.userId);
 
     default:
       return state;

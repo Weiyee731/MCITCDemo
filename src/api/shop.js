@@ -18,6 +18,7 @@ import {
 } from "../fake-server/endpoints/products";
 
 const url = "http://tourism.denoo.my/emporia/api/emporia/"
+// const url = "localhost/emporia/api/emporia/"
 
 const shopApi = {
   /**

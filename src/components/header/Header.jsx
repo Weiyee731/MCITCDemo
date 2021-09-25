@@ -43,16 +43,16 @@ function Header(props) {
           <Search context="header" />
         </div>
         <div className="nav-panel__indicators">
-          {localStorage.getItem("isLogin") === "true" ? (
+          {localStorage.getItem("isLogin") ? (
             <>
-              <Indicator url="/shop/wishlist" value={props.wishlist.length} icon={<Heart20Svg />} />
+              <Indicator url="/shop/wishlist" value={props.wishlist !== undefined ? props.wishlist.length : 0} icon={<Heart20Svg />} />
               <CartIndicator />
-              <IndicatorAccount/>
+              <IndicatorAccount />
             </>
           ) : (
             <>
               <CartIndicator />
-              <IndicatorAccount/>
+              <IndicatorAccount />
             </>
           )}
         </div>
@@ -83,7 +83,7 @@ Header.defaultProps = {
 
 
 const mapStateToProps = (state) => ({
-  wishlist: state.wishlist,
+  wishlist: state.counterReducer.wishlist
 });
 
 const mapDispatchToProps = {

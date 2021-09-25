@@ -45,17 +45,21 @@ class BlockMainCategories extends Component {
       textAlign: "center",
       cursor: "pointer"
     }
+  
 
     return (
       <div className="container">
+          {console.log("IN BLOCK MAIN CATGORUES")}
+          {console.log("this.props", this.props)}
         <h3 className="block-header__title mb-4">Categories</h3>
         <div style={categoryStyle} className="row mb-5">
           {this.props.productCategories.map((data, index) => {
+            console.log("data", data)
             return (
               <div key={index} style={categoryGrid} className="col-lg-3 col-md-3 p-2"
                 onMouseDown={(e) => {
                   if (e.button === 1) {
-                    window.open("/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory)
+                    window.location.href = "/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory
                   }
                 }}
                 onClick={(e) => {

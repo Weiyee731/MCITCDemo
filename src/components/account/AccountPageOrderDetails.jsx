@@ -11,9 +11,10 @@ import Logo from "../../assets/Emporia.png";
 
 export default function AccountPageOrderDetails(props) {
   const orderDetail = props.location.orderdetails;
-  const orderproduct = JSON.parse(orderDetail.OrderProductDetail).map(
-    (orders) => orders.ProductQuantity
-  );
+  console.log("orderDetail", orderDetail)
+  const orderproduct = orderDetail !== undefined ? JSON.parse(orderDetail.OrderProductDetail).map(
+    (orders) => orders.ProductQuantity 
+  ) : ""
   const orderTotalPrice = props.location.orderprice;
   const address = props.location.address;
   const creditcard = props.location.creditcards;
@@ -52,6 +53,8 @@ export default function AccountPageOrderDetails(props) {
                 <tr>
                   <th>Preview</th>
                   <th>Product</th>
+                  <th>Unit Price</th>
+                  <th>Quantity</th>
                   <th>Total</th>
                 </tr>
               </thead>
@@ -72,7 +75,9 @@ export default function AccountPageOrderDetails(props) {
                       />
                     </td>
                     <td>{orders.ProductName}</td>
-                    <td>Rm{orders.ProductSellingPrice}</td>
+                    <td>RM{orders.ProductSellingPrice}</td>
+                    <td>{orders.ProductQuantity}</td>
+                    <td>RM{orders.ProductSellingPrice * orders.ProductQuantity}</td>
                   </tr>
                 </tbody>
               ))}
@@ -105,6 +110,7 @@ export default function AccountPageOrderDetails(props) {
           </div>
         </div>
       </div>
+      
       {address.map((addresspreview) => (
         <div className="row mt-3 no-gutters mx-n2">
           <div className="col-sm-6 col-12 px-2">

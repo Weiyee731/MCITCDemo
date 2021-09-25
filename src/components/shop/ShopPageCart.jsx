@@ -19,7 +19,8 @@ import { url } from '../../services/utils';
 import Logo from "../../assets/Emporia.png"
 import { Button } from "@material-ui/core";
 import shopApi from "../../api/shop";
-// import { cartAddItem } from "../../store/cart";
+import { GitAction } from "../../store/action/gitAction";
+
 
 // data stubs
 import theme from '../../data/theme';
@@ -33,47 +34,78 @@ class ShopPageCart extends Component {
             /** example: [{itemId: 8, value: 1}] */
             quantities: [],
             SKUlimit: false,
-            overSKULimitID: []
+            overSKULimitID: [],
+            cart: [],
+            subtotal: 0,
+            total: 0,
+            shipping: 25,
+            tax: 0,
+            setDetails: false,
+            selectedIndex: ""
         };
+        this.setDetails = this.setDetails.bind(this)
+        this.removeItem = this.removeItem.bind(this)
     }
 
     getItemQuantity(item) {
+
         var { quantities } = this.state;
         var quantity = quantities.find((x) => x.itemId === item.id);
 
         return quantity ? quantity.value : item.quantity;
     }
 
-    handleChangeQuantity = (item, quantity) => {
-        this.setState((state) => {
-            const stateQuantity = state.quantities.find((x) => x.itemId === item.id);
+    setDetails(productcart) {
+        productcart.map((x) => {
+            this.state.cart.push(
+                {
+                    id: x.UserCartID,
+                    product: x,
+                    options: [],
+                    price: x.ProductSellingPrice,
+                    total: x.ProductQuantity * x.ProductSellingPrice,
+                    quantity: x.ProductQuantity
+                }
+            )
+        })
+        this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
+        this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+    }
 
-            if (!stateQuantity) {
-                state.quantities.push({ itemId: item.id, value: quantity });
-            } else {
-                stateQuantity.value = quantity;
+    componentDidMount() {
+        if (this.props.productcart !== undefined) {
+            this.setDetails(this.props.productcart)
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.productcart !== this.props.productcart) {
+            if (this.props.productcart.length > 0) {
+                this.state.cart.map((x, index) => {
+                    this.state.cart.splice(0, this.state.cart.length)
+                })
+                this.setDetails(this.props.productcart)
             }
 
-            return {
-                quantities: state.quantities,
-            };
-        });
+        }
+    }
+
+    removeItem(product) {
+        this.props.CallDeleteProductCart({ userCartID: product.UserCartID, userID: localStorage.getItem("id"), productName: product.ProductName })
+    }
+
+    handleChangeQuantity = (item, quantity) => {
+        this.props.CallUpdateProductCart({
+            userID: localStorage.getItem("id"),
+            userCartID: item.product.UserCartID,
+            productQuantity: quantity,
+            productName: item.product.ProductName
+        })
+        this.setState({ selectedIndex: item.id })
 
     };
 
-    cartNeedUpdate() {
-        const { quantities } = this.state;
-        const { cart } = this.props;
-
-        return quantities.filter((x) => {
-            const item = cart.items.find((item) => item.id === x.itemId);
-
-            return item && item.quantity !== x.value && x.value !== '';
-        }).length > 0;
-    }
-
     CheckOutOnClick = (items) => {
-
 
         if (localStorage.getItem("id")) {
             let ProductIDs = [];
@@ -117,7 +149,8 @@ class ShopPageCart extends Component {
 
     renderItems() {
         const { cart, cartRemoveItem, cartAddItem, cartUpdateQuantities } = this.props;
-        return cart.items.map((item) => {
+
+        return this.state.cart.map((item) => {
             let image;
             let options = [];
 
@@ -132,33 +165,6 @@ class ShopPageCart extends Component {
                     </div>
                 );
             }
-
-            if (item.options.length > 0) {
-                options = (
-                    <ul className="cart-table__options">
-                        {item.options.map((option, index) => (
-                            <li key={index}>{`${option.optionTitle}: ${option.valueTitle}`}</li>
-                        ))}
-                    </ul>
-                );
-            }
-
-            const removeButton = (
-                <AsyncAction
-                    action={() => cartRemoveItem(item.id)}
-                    render={({ run, loading }) => {
-                        const classes = classNames('btn btn-light btn-sm btn-svg-icon', {
-                            'btn-loading': loading,
-                        });
-
-                        return (
-                            <button type="button" onClick={run} className={classes}>
-                                <Cross12Svg />
-                            </button>
-                        );
-                    }}
-                />
-            );
 
             return (
                 <tr key={item.id} className="cart-table__row">
@@ -203,24 +209,13 @@ class ShopPageCart extends Component {
                     </td>
                     <td className="cart-table__column cart-table__column--total" data-title="Total">
                         {
-                            this.state.quantities.length > 0 ?
-                                this.state.quantities.filter(x => x.itemId === item.id).length > 0 ?
-                                    this.state.quantities.filter(x => x.itemId === item.id).map((x) => {
-                                        cartUpdateQuantities(this.state.quantities)
-                                        return (
-                                            <>
-                                                <Currency value={item.product.ProductSellingPrice * x.value} currency={"RM"} />
-                                            </>
-                                        )
-                                    })
-                                    :
-                                    <Currency value={item.product.ProductSellingPrice * item.quantity} currency={"RM"} />
-                                :
-                                <Currency value={item.product.ProductSellingPrice * item.quantity} currency={"RM"} />
+                            <Currency value={item.product.ProductSellingPrice * item.product.ProductQuantity} currency={"RM"} />
                         }
                     </td>
                     <td className="cart-table__column cart-table__column--remove">
-                        {removeButton}
+                        <Link onClick={() => this.removeItem(item.product)} className={'btn btn-light btn-sm btn-svg-icon'}
+                        > <Cross12Svg />
+                        </Link>
                     </td>
                 </tr>
             );
@@ -266,31 +261,11 @@ class ShopPageCart extends Component {
     }
 
     renderCart() {
-        const { cart, cartUpdateQuantities } = this.props;
-        const { quantities } = this.state;
 
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },
         ];
-
-        const updateCartButton = (
-            <AsyncAction
-                action={() => cartUpdateQuantities(quantities)}
-                render={({ run, loading }) => {
-                    const classes = classNames('btn btn-primary cart__update-button', {
-                        'btn-loading': loading,
-                    });
-
-                    return (
-                        <button type="button" onClick={run} className={classes} disabled={!this.cartNeedUpdate()}>
-                            Update Cart
-                        </button>
-                    );
-                }}
-            />
-        );
-
         return (
             <div className="cart block container_" >
                 {
@@ -319,23 +294,23 @@ class ShopPageCart extends Component {
 
                                 <div className="row">
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Subtotal </div>
-                                    <div className="col-2" ><Currency value={this.props.cart.subtotal}></Currency></div>
+                                    <div className="col-2" ><Currency value={this.state.subtotal}></Currency></div>
                                 </div>
                                 <div className="row">
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Shipping </div>
-                                    <div className="col-2" ><Currency value={this.props.cart.extraLines[0].price}></Currency></div>
+                                    <div className="col-2" ><Currency value={this.state.shipping}></Currency></div>
                                 </div>
                                 <div className="row">
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Tax </div>
-                                    <div className="col-2" ><Currency value={this.props.cart.extraLines[1].price}></Currency></div>
+                                    <div className="col-2" ><Currency value={this.state.tax}></Currency></div>
                                 </div>
                                 <div className="row">
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Total </div>
-                                    <div className="col-2" ><Currency value={this.props.cart.total}></Currency></div>
+                                    <div className="col-2" ><Currency value={this.state.total}></Currency></div>
                                 </div>
                                 <div className="mt-5">
                                     <Link className="btn btn-primary" variant="outlined" color="primary"
-                                        onClick={this.CheckOutOnClick.bind(this, this.props.cart.items)}
+                                        onClick={() => this.CheckOutOnClick(this.state.cart)}
                                     > Checkout
                                     </Link>
                                 </div>
@@ -344,19 +319,6 @@ class ShopPageCart extends Component {
                             ""
                     }
 
-                    {/* <div className="cart__actions">
-                        <form className="cart__coupon-form">
-                            <label htmlFor="input-coupon-code" className="sr-only">Password</label>
-                            <input type="text" className="form-control" id="input-coupon-code" placeholder="Coupon Code" />
-                            <button type="submit" className="btn btn-primary">Apply Coupon</button>
-                        </form>
-                        <div className="cart__buttons">
-                            <Link to="/" className="btn btn-light">Continue Shopping</Link>
-                            {updateCartButton}
-                        </div>
-                    </div> */}
-
-
                 </div>
             </div>
         );
@@ -364,15 +326,14 @@ class ShopPageCart extends Component {
 
     render() {
 
-        const { cart } = this.props;
+
+        const { cart, productcart } = this.props;
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },
         ];
-
         let content;
-
-        if (cart.quantity) {
+        if (this.state.cart.length) {
             content = this.renderCart();
         } else {
             content = (
@@ -395,12 +356,6 @@ class ShopPageCart extends Component {
 
         return (
             <React.Fragment>
-                {/* <Helmet>
-                    <title>{`Shopping Cart — ${theme.name}`}</title>
-                </Helmet>
-
-                <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> */}
-
                 {content}
             </React.Fragment>
         );
@@ -408,13 +363,16 @@ class ShopPageCart extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    cart: state.cart,
+    productcart: state.counterReducer.productcart
+
 });
 
-const mapDispatchToProps = {
-    cartRemoveItem,
-    cartUpdateQuantities,
-    cartAddItem,
+const mapDispatchToProps = (dispatch) => {
+    return {
+        CallDeleteProductCart: (prodData) => dispatch(GitAction.CallDeleteProductCart(prodData)),
+        CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
+    }
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCart);

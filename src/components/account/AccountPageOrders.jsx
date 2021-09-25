@@ -17,12 +17,10 @@ import { GitAction } from "../../store/action/gitAction";
 function mapStateToProps(state) {
   return {
     allmerchantorders: state.counterReducer["merchantOrders"],
-
     alltransactionstatus: state.counterReducer["transactionStatus"],
-
     addresses: state.counterReducer["addresses"],
-
     creditcard: state.counterReducer["creditcards"],
+    transaction: state.counterReducer["transaction"],
   };
 }
 
@@ -34,9 +32,9 @@ function mapDispatchToProps(dispatch) {
     CallGetTransactionStatus: () =>
       dispatch(GitAction.CallGetTransactionStatus()),
 
-      CallAllAddress: (prodData) => dispatch(GitAction.CallAllAddress(prodData)),
+    CallAllAddress: (prodData) => dispatch(GitAction.CallAllAddress(prodData)),
 
-      CallAllCreditCard: (prodData) =>
+    CallAllCreditCard: (prodData) =>
       dispatch(GitAction.CallAllCreditCard(prodData)),
   };
 }
@@ -45,19 +43,23 @@ class AccountPageOrders extends Component {
     super(props);
     this.props.CallGetTransactionStatus();
     this.props.CallGetMerchantsOrders({
-      trackingStatus: this.props.alltransactionstatus.map(
-        (status) => status.TrackingStatusID
-      ),
+      trackingStatus: 2,
+      // trackingStatus: this.props.alltransactionstatus.map(
+      //   (status) => status.TrackingStatusID
+      // ),
       UserID: window.localStorage.getItem("id")
     });
-    this.props.CallAllAddress(window.localStorage.getItem("id"));
+    this.props.CallAllAddress({USERID: window.localStorage.getItem("id")});
 
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.state = {
       //   orders: dataOrders,
       page: 1,
+      rowsPerPage: 10,
     };
   }
+
+ 
 
   handlePageChange = (page) => {
     this.setState(() => ({ page }));
@@ -65,8 +67,13 @@ class AccountPageOrders extends Component {
 
   render() {
     const { page } = this.state;
+    console.log("this.props INN ORDER", this.props)
+    const ordersList = this.props.allmerchantorders
+    .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
+    // slice(0, 4)
+    .map((order) => {
 
-    const ordersList = this.props.allmerchantorders.slice(0, 3).map((order) => {
+      console.log("order inside", order)
       const quantity = JSON.parse(order.OrderProductDetail).map(
         (orders) => orders.ProductQuantity
       );
@@ -113,6 +120,9 @@ class AccountPageOrders extends Component {
       );
     });
 
+    console.log("orderList", ordersList)
+    console.log("orderList.length", ordersList.length)
+
     return (
       <div className="card">
         <Helmet>
@@ -142,7 +152,12 @@ class AccountPageOrders extends Component {
         <div className="card-footer">
           <Pagination
             current={page}
-            total={3}
+            // total={ordersList.length}
+            total={
+              this.props.allmerchantorders != null
+                ?  Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
+                : 1
+            }
             onPageChange={this.handlePageChange}
           />
         </div>

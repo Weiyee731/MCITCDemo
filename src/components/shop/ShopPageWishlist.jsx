@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // third-party
 import classNames from 'classnames';
@@ -16,9 +16,12 @@ import { cartAddItem } from '../../store/cart';
 import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
 import { wishlistRemoveItem } from '../../store/wishlist';
+import { GitAction } from "../../store/action/gitAction";
+
 
 // data stubs
 import theme from '../../data/theme';
+import { browserHistory } from "react-router";
 
 function ShopPageWishlist(props) {
     const { wishlist, cartAddItem, wishlistRemoveItem } = props;
@@ -27,10 +30,58 @@ function ShopPageWishlist(props) {
         { title: 'Wishlist', url: '' },
     ];
 
+    // const [wishlisting, setWishlist] = useState("");
+
+    // Similar to componentDidMount and componentDidUpdate:
+    // useEffect(() => {
+    //     props.CallViewProductWishlist({ userID: window.localStorage.getItem("id") })
+    // }, [wishlist]);
+
+    const login = () => {
+        browserHistory.push("/login");
+        window.location.reload(false);
+    }
+    
+    const deleteWishlist = (product) => {
+        console.log("item", product)
+        props.CallDeleteProductWishlist({
+            userID: localStorage.getItem("id"),
+            userWishlistID: product.UserWishlistID,
+            productName: product.ProductName
+        })
+    }
+
+    const addCart = (product) => {
+        let found = false
+        if (props.productcart !== undefined) {
+            props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+                found = true
+                props.CallUpdateProductCart({
+                    userID: localStorage.getItem("id"),
+                    userCartID: x.UserCartID,
+                    productQuantity: parseInt(x.ProductQuantity) + 1,
+                    productName: product.ProductName
+                })
+            })
+
+            if (found === false) {
+                props.CallAddProductCart({
+                    userID: window.localStorage.getItem("id"),
+                    productID: product.ProductID,
+                    productQuantity: 1,
+                    productVariationDetailID: 1,
+                    applyingPromoCode: 0,
+                    productName: product.ProductName
+                })
+            }
+        } else
+            login()
+
+    }
+
     let content;
-    console.log("wishlist", wishlist.length)
-    if (wishlist.length) {
-      
+    if (props.wishlist !== undefined && props.wishlist.length) {
+
         const itemsList = wishlist.map((item) => {
             let image;
             const productImage = JSON.parse(item.ProductImages)
@@ -40,26 +91,26 @@ function ShopPageWishlist(props) {
                         <Link to={url.product(item)} className="product-image__body">
                             <img className="product-image__img" src={productImage[0].ProductMediaUrl} alt="" />
                         </Link>
- 
+
                     </div>
                 );
             }
 
-            const renderAddToCarButton = ({ run, loading }) => {
-                const classes = classNames('btn btn-primary btn-sm', {
-                    'btn-loading': loading,
-                });
+            // const renderAddToCarButton = ({ run, loading }) => {
+            //     const classes = classNames('btn btn-primary btn-sm', {
+            //         'btn-loading': loading,
+            //     });
 
-                return <button type="button" onClick={run} className={classes}>Add To Cart</button>;
-            };
+            //     return <button type="button" onClick={run} className={classes}>Add To Cart</button>;
+            // };
 
-            const renderRemoveButton = ({ run, loading }) => {
-                const classes = classNames('btn btn-light btn-sm btn-svg-icon', {
-                    'btn-loading': loading,
-                });
+            // const renderRemoveButton = ({ run, loading }) => {
+            //     const classes = classNames('btn btn-light btn-sm btn-svg-icon', {
+            //         'btn-loading': loading,
+            //     });
 
-                return <button type="button" onClick={run} className={classes} aria-label="Remove"><Cross12Svg /></button>;
-            };
+            //     return <button type="button" onClick={run} className={classes} aria-label="Remove"><Cross12Svg /></button>;
+            // };
 
             return (
                 <tr key={item.id} className="wishlist__row">
@@ -76,19 +127,22 @@ function ShopPageWishlist(props) {
                     <td className="wishlist__column wishlist__column--stock">
                         <div className="badge badge-success">In Stock</div>
                     </td>
-                    <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductSellingPrice} currency={"RM"}/></td>
+                    <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductSellingPrice} currency={"RM"} /></td>
                     <td className="wishlist__column wishlist__column--tocart">
-                        <AsyncAction
+                        {/* <AsyncAction
                             action={() => cartAddItem(item)
                             }
                             render={renderAddToCarButton}
-                        />
+                        /> */}
+                        <button type="button" onClick={() => addCart(item)} className={'btn btn-primary btn-sm'}>Add To Cart</button>
                     </td>
                     <td className="wishlist__column wishlist__column--remove">
-                        <AsyncAction
+                        <button type="button" onClick={() => deleteWishlist(item)} className={'btn btn-light btn-sm btn-svg-icon'} aria-label="Remove"><Cross12Svg /></button>
+                        {/* {renderRemoveButton} */}
+                        {/* <AsyncAction
                             action={() => wishlistRemoveItem(item.ProductID)}
                             render={renderRemoveButton}
-                        />
+                        /> */}
                     </td>
                 </tr>
             );
@@ -144,13 +198,23 @@ function ShopPageWishlist(props) {
 }
 
 const mapStateToProps = (state) => ({
-    wishlist: state.wishlist,
+    // wishlist: state.wishlist,
+    wishlist: state.counterReducer.wishlist,
+    productcart: state.counterReducer.productcart
 });
 
-const mapDispatchToProps = {
-    cartAddItem,
-    wishlistRemoveItem,
+const mapDispatchToProps = (dispatch) => {
+    return {
+        cartAddItem,
+        wishlistRemoveItem,
+        // CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
+        CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
+        CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
+
+    }
+
 };
+
 
 export default connect(
     mapStateToProps,

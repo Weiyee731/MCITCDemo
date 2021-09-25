@@ -45,7 +45,7 @@ class AccountPageAddCreditCard extends Component {
       focus: "",
       name: "",
       number: "",
-      cardtype: "",
+      cardtype: "VISA",
       cardAdded: false,
       issuer: "",
     };

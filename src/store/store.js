@@ -151,7 +151,16 @@ const rootEpic = combineEpics(
   gitEpic.updateProductStatus,
   //====================== EMAIL ====================//
   gitEpic.getAllSubs,
-  gitEpic.AddSubs
+  gitEpic.AddSubs,
+  //====================== PRODUCT CART ====================//
+  gitEpic.deleteProductCart,
+  gitEpic.updateProductCart,
+  gitEpic.addProductCart,
+  gitEpic.viewProductCartList,  
+  //====================== PRODUCT WISHLIST ====================//
+  gitEpic.viewProductWishlist,
+  gitEpic.addProductWishlist,
+  gitEpic.deleteProductWishlist
 );
 
 // const rootReducerCombine = rootReducer;

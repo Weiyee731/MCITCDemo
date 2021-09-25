@@ -44,6 +44,7 @@ function mapDispatchToProps(dispatch) {
   return {
     callLogout: (credentials) => dispatch(GitAction.CallLogout(credentials)),
     loginUser: (credentials) => dispatch(GitAction.CallLogin(credentials)),
+    
   };
 }
 

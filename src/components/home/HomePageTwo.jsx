@@ -156,10 +156,6 @@ function HomePageTwo(props) {
     }
   }, [props.viewMoreProducts])
 
-  // console.log(allProducts)
-  // console.log(props)
-  // console.log(allProducts)
-
   function testing() {
     console.log("testing")
   }

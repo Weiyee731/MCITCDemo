@@ -11,12 +11,13 @@
 }
 .address-card__badge {
     position: absolute;
-    background-color: $accent-color;
-    color: $accent-opposite-color;
+    background-color: #24D330;
+    // color: white;
+    color: $light-opposite-color;
     font-size: 11px;
     font-weight: $font-weight-medium;
     text-transform: uppercase;
-    padding: 4px 8px 2px;
+    padding: 8px 8px 8px 8px;
     top: -$card-border-width;
 
     @include direction {

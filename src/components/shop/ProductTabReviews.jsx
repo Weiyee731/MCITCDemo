@@ -197,8 +197,8 @@ class ProductTabReviews extends Component {
                   current={page}
                   total={
                     this.props.product.ProductReview != null
-                      ? parseInt(JSON.parse(this.props.product.ProductReview).length)
-                      : ""
+                      ?  Math.ceil(parseInt(JSON.parse(this.props.product.ProductReview).length)/this.state.rowsPerPage)
+                      : 1
                   }
                   onPageChange={this.handlePageChange}
                 />
