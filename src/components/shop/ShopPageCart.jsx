@@ -136,13 +136,13 @@ class ShopPageCart extends Component {
                         ProductQuantity: ProductQuantity,
                     })
                     .then((json) => {
-                        browserHistory.push("/shop/checkout?order=" + json[0].OrderID);
+                        browserHistory.push("/Emporia/shop/checkout?order=" + json[0].OrderID);
                         window.location.reload(false);
                     });
             }
         }
         else {
-            browserHistory.push("/login");
+            browserHistory.push("/Emporia/login");
             window.location.reload(false);
         }
     };

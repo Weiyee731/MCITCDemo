@@ -781,7 +781,7 @@ class AddSuppliersComponent extends Component {
   };
 
   onNavigationProductStockIn() {
-    browserHistory.push("/MCITC/productStocksIn");
+    browserHistory.push("/Emporia/productStocksIn");
   }
 
   checkEverything = () => {

@@ -90,7 +90,7 @@ class PageCheckout extends Component {
     console.log("this.props.order",this.props.order)
     if (prevProps.order !== this.props.order) {
       // this.props.CallClearOrder()
-      browserHistory.push("/");
+      browserHistory.push("/Emporia");
       window.location.reload(false);
     }
   }

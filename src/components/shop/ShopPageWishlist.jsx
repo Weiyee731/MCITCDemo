@@ -38,7 +38,7 @@ function ShopPageWishlist(props) {
     // }, [wishlist]);
 
     const login = () => {
-        browserHistory.push("/login");
+        browserHistory.push("/Emporia/login");
         window.location.reload(false);
     }
     

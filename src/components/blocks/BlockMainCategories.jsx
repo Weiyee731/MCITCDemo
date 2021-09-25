@@ -56,7 +56,7 @@ class BlockMainCategories extends Component {
           {this.props.productCategories.map((data, index) => {
             console.log("data", data)
             return (
-              <div key={index} style={categoryGrid} className="col-lg-2 col-md-2 p-2"
+              <div key={index} style={categoryGrid} className="col-lg-3 col-md-3 p-2"
                 onMouseDown={(e) => {
                   if (e.button === 1) {
                     window.location.href = "/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory

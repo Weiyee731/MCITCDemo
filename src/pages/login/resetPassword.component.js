@@ -170,7 +170,7 @@ const ResetPasswordComponent = (props) => {
 
   useEffect(() => {
     if (props.currentUser.length > 0 && submitResetPasswordForm === true) {
-      browserHistory.push("/login");
+      browserHistory.push("/Emporia/login");
       window.location.reload(false);
     }
   }, [props.currentUser], setsubmitResetPasswordForm);
