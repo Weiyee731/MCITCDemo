@@ -45,9 +45,9 @@ class AccountPageAddCreditCard extends Component {
       focus: "",
       name: "",
       number: "",
-      cardtype: "VISA",
       cardAdded: false,
       issuer: "",
+      cardtype: ""
     };
 
     this.handleAddCreditCard = this.handleAddCreditCard.bind(this);
@@ -62,10 +62,13 @@ class AccountPageAddCreditCard extends Component {
 
   handleInputChange = ({ target }) => {
     if (target.name === "number") {
-      target.value = formatCreditCardNumber(target.value)[1].replace(
-        /\s+/g,
-        ""
-      );
+      if (target.value.length > 1) {
+        target.value = formatCreditCardNumber(target.value)[1].replace(
+          /\s+/g,
+          ""
+        );
+      }
+
       if (formatCreditCardNumber(target.value)[0] !== undefined) {
         this.setState({ issuer: formatCreditCardNumber(target.value)[0] });
       } else {
@@ -76,13 +79,16 @@ class AccountPageAddCreditCard extends Component {
     } else if (target.name === "cvc") {
       target.value = formatCVC(target.value);
     }
-
     this.setState({ [target.name]: target.value });
   };
 
   handleAddCreditCard() {
-    this.props.CallAddCreditCard(this.state);
-    this.props.parentCallback("false");
+    if (this.state.name.length && this.state.number.length && this.state.expiry.length && this.state.cardtype.length) {
+      this.props.CallAddCreditCard(this.state);
+      this.props.parentCallback("false");
+    } else {
+      toast.error("Please fill in all required card data");
+    }
   }
 
   handleChange = (e) => {
@@ -103,7 +109,7 @@ class AccountPageAddCreditCard extends Component {
     return (
       <div id="PaymentForm">
         <Cards
-          // cvc={this.state.cvc}
+          cvc={this.state.cvc}
           expiry={this.state.expiry}
           focused={this.state.focus}
           name={this.state.name}
@@ -117,6 +123,7 @@ class AccountPageAddCreditCard extends Component {
               className="form-control"
               placeholder="Card Number"
               pattern="[\d| ]{16,22}"
+              maxLength="16"
               required
               onChange={this.handleInputChange}
               onFocus={this.handleInputFocus}
@@ -134,19 +141,21 @@ class AccountPageAddCreditCard extends Component {
             />
           </div>
 
-          <div>
-            <input
-              type="tel"
-              name="expiry"
-              className="form-control"
-              placeholder="Valid Thru"
-              pattern="\d\d/\d\d"
-              required
-              onChange={this.handleInputChange}
-              onFocus={this.handleInputFocus}
-            />
+          <div className="row">
+            <div className="col-6">
+              <input
+                type="tel"
+                name="expiry"
+                className="form-control"
+                placeholder="Valid Thru"
+                pattern="\d\d/\d\d"
+                required
+                onChange={this.handleInputChange}
+                onFocus={this.handleInputFocus}
+              />
+            </div>
 
-            {/* <div className="col-6">
+            <div className="col-6">
               <input
                 type="tel"
                 name="cvc"
@@ -157,7 +166,30 @@ class AccountPageAddCreditCard extends Component {
                 onChange={this.handleInputChange}
                 onFocus={this.handleInputFocus}
               />
-            </div> */}
+            </div>
+          </div>
+          <div>
+            <br />
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Card Type</FormLabel>
+              <RadioGroup
+                aria-label="cardtype"
+                name="cardtype"
+                value={this.state.cardtype}
+                onChange={this.handleChange}
+              >
+                <FormControlLabel
+                  value="MasterCard"
+                  control={<Radio />}
+                  label="Master Card"
+                />
+                <FormControlLabel
+                  value="VisaCard"
+                  control={<Radio />}
+                  label="Visa Card"
+                />
+              </RadioGroup>
+            </FormControl>
           </div>
           <div>
             <br />

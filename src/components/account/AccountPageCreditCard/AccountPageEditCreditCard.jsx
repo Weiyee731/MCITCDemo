@@ -1,6 +1,7 @@
 // react
 import React, { Component } from "react";
 // import "./AccountPageProfile.component.css";
+import { toast } from "react-toastify";
 import { connect } from "react-redux";
 import { GitAction } from "../../../store/action/gitAction";
 import Cards from "react-credit-cards";
@@ -59,13 +60,40 @@ class AccountPageEditCreditCard extends Component {
     this.handleUpdateCreditCard = this.handleUpdateCreditCard.bind(this);
   }
 
+
+
   handleInputFocus = (e) => {
     this.setState({ focus: e.target.name });
   };
 
+  componentDidMount() {
+    if (this.props.creditcard !== undefined) {
+      console.log(this.props.creditcard[0])
+      this.setState({
+        expiry: this.props.creditcard[0].UserCardExpireDate,
+        name: this.props.creditcard[0].UserCardName,
+        number: this.props.creditcard[0].UserCardNo,
+        cardtype: this.props.creditcard[0].UserCardType,
+      })
+    }
+  }
+
   handleInputChange = ({ target }) => {
     if (target.name === "number") {
-      target.value = formatCreditCardNumber(target.value).replace(/\s+/g, "");
+      if (target.value.length > 1) {
+        target.value = formatCreditCardNumber(target.value)[1].replace(
+          /\s+/g,
+          ""
+        );
+      }
+
+      if (formatCreditCardNumber(target.value)[0] !== undefined) {
+        this.setState({ issuer: formatCreditCardNumber(target.value)[0] });
+      } else {
+        toast.error("Card Number's format is incorrect");
+      }
+
+
     } else if (target.name === "expiry") {
       target.value = formatExpirationDate(target.value);
     } else if (target.name === "cvc") {
@@ -84,12 +112,15 @@ class AccountPageEditCreditCard extends Component {
   };
 
   handleUpdateCreditCard() {
-    console.log(this.state);
-    this.props.CallUpdateCreditCard(this.state);
-    // this.props.parentCallback(false);
-    setTimeout(function () {
-      window.location.reload();
-    }, 1000);
+    if (this.state.name.length && this.state.number.length && this.state.expiry.length && this.state.cardtype.length && this.state.cvc.length) {
+      this.props.CallUpdateCreditCard(this.state);
+      // this.props.parentCallback(false);
+      setTimeout(function () {
+        window.location.reload();
+      }, 1000);
+    } else {
+      toast.error("Please fill in all required card data");
+    }
   }
 
   render() {
@@ -110,6 +141,8 @@ class AccountPageEditCreditCard extends Component {
               className="form-control"
               placeholder="Card Number"
               pattern="[\d| ]{16,22}"
+              maxLength="16"
+              value={this.state.number}
               required
               onChange={this.handleInputChange}
               onFocus={this.handleInputFocus}
@@ -121,6 +154,7 @@ class AccountPageEditCreditCard extends Component {
               name="name"
               className="form-control"
               placeholder="Name"
+              value={this.state.name}
               required
               onChange={this.handleInputChange}
               onFocus={this.handleInputFocus}
@@ -136,6 +170,7 @@ class AccountPageEditCreditCard extends Component {
                 className="form-control"
                 placeholder="Valid Thru"
                 pattern="\d\d/\d\d"
+                value={this.state.expiry}
                 required
                 onChange={this.handleInputChange}
                 onFocus={this.handleInputFocus}
@@ -149,6 +184,7 @@ class AccountPageEditCreditCard extends Component {
                 className="form-control"
                 placeholder="CVC"
                 pattern="\d{3,4}"
+                value={this.state.cvc}
                 required
                 onChange={this.handleInputChange}
                 onFocus={this.handleInputFocus}
@@ -162,7 +198,7 @@ class AccountPageEditCreditCard extends Component {
               <RadioGroup
                 aria-label="cardtype"
                 name="cardtype"
-                value={this.state.cardtype}
+                value={this.state.cardtype.toUpperCase() === "MASTERCARD" ? "MasterCard" : "VisaCard"}
                 onChange={this.handleChange}
               >
                 <FormControlLabel
@@ -180,7 +216,7 @@ class AccountPageEditCreditCard extends Component {
           </div>
           <div className="form-actions">
             <button
-              onClick={this.handleUpdateCreditCard}
+              onClick={() => this.handleUpdateCreditCard()}
               className="btn btn-primary btn-block"
               type="button"
             >

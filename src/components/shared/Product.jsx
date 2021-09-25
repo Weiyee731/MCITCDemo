@@ -376,7 +376,6 @@ const mapDispatchToProps = (dispatch) => {
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
   }
-
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

@@ -184,7 +184,7 @@ export class GitEpic {
         payload.USERLASTNAME +
         "&USERCONTACTNO=" +
         payload.USERCONTACTNO +
-        "&USERDATEBIRTH=" +
+        "&USERDOB=" +
         payload.USERDATEBIRTH +
         "&USEREMAIL=" +
         payload.USEREMAIL +
@@ -354,6 +354,21 @@ export class GitEpic {
 
   updateCreditCard = (action$) =>
     action$.ofType(GitAction.UpdateCreditCard).switchMap(({ payload }) => {
+      
+      console.log(url +
+        "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
+        payload.USERPAYMENTMETHODID +
+        "&USERID=" +
+        payload.USERID +
+        "&USERCARDNAME=" +
+        payload.name +
+        "&USERCARDNO=" +
+        payload.number +
+        "&USERCARDEXPIREDATE=" +
+        payload.expiry +
+        "&USERCARDTYPE=" +
+        payload.cardtype)
+        
       return fetch(url +
         "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
         payload.USERPAYMENTMETHODID +
@@ -1964,6 +1979,30 @@ export class GitEpic {
           }
           return {
             type: "GOT-DELIVERABLELIST",
+            payload: json,
+          };
+        })
+        .catch((error) => toast.error(error));
+    });
+
+  getOrderListByID = (action$) =>
+    action$.ofType(GitAction.GetOrderListByOrderID).switchMap(({ payload }) => {
+      
+      console.log(url +
+        "Order_ViewOrderByOrderID?ORDERID=" + payload.OrderID)
+      return fetch(url +
+        "Order_ViewOrderByOrderID?ORDERID=" + payload.OrderID
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          // alert(json);
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+          return {
+            type: "GOT-ORDERLISTBYORDERID",
             payload: json,
           };
         })

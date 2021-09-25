@@ -42,7 +42,8 @@ const INITIAL_STATE = {
   updatedCreditCard: [],
   productcart: [],
   wishlist: [],
-  order: []
+  order: [],
+  orderByID: []
 
 };
 
@@ -719,6 +720,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         account: action.payload,
+      });
+
+    case GitAction.GetOrderListByOrderID:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotOrderListByOrderID:
+      return Object.assign({}, state, {
+        loading: false,
+        orderByID: action.payload,
       });
     //=============================PROMOTIONS===============================//
     case GitAction.GetPromotion:

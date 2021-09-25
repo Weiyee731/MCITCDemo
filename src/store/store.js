@@ -149,6 +149,7 @@ const rootEpic = combineEpics(
   gitEpic.getAllPurchaseOrders,
   gitEpic.deletePurchaseOrder,
   gitEpic.updateProductStatus,
+  gitEpic.getOrderListByID,
   //====================== EMAIL ====================//
   gitEpic.getAllSubs,
   gitEpic.AddSubs,

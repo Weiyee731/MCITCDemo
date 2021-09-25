@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { browserHistory } from "react-router";
+import { GitAction } from "../../store/action/gitAction";
 
 // application
 import AsyncAction from '../shared/AsyncAction';
@@ -19,7 +20,6 @@ import { url } from '../../services/utils';
 import Logo from "../../assets/Emporia.png"
 import { Button } from "@material-ui/core";
 import shopApi from "../../api/shop";
-import { GitAction } from "../../store/action/gitAction";
 
 
 // data stubs
@@ -148,8 +148,7 @@ class ShopPageCart extends Component {
     };
 
     renderItems() {
-        const { cart, cartRemoveItem, cartAddItem, cartUpdateQuantities } = this.props;
-
+        
         return this.state.cart.map((item) => {
             let image;
             let options = [];
@@ -222,43 +221,43 @@ class ShopPageCart extends Component {
         });
     }
 
-    renderTotals() {
-        const { cart } = this.props;
+    // renderTotals() {
+    //     const { cart } = this.props;
 
-        if (cart.extraLines.length <= 0) {
-            return null;
-        }
+    //     if (cart.extraLines.length <= 0) {
+    //         return null;
+    //     }
 
-        const extraLines = cart.extraLines.map((extraLine, index) => {
-            let calcShippingLink;
+    //     const extraLines = cart.extraLines.map((extraLine, index) => {
+    //         let calcShippingLink;
 
-            if (extraLine.type === 'shipping') {
-                calcShippingLink = <div className="cart__calc-shipping"><Link to="/">Calculate Shipping</Link></div>;
-            }
+    //         if (extraLine.type === 'shipping') {
+    //             calcShippingLink = <div className="cart__calc-shipping"><Link to="/">Calculate Shipping</Link></div>;
+    //         }
 
-            return (
-                <tr key={index}>
-                    <th>{extraLine.title}</th>
-                    <td>
-                        {calcShippingLink}
-                    </td>
-                </tr>
-            );
-        });
+    //         return (
+    //             <tr key={index}>
+    //                 <th>{extraLine.title}</th>
+    //                 <td>
+    //                     {calcShippingLink}
+    //                 </td>
+    //             </tr>
+    //         );
+    //     });
 
-        return (
-            <React.Fragment>
-                <thead className="cart__totals-header">
-                    <tr>
-                        <th style={{ textAlign: "right" }}>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody className="cart__totals-body">
-                    {extraLines}
-                </tbody>
-            </React.Fragment>
-        );
-    }
+    //     return (
+    //         <React.Fragment>
+    //             <thead className="cart__totals-header">
+    //                 <tr>
+    //                     <th style={{ textAlign: "right" }}>Subtotal</th>
+    //                 </tr>
+    //             </thead>
+    //             <tbody className="cart__totals-body">
+    //                 {extraLines}
+    //             </tbody>
+    //         </React.Fragment>
+    //     );
+    // }
 
     renderCart() {
 
@@ -326,8 +325,7 @@ class ShopPageCart extends Component {
 
     render() {
 
-
-        const { cart, productcart } = this.props;
+        // const { productcart } = this.props;
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },

@@ -227,6 +227,7 @@ class AccountPageProfile extends Component {
 
   handleChangeforDOB = (e) => {
     const { value } = e.target;
+    console.log("moment(date).format('YYYYMMDD')", moment(value).format("YYYYMMDD"))
 
     if (value !== null) {
       this.setState({

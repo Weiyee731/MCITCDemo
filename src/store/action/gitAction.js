@@ -572,6 +572,16 @@ export class GitAction {
     };
   }
 
+  static GetOrderListByOrderID = "GET-ORDERLISTBYORDERID";
+  static GotOrderListByOrderID = "GOT-ORDERLISTBYORDERID";
+
+  static CallGetOrderListByID(suppData) {
+    return {
+      type: GitAction.GetOrderListByOrderID,
+      payload: suppData
+    };
+  }
+
   //=================REVIEW=============================//
 
   // Summary

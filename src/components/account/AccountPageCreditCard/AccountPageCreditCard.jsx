@@ -142,7 +142,7 @@ class AccountPageCreditCard extends Component {
               </div>
               <div className="col-3 col-lg-3 col-xl-3">
                 <Tooltip title="Add" style={{ float: "right" }}>
-                  <IconButton aria-label="Add" onClick={this.onAddClick}>
+                  <IconButton aria-label="Add" onClick={() => this.onAddClick()}>
                     <AddIcon fontSize="large" />
                   </IconButton>
                 </Tooltip>

@@ -76,7 +76,6 @@ function ShopPageWishlist(props) {
             }
         } else
             login()
-
     }
 
     let content;
@@ -205,14 +204,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        cartAddItem,
-        wishlistRemoveItem,
-        // CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
+        CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
         CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
         CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
-
     }
-
 };
 
 

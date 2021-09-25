@@ -56,10 +56,10 @@ class AccountPageOrders extends Component {
       //   orders: dataOrders,
       page: 1,
       rowsPerPage: 10,
+      shipping: 25,
+      tax: 0
     };
   }
-
- 
 
   handlePageChange = (page) => {
     this.setState(() => ({ page }));
@@ -67,13 +67,9 @@ class AccountPageOrders extends Component {
 
   render() {
     const { page } = this.state;
-    console.log("this.props INN ORDER", this.props)
     const ordersList = this.props.allmerchantorders
     .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
-    // slice(0, 4)
     .map((order) => {
-
-      console.log("order inside", order)
       const quantity = JSON.parse(order.OrderProductDetail).map(
         (orders) => orders.ProductQuantity
       );
@@ -81,8 +77,14 @@ class AccountPageOrders extends Component {
         (orders) => orders.ProductSellingPrice
       );
 
+      const subtotal = JSON.parse(order.OrderProductDetail).map(
+        (orders) => orders.ProductSellingPrice * orders.ProductQuantity
+      );
+
       var totalQuantity = 0;
       var totalPrice = 0;
+      var subtotalPrice = 0;
+      var totalOverall = 0;
 
       if (price.length > 0) {
         totalPrice = price.reduce((previous, current) => previous + current, 0);
@@ -99,12 +101,19 @@ class AccountPageOrders extends Component {
         totalQuantity = quantity;
       }
 
+      if (subtotal.length > 0) {
+        subtotalPrice = subtotal.reduce((previous, current) => previous + current, 0);
+      } else {
+        subtotalPrice = subtotal;
+      }
+      totalOverall = subtotalPrice + this.state.shipping + this.state.tax
+
       return (
         <tr key={order.OrderID}>
           <td>
             <Link
               to={{
-                pathname: "/account/orders/5",
+                pathname: "/account/orders/"+ order.OrderID,
                 orderdetails: order,
                 orderprice: totalPrice,
                 address: this.props.addresses,
@@ -115,13 +124,10 @@ class AccountPageOrders extends Component {
 
           <td>{order.CreatedDate}</td>
           <td>{order.TrackingStatus}</td>
-          <td>{totalQuantity + " items," + " RM " + totalPrice}</td>
+          <td>{totalQuantity + " items - " + " RM " + totalOverall}</td>
         </tr>
       );
     });
-
-    console.log("orderList", ordersList)
-    console.log("orderList.length", ordersList.length)
 
     return (
       <div className="card">

@@ -1,5 +1,5 @@
 // react
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState} from "react";
 
 // third-party
 import classNames from "classnames";
@@ -32,11 +32,6 @@ function ProductCard(props) {
   const {
     product,
     layout,
-    quickviewOpen,
-    cartAddItem,
-    wishlistAddItem,
-    wishlistRemoveItem,
-    compareAddItem,
   } = props;
 
   const [isQuickViewOpen, setModal] = useState(false)
@@ -121,8 +116,6 @@ function ProductCard(props) {
       }
     } else
       login()
-
-
   }
   //   if (product.badges.includes("sale")) {
   //     badges.push(
@@ -199,9 +192,6 @@ function ProductCard(props) {
 
   return (
     <div className={containerClasses}>
-      {/* <AsyncAction
-        action={() => quickviewOpen(product)}
-        render={({ run, loading }) => ( */}
       <button
         type="button"
         onClick={() => setModal(true)}
@@ -209,8 +199,6 @@ function ProductCard(props) {
       >
         <Quickview16Svg />
       </button>
-      {/* )}
-      /> */}
       {badges}
       {image}
       <div className="product-card__info">
@@ -223,7 +211,7 @@ function ProductCard(props) {
         </div>
         {features}
       </div>
-      {
+      
         <div className="product-card__actions">
           <div className="product-card__availability">
             Availability:{" "}
@@ -283,8 +271,7 @@ function ProductCard(props) {
           /> */}
           </div>
         </div>
-      }
-
+      
       <Modal isOpen={isQuickViewOpen} centered size="xl">
         <div className="quickview">
           <button className="quickview__close" type="button" onClick={() => setModal(false)}>
@@ -337,7 +324,6 @@ const mapDispatchToProps = (dispatch) => {
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData))
   }
-
 };
 
 

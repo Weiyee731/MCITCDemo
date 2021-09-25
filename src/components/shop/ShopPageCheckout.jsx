@@ -68,7 +68,6 @@ class PageCheckout extends Component {
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
-
   onFormSubmit() {
     console.log("ADDRESS", this.state.address)
 
@@ -94,15 +93,9 @@ class PageCheckout extends Component {
       browserHistory.push("/");
       window.location.reload(false);
     }
-
   }
 
   render() {
-
-    console.log("this.props.order", this.props.order)
-
-    console.log("this.state.checkout", this.state)
-    console.log("this.props.checkout", this.props)
 
     const breadcrumb = [
       { title: "Home", url: "" },

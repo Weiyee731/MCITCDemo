@@ -21,7 +21,6 @@ function Suggestions(props) {
         context,
         className,
         products,
-        cartAddItem,
     } = props;
 
     const login = () => {
