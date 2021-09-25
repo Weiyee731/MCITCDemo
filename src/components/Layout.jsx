@@ -91,7 +91,7 @@ import addPromotionBannerComponent from "../pages/addPromotionBanner/addPromotio
 import ViewProductPromotionComponent from "../pages/viewProductPromotion/viewProductPromotion.component";
 import ViewSettingsComponent from "../pages/viewSettings/viewSettings.component";
 import addPromoCodeComponent from "../pages/addPromoCode/addPromoCode.component";
-import ViewTransactions from "../pages/viewTransactions/viewTransactions.component";
+import ViewTransactionsComponent from "../pages/viewTransactions/viewTransactions.component";
 import ViewPromoCodes from "../pages/viewPromoCodes/viewPromoCodes.component";
 import ViewPromoCodesDetails from "../pages/promoCodeDetails/promoCodeDetails.component";
 import ViewMerchantsComponent from "../pages/viewMerchants/viewMerchants.component";
@@ -246,7 +246,7 @@ const Access = () => {
             <Route path="/viewProduct" component={ViewProductComponent} />
             <Route path="/viewOrder" component={ViewProductComponent} />
             <Route
-              path="/viewTransaction"
+              path="/viewTransactioDetails"
               component={TransactionDetailsComponent}
             />
             <Route path="/addProduct" component={AddProductComponent} />
@@ -363,7 +363,7 @@ const Access = () => {
               component={addPromotionBannerComponent}
             />
             <Route path="/addPromoCode" component={addPromoCodeComponent} />
-            <Route path="/viewTransactions" component={ViewTransactions} />
+            <Route path="/viewTransaction" component={ViewTransactionsComponent} />
             <Route path="/viewPromoCodes" component={ViewPromoCodes} />
             <Route
               path="/viewPromoCodesDetails"

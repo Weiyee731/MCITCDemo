@@ -125,7 +125,7 @@ class PageCheckOrder extends Component {
   };
 
   renderAddress() {
-    this.props.CallAllAddress(window.localStorage.getItem("id"));
+    this.props.CallAllAddress({USERID: window.localStorage.getItem("id")});
 
     const selfCollect = {
       CountryID: 1,

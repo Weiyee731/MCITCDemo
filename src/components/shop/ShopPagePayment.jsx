@@ -353,8 +353,8 @@ class PagePayment extends Component {
                 </CardContent>
               </Card>
             </div>
-            <div style={Object.assign({})}>
-              {/* <PageCheckoutQr qrcode={this.props.qrcode} /> */}
+            {/* <div style={Object.assign({})}>
+              <PageCheckoutQr qrcode={this.props.qrcode} />
               <div style={{ textAlign: "center" }}>
                 {console.log(this.props.qrcode)}
                 <QRCode
@@ -374,7 +374,7 @@ class PagePayment extends Component {
                   includeMargin={true}
                 />
               </div>
-            </div>
+            </div> */}
           </SwipeableViews>
         </div>
       </div>

@@ -68,15 +68,17 @@ class AccountPageEditCreditCard extends Component {
 
   componentDidMount() {
     if (this.props.creditcard !== undefined) {
-      console.log(this.props.creditcard[0])
-      this.setState({
-        expiry: this.props.creditcard[0].UserCardExpireDate,
-        name: this.props.creditcard[0].UserCardName,
-        number: this.props.creditcard[0].UserCardNo,
-        cardtype: this.props.creditcard[0].UserCardType,
+      this.props.creditcard.filter((x) => x.UserPaymentMethodID === this.props.UserPaymentMethodID).map((x) => {
+        this.setState({
+          expiry: x.UserCardExpireDate,
+          name: x.UserCardName,
+          number: x.UserCardNo,
+          cardtype: x.UserCardType,
+        })
       })
     }
   }
+
 
   handleInputChange = ({ target }) => {
     if (target.name === "number") {
@@ -112,15 +114,21 @@ class AccountPageEditCreditCard extends Component {
   };
 
   handleUpdateCreditCard() {
+
     if (this.state.name.length && this.state.number.length && this.state.expiry.length && this.state.cardtype.length && this.state.cvc.length) {
       this.props.CallUpdateCreditCard(this.state);
       // this.props.parentCallback(false);
-      setTimeout(function () {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(function () {
+      //   window.location.reload();
+      // }, 1000);
     } else {
       toast.error("Please fill in all required card data");
     }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.creditcard !== this.props.creditcard)
+      window.location.reload();
   }
 
   render() {

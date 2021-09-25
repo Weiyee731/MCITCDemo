@@ -129,16 +129,18 @@ class ShopPageCart extends Component {
             });
 
             if (overSKUlimit !== true) {
-                shopApi
-                    .addOrder({
-                        UserID: localStorage.getItem("id"),
-                        Products: ProductIDs,
-                        ProductQuantity: ProductQuantity,
-                    })
-                    .then((json) => {
-                        browserHistory.push("/Emporia/shop/checkout?order=" + json[0].OrderID);
+                // shopApi
+                //     .addOrder({
+                //         UserID: localStorage.getItem("id"),
+                //         Products: ProductIDs,
+                //         ProductQuantity: ProductQuantity,
+                //     })
+                //     .then((json) => {
+                //         browserHistory.push("/Emporia/shop/checkout?order=" + json[0].OrderID);
+                //         window.location.reload(false);
+                //     });
+                        browserHistory.push("/Emporia/shop/checkout");
                         window.location.reload(false);
-                    });
             }
         }
         else {

@@ -1047,7 +1047,7 @@ class ViewTransactionsComponent extends Component {
         console.log(allTransactionStatusData);
         transactionList = transactionList.filter(
           (items) =>
-            items.TrackingStatus == allTransactionStatusData[i].TrackingStatus
+            items.TrackingStatusID == allTransactionStatusData[i].TrackingStatusID
         );
         console.log(transactionList);
         return (
