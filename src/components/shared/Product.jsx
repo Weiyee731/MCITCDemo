@@ -77,7 +77,7 @@ class Product extends Component {
   }
 
   login() {
-    browserHistory.push("/login");
+    browserHistory.push("/Emporia/login");
     window.location.reload(false);
   }
 

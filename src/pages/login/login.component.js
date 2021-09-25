@@ -190,7 +190,7 @@ class LoginComponent extends Component {
         localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
         cookies.set("role", this.props.currentUser[0].UserType, options);
       }
-      browserHistory.push("/");
+      browserHistory.push("/Emporia");
       window.location.reload(false);
     }
 

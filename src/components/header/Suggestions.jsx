@@ -25,7 +25,7 @@ function Suggestions(props) {
     } = props;
 
     const login = () => {
-        browserHistory.push("/login");
+        browserHistory.push("/Emporia/login");
         window.location.reload(false);
     }
 

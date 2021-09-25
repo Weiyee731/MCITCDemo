@@ -88,7 +88,7 @@ class PagePayment extends Component {
         // localStorage.setItem("checkoutind", true);
         // setadd(true);
         // setOrderid(json[0].OrderID);
-        browserHistory.push("/shop/checkout?order=" + json[0].OrderID);
+        browserHistory.push("/Emporia/shop/checkout?order=" + json[0].OrderID);
         window.location.reload(false);
       });
   };
