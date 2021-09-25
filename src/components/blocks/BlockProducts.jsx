@@ -45,7 +45,7 @@ export default function BlockProducts(props) {
             <div className="container">
               <BlockHeader title={title} />
 
-              <div className="block-products__body">
+              <div>
                 {layout === "large-first" && large}
                 {smalls}
                 {layout === "large-last" && large}

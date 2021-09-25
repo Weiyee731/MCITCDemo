@@ -49,7 +49,7 @@ class AccountPageOrders extends Component {
       // ),
       UserID: window.localStorage.getItem("id")
     });
-    this.props.CallAllAddress({USERID: window.localStorage.getItem("id")});
+    this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
 
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.state = {
@@ -67,67 +67,69 @@ class AccountPageOrders extends Component {
 
   render() {
     const { page } = this.state;
+    console.log(this.props.allmerchantorders
+      .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage))
     const ordersList = this.props.allmerchantorders
-    .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
-    .map((order) => {
-      const quantity = JSON.parse(order.OrderProductDetail).map(
-        (orders) => orders.ProductQuantity
-      );
-      const price = JSON.parse(order.OrderProductDetail).map(
-        (orders) => orders.ProductSellingPrice
-      );
-
-      const subtotal = JSON.parse(order.OrderProductDetail).map(
-        (orders) => orders.ProductSellingPrice * orders.ProductQuantity
-      );
-
-      var totalQuantity = 0;
-      var totalPrice = 0;
-      var subtotalPrice = 0;
-      var totalOverall = 0;
-
-      if (price.length > 0) {
-        totalPrice = price.reduce((previous, current) => previous + current, 0);
-      } else {
-        totalPrice = price;
-      }
-
-      if (quantity.length > 1) {
-        totalQuantity = quantity.reduce(
-          (previous, current) => previous + current,
-          0
+      .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
+      .map((order) => {
+        const quantity = JSON.parse(order.OrderProductDetail).map(
+          (orders) => orders.ProductQuantity
         );
-      } else {
-        totalQuantity = quantity;
-      }
+        const price = JSON.parse(order.OrderProductDetail).map(
+          (orders) => orders.ProductSellingPrice
+        );
 
-      if (subtotal.length > 0) {
-        subtotalPrice = subtotal.reduce((previous, current) => previous + current, 0);
-      } else {
-        subtotalPrice = subtotal;
-      }
-      totalOverall = subtotalPrice + this.state.shipping + this.state.tax
+        const subtotal = JSON.parse(order.OrderProductDetail).map(
+          (orders) => orders.ProductSellingPrice * orders.ProductQuantity
+        );
 
-      return (
-        <tr key={order.OrderID}>
-          <td>
-            <Link
-              to={{
-                pathname: "/account/orders/"+ order.OrderID,
-                orderdetails: order,
-                orderprice: totalPrice,
-                address: this.props.addresses,
-                creditcards: this.props.creditcard,
-              }}
-            >{`#${order.OrderID}`}</Link>
-          </td>
+        var totalQuantity = 0;
+        var totalPrice = 0;
+        var subtotalPrice = 0;
+        var totalOverall = 0;
 
-          <td>{order.CreatedDate}</td>
-          <td>{order.TrackingStatus}</td>
-          <td>{totalQuantity + " items - " + " RM " + totalOverall}</td>
-        </tr>
-      );
-    });
+        if (price.length > 0) {
+          totalPrice = price.reduce((previous, current) => previous + current, 0);
+        } else {
+          totalPrice = price;
+        }
+
+        if (quantity.length > 1) {
+          totalQuantity = quantity.reduce(
+            (previous, current) => previous + current,
+            0
+          );
+        } else {
+          totalQuantity = quantity;
+        }
+
+        if (subtotal.length > 0) {
+          subtotalPrice = subtotal.reduce((previous, current) => previous + current, 0);
+        } else {
+          subtotalPrice = subtotal;
+        }
+        totalOverall = subtotalPrice + this.state.shipping + this.state.tax
+
+        return (
+          <tr key={order.OrderID}>
+            <td>
+              <Link
+                to={{
+                  pathname: "/account/orders/" + order.OrderID,
+                  orderdetails: order,
+                  orderprice: totalPrice,
+                  address: this.props.addresses,
+                  creditcards: this.props.creditcard,
+                }}
+              >{`#${order.OrderID}`}</Link>
+            </td>
+
+            <td>{order.CreatedDate}</td>
+            <td>{order.TrackingStatus}</td>
+            <td>{totalQuantity + " items - " + " RM " + totalOverall}</td>
+          </tr>
+        );
+      });
 
     return (
       <div className="card">
@@ -161,7 +163,7 @@ class AccountPageOrders extends Component {
             // total={ordersList.length}
             total={
               this.props.allmerchantorders != null
-                ?  Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
+                ? Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
                 : 1
             }
             onPageChange={this.handlePageChange}
