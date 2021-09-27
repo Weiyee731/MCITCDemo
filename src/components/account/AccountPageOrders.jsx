@@ -67,76 +67,80 @@ class AccountPageOrders extends Component {
 
   render() {
     const { page } = this.state;
-    console.log(this.props.allmerchantorders
-      .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage))
-    const ordersList = this.props.allmerchantorders
-      .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
-      .map((order) => {
-        const quantity = JSON.parse(order.OrderProductDetail).map(
-          (orders) => orders.ProductQuantity
-        );
-        const price = JSON.parse(order.OrderProductDetail).map(
-          (orders) => orders.ProductSellingPrice
-        );
+    let ordersList;
 
-        const subtotal = JSON.parse(order.OrderProductDetail).map(
-          (orders) => orders.ProductSellingPrice * orders.ProductQuantity
-        );
+    if (this.props.allmerchantorders.length > 0) {
+      ordersList = this.props.allmerchantorders
+        .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
+        .map((order) => {
+          const quantity = order.OrderProductDetail !== null ? JSON.parse(order.OrderProductDetail).map(
+            (orders) => orders.ProductQuantity
+          ) : "";
+          const price = order.OrderProductDetail !== null ? JSON.parse(order.OrderProductDetail).map(
+            (orders) => orders.ProductSellingPrice
+          ) : "";
 
-        var totalQuantity = 0;
-        var totalPrice = 0;
-        var subtotalPrice = 0;
-        var totalOverall = 0;
+          const subtotal = order.OrderProductDetail !== null ? JSON.parse(order.OrderProductDetail).map(
+            (orders) => orders.ProductSellingPrice * orders.ProductQuantity
+          ) : "";
 
-        if (price.length > 0) {
-          totalPrice = price.reduce((previous, current) => previous + current, 0);
-        } else {
-          totalPrice = price;
-        }
+          var totalQuantity = 0;
+          var totalPrice = 0;
+          var subtotalPrice = 0;
+          var totalOverall = 0;
 
-        if (quantity.length > 1) {
-          totalQuantity = quantity.reduce(
-            (previous, current) => previous + current,
-            0
+          if (price.length > 0) {
+            totalPrice = price.reduce((previous, current) => previous + current, 0);
+          } else {
+            totalPrice = price;
+          }
+
+          if (quantity.length > 0) {
+            totalQuantity = quantity.reduce(
+              (previous, current) => previous + current,
+              0
+            );
+          } else {
+            totalQuantity = 0;
+          }
+
+          if (subtotal.length > 0) {
+            subtotalPrice = subtotal.reduce((previous, current) => previous + current, 0);
+          } else {
+            subtotalPrice = subtotal;
+          }
+
+          if (price.length > 0 && subtotal.length > 0) {
+            totalOverall = subtotalPrice + parseInt(this.state.shipping + this.state.tax)
+          }
+
+          return (
+            <tr key={order.OrderID}>
+              <td>
+                <Link
+                  to={{
+                    pathname: "/account/orders/" + order.OrderID,
+                    orderdetails: order,
+                    orderprice: totalPrice,
+                    address: this.props.addresses,
+                    creditcards: this.props.creditcard,
+                  }}
+                >{`#${order.OrderID}`}</Link>
+              </td>
+
+              <td>{order.CreatedDate}</td>
+              <td>{order.TrackingStatus}</td>
+              <td>{totalQuantity + " items ," + " RM " + totalOverall}</td>
+            </tr>
           );
-        } else {
-          totalQuantity = quantity;
-        }
-
-        if (subtotal.length > 0) {
-          subtotalPrice = subtotal.reduce((previous, current) => previous + current, 0);
-        } else {
-          subtotalPrice = subtotal;
-        }
-        totalOverall = subtotalPrice + this.state.shipping + this.state.tax
-
-        return (
-          <tr key={order.OrderID}>
-            <td>
-              <Link
-                to={{
-                  pathname: "/account/orders/" + order.OrderID,
-                  orderdetails: order,
-                  orderprice: totalPrice,
-                  address: this.props.addresses,
-                  creditcards: this.props.creditcard,
-                }}
-              >{`#${order.OrderID}`}</Link>
-            </td>
-
-            <td>{order.CreatedDate}</td>
-            <td>{order.TrackingStatus}</td>
-            <td>{totalQuantity + " items - " + " RM " + totalOverall}</td>
-          </tr>
-        );
-      });
+        });
+    }
 
     return (
-      <div className="card">
+      <div className="card" >
         <Helmet>
           <title>{`Order History — ${theme.name}`}</title>
         </Helmet>
-
         <div className="card-header">
           <h5>Order History</h5>
         </div>
@@ -152,25 +156,35 @@ class AccountPageOrders extends Component {
                   <th>Total</th>
                 </tr>
               </thead>
-              <tbody>{ordersList}</tbody>
+              <tbody>{ordersList.length > 0  ? ordersList : ""}</tbody>
             </table>
           </div>
         </div>
         <div className="card-divider" />
         <div className="card-footer">
-          <Pagination
-            current={page}
-            // total={ordersList.length}
-            total={
-              this.props.allmerchantorders != null
-                ? Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
-                : 1
-            }
-            onPageChange={this.handlePageChange}
-          />
+
+          {
+            ordersList.length > 0 ?
+              <Pagination
+                current={page}
+                total={
+                  this.props.allmerchantorders != null
+                    ? Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
+                    : 1
+                }
+                onPageChange={this.handlePageChange}
+              /> :
+              <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                <div style={{ marginBottom: "20px" }}>
+                  Seem like you haven purchase anything yet
+                </div>
+                <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+              </div>
+          }
+
         </div>
       </div>
-    );
+    )
   }
 }
 

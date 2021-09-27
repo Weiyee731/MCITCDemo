@@ -28,6 +28,7 @@ import StepProgressBar from "react-step-progress";
 import "react-step-progress/dist/index.css";
 import PageCart from "./ShopPageCart";
 import PageCompleted from "./ShopPageCompleted";
+import { toast } from "react-toastify";
 
 function step2Validator() {
   // return a boolean
@@ -63,31 +64,37 @@ class PageCheckout extends Component {
       ProductID: [],
       ProductQuantity: [],
       UserCartID: [],
-      address: 0
+      address: 0,
+      PaymentID: 0,
+      PaymentMethodID: 0
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
   onFormSubmit() {
-    console.log("ADDRESS", this.state.address)
-
-    this.props.productcart.map((x) => {
-      this.state.ProductID.push(x.ProductID)
-      this.state.UserCartID.push(x.UserCartID)
-      this.state.ProductQuantity.push(x.ProductQuantity)
-    })
-
-    this.props.CallAddOrder({
-      UserID: window.localStorage.getItem("id"),
-      ProductID: this.state.ProductID,
-      ProductQuantity: this.state.ProductQuantity,
-      UserCartID: this.state.UserCartID,
-      UserAddressID: this.state.address
-    })
+    if (this.state.PaymentID === 0) {
+      toast.error("Please fill in correct payment method info to continue")
+    }
+    else {
+      this.props.productcart.map((x) => {
+        this.state.ProductID.push(x.ProductID)
+        this.state.UserCartID.push(x.UserCartID)
+        this.state.ProductQuantity.push(x.ProductQuantity)
+      })
+      this.props.CallAddOrder({
+        UserID: window.localStorage.getItem("id"),
+        ProductID: this.state.ProductID,
+        ProductQuantity: this.state.ProductQuantity,
+        UserCartID: this.state.UserCartID,
+        UserAddressID: this.state.address,
+        PaymentMethodID: this.state.PaymentMethodID,
+        PAYMENTID: this.state.PaymentID,
+      })
+    }
   }
 
   componentDidUpdate(prevProps) {
-    console.log("this.props.order",this.props.order)
+    console.log("this.props.order", this.props.order)
     if (prevProps.order !== this.props.order) {
       // this.props.CallClearOrder()
       browserHistory.push("/Emporia");
@@ -117,6 +124,13 @@ class PageCheckout extends Component {
         this.setState({ address: value })
     }
 
+    const handleGetPaymentId = (paymentmethodId, paymentID) => {
+      console.log("here", paymentID)
+      console.log("here", paymentmethodId)
+      if (paymentmethodId.length !== 0 && paymentID.length !== 0)
+        this.setState({ PaymentMethodID: paymentmethodId, PaymentID: paymentID })
+    }
+
     const step1Content = (
       <div style={{ width: "100%" }}>
         <PageCart />
@@ -134,7 +148,7 @@ class PageCheckout extends Component {
     );
     const step4Content = (
       <div style={{ width: "100%" }}>
-        <PageCompleted />
+        <PageCompleted addresss={this} />
       </div>
     );
 
@@ -169,7 +183,7 @@ class PageCheckout extends Component {
                 {
                   label: "Payment",
                   name: "step 3",
-                  content: <PagePayment qrcode={query} />,
+                  content: <PagePayment qrcode={query} handleGetPaymentId={handleGetPaymentId} />,
                   // validator: step3Validator
                 },
                 {

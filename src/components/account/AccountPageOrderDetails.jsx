@@ -148,65 +148,74 @@ class AccountPageOrderDetails extends Component {
           <div className="card-divider" />
           <div className="card-table">
             <div className="table-responsive-sm">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Preview</th>
-                    <th>Product</th>
-                    <th>Unit Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                {/* {console.log("orderdetail", orderDetail)} */}
-                {orderDetail !== undefined ? JSON.parse(orderDetail.OrderProductDetail).map((orders) => (
+              {orderDetail.OrderProductDetail !== null ?
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Preview</th>
+                      <th>Product</th>
+                      <th>Unit Price</th>
+                      <th>Quantity</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  {/* {console.log("orderdetail", orderDetail)} */}
+                  {orderDetail.OrderProductDetail !== null ? JSON.parse(orderDetail.OrderProductDetail).map((orders) => (
+                    <tbody className="card-table__body card-table__body--merge-rows">
+                      <tr>
+                        <td>
+                          <img
+                            className="product-image dropcart__product-image"
+                            src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
+                            alt=""
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = Logo;
+                            }}
+                          />
+                        </td>
+                        <td>{orders.ProductName}</td>
+                        <td>RM{orders.ProductSellingPrice}</td>
+                        <td>{orders.ProductQuantity}</td>
+                        <td>RM{orders.ProductSellingPrice * orders.ProductQuantity}</td>
+                      </tr>
+                    </tbody>
+                  )) : ""}
+
                   <tbody className="card-table__body card-table__body--merge-rows">
                     <tr>
-                      <td>
-                        <img
-                          className="product-image dropcart__product-image"
-                          src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
-                          alt=""
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = Logo;
-                          }}
-                        />
-                      </td>
-                      <td>{orders.ProductName}</td>
-                      <td>RM{orders.ProductSellingPrice}</td>
-                      <td>{orders.ProductQuantity}</td>
-                      <td>RM{orders.ProductSellingPrice * orders.ProductQuantity}</td>
+                      <th>Subtotal</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>RM{this.state.subtotal}</td>
+                    </tr>
+                    <tr>
+                      <th>Shipping</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>{this.state.shipping}</td>
                     </tr>
                   </tbody>
-                )) : ""}
-
-                <tbody className="card-table__body card-table__body--merge-rows">
-                  <tr>
-                    <th>Subtotal</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>RM{this.state.subtotal}</td>
-                  </tr>
-                  <tr>
-                    <th>Shipping</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{this.state.shipping}</td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th>Total</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{this.state.total}</td>
-                  </tr>
-                </tfoot>
-              </table>
+                  <tfoot>
+                    <tr>
+                      <th>Total</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>{this.state.total}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+                :
+                <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                  <div style={{ marginBottom: "20px" }}>
+                    Something went wrong
+                  </div>
+                  <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                </div>
+              }
             </div>
           </div>
           {/* :
@@ -215,42 +224,70 @@ class AccountPageOrderDetails extends Component {
 
         </div>
 
-        {address.map((addresspreview) => (
-          <div className="row mt-3 no-gutters mx-n2">
-            <div className="col-sm-6 col-12 px-2">
-              <div className="card address-card address-card--featured">
-                <div className="address-card__body">
-                  <div className="address-card__badge address-card__badge--muted">
-                    Shipping Address
-                  </div>
-                  <div className="address-card__name">
-                    {addresspreview.UserAddressName}
-                  </div>
-                  <div className="address-card__row">
-                    {addresspreview.UserAddressLine1}
-                    <br />
-                    {addresspreview.UserAddressLine2}
-                    <br />
-                    {addresspreview.UserCity} {addresspreview.UserPoscode}{" "}
-                    {addresspreview.UserState}
-                  </div>
-                  <div className="address-card__row">
-                    <div className="address-card__row-title">Phone Number</div>
-                    <div className="address-card__row-content">
-                      {addresspreview.UserContactNo}
+        {
+          orderDetail.UserAddresID !== 0 ?
+            address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
+              <div className="row mt-3 no-gutters mx-n2">
+                <div className="col-sm-6 col-12 px-2">
+                  <div className="card address-card address-card--featured">
+                    <div className="address-card__body">
+                      <div className="address-card__badge address-card__badge--muted">
+                        Shipping Address
+                      </div>
+                      <div className="address-card__name">
+                        {addresspreview.UserAddressName}
+                      </div>
+                      <div className="address-card__row">
+                        {addresspreview.UserAddressLine1}
+                        <br />
+                        {addresspreview.UserAddressLine2}
+                        <br />
+                        {addresspreview.UserCity} {addresspreview.UserPoscode}{" "}
+                        {addresspreview.UserState}
+                      </div>
+                      <div className="address-card__row">
+                        <div className="address-card__row-title">Phone Number</div>
+                        <div className="address-card__row-content">
+                          {addresspreview.UserContactNo}
+                        </div>
+                      </div>
+                      <div className="address-card__row">
+                        <div className="address-card__row-title">Email Address</div>
+                        <div className="address-card__row-content">
+                          {addresspreview.UserEmail}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="address-card__row">
-                    <div className="address-card__row-title">Email Address</div>
-                    <div className="address-card__row-content">
-                      {addresspreview.UserEmail}
+                </div>
+              </div>
+            ))
+            :
+            <div className="row mt-3 no-gutters mx-n2">
+              <div className="col-sm-6 col-12 px-2">
+                <div className="card address-card address-card--featured">
+                  <div className="address-card__body">
+                    <div className="address-card__badge address-card__badge--muted">
+                      Self Pick Up
+                    </div>
+                    <div className="address-card__name">
+                      User Self Pick Up
+                    </div>
+                    <div className="address-card__name">
+                      {orderDetail.UserFullName}
+                    </div>
+                    <div className="address-card__row">
+                      {orderDetail.UserContactNo}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
-              {creditcard.map((paymentcard) => (
+        }
+        <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
+          {
+            orderDetail.PaymentMethodID === 0 ?
+              creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
                 <div className="card address-card address-card--featured">
                   <div className="address-card__body">
                     <div className="address-card__badge address-card__badge--muted">
@@ -279,10 +316,59 @@ class AccountPageOrderDetails extends Component {
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
+              ))
+              :
+              <>
+                {
+                  orderDetail.PaymentMethodID === 1 &&
+                  <div className="card address-card address-card--featured">
+                    <div className="address-card__body">
+                      <div className="address-card__badge address-card__badge--muted">
+                        E-WALLET
+                      </div>
+                      <div className="address-card__row">
+                        <div className="address-card__name">
+                          E-WALLET PAYMENT
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+                {
+                  orderDetail.PaymentMethodID === 2 &&
+                  <div className="card address-card address-card--featured">
+                    <div className="address-card__body">
+                      <div className="address-card__badge address-card__badge--muted">
+                        FPX
+                      </div>
+                      <div className="address-card__row">
+                        <div className="address-card__name">
+                          FPX PAYMENT
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+                {
+                  orderDetail.PaymentMethodID === 3 &&
+                  <div className="card address-card address-card--featured">
+                    <div className="address-card__body">
+                      <div className="address-card__badge address-card__badge--muted">
+                        PAYPAL
+                      </div>
+                      <div className="address-card__row">
+                        <div className="address-card__name">
+                          PAYPAL PAYMENT
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+              </>
+          }
+
+        </div>
       </React.Fragment>
     );
   }

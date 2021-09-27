@@ -161,13 +161,23 @@ class PageCompleted extends Component {
             <div className="card mb-0">
               <div className="card-body">
                 <h3 className="card-title">Emporia</h3>
-                <h5 >
-                  {/* Address: Sejingkat, 93050 Kuching, Sarawak | Tel No. : (60) 012-850 9198 */}
-                </h5>
-                {/* <h5 >
-                 Delivery Address: { localStorage.getItem("address")}
-                </h5>
-                {console.log(localStorage.getItem("address"))} */}
+                {console.log("address", this.props)}
+                {
+                  this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.address !== 0 ?
+                    this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
+                      x.UserAddressBookID === this.props.addresss.state.address).map((address) => {
+                        return (
+                          <h5 >
+                            Deivery Address: {address.UserAddressLine1 + " " + address.UserAddressLine2} <br />
+                            Tel No. : (60) {address.UserContactNo}
+                          </h5>
+                        )
+                      })
+                    :
+                    <h5 >
+                      User Self Pick Up
+                    </h5>
+                }
                 {this.renderCart()}
               </div>
             </div>
@@ -179,7 +189,8 @@ class PageCompleted extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  productcart: state.counterReducer.productcart
+  productcart: state.counterReducer.productcart,
+  addresses: state.counterReducer["addresses"],
 });
 
 const mapDispatchToProps = {};

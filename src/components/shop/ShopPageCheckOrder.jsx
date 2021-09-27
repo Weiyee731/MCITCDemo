@@ -1,6 +1,7 @@
 // react
 import React, { Component } from "react";
 import { Card, CardContent } from "@material-ui/core";
+import { browserHistory } from "react-router";
 // third-party
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet-async";
@@ -122,10 +123,12 @@ class PageCheckOrder extends Component {
 
   goEdit = (e, AddressBookNo) => {
     window.localStorage.setItem("addressNo", AddressBookNo);
+    browserHistory.push("../account/addresses");
+    window.location.reload(false)
   };
 
   renderAddress() {
-    this.props.CallAllAddress({USERID: window.localStorage.getItem("id")});
+    this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
 
     const selfCollect = {
       CountryID: 1,
@@ -208,7 +211,7 @@ class PageCheckOrder extends Component {
         {addresses}
 
         <Link
-          to="/account/address/6"
+          to="/account/address"
           className="addresses-list__item addresses-list__item--new"
         >
           <div className="addresses-list__plus" />
