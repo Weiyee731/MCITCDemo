@@ -526,7 +526,7 @@ export class GitEpic {
   getViewMoreProducts = (action$) =>
     action$.ofType(GitAction.GetViewMoreProduct).switchMap(({ payload }) => {
       return fetch(url +
-        "Product_ViewMoreItemList?PRODUCTPERPAGE=" + payload.productPerPage +
+        "Product_ItemListViewMore?PRODUCTPERPAGE=" + payload.productPerPage +
         "&PAGE=" + payload.page
       )
         .then((response) => response.json())
@@ -1929,11 +1929,13 @@ export class GitEpic {
   //=================ORDER=============================//
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(({ payload }) => {
-
       return fetch(url +
         "Order_AddOrder?USERID=" + payload.UserID
         + "&USERADDRESSID=" + payload.UserAddressID
-        + "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" + payload.ProductID
+        + "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" + payload.PaymentMethodID
+        + "&PRODUCTVARIATIONDETAILID=" + payload.ProductID
+        + "&PRODUCTID=" + payload.ProductID
+        + "&PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID
         + "&PRODUCTQUANTITY=" + payload.ProductQuantity
       )
         .then((response) => response.json())

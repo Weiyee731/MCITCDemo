@@ -18,8 +18,11 @@ import { cartRemoveItem, cartUpdateQuantities, cartAddItem } from '../../store/c
 import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
 import Logo from "../../assets/Emporia.png"
+import PageCheckout from "./ShopPageCheckout";
 import { Button } from "@material-ui/core";
 import shopApi from "../../api/shop";
+
+import Checkbox from "@material-ui/core/Checkbox";
 
 
 // data stubs
@@ -37,16 +40,22 @@ class ShopPageCart extends Component {
             overSKULimitID: [],
             cart: [],
             subtotal: 0,
-            total: 0,
-            shipping: 25,
-            tax: 0,
+            // total: 0,
+            // shipping: 25,
+            // tax: 0,
             setDetails: false,
-            selectedIndex: ""
+            selectedIndex: "",
+
+            selectedList: [],
+            selectedProductDetailList: [],
+            isDataAccepted: false,
+            isCheckOutSubmit: false
         };
         this.setDetails = this.setDetails.bind(this)
         this.removeItem = this.removeItem.bind(this)
+        this.handleSelectedProduct = this.handleSelectedProduct.bind(this)
+        this.handleAllProductSellect = this.handleAllProductSellect.bind(this)
     }
-
     getItemQuantity(item) {
 
         var { quantities } = this.state;
@@ -68,8 +77,19 @@ class ShopPageCart extends Component {
                 }
             )
         })
-        this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
-        this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+        this.setState({ isDataSet: true })
+
+        if (this.state.selectedProductDetailList !== [] && this.state.selectedProductDetailList.length > 0) {
+            let temp = [...this.state.selectedProductDetailList]
+            this.state.selectedProductDetailList.splice(0, this.state.selectedProductDetailList.length)
+            temp.map((selectedProduct) => {
+
+                this.state.cart.filter((x) => x.product.UserCartID === selectedProduct.product.UserCartID).map((updatedList, index) => {
+                    this.state.selectedProductDetailList.push(updatedList)
+                })
+            })
+            this.setState({ subtotal: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
+        }
     }
 
     componentDidMount() {
@@ -90,20 +110,25 @@ class ShopPageCart extends Component {
         }
     }
 
+    // ---------------------------------------------------- Update Cart Item ------------------------------------
+
     removeItem(product) {
         this.props.CallDeleteProductCart({ userCartID: product.UserCartID, userID: localStorage.getItem("id"), productName: product.ProductName })
     }
 
     handleChangeQuantity = (item, quantity) => {
-        this.props.CallUpdateProductCart({
-            userID: localStorage.getItem("id"),
-            userCartID: item.product.UserCartID,
-            productQuantity: quantity,
-            productName: item.product.ProductName
-        })
+        if (quantity > 0) {
+            this.props.CallUpdateProductCart({
+                userID: localStorage.getItem("id"),
+                userCartID: item.product.UserCartID,
+                productQuantity: quantity,
+                productName: item.product.ProductName
+            })
+        }
         this.setState({ selectedIndex: item.id })
-
     };
+
+    // ---------------------------------------------------- Check Out ------------------------------------
 
     CheckOutOnClick = (items) => {
 
@@ -111,24 +136,33 @@ class ShopPageCart extends Component {
             let ProductIDs = [];
             let ProductQuantity = [];
             let checkSKU = [];
+            let checkName = [];
             let overSKUlimit = false
+            this.state.overSKULimitID.splice(0, this.state.overSKULimitID.length)
+            checkSKU.splice(0, checkSKU.length)
+
             items.map((row) => {
+                this.props.productcart.filter((x) => x.UserCartID === row.product.UserCartID).map((items) => {
+                    if (row.product.SKU < items.ProductQuantity) {
+                        checkSKU.push(row.product.ProductID)
+                        checkName.push(row.product.ProductName)
+                    }
+                    if (checkSKU.length > 0) {
+                        this.setState({ SKUlimit: true, overSKULimitID: checkSKU })
+                        overSKUlimit = true
+                    }
+                    else {
+                        ProductIDs.push(row.product.ProductID);
+                        ProductQuantity.push(row.quantity);
+                    }
+                })
 
-                if (row.product.SKU < row.quantity) {
-                    checkSKU.push(row.product.ProductID)
-                }
-
-                if (checkSKU.length > 0) {
-                    this.setState({ SKUlimit: true, overSKULimitID: checkSKU })
-                    overSKUlimit = true
-                }
-                else {
-                    ProductIDs.push(row.product.ProductID);
-                    ProductQuantity.push(row.quantity);
-                }
             });
 
-            if (overSKUlimit !== true) {
+
+            if (overSKUlimit !== true && this.state.selectedList.length > 0) {
+
+                this.setState({ isDataAccepted: true })
                 // shopApi
                 //     .addOrder({
                 //         UserID: localStorage.getItem("id"),
@@ -139,8 +173,17 @@ class ShopPageCart extends Component {
                 //         browserHistory.push("/Emporia/shop/checkout?order=" + json[0].OrderID);
                 //         window.location.reload(false);
                 //     });
-                        browserHistory.push("/Emporia/shop/checkout");
-                        window.location.reload(false);
+                // browserHistory.push("/Emporia/shop/checkout");
+                // window.location.reload(false);
+            }
+
+            if (this.state.selectedList.length === 0) {
+                toast.error("Please select at least 1 product to proceed")
+            }
+            if (overSKUlimit === true) {
+                checkName.map((x) => {
+                    toast.error(x + " has over current available stock")
+                })
             }
         }
         else {
@@ -149,9 +192,52 @@ class ShopPageCart extends Component {
         }
     };
 
-    renderItems() {
-        
-        return this.state.cart.map((item) => {
+    // ---------------------------------------------------- Check Selected ------------------------------------
+
+    handleSelectedProduct(item, index) {
+        if (this.state.selectedList.length > 0) {
+            let found = false
+            this.state.selectedProductDetailList.map((x, i) => {
+                if (x.id === item.id) {
+                    this.state.selectedList.splice(i, 1)
+                    this.state.selectedProductDetailList.splice(i, 1)
+                    found = true
+                }
+            })
+            if (found === false) {
+                this.state.selectedList.push(index)
+                this.state.selectedProductDetailList.push(item)
+            }
+        }
+        else {
+            this.state.selectedList.push(index)
+            this.state.selectedProductDetailList.push(item)
+        }
+        this.setState({ subtotal: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
+        // this.setState({ total: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
+    }
+
+    handleAllProductSellect() {
+
+        if (this.state.selectedList.length === 0 && this.state.selectedList.length !== this.state.cart.length) {
+            this.state.selectedList.splice(0, this.state.selectedList.length)
+            this.state.selectedProductDetailList.splice(0, this.state.selectedProductDetailList.length)
+            this.state.cart.map((product, i) => {
+                this.state.selectedProductDetailList.push(product)
+                this.state.selectedList.push(i)
+            })
+        }
+        else {
+            this.state.selectedList.splice(0, this.state.selectedList.length)
+            this.state.selectedProductDetailList.splice(0, this.state.selectedProductDetailList.length)
+        }
+        this.setState({ subtotal: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
+        // this.setState({ total: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
+    }
+
+
+    renderItems(displayCart) {
+        return displayCart.map((item, i) => {
             let image;
             let options = [];
 
@@ -161,7 +247,15 @@ class ShopPageCart extends Component {
                 image = (
                     <div className="product-image">
                         <Link to={url.product(item.product)} className="product-image__body">
-                            <img className="product-image__img" src={productImage[0].ProductMediaUrl} alt="" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                            <img className="product-image__img" src={productImage[0].ProductMediaUrl !== null ? productImage[0].ProductMediaUrl : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                        </Link>
+                    </div>
+                );
+            } else {
+                image = (
+                    <div className="product-image">
+                        <Link to={url.product(item.product)} className="product-image__body">
+                            <img className="product-image__img" src={Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                         </Link>
                     </div>
                 );
@@ -169,6 +263,20 @@ class ShopPageCart extends Component {
 
             return (
                 <tr key={item.id} className="cart-table__row">
+                    <td className="cart-table__column cart-table__column--checkbox">
+                        {
+                            this.props.history !== undefined ?
+                                <Checkbox
+                                    checked={
+                                        this.state.selectedList.length > 0 ?
+                                            this.state.selectedList.filter(x => x === i).length > 0 ?
+                                                true : false
+                                            : false
+                                    }
+                                    onClick={() => this.handleSelectedProduct(item, i)}
+                                /> : ""
+                        }
+                    </td>
                     <td className="cart-table__column cart-table__column--image">
                         {image}
                     </td>
@@ -184,7 +292,7 @@ class ShopPageCart extends Component {
                                         return (
                                             <>
                                                 <br></br>
-                                                <label style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.SKU} </label>
+                                                <label style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.SKU !== null ? item.product.SKU : "0"} </label>
                                             </>
                                         )
                                     })
@@ -213,54 +321,20 @@ class ShopPageCart extends Component {
                             <Currency value={item.product.ProductSellingPrice * item.product.ProductQuantity} currency={"RM"} />
                         }
                     </td>
+
                     <td className="cart-table__column cart-table__column--remove">
-                        <Link onClick={() => this.removeItem(item.product)} className={'btn btn-light btn-sm btn-svg-icon'}
-                        > <Cross12Svg />
-                        </Link>
+                        {
+                            this.props.history !== undefined ?
+                                <Button onClick={() => this.removeItem(item.product)} className={'btn btn-light btn-sm btn-svg-icon'} >
+                                    <Cross12Svg />
+                                </Button>
+                                : ""
+                        }
                     </td>
                 </tr>
             );
         });
     }
-
-    // renderTotals() {
-    //     const { cart } = this.props;
-
-    //     if (cart.extraLines.length <= 0) {
-    //         return null;
-    //     }
-
-    //     const extraLines = cart.extraLines.map((extraLine, index) => {
-    //         let calcShippingLink;
-
-    //         if (extraLine.type === 'shipping') {
-    //             calcShippingLink = <div className="cart__calc-shipping"><Link to="/">Calculate Shipping</Link></div>;
-    //         }
-
-    //         return (
-    //             <tr key={index}>
-    //                 <th>{extraLine.title}</th>
-    //                 <td>
-    //                     {calcShippingLink}
-    //                 </td>
-    //             </tr>
-    //         );
-    //     });
-
-    //     return (
-    //         <React.Fragment>
-    //             <thead className="cart__totals-header">
-    //                 <tr>
-    //                     <th style={{ textAlign: "right" }}>Subtotal</th>
-    //                 </tr>
-    //             </thead>
-    //             <tbody className="cart__totals-body">
-    //                 {extraLines}
-    //             </tbody>
-    //         </React.Fragment>
-    //     );
-    // }
-
     renderCart() {
 
         const breadcrumb = [
@@ -277,6 +351,16 @@ class ShopPageCart extends Component {
                     <table className="cart__table cart-table">
                         <thead className="cart-table__head">
                             <tr className="cart-table__row">
+                                <th className="cart-table__column cart-table__column--checkbox">
+                                    {this.props.history !== undefined ?
+                                        <Checkbox
+                                            checked={this.state.selectedList.length === 0 ? false :
+                                                this.state.cart.length === this.state.selectedList.length ? true : false}
+                                            onClick={() => this.handleAllProductSellect()}
+                                        /> : ""
+                                    }
+
+                                </th>
                                 <th className="cart-table__column cart-table__column--image">Image</th>
                                 <th className="cart-table__column cart-table__column--product">Product</th>
                                 <th className="cart-table__column cart-table__column--price">Price</th>
@@ -286,7 +370,7 @@ class ShopPageCart extends Component {
                             </tr>
                         </thead>
                         <tbody className="cart-table__body">
-                            {this.renderItems()}
+                            {this.props.history !== undefined ? this.renderItems(this.state.cart) : this.renderItems(this.props.data)}
                         </tbody>
                     </table>
                     {
@@ -297,7 +381,7 @@ class ShopPageCart extends Component {
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Subtotal </div>
                                     <div className="col-2" ><Currency value={this.state.subtotal}></Currency></div>
                                 </div>
-                                <div className="row">
+                                {/* <div className="row">
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Shipping </div>
                                     <div className="col-2" ><Currency value={this.state.shipping}></Currency></div>
                                 </div>
@@ -308,10 +392,10 @@ class ShopPageCart extends Component {
                                 <div className="row">
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Total </div>
                                     <div className="col-2" ><Currency value={this.state.total}></Currency></div>
-                                </div>
+                                </div> */}
                                 <div className="mt-5">
                                     <Link className="btn btn-primary" variant="outlined" color="primary"
-                                        onClick={() => this.CheckOutOnClick(this.state.cart)}
+                                        onClick={() => this.CheckOutOnClick(this.state.selectedProductDetailList)}
                                     > Checkout
                                     </Link>
                                 </div>
@@ -326,32 +410,49 @@ class ShopPageCart extends Component {
     }
 
     render() {
-
-        // const { productcart } = this.props;
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },
         ];
         let content;
-        if (this.state.cart.length) {
-            content = this.renderCart();
-        } else {
-            content = (
-                <div className="block block-empty" >
-                    {
-                        this.props.history !== undefined ?
-                            <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <br></br>
-                    }
-                    <div className="container">
-                        <div className="block-empty__body">
-                            <div className="block-empty__message">Your shopping cart is empty!</div>
-                            <div className="block-empty__actions">
-                                <Link to="/" className="btn btn-primary btn-sm">Continue</Link>
-                            </div>
+        let continueshopping = (
+            <div className="block block-empty" >
+                {
+                    this.props.history !== undefined ?
+                        <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <br></br>
+                }
+                <div className="container">
+                    <div className="block-empty__body">
+                        <div className="block-empty__message">Your shopping cart is empty!</div>
+                        <div className="block-empty__actions">
+                            <Link to="/" className="btn btn-primary btn-sm">Continue</Link>
                         </div>
                     </div>
                 </div>
-            );
+            </div>
+        );
+        if (this.state.cart.length) {
+            if (this.state.isDataAccepted === true) {
+                return (
+                    <>
+                        <PageCheckout
+                            data={this.state.selectedProductDetailList}
+                        />
+                    </>
+                )
+            }
+            else {
+                // if (this.props.productcart[0].ReturnVal !== "0" && this.props.productcart[0].ReturnVal === undefined) {
+                if (this.props.productcart.length !== 0) {
+                    content = this.renderCart();
+                }
+
+                else {
+                    content = continueshopping;
+                }
+            }
+        } else {
+            content = continueshopping;
         }
 
         return (

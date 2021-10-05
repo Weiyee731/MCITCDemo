@@ -31,6 +31,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+
 
 import {
   formatCVC,
@@ -66,25 +69,16 @@ class PagePayment extends Component {
   }
 
   setDetails(productcart) {
-    productcart.map((x) => {
-      this.state.cart.push(
-        {
-          id: x.UserCartID,
-          product: x,
-          options: [],
-          price: x.ProductSellingPrice,
-          total: x.ProductQuantity * x.ProductSellingPrice,
-          quantity: x.ProductQuantity
-        }
-      )
+    this.setState({
+      cart: productcart
     })
-    this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
-    this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+    this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
+    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
   }
 
   componentDidMount() {
-    if (this.props.productcart !== undefined) {
-      this.setDetails(this.props.productcart)
+    if (this.props.data !== undefined && this.props.data.length > 0) {
+      this.setDetails(this.props.data)
     }
   }
 
@@ -104,29 +98,6 @@ class PagePayment extends Component {
     this.setState({ paymentMethods: value })
     this.props.handleGetPaymentId(this.state.tabvalue, value)
   };
-
-  // CheckOutOnClick = (items) => {
-  //   let ProductIDs = [];
-  //   let ProductQuantity = [];
-  //   items.map((row) => {
-  //     ProductIDs.push(row.product.ProductID);
-  //     ProductQuantity.push(row.quantity);
-  //   });
-  //   // alert("ww");
-  //   shopApi
-  //     .addOrder({
-  //       UserID: localStorage.getItem("id"),
-  //       Products: ProductIDs,
-  //       ProductQuantity: ProductQuantity,
-  //     })
-  //     .then((json) => {
-  //       // localStorage.setItem("checkoutind", true);
-  //       // setadd(true);
-  //       // setOrderid(json[0].OrderID);
-  //       browserHistory.push("/Emporia/shop/checkout?order=" + json[0].OrderID);
-  //       window.location.reload(false);
-  //     });
-  // };
 
   renderTotals() {
     return (
@@ -195,11 +166,11 @@ class PagePayment extends Component {
     });
 
     const handleChangeIndex = (index) => {
-      this.setState({ tabvalue: index,  cvcVisible: false, paymentMethods: "" , cvc : "" });
+      this.setState({ tabvalue: index, cvcVisible: false, paymentMethods: "", cvc: "" });
     };
 
     const handleChange = (event, newValue) => {
-      this.setState({ tabvalue: newValue, cvcVisible: false, paymentMethods: "" , cvc : ""});
+      this.setState({ tabvalue: newValue, cvcVisible: false, paymentMethods: "", cvc: "" });
     };
 
     const cardStyle = {
@@ -245,7 +216,6 @@ class PagePayment extends Component {
                   <br />
                   <br />
 
-
                   <div>
                     <Grid
                       container
@@ -255,35 +225,22 @@ class PagePayment extends Component {
                       }}
                     >
                       {
+                        // this.props.creditcard.length > 0 && this.props.creditcard[0].ReturnVal !== "0" && this.props.creditcard[0].ReturnVal === undefined ?
                         this.props.creditcard.length > 0 ?
                           this.props.creditcard.map((cards) => {
-
-                            console.log("cards", cards)
                             return (
                               <Grid item style={{ margin: "2vw", marginTop: "1vw", marginBottom: "1vw", }} >
                                 <div>
-                                  <Tooltip
-                                    title="Edit"
-                                    style={{ right: "-230px" }}
-                                  >
-                                    <IconButton aria-label="Edit">
-                                      <EditIcon
-                                        fontSize="small"
-                                        onClick={() =>
-                                          this.setState({ cvcVisible: true, paymentMethods: cards.UserPaymentMethodID, cvc: "" })
-                                        }
-                                      />
-                                    </IconButton>
-                                  </Tooltip>
-                                  <Cards
-                                    expiry={cards.UserCardExpireDate}
-                                    name={cards.UserCardName}
-                                    number={cards.UserCardNo}
-                                    preview={true}
-                                  />
                                   {
                                     this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethods ?
                                       <>
+                                        <Tooltip title="Edit" style={{ right: "-230px" }}  >
+                                          <IconButton aria-label="Edit">
+                                            <RadioButtonCheckedIcon
+                                              fontSize="small"
+                                              onClick={() => this.setState({ cvcVisible: false, paymentMethods: cards.UserPaymentMethodID, cvc: "" })} />
+                                          </IconButton>
+                                        </Tooltip>
                                         <Cards
                                           cvc={this.state.cvc}
                                           expiry={cards.UserCardExpireDate}
@@ -291,7 +248,6 @@ class PagePayment extends Component {
                                           name={cards.UserCardName}
                                           number={cards.UserCardNo}
                                           preview={true}
-
                                         />
                                         <br />
                                         <div>
@@ -308,7 +264,22 @@ class PagePayment extends Component {
                                           />
                                         </div>
                                       </>
-                                      : ""
+                                      :
+                                      <>
+                                        <Tooltip title="Edit" style={{ right: "-230px" }}   >
+                                          <IconButton aria-label="Edit">
+                                            <RadioButtonUncheckedIcon
+                                              fontSize="small"
+                                              onClick={() => this.setState({ cvcVisible: true, paymentMethods: cards.UserPaymentMethodID, cvc: "" })} />
+                                          </IconButton>
+                                        </Tooltip>
+                                        <Cards
+                                          expiry={cards.UserCardExpireDate}
+                                          name={cards.UserCardName}
+                                          number={cards.UserCardNo}
+                                          preview={true}
+                                        />
+                                      </>
                                   }
 
                                 </div>
@@ -377,7 +348,7 @@ class PagePayment extends Component {
               </Card>
             </div>
             <div style={Object.assign({})}>
-            <Card style={cardStyle}>
+              <Card style={cardStyle}>
                 <CardContent>
                   {/* <img width="100" src="images/payment/paypal.png"></img> */}
                   <h4>PayPal</h4>
@@ -389,45 +360,23 @@ class PagePayment extends Component {
                 </CardContent>
               </Card>
             </div>
-            {/* <div style={Object.assign({})}>
-              <PageCheckoutQr qrcode={this.props.qrcode} />
-              <div style={{ textAlign: "center" }}>
-                {console.log(this.props.qrcode)}
-                <QRCode
-                  style={{
-                    margin: "auto",
-                    width: "80%",
-                    maxWidth: "600px",
-                    maxHeight: "600px",
-                    height: "80%",
-                    padding: "10px",
-                    textAlign: "center",
-                  }}
-                  id="123456"
-                  value={this.props.qrcode.order}
-                  size={290}
-                  level={"H"}
-                  includeMargin={true}
-                />
-              </div>
-            </div> */}
           </SwipeableViews>
         </div>
       </div>
-      // </div>
     );
   }
 
   render() {
 
-    if (this.props.productcart.length < 1) {
+    console.log("this.props.data. in page payment", this.props.data)
+    if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
 
     const breadcrumb = [
       { title: "Home", url: "" },
-      { title: "Shopping Cart", url: "/shop/cart" },
-      { title: "Checkout", url: "/shop/checkout" },
+      // { title: "Shopping Cart", url: "/shop/cart" },
+      // { title: "Checkout", url: "/shop/checkout" },
       { title: "OnlinePayment", url: "" },
     ];
 
@@ -450,7 +399,6 @@ class PagePayment extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  productcart: state.counterReducer.productcart,
   creditcard: state.counterReducer["creditcards"],
 });
 

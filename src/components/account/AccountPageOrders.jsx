@@ -14,6 +14,26 @@ import theme from "../../data/theme";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 
+
+//Tab
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
+import AppBar from '@mui/material/AppBar';
+import SwipeableViews from 'react-swipeable-views';
+import TextField from '@mui/material/TextField';
+
+
+//DatePicker
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+
+import DateFnsUtils from "@date-io/date-fns";
+
 function mapStateToProps(state) {
   return {
     allmerchantorders: state.counterReducer["merchantOrders"],
@@ -38,27 +58,119 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallAllCreditCard(prodData)),
   };
 }
+
+//Tab Function
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `full-width-tab-${index}`,
+    'aria-controls': `full-width-tabpanel-${index}`,
+  };
+}
+
+
 class AccountPageOrders extends Component {
   constructor(props) {
     super(props);
     this.props.CallGetTransactionStatus();
     this.props.CallGetMerchantsOrders({
       trackingStatus: 2,
-      // trackingStatus: this.props.alltransactionstatus.map(
-      //   (status) => status.TrackingStatusID
-      // ),
       UserID: window.localStorage.getItem("id")
     });
     this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
 
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.state = {
-      //   orders: dataOrders,
       page: 1,
       rowsPerPage: 10,
       shipping: 25,
-      tax: 0
+      tax: 0,
+      value: 0,
+      TrackingStatus: '-',
+      selectedDate: null,
     };
+    this.handleChangeTab = this.handleChangeTab.bind(this);
+    this.handleChangeTabIndex = this.handleChangeTabIndex.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
+  }
+
+  //Change Tab
+  handleChangeTab = (event, value) => {
+    switch (value) {
+      case 0:
+        this.setState({
+          value: value,
+          TrackingStatus: "-",
+        })
+        this.handlePageChange(1)
+        break;
+
+      case 1:
+        this.setState({
+          value: value,
+          TrackingStatus: "In Cart",
+        })
+        this.handlePageChange(1)
+        break;
+      case 2:
+        this.setState({
+          value: value,
+          TrackingStatus: "In Purchasing",
+        })
+        this.handlePageChange(1)
+        break;
+      case 3:
+        this.setState({
+          value: value,
+          TrackingStatus: "In Shipping",
+        })
+        this.handlePageChange(1)
+        break;
+
+      default:
+        this.setState({
+          value: value,
+          TrackingStatus: "-",
+        })
+        this.handlePageChange(1)
+        break;
+    }
+  };
+
+
+  handleChangeTabIndex = (index) => {
+    this.setState({ value: index })
+  };
+
+  // Date
+  handleDateChange = (selectedDate) => {
+    this.setState({ selectedDate: new Date() })
   }
 
   handlePageChange = (page) => {
@@ -66,10 +178,11 @@ class AccountPageOrders extends Component {
   };
 
   render() {
+
+    console.log("this.props.allmerchantorders", this.props.allmerchantorders)
     const { page } = this.state;
     let ordersList;
-
-    if (this.props.allmerchantorders.length > 0) {
+    if (this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined) {
       ordersList = this.props.allmerchantorders
         .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
         .map((order) => {
@@ -115,23 +228,48 @@ class AccountPageOrders extends Component {
           }
 
           return (
-            <tr key={order.OrderID}>
-              <td>
-                <Link
-                  to={{
-                    pathname: "/account/orders/" + order.OrderID,
-                    orderdetails: order,
-                    orderprice: totalPrice,
-                    address: this.props.addresses,
-                    creditcards: this.props.creditcard,
-                  }}
-                >{`#${order.OrderID}`}</Link>
-              </td>
+            <>
+            {console.log("this.state.TrackingStatus", this.state.TrackingStatus)}
+              {this.state.TrackingStatus !== "-" ?
+                order.TrackingStatus === this.state.TrackingStatus ?
+                  <tr key={order.OrderID}>
+                    <td>
+                      <Link
+                        to={{
+                          pathname: "/account/orders/" + order.OrderID,
+                          orderdetails: order,
+                          orderprice: totalPrice,
+                          address: this.props.addresses,
+                          creditcards: this.props.creditcard,
+                        }}
+                      >{`#${order.OrderID}`}</Link>
+                    </td>
 
-              <td>{order.CreatedDate}</td>
-              <td>{order.TrackingStatus}</td>
-              <td>{totalQuantity + " items ," + " RM " + totalOverall}</td>
-            </tr>
+                    <td>{order.CreatedDate}</td>
+                    <td>{order.TrackingStatus}</td>
+                    <td>{totalQuantity + " items ," + " RM " + totalOverall}</td>
+                  </tr>
+                  : null
+                :
+                <tr key={order.OrderID}>
+                  <td>
+                    <Link
+                      to={{
+                        pathname: "/account/orders/" + order.OrderID,
+                        orderdetails: order,
+                        orderprice: totalPrice,
+                        address: this.props.addresses,
+                        creditcards: this.props.creditcard,
+                      }}
+                    >{`#${order.OrderID}`}</Link>
+                  </td>
+
+                  <td>{order.CreatedDate}</td>
+                  <td>{order.TrackingStatus}</td>
+                  <td>{totalQuantity + " items ," + " RM " + totalOverall}</td>
+                </tr>
+              }
+            </>
           );
         });
     }
@@ -144,44 +282,237 @@ class AccountPageOrders extends Component {
         <div className="card-header">
           <h5>Order History</h5>
         </div>
-        <div className="card-divider" />
-        <div className="card-table">
-          <div className="table-responsive-sm">
-            <table>
-              <thead>
-                <tr>
-                  <th>Order</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>{ordersList.length > 0  ? ordersList : ""}</tbody>
-            </table>
-          </div>
+
+        <div style={{ marginLeft: '7.5%', marginBottom: '2%', display: 'flex', flexDirection: 'row' }}>
+          <TextField
+            id="standard-helperText"
+            label="Tracking Number"
+            defaultValue="Default Value"
+            helperText="Tracking Order"
+            variant="standard"
+          />
+
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <div style={{ width: "50%", marginBottom: '2%', marginLeft: '5%' }}>
+              <KeyboardDatePicker
+                disableToolbar
+                helperText="Filter Order"
+                variant="inline"
+                format="dd/MM/yyyy"
+                id="date-picker-inline"
+                label="Select Date"
+                value={this.state.selectedDate}
+                onChange={this.handleDateChange.bind(this, "selectedDate")}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                style={{ width: "50%" }}
+              />
+            </div>
+
+          </MuiPickersUtilsProvider>
         </div>
-        <div className="card-divider" />
-        <div className="card-footer">
+        <div style={{ margin: 'auto' }}>
+          <Box sx={{ bgcolor: 'background.paper', width: 700 }}>
+            <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
+              <Tabs
+                value={this.state.value}
+                onChange={this.handleChangeTab}
+                indicatorColor="secondary"
+                textColor="inherit"
+                variant="fullWidth"
+                aria-label="full width tabs example"
+              >
+                <Tab label="All" {...a11yProps(0)} />
+                <Tab label="In Cart" {...a11yProps(1)} />
+                <Tab label="In Purchasing" {...a11yProps(2)} />
+                <Tab label="In Shipping" {...a11yProps(3)} />
+              </Tabs>
+            </AppBar>
+            <SwipeableViews
+              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+              index={this.state.value}
+              onChangeIndex={this.handleChangeTabIndex}
+            >
+              {/* ---------------------------------------------------- All ----------------------------------------------------- */}
+              <TabPanel value={this.state.value} index={0} dir={theme.direction}>
+                <div className="card-divider" />
+                <div className="card-table">
+                  <div className="table-responsive-sm">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Order</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>{ordersList !== undefined && ordersList.length > 0 ? ordersList : ""}</tbody>
+                    </table>
 
-          {
-            ordersList.length > 0 ?
-              <Pagination
-                current={page}
-                total={
-                  this.props.allmerchantorders != null
-                    ? Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
-                    : 1
-                }
-                onPageChange={this.handlePageChange}
-              /> :
-              <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                <div style={{ marginBottom: "20px" }}>
-                  Seem like you haven purchase anything yet
+                  </div>
                 </div>
-                <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
-              </div>
-          }
+                <div className="card-divider" />
+                <div className="card-footer">
+                  {
+                    ordersList !== undefined && ordersList.length > 0 ?
+                      <Pagination
+                        current={page}
+                        total={
+                          ordersList != null
+                            ? Math.ceil(ordersList.length / this.state.rowsPerPage)
+                            : 1
+                        }
+                        onPageChange={this.handlePageChange}
+                      /> :
+                      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                        <div style={{ marginBottom: "20px" }}>
+                          Seem like you haven purchase anything yet
+                        </div>
+                        <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                      </div>
+                  }
 
+                </div>
+              </TabPanel>
+              {/* ---------------------------------------------------- In Cart ----------------------------------------------------- */}
+              <TabPanel value={this.state.value} index={1} dir={theme.direction}>
+                <div className="card-divider" />
+                <div className="card-table">
+                  <div className="table-responsive-sm">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Order</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>{ordersList !== undefined && ordersList.length > 0 ? ordersList : ""}</tbody>
+
+                    </table>
+
+                  </div>
+                </div>
+                <div className="card-divider" />
+                <div className="card-footer">
+
+                  {
+                    ordersList !== undefined && ordersList.length > 0 ?
+                      <Pagination
+                        current={page}
+                        total={
+                          ordersList.length != null
+                            ? Math.ceil(ordersList.length / this.state.rowsPerPage)
+                            : 1
+                        }
+
+                        onPageChange={this.handlePageChange}
+                      /> :
+                      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                        <div style={{ marginBottom: "20px" }}>
+                          Seem like you haven purchase anything yet
+                        </div>
+                        <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                      </div>
+                  }
+                </div>
+              </TabPanel>
+
+              {/* ----------------------------------------- In Purchasing ----------------------------------------------------------- */}
+              <TabPanel value={this.state.value} index={2} dir={theme.direction}>
+                <div className="card-divider" />
+                <div className="card-table">
+                  <div className="table-responsive-sm">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Order</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>{ordersList !== undefined && ordersList.length > 0 ? ordersList : ""}</tbody>
+                    </table>
+
+                  </div>
+                </div>
+                <div className="card-divider" />
+                <div className="card-footer">
+
+                  {
+                    ordersList !== undefined && ordersList.length > 0 ?
+                      <Pagination
+                        current={page}
+                        total={
+                          this.props.allmerchantorders != null
+                            ? Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
+                            : 1
+                        }
+                        onPageChange={this.handlePageChange}
+                      /> :
+                      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                        <div style={{ marginBottom: "20px" }}>
+                          Seem like you haven purchase anything yet
+                        </div>
+                        <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                      </div>
+                  }
+
+                </div>
+              </TabPanel>
+
+              {/* -------------------------------------------- In Shipping -------------------------------------------------------- */}
+              <TabPanel value={this.state.value} index={3} dir={theme.direction}>
+                <div className="card-divider" />
+                <div className="card-table">
+                  <div className="table-responsive-sm">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Order</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>{ordersList !== undefined && ordersList.length > 0 ? ordersList : ""}</tbody>
+
+                    </table>
+
+                  </div>
+                </div>
+                <div className="card-divider" />
+                <div className="card-footer">
+                  {
+                    ordersList !== undefined && ordersList.length > 0 ?
+                      <Pagination
+                        current={page}
+                        total={
+                          this.props.allmerchantorders != null
+                            ? Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
+                            : 1
+                        }
+                        onPageChange={this.handlePageChange}
+                      /> :
+                      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                        <div style={{ marginBottom: "20px" }}>
+                          Seem like you haven purchase anything yet
+                        </div>
+                        <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                      </div>
+                  }
+
+                </div>
+              </TabPanel>
+
+            </SwipeableViews>
+          </Box>
         </div>
       </div>
     )

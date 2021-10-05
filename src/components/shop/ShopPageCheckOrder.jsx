@@ -49,25 +49,16 @@ class PageCheckOrder extends Component {
   };
 
   setDetails(productcart) {
-    productcart.map((x) => {
-      this.state.cart.push(
-        {
-          id: x.UserCartID,
-          product: x,
-          options: [],
-          price: x.ProductSellingPrice,
-          total: x.ProductQuantity * x.ProductSellingPrice,
-          quantity: x.ProductQuantity
-        }
-      )
+    this.setState({
+      cart: productcart
     })
-    this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
-    this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+    this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
+    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
   }
 
   componentDidMount() {
-    if (this.props.productcart !== undefined) {
-      this.setDetails(this.props.productcart)
+    if (this.props.data !== undefined && this.props.data.length > 0) {
+      this.setDetails(this.props.data)
     }
   }
 
@@ -107,7 +98,6 @@ class PageCheckOrder extends Component {
 
   handleClick = (e, data) => {
     this.setState({ defaultAddress: data });
-    console.log("data", data)
     this.props.handleGetAddressId(data.UserAddressBookID)
   };
 
@@ -136,7 +126,7 @@ class PageCheckOrder extends Component {
       UserCity: 'Self Collect'
     }
 
-    const addresses = this.props.addresses.map((address) => (
+    const addresses = this.props.addresses.length > 0 && this.props.addresses.map((address) => (
 
       <React.Fragment key={address.UserAddressBookID}>
         <div className="addresses-list__item card address-card">
@@ -317,7 +307,7 @@ class PageCheckOrder extends Component {
 
   render() {
 
-    if (this.props.productcart.length < 1) {
+    if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
 
@@ -351,7 +341,7 @@ class PageCheckOrder extends Component {
 
 const mapStateToProps = (state) => ({
   addresses: state.counterReducer["addresses"],
-  productcart: state.counterReducer.productcart
+  // productcart: state.counterReducer.productcart
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -39,25 +39,16 @@ class PageCompleted extends Component {
   }
 
   setDetails(productcart) {
-    productcart.map((x) => {
-      this.state.cart.push(
-        {
-          id: x.UserCartID,
-          product: x,
-          options: [],
-          price: x.ProductSellingPrice,
-          total: x.ProductQuantity * x.ProductSellingPrice,
-          quantity: x.ProductQuantity
-        }
-      )
+    this.setState({
+      cart: productcart
     })
-    this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
-    this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+    this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
+    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
   }
 
   componentDidMount() {
-    if (this.props.productcart !== undefined) {
-      this.setDetails(this.props.productcart)
+    if (this.props.data !== undefined && this.props.data.length > 0) {
+      this.setDetails(this.props.data)
     }
   }
 
@@ -143,7 +134,7 @@ class PageCompleted extends Component {
 
   render() {
 
-    if (this.props.productcart.length < 1) {
+    if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
 
@@ -161,7 +152,6 @@ class PageCompleted extends Component {
             <div className="card mb-0">
               <div className="card-body">
                 <h3 className="card-title">Emporia</h3>
-                {console.log("address", this.props)}
                 {
                   this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.address !== 0 ?
                     this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
@@ -178,6 +168,13 @@ class PageCompleted extends Component {
                       User Self Pick Up
                     </h5>
                 }
+                {
+                  this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.PaymentMethodID !== 0 ?
+                    <h5 >  Payment Method:{this.props.addresss.state.PaymentID}  </h5> :
+                    this.props.addresss.state.PaymentID !== 0 ?
+                      <h5 > Payment Method: Credit Card  </h5> :
+                      <h5 > Payment Method: No Payment Method Selected  </h5>
+                }
                 {this.renderCart()}
               </div>
             </div>
@@ -189,7 +186,6 @@ class PageCompleted extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  productcart: state.counterReducer.productcart,
   addresses: state.counterReducer["addresses"],
 });
 

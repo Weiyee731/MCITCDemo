@@ -358,8 +358,6 @@ class AccountPageProfile extends Component {
             </div>
           </div>
           <Divider variant="fullWidth" className="dividerbottom" />
-
-          {console.log("userprofiledata", this.props.userprofiledata)}
           {/* profile image */}
           <div onClick={() => this.modalOpen()} className="imagecontainer">
             <CardMedia
