@@ -192,9 +192,6 @@ export class GitAction {
   static GetProductsByCategoryIDEmpty = "GET-PRODUCT-BY-CATEGORY-ID-EMPTY";
   static GotProductsByCategoryIDEmpty = "GOT-PRODUCT-BY-CATEGORY-ID-EMPTY";
 
-  static GetProductsByCategorySlug = "GET-PRODUCT-BY-CATEGORY-SLUG";
-  static GotProductsByCategorySlug = "GOT-PRODUCT-BY-CATEGORY-SLUG";
-
   static CallAllProducts() {
     return {
       type: GitAction.GetProduct,
@@ -282,15 +279,6 @@ export class GitAction {
       payload: prodData,
     };
   }
-
-
-  static CallGetProductByProductCategorySlug(prodData) {
-    return {
-      type: GitAction.GetProductsByCategorySlug,
-      payload: prodData,
-    };
-  }
-
 
   // Product Variation
   static GetProductVariation = "GET-PRODUCTVARIATION";
