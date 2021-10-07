@@ -97,10 +97,13 @@ class AccountPageProfile extends Component {
       url: "",
       imageFile: null,
       imageName: null,
-      validfirstName: null,
-      validlastName: null,
-      validDOB: null,
-      validGender: null,
+      
+      validfirstName: false,
+      validlastName: false,
+      validDOB: false,
+      validGender: false,
+      validContact: false,
+      validEmail: false,
     };
   }
   /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
@@ -127,6 +130,13 @@ class AccountPageProfile extends Component {
         USERLANGCODE: userDetails.UserLanguageCode !== null ? userDetails.UserLanguageCode : "en",
         USERAPPDARKMODE: userDetails.AppDarkMode !== null ? userDetails.AppDarkMode : "1",
         CountryName: "-",
+
+        validfirstName: userDetails.FirstName !== null ? true : false,
+        validlastName: userDetails.LastName !== null ? true : false,
+        validDOB: userDetails.UserDOB !== null ? true : false,
+        validGender: userDetails.UserGender !== null ? true : false,
+        validContact: userDetails.UserContactNo !== null ? true : false,
+        validEmail: userDetails.UserEmailAddress !== null ? true : false,
       })
     }
   }
@@ -196,6 +206,9 @@ class AccountPageProfile extends Component {
       });
     } else {
       console.log(" first name null");
+      this.setState({
+        validfirstName: false,
+      });
     }
   };
 
@@ -209,6 +222,9 @@ class AccountPageProfile extends Component {
       });
     } else {
       console.log(" last name null");
+      this.setState({
+        validlastName: false,
+      });
     }
   };
 
@@ -222,22 +238,75 @@ class AccountPageProfile extends Component {
       });
     } else {
       console.log(" gender null");
+      this.setState({
+        validGender: false,
+      });
+    }
+  };
+
+  // handleChangeforDOB = (e) => {
+  //   const { value } = e.target;
+  //   console.log("moment(date).format('YYYYMMDD')", moment(value).format("YYYYMMDD"))
+
+  //   if (value !== null) {
+  //     this.setState({
+  //       USERDATEBIRTH: value,
+  //       validDOB: true,
+  //     });
+  //   } else {
+  //     console.log(" dob null");
+  //   }
+  // };
+
+  handleChangeforContact = (e) => {
+    const { value } = e.target;
+
+    if (value !== null && !isNaN(value) && value.length > 0) {
+      this.setState({
+        USERCONTACTNO: value,
+        validContact: true,
+      });
+    } else {
+      console.log(" contact null");
+      this.setState({
+        validContact: false,
+      });
+    }
+  };
+
+  handleChangeforEmail = (e) => {
+    const { value } = e.target;
+
+    if (value !== null && value.includes('@') && value.length > 0) {
+      this.setState({
+        USEREMAIL: value,
+        validEmail: true,
+      });
+    } else {
+      console.log(" email null");
+      this.setState({
+        validEmail: false,
+      });
     }
   };
 
   handleChangeforDOB = (e) => {
     const { value } = e.target;
-    console.log("moment(date).format('YYYYMMDD')", moment(value).format("YYYYMMDD"))
 
     if (value !== null) {
       this.setState({
-        USERDATEBIRTH: value,
+        USERDATEBIRTH: moment(value).format("YYYYMMDD"),
         validDOB: true,
       });
+
     } else {
-      console.log(" dob null");
+      console.log("dob null");
+      this.setState({
+        validDOB: false,
+      });
     }
   };
+
 
   // handleChangeforEmail =(e) => {
   //   const { value } = e.target;
@@ -324,7 +393,7 @@ class AccountPageProfile extends Component {
       <Card>
         <CardContent>
           <div className="row" style={{ margin: "10px" }}>
-            <div className="col-9 col-lg-9 col-xl-9">
+            <div className="col-6">
               <h5
                 style={{
                   textAlign: "left",
@@ -343,11 +412,7 @@ class AccountPageProfile extends Component {
                 Manage your personal information
               </Typography>
             </div>
-            <div
-              style={{
-                textAlign: "right",
-              }}
-            >
+            <div className="col-6" style={{ textAlign: "right" }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -431,7 +496,7 @@ class AccountPageProfile extends Component {
                         size="small"
                         id="userdob"
                         type="date"
-                        defaultValue={row.UserDOB}
+                        value={moment(this.state.USERDATEBIRTH).format('YYYY-MM-DD')}
                         onChange={this.handleChangeforDOB.bind(this)}
                         style={{ marginRight: "5px", width: "100%" }}
                       />
@@ -477,16 +542,46 @@ class AccountPageProfile extends Component {
                   <TableRow>
                     <TableCell className="rowStyle">Contact Number</TableCell>
                     <TableCell>
-                      {/* {row.UserContactNo !== null ? censorContact(row.UserContactNo) : "-"} */}
-                      {row.UserContactNo !== null ? row.UserContactNo : "-"}
-                      <Button style={{ float: "right" }}>Change Contact</Button>
+                      {
+                        this.state.editContact === false ?
+                          <>
+                            {row.UserContactNo !== null ? censorContact(row.UserContactNo) : "-"}
+                            <Button onClick={() => this.setState({ editContact: true })} style={{ float: "right" }}>Change Contact</Button>
+                          </>
+                          :
+                          <input
+                            variant="outlined"
+                            size="small"
+                            id="usercontact"
+                            type="text"
+                            pattern="[\d| ]{16,22}"
+                            defaultValue={row.UserContactNo}
+                            onChange={this.handleChangeforContact.bind(this)}
+                            style={{ marginRight: "5px", width: "100%" }}
+                          />
+                      }
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="rowStyle">Email Address</TableCell>
                     <TableCell>
-                      {row.UserEmailAddress !== null ? censorEmail(row.UserEmailAddress) : "-"}
-                      <Button style={{ float: "right" }}>Change Email</Button>
+                      {
+                        this.state.editEmail === false ?
+                          <>
+                            {row.UserEmailAddress !== null ? censorEmail(row.UserEmailAddress) : "-"}
+                            <Button onClick={() => this.setState({ editEmail: true })} style={{ float: "right" }}>Change Email</Button>
+                          </>
+                          :
+                          <input
+                            variant="outlined"
+                            size="small"
+                            id="useremail"
+                            type="text"
+                            defaultValue={row.UserEmailAddress}
+                            onChange={this.handleChangeforEmail.bind(this)}
+                            style={{ marginRight: "5px", width: "100%" }}
+                          />
+                      }
                     </TableCell>
                   </TableRow>
                 </TableBody>
