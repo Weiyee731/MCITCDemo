@@ -157,87 +157,88 @@ class AccountPageCreditCard extends Component {
               />
             ) : (
               <div>
-                {this.props.creditcard.length == 0 ? (
-                  <div>
-                    Seems like you doesnt have credit card saved in this system.
-                    Click on + button to add more.
-                  </div>
-                ) : (
-                  <div>
-                    <Grid
-                      container
-                      style={{
-                        margin: "auto",
-                        justifyContent: "Space-between",
-                      }}
-                    >
-                      {this.props.creditcard.map((cards) => (
-                        <div>
-                          <Grid
-                            item
-                            style={{
-                              margin: "2vw",
-                              marginTop: "1vw",
-                              marginBottom: "1vw",
-                            }}
-                          >
-                            {this.state.onUpdate &&
-                            this.state.IdClicked ===
-                              cards.UserPaymentMethodID ? (
-                              <AccountPageEditCreditCard
-                                parentCallback={this.handleCallbackfromEdit}
-                                UserPaymentMethodID={cards.UserPaymentMethodID}
-                              />
-                            ) : (
-                              <div>
-                                <Tooltip
-                                  title="Edit"
-                                  style={{ right: "-210px" }}
-                                >
-                                  <IconButton aria-label="Edit">
-                                    <EditIcon
-                                      fontSize="small"
-                                      onClick={() =>
-                                        this.onUpdateClick(
-                                          cards.UserPaymentMethodID
-                                        )
-                                      }
-                                    />
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip
-                                  title="Delete"
-                                  style={{ right: "-200px" }}
-                                >
-                                  <IconButton aria-label="Delete">
-                                    <DeleteIcon
-                                      fontSize="small"
-                                      onClick={() =>
-                                        this.onDeleteClick(
-                                          cards.UserPaymentMethodID
-                                        )
-                                      }
-                                    />
-                                  </IconButton>
-                                </Tooltip>
-
-                                <Cards
-                                  cvc=""
-                                  expiry={cards.UserCardExpireDate}
-                                  focused={this.state.focus}
-                                  name={cards.UserCardName}
-                                  number={cards.UserCardNo}
-                                  preview ={true}
+                {this.props.creditcard.length > 0 && this.props.creditcard[0].ReturnVal !== "0" && this.props.creditcard[0].ReturnVal === undefined ?
+                  (
+                    <div>
+                      <Grid
+                        container
+                        style={{
+                          margin: "auto",
+                          justifyContent: "Space-between",
+                        }}
+                      >
+                        {this.props.creditcard.map((cards) => (
+                          <div>
+                            <Grid
+                              item
+                              style={{
+                                margin: "2vw",
+                                marginTop: "1vw",
+                                marginBottom: "1vw",
+                              }}
+                            >
+                              {this.state.onUpdate &&
+                                this.state.IdClicked ===
+                                cards.UserPaymentMethodID ? (
+                                <AccountPageEditCreditCard
+                                  parentCallback={this.handleCallbackfromEdit}
+                                  UserPaymentMethodID={cards.UserPaymentMethodID}
                                 />
-                                <Divider variant="middle" />
-                              </div>
-                            )}
-                          </Grid>
-                        </div>
-                      ))}
-                    </Grid>
-                  </div>
-                )}
+                              ) : (
+                                <div>
+                                  <Tooltip
+                                    title="Edit"
+                                    style={{ right: "-210px" }}
+                                  >
+                                    <IconButton aria-label="Edit">
+                                      <EditIcon
+                                        fontSize="small"
+                                        onClick={() =>
+                                          this.onUpdateClick(
+                                            cards.UserPaymentMethodID
+                                          )
+                                        }
+                                      />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Tooltip
+                                    title="Delete"
+                                    style={{ right: "-200px" }}
+                                  >
+                                    <IconButton aria-label="Delete">
+                                      <DeleteIcon
+                                        fontSize="small"
+                                        onClick={() =>
+                                          this.onDeleteClick(
+                                            cards.UserPaymentMethodID
+                                          )
+                                        }
+                                      />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Cards
+                                    cvc=""
+                                    expiry={cards.UserCardExpireDate}
+                                    focused={this.state.focus}
+                                    name={cards.UserCardName}
+                                    number={cards.UserCardNo}
+                                    preview={true}
+                                  />
+                                  <Divider variant="middle" />
+                                </div>
+                              )}
+                            </Grid>
+                          </div>
+                        ))}
+                      </Grid>
+                    </div>
+                  ) : (
+                    <div>
+                       {console.log("NO")}
+                      Seems like you doesnt have credit card saved in this system.
+                      Click on + button to add more.
+                    </div>
+                  )}
               </div>
             )}
           </CardContent>

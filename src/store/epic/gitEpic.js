@@ -183,6 +183,40 @@ export class GitEpic {
 
   updateUserProfile = (action$) =>
     action$.ofType(GitAction.EditUserProfile).switchMap(({ payload }) => {
+
+      console.log(url +
+        "User_EditProfile?USERID=" +
+        payload.USERID +
+        "&USERFIRSTNAME=" +
+        payload.USERFIRSTNAME +
+        "&USERLASTNAME=" +
+        payload.USERLASTNAME +
+        "&USERCONTACTNO=" +
+        payload.USERCONTACTNO +
+        "&USERDATEBIRTH=" +
+        payload.USERDATEBIRTH +
+        "&USEREMAIL=" +
+        payload.USEREMAIL +
+        "&USERGENDER=" +
+        payload.USERGENDER +
+        "&USERADDRESSLINE1=" +
+        payload.USERADDRESSLINE1 +
+        "&USERADDRESSLINE2=" +
+        payload.USERADDRESSLINE2 +
+        "&USERPOSCODE=" +
+        payload.USERPOSCODE +
+        "&USERCITY=" +
+        payload.USERCITY +
+        "&USERSTATE=" +
+        payload.USERSTATE +
+        "&USERCOUNTRYID=" +
+        payload.USERCOUNTRYID +
+        "&USERNOTIFICATIONIND=" +
+        payload.USERNOTIFICATIONIND +
+        "&USERLANGCODE=" +
+        payload.USERLANGCODE +
+        "&USERAPPDARKMODE=" +
+        payload.USERAPPDARKMODE)
       return fetch(url +
         "User_EditProfile?USERID=" +
         payload.USERID +
@@ -192,7 +226,7 @@ export class GitEpic {
         payload.USERLASTNAME +
         "&USERCONTACTNO=" +
         payload.USERCONTACTNO +
-        "&USERDOB=" +
+        "&USERDATEBIRTH=" +
         payload.USERDATEBIRTH +
         "&USEREMAIL=" +
         payload.USEREMAIL +
@@ -318,6 +352,19 @@ export class GitEpic {
 
   addCreditCard = (action$) =>
     action$.ofType(GitAction.AddCreditCard).switchMap(({ payload }) => {
+
+      console.log(url +
+        "User_AddPaymentMethod?USERID=" +
+        payload.USERID +
+        "&USERCARDNAME=" +
+        payload.name +
+        "&USERCARDNO=" +
+        payload.number +
+        "&USERCARDEXPIREDATE=" +
+        payload.expiry +
+        "&USERCARDTYPE=" +
+        payload.cardtype)
+
       return fetch(url +
         "User_AddPaymentMethod?USERID=" +
         payload.USERID +
@@ -338,6 +385,8 @@ export class GitEpic {
           } else {
             returnVal = [];
           }
+
+          console.log("returnVal", returnVal)
           return fetch(url +
             "User_ViewUserPaymentMethod?USERID=" +
             payload.USERID
@@ -533,6 +582,9 @@ export class GitEpic {
 
   getViewMoreProducts = (action$) =>
     action$.ofType(GitAction.GetViewMoreProduct).switchMap(({ payload }) => {
+      console.log(url +
+        "Product_ItemListViewMore?PRODUCTPERPAGE=" + payload.productPerPage +
+        "&PAGE=" + payload.page)
       return fetch(url +
         "Product_ItemListViewMore?PRODUCTPERPAGE=" + payload.productPerPage +
         "&PAGE=" + payload.page
@@ -1765,6 +1817,27 @@ export class GitEpic {
 
   addAddress = (action$) =>
     action$.ofType(GitAction.AddAddress).switchMap(({ payload }) => {
+      console.log(url +
+        "User_AddAddressBook?USERADDRESSNAME=" +
+        payload.Address +
+        "&USERID=" +
+        payload.USERID +
+        "&USERCONTACTNO=" +
+        payload.ContactNo +
+        "&USEREMAIL=" +
+        payload.email +
+        "&USERADDRESSLINE1=" +
+        payload.USERADDRESSLINE1 +
+        "&USERADDRESSLINE2=" +
+        payload.USERADDRESSLINE2 +
+        "&USERPOSCODE=" +
+        payload.USERPOSCODE +
+        "&USERSTATE=" +
+        payload.USERSTATE +
+        "&USERCITY=" +
+        payload.USERCITY +
+        "&COUNTRYID=" +
+        payload.USERCOUNTRYID)
 
       return fetch(url +
         "User_AddAddressBook?USERADDRESSNAME=" +

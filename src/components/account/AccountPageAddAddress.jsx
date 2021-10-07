@@ -22,6 +22,8 @@ import {
   CountryRegionData,
 } from "react-country-region-selector";
 
+import { toast } from "react-toastify";
+
 function mapStateToProps(state) {
   return {
     addresses: state.counterReducer["addresses"],
@@ -50,8 +52,8 @@ class AccountPageAddAddress extends Component {
         USERPOSCODE: "",
         USERSTATE: "",
         USERCITY: "",
-        USERCOUNTRYID: 1,
-        COUNTRYID: "1",
+        USERCOUNTRYID: 148,
+        // COUNTRYID: "1",
       };
     this.addAddress = this.addAddress.bind(this);
     this.selectCountry = this.selectCountry.bind(this);
@@ -153,11 +155,20 @@ class AccountPageAddAddress extends Component {
   }
 
   addAddress() {
-    this.props.CallAddAddress(
-      this.state,
-      (this.state.USERID = JSON.parse(window.localStorage.getItem("id")))
-    );
-    this.props.parentCallback(false);
+    if (this.state.ContactNo.length !== 0 && this.state.email.length !== 0 && this.state.USERADDRESSLINE1.length !== 0
+      && this.state.USERADDRESSLINE2.length !== 0 && this.state.USERPOSCODE.length !== 0 && this.state.USERSTATE.length !== 0
+      && this.state.USERCITY.length !== 0 && this.state.USERCOUNTRYID.length !== 0) {
+        
+      this.props.CallAddAddress(
+        this.state,
+        (this.state.USERID = JSON.parse(window.localStorage.getItem("id"))),
+      );
+      this.props.parentCallback(false);
+    }
+    else {
+      toast.error("Please fill in all required data")
+    }
+
   }
 
   render() {
@@ -281,7 +292,7 @@ class AccountPageAddAddress extends Component {
                       // label="Country"
                       variant="outlined"
                       defaultValue={1}
-                      value={this.option}
+                      value={this.state.USERCOUNTRYID}
                       size="small"
                       onChange={this.handleChange.bind(this, "USERCOUNTRYID")}
                       style={{

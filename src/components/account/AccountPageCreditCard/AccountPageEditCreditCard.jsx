@@ -13,6 +13,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import "react-credit-cards/es/styles-compiled.css";
 import "react-credit-cards/lib/styles.scss";
 import "./creditcardstyle.css";
+import TextField from "@material-ui/core/TextField";
 import {
   formatCreditCardNumber,
   formatCVC,
@@ -115,7 +116,7 @@ class AccountPageEditCreditCard extends Component {
 
   handleUpdateCreditCard() {
 
-    if (this.state.name.length && this.state.number.length && this.state.expiry.length && this.state.cardtype.length && this.state.cvc.length) {
+    if (this.state.name.length && this.state.number.length && this.state.expiry.length && this.state.cardtype.length) {
       this.props.CallUpdateCreditCard(this.state);
       // this.props.parentCallback(false);
       // setTimeout(function () {
@@ -135,15 +136,19 @@ class AccountPageEditCreditCard extends Component {
     return (
       <div id="PaymentForm">
         <Cards
-          cvc={this.state.cvc}
+          // cvc={this.state.cvc}
           expiry={this.state.expiry}
           focused={this.state.focus}
           name={this.state.name}
           number={this.state.number}
         />
-        <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <input
+         <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
+          <div className="row" style={{ marginTop: "20px" }}>
+            <TextField
+              variant="outlined"
+              style={{ width: '100%' }}
+              size="small"
+              label="Card Number"
               type="tel"
               name="number"
               className="form-control"
@@ -156,48 +161,36 @@ class AccountPageEditCreditCard extends Component {
               onFocus={this.handleInputFocus}
             />
           </div>
-          <div className="form-group">
-            <input
+          <div className="row" style={{ marginTop: "20px" }}>
+            <TextField
+              variant="outlined"
+              style={{ width: '100%' }}
+              size="small"
+              label="Card Name"
               type="text"
               name="name"
-              className="form-control"
-              placeholder="Name"
               value={this.state.name}
               required
               onChange={this.handleInputChange}
               onFocus={this.handleInputFocus}
             />
           </div>
-          {console.log(this.props)}
-          {console.log(this.state)}
-          <div className="row">
-            <div className="col-6">
-              <input
-                type="tel"
-                name="expiry"
-                className="form-control"
-                placeholder="Valid Thru"
-                pattern="\d\d/\d\d"
-                value={this.state.expiry}
-                required
-                onChange={this.handleInputChange}
-                onFocus={this.handleInputFocus}
-              />
-            </div>
-
-            <div className="col-6">
-              <input
-                type="tel"
-                name="cvc"
-                className="form-control"
-                placeholder="CVC"
-                pattern="\d{3,4}"
-                value={this.state.cvc}
-                required
-                onChange={this.handleInputChange}
-                onFocus={this.handleInputFocus}
-              />
-            </div>
+          <div className="row" style={{ marginTop: "20px" }}>
+            <TextField
+              variant="outlined"
+              style={{ width: '100%' }}
+              size="small"
+              label="Valid Thru"
+              type="tel"
+              name="expiry"
+              className="form-control"
+              placeholder="Valid Thru"
+              pattern="\d\d/\d\d"
+              value={this.state.expiry}
+              required
+              onChange={this.handleInputChange}
+              onFocus={this.handleInputFocus}
+            />
           </div>
           <div>
             <br />
@@ -224,7 +217,7 @@ class AccountPageEditCreditCard extends Component {
           </div>
           <div className="form-actions">
             <button
-              onClick={() => this.handleUpdateCreditCard()}
+              onClick={this.handleUpdateCreditCard}
               className="btn btn-primary btn-block"
               type="button"
             >

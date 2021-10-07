@@ -28,6 +28,8 @@ import categories from '../../data/shopBlockCategories';
 import posts from '../../data/blogPosts';
 import theme from '../../data/theme';
 
+import { toast } from "react-toastify";
+
 function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
@@ -80,18 +82,18 @@ function HomePageTwo(props) {
     (tab) => shopApi.getLatestProducts({ limit: 8, category: tab.categorySlug }),
   );
 
-  const allProducts = useProductTabs(
-    useMemo(() => [
-      { id: 1, name: 'All', categorySlug: undefined },
-      { id: 404, name: 'Power Tools', ProductCategoryID: '404' },
-      { id: 357, name: 'Hand Tools', ProductCategoryID: '357' },
-      { id: 401, name: 'Plumbing', ProductCategoryID: '401' },
-    ], []),
-    (tab) => shopApi.getAllProducts(),
-    // (tab) => props.CallGetProductByProductCategoryID({ProductCategoryID: tab.ProductCategoryID, ProductPerPage: 4, Page: 0, Filter:"-"} ),
-    // (tab) => tab,
-    // (handleTabChange) => 
-  );
+  // const allProducts = useProductTabs(
+  //   useMemo(() => [
+  //     { id: 1, name: 'All', categorySlug: undefined },
+  //     { id: 404, name: 'Power Tools', ProductCategoryID: '404' },
+  //     { id: 357, name: 'Hand Tools', ProductCategoryID: '357' },
+  //     { id: 401, name: 'Plumbing', ProductCategoryID: '401' },
+  //   ], []),
+  //   (tab) => shopApi.getAllProducts(),
+  //   // (tab) => props.CallGetProductByProductCategoryID({ProductCategoryID: tab.ProductCategoryID, ProductPerPage: 4, Page: 0, Filter:"-"} ),
+  //   // (tab) => tab,
+  //   // (handleTabChange) => 
+  // );
   // props.CallGetProductByProductCategoryID({ProductCategoryID: 404, ProductPerPage: 4, Page: 0, Filter:"-"} )
   // console.log("props.productsByID", props.productsByID)
   // const allProducts = useProductTabs(
@@ -136,9 +138,12 @@ function HomePageTwo(props) {
   let productPerPage = 4
 
   const loopWithSlice = () => {
-    tempArray = [...postsToShow, ...props.viewMoreProducts];
-    setPostsToShow(tempArray)
-    props.CallViewMoreEmpty()
+    if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal === "0") { toast.warning("There is no more product") }
+    else {
+      tempArray = [...postsToShow, ...props.viewMoreProducts];
+      setPostsToShow(tempArray)
+      props.CallViewMoreEmpty()
+    }
   };
 
   const handleShowMorePosts = () => {
@@ -147,9 +152,11 @@ function HomePageTwo(props) {
   };
 
   useEffect(() => {
+    console.log("CallViewMoreFunctionProduct", props)
     if (page <= 1) {
       setPage(page + 1)
       props.CallViewMoreFunctionProduct({ page, productPerPage })
+
     }
     if (props.viewMoreProducts.length > 0) {
       loopWithSlice()
@@ -172,24 +179,26 @@ function HomePageTwo(props) {
 
 
         {useMemo(() => (
+          props.products !== undefined && props.products.length > 0 &&
           <BlockProductsCarousel
             title="New Arrivals"
             layout="grid-4"
             rows={2}
-            products={allProducts.data}
+            products={props.products !== [] ? props.products : []}
             // loading={props.loading}
             // groups={allProducts.tabs}
             onGroupClick={testing}
           />
-        ), [allProducts.handleTabChange, allProducts.tabs, props.loading, props.products])}
+        ), [props.products])}
 
         {useMemo(() => (
+          postsToShow !== undefined && postsToShow.length > 0 &&
           <BlockProducts
             title="Featured Products"
             layout="large-first"
-            products={postsToShow}
-            // loading={allProducts.loading}
-            groups={allProducts.tabs}
+            products={postsToShow !== [] ? postsToShow : []}
+          // loading={allProducts.loading}
+          // groups={allProducts.tabs}
           // onGroupClick={allProducts.handleTabChange}
           />
         ), [postsToShow])}
@@ -214,7 +223,7 @@ function HomePageTwo(props) {
           onGroupClick={allProducts.handleTabChange}
         /> */}
         {
-          allProducts.data.length === 0 ? "" :
+          props.products.length === 0 ? "" :
             (
               <div className="my-4">
                 <BlockMoreButton viewMore={handleShowMorePosts} />

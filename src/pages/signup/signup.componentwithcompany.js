@@ -26,7 +26,7 @@ import {
   // CountryRegionData,
 } from "react-country-region-selector";
 import Dropzone from "react-dropzone";
-// import { combineAll } from "rxjs/operator/combineAll";
+import { combineAll } from "rxjs/operator/combineAll";
 
 function mapStateToProps(state) {
   return {
