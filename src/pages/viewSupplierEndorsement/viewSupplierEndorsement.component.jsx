@@ -97,13 +97,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -164,7 +164,7 @@ function DeletableTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -206,7 +206,7 @@ function DisplayTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -232,7 +232,7 @@ DeletableTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
+  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -242,7 +242,7 @@ DisplayTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
+  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -451,8 +451,8 @@ function DeletableTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -481,6 +481,7 @@ class DisplayTable extends Component {
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeDense = this.handleChangeDense.bind(this);
     this.isSelected = this.isSelected.bind(this);
+    this.handleSetDetailShown = this.handleSetDetailShown.bind(this);
   }
 
   handleRequestSort = (event, property) => {
@@ -494,16 +495,16 @@ class DisplayTable extends Component {
       name: row,
     });
 
-    if (this.state.detailsShown) {
-      this.setState({
-        detailsShown: false,
-      });
-    } else {
-      this.setState({
-        detailsShown: true,
-      });
-    }
+    this.setState({
+      detailsShown: !this.state.detailsShown,
+    });
   };
+
+  handleSetDetailShown = (val) => {
+    this.setState({
+      detailsShown: val,
+    });
+  }
 
   handleChangePage = (event, newPage) => {
     this.setState({ page: newPage });
@@ -568,6 +569,7 @@ class DisplayTable extends Component {
           <SupplierEndorsementDetails
             userData={this.props.allUser}
             singleUserData={this.state}
+            backLink={this.handleSetDetailShown}
           />
         ) : this.state.deleteActive ? (
           <div>
@@ -593,17 +595,12 @@ class DisplayTable extends Component {
               placeholder="Search..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
-            {this.props.Data.filter(
-              (searchedItem) =>
-                searchedItem.FirstName.toLowerCase().includes(
-                  this.state.searchFilter
-                ) ||
-                searchedItem.LastName.toLowerCase().includes(
-                  this.state.searchFilter
-                )
-            ).map((filteredItem) => {
-              filteredSupplier.push(filteredItem);
-            })}
+            {
+              this.props.Data.length > 0 && this.props.Data.filter((searchedItem) => (searchedItem.FirstName + " " + searchedItem.LastName).toLowerCase()
+                .includes(this.state.searchFilter))
+                .map((filteredItem) => { filteredSupplier.push(filteredItem) })
+            }
+
             <DeletableTable
               Data={filteredSupplier}
               ProductProps={this.props.ProductProps}
@@ -651,17 +648,11 @@ class DisplayTable extends Component {
                       onRequestSort={this.handleRequestSort}
                       rowCount={this.props.Data.length}
                     />
-                    {this.props.Data.filter(
-                      (searchedItem) =>
-                        searchedItem.FirstName.toLowerCase().includes(
-                          this.state.searchFilter
-                        ) ||
-                        searchedItem.LastName.toLowerCase().includes(
-                          this.state.searchFilter
-                        )
-                    ).map((filteredItem) => {
-                      filteredSupplier.push(filteredItem);
-                    })}
+                    {
+                      this.props.Data.length > 0 && this.props.Data.filter((searchedItem) => (searchedItem.FirstName + " " + searchedItem.LastName).toLowerCase()
+                        .includes(this.state.searchFilter))
+                        .map((filteredItem) => { filteredSupplier.push(filteredItem) })
+                    }
                     <TableBody>
                       {stableSort(
                         filteredSupplier,
@@ -670,7 +661,7 @@ class DisplayTable extends Component {
                         .slice(
                           this.state.page * this.state.rowsPerPage,
                           this.state.page * this.state.rowsPerPage +
-                            this.state.rowsPerPage
+                          this.state.rowsPerPage
                         )
                         .map((row, index) => {
                           const isItemSelected = this.isSelected(
@@ -721,8 +712,8 @@ class DisplayTable extends Component {
                   count={filteredSupplier.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  onPageChange={this.handleChangePage}
+                  onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>
             </div>

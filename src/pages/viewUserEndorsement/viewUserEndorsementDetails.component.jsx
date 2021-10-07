@@ -112,13 +112,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -177,7 +177,7 @@ function DisplayTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -459,7 +459,7 @@ class DisplayTable extends Component {
                         .slice(
                           this.state.page * this.state.rowsPerPage,
                           this.state.page * this.state.rowsPerPage +
-                            this.state.rowsPerPage
+                          this.state.rowsPerPage
                         )
                         .map((row, index) => {
                           const isItemSelected = this.isSelected(row.Username);
@@ -517,8 +517,8 @@ class DisplayTable extends Component {
                   count={this.props.Data.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  onPageChange={this.handleChangePage}
+                  onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>
             </div>
@@ -595,7 +595,7 @@ class UserDetailsComponent extends Component {
     });
   }
 
-  handleChange = (data, e) => {};
+  handleChange = (data, e) => { };
   render() {
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
@@ -636,9 +636,9 @@ class UserDetailsComponent extends Component {
 
     let allTransactionStatusData = this.props.alltransactionstatus
       ? Object.keys(this.props.alltransactionstatus).map((key) => {
-          console.log(this.props.alltransactionstatus);
-          return this.props.alltransactionstatus[key];
-        })
+        console.log(this.props.alltransactionstatus);
+        return this.props.alltransactionstatus[key];
+      })
       : {};
 
     if (allTransactionStatusData.length > 0) {
@@ -648,7 +648,7 @@ class UserDetailsComponent extends Component {
           <Tab
             label={status.TrackingStatus}
             {...a11yProps(i)}
-            // onClick={changeData.bind(this, status.TrackingStatus)}
+          // onClick={changeData.bind(this, status.TrackingStatus)}
           />
         );
       });

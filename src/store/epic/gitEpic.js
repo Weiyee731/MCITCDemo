@@ -14,6 +14,7 @@ export class GitEpic {
       )
         .then((response) => response.json())
         .then((json) => {
+          console.log(json)
           if (json !== "fail") {
             json = JSON.parse(json);
           } else {
@@ -24,7 +25,14 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(error));
+        .catch((error) => {
+          alert('user: ' + error)
+          console.log(error)
+          return {
+            type: "GOT-USERS",
+            payload: [],
+          };
+        });
     });
 
   LoginUser = (action$) =>
@@ -1467,7 +1475,13 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(error));
+        .catch((error) =>{
+          console.log("viewOverallSummary: " + error)
+          return {
+            type: "GOT-OVERALLSUMMARY",
+            payload: [],
+          };
+        });
     });
 
   //=================REVIEW=============================//
@@ -2542,7 +2556,12 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(error));
+        .catch((error) => {
+          return {
+            type: "GOT-MERCHANTS",
+            payload: [],
+          };
+        });
     });
 
   getAllMerchantOrders = (action$) =>

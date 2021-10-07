@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Line, Pie } from "react-chartjs-2";
+import { Line, Pie,Bar } from "react-chartjs-2";
 import { GitAction } from "../../store/action/gitAction";
 import "./dashboard.component.css";
 import {
@@ -19,6 +19,8 @@ import {
   dashboardNASDAQChart,
 } from "./variables/charts.js";
 import MaterialTable from "material-table";
+import HouseIcon from '@material-ui/icons/House';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 
 function mapStateToProps(state) {
   return {
@@ -44,6 +46,22 @@ class Dashboard extends Component {
       TopProduct: [],
       TopCategory: [],
       Transaction: [],
+      TopCategroy:[{
+        Category: "Clothes",
+        Volume: "13,102",
+      },{
+        Category: "Shoes",
+        Volume: "11,222",
+      },{
+        Category: "Foods",
+        Volume: "10,089",
+      },{
+        Category: "Equipments",
+        Volume: "8,074",
+      },{
+        Category: "Decoration",
+        Volume: "4,118",
+      }]
     };
 
     this.props.CallOverallSummary(this.state);
@@ -65,6 +83,46 @@ class Dashboard extends Component {
         Data.push(row.ProductCount);
       });
     }
+
+    const bardata = {
+      labels: ['Merchant A', 'Merchant B', 'Merchant C', 'Merchant D', 'Merchant E', 'Merchant F'],
+      datasets: [
+        {
+          label: 'Top Sales of the Month',
+          data: [12000, 19000, 13000, 12500, 11200, 10300],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    const barOptions = {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    };
+    
 
     const data = {
       labels: Date,
@@ -106,7 +164,6 @@ class Dashboard extends Component {
       ],
     };
 
-    console.log(this.props.statistic)
     this.props.statistic.map((row) => {
       if (Array.isArray(this.state.RevenueAndProfit) && this.state.RevenueAndProfit.length === 0)
         this.setState({ RevenueAndProfit: JSON.parse(row.RevenueAndProfit), })
@@ -116,7 +173,7 @@ class Dashboard extends Component {
         topProduct.map((d, i) => {
           d.ProductImage = (
             <div>
-              <img height={50} src={d.ProductImage} />
+              <img height={50} width={50} src={d.ProductImage} alt="" />
             </div>
           );
 
@@ -148,89 +205,76 @@ class Dashboard extends Component {
 
     return (
       <div>
+        <div className="p-1">
+          <h1>Administrative Dashboard</h1>
+        </div>
+
         {this.state.RevenueAndProfit.map((RevenueData) => {
           return (
-            <Row className="mt-3">
-              <Col md="3">
-                <Card className="card-stats" style={{ height: "150px", }}>
+            <Row className="mt-3" style={{ width: '98% ' }}>
+              <Col>
+                <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px' }} >
                   <CardBody className="card-body">
                     <Row>
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-globe text-warning" />
-                      </div>
-
                       <div className="numbers">
-                        <p className="card-category">
-                          {RevenueData.OverallRevenueTitle}
-                        </p>
-                        <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
+                        <CardTitle style={{ fontSize: "24pt", fontWeight: 600, color: "white" }}>
                           RM {RevenueData.OverallRevenue}
                         </CardTitle>
-                        <p />
+                        <p className="" style={{ color: "white", }}>
+                          {/* {RevenueData.OverallRevenueTitle} */}
+                          <HouseIcon fontSize={'large'} /> <span style={{ fontSize: "14pt" }}>Total Revennue</span>
+                        </p>
                       </div>
                     </Row>
                   </CardBody>
                 </Card>
               </Col>
 
-              <Col md="3">
-
-                <Card className="card-stats" style={{ height: "150px", }}>
+              <Col>
+                <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px' }}>
                   <CardBody className="card-body">
                     <Row>
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-money-coins text-success" />
-                      </div>
-
-                      <div className="numbers">
-                        <p className="card-category">
-                          {RevenueData.OverallProfitTitle}
-                        </p>
+                      {/* <div className="numbers">
                         <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
                           RM {RevenueData.OverallProfit}
                         </CardTitle>
-                        <p />
-                      </div>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col md="3">
-                <Card className="card-stats" style={{ height: "150px", }}>
-                  <CardBody className="card-body">
-                    <Row>
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-vector text-danger" />
-                      </div>
-                      <div className="numbers">
-                        <p className="card-category">
-                          {RevenueData.MonthlyProfitTitle}
+                          <p className="" style={{color: "white",}}>
+                          <HouseIcon fontSize={'large'}/> <span style={{ fontSize: "14pt"}}>Da</span>
                         </p>
-                        <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
-                          RM {RevenueData.MonthlyProfit}
-                        </CardTitle>
-                        <p />
-                      </div>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col md="3">
-                <Card className="card-stats" style={{ height: "150px", }}>
-                  <CardBody className="card-body">
-                    <Row>
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-favourite-28 text-primary" />
-                      </div>
+                      </div> */}
 
+                      <div className="w-100">
+                        <div style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.33)", padding: '5px 10px', textAlign: 'left' }}>
+                          <span style={{ color: 'white', fontSize: '12pt', marginRight: '10px' }}>Daily Sales</span>
+                          <span style={{ fontSize: "24pt", fontWeight: 600, color: "white", width: '100%' }}>
+                            RM {RevenueData.OverallProfit}
+                          </span>
+                        </div>
+                        <div style={{ padding: '5p 10px', textAlign: 'right' }}>
+                          <span style={{ fontSize: "24pt", fontWeight: 600, color: "white", width: '100%', marginRight: '10px' }}>
+                            369
+                          </span>
+                          <span style={{ color: 'white', fontSize: '12pt' }}>Orders</span>
+                        </div>
+                      </div>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+
+              <Col>
+                <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px', color: 'white' }}>
+                  <CardBody className="card-body">
+                    <Row>
                       <div className="numbers">
-                        <p className="card-category">
-                          {RevenueData.WeeklyProfitTitle}
-                        </p>
-                        <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
-                          RM {RevenueData.WeeklyProfit}
+                        <CardTitle style={{ fontSize: "24pt", fontWeight: 600, color: "white" }}>
+                          {/* {RevenueData.MonthlyProfit} */}
+                          10,642
                         </CardTitle>
-                        <p />
+                        <p className="" style={{ color: "white", }}>
+                          {/* {RevenueData.OverallRevenueTitle} */}
+                          <PeopleAltIcon fontSize={'large'} /> <span style={{ fontSize: "14pt" }}>Total Visitor</span>
+                        </p>
                       </div>
                     </Row>
                   </CardBody>
@@ -241,20 +285,16 @@ class Dashboard extends Component {
         })}
 
         <Row>
-          <Col md="7">
+          <Col md="5">
             <div className="py-2">
-              <h5 className="ml-3"><b>Sales Made</b></h5>
-              <Line data={data} width={280} height={100} />
-            </div>
-            <div className="py-2">
-              <h5 className="ml-3"><b>Visitor</b></h5>
-              <Line data={data} width={280} height={100} />
+              <h5 className="ml-3"><b>Top Merchants</b></h5>
+              <Bar data={bardata} options={barOptions} />
             </div>
           </Col>
 
 
-          <Col md="5">
-            <div>
+          <Col md="7">
+            {/* <div>
               <h5><b>Preference Statistics</b></h5>
               <div className="TopProduct">
                 <Pie
@@ -263,35 +303,118 @@ class Dashboard extends Component {
                   options={dashboardEmailStatisticsChart.options}
                 />
               </div>
+            </div> */}
+
+            <div className="row" style={{ fontSize: 12, width: '100%', height: "40vh", overflowY: 'auto' }} >
+              <div className="col-6">
+
+                <MaterialTable
+                  title="Hot Sales Items"
+                  columns={[
+                    {
+                      title: "Product",
+                      field: "ProductImage",
+                    },
+                    {
+                      title: "Name",
+                      field: "ProductName",
+                    },
+                    {
+                      title: "Stocks",
+                      field: "ProductStockAmountInital",
+                    },
+                    {
+                      title: "Ratings",
+                      field: "ProductRating",
+                    },
+                  ]}
+                  data={this.state.TopProduct}
+                  options={{
+                    paging: false,
+                    search: false,
+                    headerStyle: {
+                      backgroundColor: '#333333',
+                      color: '#FFF'
+                    }, 
+                    rowStyle: {
+                      padding: '5px'
+                    }
+                  }}
+                />
+              </div>
+              <div className="col-6">
+                <MaterialTable
+                  title="Hot Sales Items"
+                  columns={[
+                    {
+                      title: "Product",
+                      field: "ProductImage",
+                    },
+                    {
+                      title: "Name",
+                      field: "ProductName",
+                    },
+                    {
+                      title: "Stocks",
+                      field: "ProductStockAmountInital",
+                    },
+                    {
+                      title: "Ratings",
+                      field: "ProductRating",
+                    },
+                  ]}
+                  data={this.state.TopProduct}
+                  options={{
+                    paging: false,
+                    search: false,
+                    headerStyle: {
+                      backgroundColor: '#333333',
+                      color: '#FFF'
+                    },
+                    rowStyle: {
+                      padding: '5px'
+                    }
+                  }}
+                />
+              </div>
+
             </div>
-            <div className="" style={{ fontSize: 12, width: '95%', height: "40vh", overflowY: 'auto' }} >
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md="8">
+            <div className="py-2">
+              <h5 className="ml-3"><b>Total Sales Revenue</b></h5>
+              <Line data={data} width={80} height={30} />
+            </div>
+          </Col>
+
+
+          <Col md="4">
+            <div>
               <MaterialTable
-                title="Top Grossing Product"
+                title="Top Category Browsing"
                 columns={[
                   {
-                    title: "Product",
-                    field: "ProductImage",
+                    title: "Category",
+                    field: "Category",
                   },
                   {
-                    title: "Name",
-                    field: "ProductName",
-                  },
-                  {
-                    title: "Stocks",
-                    field: "ProductStockAmountInital",
-                  },
-                  {
-                    title: "Ratings",
-                    field: "ProductRating",
+                    title: "Volume",
+                    field: "Volume",
                   },
                 ]}
-                data={this.state.TopProduct}
+                data={this.state.TopCategroy}
                 options={{
                   paging: false,
                   search: false,
                   headerStyle: {
                     backgroundColor: '#333333',
                     color: '#FFF'
+                  },
+                  rowStyle: {
+                    padding: '0'
                   }
                 }}
               />

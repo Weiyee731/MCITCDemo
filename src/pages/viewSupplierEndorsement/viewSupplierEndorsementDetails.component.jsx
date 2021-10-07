@@ -43,26 +43,27 @@ class SupplierDetailsComponent extends Component {
     super(props);
 
     // const [open, setOpen] = React.useState(false);
+    this.state = {
+      supplierName: this.props.singleUserData.name.CompanyName,
+      supplierAddress: this.props.singleUserData.name.CompanyAddressLine1,
+      supplierCity: this.props.singleUserData.name.CompanyCity,
+      supplierState: this.props.singleUserData.name.CompanyState,
+      supplierPostal: this.props.singleUserData.name.CompanyPoscode,
+      supplierAddressLine2: this.props.singleUserData.name.CompanyAddressLine2,
+      supplierContact: this.props.singleUserData.name.CompanyContactNo,
+      supplierWebsite: this.props.singleUserData.name.CompanyWebsite,
+      supplierDescription: this.props.singleUserData.name.CompanyDescription,
+      repFirstName: this.props.singleUserData.name.FirstName,
+      repLastName: this.props.singleUserData.name.LastName,
+      repContact: this.props.singleUserData.UserContactNo,
+      open: false,
+      index: 0,
+      userId: this.props.singleUserData.name.UserID,
+      status: "pending",
+    };
   }
 
-  state = {
-    supplierName: this.props.singleUserData.name.CompanyName,
-    supplierAddress: this.props.singleUserData.name.CompanyAddressLine1,
-    supplierCity: this.props.singleUserData.name.CompanyCity,
-    supplierState: this.props.singleUserData.name.CompanyState,
-    supplierPostal: this.props.singleUserData.name.CompanyPoscode,
-    supplierAddressLine2: this.props.singleUserData.name.CompanyAddressLine2,
-    supplierContact: this.props.singleUserData.name.CompanyContactNo,
-    supplierWebsite: this.props.singleUserData.name.CompanyWebsite,
-    supplierDescription: this.props.singleUserData.name.CompanyDescription,
-    repFirstName: this.props.singleUserData.name.FirstName,
-    repLastName: this.props.singleUserData.name.LastName,
-    repContact: this.props.singleUserData.UserContactNo,
-    open: false,
-    index: 0,
-    userId: this.props.singleUserData.name.UserID,
-    status: "pending",
-  };
+  
 
   endorseProduct = (data) => {
     this.setState({
@@ -134,6 +135,9 @@ class SupplierDetailsComponent extends Component {
                 {/* <button onClick={this.tester}> CheckData </button> */}
                 <h2>Supplier's Information</h2>
                 <h3>Representative's Details</h3>
+                <Button className="mt-3 mb-1" onClick={() => {this.props.backLink(false)}}>
+                  <i className="fas fa-chevron-left"></i> {"  Back" }
+                </Button>
                 <div
                   style={{
                     display: "flex",
