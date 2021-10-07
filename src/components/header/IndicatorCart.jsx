@@ -184,6 +184,7 @@ class IndicatorCart extends React.Component {
     // );
 
 
+    console.log("this.props.productcart", this.props.productcart)
 
     if (this.props.productcart.length) {
       // const dropdown = (

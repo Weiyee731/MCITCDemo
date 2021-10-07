@@ -28,6 +28,7 @@ import StepProgressBar from "react-step-progress";
 import "react-step-progress/dist/index.css";
 import PageCart from "./ShopPageCart";
 import PageCompleted from "./ShopPageCompleted";
+import { toast } from "react-toastify";
 
 function step2Validator() {
   // return a boolean
@@ -63,33 +64,40 @@ class PageCheckout extends Component {
       ProductID: [],
       ProductQuantity: [],
       UserCartID: [],
-      address: 0
+      ProductVariationDetailID: [],
+      address: 0,
+      PaymentID: 0,
+      PaymentMethodID: 0
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
   onFormSubmit() {
-    console.log("ADDRESS", this.state.address)
-
-    this.props.productcart.map((x) => {
-      this.state.ProductID.push(x.ProductID)
-      this.state.UserCartID.push(x.UserCartID)
-      this.state.ProductQuantity.push(x.ProductQuantity)
-    })
-
-    this.props.CallAddOrder({
-      UserID: window.localStorage.getItem("id"),
-      ProductID: this.state.ProductID,
-      ProductQuantity: this.state.ProductQuantity,
-      UserCartID: this.state.UserCartID,
-      UserAddressID: this.state.address
-    })
+    if (this.state.PaymentID === 0) {
+      toast.error("Please fill in correct payment method info to continue")
+    }
+    else {
+      this.props.data.map((x) => {
+        this.state.ProductID.push(x.product.ProductID)
+        this.state.UserCartID.push(x.product.UserCartID)
+        this.state.ProductQuantity.push(x.product.ProductQuantity)
+        this.state.ProductVariationDetailID.push(x.product.ProductVariationDetailID)
+      })
+      this.props.CallAddOrder({
+        UserID: window.localStorage.getItem("id"),
+        ProductID: this.state.ProductID,
+        ProductQuantity: this.state.ProductQuantity,
+        UserCartID: this.state.UserCartID,
+        UserAddressID: this.state.address,
+        PaymentMethodID: this.state.PaymentMethodID,
+        ProductVariationDetailID: this.state.ProductVariationDetailID,
+        PAYMENTID: this.state.PaymentID,
+      })
+    }
   }
 
   componentDidUpdate(prevProps) {
-    console.log("this.props.order",this.props.order)
     if (prevProps.order !== this.props.order) {
-      // this.props.CallClearOrder()
       browserHistory.push("/Emporia");
       window.location.reload(false);
     }
@@ -99,7 +107,7 @@ class PageCheckout extends Component {
 
     const breadcrumb = [
       { title: "Home", url: "" },
-      { title: "Shopping Cart", url: "/shop/cart" },
+      // { title: "Shopping Cart", url: "/shop/cart" },
       { title: "Checkout", url: "" },
     ];
 
@@ -112,19 +120,23 @@ class PageCheckout extends Component {
     };
 
     const handleGetAddressId = (value) => {
-      // console.log(value)
       if (value.length !== 0)
         this.setState({ address: value })
     }
 
+    const handleGetPaymentId = (paymentmethodId, paymentID) => {
+      if (paymentmethodId.length !== 0 && paymentID.length !== 0)
+        this.setState({ PaymentMethodID: paymentmethodId, PaymentID: paymentID })
+    }
+
     const step1Content = (
       <div style={{ width: "100%" }}>
-        <PageCart />
+        <PageCart data={this.props.data} />
       </div>
     );
     const step2Content = (
       <div style={{ width: "100%" }}>
-        <PageCheckOrder handleGetAddressId={handleGetAddressId} />
+        <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} />
       </div>
     );
     const step3Content = (
@@ -134,11 +146,11 @@ class PageCheckout extends Component {
     );
     const step4Content = (
       <div style={{ width: "100%" }}>
-        <PageCompleted />
+        <PageCompleted addresss={this} data={this.props.data} />
       </div>
     );
 
-    const query = queryString.parse(this.props.location.search);
+    // const query = queryString.parse(this.props.location.search);
     return (
       <React.Fragment>
         <Helmet>
@@ -169,7 +181,7 @@ class PageCheckout extends Component {
                 {
                   label: "Payment",
                   name: "step 3",
-                  content: <PagePayment qrcode={query} />,
+                  content: <PagePayment handleGetPaymentId={handleGetPaymentId} data={this.props.data} />,
                   // validator: step3Validator
                 },
                 {

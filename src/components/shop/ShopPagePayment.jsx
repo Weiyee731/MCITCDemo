@@ -23,6 +23,23 @@ import QRCode from "qrcode.react";
 import shopApi from "../../api/shop";
 import { browserHistory } from "react-router";
 
+import { GitAction } from "../../store/action/gitAction";
+import Cards from "react-credit-cards";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+
+
+import {
+  formatCVC,
+} from "../account/AccountPageCreditCard/utils";
+
+
 class PagePayment extends Component {
   payments = payments;
 
@@ -31,84 +48,58 @@ class PagePayment extends Component {
 
     this.state = {
       payment: "bank",
+      paymentMethods: "",
 
       cart: [],
       subtotal: 0,
       total: 0,
       shipping: 25,
       tax: 0,
+
+      tabvalue: 0,
+      cvcVisible: false,
+      cvc: ""
     };
     this.setDetails = this.setDetails.bind(this)
+    this.handleInputFocus = this.handleInputFocus.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handlePaymentChange = this.handlePaymentChange.bind(this);
+    this.props.CallAllCreditCard(window.localStorage.getItem("id"));
+
   }
 
   setDetails(productcart) {
-    productcart.map((x) => {
-      this.state.cart.push(
-        {
-          id: x.UserCartID,
-          product: x,
-          options: [],
-          price: x.ProductSellingPrice,
-          total: x.ProductQuantity * x.ProductSellingPrice,
-          quantity: x.ProductQuantity
-        }
-      )
+    this.setState({
+      cart: productcart
     })
-    this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
-    this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+    this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
+    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
   }
 
   componentDidMount() {
-    if (this.props.productcart !== undefined) {
-      this.setDetails(this.props.productcart)
+    if (this.props.data !== undefined && this.props.data.length > 0) {
+      this.setDetails(this.props.data)
     }
   }
 
-  handlePaymentChange = (event) => {
-    if (event.target.checked) {
-      this.setState({ payment: event.target.value });
-    }
+  handleInputFocus = (e) => {
+    this.setState({ focus: e.target.name });
   };
 
-  CheckOutOnClick = (items) => {
-    let ProductIDs = [];
-    let ProductQuantity = [];
-    items.map((row) => {
-      ProductIDs.push(row.product.ProductID);
-      ProductQuantity.push(row.quantity);
-    });
-    // alert("ww");
-    shopApi
-      .addOrder({
-        UserID: localStorage.getItem("id"),
-        Products: ProductIDs,
-        ProductQuantity: ProductQuantity,
-      })
-      .then((json) => {
-        // localStorage.setItem("checkoutind", true);
-        // setadd(true);
-        // setOrderid(json[0].OrderID);
-        browserHistory.push("/Emporia/shop/checkout?order=" + json[0].OrderID);
-        window.location.reload(false);
-      });
+  handleInputChange = ({ target }) => {
+    if (target.name === "cvc") {
+      target.value = formatCVC(target.value);
+    }
+    this.setState({ [target.name]: target.value });
+    this.props.handleGetPaymentId(this.state.tabvalue, this.state.paymentMethods)
+  };
+
+  handlePaymentChange = (value) => {
+    this.setState({ paymentMethods: value })
+    this.props.handleGetPaymentId(this.state.tabvalue, value)
   };
 
   renderTotals() {
-    // const { cart } = this.props;
-
-    // if (cart.extraLines.length <= 0) {
-    //   return null;
-    // }
-
-    // const extraLines = cart.extraLines.map((extraLine, index) => (
-    //   <tr key={index}>
-    //     <th style={{ textAlign: "right" }}>{extraLine.title}</th>
-    //     <td>
-    //       <Currency value={extraLine.price} />
-    //     </td>
-    //   </tr>
-    // ));
-
     return (
       <React.Fragment>
         <tbody className="checkout__totals-subtotals">
@@ -175,11 +166,11 @@ class PagePayment extends Component {
     });
 
     const handleChangeIndex = (index) => {
-      this.setState({ tabvalue: index });
+      this.setState({ tabvalue: index, cvcVisible: false, paymentMethods: "", cvc: "" });
     };
 
     const handleChange = (event, newValue) => {
-      this.setState({ tabvalue: newValue });
+      this.setState({ tabvalue: newValue, cvcVisible: false, paymentMethods: "", cvc: "" });
     };
 
     const cardStyle = {
@@ -212,7 +203,7 @@ class PagePayment extends Component {
             <div style={Object.assign({})}>
               <Card style={cardStyle}>
                 <CardContent>
-                  <h4>Invoice</h4>
+                  <h4>Credit Card</h4>
                   <br />
                   <div style={{ float: "right", marginBottom: "10px" }}>
                     <img width="50" src="images/creditcard/visa.png"></img>
@@ -224,84 +215,98 @@ class PagePayment extends Component {
                   </div>
                   <br />
                   <br />
-                  <div className="form-group row">
-                    <div className="col-4">
-                      <label htmlFor="checkout-company-name">Card Number</label>
-                    </div>
-                    <div className="col-8">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="checkout-company-name"
-                        placeholder="1234 5678 9012 3456"
-                      />
-                    </div>
+
+                  <div>
+                    <Grid
+                      container
+                      style={{
+                        margin: "auto",
+                        justifyContent: "Space-between",
+                      }}
+                    >
+                      {
+                        // this.props.creditcard.length > 0 && this.props.creditcard[0].ReturnVal !== "0" && this.props.creditcard[0].ReturnVal === undefined ?
+                        this.props.creditcard.length > 0 ?
+                          this.props.creditcard.map((cards) => {
+                            return (
+                              <Grid item style={{ margin: "2vw", marginTop: "1vw", marginBottom: "1vw", }} >
+                                <div>
+                                  {
+                                    this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethods ?
+                                      <>
+                                        <Tooltip title="Edit" style={{ right: "-230px" }}  >
+                                          <IconButton aria-label="Edit">
+                                            <RadioButtonCheckedIcon
+                                              fontSize="small"
+                                              onClick={() => this.setState({ cvcVisible: false, paymentMethods: cards.UserPaymentMethodID, cvc: "" })} />
+                                          </IconButton>
+                                        </Tooltip>
+                                        <Cards
+                                          cvc={this.state.cvc}
+                                          expiry={cards.UserCardExpireDate}
+                                          focused={this.state.focus}
+                                          name={cards.UserCardName}
+                                          number={cards.UserCardNo}
+                                          preview={true}
+                                        />
+                                        <br />
+                                        <div>
+                                          <input
+                                            type="tel"
+                                            name="cvc"
+                                            className="form-control"
+                                            placeholder="CVC"
+                                            pattern="\d{3,4}"
+                                            required
+                                            value={this.state.cvc}
+                                            onChange={this.handleInputChange}
+                                            onFocus={this.handleInputFocus}
+                                          />
+                                        </div>
+                                      </>
+                                      :
+                                      <>
+                                        <Tooltip title="Edit" style={{ right: "-230px" }}   >
+                                          <IconButton aria-label="Edit">
+                                            <RadioButtonUncheckedIcon
+                                              fontSize="small"
+                                              onClick={() => this.setState({ cvcVisible: true, paymentMethods: cards.UserPaymentMethodID, cvc: "" })} />
+                                          </IconButton>
+                                        </Tooltip>
+                                        <Cards
+                                          expiry={cards.UserCardExpireDate}
+                                          name={cards.UserCardName}
+                                          number={cards.UserCardNo}
+                                          preview={true}
+                                        />
+                                      </>
+                                  }
+
+                                </div>
+                              </Grid>
+                            )
+                          })
+                          : ""
+                      }
+                    </Grid>
                   </div>
-                  <div className="form-group row">
-                    <div className="col-4">
-                      <label htmlFor="checkout-street-address">
-                        Name of Cardholder
-                      </label>
-                    </div>
-                    <div className="col-8">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="checkout-street-address"
-                        placeholder="Ex. John Smith"
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-4">
-                      <label htmlFor="checkout-street-address">
-                        Expiry Date
-                      </label>
-                    </div>
-                    <div className="col-8">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="checkout-street-address"
-                        placeholder="01/25"
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-4">
-                      <label htmlFor="checkout-street-address">CVV</label>
-                    </div>
-                    <div className="col-8">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="checkout-street-address"
-                        placeholder=""
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-xl btn-block"
-                  >
-                    Place Order
-                  </button>
                 </CardContent>
               </Card>
             </div>
             <div style={Object.assign({})}>
               <Card style={cardStyle}>
                 <CardContent>
-                  <h4>To Pay with E-Wallet</h4>
+                  <h4>E-Wallet</h4>
+                  <h5>Selected : {isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()}</h5>
                   <br />
                   {/* <div class="row"> */}
-                  <Button>
+                  <Button onClick={() => this.handlePaymentChange("touch and go")}>
                     <img width="250" src="images/payment/touchandgo.png"></img>
                   </Button>
-                  <Button>
+                  <Button onClick={() => this.handlePaymentChange("boost")}>
                     <img width="250" src="images/payment/boost.png"></img>
                   </Button>
-                  <Button>
+                  <Button onClick={() => this.handlePaymentChange("grab")}>
                     <img width="250" src="images/payment/grab.png"></img>
                   </Button>
                   {/* </div> */}
@@ -313,27 +318,28 @@ class PagePayment extends Component {
                 <CardContent>
                   {/* <img width="100" src="images/payment/fpx.png"></img> */}
                   <h4>Online Banking (Current/Saving/Credit Card Account)</h4>
+                  <h5>Selected : {isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()}</h5>
                   <br />
                   {/* <div class="row"> */}
-                  <Button>
+                  <Button onClick={() => this.handlePaymentChange("hong leong bank")}>
                     {" "}
                     <img width="250" src="images/payment/hongleong.png"></img>
                   </Button>
-                  <Button>
+                  <Button onClick={() => this.handlePaymentChange("maybank")}>
                     {" "}
                     <img width="250" src="images/payment/maybank.png"></img>
                   </Button>
-                  <Button>
+                  <Button onClick={() => this.handlePaymentChange("public bank")}>
                     {" "}
                     <img width="250" src="images/payment/public.png"></img>
                   </Button>
                   {/* </div> */}
                   {/* <div class="row"> */}
-                  <Button>
+                  <Button onClick={() => this.handlePaymentChange("cimb bank")}>
                     {" "}
                     <img width="250" src="images/payment/cimb.png"></img>
                   </Button>
-                  <Button>
+                  <Button onClick={() => this.handlePaymentChange("rhb bank")}>
                     {" "}
                     <img width="250" src="images/payment/rhb.jpg"></img>
                   </Button>
@@ -346,52 +352,31 @@ class PagePayment extends Component {
                 <CardContent>
                   {/* <img width="100" src="images/payment/paypal.png"></img> */}
                   <h4>PayPal</h4>
+                  <h5>Selected : {isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()}</h5>
                   <br />
-                  <Button style={{}}>
+                  <Button onClick={() => this.handlePaymentChange("pay pal")}>
                     <img width="200" src="images/payment/paypal.png"></img>
                   </Button>
                 </CardContent>
               </Card>
             </div>
-            {/* <div style={Object.assign({})}>
-              <PageCheckoutQr qrcode={this.props.qrcode} />
-              <div style={{ textAlign: "center" }}>
-                {console.log(this.props.qrcode)}
-                <QRCode
-                  style={{
-                    margin: "auto",
-                    width: "80%",
-                    maxWidth: "600px",
-                    maxHeight: "600px",
-                    height: "80%",
-                    padding: "10px",
-                    textAlign: "center",
-                  }}
-                  id="123456"
-                  value={this.props.qrcode.order}
-                  size={290}
-                  level={"H"}
-                  includeMargin={true}
-                />
-              </div>
-            </div> */}
           </SwipeableViews>
         </div>
       </div>
-      // </div>
     );
   }
 
   render() {
 
-    if (this.props.productcart.length < 1) {
+    console.log("this.props.data. in page payment", this.props.data)
+    if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
 
     const breadcrumb = [
       { title: "Home", url: "" },
-      { title: "Shopping Cart", url: "/shop/cart" },
-      { title: "Checkout", url: "/shop/checkout" },
+      // { title: "Shopping Cart", url: "/shop/cart" },
+      // { title: "Checkout", url: "/shop/checkout" },
       { title: "OnlinePayment", url: "" },
     ];
 
@@ -414,9 +399,14 @@ class PagePayment extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  productcart: state.counterReducer.productcart
+  creditcard: state.counterReducer["creditcards"],
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    CallAllCreditCard: (prodData) =>
+      dispatch(GitAction.CallAllCreditCard(prodData)),
+  }
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PagePayment);

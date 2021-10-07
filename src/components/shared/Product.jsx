@@ -106,7 +106,7 @@ class Product extends Component {
 
   wishlisting(product) {
     return (
-      this.props.wishlist.length > 0 ?
+      typeof this.props.wishlisth !== "undefined" && this.props.wishlist.length > 0 ?
         this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
 
           this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
