@@ -612,36 +612,6 @@ export class GitEpic {
           .catch((error) => toast.error(error));
       });
 
-
-  GetProduct_ItemListByCategorySlug = (action$) =>
-    action$
-      .ofType(GitAction.GetProductsByCategorySlug)
-      .switchMap(({ payload }) => {
-        return fetch(url +
-          "Product_ItemListByCategorySlug?ProductCategorySlug=" +
-          payload.ProductCategoryID +
-          "&ProductPerPage=" +
-          payload.ProductPerPage +
-          "&Page=" +
-          payload.Page +
-          "&Filter=" +
-          payload.Filter
-        )
-          .then((response) => response.json())
-          .then((json) => {
-            if (json !== "fail") {
-              json = JSON.parse(json);
-            } else {
-              json = [];
-            }
-            return {
-              type: GitAction.GotProductsByCategorySlug,
-              payload: json,
-            };
-          })
-          .catch((error) => toast.error(error));
-      });
-
   addProduct = (action$) =>
     action$.ofType(GitAction.AddProduct).switchMap(({ payload }) => {
       return fetch(url +
