@@ -258,7 +258,6 @@ const DeletableTableToolbar = (props) => {
 
   const onDeleteSupplier = () => {
     props.ProductProps.CallDeleteSupplier(props.selectedData);
-    // props.callAllGridStorages();
   };
 
   return (

@@ -28,7 +28,6 @@ class ProductCatogoryDetailComponent extends Component {
   constructor(props) {
     super(props);
     this.props.CallAllProductCategoryListing();
-    // this.props.callAllGridStorages();
     this.state = this.props.data;
   }
 

@@ -35,9 +35,6 @@ import { toast } from "react-toastify";
 function mapStateToProps(state) {
   return {
     allcomplains: state.counterReducer["missings"],
-    // allcategories: state.counterReducer["categories"],
-    allgridstorages: state.counterReducer["gridstorage"],
-    allshoplots: state.counterReducer["shoplot"],
     allUser: state.counterReducer["supplier"],
     exist: state.counterReducer["exists"],
     result: state.counterReducer["addResult"],
@@ -49,11 +46,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    callAllGridStorages: () => dispatch(GitAction.CallAllGridStorages()),
-    // CallAllProductCategory: () => dispatch(GitAction.CallAllProductCategory()),
     CallAllProductCategoryListing: () =>
       dispatch(GitAction.CallAllProductCategoryListing()),
-    callAllShoplots: () => dispatch(GitAction.CallAllShoplots()),
     callAddProduct: (prodData) => dispatch(GitAction.CallAddProduct(prodData)),
     callAllSupplierByUserStatus: (suppData) =>
       dispatch(GitAction.CallAllSupplierByUserStatus(suppData)),
@@ -228,8 +222,6 @@ function ProductModificableVariationTable(props) {
 class AddSuppliersComponent extends Component {
   constructor(props) {
     super(props);
-    this.props.callAllGridStorages();
-    this.props.callAllShoplots();
     this.props.CallAllProductCategoryListing();
     this.props.callAllSupplierByUserStatus("endorsed");
     this.handlePrevClickButton = this.handlePrevClickButton.bind(this);
@@ -1032,36 +1024,6 @@ class AddSuppliersComponent extends Component {
       var createMenusForDropDown = allcategoriesData.map((d, i) => {
         return <option value={d.ProductCategoryID}>{d.ProductCategory}</option>;
       });
-    }
-
-    let allgridData = this.props.allgridstorages
-      ? Object.keys(this.props.allgridstorages).map((key) => {
-          return this.props.allgridstorages[key];
-        })
-      : {};
-
-    if (allgridData.length > 0) {
-      var NotEmptyGrid = true;
-      var createMenusForDropDownGrid = allgridData.map((d, i) => {
-        return <option value={d.GridStorageID}>{d.GridStorageCode}</option>;
-      });
-    } else {
-      var NotEmptyGrid = false;
-    }
-
-    let allshoplotsData = this.props.allshoplots
-      ? Object.keys(this.props.allshoplots).map((key) => {
-          return this.props.allshoplots[key];
-        })
-      : {};
-
-    if (allshoplotsData.length > 0) {
-      var NotEmpty = true;
-      var createMenusForDropDownShoplots = allshoplotsData.map((d, i) => {
-        return <option value={d.ShoplotID}>{d.ShoplotName}</option>;
-      });
-    } else {
-      var NotEmpty = false;
     }
 
     let allusersData = this.props.allUser

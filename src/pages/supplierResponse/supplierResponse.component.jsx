@@ -22,7 +22,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    callAllGridStorages: () => dispatch(GitAction.CallAllGridStorages()),
     CallSendSalesOrder: (orderData) =>
       dispatch(GitAction.CallSendSalesOrder(orderData)),
   };

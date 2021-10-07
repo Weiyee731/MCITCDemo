@@ -769,8 +769,6 @@ class ViewProductCategoriesComponent extends Component {
       parent: [],
     };
     this.props.CallAllProductCategoryListing();
-    // this.props.CallAllProductCategory();
-    // this.props.CallAllProductsByProductStatus(this.state.productStatus);
   }
 
   render() {

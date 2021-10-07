@@ -268,7 +268,6 @@ const DeletableTableToolbar = (props) => {
   const onEndorsePromotion = () => {
     console.log(props);
     props.PromotionProps.CallEndorsePromotion(props.selectedData);
-    // props.callAllGridStorages();
   };
 
   return (
