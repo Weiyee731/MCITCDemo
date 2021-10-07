@@ -642,7 +642,13 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(error));
+          .catch((error) => {
+            toast.error(error)
+            return {
+              type: "GOT-PRODUCT-BYPRODUCTSTATUS",
+              payload: [],
+            };
+          });
       });
 
   GetProduct_ItemListByCategoryID = (action$) =>

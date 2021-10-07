@@ -4284,7 +4284,7 @@ class AddProductComponent extends Component {
                   </div>
                 ) : null}
 
-                {/* {this.state.variation1On ? (
+                {this.state.variation1On ? (
                   <div className="VariantMain">
                     <div className="VariantText">
                       <p>Variation 1</p>
@@ -4383,9 +4383,9 @@ class AddProductComponent extends Component {
                     />
                   </div>
                 ) : null}
-                {this.state.variation1On ? <br /> : null} */}
+                {this.state.variation1On ? <br /> : null}
 
-                {/* {this.state.variation2On ? (
+                {this.state.variation2On ? (
                   <div className="VariantMain">
                     <div className="VariantText">
                       <p>Variation 2</p>
@@ -4486,10 +4486,10 @@ class AddProductComponent extends Component {
                       onClick={this.onDeleteVariant.bind(this, -1, "variant2")}
                     />
                   </div>
-                ) : null} */}
+                ) : null}
 
-                {/* {this.state.variation2On ? <br /> : null} */}
-                {/* {!this.state.variation1On || !this.state.variation2On ? (
+                {this.state.variation2On ? <br /> : null}
+                {!this.state.variation1On || !this.state.variation2On ? (
                   <div className="ItemContainer">
                     <Button
                       variant="outlined"
@@ -4499,12 +4499,12 @@ class AddProductComponent extends Component {
                       Add Variant
                     </Button>
                   </div>
-                ) : null} */}
+                ) : null}
 
-                {/* {this.state.variation1On ? (
+                {this.state.variation1On ? (
                   <p className="FontType1">Variations Information</p>
-                ) : null} */}
-                {/* {this.state.variation1On ? (
+                ) : null}
+                {this.state.variation1On ? (
                   <div className="VariantMain">
                     <div className="ItemContainer">
                       <div className="VariantContainer">
@@ -4579,12 +4579,12 @@ class AddProductComponent extends Component {
                       Apply to All
                     </Button>
                   </div>
-                ) : null} */}
+                ) : null}
 
-                {/* {this.state.variation1On ? (
+                {this.state.variation1On ? (
                   <p className="FontType1">Variations List</p>
-                ) : null} */}
-                {/* {this.state.variation1On ? (
+                ) : null}
+                {this.state.variation1On ? (
                   <table className="TableMain">
                     <tr className="trHeading">
                       <td className="tdHeading">
@@ -4920,10 +4920,10 @@ class AddProductComponent extends Component {
                       )
                     )}
                   </table>
-                ) : null} */}
+                ) : null}
 
-                {/* <p className="FontType1">Wholesale Prices</p> */}
-                {/* {!this.state.wholeSaleOn ? (
+                <p className="FontType1">Wholesale Prices</p>
+                {!this.state.wholeSaleOn ? (
                   <div className="ItemContainer">
                     <Button
                       variant="outlined"
@@ -4933,8 +4933,8 @@ class AddProductComponent extends Component {
                       Add Price Tiers
                     </Button>
                   </div>
-                ) : null} */}
-                {/* {this.state.wholeSaleOn ? (
+                ) : null}
+                {this.state.wholeSaleOn ? (
                   <div className="wholeSale">
                     <div>
                       {[...Array(this.state.wholeSaleOptions)].map((e, i) => (
@@ -5058,7 +5058,7 @@ class AddProductComponent extends Component {
                       onClick={this.onDeleteVariant.bind(this, -1, "wholeSale")}
                     />
                   </div>
-                ) : null} */}
+                ) : null} 
               </CardContent>
             </Card>
             <br />
