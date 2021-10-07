@@ -411,7 +411,7 @@ export class GitEpic {
 
   updateCreditCard = (action$) =>
     action$.ofType(GitAction.UpdateCreditCard).switchMap(({ payload }) => {
-      
+
       console.log(url +
         "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
         payload.USERPAYMENTMETHODID +
@@ -425,7 +425,7 @@ export class GitEpic {
         payload.expiry +
         "&USERCARDTYPE=" +
         payload.cardtype)
-        
+
       return fetch(url +
         "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
         payload.USERPAYMENTMETHODID +
@@ -561,9 +561,11 @@ export class GitEpic {
 
   getAllProducts = (action$) =>
     action$.ofType(GitAction.GetProduct).switchMap(({ payload }) => {
-
       return fetch(url +
-        "Product_ItemList"
+        "Product_ItemListByMerchantID?"+
+        "MERCHANTID=" + payload.merchantID + 
+        "&PRODUCTPERPAGE=" + payload.productPerPage + 
+        "&PAGE=" + payload.page 
       )
         .then((response) => response.json())
         .then((json) => {
@@ -577,7 +579,13 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(error));
+        .catch((error) => {
+          console.log("getAllProducts " + error)
+          return {
+            type: "GOT-PRODUCT",
+            payload: [],
+          };
+        });
     });
 
   getViewMoreProducts = (action$) =>
@@ -602,7 +610,13 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(error));
+        .catch((error) => {
+          toast.error(error);
+          return {
+            type: "GOT-VIEWMORE-PRODUCT",
+            payload: [],
+          };
+        });
     });
 
 
@@ -628,7 +642,13 @@ export class GitEpic {
               payload: json,
             };
           })
-          .catch((error) => toast.error(error));
+          .catch((error) => {
+            toast.error(error)
+            return {
+              type: "GOT-PRODUCT-BYPRODUCTSTATUS",
+              payload: [],
+            };
+          });
       });
 
   GetProduct_ItemListByCategoryID = (action$) =>
@@ -1497,7 +1517,7 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) =>{
+        .catch((error) => {
           console.log("viewOverallSummary: " + error)
           return {
             type: "GOT-OVERALLSUMMARY",
@@ -2046,7 +2066,7 @@ export class GitEpic {
 
   getOrderListByID = (action$) =>
     action$.ofType(GitAction.GetOrderListByOrderID).switchMap(({ payload }) => {
-      
+
       console.log(url +
         "Order_ViewOrderByOrderID?ORDERID=" + payload.OrderID)
       return fetch(url +
@@ -2656,6 +2676,7 @@ export class GitEpic {
         })
         .catch((error) => toast.error(error));
     });
+
   getProductStockByStatus = (action$) =>
     action$
       .ofType(GitAction.GetProductStockByStatus)
@@ -2680,6 +2701,7 @@ export class GitEpic {
           })
           .catch((error) => toast.error(error));
       });
+
   sendSalesOrder = (action$) =>
     action$.ofType(GitAction.SendSalesOrder).switchMap(({ payload }) => {
       return fetch(url +

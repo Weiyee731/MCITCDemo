@@ -41,7 +41,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
+    CallAllProducts: (data) => dispatch(GitAction.CallAllProducts(data)),
     CallViewMoreFunctionProduct: (propsData) => dispatch(GitAction.CallViewMoreFunctionProduct(propsData)),
     CallViewMoreEmpty: () => dispatch(GitAction.CallViewMoreEmpty()),
     CallGetProductByProductCategoryID: (propsData) => dispatch(GitAction.CallGetProductByProductCategoryID(propsData)),

@@ -192,9 +192,10 @@ export class GitAction {
   static GetProductsByCategoryIDEmpty = "GET-PRODUCT-BY-CATEGORY-ID-EMPTY";
   static GotProductsByCategoryIDEmpty = "GOT-PRODUCT-BY-CATEGORY-ID-EMPTY";
 
-  static CallAllProducts() {
+  static CallAllProducts(prodData) {
     return {
       type: GitAction.GetProduct,
+      payload: prodData,
     };
   }
 

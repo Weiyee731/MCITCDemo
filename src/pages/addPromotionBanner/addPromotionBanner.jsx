@@ -117,13 +117,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -693,8 +693,8 @@ class AddPromotionBannerComponent extends Component {
   checkProductsAreChosen = () => {
     console.log(
       this.state.fullChosenProductsBackup.length +
-        " + " +
-        this.state.fullChosenProducts.length
+      " + " +
+      this.state.fullChosenProducts.length
     );
     if (this.state.fullChosenProductsBackup.length > 0) {
       this.setState({
@@ -810,8 +810,8 @@ class AddPromotionBannerComponent extends Component {
   render() {
     let allProductsData = this.props.allproducts
       ? Object.keys(this.props.allproducts).map((key) => {
-          return this.props.allproducts[key];
-        })
+        return this.props.allproducts[key];
+      })
       : {};
 
     // const addPromotionForm = () => {
@@ -1093,7 +1093,7 @@ class AddPromotionBannerComponent extends Component {
                       }
                     />
                     {this.state.startDateNotSet ||
-                    this.state.startDateInvalid ? (
+                      this.state.startDateInvalid ? (
                       <FormHelperText style={{ color: "red" }}>
                         Please enter a valid start date.
                       </FormHelperText>
@@ -1269,8 +1269,8 @@ class AddPromotionBannerComponent extends Component {
                   count={this.props.allstocks.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </Paper> */}
               {/* </div> */}

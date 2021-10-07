@@ -30,19 +30,20 @@ import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
+import { toast } from "react-toastify";
 
 function mapStateToProps(state) {
   return {
     allstocks: state.counterReducer["products"],
+    productMgmtResult: state.counterReducer["productMgmtResult"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
-    CallDeleteProduct: (prodData) =>
-      dispatch(GitAction.CallDeleteProduct(prodData)),
+    CallAllProductsByProductStatus: (prodData) => dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    CallResetProductMgmtReturnVal: () => dispatch(GitAction.CallResetProductMgmtReturnVal()),
+    CallDeleteProduct: (prodData) => dispatch(GitAction.CallDeleteProduct(prodData)),
   };
 }
 
@@ -101,13 +102,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -188,7 +189,7 @@ function DeletableTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -230,7 +231,7 @@ function DisplayTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -278,6 +279,7 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteProduct = () => {
+    // console.log("props.selectedData", props.selectedData)
     props.ProductProps.CallDeleteProduct(props.selectedData);
   };
 
@@ -384,6 +386,7 @@ function DeletableTable(props) {
   };
 
   const handleChangePage = (event, newPage) => {
+    console.log(newPage)
     setPage(newPage);
   };
 
@@ -506,7 +509,7 @@ function DeletableTable(props) {
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -578,7 +581,26 @@ class DisplayTable extends Component {
     }
   };
 
+  componentDidUpdate(prevProps) {
+
+    if (typeof this.props.ProductProps.productMgmtResult !== "undefined" && this.props.ProductProps.productMgmtResult.length > 0) {
+      this.ToggleDeletable();
+      this.props.ProductProps.CallResetProductMgmtReturnVal();
+      this.props.ProductProps.CallAllProductsByProductStatus({
+        ProductStatus: this.state.productStatus,
+        UserID: window.localStorage.getItem("id"),
+      });
+
+      toast.success("Selected products removed successfully.")
+    }
+  }
+
+  handleDetailShown = (value) =>{
+    this.setState({detailsShown: value})
+  }
+
   handleChangePage = (event, newPage) => {
+    console.log(newPage)
     this.setState({ page: newPage });
   };
 
@@ -596,6 +618,7 @@ class DisplayTable extends Component {
   };
 
   ToggleDeletable() {
+
     this.setState((prevState, props) => {
       return { deleteActive: !prevState.deleteActive };
     });
@@ -619,6 +642,10 @@ class DisplayTable extends Component {
                 ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
                 : ""
             }
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = Logo;
+            }}
           />
         </div>
       );
@@ -651,17 +678,19 @@ class DisplayTable extends Component {
       width: 1,
     };
 
+    
+
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailsComponent data={this.state} data2={this.props} />
+          <ProductDetailsComponent data={this.state} data2={this.props} isEndorsement={false} setDetailShown={this.handleDetailShown}  />
         ) : this.state.deleteActive ? (
           <div>
             <h1>Product List</h1>
             <div>
               <Button>
                 <i class="fa fa-plus" aria-hidden="true"></i>
-                <Link className="nav-link" to={"/addProduct"}>
+                <Link className="nav-link" to={"/addProductsAllIn"}>
                   Create new Product
                 </Link>
               </Button>
@@ -703,7 +732,7 @@ class DisplayTable extends Component {
             <div>
               <Button>
                 <i class="fa fa-plus" aria-hidden="true"></i>
-                <Link className="nav-link" to={"/addProduct"}>
+                <Link className="nav-link" to={"/addProductsAllIn"}>
                   Create new Product
                 </Link>
               </Button>
@@ -760,7 +789,7 @@ class DisplayTable extends Component {
                         .slice(
                           this.state.page * this.state.rowsPerPage,
                           this.state.page * this.state.rowsPerPage +
-                            this.state.rowsPerPage
+                          this.state.rowsPerPage
                         )
                         .map((row, index) => {
                           const isItemSelected = this.isSelected(
@@ -771,28 +800,18 @@ class DisplayTable extends Component {
                           return (
                             <TableRow
                               hover
-                              onClick={(event) =>
-                                this.onRowClick(event, row, index)
-                              }
+                              onClick={(event) => this.onRowClick(event, row, index)}
                               role="checkbox"
                               aria-checked={isItemSelected}
                               tabIndex={-1}
                               key={row.ProductName}
                               selected={isItemSelected}
                             >
-                              <TableCell align="center">
-                                {row.Picture}
-                              </TableCell>
-                              <TableCell align="left">
-                                {row.ProductName}
-                              </TableCell>
-                              <TableCell align="left">
-                                {row.ProductDescription}
-                              </TableCell>
+                              <TableCell align="center"> {row.Picture} </TableCell>
+                              <TableCell align="left"> {row.ProductName} </TableCell>
+                              <TableCell align="left"> {row.ProductDescription} </TableCell>
                               <TableCell align="left">{row.Brand}</TableCell>
-                              <TableCell align="right">
-                                {row.ProductWeight}
-                              </TableCell>
+                              <TableCell align="right"> {row.ProductWeight} </TableCell>
                               <TableCell align="right">
                                 {row.ProductDimensionWidth +
                                   " x " +
@@ -800,12 +819,8 @@ class DisplayTable extends Component {
                                   " x " +
                                   row.ProductDimensionHeight}
                               </TableCell>
-                              <TableCell align="right">
-                                {row.ProductStockAmountInital}
-                              </TableCell>
-                              <TableCell align="right">
-                                {row.ProductSellingPrice}
-                              </TableCell>
+                              <TableCell align="right"> {row.ProductStockAmountInital}</TableCell>
+                              <TableCell align="right"> {row.ProductSellingPrice} </TableCell>
                             </TableRow>
                           );
                         })}
@@ -828,7 +843,7 @@ class DisplayTable extends Component {
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
                   onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>
             </div>
@@ -885,6 +900,8 @@ class ViewProductComponent extends Component {
       UserID: window.localStorage.getItem("id"),
     });
   }
+
+
 
   render() {
     return (

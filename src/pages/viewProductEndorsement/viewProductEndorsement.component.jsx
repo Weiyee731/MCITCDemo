@@ -27,9 +27,10 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import EditIcon from "@material-ui/icons/Edit";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
 import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
+import { toast } from "react-toastify";
 
 function mapStateToProps(state) {
   return {
@@ -39,10 +40,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
-    CallEndorseProduct: (prodData) =>
-      dispatch(GitAction.CallEndorseProduct(prodData)),
+    CallAllProductsByProductStatus: (prodData) => dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    CallEndorseProduct: (prodData) => dispatch(GitAction.CallEndorseProduct(prodData)),
+    CallResetEndorseProductReturnValue: (prodData) => dispatch(GitAction.CallResetEndorseProductReturnValue(prodData)),
   };
 }
 
@@ -101,13 +101,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -188,7 +188,7 @@ function EndorseTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -230,7 +230,7 @@ function DisplayTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -278,7 +278,11 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onEndorseProduct = () => {
-    props.ProductProps.CallEndorseProduct(props.selectedData);
+    props.ProductProps.CallEndorseProduct({
+      ProductID: props.selectedData,
+      UserID: window.localStorage.getItem("id")
+    })
+    // props.callAllGridStorages();
   };
 
   return (
@@ -311,11 +315,9 @@ const DeletableTableToolbar = (props) => {
         <Tooltip title="Endorse">
           <IconButton
             aria-label="endorse"
-            onClick={() => {
-              onEndorseProduct();
-            }}
+            onClick={() => { onEndorseProduct(); }}
           >
-            <EditIcon />
+            <DoneAllIcon />
           </IconButton>
         </Tooltip>
       ) : (
@@ -505,8 +507,8 @@ function DeletableTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -543,8 +545,21 @@ class DisplayTable extends Component {
     this.setState({ orderBy: property });
   };
 
+  componentDidUpdate(prevProps) {
+
+    if (prevProps.ProductProps.allstocks !== this.props.ProductProps.allstocks) {
+      this.setState({ deleteActive: false })
+      // toast.success("The product is endorse successfully")
+    }
+  }
+
+  handleDetailShown = (value) =>{
+    this.setState({detailsShown: value})
+  }
+
   onRowClick = (event, row, index) => {
     this.setState({
+      productID: row.ProductID,
       name: row.ProductName,
       category: row.ProductCategoryID,
       height: row.ProductDimensionHeight,
@@ -600,6 +615,7 @@ class DisplayTable extends Component {
   }
 
   render() {
+
     const { classes } = this.props;
     const emptyRows =
       this.state.rowsPerPage -
@@ -621,7 +637,6 @@ class DisplayTable extends Component {
               e.target.onerror = null;
               e.target.src = Logo;
             }}
-            // onError={this.src=Logo}
           />
         </div>
       );
@@ -657,25 +672,20 @@ class DisplayTable extends Component {
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailsComponent data={this.state} data2={this.props} />
+          <ProductDetailsComponent data={this.state} data2={this.props} isEndorsement={true} setDetailShown={this.handleDetailShown} />
         ) : this.state.deleteActive ? (
           <div>
             <h1>Product Endorsement List</h1>
             <div>
-              <Button>
+              {/* <Button>
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <Link className="nav-link" to={"/addProduct"}>
                   Create new Product
                 </Link>
-              </Button>
+              </Button> */}
 
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={this.state.deleteActive}
-                    onChange={this.ToggleDeletable}
-                  />
-                }
+                control={ <Switch checked={this.state.deleteActive} onChange={this.ToggleDeletable} color="primary" /> }
                 label="Endorse"
                 style={{
                   float: "right",
@@ -704,12 +714,12 @@ class DisplayTable extends Component {
           <div>
             <h1>Product Endorsement List</h1>
             <div>
-              <Button>
+              {/* <Button>
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <Link className="nav-link" to={"/addProduct"}>
                   Create new Product
                 </Link>
-              </Button>
+              </Button> */}
               <FormControlLabel
                 control={
                   <Switch
@@ -762,7 +772,7 @@ class DisplayTable extends Component {
                         .slice(
                           this.state.page * this.state.rowsPerPage,
                           this.state.page * this.state.rowsPerPage +
-                            this.state.rowsPerPage
+                          this.state.rowsPerPage
                         )
                         .map((row, index) => {
                           const isItemSelected = this.isSelected(
@@ -829,8 +839,8 @@ class DisplayTable extends Component {
                   count={filteredProduct.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  onPageChange={this.handleChangePage}
+                  onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>
             </div>
