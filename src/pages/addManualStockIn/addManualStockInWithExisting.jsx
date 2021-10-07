@@ -1,16 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import "react-table/react-table.css";
-
-
-import MainTable from "./Components/TableView.component";
-import {Card, CardContent} from "@material-ui/core";
+import SearchBox from "../../components/SearchBox/SearchBox";
+import MaterialTable from "material-table";
 import GoogleMaps from "../../components/googleMaps/googleMaps";
-
-
 import Button from "@material-ui/core/Button";
 
 function mapStateToProps(state) {
@@ -27,6 +22,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallUpdateProductStock(prodData)),
   };
 }
+
 class AddManualStockInComponent extends Component {
   constructor(props) {
     super(props);
@@ -35,10 +31,10 @@ class AddManualStockInComponent extends Component {
       SelectedProductStock: [],
       ProductStatus: "Endorsed",
       UserID: localStorage.getItem("id"),
+      searchFilter:"",
     };
     this.props.CallAllProductsByProductStatus(this.state);
   }
-
 
   handleInputChange = (event, index) => {
     let newSelected = this.state.SelectedProductStock;
@@ -83,38 +79,96 @@ class AddManualStockInComponent extends Component {
   };
 
   updateProduct = () => {
-    // console.log(this.state);
     this.props.CallUpdateProductStock(this.state);
   };
 
   render() {
-    // console.log(this.props.allstocks);
-    let allStocksData = this.props.allstocks
-    ? Object.keys(this.props.allstocks).map((key) => {
-      return this.props.allstocks[key];
-    })
-  : {};
+    console.log(this.props.allstocks);
+    this.props.allstocks.map((d, i) => {
+      d.ProductImage = (
+        <div>
+          <img height={50} src={d.ProductImage} />
+        </div>
+      );
+      d.ProductComponentOf = (
+        <div>
+          <Button
+            onClick={this.updateProduct}
+            variant="outlined"
+            className="AddButton"
+          >
+            Request Stock
+          </Button>
+        </div>
+      );
+    });
 
-  var FilterList=["ProductName", "Model", "ProductStockStatus", "ProductTag"];
-  
-  var ListedAttributes = [
-  {name:"ProductImage", isNum:false, displayName: "Product Image"}, 
-  {name:"ProductName", isNum:false, displayName: "Product Name"}, 
-  {name:"ProductStockAmountInital", isNum:true, displayName: "Current Stock"},
-  {name:"ProductStockAmount", isNum:true, displayName: "Awaiting Approval"},
-  {name:"ProductStockStatus", isNum:false, displayName: "Stock Status"},
-  ]
+    const divStyle = {
+      width: "100%",
+      margin: "auto",
+      padding: "1%",
+      marginTop: "15px",
+    };
+
+    var filteredProduct = [];
 
     return (
-      <div className="MainContainer">
-        <h1>Product Stock In</h1>
-        <Card className="MainCard">
-          <CardContent className="MainContent">
-            <MainTable CallUpdateProductStock={this.props.CallUpdateProductStock} ListedAttributes={ListedAttributes} Data={allStocksData} filterList={FilterList} changeValue={this.updateList}/>
-          </CardContent>
-        </Card>
+      <div style={{ width: "100%" }}>
+        <div style={{ margin: "2%" }}>
+          <div>
+            <h1>Product Stock In</h1>
+            <div style={{ margin: "1%" }}>
+            <SearchBox
+              style={divStyle}
+              placeholder="Search..."
+            
+              onChange={(e) => this.setState({ searchFilter: e.target.value })}
+            />
+            {this.props.allstocks.filter((searchedItem) =>
+              searchedItem.ProductName.toLowerCase().includes(
+                this.state.searchFilter.toLowerCase()
+              )
+            ).map((filteredItem) => {
+              filteredProduct.push(filteredItem);
+            })}
+              <MaterialTable
+              columns={[
+                  {
+                    title: "Product Image",
+                    field: "ProductImage",
+                  },
+                  {
+                    title: "Product Name",
+                    field: "ProductName",
+                  },
+                  {
+                    title: "Current Stock",
+                    field: "ProductStockAmountInital",
+                  },
+                  {
+                    title: "Waiting to Approved Stock",
+                    field: "ProductStockAmount",
+                  },
+                  {
+                    title: "Status",
+                    field: "ProductStockStatus",
+                  },
+                  {
+                    title: "",
+                    field: "ProductComponentOf",
+                  },
+                ]}
+                data = {filteredProduct}
+                options={{
+                  paging: true,
+                  search: false,
+                  toolbar: false,
+                }}
+              ></MaterialTable>
+            </div>
+          </div>
+        </div>
       </div>
-           
     );
   }
 }

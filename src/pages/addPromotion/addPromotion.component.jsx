@@ -123,13 +123,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -310,7 +310,7 @@ function TransferList(props) {
     <Grid
       container
       spacing={2}
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       className={classes.root}
     >
@@ -699,8 +699,8 @@ class AddPromotionBannerComponent extends Component {
   checkProductsAreChosen = () => {
     console.log(
       this.state.fullChosenProductsBackup.length +
-        " + " +
-        this.state.fullChosenProducts.length
+      " + " +
+      this.state.fullChosenProducts.length
     );
     if (this.state.fullChosenProductsBackup.length > 0) {
       this.setState({
@@ -761,9 +761,7 @@ class AddPromotionBannerComponent extends Component {
           this.state.PromotionEndDate.getDate());
 
       console.log("hahahahah" + this.state.PromotionStartDate.getMonth() + 1);
-      console.log(
-        "hahahahah" + parseInt(+(this.state.PromotionStartDate.getMonth() + 1))
-      );
+      console.log("hahahahah" + parseInt(+(this.state.PromotionStartDate.getMonth() + 1)));
 
       // var StartDate =
       //   this.state.PromotionStartDate.getFullYear() +
@@ -771,6 +769,8 @@ class AddPromotionBannerComponent extends Component {
       //    parseInt(((this.state.PromotionStartDate.getMonth() + 1) < 10 ? '0' : '') + (this.state.PromotionStartDate.getMonth() + 1)) +
       //   "" +
       //   ((this.state.PromotionStartDate.getDate() < 10 ? '0' : '') + this.state.PromotionStartDate.getDate());
+      // console.log("this.state.PromotionStartDate",this.state.PromotionStartDate)
+      // console.log("this.state.PromotionEndDate",this.state.PromotionEndDate)
 
       var StartDate =
         this.state.PromotionStartDate.getFullYear() +
@@ -787,6 +787,8 @@ class AddPromotionBannerComponent extends Component {
         ProductID: ProductIDOnly,
         PromotionDesc: this.state.PromotionDesc,
         PromotionTitle: this.state.PromotionTitle,
+        BannerImage: "Null",
+        SlideOrder: "Null",
         promoStart: StartDate,
         promoEnd: EndDate,
         DiscountPercentage: this.state.DiscountPercentage,
@@ -817,8 +819,8 @@ class AddPromotionBannerComponent extends Component {
   render() {
     let allProductsData = this.props.allproducts
       ? Object.keys(this.props.allproducts).map((key) => {
-          return this.props.allproducts[key];
-        })
+        return this.props.allproducts[key];
+      })
       : {};
 
     // const addPromotionForm = () => {
@@ -944,7 +946,7 @@ class AddPromotionBannerComponent extends Component {
       });
 
       var leftImages = ItemsLeft.map(
-        (images) => JSON.parse(images.ProductImages)[0].ProductMediaUrl
+        (images) => JSON.parse(images.ProductImages).length > 0 && JSON.parse(images.ProductImages)[0].ProductMediaUrl
       );
 
       this.setState({
@@ -1048,7 +1050,7 @@ class AddPromotionBannerComponent extends Component {
           <div className="App-header">
             <h2 style={{ margin: "10px" }}>Add Promotion</h2>
             <Button onClick={back}>
-              <i class="fas fa-chevron-left"></i>Back
+              <i className="fas fa-chevron-left"></i>Back
             </Button>
           </div>
           <Card style={{ width: "80%", margin: "0 auto" }}>
@@ -1102,7 +1104,7 @@ class AddPromotionBannerComponent extends Component {
                       }
                     />
                     {this.state.startDateNotSet ||
-                    this.state.startDateInvalid ? (
+                      this.state.startDateInvalid ? (
                       <FormHelperText style={{ color: "red" }}>
                         Please enter a valid start date.
                       </FormHelperText>
@@ -1278,8 +1280,8 @@ class AddPromotionBannerComponent extends Component {
                   count={this.props.allstocks.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </Paper> */}
               {/* </div> */}

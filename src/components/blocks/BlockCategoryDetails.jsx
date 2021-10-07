@@ -32,7 +32,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
-import { isNullOrEmptyString } from "../../Utilities/UtilRepo";
+import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 
 // styles
 import './styles/BlockCategoryDetails.css'
@@ -94,7 +94,7 @@ class BlockCategoryDetails extends Component {
 
 
     componentDidMount() {
-        if (!isNullOrEmptyString(this.props.match.params.categoryID)) {
+        if (!isStringNullOrEmpty(this.props.match.params.categoryID)) {
             // this.props.CallProductByProductCategoryIDEmpty()
             let propsData = {
                 ProductCategoryID: Number(this.props.match.params.categoryID),
