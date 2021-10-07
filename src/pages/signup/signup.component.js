@@ -341,7 +341,7 @@ const SignUp = (props) => {
 
     useEffect(() => {
         if (props.currentUser.length > 0 && submitRegisterForm === true) {
-            browserHistory.push("/login");
+            browserHistory.push("/Emporia/login");
             window.location.reload(false);
         }
     }, [props.currentUser], setSubmitRegisterForm);
