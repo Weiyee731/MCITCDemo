@@ -20,7 +20,7 @@ export default function FooterNewsletter() {
                     id="footer-newsletter-address"
                     placeholder="Email Address..."
                 />
-                <button type="submit" className="footer-newsletter__form-button btn btn-primary">Subscribe</button>
+                <button className="footer-newsletter__form-button btn btn-primary">Subscribe</button>
             </form>
 
             <div className="footer-newsletter__text footer-newsletter__text--social">

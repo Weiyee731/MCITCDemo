@@ -50,67 +50,81 @@ class Product extends Component {
   addCart = (product, quantity) => {
     let found = false
 
-    this.props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
-      found = true
-      this.props.CallUpdateProductCart({
-        userID: localStorage.getItem("id"),
-        userCartID: x.UserCartID,
-        productQuantity: parseInt(x.ProductQuantity) + quantity,
-        productName: product.ProductName
+    if (this.props.productcart) {
+      this.props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+        found = true
+        this.props.CallUpdateProductCart({
+          userID: localStorage.getItem("id"),
+          userCartID: x.UserCartID,
+          productQuantity: parseInt(x.ProductQuantity) + quantity,
+          productName: product.ProductName
+        })
       })
-    })
 
-    if (found === false) {
-      this.props.CallAddProductCart({
-        userID: window.localStorage.getItem("id"),
-        productID: product.ProductID,
-        productQuantity: quantity,
-        productVariationDetailID: 1,
-        applyingPromoCode: 0,
-        productName: product.ProductName
-      })
-    }
+      if (found === false) {
+        this.props.CallAddProductCart({
+          userID: window.localStorage.getItem("id"),
+          productID: product.ProductID,
+          productQuantity: quantity,
+          productVariationDetailID: 1,
+          applyingPromoCode: 0,
+          productName: product.ProductName
+        })
+      }
+    } else
+      this.login()
+
   }
 
   login() {
-    browserHistory.push("/login");
+    browserHistory.push("/Emporia/login");
     window.location.reload(false);
   }
 
   handleWishlist = (product) => {
     let found = false
-
-    this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-      found = true
-      this.props.CallDeleteProductWishlist({
-        userID: localStorage.getItem("id"),
-        userWishlistID: x.UserWishlistID,
-        productName: product.ProductName
+    if (this.props.wishlist !== undefined) {
+      this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+        found = true
+        this.props.CallDeleteProductWishlist({
+          userID: localStorage.getItem("id"),
+          userWishlistID: x.UserWishlistID,
+          productName: product.ProductName
+        })
       })
-    })
-    if (found === false) {
-      this.props.CallAddProductWishlist({
-        userID: window.localStorage.getItem("id"),
-        productID: product.ProductID,
-        productName: product.ProductName
-      })
+      if (found === false) {
+        this.props.CallAddProductWishlist({
+          userID: window.localStorage.getItem("id"),
+          productID: product.ProductID,
+          productName: product.ProductName
+        })
+      }
     }
+    else
+      this.login()
   }
 
   wishlisting(product) {
     return (
-      this.props.wishlist.length > 0 ?
-        this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-          return (
-            <button type="button" onClick={() => localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
-              className={classNames('btn btn-light btn-sm btn-svg-icon')}
-            ><Wishlist16Svg fill="red" />
+      typeof this.props.wishlisth !== "undefined" && this.props.wishlist.length > 0 ?
+        this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+
+          this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+            return (
+              <button type="button" onClick={() => window.localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
+                className={classNames('btn btn-light btn-sm btn-svg-icon')}
+              ><Wishlist16Svg fill="red" />
+              </button>
+            )
+          }) :
+          (
+            <button type="button" onClick={() => window.localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
+              className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
+            ><Wishlist16Svg />
             </button>
-          )
-        })
-        :
+          ) :
         (
-          <button type="button" onClick={() => localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
+          <button type="button" onClick={() => window.localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
             className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
           ><Wishlist16Svg />
           </button>
@@ -280,7 +294,7 @@ class Product extends Component {
                     <div className="product__actions-item product__actions-item--addtocart mx-1">
                       <button
                         type="button"
-                        onClick={() => localStorage.getItem("id") ? this.addCart(product, quantity) : this.login()}
+                        onClick={() => window.localStorage.getItem("id") ? this.addCart(product, quantity) : this.login()}
                         className={classNames("btn btn-primary product-card__addtocart")}
                       >
                         Add To Cart
@@ -362,7 +376,6 @@ const mapDispatchToProps = (dispatch) => {
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
   }
-
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

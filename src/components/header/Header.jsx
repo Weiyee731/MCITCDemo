@@ -43,18 +43,9 @@ function Header(props) {
           <Search context="header" />
         </div>
         <div className="nav-panel__indicators">
-          {localStorage.getItem("isLogin") ? (
-            <>
-              <Indicator url="/shop/wishlist" value={props.wishlist !== undefined ? props.wishlist.length : 0} icon={<Heart20Svg />} />
-              <CartIndicator />
-              <IndicatorAccount />
-            </>
-          ) : (
-            <>
-              <CartIndicator />
-              <IndicatorAccount />
-            </>
-          )}
+          {localStorage.getItem("isLogin") === 'true' && <Indicator url="/shop/wishlist" value={props.wishlist !== undefined ? props.wishlist.length : 0} icon={<Heart20Svg />} />}
+          <CartIndicator />
+          <IndicatorAccount />
         </div>
       </div>
     );

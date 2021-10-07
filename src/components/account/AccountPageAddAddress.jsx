@@ -51,7 +51,7 @@ class AccountPageAddAddress extends Component {
         USERSTATE: "",
         USERCITY: "",
         USERCOUNTRYID: 1,
-        // COUNTRYID: "1",
+        COUNTRYID: "1",
       };
     this.addAddress = this.addAddress.bind(this);
     this.selectCountry = this.selectCountry.bind(this);

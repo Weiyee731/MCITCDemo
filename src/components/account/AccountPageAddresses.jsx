@@ -80,7 +80,7 @@ class AccountPageAddresses extends Component {
       defaultAddress: "",
       addressIdClicked: " ",
     };
-    this.props.CallAllAddress(window.localStorage.getItem("id"));
+    this.props.CallAllAddress({USERID: window.localStorage.getItem("id")});
     this.handleCallbackfromAdd = this.handleCallbackfromAdd.bind(this);
     this.handleCallbackfromEdit = this.handleCallbackfromEdit.bind(this);
     this.onAddClick = this.onAddClick.bind(this);

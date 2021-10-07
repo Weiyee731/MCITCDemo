@@ -91,7 +91,7 @@ import addPromotionBannerComponent from "../pages/addPromotionBanner/addPromotio
 import ViewProductPromotionComponent from "../pages/viewProductPromotion/viewProductPromotion.component";
 import ViewSettingsComponent from "../pages/viewSettings/viewSettings.component";
 import addPromoCodeComponent from "../pages/addPromoCode/addPromoCode.component";
-import ViewTransactions from "../pages/viewTransactions/viewTransactions.component";
+import ViewTransactionsComponent from "../pages/viewTransactions/viewTransactions.component";
 import ViewPromoCodes from "../pages/viewPromoCodes/viewPromoCodes.component";
 import ViewPromoCodesDetails from "../pages/promoCodeDetails/promoCodeDetails.component";
 import ViewMerchantsComponent from "../pages/viewMerchants/viewMerchants.component";
@@ -108,7 +108,7 @@ import ViewStockOutDetailsComponent from "../pages/viewStockOutDetails/viewStock
 import ViewPayableComponent from "../pages/viewPayable/viewPayable.component";
 import ViewReceivableComponent from "../pages/viewReceivable/viewReceivable.component";
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
-import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
+// import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
 import sendUserMail from "../pages/sendUserMail/sendUserMail.component";
 import DeliverableTransactionDetails from "../pages/deliverableTransactionDetails/deliverableTransactionDetails.component";
 
@@ -246,7 +246,7 @@ const Access = () => {
             <Route path="/viewProduct" component={ViewProductComponent} />
             <Route path="/viewOrder" component={ViewProductComponent} />
             <Route
-              path="/viewTransaction"
+              path="/viewTransactioDetails"
               component={TransactionDetailsComponent}
             />
             <Route path="/addProduct" component={AddProductComponent} />
@@ -363,7 +363,7 @@ const Access = () => {
               component={addPromotionBannerComponent}
             />
             <Route path="/addPromoCode" component={addPromoCodeComponent} />
-            <Route path="/viewTransactions" component={ViewTransactions} />
+            <Route path="/viewTransaction" component={ViewTransactionsComponent} />
             <Route path="/viewPromoCodes" component={ViewPromoCodes} />
             <Route
               path="/viewPromoCodesDetails"
@@ -384,8 +384,8 @@ const Access = () => {
             <Route path="/supplierResponse" component={supplierResponse} />
 
             <Route path="/addProductsAllIn" component={AddProductAllInOne} />
-            <Route path="/viewUserMail" component={viewUserMail} />
-            <Route path="/sendUserMail" component={sendUserMail} />
+            {/* <Route path="/viewUserMail" component={viewUserMail} /> */}
+            {/* <Route path="/sendUserMail" component={sendUserMail} /> */}
           </Switch>
         </div>
       </div>

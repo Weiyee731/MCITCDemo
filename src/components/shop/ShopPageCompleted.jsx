@@ -28,7 +28,28 @@ class PageCompleted extends Component {
 
     this.state = {
       payment: "bank",
+
+      cart: [],
+      subtotal: 0,
+      total: 0,
+      shipping: 25,
+      tax: 0,
     };
+    this.setDetails = this.setDetails.bind(this)
+  }
+
+  setDetails(productcart) {
+    this.setState({
+      cart: productcart
+    })
+    this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
+    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+  }
+
+  componentDidMount() {
+    if (this.props.data !== undefined && this.props.data.length > 0) {
+      this.setDetails(this.props.data)
+    }
   }
 
   handlePaymentChange = (event) => {
@@ -38,40 +59,49 @@ class PageCompleted extends Component {
   };
 
   renderTotals() {
-    const { cart } = this.props;
+    // const { cart } = this.props;
 
-    if (cart.extraLines.length <= 0) {
-      return null;
-    }
+    // if (cart.extraLines.length <= 0) {
+    //   return null;
+    // }
 
-    const extraLines = cart.extraLines.map((extraLine, index) => (
-      <tr key={index}>
-        <th style={{ textAlign: "right" }}>{extraLine.title}</th>
-        <td>
-          <Currency value={extraLine.price} />
-        </td>
-      </tr>
-    ));
-
+    // const extraLines = cart.extraLines.map((extraLine, index) => (
+    //   <tr key={index}>
+    //     <th style={{ textAlign: "right" }}>{extraLine.title}</th>
+    //     <td>
+    //       <Currency value={extraLine.price} />
+    //     </td>
+    //   </tr>
+    // ));
     return (
       <React.Fragment>
         <tbody className="checkout__totals-subtotals">
           <tr>
             <th style={{ textAlign: "right" }}>Subtotal</th>
             <td>
-              <Currency value={cart.subtotal} />
+              <Currency value={this.state.subtotal} />
             </td>
           </tr>
-          {extraLines}
+          <tr>
+            <th style={{ textAlign: "right" }}>Shipping</th>
+            <td>
+              <Currency value={this.state.shipping} />
+            </td>
+          </tr>
+          <tr>
+            <th style={{ textAlign: "right" }}>Tax</th>
+            <td>
+              <Currency value={this.state.tax} />
+            </td>
+          </tr>
         </tbody>
       </React.Fragment>
     );
   }
 
   renderCart() {
-    const { cart } = this.props;
 
-    const items = cart.items.map((item) => (
+    const items = this.state.cart.map((item) => (
       <tr key={item.id}>
         <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
         <td>
@@ -94,7 +124,7 @@ class PageCompleted extends Component {
           <tr>
             <th style={{ textAlign: "right" }}>Total</th>
             <td>
-              <Currency value={cart.total} />
+              <Currency value={this.state.total} />
             </td>
           </tr>
         </tfoot>
@@ -103,9 +133,8 @@ class PageCompleted extends Component {
   }
 
   render() {
-    const { cart } = this.props;
 
-    if (cart.items.length < 1) {
+    if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
 
@@ -123,13 +152,29 @@ class PageCompleted extends Component {
             <div className="card mb-0">
               <div className="card-body">
                 <h3 className="card-title">Emporia</h3>
-                <h5 >
-                  {/* Address: Sejingkat, 93050 Kuching, Sarawak | Tel No. : (60) 012-850 9198 */}
-                </h5>
-                {/* <h5 >
-                 Delivery Address: { localStorage.getItem("address")}
-                </h5>
-                {console.log(localStorage.getItem("address"))} */}
+                {
+                  this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.address !== 0 ?
+                    this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
+                      x.UserAddressBookID === this.props.addresss.state.address).map((address) => {
+                        return (
+                          <h5 >
+                            Deivery Address: {address.UserAddressLine1 + " " + address.UserAddressLine2} <br />
+                            Tel No. : (60) {address.UserContactNo}
+                          </h5>
+                        )
+                      })
+                    :
+                    <h5 >
+                      User Self Pick Up
+                    </h5>
+                }
+                {
+                  this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.PaymentMethodID !== 0 ?
+                    <h5 >  Payment Method:{this.props.addresss.state.PaymentID}  </h5> :
+                    this.props.addresss.state.PaymentID !== 0 ?
+                      <h5 > Payment Method: Credit Card  </h5> :
+                      <h5 > Payment Method: No Payment Method Selected  </h5>
+                }
                 {this.renderCart()}
               </div>
             </div>
@@ -141,7 +186,7 @@ class PageCompleted extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  cart: state.cart,
+  addresses: state.counterReducer["addresses"],
 });
 
 const mapDispatchToProps = {};

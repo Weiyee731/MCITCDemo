@@ -8,8 +8,9 @@ export function formatCreditCardNumber(value) {
   if (!value) {
     return value;
   }
-
+  console.log("value", value)
   const issuer = Payment.fns.cardType(value);
+  console.log("issuer", issuer)
   const clearValue = clearNumber(value);
   let nextValue;
 

@@ -119,13 +119,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -531,7 +531,7 @@ function Row(props) {
         tabIndex={-1}
         key={row.Username}
         onClick={() => setOpen(!open)}
-        // selected={isItemSelected}
+      // selected={isItemSelected}
       >
         <TableCell>
           <IconButton
@@ -613,28 +613,28 @@ function Row(props) {
                   <TableBody>
                     {row.OrderProductDetail
                       ? JSON.parse(row.OrderProductDetail).map((product, i) => (
-                          <TableRow>
-                            <TableCell>
-                              <img
-                                height={50}
-                                src={
-                                  JSON.parse(product.ProductImages)
-                                    ? JSON.parse(product.ProductImages)[0]
-                                        .ProductMediaUrl
-                                    : ""
-                                }
-                              />
-                            </TableCell>
-                            <TableCell>{product.ProductName}</TableCell>
-                            <TableCell>{product.ProductQuantity}</TableCell>
-                            <TableCell>{product.ProductSellingPrice}</TableCell>
-                            <TableCell>
-                              {product.ProductQuantity *
-                                product.ProductSellingPrice}
-                            </TableCell>
-                            <TableCell>{product.ProductStatus}</TableCell>
-                          </TableRow>
-                        ))
+                        <TableRow>
+                          <TableCell>
+                            <img
+                              height={50}
+                              src={
+                                JSON.parse(product.ProductImages)
+                                  ? JSON.parse(product.ProductImages)[0]
+                                    .ProductMediaUrl
+                                  : ""
+                              }
+                            />
+                          </TableCell>
+                          <TableCell>{product.ProductName}</TableCell>
+                          <TableCell>{product.ProductQuantity}</TableCell>
+                          <TableCell>{product.ProductSellingPrice}</TableCell>
+                          <TableCell>
+                            {product.ProductQuantity *
+                              product.ProductSellingPrice}
+                          </TableCell>
+                          <TableCell>{product.ProductStatus}</TableCell>
+                        </TableRow>
+                      ))
                       : null}
                   </TableBody>
                 </Table>
@@ -865,7 +865,7 @@ class DisplayTable extends Component {
                           .slice(
                             this.state.page * this.state.rowsPerPage,
                             this.state.page * this.state.rowsPerPage +
-                              this.state.rowsPerPage
+                            this.state.rowsPerPage
                           )
                           .map((row, index) => {
                             const isItemSelected = this.isSelected(
@@ -1017,9 +1017,9 @@ class ViewTransactionsComponent extends Component {
 
     let allTransactionStatusData = this.props.alltransactionstatus
       ? Object.keys(this.props.alltransactionstatus).map((key) => {
-          console.log(this.props.alltransactionstatus);
-          return this.props.alltransactionstatus[key];
-        })
+        console.log(this.props.alltransactionstatus);
+        return this.props.alltransactionstatus[key];
+      })
       : {};
 
     if (allTransactionStatusData.length > 0) {
@@ -1032,24 +1032,22 @@ class ViewTransactionsComponent extends Component {
     }
 
     if (allTransactionStatusData.length > 0) {
-      console.log(allTransactionStatusData);
       var generateTabs = allTransactionStatusData.map((status, i) => {
         return (
           <Tab
             label={status.TrackingStatus}
             {...a11yProps(i)}
-            // onClick={changeData.bind(this, status.TrackingStatus)}
+          // onClick={changeData.bind(this, status.TrackingStatus)}
           />
         );
       });
       var generatePanels = allTransactionStatusData.map((status, i) => {
         var transactionList = this.props.alltransactions;
-        console.log(allTransactionStatusData);
         transactionList = transactionList.filter(
           (items) =>
-            items.TrackingStatus == allTransactionStatusData[i].TrackingStatus
+
+            items.TrackingStatusID === allTransactionStatusData[i].TrackingStatusID
         );
-        console.log(transactionList);
         return (
           <TabPanel value={this.state.value} index={i}>
             <DisplayTable
@@ -1076,7 +1074,7 @@ class ViewTransactionsComponent extends Component {
         return (
           <div>
             {this.state.currentlyChosen ==
-            allTransactionStatusData[i].TrackingStatus ? (
+              allTransactionStatusData[i].TrackingStatus ? (
               <DisplayTable
                 Data={transactionList}
                 ProductProps={this.props}

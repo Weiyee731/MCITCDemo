@@ -72,8 +72,6 @@ function Search(props) {
     location,
   } = props;
 
-  props.CallAllProducts();
-
   const [cancelFn, setCancelFn] = useState(() => () => { });
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [hasSuggestions, setHasSuggestions] = useState(false);

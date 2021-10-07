@@ -29,6 +29,13 @@ class IndicatorCart extends React.Component {
     this.props.CallDeleteProductCart({ userCartID: product.UserCartID, userID: localStorage.getItem("id"), productName: product.ProductName })
   }
 
+  componentDidMount() {
+    if (localStorage.getItem("id")) {
+      this.props.CallViewProductCart({ userID: localStorage.getItem("id") })
+      this.props.CallViewProductWishlist({ userID: localStorage.getItem("id") })
+    }
+  }
+
   // const { this.props.cart, cartRemoveItem } = props;
   // const [added, setadd] = useState(localStorage.getItem("checkoutind"));
   // const [orderid, setOrderid] = useState(0);
@@ -177,6 +184,7 @@ class IndicatorCart extends React.Component {
     // );
 
 
+    console.log("this.props.productcart", this.props.productcart)
 
     if (this.props.productcart.length) {
       // const dropdown = (
@@ -252,6 +260,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     CallDeleteProductCart: (prodData) => dispatch(GitAction.CallDeleteProductCart(prodData)),
+    CallViewProductCart: (prodData) => dispatch(GitAction.CallViewProductCart(prodData)),
+    CallViewProductWishlist: (propsData) => dispatch(GitAction.CallViewProductWishlist(propsData)),
   }
 };
 

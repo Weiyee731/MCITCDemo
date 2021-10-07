@@ -31,7 +31,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallGetTransaction: () => dispatch(GitAction.CallGetTransaction()),
+    CallGetTransaction: (prodData) => dispatch(GitAction.CallGetTransaction(prodData)),
     CallDeletePromoCode: (promoCodeData) =>
       dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
     CallAllProductsByProductStatus: (prodData) =>
@@ -94,13 +94,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -340,12 +340,12 @@ class DisplayTable extends Component {
                   />
                   {this.props.Data
                     ? this.props.Data.filter((searchedItem) =>
-                        searchedItem.ProductName.toLowerCase().includes(
-                          this.state.searchFilter
-                        )
-                      ).map((filteredItem) => {
-                        filteredProduct.push(filteredItem);
-                      })
+                      searchedItem.ProductName.toLowerCase().includes(
+                        this.state.searchFilter
+                      )
+                    ).map((filteredItem) => {
+                      filteredProduct.push(filteredItem);
+                    })
                     : null}
                   <TableBody>
                     {stableSort(
@@ -355,7 +355,7 @@ class DisplayTable extends Component {
                       .slice(
                         this.state.page * this.state.rowsPerPage,
                         this.state.page * this.state.rowsPerPage +
-                          this.state.rowsPerPage
+                        this.state.rowsPerPage
                       )
                       .map((row, index) => {
                         const isItemSelected = this.isSelected(row.ProductID);
@@ -410,8 +410,8 @@ class DisplayTable extends Component {
                 count={this.props.Data ? this.props.Data.length : 0}
                 rowsPerPage={this.state.rowsPerPage}
                 page={this.state.page}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                onPageChange={this.handleChangePage}
+                onRowsPerPageChange={this.handleChangeRowsPerPage}
               />
             </Paper>
           </div>
@@ -425,28 +425,58 @@ class TransactionDetailsComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      transactionName: this.props.data.name,
-      username: this.props.data.username,
-      userFullName: this.props.data.fullName,
-      userContactNo: this.props.data.phoneNumber,
-      userEmailAddress: this.props.data.email,
-      userAddressLine1: this.props.data.address,
-      paymentMethod: this.props.data.PaymentMethod,
-      trackingStatus: this.props.data.TrackingStatus,
-      orderProductDetail: this.props.data.orderProductDetail,
+      transactionName: "",
+      username: "",
+      userFullName: "",
+      userContactNo: "",
+      userEmailAddress: "",
+      userAddressLine1: "",
+      paymentMethod: "",
+      trackingStatus: "",
+      orderProductDetail: "",
     };
+    this.props.CallGetTransaction(2)
   }
 
-  handleChange = () => {};
+  handleChange = () => { };
 
   render() {
+
     const back = () => {
       //   window.location.reload(false);
       this.props.setDetailsShown(false);
       //   console.log(this.props);
     };
+    console.log(this.props)
+
+    // if (this.props.alltransactions.length > 0) {
+    //   this.setState({
+    //     transactionName: this.props.alltransactions.name,
+    //     username: this.props.alltransactions.username,
+    //     userFullName: this.props.alltransactions.fullName,
+    //     userContactNo: this.props.alltransactions.phoneNumber,
+    //     userEmailAddress: this.props.alltransactions.email,
+    //     userAddressLine1: this.props.alltransactions.address,
+    //     paymentMethod: this.props.alltransactions.PaymentMethod,
+    //     trackingStatus: this.props.alltransactions.TrackingStatus,
+    //     orderProductDetail: this.props.alltransactions.orderProductDetail
+    //   })
+    // } else {
+    //   this.setState({
+    //     transactionName: "",
+    //     username: "",
+    //     userFullName: "",
+    //     userContactNo: "",
+    //     userEmailAddress: "",
+    //     userAddressLine1: "",
+    //     paymentMethod: "",
+    //     trackingStatus: "",
+    //     orderProductDetail: "",
+    //   })
+    // }
     return (
       <div>
+
         <h2>Order Details</h2>
         <Button onClick={back.bind(this)}>
           <i class="fas fa-chevron-left"></i>Back
@@ -546,7 +576,9 @@ class TransactionDetailsComponent extends Component {
               </div>
             ) : null}
             <h5 style={{ marginTop: "10px" }}>Products Ordered</h5>
-            <DisplayTable Data={JSON.parse(this.state.orderProductDetail)} />
+            {/* {console.log("JSON.parse(this.state.orderProductDetail)", JSON.parse(this.state.orderProductDetail))} */}
+            {console.log("this.state.orderProductDetail", this.state.orderProductDetail)}
+            {/* <DisplayTable Data={JSON.parse(this.state.orderProductDetail)} /> */}
           </CardContent>
         </Card>
       </div>

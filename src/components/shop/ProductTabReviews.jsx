@@ -184,21 +184,19 @@ class ProductTabReviews extends Component {
     }
 
     return (
-      this.props.loading === true ?
+      this.props.loading === false ?
         <div div className="reviews-view" id="reviews" >
           <div className="reviews-view__list">
             <h3 className="reviews-view__header">Customer Reviews</h3>
             <div className="reviews-list">
               <ol className="reviews-list__content">{reviewsList}</ol>
               <div className="reviews-list__pagination">
-
-                {console.log("this.props.product", this.props.product)}
                 <Pagination
                   current={page}
                   total={
                     this.props.product.ProductReview != null
-                      ? parseInt(JSON.parse(this.props.product.ProductReview).length)
-                      : ""
+                      ?  Math.ceil(parseInt(JSON.parse(this.props.product.ProductReview).length)/this.state.rowsPerPage)
+                      : 1
                   }
                   onPageChange={this.handlePageChange}
                 />

@@ -3,7 +3,7 @@ import { ActionsObservable } from "redux-observable";
 import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 
-const url = "http://tourism.denoo.my/emporia/api/emporia/"
+const url = "http://tourism.denoo.my/emporiaApi/api/emporia/"
 // const url = "localhost/emporia/api/emporia/"
 export class GitEpic {
   //==================USER==========================//
@@ -47,6 +47,7 @@ export class GitEpic {
             }
           } else {
             json = [];
+            toast.error("Invalid username or password")
           }
           return {
             type: "SUCCESSFULLY-LOGIN-WITH-DATA",
@@ -183,7 +184,7 @@ export class GitEpic {
         payload.USERLASTNAME +
         "&USERCONTACTNO=" +
         payload.USERCONTACTNO +
-        "&USERDATEBIRTH=" +
+        "&USERDOB=" +
         payload.USERDATEBIRTH +
         "&USEREMAIL=" +
         payload.USEREMAIL +
@@ -212,13 +213,28 @@ export class GitEpic {
         .then((json) => {
           if (json !== "fail") {
             json = JSON.parse(json);
+            toast.success("User Profile is updated successfully");
           } else {
             json = [];
           }
-          return {
-            type: "EDITED-USERPROFILE",
-            payload: json,
-          };
+
+          return fetch(url +
+            "User_ProfileByID?USERID=" +
+            payload.USERID
+          )
+            .then((response) => response.json())
+            .then((json) => {
+              if (json !== "fail") {
+                json = JSON.parse(json);
+              } else {
+                json = [];
+              }
+              return {
+                type: "EDITED-USERPROFILE",
+                payload: json,
+              };
+            })
+            .catch((error) => toast.error(error));
         })
         .catch((error) => toast.error(error));
     });
@@ -304,7 +320,7 @@ export class GitEpic {
         "&USERCARDEXPIREDATE=" +
         payload.expiry +
         "&USERCARDTYPE=" +
-        payload.issuer
+        payload.cardtype
       )
         .then((response) => response.json())
         .then((returnVal) => {
@@ -338,6 +354,21 @@ export class GitEpic {
 
   updateCreditCard = (action$) =>
     action$.ofType(GitAction.UpdateCreditCard).switchMap(({ payload }) => {
+      
+      console.log(url +
+        "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
+        payload.USERPAYMENTMETHODID +
+        "&USERID=" +
+        payload.USERID +
+        "&USERCARDNAME=" +
+        payload.name +
+        "&USERCARDNO=" +
+        payload.number +
+        "&USERCARDEXPIREDATE=" +
+        payload.expiry +
+        "&USERCARDTYPE=" +
+        payload.cardtype)
+        
       return fetch(url +
         "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
         payload.USERPAYMENTMETHODID +
@@ -495,7 +526,7 @@ export class GitEpic {
   getViewMoreProducts = (action$) =>
     action$.ofType(GitAction.GetViewMoreProduct).switchMap(({ payload }) => {
       return fetch(url +
-        "Product_ViewMoreItemList?PRODUCTPERPAGE=" + payload.productPerPage +
+        "Product_ItemListViewMore?PRODUCTPERPAGE=" + payload.productPerPage +
         "&PAGE=" + payload.page
       )
         .then((response) => response.json())
@@ -1501,6 +1532,7 @@ export class GitEpic {
         .then((json) => {
           if (json !== "fail") {
             json = JSON.parse(json);
+            toast.success("Sucessfully added a product review");
           } else {
             json = [];
           }
@@ -1730,7 +1762,7 @@ export class GitEpic {
 
       return fetch(url +
         "User_ViewAddressBook?USERID=" +
-        payload
+        payload.USERID
       )
         .then((response) => response.json())
         .then((json) => {
@@ -1898,23 +1930,37 @@ export class GitEpic {
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(({ payload }) => {
       return fetch(url +
-        "Order_AddOrder?USERID=" +
-        payload.UserID +
-        "&USERADDRESSID=-&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=0&PRODUCTID=" +
-        payload.Products
+        "Order_AddOrder?USERID=" + payload.UserID
+        + "&USERADDRESSID=" + payload.UserAddressID
+        + "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" + payload.PaymentMethodID
+        + "&PRODUCTVARIATIONDETAILID=" + payload.ProductID
+        + "&PRODUCTID=" + payload.ProductID
+        + "&PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID
+        + "&PRODUCTQUANTITY=" + payload.ProductQuantity
       )
         .then((response) => response.json())
         .then((json) => {
-          // alert(json);
           if (json !== "fail") {
             json = JSON.parse(json);
+            toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
           } else {
             json = [];
           }
-          return {
-            type: "ADDED-ORDER",
-            payload: json,
-          };
+          return fetch(url + "Product_DeleteProductCart?USERCARTID=" + payload.UserCartID)
+            .then((response) => response.json())
+            .then((json2) => {
+
+              if (json2 !== "fail") {
+                json2 = json2;
+              } else {
+                json2 = [];
+              }
+              return {
+                type: "ADDED-ORDER",
+                payload: json,
+              };
+            })
+            .catch((error) => console.log(error));
         })
         .catch((error) => toast.error(error));
     });
@@ -1935,6 +1981,30 @@ export class GitEpic {
           }
           return {
             type: "GOT-DELIVERABLELIST",
+            payload: json,
+          };
+        })
+        .catch((error) => toast.error(error));
+    });
+
+  getOrderListByID = (action$) =>
+    action$.ofType(GitAction.GetOrderListByOrderID).switchMap(({ payload }) => {
+      
+      console.log(url +
+        "Order_ViewOrderByOrderID?ORDERID=" + payload.OrderID)
+      return fetch(url +
+        "Order_ViewOrderByOrderID?ORDERID=" + payload.OrderID
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          // alert(json);
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+          return {
+            type: "GOT-ORDERLISTBYORDERID",
             payload: json,
           };
         })
@@ -2477,6 +2547,12 @@ export class GitEpic {
 
   getAllMerchantOrders = (action$) =>
     action$.ofType(GitAction.GetMerchantOrders).switchMap(({ payload }) => {
+
+      console.log(url +
+        "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
+        payload.trackingStatus +
+        "&USERID=" +
+        payload.UserID)
       return fetch(url +
         "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
         payload.trackingStatus +
@@ -2735,11 +2811,12 @@ export class GitEpic {
         .then((response) => response.json())
         .then((json) => {
           if (json !== "fail") {
-            json = JSON.parse(json);
+            json = json;
             toast.success("Product " + payload.productName + " is removed from cart!");
           } else {
             json = [];
           }
+          console.log("DELETE PRODUCT CART", json)
           return fetch(url +
             "Product_ItemListInCartByUserID?USERID=" +
             payload.userID
@@ -2865,13 +2942,18 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => alert("Something went wrong. Error code: Product_ItemListInCartByUserID"));
+        .catch((error) => console.log("error", error));
     });
 
   //------------------------- PRODUCT WISHLIST ----------------------------
 
   viewProductWishlist = (action$) =>
     action$.ofType(GitAction.ViewProductWishlist).switchMap(({ payload }) => {
+
+
+      console.log(url +
+        "Product_ItemListInWishlistByUserID?USERID=" +
+        payload.userID)
       return fetch(url +
         "Product_ItemListInWishlistByUserID?USERID=" +
         payload.userID
@@ -2883,12 +2965,15 @@ export class GitEpic {
           } else {
             json = [];
           }
+
+          console.log("json", json)
+
           return {
             type: "VIEWED-PRODUCTWISHLIST",
             payload: json,
           };
         })
-        .catch((error) => alert("Something went wrong. Error code: Product_ItemListInWishlistByUserID"));
+        .catch((error) => console.log("error", error));
     });
 
   addProductWishlist = (action$) =>

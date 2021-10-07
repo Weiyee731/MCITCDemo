@@ -44,6 +44,7 @@ function mapDispatchToProps(dispatch) {
   return {
     callLogout: (credentials) => dispatch(GitAction.CallLogout(credentials)),
     loginUser: (credentials) => dispatch(GitAction.CallLogin(credentials)),
+    
   };
 }
 
@@ -125,7 +126,7 @@ class IndicatorAccount extends Component {
 
   logout = () => {
     this.props.callLogout({ UserID: localStorage.getItem("id") });
-    browserHistory.push("/");
+    browserHistory.push("/Emporia");
     localStorage.clear();
     cookies.set("isLogin", false);
     localStorage.setItem("isLogin", false);

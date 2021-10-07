@@ -41,7 +41,9 @@ const INITIAL_STATE = {
   creditcards: [],
   updatedCreditCard: [],
   productcart: [],
-  wishlist: []
+  wishlist: [],
+  order: [],
+  orderByID: []
 
 };
 
@@ -638,8 +640,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.AddedOrder:
       return Object.assign({}, state, {
         loading: false,
-        quotations: action.payload,
+        order: action.payload,
       });
+
+    case GitAction.ClearOrder:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ClearedOrder:
+      return Object.assign({}, state, {
+        loading: false,
+        order: [],
+      });
+
     case GitAction.GetProductStockByStatus:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotProductStockByStatus:
@@ -709,6 +720,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         account: action.payload,
+      });
+
+    case GitAction.GetOrderListByOrderID:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotOrderListByOrderID:
+      return Object.assign({}, state, {
+        loading: false,
+        orderByID: action.payload,
       });
     //=============================PROMOTIONS===============================//
     case GitAction.GetPromotion:
@@ -901,6 +920,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
       newPromoObj.loading = false;
       return newPromoObj;
 
+    //================= PRODUCT CART ================//
 
     case GitAction.DeleteProductCart:
       return Object.assign({}, state, { loading: true });
@@ -934,8 +954,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
         productcart: action.payload,
       });
 
+    case GitAction.ClearProductCart:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ClearedProductCart:
+      return Object.assign({}, state, {
+        loading: false,
+        productcart: [],
+      });
 
-    // Wishlist
+    //================= PRODUCT WIHSLIST ================//
     case GitAction.DeleteProductWishlist:
       return Object.assign({}, state, { loading: true });
     case GitAction.DeletedProductWishlist:
@@ -958,6 +985,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         wishlist: action.payload,
+      });
+
+    case GitAction.ClearProductWishlist:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ClearedProductWishlist:
+      return Object.assign({}, state, {
+        loading: false,
+        wishlist: [],
       });
 
 
