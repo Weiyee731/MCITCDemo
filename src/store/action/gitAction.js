@@ -1169,8 +1169,6 @@ export class GitAction {
       type: GitAction.ClearProductWishlist,
     };
   }
-<<<<<<< Updated upstream
-=======
 
   //================= PROMOTION BANNER ================//
   static addPromotionBanner = "ADD-PROMOTIONBANNER";
@@ -1182,5 +1180,4 @@ export class GitAction {
     };
   }
 
->>>>>>> Stashed changes
 }
