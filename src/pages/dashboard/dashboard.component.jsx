@@ -46,19 +46,19 @@ class Dashboard extends Component {
       TopProduct: [],
       TopCategory: [],
       Transaction: [],
-      TopCategroy:[{
+      TopCategroy: [{
         Category: "Clothes",
         Volume: "13,102",
-      },{
+      }, {
         Category: "Shoes",
         Volume: "11,222",
-      },{
+      }, {
         Category: "Foods",
         Volume: "10,089",
-      },{
+      }, {
         Category: "Equipments",
         Volume: "8,074",
-      },{
+      }, {
         Category: "Decoration",
         Volume: "4,118",
       }]
@@ -164,37 +164,35 @@ class Dashboard extends Component {
     // });
 
     return (
-      <div>
+      <div className="p-2">
         <div className="p-1">
           <h1>Merchant Dashboard</h1>
         </div>
 
-        {this.state.RevenueAndProfit.map((RevenueData) => {
-          return (
-            <Row className="mt-3" style={{ width: '98% ' }}>
-              <Col>
-                <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px' }} >
-                  <CardBody className="card-body">
-                    <Row>
-                      <div className="numbers">
-                        <CardTitle style={{ fontSize: "24pt", fontWeight: 600, color: "white" }}>
-                          RM 3,495.03
-                        </CardTitle>
-                        <p className="" style={{ color: "white", }}>
-                          {/* {RevenueData.OverallRevenueTitle} */}
-                          <HouseIcon fontSize={'large'} /> <span style={{ fontSize: "14pt" }}>Total Revennue</span>
-                        </p>
-                      </div>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
+        <Row className="mt-3" style={{ width: '98% ' }}>
+          <Col>
+            <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px' }} >
+              <CardBody className="card-body">
+                <Row>
+                  <div className="numbers">
+                    <CardTitle style={{ fontSize: "24pt", fontWeight: 600, color: "white" }}>
+                      RM 3,495.03
+                    </CardTitle>
+                    <p className="" style={{ color: "white", }}>
+                      {/* {RevenueData.OverallRevenueTitle} */}
+                      <HouseIcon fontSize={'large'} /> <span style={{ fontSize: "14pt" }}>Total Revennue</span>
+                    </p>
+                  </div>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
 
-              <Col>
-                <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px' }}>
-                  <CardBody className="card-body">
-                    <Row>
-                      {/* <div className="numbers">
+          <Col>
+            <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px' }}>
+              <CardBody className="card-body">
+                <Row>
+                  {/* <div className="numbers">
                         <CardTitle style={{ fontSize: "18pt", fontWeight: 600 }}>
                           RM {RevenueData.OverallProfit}
                         </CardTitle>
@@ -203,46 +201,44 @@ class Dashboard extends Component {
                         </p>
                       </div> */}
 
-                      <div className="w-100">
-                        <div style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.33)", padding: '5px 10px', textAlign: 'left' }}>
-                          <span style={{ color: 'white', fontSize: '12pt', marginRight: '10px' }}>Daily Sales</span>
-                          <span style={{ fontSize: "24pt", fontWeight: 600, color: "white", width: '100%' }}>
-                            RM 415.13
-                          </span>
-                        </div>
-                        <div style={{ padding: '5p 10px', textAlign: 'right' }}>
-                          <span style={{ fontSize: "24pt", fontWeight: 600, color: "white", width: '100%', marginRight: '10px' }}>
-                            45
-                          </span>
-                          <span style={{ color: 'white', fontSize: '12pt' }}>Orders</span>
-                        </div>
-                      </div>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
+                  <div className="w-100">
+                    <div style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.33)", padding: '5px 10px', textAlign: 'left' }}>
+                      <span style={{ color: 'white', fontSize: '12pt', marginRight: '10px' }}>Daily Sales</span>
+                      <span style={{ fontSize: "24pt", fontWeight: 600, color: "white", width: '100%' }}>
+                        RM 415.13
+                      </span>
+                    </div>
+                    <div style={{ padding: '5p 10px', textAlign: 'right' }}>
+                      <span style={{ fontSize: "24pt", fontWeight: 600, color: "white", width: '100%', marginRight: '10px' }}>
+                        45
+                      </span>
+                      <span style={{ color: 'white', fontSize: '12pt' }}>Orders</span>
+                    </div>
+                  </div>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
 
-              <Col>
-                <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px', color: 'white' }}>
-                  <CardBody className="card-body">
-                    <Row>
-                      <div className="numbers">
-                        <CardTitle style={{ fontSize: "24pt", fontWeight: 600, color: "white" }}>
-                          {/* {RevenueData.MonthlyProfit} */}
-                          71
-                        </CardTitle>
-                        <p className="" style={{ color: "white", }}>
-                          {/* {RevenueData.OverallRevenueTitle} */}
-                          <PeopleAltIcon fontSize={'large'} /> <span style={{ fontSize: "14pt" }}>Total Visitor</span>
-                        </p>
-                      </div>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          );
-        })}
+          <Col>
+            <Card className="card-stats w-100" style={{ height: "175px", backgroundColor: '#2b2b2b', borderRadius: '5px', color: 'white' }}>
+              <CardBody className="card-body">
+                <Row>
+                  <div className="numbers">
+                    <CardTitle style={{ fontSize: "24pt", fontWeight: 600, color: "white" }}>
+                      {/* {RevenueData.MonthlyProfit} */}
+                      71
+                    </CardTitle>
+                    <p className="" style={{ color: "white", }}>
+                      {/* {RevenueData.OverallRevenueTitle} */}
+                      <PeopleAltIcon fontSize={'large'} /> <span style={{ fontSize: "14pt" }}>Total Visitor</span>
+                    </p>
+                  </div>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
 
         <Row>
           <Col md="8">
@@ -328,75 +324,75 @@ class Dashboard extends Component {
           <Col md="4">
             <div>
               <MaterialTable
-                  title="Hot Sales Items"
-                  columns={[
-                    {
-                      title: "Product",
-                      field: "ProductImage",
-                    },
-                    {
-                      title: "Name",
-                      field: "ProductName",
-                    },
-                    {
-                      title: "Stocks",
-                      field: "ProductStockAmountInital",
-                    },
-                    {
-                      title: "Ratings",
-                      field: "ProductRating",
-                    },
-                  ]}
-                  data={this.state.TopProduct}
-                  options={{
-                    paging: false,
-                    search: false,
-                    headerStyle: {
-                      backgroundColor: '#333333',
-                      color: '#FFF'
-                    },
-                    rowStyle: {
-                      padding: '5px'
-                    }
-                  }}
-                />
+                title="Hot Sales Items"
+                columns={[
+                  {
+                    title: "Product",
+                    field: "ProductImage",
+                  },
+                  {
+                    title: "Name",
+                    field: "ProductName",
+                  },
+                  {
+                    title: "Stocks",
+                    field: "ProductStockAmountInital",
+                  },
+                  {
+                    title: "Ratings",
+                    field: "ProductRating",
+                  },
+                ]}
+                data={this.state.TopProduct}
+                options={{
+                  paging: false,
+                  search: false,
+                  headerStyle: {
+                    backgroundColor: '#333333',
+                    color: '#FFF'
+                  },
+                  rowStyle: {
+                    padding: '5px'
+                  }
+                }}
+              />
             </div>
           </Col>
           <Col md="4">
             <div>
               <MaterialTable
-                  title="Cold Sales Items"
-                  columns={[
-                    {
-                      title: "Product",
-                      field: "ProductImage",
-                    },
-                    {
-                      title: "Name",
-                      field: "ProductName",
-                    },
-                    {
-                      title: "Stocks",
-                      field: "ProductStockAmountInital",
-                    },
-                    {
-                      title: "Ratings",
-                      field: "ProductRating",
-                    },
-                  ]}
-                  data={this.state.TopProduct}
-                  options={{
-                    paging: false,
-                    search: false,
-                    headerStyle: {
-                      backgroundColor: '#333333',
-                      color: '#FFF'
-                    },
-                    rowStyle: {
-                      padding: '5px'
-                    }
-                  }}
-                />
+                title="Cold Sales Items"
+                columns={[
+                  {
+                    title: "Product",
+                    field: "ProductImage",
+                  },
+                  {
+                    title: "Name",
+                    field: "ProductName",
+                  },
+                  {
+                    title: "Stocks",
+                    field: "ProductStockAmountInital",
+                  },
+                  {
+                    title: "Ratings",
+                    field: "ProductRating",
+                  },
+                ]}
+                data={this.state.TopProduct}
+                options={{
+                  paging: false,
+                  search: false,
+                  headerStyle: {
+                    backgroundColor: '#333333',
+                    color: '#FFF'
+                  },
+                  rowStyle: {
+                    padding: '5px'
+                  }
+                }}
+              />
             </div>
           </Col>
         </Row>

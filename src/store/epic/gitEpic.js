@@ -343,7 +343,13 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(error));
+        .catch((error) => {
+          toast.error(error)
+          return {
+            type: "GOT-CREDITCARD",
+            payload: [],
+          };
+        });
     });
 
   addCreditCard = (action$) =>
@@ -807,15 +813,47 @@ export class GitEpic {
 
   AddProductMedia = (action$) =>
     action$.ofType(GitAction.AddProductMedia).switchMap(({ payload }) => {
-      return fetch(url +
+      console.log(
+        url +
         "Product_AddProductMedia?" +
-        "PRODUCTID=" +
-        payload.productID +
-        "&PRODUCTVARIATIONDETAILID=0&WIDTH=" +
-        payload.width +
-        "&HEIGHT=" +
-        payload.height
-      );
+        "PRODUCTID=" + payload.ProductID +
+        "&PRODUCTVARIATIONDETAILID=" + payload.variationID + 
+        "&PRODUCTSLIDEORDER=" + payload.slideOrder +
+        "&TYPE=" + payload.mediaType + 
+        "&WIDTH=" +  payload.imageWidth + 
+        "&HEIGHT=" +  payload.imageHeight + 
+        "&IMAGENAME=" + payload.imageName
+      )
+      return fetch(
+        url +
+        "Product_AddProductMedia?" +
+        "PRODUCTID=" + payload.ProductID +
+        "&PRODUCTVARIATIONDETAILID=" + payload.variationID + 
+        "&PRODUCTSLIDEORDER=" + payload.slideOrder +
+        "&TYPE=" + payload.mediaType + 
+        "&WIDTH=" +  payload.imageWidth + 
+        "&HEIGHT=" +  payload.imageHeight + 
+        "&IMAGENAME=" + payload.imageName
+      )
+      .then((resposne) => resposne.json())
+      .then((json) => {
+        if (json !== "fail") {
+          json = JSON.parse(json);
+        } else {
+          json = [];
+        }
+        return {
+          type: GitAction.ProductMediaAdded,
+          payload: json,
+        };
+      })
+      .catch((error) => {
+        toast.error(error)
+        return {
+          type: GitAction.ProductMediaAdded,
+          payload: [],
+        };
+      });
     });
 
   //Product Variation Detail
