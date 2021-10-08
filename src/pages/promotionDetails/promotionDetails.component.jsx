@@ -45,6 +45,8 @@ import Divider from "@material-ui/core/Divider";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
 import CardHeader from "@material-ui/core/CardHeader";
+import { browserHistory } from "react-router";
+
 //----------------------------------------------------------------------------------------------------
 function mapStateToProps(state) {
   return {
@@ -81,13 +83,24 @@ function union(a, b) {
 }
 
 function TransferList(props) {
-  // console.log(props.allProducts[0]);
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState(
-    props.allProducts.map((product) => product.ProductName)
-  );
+
+  const getListOfProductName = () => {
+    let list = []
+    props.allProducts.filter(el => !props.productsListFromProps.includes(el.ProductName)).map((el) => list.push(el.ProductName))
+    return list
+  }
+
+  const [left, setLeft] = React.useState(getListOfProductName());
   const [right, setRight] = React.useState(props.productsListFromProps);
+  // var [left, setLeft] = React.useState(
+  //   [props.allProducts.filter(function(e) {
+  //     let i = right.indexOf(e)
+  //     return 1 == -1 ? true : (right.splice(i, 1), false)
+  //   ;})])
+
+
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
   const handleToggle = (value) => () => {
@@ -149,8 +162,8 @@ function TransferList(props) {
 
   React.useEffect(() => {
     const timeOutId = setTimeout(
-      () => setLeft(props.allProducts.map((product) => product.ProductName)),
-      0
+      () => setLeft(getListOfProductName()),
+      5000
     );
     return () => clearTimeout(timeOutId);
   }, [props.allProducts]);
@@ -161,7 +174,7 @@ function TransferList(props) {
         setRight(
           props.fullChosenProducts.map((product) => product.ProductName)
         ),
-      500
+      5000
     );
     return () => clearTimeout(timeOutId);
   }, [props.fullChosenProducts]);
@@ -211,8 +224,11 @@ function TransferList(props) {
       <Divider />
 
       <List className={classes.list} dense component="div" role="list">
+
         {items.map((value, i) => {
           const labelId = `transfer-list-all-item-${value}-label`;
+          console.log("value: ", value)
+          console.log("i: ", i)
 
           return (
             <ListItem
@@ -233,6 +249,7 @@ function TransferList(props) {
                   height={50}
                   // src={JSON.parse(allItems[i].ProductImages)[0].ProductMediaUrl}
                   src={allItems[i]}
+                  alt=""
                 />
               </ListItemIcon>
 
@@ -249,7 +266,7 @@ function TransferList(props) {
     <Grid
       container
       spacing={2}
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       className={classes.root}
     >
@@ -458,6 +475,7 @@ const SelectProductTableToolbar = (props) => {
 SelectProductTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
+
 function DisplayTableHead(props) {
   const {
     onSelectAllClick,
@@ -478,7 +496,7 @@ function DisplayTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -550,7 +568,7 @@ class DisplayTable extends Component {
       Brand: row.Brand,
       ProductID: row.ProductID,
     });
-    // console.log(this.props.Data[index]);
+
 
     if (this.state.detailsShown) {
       this.setState({
@@ -578,10 +596,13 @@ class DisplayTable extends Component {
     this.setState({ dense: event.target.checked });
   };
 
-  isSelected = (name) => {};
+  isSelected = (name) => { };
 
   render() {
-    const { classes } = this.props;
+
+
+    const { classes, data, data2 } = this.props;
+
     const emptyRows =
       this.state.rowsPerPage -
       Math.min(
@@ -650,7 +671,7 @@ class DisplayTable extends Component {
                       .slice(
                         this.state.page * this.state.rowsPerPage,
                         this.state.page * this.state.rowsPerPage +
-                          this.state.rowsPerPage
+                        this.state.rowsPerPage
                       )
                       .map((row, index) => {
                         const isItemSelected = this.isSelected(row.ProductID);
@@ -699,8 +720,8 @@ class DisplayTable extends Component {
                 count={this.props.Data.length}
                 rowsPerPage={this.state.rowsPerPage}
                 page={this.state.page}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                onPageChange={this.handleChangePage}
+                onRowsPerPageChange={this.handleChangeRowsPerPage}
               />
             </Paper>
           </div>
@@ -713,7 +734,6 @@ class DisplayTable extends Component {
 class PromotionDetailsComponent extends Component {
   constructor(props) {
     super(props);
-    // console.log(this.props.data)
     this.props.CallAllProductsByProductStatus({
       ProductStatus: "Endorsed",
       UserID: window.localStorage.getItem("id"),
@@ -774,10 +794,6 @@ class PromotionDetailsComponent extends Component {
     } else if (data === "PromotionStartDate") {
       if (e !== null) {
         if (moment(e, "MM/DD/YYYY", true).isValid()) {
-          // console.log(new Date("December 1, 2020"))
-          // console.log(this.props.data.BeginDate)
-          // console.log(moment(this.props.data.BeginDate).format('LL'))
-          // console.log(new Date(moment(this.props.data.BeginDate).format('LL')))
           var StartDate =
             e.getFullYear() +
             "" +
@@ -785,7 +801,6 @@ class PromotionDetailsComponent extends Component {
             "" +
             ((e.getDate() < 10 ? "0" : "") + e.getDate());
 
-          // console.log(StartDate)
           this.setState({
             PromotionStartDate: e,
             promoStart: StartDate,
@@ -904,7 +919,6 @@ class PromotionDetailsComponent extends Component {
         startDateNotSet: false,
       });
     }
-
     var currentDate = new Date(this.props.data.BeginDate);
     var currentDay = currentDate.getDate();
     var currentMonth = parseInt(currentDate.getMonth() + 1);
@@ -1068,18 +1082,19 @@ class PromotionDetailsComponent extends Component {
           this.state.PromotionStartDate.getDate());
 
       const promoInfo = {
-        ProductID: ProductIDOnly,
         PromotionID: this.props.data.PromotionID,
-        PromotionDesc: this.state.PromotionDesc,
         PromotionTitle: this.state.PromotionTitle,
+        PromotionDesc: this.state.PromotionDesc,
+        BannerImage: null,
+        SlideOrder: null,
         promoStart: StartDate,
         promoEnd: EndDate,
+        ProductID: ProductIDOnly,
         DiscountPercentage: this.state.DiscountPercentage,
       };
 
       setTimeout(
         function () {
-          // console.log(promoInfo);
           alert("Submitted!");
           this.props.CallUpdatePromotion(promoInfo);
         }.bind(this),
@@ -1087,15 +1102,14 @@ class PromotionDetailsComponent extends Component {
       );
       setTimeout(
         function () {
-          this.props.history.push("/viewProductPromotion");
+          // this.props.history.push("/viewProductPromotion");
+          browserHistory.push("/UnimasMarketplace/viewProductPromotion");
           window.location.reload(false);
         }.bind(this),
         500
       );
     }
     // {
-    //   alert("Submitted!");
-    //   console.log(this.state);
     //   this.props.CallUpdatePromotion(this.state);
     //   this.setState({
     //     toBeEdited: false,
@@ -1111,10 +1125,11 @@ class PromotionDetailsComponent extends Component {
   };
 
   render() {
+    const { data, data2 } = this.props;
     let allProductsData = this.props.allproducts
       ? Object.keys(this.props.allproducts).map((key) => {
-          return this.props.allproducts[key];
-        })
+        return this.props.allproducts[key];
+      })
       : {};
 
     const back = () => {
@@ -1136,8 +1151,8 @@ class PromotionDetailsComponent extends Component {
 
     let PromotionsData = this.props.allpromo
       ? Object.keys(this.props.allpromo).map((key) => {
-          return this.props.allpromo[key];
-        })
+        return this.props.allpromo[key];
+      })
       : {};
 
     // -----------------------------------------------------------------------------------------------------------------------------------
@@ -1236,13 +1251,15 @@ class PromotionDetailsComponent extends Component {
         newList = allProductsData;
 
         newList.map((productLeft) => {
-          this.state.fullChosenProducts.map((chosen) => {
-            if (productLeft.ProductName !== chosen.ProductName) {
-              newList = newList.filter(
-                (item) => item.ProductName !== chosen.ProductName
-              );
-            }
-          });
+          if (!this.state.fullChosenProducts == null) {
+            this.state.fullChosenProducts.map((chosen) => {
+              if (productLeft.ProductName !== chosen.ProductName) {
+                newList = newList.filter(
+                  (item) => item.ProductName !== chosen.ProductName
+                );
+              }
+            });
+          }
         });
 
         var items = [];
@@ -1378,7 +1395,7 @@ class PromotionDetailsComponent extends Component {
               <h1 style={{ margin: "10px" }}>Update Promotion</h1>
             </div>
             <Button onClick={back}>
-              <i class="fas fa-chevron-left"></i>Back
+              <i className="fas fa-chevron-left"></i>Back
             </Button>
             <Card style={{ width: "80%", margin: "0 auto" }}>
               <CardContent>
@@ -1440,7 +1457,7 @@ class PromotionDetailsComponent extends Component {
                         }
                       />
                       {this.state.startDateNotSet ||
-                      this.state.startDateInvalid ? (
+                        this.state.startDateInvalid ? (
                         <FormHelperText style={{ color: "red" }}>
                           Please enter a valid start date.
                         </FormHelperText>
@@ -1511,8 +1528,8 @@ class PromotionDetailsComponent extends Component {
                     productsListFromProps={
                       this.props.data.PromotionDetail
                         ? JSON.parse(this.props.data.PromotionDetail).map(
-                            (product) => product.ProductName
-                          )
+                          (product) => product.ProductName
+                        )
                         : []
                     }
                     imagesChosen={this.state.imagesChosen}
@@ -1581,7 +1598,7 @@ class PromotionDetailsComponent extends Component {
             <div className="App-header">
               <h1 style={{ margin: "10px" }}>Promotion Details</h1>
               <Button onClick={back}>
-                <i class="fas fa-chevron-left"></i>Back
+                <i className="fas fa-chevron-left"></i>Back
               </Button>
             </div>
             <Card style={classes}>
@@ -1617,8 +1634,6 @@ class PromotionDetailsComponent extends Component {
                       Effective Date:{" "}
                     </FormHelperText>
                     <div style={{ margin: "5px", width: "100%" }}>
-                      {/* {console.log( Date.parse(this.state.PromotionStartDate.toString()))}
-              {console.log(this.state.ProductID)} */}
 
                       <KeyboardDatePicker
                         style={{ width: "100%" }}
@@ -1688,12 +1703,11 @@ class PromotionDetailsComponent extends Component {
                       Chosen Products
                     </InputLabel>
 
-                    <DisplayTable
-                      Data={JSON.parse(this.props.data.PromotionDetail)}
-                    />
+                    {/* <DisplayTable
+                      Data={this.props.data}
+                    /> */}
                   </div>
                 </Paper>
-                {/* {console.log("Data")} */}
                 <br />
                 <TextField
                   id="PromotionDesc"

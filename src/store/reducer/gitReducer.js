@@ -171,13 +171,13 @@ export function counterReducer(state = INITIAL_STATE, action) {
     //     loading: false,
     //     addPromo: action.payload,
     //   });
-    case GitAction.EditUserProfile:
-      return Object.assign({}, state, { loading: true });
-    case GitAction.EditedUserProfile:
-      return Object.assign({}, state, {
-        loading: false,
-        currentUser: action.payload,
-      });
+    // case GitAction.EditUserProfile:
+    //   return Object.assign({}, state, { loading: true });
+    // case GitAction.EditedUserProfile:
+    //   return Object.assign({}, state, {
+    //     loading: false,
+    //     currentUser: action.payload,
+    //   });
     //======================= SUBSCRIBER========================//
     case GitAction.GetSubs:
       return Object.assign({}, state, { loading: true });

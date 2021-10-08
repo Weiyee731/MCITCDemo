@@ -760,7 +760,6 @@ class DisplayTable extends Component {
 class QuotationListComponent extends Component {
   constructor(props) {
     super(props);
-    // this.props.callAllGridStorages();
     this.props.CallViewProductQuotation({
       USERID: window.localStorage.getItem("id"),
     });

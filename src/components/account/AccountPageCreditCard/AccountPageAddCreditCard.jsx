@@ -17,6 +17,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import "react-credit-cards/es/styles-compiled.css";
 import "react-credit-cards/lib/styles.scss";
 import "./creditcardstyle.css";
+import TextField from "@material-ui/core/TextField";
 import {
   formatCreditCardNumber,
   formatCVC,
@@ -83,9 +84,12 @@ class AccountPageAddCreditCard extends Component {
   };
 
   handleAddCreditCard() {
+
+    console.log("HERE")
     if (this.state.name.length && this.state.number.length && this.state.expiry.length && this.state.cardtype.length) {
+      console.log("handleAddCreditCard")
       this.props.CallAddCreditCard(this.state);
-      this.props.parentCallback("false");
+      // this.props.parentCallback("false");
     } else {
       toast.error("Please fill in all required card data");
     }
@@ -109,15 +113,18 @@ class AccountPageAddCreditCard extends Component {
     return (
       <div id="PaymentForm">
         <Cards
-          cvc={this.state.cvc}
           expiry={this.state.expiry}
           focused={this.state.focus}
           name={this.state.name}
           number={this.state.number}
         />
-        <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <input
+          <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
+          <div className="row" style={{marginTop:"20px"}}>
+            <TextField
+              variant="outlined"
+              style={{ width: '100%' }}
+              size="small"
+              label="Card Number"
               type="tel"
               name="number"
               className="form-control"
@@ -129,8 +136,12 @@ class AccountPageAddCreditCard extends Component {
               onFocus={this.handleInputFocus}
             />
           </div>
-          <div className="form-group">
-            <input
+          <div className="row" style={{marginTop:"20px"}}>
+            <TextField
+              variant="outlined"
+              style={{ width: '100%' }}
+              size="small"
+              label="Card Name"
               type="text"
               name="name"
               className="form-control"
@@ -140,33 +151,21 @@ class AccountPageAddCreditCard extends Component {
               onFocus={this.handleInputFocus}
             />
           </div>
-
-          <div className="row">
-            <div className="col-6">
-              <input
-                type="tel"
-                name="expiry"
-                className="form-control"
-                placeholder="Valid Thru"
-                pattern="\d\d/\d\d"
-                required
-                onChange={this.handleInputChange}
-                onFocus={this.handleInputFocus}
-              />
-            </div>
-
-            <div className="col-6">
-              <input
-                type="tel"
-                name="cvc"
-                className="form-control"
-                placeholder="CVC"
-                pattern="\d{3,4}"
-                required
-                onChange={this.handleInputChange}
-                onFocus={this.handleInputFocus}
-              />
-            </div>
+          <div className="row" style={{marginTop:"20px"}}>
+            <TextField
+              variant="outlined"
+              style={{ width: '100%' }}
+              size="small"
+              label="Valid Thru"
+              type="tel"
+              name="expiry"
+              className="form-control"
+              placeholder="Valid Thru"
+              pattern="\d\d/\d\d"
+              required
+              onChange={this.handleInputChange}
+              onFocus={this.handleInputFocus}
+            />
           </div>
           <div>
             <br />

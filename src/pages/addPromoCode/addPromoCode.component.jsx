@@ -34,6 +34,7 @@ function mapStateToProps(state) {
   return {
     allpromos: state.counterReducer["promos"],
     allproducts: state.counterReducer["products"],
+    PromoCodes: state.counterReducer["addPromoCodes"],
   };
 }
 
@@ -588,23 +589,30 @@ class AddProductVoucherComponent extends Component {
       this.state.fullChosenProductsBackup.map((product) => {
         ProductIDOnly.push(product.ProductID);
       });
+
       var endDate =
         this.state.endDateForTextView.getFullYear() +
         "" +
-        parseInt(this.state.endDateForTextView.getMonth() + 1) +
+        (this.state.endDateForTextView.getMonth() + 1 < 10 ? "0" : "") +
+        (this.state.endDateForTextView.getMonth() + 1) +
         "" +
-        this.state.endDateForTextView.getDate();
+        ((this.state.endDateForTextView.getDate() < 10 ? "0" : "") +
+          this.state.endDateForTextView.getDate());
+
       var startDate =
         this.state.startDateForTextView.getFullYear() +
         "" +
-        parseInt(this.state.startDateForTextView.getMonth() + 1) +
+        (this.state.startDateForTextView.getMonth() + 1 < 10 ? "0" : "") +
+        (this.state.startDateForTextView.getMonth() + 1) +
         "" +
-        this.state.startDateForTextView.getDate();
+        ((this.state.startDateForTextView.getDate() < 10 ? "0" : "") +
+          this.state.startDateForTextView.getDate());
 
       if (this.state.promoCode == "") {
         this.makeid();
       }
-      console.log(this.state.promoCode);
+      console.log("this.state", this.state);
+      console.log("this.state.promoCode", this.state.promoCode);
       const promoInfo = {
         productID: ProductIDOnly,
         promo: this.state.promo,

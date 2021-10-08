@@ -103,13 +103,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -178,7 +178,7 @@ function EndorseTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -229,7 +229,7 @@ function DeletableTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -459,8 +459,8 @@ function DeletableTable(props) {
                       <TableCell align="left">
                         {row.PromotionDetail
                           ? JSON.parse(row.PromotionDetail).map((product) => (
-                              <p>{product.ProductName}</p>
-                            ))
+                            <p>{product.ProductName}</p>
+                          ))
                           : null}
                       </TableCell>
                     </TableRow>
@@ -480,8 +480,8 @@ function DeletableTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -508,7 +508,7 @@ function DisplayTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -677,7 +677,7 @@ class DisplayTable extends Component {
         {this.state.detailsShown ? (
           <PromotionDetailsComponent data={this.state} data2={this.props} />
         ) : this.state.deleteActive ? (
-          <div>
+          <div>Promotion List
             <h1>Promotion List</h1>
             <div>
               <Button>
@@ -703,7 +703,7 @@ class DisplayTable extends Component {
             </div>
             <SearchBox
               style={divStyle}
-              placeholder="Search..."
+              placeholder="Search by promotion title..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
             {this.props.Data.filter((searchedItem) =>
@@ -744,7 +744,7 @@ class DisplayTable extends Component {
             </div>
             <SearchBox
               style={divStyle}
-              placeholder="Search..."
+              placeholder="Search by promotion title..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
 
@@ -781,7 +781,7 @@ class DisplayTable extends Component {
                         .slice(
                           this.state.page * this.state.rowsPerPage,
                           this.state.page * this.state.rowsPerPage +
-                            this.state.rowsPerPage
+                          this.state.rowsPerPage
                         )
                         .map((row, index) => {
                           const isItemSelected = this.isSelected(
@@ -789,7 +789,7 @@ class DisplayTable extends Component {
                           );
                           const labelId = `enhanced-table-checkbox-${index}`;
                           const product = row.PromotionDetail;
-                          console.log("lalalaa " + product);
+                          // console.log("lalalaa " + product);
 
                           return (
                             <TableRow
@@ -822,10 +822,10 @@ class DisplayTable extends Component {
                               <TableCell align="left">
                                 {row.PromotionDetail
                                   ? JSON.parse(
-                                      row.PromotionDetail
-                                    ).map((product) => (
-                                      <p>{product.ProductName}</p>
-                                    ))
+                                    row.PromotionDetail
+                                  ).map((product) => (
+                                    <p>{product.ProductName}</p>
+                                  ))
                                   : null}
                               </TableCell>
                             </TableRow>
@@ -849,8 +849,8 @@ class DisplayTable extends Component {
                   count={filteredPromotion.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  onPageChange={this.handleChangePage}
+                  onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>
             </div>

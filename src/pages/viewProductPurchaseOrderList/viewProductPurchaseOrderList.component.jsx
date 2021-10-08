@@ -795,7 +795,6 @@ class DisplayTable extends Component {
 class viewProductPurchaseOrderList extends Component {
   constructor(props) {
     super(props);
-    // this.props.callAllGridStorages();
     this.props.CallGetPurchaseOrders(window.localStorage.getItem("id"));
 
     //     this.state = {

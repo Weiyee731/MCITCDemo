@@ -28,6 +28,8 @@ import categories from '../../data/shopBlockCategories';
 import posts from '../../data/blogPosts';
 import theme from '../../data/theme';
 
+import { toast } from "react-toastify";
+
 function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
@@ -112,6 +114,7 @@ function HomePageTwo(props) {
 
 
         {useMemo(() => (
+          props.products !== undefined && props.products.length > 0 &&
           <BlockProductsCarousel
             title="New Arrivals"
             layout="grid-4"
@@ -124,6 +127,7 @@ function HomePageTwo(props) {
         ), [props.loading, props.products])}
 
         {useMemo(() => (
+          postsToShow !== undefined && postsToShow.length > 0 &&
           <BlockProducts
             title="Featured Products"
             layout="large-first"

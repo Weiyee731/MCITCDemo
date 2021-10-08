@@ -27,7 +27,6 @@ class GridStorageDetailComponent extends Component {
   constructor(props) {
     super(props);
     this.props.CallAllShoplots();
-    // this.props.callAllGridStorages();
     this.state = this.props.data;
   }
 

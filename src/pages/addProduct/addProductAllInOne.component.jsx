@@ -64,12 +64,12 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { Fade } from "shards-react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
+import { convertDateTimeToString, getFileExtension, getFileTypeByExtension } from "../../Utilities/UtilRepo"
 
 function mapStateToProps(state) {
   return {
-    allgridstorages: state.counterReducer["gridstorage"],
-    allshoplots: state.counterReducer["shoplot"],
     allUser: state.counterReducer["supplier"],
+    suppliers: state.counterReducer["supplier"],
     exist: state.counterReducer["exists"],
     result: state.counterReducer["addResult"],
     resultsMedia: state.counterReducer["productMediaResult"],
@@ -99,21 +99,15 @@ const editorConfiguration = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    callAllGridStorages: () => dispatch(GitAction.CallAllGridStorages()),
-    CallAllProductCategoryListing: () =>
-      dispatch(GitAction.CallAllProductCategoryListing()),
-    callAllShoplots: () => dispatch(GitAction.CallAllShoplots()),
+    CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
     callAddProduct: (prodData) => dispatch(GitAction.CallAddProduct(prodData)),
-    callAllSupplierByUserStatus: (suppData) =>
-      dispatch(GitAction.CallAllSupplierByUserStatus(suppData)),
-    callCheckProduct: (prodData) =>
-      dispatch(GitAction.CallCheckProduct(prodData)),
-    callAddProductMedia: (prodData) =>
-      dispatch(GitAction.CallAddProductMedia(prodData)),
-    CallAllProductVariationByCategoryID: (prodData) =>
-      dispatch(GitAction.CallAllProductVariationByCategoryID(prodData)),
-    CallAllProductsCategories: () =>
-      dispatch(GitAction.CallAllProductCategory()),
+    callAllSupplierByUserStatus: (suppData) => dispatch(GitAction.CallAllSupplierByUserStatus(suppData)),
+    callCheckProduct: (prodData) => dispatch(GitAction.CallCheckProduct(prodData)),
+    callAddProductMedia: (prodData) => dispatch(GitAction.CallAddProductMedia(prodData)),
+    CallAllProductVariationByCategoryID: (prodData) => dispatch(GitAction.CallAllProductVariationByCategoryID(prodData)),
+    CallAllProductsCategories: () => dispatch(GitAction.CallAllProductCategory()),
+    CallResetProductReturnVal: () => dispatch(GitAction.CallResetProductReturnVal()),
+    CallResetProductMediaResult: () => dispatch(GitAction.CallResetProductMediaResult()),
   };
 }
 
@@ -328,12 +322,11 @@ class AddProductComponent extends Component {
     super(props);
 
     this.myRef = React.createRef();
-    this.props.callAllGridStorages();
-    this.props.callAllShoplots();
     this.props.CallAllProductCategoryListing();
     this.props.callAllSupplierByUserStatus("endorsed");
     this.handlePrevClickButton = this.handlePrevClickButton.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.uploadFile = this.uploadFile.bind(this);
     this.props.CallAllProductsCategories();
 
     this.basicInfo = React.createRef();
@@ -341,13 +334,14 @@ class AddProductComponent extends Component {
     this.productVarient = React.createRef();
     this.productMedia = React.createRef();
     this.shippingInfo = React.createRef();
+    this.OnSubmit = this.OnSubmit.bind(this)
     this.state = {
       scrollTop: 0,
       name: "",
       manufacturer: "",
       description: "",
       productCategory: "",
-      productSupplier: "",
+      productSupplier: localStorage.getItem("id"),
       productShoplot: "",
       productGrid: "",
       height: "",
@@ -483,11 +477,11 @@ class AddProductComponent extends Component {
       FocusOn: false,
       helpText: [],
       editorState: null,
+      isButtonDisabled: true
     };
   }
 
   setHint = (data, e) => {
-    console.log(e + " " + data);
     if (data === "ProductName") {
       this.setState({
         FocusOn: true,
@@ -716,7 +710,6 @@ class AddProductComponent extends Component {
         var FilledValues = 0;
         var TotalValue = 0;
         this.state.priceTierList.map((priceTier, i) => {
-          console.log(priceTier.max == 0);
           if (
             priceTier.max == 0 ||
             priceTier.max == null ||
@@ -742,7 +735,6 @@ class AddProductComponent extends Component {
         });
 
         var WholeSaleFilled = FilledValues / TotalValue;
-        console.log(FilledValues + " " + TotalValue);
         this.setState({
           progressVariation:
             ((this.state.priceFilled +
@@ -792,13 +784,11 @@ class AddProductComponent extends Component {
           FilledValues = FilledValues + 1;
         }
         var Variant1Filled = FilledValues / TotalValue;
-        console.log(FilledValues + " " + TotalValue);
 
         if (this.state.wholeSaleOn) {
           var FilledValues2 = 0;
           var TotalValue2 = 0;
           this.state.priceTierList.map((priceTier, i) => {
-            console.log(priceTier.max == 0);
             if (
               priceTier.max == 0 ||
               priceTier.max == null ||
@@ -824,7 +814,6 @@ class AddProductComponent extends Component {
           });
 
           var WholeSaleFilled = FilledValues2 / TotalValue2;
-          console.log(FilledValues2 + " " + TotalValue2);
           this.setState({
             progressVariation: ((Variant1Filled + WholeSaleFilled) / 2) * 100,
           });
@@ -853,8 +842,7 @@ class AddProductComponent extends Component {
             TotalValue = TotalValue + 1;
             FilledValues = FilledValues + 1;
           }
-          console.log(option.variation2Options);
-          console.log(this.state.variation1);
+
           option.variation2Options.options.map((option2, x) => {
             if (option2.optionName == "" || option2.optionName == null) {
               TotalValue = TotalValue + 1;
@@ -892,12 +880,10 @@ class AddProductComponent extends Component {
           FilledValues = FilledValues + 1;
         }
         var Variant1Filled = FilledValues / TotalValue;
-        console.log(FilledValues + " " + TotalValue);
         if (this.state.wholeSaleOn) {
           var FilledValues2 = 0;
           var TotalValue2 = 0;
           this.state.priceTierList.map((priceTier, i) => {
-            console.log(priceTier.max == 0);
             if (
               priceTier.max == 0 ||
               priceTier.max == null ||
@@ -923,7 +909,6 @@ class AddProductComponent extends Component {
           });
 
           var WholeSaleFilled = FilledValues2 / TotalValue2;
-          console.log(FilledValues2 + " " + TotalValue2);
           this.setState({
             progressVariation: ((Variant1Filled + WholeSaleFilled) / 2) * 100,
           });
@@ -937,10 +922,10 @@ class AddProductComponent extends Component {
   };
 
   checkFiles512x512 = () => {
-    if (this.state.file.length < 3) {
+    if (this.state.file.length < 1) {
       this.setState({
         notEnoughFiles512x512: true,
-        Total512x512: this.state.file.length / 3,
+        Total512x512: this.state.file.length / 1,
       });
     } else {
       this.setState({
@@ -951,10 +936,10 @@ class AddProductComponent extends Component {
   };
 
   checkFiles1600x900 = () => {
-    if (this.state.file2.length < 3) {
+    if (this.state.file2.length < 1) {
       this.setState({
         notEnoughFiles1600x900: true,
-        Total1600x900: this.state.file2.length / 3,
+        Total1600x900: this.state.file2.length / 1,
       });
     } else {
       this.setState({
@@ -968,7 +953,7 @@ class AddProductComponent extends Component {
     if (this.state.file3.length < 1) {
       this.setState({
         notEnoughFilesVideo: true,
-        videoFilled: 0,
+        videoFilled: 0
       });
     } else {
       this.setState({
@@ -1102,13 +1087,11 @@ class AddProductComponent extends Component {
         heightEmpty: true,
         heightFilled: 0,
       });
-      console.log("filled 0");
     } else {
       this.setState({
         heightEmpty: false,
         heightFilled: 1,
       });
-      console.log("filled 1");
     }
   };
 
@@ -1315,7 +1298,6 @@ class AddProductComponent extends Component {
     }
     if (missingImages > 0) {
       var valueToBeAdded = 1 - missingImages / this.state.variation1Options;
-      console.log(valueToBeAdded);
       this.setState({
         variantImagesTotal: valueToBeAdded,
       });
@@ -1370,7 +1352,6 @@ class AddProductComponent extends Component {
       totalFields = totalFields + 1;
     }
 
-    console.log("missing: " + missing + " total: " + totalFields);
   };
 
   checkVariant2 = () => {
@@ -1434,7 +1415,6 @@ class AddProductComponent extends Component {
       totalFields = totalFields + 1;
     }
 
-    console.log("missing: " + missing + " total: " + totalFields);
   };
 
   changeBackground2 = (e) => {
@@ -1461,9 +1441,13 @@ class AddProductComponent extends Component {
 
   handleDrop = (data, acceptedFiles) => {
     if (acceptedFiles.length > 3) {
+
     } else {
       if (data === "512x512") {
         if (this.state.fileInfo.length + acceptedFiles.length > 3) {
+          this.setState({
+
+          })
           toast.error("Only 3 images are allowed.");
         } else {
           this.setState((state) => {
@@ -1501,10 +1485,10 @@ class AddProductComponent extends Component {
           }
           toast.success(
             this.state.file2Added +
-              " file Length: " +
-              this.state.fileInfo.length
+            " file Length: " +
+            this.state.fileInfo.length
           );
-          this.checkFiles512x512();
+          // this.checkFiles512x512();
         }
       } else if (data === "1600x900") {
         if (this.state.fileInfo2.length + acceptedFiles.length > 3) {
@@ -1540,7 +1524,7 @@ class AddProductComponent extends Component {
               file3Added2: true,
             });
           }
-          this.checkFiles1600x900();
+          // this.checkFiles1600x900();
         }
       } else if (data === "video") {
         if (this.state.fileInfo3.length + acceptedFiles.length > 1) {
@@ -1566,7 +1550,6 @@ class AddProductComponent extends Component {
             });
           }
           this.checkFilesVideo();
-          console.log(this.state.file3[0]);
         }
       }
 
@@ -1579,9 +1562,7 @@ class AddProductComponent extends Component {
   };
 
   handleDropVariant = (data, index, acceptedFiles) => {
-    console.log(data + " " + acceptedFiles + " " + index);
     if (data === "variant1") {
-      console.log(acceptedFiles[0]);
 
       const optionData = {
         optionName: this.state.variation1.options[index].name,
@@ -1619,23 +1600,23 @@ class AddProductComponent extends Component {
     var heigth = e.target.height;
     var width = e.target.width;
     if (data === "512x512") {
-      if (heigth !== 512 || width !== 512) {
-        this.removeFile(
-          "512x512",
-          e.target.attributes.getNamedItem("data-key").value
-        );
-        toast.error("Images have to be 512 x 512");
-      }
+      // if (heigth !== 512 || width !== 512) {
+      //   this.removeFile(
+      //     "512x512",
+      //     e.target.attributes.getNamedItem("data-key").value
+      //   );
+      //   toast.error("Images have to be 512 x 512");
+      // }
     } else if (data === "1600x900") {
       // var heigth = e.target.height;
       // var width = e.target.width;
-      if (heigth !== 900 || width !== 1600) {
-        this.removeFile(
-          "1600x900",
-          e.target.attributes.getNamedItem("data-key").value
-        );
-        toast.error("Images have to be 1600 x 900");
-      }
+      // if (heigth !== 900 || width !== 1600) {
+      //   this.removeFile(
+      //     "1600x900",
+      //     e.target.attributes.getNamedItem("data-key").value
+      //   );
+      //   toast.error("Images have to be 1600 x 900");
+      // }
     }
   };
 
@@ -1793,7 +1774,6 @@ class AddProductComponent extends Component {
   };
 
   onDeleteVariant = (index, data) => {
-    console.log(index + " " + data);
     if (data === "variant1") {
       if (this.state.variation2On) {
         var newVariant = [];
@@ -2056,27 +2036,76 @@ class AddProductComponent extends Component {
   };
 
   uploadFile = (productID) => {
-    for (var i = 0; i < this.state.file.length; i++) {
-      const formData1 = new FormData();
-      formData1.append(i + "image512x512", this.state.file[i]);
-      formData1.append("imageName", productID + "_image512x512_" + (i + 1));
-      formData1.append("ProductID", productID);
-      let url = "http://tourism.denoo.my/emporiaimage/upload.php";
-      axios.post(url, formData1, {}).then((res) => {
-        console.log("Warning: " + JSON.stringify(res));
-      });
-      this.props.callAddProductMedia(this.state);
-    }
-    for (var i = 0; i < this.state.file2.length; i++) {
-      const formData2 = new FormData();
-      formData2.append(i + "image1600x900", this.state.file2[i]);
-      formData2.append("imageName", productID + "_image1600x900_" + (i + 1));
-      formData2.append("ProductID", productID);
-      let url = "http://tourism.denoo.my/emporiaimage/upload.php";
-      axios.post(url, formData2, {}).then((res) => {
-        console.log("Warning: " + res);
-      });
-      this.props.callAddProductMedia(this.state);
+    // combine images and video for upload in an array
+    let uploadingMedia = [...this.state.file, ...this.state.file3]
+
+    if (typeof productID !== "undefined" && productID !== null && uploadingMedia.length > 0) {
+      //basic form setup
+      // const uploadFileUrl = "http://192.168.137.177/UnimasMarketplaceImage/uploadproductImages.php";
+      const uploadFileUrl = "http://tourism.denoo.my/UnimasMarketplaceApi/api/UnimasMarketplace/"
+      const formData = new FormData()
+
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+      formData.append("ProductID", productID);
+      //upload single file
+      let filenames = []
+      let variationID = []
+      let slideOrder = []
+      let mediaType = []
+      let imageWidth = []
+      let imageHeight = []
+
+      for (let i = 0; i < uploadingMedia.length; i++) {
+        let fileExt = getFileExtension(uploadingMedia[i])
+        let filename = productID + "_" + i + "_" + convertDateTimeToString(new Date())
+
+        filenames.push(filename + "." + fileExt)
+        mediaType.push(getFileTypeByExtension(fileExt))
+        variationID.push(0)
+        slideOrder.push(i)
+        imageWidth.push(0)
+        imageHeight.push(0)
+
+        formData.append("upload[]", uploadingMedia[i]);
+        formData.append("imageName[]", filename);
+      }
+
+      filenames = JSON.stringify(filenames)
+      variationID = JSON.stringify(variationID)
+      slideOrder = JSON.stringify(slideOrder)
+      mediaType = JSON.stringify(mediaType)
+      imageWidth = JSON.stringify(imageWidth)
+      imageHeight = JSON.stringify(imageHeight)
+
+      let object = {
+        ProductID: productID,
+        imageName: filenames.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
+        mediaType: mediaType.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
+        variationID: variationID.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
+        sliderOrder: slideOrder.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
+        width: imageWidth.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
+        height: imageHeight.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
+      }
+
+      console.log(object)
+
+      // axios.post("http://192.168.137.177/UnimasMarketplaceImage/uploadproductImages.php", formData, config).then((res) => {
+      axios.post("http://tourism.denoo.my/UnimasMarketplaceImage/uploadproductImages.php", formData, config).then((res) => {
+        if (res.status === 200 && res.data === 1) {
+
+
+
+          this.props.callAddProductMedia(object)
+          toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
+        }
+        else {
+          console.log(res)
+          toast.error("There is something wrong with uploading images. Please try again.")
+        }
+      }).catch(e => {
+        console.log(e)
+        toast.error("There is something wrong with uploading images. Please try again.")
+      })
     }
   };
 
@@ -2321,7 +2350,6 @@ class AddProductComponent extends Component {
       for (var i = 0; i < this.state.variation1Options; i++) {
         var variations = this.state.variation1;
         variations.options[i].variation2Options.name = e.target.value;
-        console.log(variations);
         this.setState({
           variation1: variations,
         });
@@ -2342,7 +2370,6 @@ class AddProductComponent extends Component {
   }
 
   handleChangeOptions = (data, index, e) => {
-    console.log(e + " " + index + " " + data);
     if (data === "variant1Options") {
       const optionData = {
         optionName: e.target.value,
@@ -2517,9 +2544,6 @@ class AddProductComponent extends Component {
       });
     }
 
-    console.log(this.state.variation1);
-    console.log(this.state.priceTierList);
-
     setTimeout(
       function () {
         this.checkProgress();
@@ -2529,9 +2553,6 @@ class AddProductComponent extends Component {
   };
 
   handleChangeOptionsVariant2 = (data, index, indexVariant2, e) => {
-    console.log(e + " " + data + " " + index + " " + indexVariant2);
-    console.log(this.state.variation1);
-
     if (data === "variant2Options") {
       const optionData = {
         optionName: e.target.value,
@@ -2558,7 +2579,6 @@ class AddProductComponent extends Component {
       variations.options[index].variation2Options.options[
         indexVariant2
       ] = optionData;
-      console.log(variations);
       this.setState({
         variation1: variations,
       });
@@ -2584,11 +2604,9 @@ class AddProductComponent extends Component {
       };
 
       var variations = this.state.variation1;
-      console.log(this.state.variation1);
       variations.options[index].variation2Options.options[
         indexVariant2
       ] = optionData;
-      console.log(variations);
 
       this.setState({
         variation1: variations,
@@ -2652,7 +2670,6 @@ class AddProductComponent extends Component {
         variation1: variations,
       });
     }
-    console.log(this.state.variation1);
     setTimeout(
       function () {
         this.checkVariant2();
@@ -2687,7 +2704,7 @@ class AddProductComponent extends Component {
   };
 
   onNavigationProductStockIn() {
-    browserHistory.push("/Emporia/productStocksIn");
+    browserHistory.push("/UnimasMarketplace/productStocksIn");
   }
 
   checkEverything = () => {
@@ -2710,9 +2727,9 @@ class AddProductComponent extends Component {
     this.checkTags();
     this.checkPrice();
     this.checkStock();
-    this.checkFiles1600x900();
-    this.checkFiles512x512();
-    this.checkFilesVideo();
+    // this.checkFiles1600x900();
+    // this.checkFiles512x512();
+    // this.checkFilesVideo();
 
     setTimeout(
       function () {
@@ -2935,8 +2952,6 @@ class AddProductComponent extends Component {
         };
       }
 
-      console.log(variationObject);
-
       if (!this.state.variation1On) {
         this.setState({
           variation1On: true,
@@ -3076,12 +3091,15 @@ class AddProductComponent extends Component {
   };
 
   checkVisible = (elm) => {
-    var rect = elm.getBoundingClientRect();
-    var viewHeight = Math.max(
-      document.documentElement.clientHeight,
-      window.innerHeight
-    );
-    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+    if (elm !== null) {
+      var rect = elm.getBoundingClientRect();
+      var viewHeight = Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight
+      );
+      return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+    }
+
   };
 
   componentDidMount() {
@@ -3089,7 +3107,7 @@ class AddProductComponent extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll, true);
   }
 
   addOptions = (variantNum, e) => {
@@ -3223,8 +3241,6 @@ class AddProductComponent extends Component {
             variation1: variations,
           });
         }
-
-        console.log(variations);
       }
     } else if (variantNum == "priceTier") {
       const priceTier = {
@@ -3243,8 +3259,6 @@ class AddProductComponent extends Component {
         wholeSaleOptions: this.state.wholeSaleOptions + 1,
         priceTierList: TierList,
       });
-
-      console.log(this.state.priceTierList);
     }
     setTimeout(
       function () {
@@ -3267,6 +3281,49 @@ class AddProductComponent extends Component {
       500
     );
   };
+
+  OnSubmit = () => {
+
+    this.checkEverything();
+
+    let object = {
+      name: this.state.name,
+      manufacturer: this.state.manufacturer === "" ? "-" : this.state.manufacturer,
+      description: this.state.description,
+      productCategory: this.state.productCategory,
+      productSupplier: this.state.productSupplier,
+      height: this.state.height,
+      width: this.state.weight,
+      depth: this.state.depth,
+      weight: this.state.weight,
+      sku: this.state.sku,
+      brand: this.state.brand,
+      model: this.state.model,
+      tags: this.state.tags,
+    }
+    this.props.callAddProduct(object)
+
+    // console.log(this.state.file)
+  }
+
+  componentDidUpdate(prevProps) {
+    // check product is upload, 
+    // upload one or multiple file, php will handle the api that saving the file path to db
+    // after all files are uploaded, upload video if have video, then done
+    // 
+
+    if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
+      if (this.state.file.length > 0) {
+        let ProductID = this.props.result[0].ProductID
+        this.uploadFile(ProductID)
+      }
+      this.props.CallResetProductReturnVal()
+    }
+
+    if (typeof this.props.resultsMedia !== "undefined" && this.props.resultsMedia.length > 0 && this.props.resultsMedia[0].ReturnVal == 1) {
+      this.props.CallResetProductMediaResult()
+    }
+  }
 
   render() {
     const steps = [
@@ -3295,16 +3352,18 @@ class AddProductComponent extends Component {
     };
 
     var counter = 0;
-    let resultData = this.props.result
-      ? Object.keys(this.props.result).map((key) => {
-          return this.props.result[key];
-        })
-      : {};
-    if (resultData.length > 0) {
-      resultData.map((d, i) => {
-        this.uploadFile(d.ProductID);
-      });
-    }
+
+    // I commented this part as I suspecting the line below is not working on uploading file
+    // let resultData = this.props.result
+    //   ? Object.keys(this.props.result).map((key) => {
+    //     return this.props.result[key];
+    //   })
+    //   : {};
+    // if (resultData.length > 0) {
+    //   resultData.map((d, i) => {
+    //     this.uploadFile(d.ProductID);
+    //   });
+    // }
 
     const query = queryString.parse(this.props.location.search);
 
@@ -3317,8 +3376,8 @@ class AddProductComponent extends Component {
 
     let existData = this.props.exist
       ? Object.keys(this.props.exist).map((key) => {
-          return this.props.exist[key];
-        })
+        return this.props.exist[key];
+      })
       : {};
     if (existData.length > 0) {
       var checkDuplicate = existData.map((d, i) => {
@@ -3331,44 +3390,14 @@ class AddProductComponent extends Component {
     const { index } = this.state;
     let allcategoriesData = this.props.allcategories
       ? Object.keys(this.props.allcategories).map((key) => {
-          return this.props.allcategories[key];
-        })
+        return this.props.allcategories[key];
+      })
       : {};
 
     if (allcategoriesData.length > 0) {
       var createMenusForDropDown = allcategoriesData.map((d, i) => {
         return <option value={d.ProductCategoryID}>{d.ProductCategory}</option>;
       });
-    }
-
-    let allgridData = this.props.allgridstorages
-      ? Object.keys(this.props.allgridstorages).map((key) => {
-          return this.props.allgridstorages[key];
-        })
-      : {};
-
-    if (allgridData.length > 0) {
-      var NotEmptyGrid = true;
-      var createMenusForDropDownGrid = allgridData.map((d, i) => {
-        return <option value={d.GridStorageID}>{d.GridStorageCode}</option>;
-      });
-    } else {
-      var NotEmptyGrid = false;
-    }
-
-    let allshoplotsData = this.props.allshoplots
-      ? Object.keys(this.props.allshoplots).map((key) => {
-          return this.props.allshoplots[key];
-        })
-      : {};
-
-    if (allshoplotsData.length > 0) {
-      var NotEmpty = true;
-      var createMenusForDropDownShoplots = allshoplotsData.map((d, i) => {
-        return <option value={d.ShoplotID}>{d.ShoplotName}</option>;
-      });
-    } else {
-      var NotEmpty = false;
     }
 
     let allusersData = this.props.allUser
@@ -3378,7 +3407,7 @@ class AddProductComponent extends Component {
       : {};
 
     if (allusersData.length > 0) {
-      var createMenusForDropDownUsers = allusersData.map((d, i) => {
+      var createSupplierMenu = allusersData.map((d, i) => {
         return (
           <option value={d.UserID}>
             {d.FirstName + d.LastName} ({d.CompanyName})
@@ -3490,10 +3519,11 @@ class AddProductComponent extends Component {
       return elemList;
     };
 
+
     let productCategoriesList = this.props.productCategories
       ? Object.keys(this.props.productCategories).map((key) => {
-          return this.props.productCategories[key];
-        })
+        return this.props.productCategories[key];
+      })
       : {};
 
     if (productCategoriesList.length > 0) {
@@ -3502,13 +3532,11 @@ class AddProductComponent extends Component {
 
     let productCategoriesFullListList = this.props.productCategoriesFullList
       ? Object.keys(this.props.productCategoriesFullList).map((key) => {
-          return this.props.productCategoriesFullList[key];
-        })
+        return this.props.productCategoriesFullList[key];
+      })
       : {};
 
     const searchCategory = (searchValue) => {
-      console.log(searchValue + "  " + this.state.productCategory);
-
       productCategoriesFullListList.map((category) => {
         if (category.ProductCategory == searchValue) {
           if (category.HierarchyID == 1) {
@@ -3516,7 +3544,6 @@ class AddProductComponent extends Component {
               if (
                 categoryItem.ProductCategoryID == category.ProductCategoryID
               ) {
-                console.log(JSON.parse(categoryItem.HierarchyItem));
                 this.setState({
                   categoryH1: category.ProductCategoryID,
                   categoryH1Name: categoryItem.ProductCategory,
@@ -3539,7 +3566,6 @@ class AddProductComponent extends Component {
                 categoryItem.ProductCategoryID ==
                 category.ParentProductCategoryID
               ) {
-                console.log(JSON.parse(categoryItem.HierarchyItem));
                 JSON.parse(categoryItem.HierarchyItem).map(
                   (firstNestedList) => {
                     if (
@@ -3585,7 +3611,6 @@ class AddProductComponent extends Component {
 
                     productCategoriesList.map((List1) => {
                       if (List1.ProductCategoryID == h1ID) {
-                        console.log(JSON.parse(List1.HierarchyItem));
                         JSON.parse(List1.HierarchyItem).map((List2) => {
                           if (List2.ProductCategoryID == h2ID) {
                             JSON.parse(List2.HierarchyItem).map((List3) => {
@@ -3641,7 +3666,6 @@ class AddProductComponent extends Component {
 
                         productCategoriesList.map((List1) => {
                           if (List1.ProductCategoryID == h1ID) {
-                            console.log(JSON.parse(List1.HierarchyItem));
                             JSON.parse(List1.HierarchyItem).map((List2) => {
                               if (List2.ProductCategoryID == h2ID) {
                                 JSON.parse(List2.HierarchyItem).map((List3) => {
@@ -3651,31 +3675,17 @@ class AddProductComponent extends Component {
                                         if (List4.ProductCategoryID == h4ID) {
                                           this.setState({
                                             categoryH1: List1.ProductCategoryID,
-                                            categoryH1Name:
-                                              List1.ProductCategory,
-                                            categoryH2: JSON.parse(
-                                              List1.HierarchyItem
-                                            ),
-                                            categoryH2ID:
-                                              List2.ProductCategoryID,
-                                            categoryH2Name:
-                                              List2.ProductCategory,
-                                            categoryH3: JSON.parse(
-                                              List2.HierarchyItem
-                                            ),
-                                            categoryH3ID:
-                                              List3.ProductCategoryID,
-                                            categoryH3Name:
-                                              List3.ProductCategory,
-                                            categoryH4: JSON.parse(
-                                              List3.HierarchyItem
-                                            ),
-                                            categoryH4ID:
-                                              List4.ProductCategoryID,
-                                            categoryH4Name:
-                                              List4.ProductCategory,
-                                            productCategory:
-                                              List4.ProductCategoryID,
+                                            categoryH1Name: List1.ProductCategory,
+                                            categoryH2: JSON.parse(List1.HierarchyItem),
+                                            categoryH2ID: List2.ProductCategoryID,
+                                            categoryH2Name: List2.ProductCategory,
+                                            categoryH3: JSON.parse(List2.HierarchyItem),
+                                            categoryH3ID: List3.ProductCategoryID,
+                                            categoryH3Name: List3.ProductCategory,
+                                            categoryH4: JSON.parse(List3.HierarchyItem),
+                                            categoryH4ID: List4.ProductCategoryID,
+                                            categoryH4Name: List4.ProductCategory,
+                                            productCategory: List4.ProductCategoryID,
                                           });
                                         }
                                       }
@@ -3703,12 +3713,9 @@ class AddProductComponent extends Component {
       );
     };
     const categoryClick = (level, e) => {
-      console.log(productCategoriesFullListList);
-      console.log(e.currentTarget.id);
       if (level == "1") {
         productCategoriesList.map((categoryItem) => {
           if (categoryItem.ProductCategoryID == e.currentTarget.id) {
-            console.log(JSON.parse(categoryItem.HierarchyItem));
             this.setState({
               categoryH1: e.currentTarget.id,
               categoryH1Name: categoryItem.ProductCategory,
@@ -3728,7 +3735,6 @@ class AddProductComponent extends Component {
       } else if (level == "2") {
         this.state.categoryH2.map((categoryItem) => {
           if (categoryItem.ProductCategoryID == e.currentTarget.id) {
-            console.log(JSON.parse(categoryItem.HierarchyItem));
             this.setState({
               categoryH2ID: e.currentTarget.id,
               categoryH2Name: categoryItem.ProductCategory,
@@ -3745,7 +3751,6 @@ class AddProductComponent extends Component {
       } else if (level == "3") {
         this.state.categoryH3.map((categoryItem) => {
           if (categoryItem.ProductCategoryID == e.currentTarget.id) {
-            console.log(JSON.parse(categoryItem.HierarchyItem));
             this.setState({
               categoryH3ID: e.currentTarget.id,
               categoryH3Name: categoryItem.ProductCategory,
@@ -3758,7 +3763,6 @@ class AddProductComponent extends Component {
         });
       } else if (level == "4") {
         this.state.categoryH4.map((categoryItem) => {
-          console.log(categoryItem);
           if (categoryItem.ProductCategoryID == e.currentTarget.id) {
             this.setState({
               categoryH4ID: e.currentTarget.id,
@@ -3859,12 +3863,12 @@ class AddProductComponent extends Component {
                           style={{
                             color:
                               this.state.categoryH1 ==
-                              category.ProductCategoryID
+                                category.ProductCategoryID
                                 ? "#3d3d3d"
                                 : "#3d3d3d",
                             background:
                               this.state.categoryH1 ==
-                              category.ProductCategoryID
+                                category.ProductCategoryID
                                 ? "#ebebeb"
                                 : "white",
                           }}
@@ -3878,76 +3882,76 @@ class AddProductComponent extends Component {
                     <div className="CategorySelectorSection">
                       {this.state.categoryH2
                         ? this.state.categoryH2.map((category) => (
-                            <Button
-                              className="CategorySelectorItem"
-                              style={{
-                                color:
-                                  this.state.categoryH2ID ==
+                          <Button
+                            className="CategorySelectorItem"
+                            style={{
+                              color:
+                                this.state.categoryH2ID ==
                                   category.ProductCategoryID
-                                    ? "#3d3d3d"
-                                    : "#3d3d3d",
-                                background:
-                                  this.state.categoryH2ID ==
+                                  ? "#3d3d3d"
+                                  : "#3d3d3d",
+                              background:
+                                this.state.categoryH2ID ==
                                   category.ProductCategoryID
-                                    ? "#ebebeb"
-                                    : "white",
-                              }}
-                              onClick={categoryClick.bind(this, "2")}
-                              id={category.ProductCategoryID}
-                            >
-                              {category.ProductCategory}
-                            </Button>
-                          ))
+                                  ? "#ebebeb"
+                                  : "white",
+                            }}
+                            onClick={categoryClick.bind(this, "2")}
+                            id={category.ProductCategoryID}
+                          >
+                            {category.ProductCategory}
+                          </Button>
+                        ))
                         : null}
                     </div>
                     <div className="CategorySelectorSection">
                       {this.state.categoryH3
                         ? this.state.categoryH3.map((category) => (
-                            <Button
-                              className="CategorySelectorItem"
-                              style={{
-                                color:
-                                  this.state.categoryH3ID ==
+                          <Button
+                            className="CategorySelectorItem"
+                            style={{
+                              color:
+                                this.state.categoryH3ID ==
                                   category.ProductCategoryID
-                                    ? "#3d3d3d"
-                                    : "#3d3d3d",
-                                background:
-                                  this.state.categoryH3ID ==
+                                  ? "#3d3d3d"
+                                  : "#3d3d3d",
+                              background:
+                                this.state.categoryH3ID ==
                                   category.ProductCategoryID
-                                    ? "#ebebeb"
-                                    : "white",
-                              }}
-                              onClick={categoryClick.bind(this, "3")}
-                              id={category.ProductCategoryID}
-                            >
-                              {category.ProductCategory}
-                            </Button>
-                          ))
+                                  ? "#ebebeb"
+                                  : "white",
+                            }}
+                            onClick={categoryClick.bind(this, "3")}
+                            id={category.ProductCategoryID}
+                          >
+                            {category.ProductCategory}
+                          </Button>
+                        ))
                         : null}
                     </div>
                     <div className="CategorySelectorSection">
                       {this.state.categoryH4
                         ? this.state.categoryH4.map((category) => (
-                            <Button
-                              className="CategorySelectorItem"
-                              style={{
-                                color:
-                                  this.state.categoryH4ID ==
+                          <Button
+                            className="CategorySelectorItem"
+                            style={{
+                              color:
+                                this.state.categoryH4ID ==
                                   category.ProductCategoryID
-                                    ? "#3d3d3d"
-                                    : "#3d3d3d",
-                                background:
-                                  this.state.categoryH4ID ==
+                                  ? "#3d3d3d"
+                                  : "#3d3d3d",
+                              background:
+                                this.state.categoryH4ID ==
                                   category.ProductCategoryID
-                                    ? "#ebebeb"
-                                    : "white",
-                              }}
-                              onClick={categoryClick.bind(this, "4")}
-                              id={category.ProductCategoryID}
-                            >
-                              {category.ProductCategory}
-                            </Button>
-                          ))
+                                  ? "#ebebeb"
+                                  : "white",
+                            }}
+                            onClick={categoryClick.bind(this, "4")}
+                            id={category.ProductCategoryID}
+                          >
+                            {category.ProductCategory}
+                          </Button>
+                        ))
                         : null}
                     </div>
                   </div>
@@ -4005,8 +4009,12 @@ class AddProductComponent extends Component {
                       })
                     }
                   >
-                    <option aria-label="None" value="" />
-                    {createMenusForDropDownUsers}
+                    <option aria-label="None" value="">None Selected</option>
+                    {/* {createSupplierMenu} */}
+                    {/* {createSupplierMenu} */}
+                    <option value={localStorage.getItem("id")}>
+                      {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")} 
+                    </option>
                   </Select>
                 </FormControl>
                 {this.state.productSupplierEmpty && (
@@ -4160,14 +4168,11 @@ class AddProductComponent extends Component {
                   }}
                   onChange={(event, editor) => {
                     const data = editor.getData();
-                    console.log({ event, editor, data });
                     this.setState({ description: data });
                   }}
                   onBlur={(event, editor) => {
-                    console.log("Blur.", editor);
                   }}
                   onFocus={(event, editor) => {
-                    console.log("Focus.", editor);
                   }}
                 />
                 {/* <Button
@@ -4185,7 +4190,7 @@ class AddProductComponent extends Component {
             <br />
             <Card className="SubContainer" id="productVariation">
               <CardContent>
-                <p className="Heading">Product Variations</p>
+                <p className="Heading">Product Pricing</p>
                 {!this.state.variation1On && !this.state.variation2On ? (
                   <div>
                     <InputGroup className="InputField">
@@ -4448,7 +4453,7 @@ class AddProductComponent extends Component {
                   </div>
                 ) : null}
 
-                {/* {this.state.variation2On ? <br /> : null} */}
+                {this.state.variation2On ? <br /> : null}
                 {!this.state.variation1On || !this.state.variation2On ? (
                   <div className="ItemContainer">
                     <Button
@@ -4581,8 +4586,8 @@ class AddProductComponent extends Component {
                                       {this.state.variation1.options[x]
                                         .variation2Options.options[i].optionName
                                         ? this.state.variation1.options[x]
-                                            .variation2Options.options[i]
-                                            .optionName
+                                          .variation2Options.options[i]
+                                          .optionName
                                         : "Option " + (i + 1) + " Variant 2"}
                                     </td>
                                     <td className="tdNestedNew">
@@ -4674,7 +4679,7 @@ class AddProductComponent extends Component {
                                           }}
                                           variant="outlined"
                                           className="InputField2"
-                                          // error={this.state.stock || this.state.skuNotLongEnough}
+                                        // error={this.state.stock || this.state.skuNotLongEnough}
                                         />
                                         {this.state.variation1.options[x]
                                           .variation2Options.options[i]
@@ -4724,7 +4729,7 @@ class AddProductComponent extends Component {
                                           }}
                                           variant="outlined"
                                           className="InputField2"
-                                          // error={this.state.stock || this.state.skuNotLongEnough}
+                                        // error={this.state.stock || this.state.skuNotLongEnough}
                                         />
                                         {this.state.variation1.options[x]
                                           .variation2Options.options[i]
@@ -4823,7 +4828,7 @@ class AddProductComponent extends Component {
                                 }}
                                 variant="outlined"
                                 className="InputField2"
-                                // error={this.state.stock || this.state.skuNotLongEnough}
+                              // error={this.state.stock || this.state.skuNotLongEnough}
                               />
                               {this.state.variation1.options[x].errorStock ? (
                                 <Tooltip
@@ -5018,7 +5023,7 @@ class AddProductComponent extends Component {
                       onClick={this.onDeleteVariant.bind(this, -1, "wholeSale")}
                     />
                   </div>
-                ) : null}
+                ) : null} 
               </CardContent>
             </Card>
             <br />
@@ -5027,7 +5032,8 @@ class AddProductComponent extends Component {
                 <p className="Heading">Product Media</p>
                 <p className="FontType1">Product Images</p>
                 <p className="FontType1">
-                  Main product images of size 512x512:
+                  {/* Main product images of size 512x512: */}
+                  Main product images
                 </p>
                 <div className="DropZoneMain">
                   <div className="DropZoneGrid">
@@ -5251,10 +5257,10 @@ class AddProductComponent extends Component {
                 </div>
                 {this.state.notEnoughFiles512x512 && (
                   <p className="error">
-                    There has to be at least 3 images of the size 512x512 added.
+                    There has to be at least 1 images of the size 512x512 added.
                   </p>
                 )}
-                <p className="FontType1">
+                {/* <p className="FontType1">
                   Main product images of size 1600x900:
                 </p>
                 <div className="DropZoneMain">
@@ -5480,7 +5486,7 @@ class AddProductComponent extends Component {
                     There has to be at least 3 images of the size 1600x900
                     added.
                   </p>
-                )}
+                )} */}
                 <p className="FontType1">Product Video:</p>
                 <div className="DropZoneMain">
                   <div className="DropZoneGrid">
@@ -5817,7 +5823,7 @@ class AddProductComponent extends Component {
           </div>
           <br />
           <div className="SubmitButtonContainer">
-            <Button variant="outlined" className="SubmitButton">
+            <Button variant="outlined" className="SubmitButton" onClick={() => { this.OnSubmit() }}>
               Review Product Details
             </Button>
           </div>
