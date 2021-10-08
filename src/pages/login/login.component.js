@@ -81,12 +81,61 @@ class LoginComponent extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.currentUser !== this.props.currentUser) {
-      if (this.props.currentUser[0]) {
-        console.log("this.props.currentUser[0].UserID", this.props.currentUser[0].UserID)
+      if (this.props.currentUser[0].ReturnVal !== "0") {
         this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
         this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
-      }
 
+        localStorage.setItem("isLogin", true);
+        localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
+        localStorage.setItem("lastname", this.props.currentUser[0].LastName);
+        localStorage.setItem("role", this.props.currentUser[0].UserType);
+        localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
+        localStorage.setItem(
+          "productEndorsementBadge",
+          this.props.currentUser[0].productEndorsementBadge
+        );
+        localStorage.setItem(
+          "productBadge",
+          this.props.currentUser[0].productBadge
+        );
+        localStorage.setItem("id", this.props.currentUser[0].UserID);
+
+        if (this.state.rememberMe === false) {
+          localStorage.setItem("isLogin", true);
+          cookies.set("isLogin", true);
+
+          cookies.set("rememberMe", this.state.rememberMe);
+
+          localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
+          cookies.set("firstname", this.props.currentUser[0].FirstName);
+          localStorage.setItem("lastname", this.props.currentUser[0].LastName);
+          cookies.set("lastname", this.props.currentUser[0].LastName);
+          localStorage.setItem("role", this.props.currentUser[0].UserType);
+          cookies.set("role", this.props.currentUser[0].UserType);
+          localStorage.setItem("id", this.props.currentUser[0].UserID);
+        } else {
+          let date = new Date();
+          date.setTime(date.getTime() + 60 * 60 * 24 * 1000);
+          const options = { path: "/", expires: date };
+          localStorage.setItem("isLogin", true);
+          cookies.set("isLogin", true, options);
+
+          cookies.set("rememberMe", this.state.rememberMe, options);
+          localStorage.setItem("id", this.props.currentUser[0].UserID);
+
+          localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
+          cookies.set("firstname", this.props.currentUser[0].FirstName, options);
+          localStorage.setItem("lastname", this.props.currentUser[0].LastName);
+          cookies.set("lastname", this.props.currentUser[0].LastName, options);
+          localStorage.setItem("role", this.props.currentUser[0].UserType);
+          localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
+          cookies.set("role", this.props.currentUser[0].UserType, options);
+        }
+        browserHistory.push("/Emporia");
+        window.location.reload(false);
+      } else {
+        toast.error("The username and password does not match.")
+      }
     }
   }
 
@@ -121,11 +170,7 @@ class LoginComponent extends Component {
   }
 
   resetPassword(e) {
-    // this.setState({ isForgetPassword: false })
     e.preventDefault()
-    // console.log("HEHE")
-    // console.log(e.target)
-    // console.log(this.state)
 
     if (this.state.resetEmail !== "" && this.state.resetEmail.includes("@")) {
       emailjs.sendForm('service_ph326fk', 'template_pwxl4tf', e.target, 'user_c793YoEph6xtuh3ctKtsY')
@@ -140,63 +185,7 @@ class LoginComponent extends Component {
     }
   }
 
-
   render() {
-    if (this.props.currentUser[0]) {
-
-      localStorage.setItem("isLogin", true);
-      localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
-      localStorage.setItem("lastname", this.props.currentUser[0].LastName);
-      localStorage.setItem("role", this.props.currentUser[0].UserType);
-      localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
-      localStorage.setItem(
-        "productEndorsementBadge",
-        this.props.currentUser[0].productEndorsementBadge
-      );
-      localStorage.setItem(
-        "productBadge",
-        this.props.currentUser[0].productBadge
-      );
-      localStorage.setItem("id", this.props.currentUser[0].UserID);
-
-      if (this.state.rememberMe === false) {
-        localStorage.setItem("isLogin", true);
-        cookies.set("isLogin", true);
-
-        cookies.set("rememberMe", this.state.rememberMe);
-
-        localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
-        cookies.set("firstname", this.props.currentUser[0].FirstName);
-        localStorage.setItem("lastname", this.props.currentUser[0].LastName);
-        cookies.set("lastname", this.props.currentUser[0].LastName);
-        localStorage.setItem("role", this.props.currentUser[0].UserType);
-        cookies.set("role", this.props.currentUser[0].UserType);
-        localStorage.setItem("id", this.props.currentUser[0].UserID);
-      } else {
-        let date = new Date();
-        date.setTime(date.getTime() + 60 * 60 * 24 * 1000);
-        const options = { path: "/", expires: date };
-        localStorage.setItem("isLogin", true);
-        cookies.set("isLogin", true, options);
-
-        cookies.set("rememberMe", this.state.rememberMe, options);
-        localStorage.setItem("id", this.props.currentUser[0].UserID);
-
-        localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
-        cookies.set("firstname", this.props.currentUser[0].FirstName, options);
-        localStorage.setItem("lastname", this.props.currentUser[0].LastName);
-        cookies.set("lastname", this.props.currentUser[0].LastName, options);
-        localStorage.setItem("role", this.props.currentUser[0].UserType);
-        localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
-        cookies.set("role", this.props.currentUser[0].UserType, options);
-      }
-      browserHistory.push("/Emporia");
-      window.location.reload(false);
-    }
-
-
-    console.log("currentUser", this.props.currentUser)
-
     return (
       <div>
         <form onSubmit={this.OnSubmitLogin} className="container block block--margin-top">
@@ -255,6 +244,7 @@ class LoginComponent extends Component {
                   type="submit"
                   variant="contained"
                   className="btn btn-primary w-100"
+                  disabled={this.state.username !== '' && this.state.password !== '' ? false : true}
                 >
                   Sign In
                 </button>
@@ -291,7 +281,6 @@ class LoginComponent extends Component {
             </Col>
           </Row>
         </form>
-        {console.log(this.props)}
 
         <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState({ isForgetPassword: false }) }} fullWidth="true" maxWidth="xs">
           <DialogContent dividers>

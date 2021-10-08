@@ -60,6 +60,7 @@ const rootEpic = combineEpics(
   gitEpic.updateProduct,
   gitEpic.deleteProduct,
   gitEpic.endorseProduct,
+  gitEpic.addProductSpecsDetail,
   gitEpic.addProductVariationDetail,
   gitEpic.getAllProductVariation,
   gitEpic.addProductVariation,
@@ -77,38 +78,16 @@ const rootEpic = combineEpics(
   //=================PROMOTION=============================//
   gitEpic.getAllPromotion,
   gitEpic.AddPromotion,
-  //=================QUOTATION=============================//
-  gitEpic.AddProductQuotation,
-  gitEpic.AddedProductQuotation,
-  gitEpic.ViewProductQuotation,
-  gitEpic.deleteQuotation,
   //=================SUPPLIER=============================//
   gitEpic.getAllSupplierByUserStatus,
   gitEpic.registerSupplier,
   gitEpic.endorseSupplier,
-  //==================STORAGE==========================//
-  gitEpic.getAllShoplots,
-  gitEpic.addShoplot,
-  gitEpic.updateShoplot,
-  gitEpic.deleteShoplot,
-  gitEpic.getAllGridStorages,
-  gitEpic.addGridStorages,
-  gitEpic.updateGridStorages,
-  gitEpic.deleteGridStorages,
-  gitEpic.getAllShoplotsPolygon,
   //==================REVIEW==========================//
-
   gitEpic.viewProductReviewByProductID,
   gitEpic.viewProductReview,
   gitEpic.addProductReview,
   //==================REPORT==========================//
   gitEpic.viewOverallSummary,
-
-  //==================COLOR==========================//
-  gitEpic.getAllColor,
-  gitEpic.addColor,
-  gitEpic.updateColor,
-  gitEpic.deleteColor,
   //==================DELIVERY==========================//
   gitEpic.getDeliverableList,
   //==================NOTIFICATION==========================//
@@ -130,24 +109,13 @@ const rootEpic = combineEpics(
   //==================TRANSACTIONS========================//
   gitEpic.getAllTransactions,
   gitEpic.getAllTransactionStatus,
-  //=====================ACCOUNT========================//
-  gitEpic.getAllPayableList,
-  gitEpic.getAllReceivableList,
   //==================INVENTORY========================//
   gitEpic.updateProductStock,
-  gitEpic.endorseProductStock,
-  gitEpic.updateProductStockOut,
-  gitEpic.updatePurchaseOrderStatus,
   //=====================MERCHANTS========================//
   gitEpic.getAllMerchants,
   gitEpic.getAllMerchantOrders,
-  gitEpic.updateProductDetailStatus,
   //======================PRODUCT ORDERS====================//
   gitEpic.getAllProductOrders,
-  gitEpic.sendSalesOrder,
-  gitEpic.addPurchaseOrder,
-  gitEpic.getAllPurchaseOrders,
-  gitEpic.deletePurchaseOrder,
   gitEpic.updateProductStatus,
   gitEpic.getOrderListByID,
   //====================== EMAIL ====================//
@@ -161,7 +129,9 @@ const rootEpic = combineEpics(
   //====================== PRODUCT WISHLIST ====================//
   gitEpic.viewProductWishlist,
   gitEpic.addProductWishlist,
-  gitEpic.deleteProductWishlist
+  gitEpic.deleteProductWishlist,
+  //====================== PROMOTION BANNER ====================//
+  gitEpic.AddPromotionBannerByIds,
 );
 
 // const rootReducerCombine = rootReducer;

@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   statistic: [],
   products: [],
   productsByID: [],
+  productSpecsDetail: [],
   viewMoreProducts: [],
   reviews: [],
   categories: [],
@@ -287,6 +288,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
       var productMediaResult = Object.assign({}, state);
       productMediaResult.loading = false;
       return productMediaResult;
+
+    //==============PRODUCT SPECS DETAIL===============//
+    case GitAction.AddProductSpecsDetail:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.AddedProductSpecsDetail:
+      return Object.assign({}, state, {
+        loading: false,
+        productSpecsDetail: action.payload,
+      });
 
 
     case GitAction.ResetProductReturnVal:
@@ -933,7 +943,6 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return newPromoObj;
 
     //================= PRODUCT CART ================//
-
     case GitAction.DeleteProductCart:
       return Object.assign({}, state, { loading: true });
     case GitAction.DeletedProductCart:
@@ -1007,7 +1016,16 @@ export function counterReducer(state = INITIAL_STATE, action) {
         wishlist: [],
       });
 
+    //================= PROMOTION BANNER ================//
+    case GitAction.addPromotionBanner:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.addedPromotionBanner:
+      return Object.assign({}, state, {
+        loading: false,
+        promotionBannerReturn: action.payload,
+      });
 
+    /////////////////////////////////////////////////// Default /////////////////////////////////////////////////// 
     default:
       return state;
   }

@@ -53,6 +53,7 @@
     "intl-messageformat-parser": "^6.4.4",
     "material-icons": "^1.8.0",
     "material-table": "^1.69.0",
+    "material-ui-dropzone": "^3.5.0",
     "material-ui-icons": "^1.0.0-beta.36",
     "material-ui-nested-menu-item": "^1.0.2",
     "moment": "^2.29.1",

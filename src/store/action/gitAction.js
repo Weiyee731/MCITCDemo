@@ -208,7 +208,7 @@ export class GitAction {
 
   static CallProductDetail(propData) {
     return {
-      type: GitAction.GetProduct,
+      type: GitAction.GetProductDetail,
       payload: propData
     };
   }
@@ -362,6 +362,18 @@ export class GitAction {
     return {
       type: GitAction.DeleteProductVariation,
       payload: prodData,
+    };
+  }
+
+  // PRODUCT SPECS
+
+  static AddProductSpecsDetail = "DELETE-PRODUCTVARIATION";
+  static AddedProductSpecsDetail = "DELETED-PRODUCTVARIATION";
+
+  static CallAllProductSpecsDetail(prodData) {
+    return {
+      type: GitAction.AddProductSpecsDetail,
+      payload: prodData
     };
   }
 
@@ -1168,4 +1180,15 @@ export class GitAction {
       type: GitAction.ClearProductWishlist,
     };
   }
+
+  //================= PROMOTION BANNER ================//
+  static addPromotionBanner = "ADD-PROMOTIONBANNER";
+  static addedPromotionBanner = "ADDED-PROMOTIONBANNER";
+  static AddPromotionBannerByIds(propsData) {
+    return {
+      type: GitAction.addPromotionBanner,
+      payload: propsData
+    };
+  }
+
 }
