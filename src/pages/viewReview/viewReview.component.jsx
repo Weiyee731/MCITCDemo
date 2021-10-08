@@ -60,10 +60,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 class ViewReviewComponent extends Component {
   constructor(props) {
     super(props);
+    const reviews = this.props.reviews;
     this.state = {
       ProductID: 0,
       ParentProductReviewID: 0,
-      reviews: [],
+      reviews: reviews,
       ProductReviewDetail: [],
       searchFilter: "",
       displayDialogOpen: false,
@@ -80,22 +81,9 @@ class ViewReviewComponent extends Component {
     this.props.CallProductReview({
       UserID: window.localStorage.getItem("id"),
     });
-    // if (this.props.reviews && this.props.reviews !== undefined) {
-    //   this.setState({ reviews: this.props.reviews })
-    // }
-  }
-
-  handleDisplayAllComments = (value) => {
-    this.setState({
-      displayDialogOpen: value,
-    })
-  }
-
-
-  render() {
-
-    // this.state.reviews = this.props.reviews;
-
+    if (this.props.reviews && this.props.reviews !== undefined) {
+      this.setState({ reviews: this.props.reviews })
+    }
     this.state.reviews.map((d, i) => {
       const Picture = d.ProductMediaUrl;
       d.ProductMediaUrl = (
@@ -116,9 +104,41 @@ class ViewReviewComponent extends Component {
         </div>
       );
     });
+  }
 
-    this.state.ProductReviewDetail = this.state.reviews;
-    const ReviewData = this.state.reviews;
+  handleDisplayAllComments = (value) => {
+    this.setState({
+      displayDialogOpen: value,
+    })
+  }
+
+
+  render() {
+
+    // this.state.reviews = this.props.reviews;
+
+    // this.state.reviews.map((d, i) => {
+    //   const Picture = d.ProductMediaUrl;
+    //   d.ProductMediaUrl = (
+    //     <div key={i}>
+    //       <img height={50} src={Picture} alt={d.Name} />
+    //     </div>
+    //   );
+
+    //   const RatingReview = d.ProductAverageRating;
+    //   d.ProductAverageRating = (
+    //     <div>
+    //       <Rating
+    //         name="productAverageReviewRating"
+    //         value={RatingReview}
+    //         precision={0.5}
+    //         readOnly
+    //       />
+    //     </div>
+    //   );
+    // });
+
+
     const filteredProduct = [];
 
     const commentPanel = {
@@ -150,7 +170,7 @@ class ViewReviewComponent extends Component {
       marginTop: "15px",
     };
 
-    ReviewData.filter((searchedItem) => typeof searchedItem !== 'undefined' && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+    this.state.reviews.filter((searchedItem) => typeof searchedItem !== 'undefined' && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
       .map((filteredItem) => { filteredProduct.push(filteredItem); })
 
     return (
