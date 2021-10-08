@@ -103,7 +103,6 @@ function HomePageTwo(props) {
 
   return (
     <React.Fragment>
-      {console.log("posttoshow", postsToShow)}
       <div className="block--margin-top">
         <Helmet>
           <title>{theme.name}</title>

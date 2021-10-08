@@ -1376,7 +1376,6 @@ class AddProductComponent extends Component {
         style={{ width: "100%" }}
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownShoplots}
       </Select>
     );
 
@@ -1391,7 +1390,6 @@ class AddProductComponent extends Component {
         style={{ width: "100%" }}
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownGrid}
       </Select>
     );
 
@@ -1574,7 +1572,7 @@ class AddProductComponent extends Component {
                     Product supplier cannot be empty.
                   </p>
                 )}
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     width: "100%",
@@ -1593,7 +1591,7 @@ class AddProductComponent extends Component {
                     ) : null}
                   </div>
                 </div>
-                <br />
+                <br /> */}
                 <div
                   style={{
                     display: "flex",

@@ -3427,7 +3427,6 @@ class AddProductComponent extends Component {
         className="ItemContainer"
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownShoplots}
       </Select>
     );
 
@@ -3442,7 +3441,6 @@ class AddProductComponent extends Component {
         className="ItemContainer"
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownGrid}
       </Select>
     );
 
