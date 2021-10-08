@@ -14,7 +14,6 @@ export class GitEpic {
       )
         .then((response) => response.json())
         .then((json) => {
-          console.log(json)
           if (json !== "fail") {
             json = JSON.parse(json);
           } else {
@@ -27,7 +26,6 @@ export class GitEpic {
         })
         .catch((error) => {
           alert('user: ' + error)
-          console.log(error)
           return {
             type: "GOT-USERS",
             payload: [],
@@ -118,8 +116,6 @@ export class GitEpic {
 
   checkUser = (action$) =>
     action$.ofType(GitAction.CheckUser).switchMap(({ payload }) => {
-      console.log("User_CheckDuplicate?email=" +
-        payload)
       return fetch(url +
         "User_CheckDuplicate?email=" +
         payload
@@ -362,21 +358,6 @@ export class GitEpic {
 
   updateCreditCard = (action$) =>
     action$.ofType(GitAction.UpdateCreditCard).switchMap(({ payload }) => {
-      
-      console.log(url +
-        "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
-        payload.USERPAYMENTMETHODID +
-        "&USERID=" +
-        payload.USERID +
-        "&USERCARDNAME=" +
-        payload.name +
-        "&USERCARDNO=" +
-        payload.number +
-        "&USERCARDEXPIREDATE=" +
-        payload.expiry +
-        "&USERCARDTYPE=" +
-        payload.cardtype)
-        
       return fetch(url +
         "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
         payload.USERPAYMENTMETHODID +
@@ -458,7 +439,8 @@ export class GitEpic {
         .catch((error) => toast.error(error));
     });
 
-  //=============================================PROMOTION===========================================================//
+  // PROMOTION
+  
   getAllPromotion = (action$) =>
     action$.ofType(GitAction.GetPromotion).switchMap(({ payload }) => {
       return fetch(url +
@@ -508,92 +490,88 @@ export class GitEpic {
         .catch((error) => toast.error(error));
     });
 
-  //==================PRODUCT==========================//
+  // PRODUCT
 
   getAllProducts = (action$) =>
-    action$.ofType(GitAction.GetProduct).switchMap(({ payload }) => {
-
-      return fetch(url +
-        "Product_ItemList"
-      )
-        .then((response) => response.json())
-        .then((json) => {
-          if (json !== "fail") {
-            json = JSON.parse(json);
-          } else {
-            json = [];
-          }
-          return {
-            type: "GOT-PRODUCT",
-            payload: json,
-          };
-        })
-        .catch((error) => toast.error(error));
+    action$.ofType(GitAction.GetProduct).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "Product_ItemListByMerchantID?MERCHANTID=" +
+          payload.merchantId +
+          "&PRODUCTPERPAGE=" +
+          payload.productPage +
+          "&PAGE=" +
+          payload.page
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.GotProduct,
+          payload: json,
+        };
+      } catch (error) {
+        alert(error);
+        return {
+          type: GitAction.GotProduct,
+          payload: [],
+        };
+      }
     });
 
-  getViewMoreProducts = (action$) =>
-    action$.ofType(GitAction.GetViewMoreProduct).switchMap(({ payload }) => {
-      return fetch(url +
-        "Product_ItemListViewMore?PRODUCTPERPAGE=" + payload.productPerPage +
-        "&PAGE=" + payload.page
-      )
-        .then((response) => response.json())
-        .then((json) => {
-
-          if (json !== "fail") {
-            json = JSON.parse(json);
-          } else {
-            json = [];
-          }
-          return {
-            type: "GOT-VIEWMORE-PRODUCT",
-            payload: json,
-          };
-        })
-        .catch((error) => toast.error(error));
+  getProductDetail = (action$) =>
+    action$.ofType(GitAction.GetProductDetail).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "Product_ItemDetailByProductID?ProductID=" +
+          payload.productId
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.GotProductDetail,
+          payload: json,
+        };
+      } catch (error) {
+        toast.error(error);
+        return {
+          type: GitAction.GotProductDetail,
+          payload: [],
+        };
+      }
     });
-
 
   getAllProductsByStatus = (action$) =>
     action$
       .ofType(GitAction.GetProductByProductStatus)
-      .switchMap(({ payload }) => {
-        return fetch(url +
-          "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
-          payload.ProductStatus +
-          "&USERID=" +
-          payload.UserID
-        )
-          .then((response) => response.json())
-          .then((json) => {
-            if (json !== "fail") {
-              json = JSON.parse(json);
-            } else {
-              json = [];
-            }
-            return {
-              type: "GOT-PRODUCT-BYPRODUCTSTATUS",
-              payload: json,
-            };
-          })
-          .catch((error) => toast.error(error));
+      .switchMap(async ({ payload }) => {
+        try {
+          const response = await fetch(url +
+            "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
+            payload.ProductStatus +
+            "&USERID=" +
+            payload.UserID
+          );
+          let json = await response.json();
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+          return {
+            type: "GOT-PRODUCT-BYPRODUCTSTATUS",
+            payload: json,
+          };
+        } catch (error) {
+          return toast.error(error);
+        }
       });
 
   GetProduct_ItemListByCategoryID = (action$) =>
     action$
       .ofType(GitAction.GetProductsByCategoryID)
       .switchMap(({ payload }) => {
-
-        console.log(url +
-          "Product_ItemListByCategory?ProductCategoryID=" +
-          payload.ProductCategoryID +
-          "&ProductPerPage=" +
-          payload.ProductPerPage +
-          "&Page=" +
-          payload.Page +
-          "&Filter=" +
-          payload.Filter)
-
         return fetch(url +
           "Product_ItemListByCategory?ProductCategoryID=" +
           payload.ProductCategoryID +
@@ -611,7 +589,6 @@ export class GitEpic {
             } else {
               json = [];
             }
-            console.log(json)
             return {
               type: GitAction.GotProductsByCategoryID,
               payload: json,
@@ -1445,8 +1422,7 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) =>{
-          console.log("viewOverallSummary: " + error)
+        .catch((error) => {
           return {
             type: "GOT-OVERALLSUMMARY",
             payload: [],
@@ -1973,9 +1949,6 @@ export class GitEpic {
 
   getOrderListByID = (action$) =>
     action$.ofType(GitAction.GetOrderListByOrderID).switchMap(({ payload }) => {
-      
-      console.log(url +
-        "Order_ViewOrderByOrderID?ORDERID=" + payload.OrderID)
       return fetch(url +
         "Order_ViewOrderByOrderID?ORDERID=" + payload.OrderID
       )
@@ -2536,12 +2509,6 @@ export class GitEpic {
 
   getAllMerchantOrders = (action$) =>
     action$.ofType(GitAction.GetMerchantOrders).switchMap(({ payload }) => {
-
-      console.log(url +
-        "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
-        payload.trackingStatus +
-        "&USERID=" +
-        payload.UserID)
       return fetch(url +
         "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
         payload.trackingStatus +
@@ -2805,7 +2772,6 @@ export class GitEpic {
           } else {
             json = [];
           }
-          console.log("DELETE PRODUCT CART", json)
           return fetch(url +
             "Product_ItemListInCartByUserID?USERID=" +
             payload.userID
@@ -2855,7 +2821,6 @@ export class GitEpic {
               } else {
                 json = [];
               }
-              console.log("json in gitepic", json)
               return {
                 type: "UPDATED-PRODUCTCART",
                 payload: json,
@@ -2898,7 +2863,6 @@ export class GitEpic {
             .then((json) => {
               if (json !== "fail") {
                 json = JSON.parse(json);
-                console.log("json", json)
               } else {
                 json = [];
               }
@@ -2938,11 +2902,6 @@ export class GitEpic {
 
   viewProductWishlist = (action$) =>
     action$.ofType(GitAction.ViewProductWishlist).switchMap(({ payload }) => {
-
-
-      console.log(url +
-        "Product_ItemListInWishlistByUserID?USERID=" +
-        payload.userID)
       return fetch(url +
         "Product_ItemListInWishlistByUserID?USERID=" +
         payload.userID
@@ -2954,9 +2913,6 @@ export class GitEpic {
           } else {
             json = [];
           }
-
-          console.log("json", json)
-
           return {
             type: "VIEWED-PRODUCTWISHLIST",
             payload: json,
@@ -2989,7 +2945,6 @@ export class GitEpic {
             .then((json) => {
               if (json !== "fail") {
                 json = JSON.parse(json);
-                console.log("json", json)
               } else {
                 json = [];
               }

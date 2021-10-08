@@ -156,6 +156,9 @@ export class GitAction {
   static GetProduct = "GET-PRODUCT";
   static GotProduct = "GOT-PRODUCT";
 
+  static GetProductDetail = "GET-PRODUCT-DETAIL";
+  static GotProductDetail = "GOT-PRODUCT-DETAIL";
+
   static GetViewMoreProduct = "GET-VIEWMORE-PRODUCT";
   static GotViewMoreProduct = "GOT-VIEWMORE-PRODUCT";
 
@@ -192,9 +195,17 @@ export class GitAction {
   static GetProductsByCategoryIDEmpty = "GET-PRODUCT-BY-CATEGORY-ID-EMPTY";
   static GotProductsByCategoryIDEmpty = "GOT-PRODUCT-BY-CATEGORY-ID-EMPTY";
 
-  static CallAllProducts() {
+  static CallAllProducts(propData) {
     return {
       type: GitAction.GetProduct,
+      payload: propData
+    };
+  }
+
+  static CallProductDetail(propData) {
+    return {
+      type: GitAction.GetProduct,
+      payload: propData
     };
   }
 
@@ -211,7 +222,7 @@ export class GitAction {
     };
   }
 
-  static CallProductByProductCategoryIDEmpty(){
+  static CallProductByProductCategoryIDEmpty() {
     return {
       type: GitAction.GetProductsByCategoryIDEmpty
     };
@@ -578,7 +589,7 @@ export class GitAction {
 
   static GetProductReviewByProductID = "GET-PRODUCTREVIEWBYPRODUCTID";
   static GotProductReviewByProductID = "GOT-PRODUCTREVIEWBYPRODUCTID";
-  
+
   static addProductReview = "ADD-PRODUCTREVIEW";
   static addedProductReview = "ADDED-PRODUCTREVIEW";
 
@@ -660,7 +671,7 @@ export class GitAction {
   static GotSubs = "GOT-SUBCRIBER"
 
   static AddSubcs = "ADD-SUBCRIBER";
-  static AddedSubcs = "ADDED-SUBCRIBER"; 
+  static AddedSubcs = "ADDED-SUBCRIBER";
 
   static CallAddSubs(subsData) {
     return {
@@ -1044,93 +1055,93 @@ export class GitAction {
     };
   }
 
-   //================= PRODUCT CART ================//
-   static DeleteProductCart = "DELETE-PRODUCTCART";
-   static DeletedProductCart = "DELETED-PRODUCTCART";
- 
-   static UpdateProductCart = "UPDATE-PRODUCTCART";
-   static UpdatedProductCart = "UPDATED-PRODUCTCART";
- 
-   static AddProductCart = "ADD-PRODUCTCART";
-   static AddedProductCart = "ADDED-PRODUCTCART";
- 
-   static ViewProductCart = "VIEW-PRODUCTCART";
-   static ViewedProductCart = "VIEWED-PRODUCTCART";
+  //================= PRODUCT CART ================//
+  static DeleteProductCart = "DELETE-PRODUCTCART";
+  static DeletedProductCart = "DELETED-PRODUCTCART";
 
-   static ClearProductCart = "CLEAR-PRODUCTCART";
-   static ClearedProductCart = "CLEARED-PRODUCTCART";
- 
-   static CallDeleteProductCart(propsData) {
-     return {
-       type: GitAction.DeleteProductCart,
-       payload: propsData,
-     };
-   }
- 
-   static CallUpdateProductCart(propsData) {
-     return {
-       type: GitAction.UpdateProductCart,
-       payload: propsData,
-     };
-   }
- 
-   static CallAddProductCart(propsData) {
-     return {
-       type: GitAction.AddProductCart,
-       payload: propsData,
-     };
-   }
- 
-   static CallViewProductCart(propsData) {
-     return {
-       type: GitAction.ViewProductCart,
-       payload: propsData,
-     };
-   }
+  static UpdateProductCart = "UPDATE-PRODUCTCART";
+  static UpdatedProductCart = "UPDATED-PRODUCTCART";
 
-   static CallClearProductCart() {
+  static AddProductCart = "ADD-PRODUCTCART";
+  static AddedProductCart = "ADDED-PRODUCTCART";
+
+  static ViewProductCart = "VIEW-PRODUCTCART";
+  static ViewedProductCart = "VIEWED-PRODUCTCART";
+
+  static ClearProductCart = "CLEAR-PRODUCTCART";
+  static ClearedProductCart = "CLEARED-PRODUCTCART";
+
+  static CallDeleteProductCart(propsData) {
+    return {
+      type: GitAction.DeleteProductCart,
+      payload: propsData,
+    };
+  }
+
+  static CallUpdateProductCart(propsData) {
+    return {
+      type: GitAction.UpdateProductCart,
+      payload: propsData,
+    };
+  }
+
+  static CallAddProductCart(propsData) {
+    return {
+      type: GitAction.AddProductCart,
+      payload: propsData,
+    };
+  }
+
+  static CallViewProductCart(propsData) {
+    return {
+      type: GitAction.ViewProductCart,
+      payload: propsData,
+    };
+  }
+
+  static CallClearProductCart() {
     return {
       type: GitAction.ClearProductCart,
     };
   }
 
-     //================= PRODUCT WIHSLIST ================//
-     static DeleteProductWishlist = "DELETE-PRODUCTWISHLIST";
-     static DeletedProductWishlist = "DELETED-PRODUCTWISHLIST";
-   
-     static AddProductWishlist = "ADD-PRODUCTWISHLIST";
-     static AddedProductWishlist = "ADDED-PRODUCTWISHLIST";
-   
-     static ViewProductWishlist = "VIEW-PRODUCTWISHLIST";
-     static ViewedProductWishlist = "VIEWED-PRODUCTWISHLIST";
+  //================= PRODUCT WIHSLIST ================//
+  static DeleteProductWishlist = "DELETE-PRODUCTWISHLIST";
+  static DeletedProductWishlist = "DELETED-PRODUCTWISHLIST";
 
-     static ClearProductWishlist = "CLEAR-PRODUCTWISHLIST";
-     static ClearedProductWishlist = "CLEARED-PRODUCTWISHLIST";
-   
-     static CallDeleteProductWishlist(propsData) {
-       return {
-         type: GitAction.DeleteProductWishlist,
-         payload: propsData,
-       };
-     }
-   
-     static CallAddProductWishlist(propsData) {
-       return {
-         type: GitAction.AddProductWishlist,
-         payload: propsData,
-       };
-     }
-   
-     static CallViewProductWishlist(propsData) {
-       return {
-         type: GitAction.ViewProductWishlist,
-         payload: propsData,
-       };
-     }
+  static AddProductWishlist = "ADD-PRODUCTWISHLIST";
+  static AddedProductWishlist = "ADDED-PRODUCTWISHLIST";
 
-     static CallClearProductWishlist() {
-      return {
-        type: GitAction.ClearProductWishlist,
-      };
-    }
+  static ViewProductWishlist = "VIEW-PRODUCTWISHLIST";
+  static ViewedProductWishlist = "VIEWED-PRODUCTWISHLIST";
+
+  static ClearProductWishlist = "CLEAR-PRODUCTWISHLIST";
+  static ClearedProductWishlist = "CLEARED-PRODUCTWISHLIST";
+
+  static CallDeleteProductWishlist(propsData) {
+    return {
+      type: GitAction.DeleteProductWishlist,
+      payload: propsData,
+    };
+  }
+
+  static CallAddProductWishlist(propsData) {
+    return {
+      type: GitAction.AddProductWishlist,
+      payload: propsData,
+    };
+  }
+
+  static CallViewProductWishlist(propsData) {
+    return {
+      type: GitAction.ViewProductWishlist,
+      payload: propsData,
+    };
+  }
+
+  static CallClearProductWishlist() {
+    return {
+      type: GitAction.ClearProductWishlist,
+    };
+  }
 }
