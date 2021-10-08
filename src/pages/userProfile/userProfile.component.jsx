@@ -44,7 +44,7 @@ class userProfile extends Component {
               <td>
                 <Typography
                   style={{
-                    fontSize: "30px",
+                    fontSize: "18px",
                     fontFamily: "Calibri Light,sans-serif",
                   }}
                 >
@@ -53,7 +53,7 @@ class userProfile extends Component {
 
                 <Typography
                   style={{
-                    fontSize: "15px",
+                    fontSize: "14px",
                     fontFamily: "Calibri Light,sans-serif",
                     marginBottom: 12,
                   }}
@@ -81,7 +81,7 @@ class userProfile extends Component {
                 <TableBody>
                   {rows.map((row) => (
                     <TableRow key={row.Column1}>
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" className="input-row">
                         {row.Column1}
                       </TableCell>
                       <TableCell>{row.Column2}</TableCell>

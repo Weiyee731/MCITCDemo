@@ -3402,8 +3402,8 @@ class AddProductComponent extends Component {
 
     let allusersData = this.props.allUser
       ? Object.keys(this.props.allUser).map((key) => {
-          return this.props.allUser[key];
-        })
+        return this.props.allUser[key];
+      })
       : {};
 
     if (allusersData.length > 0) {
@@ -3427,7 +3427,7 @@ class AddProductComponent extends Component {
         className="ItemContainer"
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownShoplots}
+        {/* {createMenusForDropDownShoplots} */}
       </Select>
     );
 
@@ -3442,7 +3442,7 @@ class AddProductComponent extends Component {
         className="ItemContainer"
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownGrid}
+        {/* {createMenusForDropDownGrid} */}
       </Select>
     );
 
@@ -4013,7 +4013,7 @@ class AddProductComponent extends Component {
                     {/* {createSupplierMenu} */}
                     {/* {createSupplierMenu} */}
                     <option value={localStorage.getItem("id")}>
-                      {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")} 
+                      {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")}
                     </option>
                   </Select>
                 </FormControl>
@@ -5023,7 +5023,7 @@ class AddProductComponent extends Component {
                       onClick={this.onDeleteVariant.bind(this, -1, "wholeSale")}
                     />
                   </div>
-                ) : null} 
+                ) : null}
               </CardContent>
             </Card>
             <br />

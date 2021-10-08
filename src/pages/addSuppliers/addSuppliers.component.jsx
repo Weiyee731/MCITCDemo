@@ -227,16 +227,16 @@ class AddSuppliersComponent extends Component {
     this.handlePrevClickButton = this.handlePrevClickButton.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
-      contactNumber:"",
+      contactNumber: "",
       contactNumberEmpty: false,
       contactNumberDublicated: false,
-      supplierName:"",
+      supplierName: "",
       supplierNameEmpty: false,
       supplierNameDublicated: false,
-      companyName:"",
+      companyName: "",
       companyNameEmpty: false,
       companyNameDublicated: false,
-      companyNumber:"",
+      companyNumber: "",
       companyNumberEmpty: false,
       companyNumberDublicated: false,
       name: "",
@@ -430,10 +430,10 @@ class AddSuppliersComponent extends Component {
           }
           console.log(
             this.state.file2Added +
-              " file Length: " +
-              this.state.fileInfo.length
+            " file Length: " +
+            this.state.fileInfo.length
           );
-          toast.success( this.state.file2Added +
+          toast.success(this.state.file2Added +
             " file Length: " +
             this.state.fileInfo.length);
           this.checkFiles512x512();
@@ -751,7 +751,7 @@ class AddSuppliersComponent extends Component {
       this.setState({
         companyNumber: e.target.value,
       });
-    } 
+    }
   }
 
   handleChangeSlider = (event, value) => {
@@ -777,9 +777,9 @@ class AddSuppliersComponent extends Component {
   }
 
   checkEverything = () => {
-    
+
     this.checkProductName();
-  
+
 
     setTimeout(
       function () {
@@ -876,7 +876,7 @@ class AddSuppliersComponent extends Component {
       currentlyHovered: id,
     });
     // console.log("mouseOut: " + this.state.onImage);
-    toast.success( "mouseOut: " + this.state.onImage);
+    toast.success("mouseOut: " + this.state.onImage);
   };
 
   mouseIn = (id) => {
@@ -885,7 +885,7 @@ class AddSuppliersComponent extends Component {
       currentlyHovered: id,
     });
     // console.log("mouseIn " + this.state.onImage);
-    toast.success( "mouseIn " + this.state.onImage);
+    toast.success("mouseIn " + this.state.onImage);
   };
 
   addProductVariation = (newData) => {
@@ -967,8 +967,8 @@ class AddSuppliersComponent extends Component {
     var counter = 0;
     let resultData = this.props.result
       ? Object.keys(this.props.result).map((key) => {
-          return this.props.result[key];
-        })
+        return this.props.result[key];
+      })
       : {};
     if (resultData.length > 0) {
       var checkIfDone = resultData.map((d, i) => {
@@ -985,10 +985,10 @@ class AddSuppliersComponent extends Component {
 
     const query = queryString.parse(this.props.location.search);
     // console.log(query);
-    toast.success( query);
+    toast.success(query);
     const barcode = query.barcode;
     // console.log("barcode", barcode);
-    toast.success( "barcode", barcode);
+    toast.success("barcode", barcode);
     const previewStyle = {
       display: "inline",
       width: 60,
@@ -998,8 +998,8 @@ class AddSuppliersComponent extends Component {
 
     let existData = this.props.exist
       ? Object.keys(this.props.exist).map((key) => {
-          return this.props.exist[key];
-        })
+        return this.props.exist[key];
+      })
       : {};
     if (existData.length > 0) {
       var checkDuplicate = existData.map((d, i) => {
@@ -1016,8 +1016,8 @@ class AddSuppliersComponent extends Component {
     const { index } = this.state;
     let allcategoriesData = this.props.allcategories
       ? Object.keys(this.props.allcategories).map((key) => {
-          return this.props.allcategories[key];
-        })
+        return this.props.allcategories[key];
+      })
       : {};
 
     if (allcategoriesData.length > 0) {
@@ -1028,8 +1028,8 @@ class AddSuppliersComponent extends Component {
 
     let allusersData = this.props.allUser
       ? Object.keys(this.props.allUser).map((key) => {
-          return this.props.allUser[key];
-        })
+        return this.props.allUser[key];
+      })
       : {};
 
     if (allusersData.length > 0) {
@@ -1044,8 +1044,8 @@ class AddSuppliersComponent extends Component {
 
     let complains = this.props.allcomplains
       ? Object.keys(this.props.allcomplains).map((key) => {
-          return this.props.allcomplains[key];
-        })
+        return this.props.allcomplains[key];
+      })
       : {};
     if (complains.length > 0) {
       var complainCard = complains.map((d, i) => {
@@ -1073,7 +1073,7 @@ class AddSuppliersComponent extends Component {
         style={{ width: "100%" }}
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownShoplots}
+        {/* {createMenusForDropDownShoplots} */}
       </Select>
     );
 
@@ -1088,7 +1088,7 @@ class AddSuppliersComponent extends Component {
         style={{ width: "100%" }}
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownGrid}
+        {/* {createMenusForDropDownGrid} */}
       </Select>
     );
 
@@ -1168,8 +1168,8 @@ class AddSuppliersComponent extends Component {
 
     let productCategoriesList = this.props.productCategories
       ? Object.keys(this.props.productCategories).map((key) => {
-          return this.props.productCategories[key];
-        })
+        return this.props.productCategories[key];
+      })
       : {};
 
     if (productCategoriesList.length > 0) {
@@ -1187,128 +1187,128 @@ class AddSuppliersComponent extends Component {
             Back
           </Link>
         </Button>
-          <div style={Object.assign({})}>
-            <Card style={cardStyle}>
-              <CardContent>
-                <TextField
-                  id="supplierName"
-                  helperText="Supplier Name"
-                  value={this.state.suppliername}
-                  onChange={this.handleChange.bind(this, "supplierName")}
-                  error={
-                    this.state.contactNumberEmpty ||
-                    this.state.contactNumberDublicated
-                  }
-                  style={{ width: "100%" }}
-                />
-                <br />
-                {this.state.productNameEmpty && (
-                  <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                    Supplier name cannot be empty.
-                  </p>
-                )}
-                {this.state.name && checkDuplicate}
-                  <br />
-                <TextField
-                  id="contactNumber"
-                  helperText="Contact Number"
-                  value={this.state.contactnumber}
-                  onChange={this.handleChange.bind(this, "contactNumber")}
-                  error={
-                    this.state.productNameEmpty ||
-                    this.state.productNameDublicated
-                  }
-                  style={{ width: "100%" }}
-                />
-                <br />
-                {this.state.productNameEmpty && (
-                  <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                    Contact Number cannot be empty.
-                  </p>
-                )}
-                {this.state.name && checkDuplicate}
-                <br />
-                <TextField
-                  id="companyName"
-                  helperText="Company Name"
-                  value={this.state.companyname}
-                  onChange={this.handleChange.bind(this, "companyName")}
-                  error={
-                    this.state.productNameEmpty ||
-                    this.state.productNameDublicated
-                  }
-                  style={{ width: "100%" }}
-                />
-                <br />
-                {this.state.productNameEmpty && (
-                  <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                    Company name cannot be empty.
-                  </p>
-                )}
-                {this.state.name && checkDuplicate}
-                <br />
-                <TextField
-                  id="companyNumber"
-                  helperText="Company Number"
-                  value={this.state.companynumber}
-                  onChange={this.handleChange.bind(this, "companyNumber")}
-                  error={
-                    this.state.productNameEmpty ||
-                    this.state.productNameDublicated
-                  }
-                  style={{ width: "100%" }}
-                />
-                <br />
-                {this.state.productNameEmpty && (
-                  <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                    Company number cannot be empty.
-                  </p>
-                )}
-                {this.state.name && checkDuplicate}
-                <br />
-                <TextField
-                  id="companyNumber"
-                  helperText="Address"
-                  value={this.state.companynumber}
-                  onChange={this.handleChange.bind(this, "companyNumber")}
-                  error={
-                    this.state.productNameEmpty ||
-                    this.state.productNameDublicated
-                  }
-                  style={{ width: "100%" }}
-                />
-                <br />
-                {this.state.productNameEmpty && (
-                  <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                    Company number cannot be empty.
-                  </p>
-                )}
-                {this.state.name && checkDuplicate}
-                
-                <Select
-                  onChange={this.handleChange.bind(this, "Product Supplier")}
-                  inputProps={{
-                    name: "Product Supplier",
-                    id: "productSupplier",
-                  }}
-                  style={{ width: "100%" }}
-                  error={this.state.productSupplierEmpty}
-                >
-                  <option aria-label="None" value="" />
-                  <option value="online payment">Online Payment</option>
-                  <option value="card"> credit/debit </option>
-                  <option selected value="e-wallet">e-wallet</option>
-                  {createMenusForDropDownUsers}
-                </Select>
-                <FormHelperText>Supplier</FormHelperText>
-                
-              </CardContent>
-            </Card>
-          </div>
+        <div style={Object.assign({})}>
+          <Card style={cardStyle}>
+            <CardContent>
+              <TextField
+                id="supplierName"
+                helperText="Supplier Name"
+                value={this.state.suppliername}
+                onChange={this.handleChange.bind(this, "supplierName")}
+                error={
+                  this.state.contactNumberEmpty ||
+                  this.state.contactNumberDublicated
+                }
+                style={{ width: "100%" }}
+              />
+              <br />
+              {this.state.productNameEmpty && (
+                <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
+                  Supplier name cannot be empty.
+                </p>
+              )}
+              {this.state.name && checkDuplicate}
+              <br />
+              <TextField
+                id="contactNumber"
+                helperText="Contact Number"
+                value={this.state.contactnumber}
+                onChange={this.handleChange.bind(this, "contactNumber")}
+                error={
+                  this.state.productNameEmpty ||
+                  this.state.productNameDublicated
+                }
+                style={{ width: "100%" }}
+              />
+              <br />
+              {this.state.productNameEmpty && (
+                <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
+                  Contact Number cannot be empty.
+                </p>
+              )}
+              {this.state.name && checkDuplicate}
+              <br />
+              <TextField
+                id="companyName"
+                helperText="Company Name"
+                value={this.state.companyname}
+                onChange={this.handleChange.bind(this, "companyName")}
+                error={
+                  this.state.productNameEmpty ||
+                  this.state.productNameDublicated
+                }
+                style={{ width: "100%" }}
+              />
+              <br />
+              {this.state.productNameEmpty && (
+                <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
+                  Company name cannot be empty.
+                </p>
+              )}
+              {this.state.name && checkDuplicate}
+              <br />
+              <TextField
+                id="companyNumber"
+                helperText="Company Number"
+                value={this.state.companynumber}
+                onChange={this.handleChange.bind(this, "companyNumber")}
+                error={
+                  this.state.productNameEmpty ||
+                  this.state.productNameDublicated
+                }
+                style={{ width: "100%" }}
+              />
+              <br />
+              {this.state.productNameEmpty && (
+                <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
+                  Company number cannot be empty.
+                </p>
+              )}
+              {this.state.name && checkDuplicate}
+              <br />
+              <TextField
+                id="companyNumber"
+                helperText="Address"
+                value={this.state.companynumber}
+                onChange={this.handleChange.bind(this, "companyNumber")}
+                error={
+                  this.state.productNameEmpty ||
+                  this.state.productNameDublicated
+                }
+                style={{ width: "100%" }}
+              />
+              <br />
+              {this.state.productNameEmpty && (
+                <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
+                  Company number cannot be empty.
+                </p>
+              )}
+              {this.state.name && checkDuplicate}
 
-         
-        
-      
+              <Select
+                onChange={this.handleChange.bind(this, "Product Supplier")}
+                inputProps={{
+                  name: "Product Supplier",
+                  id: "productSupplier",
+                }}
+                style={{ width: "100%" }}
+                error={this.state.productSupplierEmpty}
+              >
+                <option aria-label="None" value="" />
+                <option value="online payment">Online Payment</option>
+                <option value="card"> credit/debit </option>
+                <option selected value="e-wallet">e-wallet</option>
+                {createMenusForDropDownUsers}
+              </Select>
+              <FormHelperText>Supplier</FormHelperText>
+
+            </CardContent>
+          </Card>
+        </div>
+
+
+
+
 
         {/*=================== Sliders ===================*/}
 

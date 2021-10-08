@@ -107,13 +107,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -483,8 +483,8 @@ function DeletableTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -702,7 +702,7 @@ class DisplayTable extends Component {
                         .slice(
                           this.state.page * this.state.rowsPerPage,
                           this.state.page * this.state.rowsPerPage +
-                            this.state.rowsPerPage
+                          this.state.rowsPerPage
                         )
                         .map((row, index) => {
                           const isItemSelected = this.isSelected(row.Number);
@@ -749,7 +749,7 @@ class DisplayTable extends Component {
                               </TableCell>
                               <TableCell align="right">
                                 {row.ProductPurchaseOrderStatus ==
-                                "SALEORDER" ? (
+                                  "SALEORDER" ? (
                                   <button
                                     type="submit"
                                     onClick={() => this.received(row)}
@@ -780,8 +780,8 @@ class DisplayTable extends Component {
                   count={this.props.Data.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  onPageChange={this.handleChangePage}
+                  onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>
             </div>
@@ -927,9 +927,9 @@ class viewProductPurchaseOrderList extends Component {
 
     let allPurchaseOrdersDate = this.props.allpurchaseorders
       ? Object.keys(this.props.allpurchaseorders).map((key) => {
-          console.log(this.props.allpurchaseorders);
-          return this.props.allpurchaseorders[key];
-        })
+        console.log(this.props.allpurchaseorders);
+        return this.props.allpurchaseorders[key];
+      })
       : {};
 
     if (allPurchaseOrdersDate.length > 0) {
@@ -939,7 +939,7 @@ class viewProductPurchaseOrderList extends Component {
           <Tab
             label={status.TrackingStatus}
             {...a11yProps(i)}
-            // onClick={changeData.bind(this, status.TrackingStatus)}
+          // onClick={changeData.bind(this, status.TrackingStatus)}
           />
         );
       });
@@ -984,32 +984,32 @@ class viewProductPurchaseOrderList extends Component {
               <Tab
                 label="Pending"
                 {...a11yProps(0)}
-                // onClick={changeData.bind(this, status.TrackingStatus)}
+              // onClick={changeData.bind(this, status.TrackingStatus)}
               />
               {localStorage.getItem("roleid") == 1 ||
-              localStorage.getItem("roleid") == 2 ? (
+                localStorage.getItem("roleid") == 2 ? (
                 <Tab
                   label="Seen by Supplier"
                   {...a11yProps(1)}
-                  // onClick={changeData.bind(this, status.TrackingStatus)}
+                // onClick={changeData.bind(this, status.TrackingStatus)}
                 />
               ) : null}
               <Tab
                 label="Replied SO"
                 {...a11yProps(2)}
-                // onClick={changeData.bind(this, status.TrackingStatus)}
+              // onClick={changeData.bind(this, status.TrackingStatus)}
               />
               <Tab
                 label="Received"
                 {...a11yProps(3)}
-                // onClick={changeData.bind(this, status.TrackingStatus)}
+              // onClick={changeData.bind(this, status.TrackingStatus)}
               />
               {localStorage.getItem("roleid") == 1 ||
-              localStorage.getItem("roleid") == 2 ? (
+                localStorage.getItem("roleid") == 2 ? (
                 <Tab
                   label="Endorsed"
                   {...a11yProps(4)}
-                  // onClick={changeData.bind(this, status.TrackingStatus)}
+                // onClick={changeData.bind(this, status.TrackingStatus)}
                 />
               ) : null}
             </Tabs>

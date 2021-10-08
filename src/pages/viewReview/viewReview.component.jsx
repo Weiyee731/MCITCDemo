@@ -60,9 +60,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 class ViewReviewComponent extends Component {
   constructor(props) {
     super(props);
-    this.props.CallProductReview({
-      UserID: window.localStorage.getItem("id"),
-    });
     this.state = {
       ProductID: 0,
       ParentProductReviewID: 0,
@@ -79,14 +76,25 @@ class ViewReviewComponent extends Component {
     this.handleDisplayAllComments = this.handleDisplayAllComments.bind(this)
   }
 
+  componentDidMount() {
+    this.props.CallProductReview({
+      UserID: window.localStorage.getItem("id"),
+    });
+    // if (this.props.reviews && this.props.reviews !== undefined) {
+    //   this.setState({ reviews: this.props.reviews })
+    // }
+  }
+
   handleDisplayAllComments = (value) => {
     this.setState({
       displayDialogOpen: value,
     })
   }
 
+
   render() {
-    this.state.reviews = this.props.reviews;
+
+    // this.state.reviews = this.props.reviews;
 
     this.state.reviews.map((d, i) => {
       const Picture = d.ProductMediaUrl;

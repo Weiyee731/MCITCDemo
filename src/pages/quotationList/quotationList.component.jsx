@@ -104,13 +104,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -480,8 +480,8 @@ function DeletableTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -693,7 +693,7 @@ class DisplayTable extends Component {
                         .slice(
                           this.state.page * this.state.rowsPerPage,
                           this.state.page * this.state.rowsPerPage +
-                            this.state.rowsPerPage
+                          this.state.rowsPerPage
                         )
                         .map((row, index) => {
                           const isItemSelected = this.isSelected(row.Number);
@@ -745,8 +745,8 @@ class DisplayTable extends Component {
                   count={this.props.Data.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  onPageChange={this.handleChangePage}
+                  onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>
             </div>
@@ -854,9 +854,9 @@ class QuotationListComponent extends Component {
 
     let allQuotationData = this.props.quotations
       ? Object.keys(this.props.quotations).map((key) => {
-          console.log(this.props.quotations);
-          return this.props.quotations[key];
-        })
+        console.log(this.props.quotations);
+        return this.props.quotations[key];
+      })
       : {};
 
     if (allQuotationData.length > 0) {
@@ -866,7 +866,7 @@ class QuotationListComponent extends Component {
           <Tab
             label={status.TrackingStatus}
             {...a11yProps(i)}
-            // onClick={changeData.bind(this, status.TrackingStatus)}
+          // onClick={changeData.bind(this, status.TrackingStatus)}
           />
         );
       });
@@ -911,30 +911,30 @@ class QuotationListComponent extends Component {
               <Tab
                 label="Pending"
                 {...a11yProps(0)}
-                // onClick={changeData.bind(this, status.TrackingStatus)}
+              // onClick={changeData.bind(this, status.TrackingStatus)}
               />
               {localStorage.getItem("roleid") <= 2 ? (
                 <Tab
                   label="Seen by Merchant"
                   {...a11yProps(1)}
-                  // onClick={changeData.bind(this, status.TrackingStatus)}
+                // onClick={changeData.bind(this, status.TrackingStatus)}
                 />
               ) : null}
               <Tab
                 label="Replied PO"
                 {...a11yProps(2)}
-                // onClick={changeData.bind(this, status.TrackingStatus)}
+              // onClick={changeData.bind(this, status.TrackingStatus)}
               />
               <Tab
                 label="Delivered"
                 {...a11yProps(3)}
-                // onClick={changeData.bind(this, status.TrackingStatus)}
+              // onClick={changeData.bind(this, status.TrackingStatus)}
               />
               {localStorage.getItem("roleid") <= 2 ? (
                 <Tab
                   label="History"
                   {...a11yProps(4)}
-                  // onClick={changeData.bind(this, status.TrackingStatus)}
+                // onClick={changeData.bind(this, status.TrackingStatus)}
                 />
               ) : null}
             </Tabs>

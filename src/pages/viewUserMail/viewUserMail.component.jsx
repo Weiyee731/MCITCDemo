@@ -1,4 +1,4 @@
-import React, { Component,  useState  } from "react";
+import React, { Component, useState } from "react";
 import { connect } from "react-redux";
 import {
   Table,
@@ -6,7 +6,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  } from "@material-ui/core";
+} from "@material-ui/core";
 import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import "react-table/react-table.css";
@@ -44,7 +44,7 @@ function mapStateToProps(state) {
     subscriber: state.counterReducer["subscriber"],
     newSubsObj: state.counterReducer[" newSubsObj"],
     adddispatch: state.counterReducer["adddispatch"],
-    addsubs:state.counterReducer["addsubs"], 
+    addsubs: state.counterReducer["addsubs"],
   };
 }
 
@@ -56,10 +56,10 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallDeleteSubs(newSubsObj)),
     CallUpdateSubs: (newSubsObj) =>
       dispatch(GitAction.CallUpdateSubs(newSubsObj)),
-    CallAddDispatch: (adddispatch) => 
+    CallAddDispatch: (adddispatch) =>
       dispatch(GitAction.CallAddDispatch(adddispatch)),
     CallAddSubs: (addsubs) =>
-    dispatch(GitAction.CallAddSubs(addsubs)),
+      dispatch(GitAction.CallAddSubs(addsubs)),
   };
 }
 
@@ -118,20 +118,20 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
 }));
 
 const headCells = [ //maybe this similar to column
- 
+
   {
     id: "SubscriberEmail",
     numeric: false,
@@ -231,7 +231,7 @@ function EditMailTableHead(props) { //identical to EndorseTableHead - Change Nam
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">        
+        <TableCell padding="checkbox">
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -277,7 +277,7 @@ function EditMailTable(props) {
   const [page, setPage] = React.useState(0);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("SubscriberEmail");
- 
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -285,7 +285,7 @@ function EditMailTable(props) {
     setOrderBy(property);
   };
 
-  
+
 
   const onToggleEditMode = (SubscriberId) => {
     setRows(state => {
@@ -296,7 +296,7 @@ function EditMailTable(props) {
         return row;
       });
     });
-   
+
   };
 
   const onSendEditMode = (SubscriberId) => {
@@ -304,7 +304,7 @@ function EditMailTable(props) {
       return rows.map(row => {
         if (row.SubscriberId !== SubscriberId) {
           return { ...row, isEditMode: row.isEditMode };
-         
+
         }
         const SubsInfo = {
           SubscriberId: row.SubscriberId,
@@ -321,20 +321,20 @@ function EditMailTable(props) {
               500
             );
           },
-          
+
         );
         console.log(SubsInfo)
         return row;
       });
-  
+
     });
-   
+
     onToggleEditMode(SubscriberId);
   };
 
 
   // const isSelected = (SubscriberId) => selected.indexOf(SubscriberId) !== -1;
-  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -345,18 +345,18 @@ function EditMailTable(props) {
   };
 
   const emptyRows =
-  rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  
+
   const onChange = (e, row) => {
     if (!previous[row.SubscriberId]) {
       setPrevious(state => ({ ...state, [row.SubscriberId]: row }));
     }
     const value = e.target.value;
     const name = e.target.name;
-    const {SubscriberId} = row;
+    const { SubscriberId } = row;
     const newRows = rows.map(row => {
-    
+
       if (row.SubscriberId === SubscriberId) {
         return { ...row, [name]: value };
       }
@@ -364,102 +364,102 @@ function EditMailTable(props) {
     }
     );
 
-  setRows(newRows);
-};
+    setRows(newRows);
+  };
 
 
-const onRevert = SubscriberId => {
-  const newRows = props.Data.map(row => {
-    if (row.SubscriberId === SubscriberId) {
-      return previous[SubscriberId] ? previous[SubscriberId] : row;
-    }
-    // console.log(row);
-    return row;
-    
-  });
+  const onRevert = SubscriberId => {
+    const newRows = props.Data.map(row => {
+      if (row.SubscriberId === SubscriberId) {
+        return previous[SubscriberId] ? previous[SubscriberId] : row;
+      }
+      // console.log(row);
+      return row;
+
+    });
     setRows(newRows);
     setPrevious(state => {
       delete state[SubscriberId];
       // console.log(state);
       return state;
-      
+
     });
 
   };
 
   return (
     <Paper className={classes.root}>
-    <TableContainer>
-      <Table className={classes.table} 
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table">    
-            <EditMailTableHead
-                      classes={classes}
-                      order={order}
-                      orderBy={orderBy}
-                      onRequestSort={handleRequestSort}
-                      rowCount={rows.length}
-                    />
-       
-        <TableBody>
-          {stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
-            <TableRow key={row.SubscriberId}>
-              <TableCell className={classes.selectTableCell}>
-                {row.isEditMode ? (
-                  <> <Tooltip title="Save">
-                    <IconButton
-                      aria-label="save"
-                      label="save"
-                      onClick={() => onSendEditMode(row.SubscriberId)}
-                    >
-                      <DoneIcon />
-                    </IconButton>
+      <TableContainer>
+        <Table className={classes.table}
+          aria-labelledby="tableTitle"
+          size={dense ? "small" : "medium"}
+          aria-label="enhanced table">
+          <EditMailTableHead
+            classes={classes}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            rowCount={rows.length}
+          />
+
+          <TableBody>
+            {stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
+              <TableRow key={row.SubscriberId}>
+                <TableCell className={classes.selectTableCell}>
+                  {row.isEditMode ? (
+                    <> <Tooltip title="Save">
+                      <IconButton
+                        aria-label="save"
+                        label="save"
+                        onClick={() => onSendEditMode(row.SubscriberId)}
+                      >
+                        <DoneIcon />
+                      </IconButton>
                     </Tooltip>
-                    <Tooltip title="Redo">
-                    <IconButton
-                      aria-label="redo"
-                      label="redo"
-                      onClick={() => onRevert(row.SubscriberId)}
-                    >
-                      <UndoIcon />
-                    </IconButton>
+                      <Tooltip title="Redo">
+                        <IconButton
+                          aria-label="redo"
+                          label="redo"
+                          onClick={() => onRevert(row.SubscriberId)}
+                        >
+                          <UndoIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </>
+                  ) : (
+                    <Tooltip title="Edit Email">
+                      <IconButton
+                        aria-label="edit"
+                        label="edit"
+                        onClick={() => onToggleEditMode(row.SubscriberId)}
+                      >
+                        <EditIcon />
+                      </IconButton>
                     </Tooltip>
-                  </>
-                ) : (
-                  <Tooltip title="Edit Email">
-                  <IconButton
-                    aria-label="edit"
-                    label="edit"
-                    onClick={() => onToggleEditMode(row.SubscriberId)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  </Tooltip>
-                )}
-              </TableCell>
-            
-              <CustomTableCell {...{ row, name: "SubscriberEmail", onChange }} />
-              
-            </TableRow>
-          ))}
-          {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
+                  )}
+                </TableCell>
+
+                <CustomTableCell {...{ row, name: "SubscriberEmail", onChange }} />
+
+              </TableRow>
+            ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Paper>
   );
 }
@@ -592,11 +592,11 @@ const SelectTab = (props) => {
   const classes = useStyles();
 
   const { numSelected } = props;
-  
-  const onSendEmail = () => {  
-    props.SubsProps.CallAddDispatch(props.selectedData.map(Recipients=>({Recipients})));
 
-    };
+  const onSendEmail = () => {
+    props.SubsProps.CallAddDispatch(props.selectedData.map(Recipients => ({ Recipients })));
+
+  };
 
   return (
     <Toolbar
@@ -646,7 +646,7 @@ const DeleteTab = (props) => {
   const classes = useStyles();
   const { numSelected } = props;
   const onDeleteEmail = () => {
-    props.SubsProps.CallDeleteSubs(props.selectedData); 
+    props.SubsProps.CallDeleteSubs(props.selectedData);
     setTimeout(
       function () {
         window.location.reload(false);
@@ -767,15 +767,15 @@ function DeleteTable(props) {
 
   return (
     <div>
-    
+
       <Paper className={classes.paper}>
         <DeleteTab
           numSelected={selected.length}
           selectedData={selected}
           SubsProps={props.SubsProps}
-        
+
         />
-        
+
         <TableContainer>
           <Table
             className={classes.table}
@@ -817,7 +817,7 @@ function DeleteTable(props) {
                       </TableCell>
                       <TableCell align="left">
                         {row.SubscriberEmail}
-                      </TableCell>                                            
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -835,8 +835,8 @@ function DeleteTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -867,7 +867,7 @@ function SelectMailTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -900,7 +900,7 @@ function SelectMailTable(props) {
     }
 
     setSelected(newSelected);
-    
+
     // console.log(newSelected)
   };
 
@@ -922,9 +922,9 @@ function SelectMailTable(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, props.Data.length - page * rowsPerPage);
 
-  
 
-  console.log({selected})
+
+  console.log({ selected })
 
   return (
     <div>
@@ -967,7 +967,7 @@ function SelectMailTable(props) {
                       tabIndex={-1}
                       key={row.SubscriberId}
                       selected={isItemSelected}
-                     
+
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
@@ -975,10 +975,10 @@ function SelectMailTable(props) {
                           inputProps={{ "aria-labelledby": labelId }}
                         />
                       </TableCell>
-                      
+
                       <TableCell align="left">
                         {row.SubscriberEmail}
-                      </TableCell>                                            
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -996,8 +996,8 @@ function SelectMailTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -1021,7 +1021,7 @@ class viewUserMail extends Component {
       searchFilter: "",
       rows: [],
       open: false,
-      SubscriberEmail:"",
+      SubscriberEmail: "",
       SubscriberEmailEmailFormat: false,
       error: false,
     };
@@ -1038,27 +1038,27 @@ class viewUserMail extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.isSelected = this.isSelected.bind(this);
   }
-  
+
 
   handleRequestSort = (event, property) => {
     const isAsc = this.state.orderBy === property && this.state.order === "asc";
     this.setState({ order: isAsc ? "desc" : "asc" });
     this.setState({ orderBy: property });
   };
-  
+
   handleClickOpen = () => {
-    this.setState({open:true});
+    this.setState({ open: true });
   };
 
   handleClose = () => {
-    this.setState({open:false});
+    this.setState({ open: false });
   };
 
   onRowClick = (event, row) => {
     this.setState({
       // SubsID:row.SubcriberId,
-      SubsMail:row.SubscriberEmail,
-     
+      SubsMail: row.SubscriberEmail,
+
     });
 
     if (this.state.detailsShown) {
@@ -1109,10 +1109,10 @@ class viewUserMail extends Component {
     }
   };
 
-  checkMailFormat= () => {
+  checkMailFormat = () => {
     if (validator.isEmail(this.state.SubscriberEmail)) {
       this.setState({
-        SubscriberEmailFormat : false,
+        SubscriberEmailFormat: false,
       });
     } else {
       this.setState({
@@ -1126,21 +1126,23 @@ class viewUserMail extends Component {
       !(
         this.state.SubscriberEmailFormat
       )
-    ){this.setState({open:false});
-    const mailinfo = {
-      SubscriberEmail: this.state.SubscriberEmail,
-      
-    };
+    ) {
+      this.setState({ open: false });
+      const mailinfo = {
+        SubscriberEmail: this.state.SubscriberEmail,
 
-    this.props.CallAddSubs(mailinfo); 
-    
-    setTimeout(
-      function () {
-        window.location.reload(false);
-      }.bind(this),
-      500
-    );
-    console.log(this.props.subscriber)}
+      };
+
+      this.props.CallAddSubs(mailinfo);
+
+      setTimeout(
+        function () {
+          window.location.reload(false);
+        }.bind(this),
+        500
+      );
+      console.log(this.props.subscriber)
+    }
   };
 
   checkValues = () => {
@@ -1153,7 +1155,7 @@ class viewUserMail extends Component {
     );
   };
 
-  
+
   render() {
     const { classes } = this.props;
     const emptyRows =
@@ -1162,7 +1164,7 @@ class viewUserMail extends Component {
         this.state.rowsPerPage,
         this.props.subscriber.length - this.state.page * this.state.rowsPerPage
       );
-   
+
     const divStyle = {
       width: "100%",
       margin: "auto",
@@ -1189,7 +1191,7 @@ class viewUserMail extends Component {
     const filteredSubs = [];
     return (
       <div style={{ margin: "2%" }}>
-        { this.state.selectActive ? (
+        {this.state.selectActive ? (
           <div>
             <h1>Email List</h1>
             <div>
@@ -1205,7 +1207,7 @@ class viewUserMail extends Component {
                   float: "right",
                   marginRight: "4%",
                   marginTop: "1%",
-                  
+
                 }}
               />
 
@@ -1231,90 +1233,90 @@ class viewUserMail extends Component {
               SubsProps={this.props}
             ></SelectMailTable>
           </div>
-        ): this.state.deleteActive ? (<div>
-            <h1>Email List</h1>
-            <div>                
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={this.state.deleteActive}
-                    onChange={this.ToggleDelete}
-                  />
-                }
-                label="Delete Email"
-                style={{
-                  float: "right",
-                  marginRight: "4%",
-                  marginTop: "1%",
-                  
-                }}
-              />                            
-            </div>
-            <SearchBox
-              style={divStyle}
-              placeholder="Search..."
-              onChange={(e) => this.setState({ searchFilter: e.target.value })}
+        ) : this.state.deleteActive ? (<div>
+          <h1>Email List</h1>
+          <div>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={this.state.deleteActive}
+                  onChange={this.ToggleDelete}
+                />
+              }
+              label="Delete Email"
+              style={{
+                float: "right",
+                marginRight: "4%",
+                marginTop: "1%",
+
+              }}
             />
-            {this.props.subscriber.filter(
-              (searchedItem) =>
-                searchedItem.SubscriberEmail.toLowerCase().includes(
-                  this.state.searchFilter
-                ) ||
-                searchedItem.SubscriberEmail.toLowerCase().includes(
-                  this.state.searchFilter
-                )
-            ).map((filteredItem) => {
-              filteredSubs.push(filteredItem);
-            })}
-            <DeleteTable
-              Data={this.props.subscriber}
-              SubsProps={this.props}
-            ></DeleteTable>
-          </div> 
-          ):(
-        
-          <div><br/>
+          </div>
+          <SearchBox
+            style={divStyle}
+            placeholder="Search..."
+            onChange={(e) => this.setState({ searchFilter: e.target.value })}
+          />
+          {this.props.subscriber.filter(
+            (searchedItem) =>
+              searchedItem.SubscriberEmail.toLowerCase().includes(
+                this.state.searchFilter
+              ) ||
+              searchedItem.SubscriberEmail.toLowerCase().includes(
+                this.state.searchFilter
+              )
+          ).map((filteredItem) => {
+            filteredSubs.push(filteredItem);
+          })}
+          <DeleteTable
+            Data={this.props.subscriber}
+            SubsProps={this.props}
+          ></DeleteTable>
+        </div>
+        ) : (
+
+          <div><br />
             <h1>Email List</h1>
             <div>
-            <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
-        Add New Subscriber Mail
-      </Button>
-    
-      <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please Enter Valid Email for Subscription
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="SubscriberEmail"
-            onChange={this.handleChange.bind(this, "SubscriberEmail")}
-            value ={this.state.SubscriberEmail}
-            label="Email Address"
-            type="email"
-            error={this.state.SubscriberEmailFormat}
-            fullWidth
-          />
-          <br />
-              {this.state.SubscriberEmailFormat && (
-                <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                  Please Enter Valid Email.
-                </p>
-              )}
+              <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
+                Add New Subscriber Mail
+              </Button>
 
-              <br />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={this.checkValues.bind(this)} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog></div>
+              <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Please Enter Valid Email for Subscription
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="SubscriberEmail"
+                    onChange={this.handleChange.bind(this, "SubscriberEmail")}
+                    value={this.state.SubscriberEmail}
+                    label="Email Address"
+                    type="email"
+                    error={this.state.SubscriberEmailFormat}
+                    fullWidth
+                  />
+                  <br />
+                  {this.state.SubscriberEmailFormat && (
+                    <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
+                      Please Enter Valid Email.
+                    </p>
+                  )}
+
+                  <br />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.handleClose} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={this.checkValues.bind(this)} color="primary">
+                    Save
+                  </Button>
+                </DialogActions>
+              </Dialog></div>
             <div>
               <FormControlLabel
                 control={
@@ -1333,7 +1335,7 @@ class viewUserMail extends Component {
             </div>
 
             <div>
-            <FormControlLabel
+              <FormControlLabel
                 control={
                   <Switch
                     checked={this.state.deleteActive}
@@ -1345,7 +1347,7 @@ class viewUserMail extends Component {
                   float: "right",
                   marginRight: "4%",
                   marginTop: "1%",
-                  
+
                 }}
               />
             </div>
@@ -1356,20 +1358,20 @@ class viewUserMail extends Component {
             />
             <div>
               {this.props.subscriber.filter(
-                      (searchedItem) =>
-                        searchedItem.SubscriberEmail.toLowerCase().includes(
-                          this.state.searchFilter
-                        ) ||
-                        searchedItem.SubscriberEmail.toLowerCase().includes(
-                          this.state.searchFilter
-                        )
-                    ).map((filteredItem) => {
-                      filteredSubs.push(filteredItem);
-                    })}
-                    <EditMailTable
-                      Data={this.props.subscriber}
-                      SubsProps={this.props}
-                    ></EditMailTable>
+                (searchedItem) =>
+                  searchedItem.SubscriberEmail.toLowerCase().includes(
+                    this.state.searchFilter
+                  ) ||
+                  searchedItem.SubscriberEmail.toLowerCase().includes(
+                    this.state.searchFilter
+                  )
+              ).map((filteredItem) => {
+                filteredSubs.push(filteredItem);
+              })}
+              <EditMailTable
+                Data={this.props.subscriber}
+                SubsProps={this.props}
+              ></EditMailTable>
             </div>
           </div>
         )}

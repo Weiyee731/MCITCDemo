@@ -625,8 +625,8 @@ class AddProductComponent extends Component {
           }
           toast.success(
             this.state.file2Added +
-              " file Length: " +
-              this.state.fileInfo.length
+            " file Length: " +
+            this.state.fileInfo.length
           );
           this.checkFiles512x512();
         }
@@ -1301,8 +1301,8 @@ class AddProductComponent extends Component {
     var counter = 0;
     let resultData = this.props.result
       ? Object.keys(this.props.result).map((key) => {
-          return this.props.result[key];
-        })
+        return this.props.result[key];
+      })
       : {};
     if (resultData.length > 0) {
       resultData.map((d, i) => {
@@ -1321,8 +1321,8 @@ class AddProductComponent extends Component {
 
     let existData = this.props.exist
       ? Object.keys(this.props.exist).map((key) => {
-          return this.props.exist[key];
-        })
+        return this.props.exist[key];
+      })
       : {};
     if (existData.length > 0) {
       var checkDuplicate = existData.map((d, i) => {
@@ -1339,8 +1339,8 @@ class AddProductComponent extends Component {
     const { index } = this.state;
     let allcategoriesData = this.props.allcategories
       ? Object.keys(this.props.allcategories).map((key) => {
-          return this.props.allcategories[key];
-        })
+        return this.props.allcategories[key];
+      })
       : {};
 
     if (allcategoriesData.length > 0) {
@@ -1351,8 +1351,8 @@ class AddProductComponent extends Component {
 
     let allusersData = this.props.allUser
       ? Object.keys(this.props.allUser).map((key) => {
-          return this.props.allUser[key];
-        })
+        return this.props.allUser[key];
+      })
       : {};
 
     if (allusersData.length > 0) {
@@ -1376,7 +1376,7 @@ class AddProductComponent extends Component {
         style={{ width: "100%" }}
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownShoplots}
+        {/* {createMenusForDropDownShoplots} */}
       </Select>
     );
 
@@ -1391,7 +1391,7 @@ class AddProductComponent extends Component {
         style={{ width: "100%" }}
       >
         <option aria-label="None" value="" />
-        {createMenusForDropDownGrid}
+        {/* {createMenusForDropDownGrid} */}
       </Select>
     );
 
@@ -1471,8 +1471,8 @@ class AddProductComponent extends Component {
 
     let productCategoriesList = this.props.productCategories
       ? Object.keys(this.props.productCategories).map((key) => {
-          return this.props.productCategories[key];
-        })
+        return this.props.productCategories[key];
+      })
       : {};
 
     if (productCategoriesList.length > 0) {
@@ -1581,17 +1581,17 @@ class AddProductComponent extends Component {
                     justifyContent: "space-between",
                   }}
                 >
-                  <div style={{ width: "100%", marginRight: "5px" }}>
+                  {/* <div style={{ width: "100%", marginRight: "5px" }}>
                     {NotEmpty ? <Shoplots /> : null}
                     {NotEmpty ? <FormHelperText>Shoplot</FormHelperText> : null}
-                  </div>
+                  </div> */}
 
-                  <div style={{ width: "100%" }}>
+                  {/* <div style={{ width: "100%" }}>
                     {NotEmptyGrid ? <Grid /> : null}
                     {NotEmptyGrid ? (
                       <FormHelperText>Grid Storage</FormHelperText>
                     ) : null}
-                  </div>
+                  </div> */}
                 </div>
                 <br />
                 <div
