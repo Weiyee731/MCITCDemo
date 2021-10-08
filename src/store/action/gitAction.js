@@ -1169,4 +1169,18 @@ export class GitAction {
       type: GitAction.ClearProductWishlist,
     };
   }
+<<<<<<< Updated upstream
+=======
+
+  //================= PROMOTION BANNER ================//
+  static addPromotionBanner = "ADD-PROMOTIONBANNER";
+  static addedPromotionBanner = "ADDED-PROMOTIONBANNER";
+  static AddPromotionBannerByIds(propsData) {
+    return {
+      type: GitAction.addPromotionBanner,
+      payload: propsData
+    };
+  }
+
+>>>>>>> Stashed changes
 }

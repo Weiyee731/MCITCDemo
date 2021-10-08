@@ -933,7 +933,6 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return newPromoObj;
 
     //================= PRODUCT CART ================//
-
     case GitAction.DeleteProductCart:
       return Object.assign({}, state, { loading: true });
     case GitAction.DeletedProductCart:
@@ -1007,7 +1006,16 @@ export function counterReducer(state = INITIAL_STATE, action) {
         wishlist: [],
       });
 
+    //================= PROMOTION BANNER ================//
+    case GitAction.addPromotionBanner:
+      return Object.assign({}, state, {loading: true});
+    case GitAction.addedPromotionBanner:
+      return Object.assign({}, state, {
+        loading: false,
+        promotionBannerReturn: action.payload,
+      });
 
+    /////////////////////////////////////////////////// Default /////////////////////////////////////////////////// 
     default:
       return state;
   }

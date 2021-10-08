@@ -96,13 +96,11 @@ const rootEpic = combineEpics(
   gitEpic.deleteGridStorages,
   gitEpic.getAllShoplotsPolygon,
   //==================REVIEW==========================//
-
   gitEpic.viewProductReviewByProductID,
   gitEpic.viewProductReview,
   gitEpic.addProductReview,
   //==================REPORT==========================//
   gitEpic.viewOverallSummary,
-
   //==================COLOR==========================//
   gitEpic.getAllColor,
   gitEpic.addColor,
@@ -160,7 +158,9 @@ const rootEpic = combineEpics(
   //====================== PRODUCT WISHLIST ====================//
   gitEpic.viewProductWishlist,
   gitEpic.addProductWishlist,
-  gitEpic.deleteProductWishlist
+  gitEpic.deleteProductWishlist,
+  //====================== PROMOTION BANNER ====================//
+  gitEpic.AddPromotionBannerByIds,
 );
 
 // const rootReducerCombine = rootReducer;

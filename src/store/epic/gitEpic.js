@@ -3012,7 +3012,7 @@ export class GitEpic {
         .catch((error) => console.log("error", error));
     });
 
-  //------------------------- PRODUCT WISHLIST ----------------------------
+  //=================================== PRODUCT WISHLIST ===================================
 
   viewProductWishlist = (action$) =>
     action$.ofType(GitAction.ViewProductWishlist).switchMap(({ payload }) => {
@@ -3106,7 +3106,70 @@ export class GitEpic {
         .catch((error) => alert("Something went wrong. Error code: Product_DeleteProductWishlist"));
     });
 
+  //=================================== PROMOTION BANNER ===================================//
 
+  AddPromotionBannerByIds = action$ =>
+    action$.ofType(GitAction.addPromotionBanner).switchMap(({ payload }) => {
+      console.log("add promotion banner message: ",
+      this.url + 
+      "AddPostMedia?POSTID=" +
+      payload.postId +
+      "&MEDIATYPE=" +
+      payload.mediaType +
+      "&MEDIATITLE=" +
+      payload.mediaTitle +
+      "&MEDIAURL=" +
+      payload.mediaUrl +
+      "&MEDIADESC=" +
+      payload.mediaDesc +
+      "&SLIDEORDER=" +
+      payload.slideOrder +
+      "&MEDIASOURCE=" +
+      payload.mediaSource
+    )
+      return fetch(
+        this.url + 
+        "AddPostMedia?POSTID=" +
+        payload.postId +
+        "&MEDIATYPE=" +
+        payload.mediaType +
+        "&MEDIATITLE=" +
+        payload.mediaTitle +
+        "&MEDIAURL=" +
+        payload.mediaUrl +
+        "&MEDIADESC=" +
+        payload.mediaDesc +
+        "&SLIDEORDER=" +
+        payload.slideOrder +
+        "&MEDIASOURCE=" +
+        payload.mediaSource
+      )
+        .then(response => response.json())
+        .then(json => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+
+          return fetch(this.url + "viewPost?POSTTYPE=1")
+            .then(response => response.json())
+            .then(json2 => {
+              if (json2 !== "fail") {
+                json2 = json2;
+              } else {
+                json2 = [];
+              }
+              return {
+                type: GitAction.addedPromotionBanner,
+                payload: json,
+                payload2: json2
+              };
+            })
+            .catch(error => console.log("Add promotion banner error code: 4002.1", error));
+        })
+        .catch(error => console.log("Add promotion banner error code: 4002.2", error));
+    });
 
 }
 export let gitEpic = new GitEpic();

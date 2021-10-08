@@ -5,7 +5,8 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { GitAction } from "../../store/action/gitAction";
-//----------------------------------Table Things---------------------------------------------------
+import { toast } from "react-toastify";
+//---------------------------------- TABLE THINGS ---------------------------------------------------
 import { Table, TableBody, TableCell, TableRow } from "@material-ui/core";
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -41,6 +42,11 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import moment from "moment";
+//---------------------------------- ADD IMAGE THINGS ---------------------------------------------------
+import { DropzoneArea } from "material-ui-dropzone";
+import Dropzone from "react-dropzone";
+import axios from "axios";
+import CloseIcon from "@material-ui/icons/Close";
 
 //----------------------------------------------------------------------------------------------------
 function mapStateToProps(state) {
@@ -48,6 +54,8 @@ function mapStateToProps(state) {
     Promotion: state.counterReducer["addPromo"], // Add data to Promotion
     // allstocks: state.counterReducer["products"],
     allproducts: state.counterReducer["products"],
+    promotionBannerReturn: state.counterReducer["promotionBannerReturn"],
+
   };
 }
 
@@ -407,56 +415,66 @@ class AddPromotionBannerComponent extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      order: "asc",
+      orderBy: "productName",
+      page: 0,
+      dense: false,
+      rowsPerPage: 5,
+      searchFilter: "",
+      Amount: [],
+      PromotionTitle: "",
+      PromotionDesc: "",
+      DiscountPercentage: null,
+
+      file: [],
+      productsDisplayed: [],
+      ProductID: [], //ADD PRODUCT
+      fullChosenProducts: [],
+      fullChosenProductsBackup: [], //final products chosen to be sent
+      chosenProducts: [],
+      chosenProductsNames: [],
+      imagesLeft: [],
+      imagesChosen: [],
+      productsLeft: [],
+
+      promoStart: new Date().toLocaleString(),
+      promoEnd: new Date().toLocaleString(),
+      PromotionStartDate: new Date(),
+      PromotionEndDate: new Date(),
+
+      searchWordAdd: "",
+      searchWordRemove: "",
+      startDateNotSet: false,
+      startDateInvalid: false,
+      endDateNotSet: false,
+      endDateInvalid: false,
+      PromotionTitleEmpty: false,
+      PromotionDescEmpty: false,
+      productsAreNotChosen: false,
+      promotionDiscountNotSet: false,
+
+    };
+
+    this.uploadHandler = this.uploadHandler.bind(this);
+
     this.props.CallAllProductsByProductStatus({
       ProductStatus: "Endorsed",
       UserID: window.localStorage.getItem("id"),
     });
+
   }
 
-  state = {
-    order: "asc",
-    orderBy: "productName",
-    page: 0,
-    dense: false,
-    rowsPerPage: 5,
-    searchFilter: "",
-    Amount: [],
-    PromotionTitle: "",
-    PromotionDesc: "",
-    DiscountPercentage: null,
-
-    productsDisplayed: [],
-    ProductID: [], //ADD PRODUCT
-    fullChosenProducts: [],
-    fullChosenProductsBackup: [], //final products chosen to be sent
-    chosenProducts: [],
-    chosenProductsNames: [],
-    imagesLeft: [],
-    imagesChosen: [],
-    productsLeft: [],
-
-    promoStart: new Date().toLocaleString(),
-    promoEnd: new Date().toLocaleString(),
-    PromotionStartDate: new Date(),
-    PromotionEndDate: new Date(),
-
-    searchWordAdd: "",
-    searchWordRemove: "",
-    startDateNotSet: false,
-    startDateInvalid: false,
-    endDateNotSet: false,
-    endDateInvalid: false,
-    PromotionTitleEmpty: false,
-    PromotionDescEmpty: false,
-    productsAreNotChosen: false,
-    promotionDiscountNotSet: false,
-  };
+  uploadHandler(e) {
+    this.setState({ file: e });
+  }
 
   handleChange(data, e) {
     if (data === "PromotionTitle") {
       this.setState({
         PromotionTitle: e.target.value,
       });
+      console.log("PromotionTitle: ", this.state);
     } else if (data === "PromotionDesc") {
       this.setState({
         PromotionDesc: e.target.value,
@@ -781,34 +799,156 @@ class AddPromotionBannerComponent extends Component {
         ((this.state.PromotionStartDate.getDate() < 10 ? "0" : "") +
           this.state.PromotionStartDate.getDate());
 
-      // ((this.state.PromotionStartDate.getDate() < 10 ? '0' : '') + this.state.PromotionStartDate.getDate());
-      console.log("hohohoho" + StartDate);
       const promoInfo = {
         ProductID: ProductIDOnly,
         PromotionDesc: this.state.PromotionDesc,
         PromotionTitle: this.state.PromotionTitle,
-        BannerImage: "Null",
+        BannerImage: BannerImage + ".jpg",
         SlideOrder: "Null",
         promoStart: StartDate,
         promoEnd: EndDate,
         DiscountPercentage: this.state.DiscountPercentage,
       };
-      setTimeout(
-        function () {
-          console.log(promoInfo);
-          this.props.CallAddPromotion(promoInfo);
-        }.bind(this),
-        500
-      );
-      setTimeout(
-        function () {
-          this.props.history.push("/viewProductPromotion");
-          window.location.reload(false);
-        }.bind(this),
-        500
-      );
+
+      //============= Promotion Content and Promotion Banner Updator =============
+
+      const formData = new FormData();
+      
+      //============= Set BannerImage Name by Date + Time =============
+      var today = new Date();
+      var date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      var BannerImage = date + ' ' + time;
+
+      console.log("submit values this.props", this.props);
+      console.log("submit values this.state", this.state);
+      //var PromotionBannerId = this.props.promotionBannerReturn[0].PromotionBannerId
+
+      // formData.append("directory", "emporiaimage/slide/");
+      formData.append("imageFile", this.state.file[0]);
+      formData.append("imageName", BannerImage);
+      let url = "http://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php";
+      axios.post(url, formData, {}).then(res => {
+        console.log("res: ",res);
+        if (res.status === 200) {
+          if (res.data === 1) {
+            toast.success("Promotion Banner Added.")
+            // this.props.ResetStoryReturnVal()
+            this.props.CallAddPromotion(promoInfo)
+          }
+          else {
+            toast.error("Res Data error.");
+          }
+        }
+        else {
+          toast.error("Res Status error.");
+        }
+      });
+
+      // ((this.state.PromotionStartDate.getDate() < 10 ? '0' : '') + this.state.PromotionStartDate.getDate());
+      // console.log("hohohoho" + StartDate);
+      
+      // setTimeout(
+      //   function () {
+      //     console.log("promoInfo: ", promoInfo);
+      //     this.props.CallAddPromotion(promoInfo);
+      //   }.bind(this),
+      //   500
+      // );
+      // setTimeout(
+      //   function () {
+      //     this.props.history.push("/viewProductPromotion");
+      //     window.location.reload(false);
+      //   }.bind(this),
+      //   500
+      // );
+    }
+    else {
+      console.log("add promotion error");
+      toast.error("add promotion error");
     }
   };
+
+  componentDidUpdate() {
+    console.log("componentdidupdate this.props.promotionBannerReturn.length: ", this.props)
+    // to capture the photo is successfully save into the database, then reload if success
+    if (this.props.promotionBannerReturn !== undefined) {
+      if (this.props.promotionBannerReturn.length > 0) {
+        if (this.props.promotionBannerReturn[0].ReturnVal === 1) {
+            toast.success("Promotion Banner Added Successfully.")
+            window.location.href = '/viewProductPromotion';
+        }
+        else {
+          console.log("1something wrong");
+        }
+      }
+      else {
+        console.log("2something wrong");
+      }
+    }
+    else {
+      console.log("3something wrong");
+    }
+    
+
+    // if (this.props.promotionBannerReturn.length = 0) {
+    //   console.log("this.props.promotionBannerReturn.length: ", this.props)
+    // }
+
+    // to capture the story is successfully save into the database
+    // if (this.props.promotionBannerReturn.length > 0) {
+
+    //   if (this.props.promotionBannerReturn[0].ReturnVal === 1) {
+    //       this.setState({ returnPostId: this.props.promotionBannerReturn.length > 0 ? this.props.promotionBannerReturn[0].postId : -1 })
+
+    //       console.log("file content state: ", this.state);
+    //       console.log("file content props: ", this.props);
+    //       // to capture there is the photo to upload
+    //       if (this.state.file.length > 0) {
+    //           const formData = new FormData();
+    //           let imagename = new Date().valueOf();
+    //           let postId = this.props.promotionBannerReturn[0].postId
+
+    //           formData.append("directory", "images/post/" + postId);
+    //           formData.append("imageFile", this.state.file[0]);
+    //           formData.append("imageName", imagename);
+    //           let url = "http://tourism.denoo.my/TourismManagementAPI/upload.php";
+    //           axios.post(url, formData, {}).then(res => {
+    //               // if successfully uploaded, I trigger the api to save the photo with the post Id, line 203 will capture the return 
+    //               if (res.status === 200) {
+    //                   if (res.data === 1) {
+    //                       toast.success("Story Successfully.")
+    //                       this.props.ResetStoryReturnVal()
+    //                       this.props.AddPromotionBannerByIds({
+    //                           postId: postId,
+    //                           mediaType: "image",
+    //                           mediaTitle: '-',
+    //                           mediaUrl: imagename + ".jpg",
+    //                           mediaDesc: '-',
+    //                           slideOrder: '1',
+    //                           mediaSource: '-'
+    //                       })
+    //                   }
+    //                   else {
+    //                       toast.error("Story content added successfully. Story image upload failed.")
+    //                   }
+    //               }
+    //               else {
+    //                   toast.error("Story content added successfully. Story image upload failed.")
+    //               }
+    //           });
+    //       } else {
+    //           toast.success("Story Content Added Successfully.")
+    //           this.props.ResetStoryReturnVal()
+    //           window.location.href = './Story';
+    //       }
+    //   }
+    //   else {
+    //       toast.error("Story content added failed.")
+    //   }
+    //   this.props.ResetStoryReturnVal()
+    // } 
+  }
 
   // ------------------------------------------------------ Send Data Method 2 --------------------------------------------------------------
   // addPromotionForm = () => {
@@ -817,6 +957,7 @@ class AddPromotionBannerComponent extends Component {
 
   // ------------------------------------------------------------------------------------------------------------------------------------------
   render() {
+    console.log("render this.props.promotionBannerReturn.length: ", this.props)
     let allProductsData = this.props.allproducts
       ? Object.keys(this.props.allproducts).map((key) => {
         return this.props.allproducts[key];
@@ -1157,6 +1298,24 @@ class AddPromotionBannerComponent extends Component {
                   Promotion Discount Need to Be Set.
                 </p>
               )}
+
+              {/* ----------------------------------------------- (Start) Add Promotion Banner --------------------------------------- */}
+              <br />
+              <div>
+                <div className="form-group">
+                  <DropzoneArea
+                    acceptedFiles={["image/*"]}
+                    dropzoneText={"Drag & Drop Story Image or Click To Browse"}
+                    filesLimit={1}
+                    multiple={false}
+                    onChange={this.uploadHandler}
+                  />
+                </div>
+                {this.state.mediaAlert === true ? <FormHelperText className="invalid-message">Please Insert an Story Photo</FormHelperText> : ""}
+              </div>
+
+              {/* ----------------------------------------------- (End) Add Promotion Banner --------------------------------------- */}
+
               <div>
                 {/* ----------------------------------------------- Add Product --------------------- (Method 1)------------------ */}
                 <InputLabel style={{ marginTop: "20px" }}>
