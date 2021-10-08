@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   statistic: [],
   products: [],
   productsByID: [],
+  productSpecsDetail: [],
   viewMoreProducts: [],
   reviews: [],
   categories: [],
@@ -281,6 +282,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
       var productMediaResult = Object.assign({}, state);
       productMediaResult.loading = false;
       return productMediaResult;
+
+    //==============PRODUCT SPECS DETAIL===============//
+    case GitAction.AddProductSpecsDetail:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.AddedProductSpecsDetail:
+      return Object.assign({}, state, {
+        loading: false,
+        productSpecsDetail: action.payload,
+      });
 
     //==============PRODUCTVARIATION===============//
     case GitAction.GetProductVariation:

@@ -204,7 +204,7 @@ export class GitAction {
 
   static CallProductDetail(propData) {
     return {
-      type: GitAction.GetProduct,
+      type: GitAction.GetProductDetail,
       payload: propData
     };
   }
@@ -338,6 +338,18 @@ export class GitAction {
     return {
       type: GitAction.DeleteProductVariation,
       payload: prodData,
+    };
+  }
+
+  // PRODUCT SPECS
+
+  static AddProductSpecsDetail = "DELETE-PRODUCTVARIATION";
+  static AddedProductSpecsDetail = "DELETED-PRODUCTVARIATION";
+
+  static CallAllProductSpecsDetail(prodData) {
+    return {
+      type: GitAction.AddProductSpecsDetail,
+      payload: prodData
     };
   }
 

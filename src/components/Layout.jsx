@@ -24,13 +24,10 @@ import Quickview from "./shared/Quickview";
 import SitePageAffiliate from "./site/SitePageAffiliate";
 import SitePageCareers from "./site/SitePageCareers";
 import AccountLayout from "./account/AccountLayout";
-import AccountPageLogin from "./account/AccountPageLogin";
 import BlogPageCategory from "./blog/BlogPageCategory";
 import BlogPagePost from "./blog/BlogPagePost";
 import PageCart from "./shop/ShopPageCart";
 import PageCheckout from "./shop/ShopPageCheckout";
-import PageCheckOrder from "./shop/ShopPageCheckOrder";
-import PageCheckoutQr from "./shop/ShopPageCheckoutQr";
 import PageCompare from "./shop/ShopPageCompare";
 import PageWishlist from "./shop/ShopPageWishlist";
 import ShopPageCategory from "./shop/ShopPageCategory";
@@ -55,7 +52,6 @@ import BlockCategoryDetails from "./blocks/BlockCategoryDetails";
 import BlockAllProductCategory from "./blocks/BlockAllProductCategory";
 
 // data stubs
-import theme from "../data/theme";
 import SideBarMenu from "../components/navigationsidebar/SideBarMenu";
 import Login from "../pages/login/login.component";
 import ResetPassword from "../pages/login/resetPassword.component";
@@ -68,25 +64,14 @@ import ViewSupplierComponent from "../pages/viewSupplier/viewSupplier.component"
 import DashboardComponent from "../pages/dashboard/dashboard.component";
 import viewProductEndorsementComponent from "../pages/viewProductEndorsement/viewProductEndorsement.component";
 import ViewSupplierEndorsementComponent from "../pages/viewSupplierEndorsement/viewSupplierEndorsement.component";
-import AddShopLotComponent from "../pages/addShopLot/addShopLot.component";
-import ProductQuotationComponent from "../pages/productQuotation/productQuotation.component";
 import ColorPickerComponent from "../pages/ColorPicker/ColorPicker.component";
 import ViewProductCategoryComponent from "../pages/viewProductCategories/viewProductCategories.component";
 import AddProductCategoryComponent from "../pages/addProductCategory/addProductCategory.component";
-import ViewShoplotsComponent from "../pages/viewShoplots/viewShoplots.component";
-import ViewGridStoragesComponent from "../pages/viewGridStorages/viewGridStorages.component";
 import ViewProductVariationComponent from "../pages/viewProductVariation/viewProductVariation.component";
-import AddGridStorageComponent from "../pages/addGridStorage/addGridStorage.component";
 import ViewReviewComponent from "../pages/viewReview/viewReview.component";
-import viewProductPurchaseOrderList from "../pages/viewProductPurchaseOrderList/viewProductPurchaseOrderList.component";
-import ColorDetailComponent from "../pages/colorDetail/colorDetail.component";
-import ViewColorComponent from "../pages/viewColor/viewColor.component";
-import AddColorComponent from "../pages/addColor/addColor.component";
-import ProductPurchaseOrderComponent from "../pages/productPurchaseOrder/productPurchaseOrder.component";
 import ProductStockInComponent from "../pages/productStockIn/productStockIn.component";
 import Cookie from "universal-cookie";
 import userProfile from "../pages/userProfile/userProfile.component";
-import QuotationListComponent from "../pages/quotationList/quotationList.component";
 import addPromotionBannerComponent from "../pages/addPromotionBanner/addPromotionBanner";
 import ViewProductPromotionComponent from "../pages/viewProductPromotion/viewProductPromotion.component";
 import ViewSettingsComponent from "../pages/viewSettings/viewSettings.component";
@@ -104,12 +89,9 @@ import addPromotion from "../pages/addPromotion/addPromotion.component";
 import supplierResponse from "../pages/supplierResponse/supplierResponse.component";
 import ViewProductStockOutComponent from "../pages/viewProductStockOut/viewProductStockOut.component";
 import ViewStockOutDetailsComponent from "../pages/viewStockOutDetails/viewStockOutDetails.component";
-import ViewPayableComponent from "../pages/viewPayable/viewPayable.component";
 import ViewReceivableComponent from "../pages/viewReceivable/viewReceivable.component";
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
 // import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
-import sendUserMail from "../pages/sendUserMail/sendUserMail.component";
-import DeliverableTransactionDetails from "../pages/deliverableTransactionDetails/deliverableTransactionDetails.component";
 
 import AddProductAllInOne from "../pages/addProduct/addProductAllInOne.component";
 
@@ -196,15 +178,15 @@ const Access = () => {
               <Switch>
                 <Route path="/" component={Login} />
                 <Route
-                exact
-                path="/resetPassword/:resetPasswordID"
-                render={(props) => (
-                  <ResetPassword
-                    {...props}
-                    resetPasswordID={props.match.params.resetPasswordID}
-                  />
-                )}
-              />
+                  exact
+                  path="/resetPassword/:resetPasswordID"
+                  render={(props) => (
+                    <ResetPassword
+                      {...props}
+                      resetPasswordID={props.match.params.resetPasswordID}
+                    />
+                  )}
+                />
                 <Route path="/login" component={Login} />
                 {/* <Route path="/resetPassword" component={ResetPassword}/> */}
                 <Route path="/signup" component={SignUp} />
@@ -252,15 +234,15 @@ const Access = () => {
             <Route path="/addSuppliers" component={AddSuppliersComponent} />
             <Route path="/login" component={Login} />
             <Route
-                exact
-                path="/resetPassword/:resetPasswordID"
-                render={(props) => (
-                  <ResetPassword
-                    {...props}
-                    resetPasswordID={props.match.params.resetPasswordID}
-                  />
-                )}
-              />
+              exact
+              path="/resetPassword/:resetPasswordID"
+              render={(props) => (
+                <ResetPassword
+                  {...props}
+                  resetPasswordID={props.match.params.resetPasswordID}
+                />
+              )}
+            />
             {/* <Route path="/resetPassword" component={ResetPassword}/> */}
             <Route path="/signup" component={SignUp} />
             <Route path="/viewSaleByProduct" component={ViewProductComponent} />
@@ -270,16 +252,10 @@ const Access = () => {
               component={ViewProductComponent}
             />
             <Route path="/viewReceivable" component={ViewReceivableComponent} />
-            <Route path="/viewPayable" component={ViewPayableComponent} />
             <Route
               path="/viewDeliverableTransaction"
               component={ViewDeliverableComponent}
             />
-            <Route
-              path="/viewProductQuotation"
-              component={ProductQuotationComponent}
-            />
-
             <Route path="/viewPriceAnalysis" component={ViewProductComponent} />
             <Route
               path="/viewProductAnalysis"
@@ -308,32 +284,12 @@ const Access = () => {
               path="/viewProductEndorsement"
               component={viewProductEndorsementComponent}
             />
-            <Route path="/addShopLot" component={AddShopLotComponent} />
-            <Route path="/addGridStorage" component={AddGridStorageComponent} />
             <Route
               path="/viewProductVariation"
               component={ViewProductVariationComponent}
             />
-            <Route path="/viewShopLots" component={ViewShoplotsComponent} />
-            <Route
-              path="/viewGridStorages"
-              component={ViewGridStoragesComponent}
-            />
             <Route path="/viewReviews" component={ViewReviewComponent} />
             <Route path="/viewProfile" component={userProfile} />
-            <Route
-              path="/viewPurchaseOrderList"
-              component={viewProductPurchaseOrderList}
-            />
-            <Route path="/viewColor" component={ViewColorComponent} />
-            <Route path="/colorDetail" component={ColorDetailComponent} />
-            {/* <Route path="/colorDetail" component={DeliverableTransactionDetails} /> */}
-
-            <Route path="/addColor" component={AddColorComponent} />
-            <Route
-              path="/viewProductPurchaseOrder"
-              component={ProductPurchaseOrderComponent}
-            />
             <Route
               path="/productStocksIn"
               component={ProductStockInComponent}
@@ -350,13 +306,10 @@ const Access = () => {
               path="/viewStockOutDetail"
               component={ViewStockOutDetailsComponent}
             />
-
-            <Route path="/quotationList" component={QuotationListComponent} />
             <Route
               path="/viewProductPromotion"
               component={ViewProductPromotionComponent}
             />
-
             <Route
               path="/addPromotionBanner"
               component={addPromotionBannerComponent}
@@ -601,26 +554,18 @@ function Layout(props) {
                 exact
                 path="/shop/ProductCategory/:categoryID/:categorySlug"
                 render={(props) => (
-                  <>
-                   {console.log("HERE")}
-                   {console.log(props.match.params)}
-                   {console.log(props)}
                   <BlockCategoryDetails
                     {...props}
                     layout="standard"
                     categorySlug={props.match.params.categorySlug}
                     categoryID={props.match.params.categoryID}
                   />
-                  </>
                 )}
               />
               <Route
                 exact
                 path="/shop/ProductCategory/:parentCategoryID/:categorySlug/:categoryID/:childcategorySlug"
                 render={(props) => (
-                  <>
-                   {console.log("HERE")}
-                   {console.log(props.match.params)}
                   <BlockCategoryDetails
                     {...props}
                     layout="standard"
@@ -629,7 +574,6 @@ function Layout(props) {
                     categoryID={props.match.params.categoryID}
                     parentCategoryID={props.match.params.parentCategoryID}
                   />
-                  </>
                 )}
               />
               <Route

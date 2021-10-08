@@ -34,54 +34,16 @@ function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
     products: state.counterReducer["products"],
-    viewMoreProducts: state.counterReducer["viewMoreProducts"],
-    productsByID: state.counterReducer["productsByID"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
-    CallViewMoreFunctionProduct: (propsData) => dispatch(GitAction.CallViewMoreFunctionProduct(propsData)),
-    CallViewMoreEmpty: () => dispatch(GitAction.CallViewMoreEmpty()),
-    CallGetProductByProductCategoryID: (propsData) => dispatch(GitAction.CallGetProductByProductCategoryID(propsData)),
   };
 }
 
 function HomePageTwo(props) {
-  const featuredProducts = useProductTabs(
-    useMemo(() => [
-      { id: 1, name: 'All', categorySlug: undefined },
-      { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
-      { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
-      { id: 4, name: 'Plumbing', categorySlug: 'plumbing' },
-    ], []),
-    (tab) => shopApi.getPopularProducts({ limit: 12, category: tab.categorySlug }),
-  );
-
-  const bestsellers = useDeferredData(() => (
-    shopApi.getPopularProducts({ limit: 7 })
-  ), []);
-
-  let allProductsCategoryData = props.allcategories;
-  let allProductsData = props.allproducts;
-  const columns = useProductColumns(
-    useMemo(() => [
-      {
-        title: 'Top Rated Products',
-        source: () => shopApi.getTopRatedProducts({ limit: 3 }),
-      },
-      {
-        title: 'Special Offers',
-        source: () => shopApi.getDiscountedProducts({ limit: 3 }),
-      },
-      {
-        title: 'Bestsellers',
-        source: () => shopApi.getPopularProducts({ limit: 3 }),
-      },
-    ], []),
-  );
-
   const [postsToShow, setPostsToShow] = useState([]);
   let tempArray = []
   const [page, setPage] = useState(1);
@@ -97,13 +59,20 @@ function HomePageTwo(props) {
   };
 
   useEffect(() => {
-    props.CallAllProducts({ merchantId: 0, productPage: productPerPage, page: page })
+    props.CallAllProducts({
+      type: "Category",
+      typeValue: 0,
+      userId: localStorage.getItem('id') !== null ? localStorage.getItem('id') : 0,
+      productPage: productPerPage,
+      page: page
+    })
     loopWithSlice()
   }, [page])
 
   return (
     <React.Fragment>
       <div className="block--margin-top">
+        {console.log("hello", props)}
         <Helmet>
           <title>{theme.name}</title>
         </Helmet>
