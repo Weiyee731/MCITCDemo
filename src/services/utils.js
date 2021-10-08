@@ -3,12 +3,14 @@ export const url = {
 
   catalog: () => "/shop/catalog",
 
-  category: (category) => category.slug !== null ? `/shop/catalog/${category.slug}` : `/shop/catalog`,
+  category: (category) => category.ProductName !== null ? `/shop/catalog/${category.ProductName}` : `/shop/catalog`,
 
-  product: (product) => product.ProductName !== null ? `/shop/products/${product.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')}` :  `/shop/products/`,
+  // product: (product) => product.ProductName !== null ? `/shop/products/${product.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')}` :  `/shop/products/`,
+ 
+  product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` :  `/shop/products/`,
   // product: (product) => `/shop/products/${product.slug}`,
 
-  productcateogory: (category) => category.slug !== null ? `/shop/ProductCategory/${category.slug}` : `/shop/ProductCategory/`,
+  productcateogory: (category) => category.ProductName !== null ? `/shop/ProductCategory/${category.ProductName}` : `/shop/ProductCategory/`,
 };
 
 export function getCategoryParents(category) {

@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { GitAction } from "../../store/action/gitAction";
 import { Link } from "react-router-dom";
 
 // application
@@ -388,4 +389,12 @@ const mapStateToProps = (state) => ({
   locale: state.locale,
 });
 
-export default connect(mapStateToProps)(ProductGallery);
+
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    CallAllProducts: (data) => dispatch(GitAction.CallAllProducts(data)),
+ };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductGallery);

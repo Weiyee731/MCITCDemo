@@ -50,24 +50,36 @@ function HomePageTwo(props) {
   let productPerPage = 20
 
   const loopWithSlice = () => {
-    tempArray = [...postsToShow, ...props.products];
-    setPostsToShow(tempArray)
+    if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal !== "1") { toast.warning("There is no more product") }
+    else {
+      tempArray = [...postsToShow, ...props.viewMoreProducts];
+      setPostsToShow(tempArray)
+      props.CallViewMoreEmpty()
+    }
   };
 
   const handleShowMorePosts = () => {
     setPage(page + 1)
+    props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
   };
 
   useEffect(() => {
-    props.CallAllProducts({
-      type: "Category",
-      typeValue: 0,
-      userId: localStorage.getItem('id') !== null ? localStorage.getItem('id') : 0,
-      productPage: productPerPage,
-      page: page
-    })
-    loopWithSlice()
-  }, [page])
+    if (page <= 1) {
+      setPage(page + 1)
+      props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
+    }
+    if (props.viewMoreProducts.length > 0) {
+      loopWithSlice()
+    }
+  }, [props.viewMoreProducts])
+
+  useEffect(() => {
+    props.CallAllProducts({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: 999, page: 1 })
+  }, [])
+
+  console.log("IN HOMEPAGE props", props)
+  // console.log("IN HOMEPAGE postsToShow", postsToShow)
+  // console.log("IN HOMEPAGE products", props.products)
 
   return (
     <React.Fragment>
@@ -80,17 +92,13 @@ function HomePageTwo(props) {
         {useMemo(() => <BlockMainCategories />, [])}
         {useMemo(() => <BlockFeatures layout="boxed" />, [])}
 
-
         {useMemo(() => (
           props.products !== undefined && props.products.length > 0 &&
           <BlockProductsCarousel
             title="New Arrivals"
             layout="grid-4"
             rows={2}
-            products={props.products}
-          // loading={props.loading}
-          // groups={allProducts.tabs}
-          // onGroupClick={testing}
+            products={props.products !== [] ? props.products : []}
           />
         ), [props.loading, props.products])}
 
@@ -99,32 +107,9 @@ function HomePageTwo(props) {
           <BlockProducts
             title="Featured Products"
             layout="large-first"
-            products={postsToShow}
-          // loading={allProducts.loading}
-          // groups={allProducts.tabs}
-          // onGroupClick={allProducts.handleTabChange}
+            products={postsToShow !== [] ? postsToShow : []}
           />
         ), [postsToShow])}
-
-        {/* {useMemo(() => (
-          <BlockProducts
-            title="Featured Products"
-            layout="large-first"
-            products={postsToShow}
-            loading={allProducts.loading}
-            groups={allProducts.tabs}
-            onGroupClick={allProducts.handleTabChange}
-          />
-        ), [allProducts.handleTabChange, allProducts.tabs, postsToShow, props.loading])} */}
-
-        {/* <BlockProducts
-          title="Featured Products"
-          layout="large-first"
-          products={postsToShow}
-          loading={allProducts.loading}
-          groups={allProducts.tabs}
-          onGroupClick={allProducts.handleTabChange}
-        /> */}
         {
           props.products.length === 0 ? "" :
             (

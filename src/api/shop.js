@@ -45,8 +45,11 @@ const shopApi = {
     return getCategories(options);
   },
 
-  getAllProducts: () => {
-    return fetch(url + "Product_ItemList")
+
+  getProductByID: (productID) => {
+    let userID = localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id")
+    return fetch(url + "Product_ItemDetailByProductID?ProductID=" + productID +
+      "&USERID=" + userID)
       .then((response) => response.json())
       .then((json) => {
         json = JSON.parse(json);

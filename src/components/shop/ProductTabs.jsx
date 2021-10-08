@@ -13,10 +13,6 @@ import ProductTabReviews from "./ProductTabReviews";
 class ProductTabs extends Component {
   constructor(props) {
     super(props);
-
-    // this.state = {
-    //   currentTab: "description",
-    // };
     this.state = this.props.currentTab;
   }
 
@@ -25,9 +21,6 @@ class ProductTabs extends Component {
   };
 
   render() {
-    console.log(this.props)
-
-    const { currentTab } = this.state;
     const { withSidebar } = this.props;
     const classes = classNames("product-tabs", {
       "product-tabs--layout--sidebar": withSidebar,

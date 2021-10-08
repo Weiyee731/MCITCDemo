@@ -117,7 +117,7 @@ export default [
         submenu: {
             type: 'menu',
             menu: [
-                { title: 'Login', url: '/account/login' },
+                { title: 'Login', url: '/Emporia/login' },
                 { title: 'Dashboard', url: '/dashboard' },
                 { title: 'Edit Profile', url: '/account/profile' },
                 { title: 'Order History', url: '/account/orders' },

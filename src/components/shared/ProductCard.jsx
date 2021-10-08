@@ -1,5 +1,9 @@
 // react
+<<<<<<< Updated upstream
 import React, { useState } from "react";
+=======
+import React, { useEffect, useState } from "react";
+>>>>>>> Stashed changes
 
 // third-party
 import classNames from "classnames";
@@ -57,13 +61,28 @@ function ProductCard(props) {
   let features;
   let productView;
 
-  if (product !== null) {
-    productView = <Product product={product} layout="quickview" />;
-  }
+  // if (product !== null && isQuickViewOpen) {
+  //   console.log(product.ProductID)
+  //   props.CallProductsByID({ ProductID: product.ProductID })
+  //   // if (props.productsByID !== undefined)
+  //   //   productView = <Product product={props.productsByID} layout="quickview" />;
+  // }
+
+  // useEffect(() => {
+  //   console.log("props.productsByID", props.productsByID)
+  //   if (product !== null && isQuickViewOpen) {
+  //     productView = <Product product={props.productsByID} layout="quickview" />;
+  //     setModal(false)
+  //   }
+  // }, [props.productsByID]);
 
   const login = () => {
     browserHistory.push("/Emporia/login");
     window.location.reload(false);
+  }
+
+  const handleQuickView = () => {
+    props.CallProductsByID({ ProductID: product.ProductID })
   }
 
   const handleCart = (product) => {
@@ -117,38 +136,14 @@ function ProductCard(props) {
     } else
       login()
   }
-  //   if (product.badges.includes("sale")) {
-  //     badges.push(
-  //       <div key="sale" className="product-card__badge product-card__badge--sale">
-  //         Sale
-  //       </div>
-  //     );
-  //   }
-  //   if (product.badges.includes("hot")) {
-  //     badges.push(
-  //       <div key="hot" className="product-card__badge product-card__badge--hot">
-  //         Hot
-  //       </div>
-  //     );
-  //   }
-  //   if (product.badges.includes("new")) {
-  //     badges.push(
-  //       <div key="new" className="product-card__badge product-card__badge--new">
-  //         New
-  //       </div>
-  //     );
-  //   }
 
-  //   badges = badges.length ? (
-  //     <div className="product-card__badges-list">{badges}</div>
-  //   ) : null;
-  if (product.ProductImage !== null) {
+  if (product.ProductImage && product.ProductImage.length > 0) {
     image = (
       <div className="product-card__image product-image">
         <Link to={url.product(product)} className="product-image__body">
           <img
             className="product-image__img"
-            src={product.ProductImage}
+            src={product.ProductImage !== undefined ? product.ProductImage : Logo}
             onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
             alt=""
           />
@@ -161,7 +156,7 @@ function ProductCard(props) {
     price = (
       <div className="product-card__prices">
         <span className="product-card__new-price">
-          <Currency value={product.price} currency={"RM"} />
+          <Currency value={product.ProductPrice} currency={"RM"} />
         </span>{" "}
         <span className="product-card__old-price">
           <Currency value={product.compareAtPrice} currency={"RM"} />
@@ -171,7 +166,7 @@ function ProductCard(props) {
   } else {
     price = (
       <div className="product-card__prices">
-        <Currency value={parseFloat(product.ProductSellingPrice)} currency={"RM"} />
+        <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
       </div>
     );
   }
@@ -192,13 +187,13 @@ function ProductCard(props) {
 
   return (
     <div className={containerClasses}>
-      <button
+      {/* <button
         type="button"
         onClick={() => setModal(true)}
         className={classNames("product-card__quickview")}
       >
         <Quickview16Svg />
-      </button>
+      </button> */}
       {badges}
       {image}
       <div className="product-card__info">
@@ -206,8 +201,9 @@ function ProductCard(props) {
           <Link to={url.product(product)}>{product.ProductName}</Link>
         </div>
         <div className="product-card__rating">
-          <Rating value={product.ProductRating} />
-          <div className=" product-card__rating-legend">{`${product.ProductRatingCount} Reviews`}</div>
+          <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
+          <div className=" product-card__rating-legend">{`${product.ProductRating !== null ? product.ProductRating : 0}/5 (`}</div>
+          <div className=" product-card__rating-legend">{`${product.ProductReviewCount !== null ? product.ProductReviewCount : 0} Reviews )`}</div>
         </div>
         {features}
       </div>
@@ -251,35 +247,17 @@ function ProductCard(props) {
                 </button>
               )
           }
-
-          {/* <AsyncAction
-            action={() => compareAddItem(product)}
-            render={({ run, loading }) => (
-              <button
-                type="button"
-                onClick={run}
-                className={classNames(
-                  "btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__compare",
-                  {
-                    "btn-loading": loading,
-                  }
-                )}
-              >
-                <Compare16Svg />
-              </button>
-            )}
-          /> */}
         </div>
       </div>
 
-      <Modal isOpen={isQuickViewOpen} centered size="xl">
+      {/* <Modal isOpen={isQuickViewOpen} centered size="xl">
         <div className="quickview">
-          <button className="quickview__close" type="button" onClick={() => setModal(false)}>
+          <button className="quickview__close" type="button" onClick={() => handleQuickView()}>
             <Cross20Svg />
           </button>
           {productView}
         </div>
-      </Modal>
+      </Modal> */}
 
     </div>
   );
@@ -308,21 +286,23 @@ ProductCard.propTypes = {
 
 const mapStateToProps = (state) => ({
   productcart: state.counterReducer.productcart,
-  wishlist: state.counterReducer.wishlist
+  wishlist: state.counterReducer.wishlist,
+  productsByID: state.counterReducer.productsByID
 
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
-    CallDeleteProductCart: (prodData) => dispatch(GitAction.CallDeleteProductCart(prodData)),
+    // CallDeleteProductCart: (prodData) => dispatch(GitAction.CallDeleteProductCart(prodData)),
     CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
     CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
     CallViewProductWishlist: (propsData) => dispatch(GitAction.CallViewProductWishlist(propsData)),
 
     CallViewProductCart: (prodData) => dispatch(GitAction.CallViewProductCart(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
-    CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData))
+    CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
+
+    CallProductsByID: (prodData) => dispatch(GitAction.CallProductsByID(prodData)),
   }
 };
 

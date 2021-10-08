@@ -431,7 +431,7 @@ const productsData = productsDef.map((productDef) => {
   }
 
   const categories = categoriesListData
-    .filter((category) => productDef.categories.includes(category.slug))
+    .filter((category) => productDef.categories.includes(category.ProductName))
     .map((category) => prepareCategory(category));
 
   const attributes = (productDef.attributes || [])

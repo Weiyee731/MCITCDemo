@@ -159,12 +159,12 @@ const Access = () => {
               >
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
-                    <Link className="nav-link" to={"/login"}>
+                    <Link className="nav-link" to={"/Emporia/login"}>
                       Login
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to={"/signup"}>
+                    <Link className="nav-link" to={"/Emporia/signup"}>
                       Sign up
                     </Link>
                   </li>
@@ -189,7 +189,7 @@ const Access = () => {
                 />
                 <Route path="/login" component={Login} />
                 {/* <Route path="/resetPassword" component={ResetPassword}/> */}
-                <Route path="/signup" component={SignUp} />
+                <Route path="/Emporia/signup" component={SignUp} />
               </Switch>
             </div>
           </div>
@@ -232,7 +232,7 @@ const Access = () => {
             />
             <Route path="/addProduct" component={AddProductComponent} />
             <Route path="/addSuppliers" component={AddSuppliersComponent} />
-            <Route path="/login" component={Login} />
+            <Route path="/Emporia/login" component={Login} />
             <Route
               exact
               path="/resetPassword/:resetPasswordID"
@@ -481,7 +481,7 @@ function Layout(props) {
                 path="/blog/post-full"
                 render={(props) => <BlogPagePost {...props} layout="full" />}
               />
-              <Route exact path="/login" component={Login} />
+              <Route exact path="/Emporia/login" component={Login} />
               <Route
                 exact
                 path="/resetPassword/:resetPasswordID"

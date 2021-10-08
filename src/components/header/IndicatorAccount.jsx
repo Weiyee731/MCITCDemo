@@ -262,7 +262,7 @@ class IndicatorAccount extends Component {
         {localStorage.getItem("isLogin") !== "false" ? (
           <Indicator url="/account" dropdown={dropdown} icon={<Person20Svg />} />
         ) : (
-          <Indicator url="/login" icon={<Person20Svg />} />
+          <Indicator url="/Emporia/login" icon={<Person20Svg />} />
         )}
       </>
     );

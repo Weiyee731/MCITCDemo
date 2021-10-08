@@ -223,7 +223,7 @@ const ResetPasswordComponent = (props) => {
 
       <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
         <div className="SignUpForm-Submit mb-2">
-          Remember your password? <a href="/login"><b>Login</b></a>
+          Remember your password? <a href="/Emporia/login"><b>Login</b></a>
         </div>
         <button
           type="submit"

@@ -507,7 +507,7 @@ const SignUp = (props) => {
 
             <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
                 <div className="SignUpForm-Submit mb-2">
-                    Already have an account? <a href="/login"><b>Login</b></a>
+                    Already have an account? <a href="/Emporia/login"><b>Login</b></a>
                 </div>
                 <button
                     type="submit"

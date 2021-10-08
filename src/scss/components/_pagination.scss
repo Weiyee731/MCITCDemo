@@ -68,7 +68,7 @@
 }
 .page-item.active .page-link {
     background: $pagination-current-bg;
-    color: $pagination-current-font-color;
+    // color: $pagination-current-font-color;
     cursor: default;
     z-index: 2;
 }

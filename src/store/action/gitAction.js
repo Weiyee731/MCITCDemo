@@ -158,6 +158,11 @@ export class GitAction {
 
   static GetProductDetail = "GET-PRODUCT-DETAIL";
   static GotProductDetail = "GOT-PRODUCT-DETAIL";
+  static GetProductByID = "GET-PRODUCT-BYID";
+  static GotProductByID = "GOT-PRODUCT-BYID";
+
+  static GetProductByMerchantID = "GET-PRODUCT-BYMERCHANTID";
+  static GotProductByMerchantID = "GOT-PRODUCT-BYMERCHANTID";
 
   static GetViewMoreProduct = "GET-VIEWMORE-PRODUCT";
   static GotViewMoreProduct = "GOT-VIEWMORE-PRODUCT";
@@ -211,6 +216,20 @@ export class GitAction {
     return {
       type: GitAction.GetProductDetail,
       payload: propData
+    };
+  }
+
+  static CallProductsByID(prodData) {
+    return {
+      type: GitAction.GetProductByID,
+      payload: prodData,
+    };
+  }
+
+  static CallProductsByMerchantID(prodData) {
+    return {
+      type: GitAction.GetProductByMerchantID,
+      payload: prodData,
     };
   }
 
@@ -1181,6 +1200,7 @@ export class GitAction {
       type: GitAction.ClearProductWishlist,
     };
   }
+<<<<<<< Updated upstream
 
   //================= PROMOTION BANNER ================//
   static addPromotionBanner = "ADD-PROMOTIONBANNER";
@@ -1192,4 +1212,6 @@ export class GitAction {
     };
   }
 
+=======
+>>>>>>> Stashed changes
 }

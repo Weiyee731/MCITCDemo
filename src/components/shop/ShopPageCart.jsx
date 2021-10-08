@@ -36,8 +36,8 @@ class ShopPageCart extends Component {
         this.state = {
             /** example: [{itemId: 8, value: 1}] */
             quantities: [],
-            SKUlimit: false,
-            overSKULimitID: [],
+            ProductStockAmountlimit: false,
+            overProductStockAmountLimitID: [],
             cart: [],
             subtotal: 0,
             // total: 0,
@@ -71,8 +71,8 @@ class ShopPageCart extends Component {
                     id: x.UserCartID,
                     product: x,
                     options: [],
-                    price: x.ProductSellingPrice,
-                    total: x.ProductQuantity * x.ProductSellingPrice,
+                    price: x.ProductPrice,
+                    total: x.ProductQuantity * x.ProductPrice,
                     quantity: x.ProductQuantity
                 }
             )
@@ -135,21 +135,21 @@ class ShopPageCart extends Component {
         if (localStorage.getItem("id")) {
             let ProductIDs = [];
             let ProductQuantity = [];
-            let checkSKU = [];
+            let checkProductStockAmount = [];
             let checkName = [];
-            let overSKUlimit = false
-            this.state.overSKULimitID.splice(0, this.state.overSKULimitID.length)
-            checkSKU.splice(0, checkSKU.length)
+            let overProductStockAmountlimit = false
+            this.state.overProductStockAmountLimitID.splice(0, this.state.overProductStockAmountLimitID.length)
+            checkProductStockAmount.splice(0, checkProductStockAmount.length)
 
             items.map((row) => {
                 this.props.productcart.filter((x) => x.UserCartID === row.product.UserCartID).map((items) => {
-                    if (row.product.SKU < items.ProductQuantity) {
-                        checkSKU.push(row.product.ProductID)
+                    if (row.product.ProductStockAmount < items.ProductQuantity) {
+                        checkProductStockAmount.push(row.product.ProductID)
                         checkName.push(row.product.ProductName)
                     }
-                    if (checkSKU.length > 0) {
-                        this.setState({ SKUlimit: true, overSKULimitID: checkSKU })
-                        overSKUlimit = true
+                    if (checkProductStockAmount.length > 0) {
+                        this.setState({ ProductStockAmountlimit: true, overProductStockAmountLimitID: checkProductStockAmount })
+                        overProductStockAmountlimit = true
                     }
                     else {
                         ProductIDs.push(row.product.ProductID);
@@ -160,7 +160,7 @@ class ShopPageCart extends Component {
             });
 
 
-            if (overSKUlimit !== true && this.state.selectedList.length > 0) {
+            if (overProductStockAmountlimit !== true && this.state.selectedList.length > 0) {
 
                 this.setState({ isDataAccepted: true })
                 // shopApi
@@ -180,7 +180,7 @@ class ShopPageCart extends Component {
             if (this.state.selectedList.length === 0) {
                 toast.error("Please select at least 1 product to proceed")
             }
-            if (overSKUlimit === true) {
+            if (overProductStockAmountlimit === true) {
                 checkName.map((x) => {
                     toast.error(x + " has over current available stock")
                 })
@@ -241,13 +241,16 @@ class ShopPageCart extends Component {
             let image;
             let options = [];
 
-            const productImage = JSON.parse(item.product.ProductImages)
-
-            if (productImage.length > 0) {
+            console.log("item.product IN ACRT", item.product.ReturnVal)
+            console.log("item.product IN ACRT", item)
+            // const productImage = item.ReturnVal !== 0 ? item.ProductImage : ""
+            // console.log("productImage",productImage)
+            
+            if (item.product.ProductImage !== undefined && item.product.ProductImage.length > 0) {
                 image = (
                     <div className="product-image">
                         <Link to={url.product(item.product)} className="product-image__body">
-                            <img className="product-image__img" src={productImage[0].ProductMediaUrl !== null ? productImage[0].ProductMediaUrl : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                            <img className="product-image__img" src={item.product.ProductImage !== null ? item.product.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                         </Link>
                     </div>
                 );
@@ -286,13 +289,13 @@ class ShopPageCart extends Component {
                         </Link>
                         {options}
                         {
-                            this.state.overSKULimitID.length > 0 ?
-                                this.state.overSKULimitID.filter(x => x === item.product.ProductID).length > 0 ?
-                                    this.state.overSKULimitID.filter(x => x === item.product.ProductID).map((x) => {
+                            this.state.overProductStockAmountLimitID.length > 0 ?
+                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 ?
+                                    this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x) => {
                                         return (
                                             <>
                                                 <br></br>
-                                                <label style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.SKU !== null ? item.product.SKU : "0"} </label>
+                                                <label style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.ProductStockAmount !== null ? item.product.ProductStockAmount : "0"} </label>
                                             </>
                                         )
                                     })
@@ -302,7 +305,7 @@ class ShopPageCart extends Component {
                     </td>
 
                     <td className="cart-table__column cart-table__column--price" data-title="Price">
-                        <Currency value={item.product.ProductSellingPrice} currency={"RM"} />
+                        <Currency value={item.product.ProductPrice} currency={"RM"} />
                     </td>
                     <td className="cart-table__column cart-table__column--quantity" data-title="Quantity">
                         {
@@ -318,7 +321,7 @@ class ShopPageCart extends Component {
                     </td>
                     <td className="cart-table__column cart-table__column--total" data-title="Total">
                         {
-                            <Currency value={item.product.ProductSellingPrice * item.product.ProductQuantity} currency={"RM"} />
+                            <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
                         }
                     </td>
 
@@ -410,6 +413,7 @@ class ShopPageCart extends Component {
     }
 
     render() {
+        console.log("this.props IN CART", this.props)
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },

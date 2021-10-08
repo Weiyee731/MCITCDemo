@@ -26,7 +26,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     CallAddProductReview: (PropsData) => dispatch(GitAction.CallAddProductReview(PropsData)),
-    CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
+    // CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
   };
 }
 
@@ -57,8 +57,7 @@ class ProductTabReviews extends Component {
       rowsPerPage: 5,
       edited: false,
     }
-    console.log(this.props.product)
-    this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
+    // this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
     this.onSubmitReview = this.onSubmitReview.bind(this);
     this.onSubmitReviewReply = this.onSubmitReviewReply.bind(this);
   }
@@ -94,8 +93,8 @@ class ProductTabReviews extends Component {
 
   render() {
     const { page } = this.state;
-    if (this.props.reviews != null) {
-      var reviewsList = (this.props.reviews)
+    if (this.props.product.ProductReview !== null) {
+      var reviewsList = JSON.parse(this.props.product.ProductReview)
         .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
         .map(
           (review, index) => (
@@ -175,6 +174,8 @@ class ProductTabReviews extends Component {
           className=" review__content"
           style={{
             width: "100%",
+            font: "40px",
+            fontWeight: "bold",
             textAlign: "center",
           }}
         >
@@ -183,6 +184,7 @@ class ProductTabReviews extends Component {
       );
     }
 
+    console.log("this.props in product tab review", JSON.parse(this.props.product.ProductReview))
     return (
       this.props.loading === false ?
         <div div className="reviews-view" id="reviews" >
@@ -194,9 +196,9 @@ class ProductTabReviews extends Component {
                 <Pagination
                   current={page}
                   total={
-                    this.props.product.ProductReview != null
-                      ?  Math.ceil(parseInt(JSON.parse(this.props.product.ProductReview).length)/this.state.rowsPerPage)
-                      : 1
+                    this.props.product.ProductReview !== null && this.props.product.ProductReview !== 0
+                      ? Math.ceil(parseInt(this.props.product.ProductReview.length) / this.state.rowsPerPage)
+                      : 0
                   }
                   onPageChange={this.handlePageChange}
                 />

@@ -51,14 +51,20 @@ function ShopPageProduct(props) {
     let canceled = false;
 
     setIsLoading(true);
+    console.log("in shop page product", props)
 
-    console.log(props)
-
-    props.products.map((productToBeUsed) => {
-      if (productToBeUsed.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_') === productSlug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_')) {
-        setProduct(productToBeUsed);
-        setIsLoading(false);
+    shopApi.getProductByID(productSlug).then((product) => {
+      if (canceled) {
+        return;
       }
+      product.map((productToBeUsed) => {
+        // if (productToBeUsed.slug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_') === productSlug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')) {
+          setProduct(productToBeUsed);
+          setIsLoading(false);
+        // }
+      });
+      // setProduct(product);
+      // setIsLoading(false);
     });
 
     // props.CallAllProducts({ merchantId: 0, productPage: 999, page: 1 }).then((product) => {

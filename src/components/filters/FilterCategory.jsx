@@ -15,7 +15,7 @@ function FilterCategory(props) {
 
     const categoriesList = data.items.map((category) => {
         const itemClasses = classNames('filter-categories__item', {
-            'filter-categories__item--current': data.value === category.slug,
+            'filter-categories__item--current': data.value === category.ProductName,
         });
 
         return (

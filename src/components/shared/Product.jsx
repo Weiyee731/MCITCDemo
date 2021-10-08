@@ -8,19 +8,21 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // application
-import AsyncAction from "./AsyncAction";
 import Currency from "./Currency";
 import InputNumber from "./InputNumber";
 import ProductGallery from "./ProductGallery";
 import Rating from "./Rating";
-import { cartAddItem } from "../../store/cart";
-import { compareAddItem } from "../../store/compare";
 import { Wishlist16Svg, Compare16Svg } from "../../svg";
-import { wishlistAddItem, wishlistRemoveItem, } from "../../store/wishlist";
 import { HashLink } from "react-router-hash-link";
 import ProductTabs from "../shop/ProductTabs";
 import { GitAction } from "../../store/action/gitAction";
 import { browserHistory } from "react-router";
+import Logo from "../../assets/Emporia.png"
+import {
+  Divider,
+} from "@material-ui/core";
+import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
+import { toast } from "react-toastify";
 
 
 class Product extends Component {
@@ -30,11 +32,39 @@ class Product extends Component {
     this.state = {
       quantity: 1,
       currentTab: "description",
+      productVariation: "",
+      productPrice: "",
+      productQuantity: 0,
+      productVariationDetailID: "",
+      isVariationClick: false
     };
     this.addCart = this.addCart.bind(this)
     this.handleWishlist = this.handleWishlist.bind(this)
     this.wishlisting = this.wishlisting.bind(this)
     this.login = this.login.bind(this)
+    this.checkCart = this.checkCart.bind(this)
+    this.props.CallProductsByMerchantID({ type: "Merchant", typeValue: this.props.product.MerchantID, productPerPage: 999, page: 1 })
+  }
+
+
+  componentDidMount() {
+    JSON.parse(this.props.product.ProductVariation).map((variation) => {
+      variation.ProductVariationValue === "-" &&
+        this.setState({
+          productVariation: variation.ProductVariationValue,
+          productQuantity: variation.ProductStockAmount,
+          productVariationDetailID: variation.ProductVariationDetailID
+        })
+    })
+    this.setState({ productPrice: this.props.product.ProductPrice })
+  }
+
+  checkCart(product, quantity) {
+    if (this.state.productVariationDetailID === "")
+      toast.error("Please Select One of the Variation")
+    else
+      this.addCart(product, quantity)
+    // this.addCart(product, quantity)
   }
 
   handleChangeQuantity = (quantity) => {
@@ -66,7 +96,7 @@ class Product extends Component {
           userID: window.localStorage.getItem("id"),
           productID: product.ProductID,
           productQuantity: quantity,
-          productVariationDetailID: 1,
+          productVariationDetailID: this.state.productVariationDetailID,
           applyingPromoCode: 0,
           productName: product.ProductName
         })
@@ -106,7 +136,7 @@ class Product extends Component {
 
   wishlisting(product) {
     return (
-      typeof this.props.wishlisth !== "undefined" && this.props.wishlist.length > 0 ?
+      typeof this.props.wishlist !== "undefined" && this.props.wishlist.length > 0 ?
         this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
 
           this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
@@ -139,22 +169,21 @@ class Product extends Component {
     const { quantity } = this.state;
     let prices;
 
-    prices = <Currency value={product.ProductSellingPrice} currency={"RM"} />;
-
-
+    prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
+    console.log("here", product)
 
     return (
       <div className="block" >
         <div
-          style={{ width: "100%" }}
+          style={{ width: "100%", backgroundColor: "white", padding: "20px" }}
           className={`product product--layout--${layout}`}
         >
           <div className="product__content">
             <ProductGallery
               layout={layout}
+              // images={typeof product.ProductImages === "string" && product.ProductImages !== null && product.ProductImages !== undefined ? JSON.parse(product.ProductImages) : product.ProductImages}
               images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : product.ProductImages}
             />
-
             <div className="product__info">
               <div className="product__wishlist-compare">
                 {this.wishlisting(product)}
@@ -162,16 +191,19 @@ class Product extends Component {
               <h1 className="product__name">{product.ProductName}</h1>
               <div className="product__rating">
                 <div className="product__rating-stars">
-                  <Rating value={product.ProductRating} />
+                  <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
                 </div>
                 <div className="product__rating-legend" style={{ fontSize: "13pt" }}>
                   <HashLink
                     onClick={this.changeCurrentTab.bind(this, "reviews")}
                     to="#reviews"
-                  >{`${product.ProductReview != null
-                    ? JSON.parse(product.ProductReview).length
+                  >{`${product.ProductRating != null
+                    ? parseFloat(product.ProductRating)
                     : "0"
-                    } Reviews`}</HashLink>
+                    }/5 (`}{`${product.ProductReviewCount != null
+                      ? product.ProductReviewCount
+                      : "0"
+                      } Reviews)`}</HashLink>
                   <span>/</span>
                   <HashLink
                     onClick={this.changeCurrentTab.bind(this, "reviews")}
@@ -184,6 +216,9 @@ class Product extends Component {
               <ul className="product__meta" style={{ fontSize: "13pt" }}>
                 <li className="product__meta-availability">
                   Availability: <span className="text-success">In Stock</span>
+                  <span style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9", paddingLeft: "20px" }}
+                  >({this.state.productQuantity})
+                  </span>
                 </li>
                 <li>
                   Brand:
@@ -200,72 +235,73 @@ class Product extends Component {
                   {product.ProductStockAmount > 0 ? "In Stock" : "Out of Stock"}
                 </span>
               </div>
-
+              {console.log("this.props.product.ProductVariation ", JSON.parse(this.props.product.ProductVariation))}
               <div className="product__prices" style={{ fontSize: "28pt" }}>{prices}</div>
+              {
+                this.props.product.ProductVariation !== null &&
+                (
+                  <>
+                    <label
+                      className="product__option-label"
+                      style={{ fontSize: "14pt", paddingTop: "9pt" }}
+                    >
+                      Variation
+                    </label>
+                    <div className="product__variation">
+                      {
+                        JSON.parse(this.props.product.ProductVariation).map((variation) => {
+                          return (
+                            variation.ProductVariationValue !== "null" ?
+                              <>
+                                <button
+                                  type="button"
+                                  style={{ paddingLeft: "20px", paddingRight: "20px", paddingTop: "5px", paddingBottom: "5px", backgroundColor: "white", borderColor: "#D3D3D3" }}
+                                  onClick={() => this.setState({ productVariation: variation.ProductVariationValue, productQuantity: variation.ProductStockAmount, productPrice: variation.ProductVariationPrice, productVariationDetailID: variation.ProductVariationDetailID, isVariationClick: true })}
+
+                                >{variation.ProductVariationValue}
+                                </button>
+                                <label style={{ padding: "10px" }}></label>
+                              </>
+                              :
+                              <label
+                                className="product__option-label"
+                                style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9" }}
+                              >
+                                No Variation
+                              </label>
+                          )
+
+                        })
+                      }
+                    </div>
+                    {/* <div className="row">
+                      <label
+                        className="product__option-label"
+                        style={{ fontSize: "14pt", paddingTop: "9pt" }}
+                      >
+                        Available Quantity
+                      </label>
+                      <div className="product__variation">
+                        {
+                          JSON.parse(this.props.product.ProductVariation).map((variation) => {
+                            return (
+                              <label
+                                className="product__option-label"
+                                style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9", paddingLeft:"20px" }}
+                              >{variation.ProductVariationValue !== "-" ? variation.QuantityPerUnit : 0}
+                              </label>
+                            )
+
+                          })
+                        }
+                      </div>
+                    </div> */}
+                  </>
+                )
+
+              }
 
               <form className="product__options">
-                {/* <div className="form-group product__option">
-                <div className="product__option-label">Color</div>
-                <div className="input-radio-color">
-                  <div className="input-radio-color__list">
-                    <label
-                      className="input-radio-color__item input-radio-color__item--white"
-                      style={{ color: "#fff" }}
-                      data-toggle="tooltip"
-                      title="White"
-                    >
-                      <input type="radio" name="color" />
-                      <span />
-                    </label>
-                    <label
-                      className="input-radio-color__item"
-                      style={{ color: "#ffd333" }}
-                      data-toggle="tooltip"
-                      title="Yellow"
-                    >
-                      <input type="radio" name="color" />
-                      <span />
-                    </label>
-                    <label
-                      className="input-radio-color__item"
-                      style={{ color: "#ff4040" }}
-                      data-toggle="tooltip"
-                      title="Red"
-                    >
-                      <input type="radio" name="color" />
-                      <span />
-                    </label>
-                    <label
-                      className="input-radio-color__item input-radio-color__item--disabled"
-                      style={{ color: "#4080ff" }}
-                      data-toggle="tooltip"
-                      title="Blue"
-                    >
-                      <input type="radio" name="color" disabled />
-                      <span />
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div className="form-group product__option">
-                <div className="product__option-label">Material</div>
-                <div className="input-radio-label">
-                  <div className="input-radio-label__list">
-                    <label>
-                      <input type="radio" name="material" />
-                      <span>Metal</span>
-                    </label>
-                    <label>
-                      <input type="radio" name="material" />
-                      <span>Wood</span>
-                    </label>
-                    <label>
-                      <input type="radio" name="material" disabled />
-                      <span>Plastic</span>
-                    </label>
-                  </div>
-                </div>
-              </div> */}
                 <div className="row form-group product__option" style={{ marginLeft: "-45pt" }}>
                   <div className="col-3">
                     <label
@@ -294,7 +330,7 @@ class Product extends Component {
                     <div className="product__actions-item product__actions-item--addtocart mx-1">
                       <button
                         type="button"
-                        onClick={() => window.localStorage.getItem("id") ? this.addCart(product, quantity) : this.login()}
+                        onClick={() => window.localStorage.getItem("id") ? this.checkCart(product, quantity) : this.login()}
                         className={classNames("btn btn-primary product-card__addtocart")}
                       >
                         Add To Cart
@@ -314,39 +350,66 @@ class Product extends Component {
                   <Link to="/">{product.ProductTag}</Link>
                 </div>
               </div>
-
-              <div className="product__share-links share-links">
-                <ul className="share-links__list">
-                  <li className="share-links__item share-links__item--type--like">
-                    <Link to="/">Like</Link>
-                  </li>
-                  <li className="share-links__item share-links__item--type--tweet">
-                    <Link to="/">Tweet</Link>
-                  </li>
-                  <li className="share-links__item share-links__item--type--pin">
-                    <Link to="/">Pin It</Link>
-                  </li>
-                  <li className="share-links__item share-links__item--type--counter">
-                    <Link to="/">4K</Link>
-                  </li>
-                </ul>
+            </div>
+          </div>
+        </div>
+        <div style={{ backgroundColor: "white", height: "150px", width: "100%", marginTop: "30px" }}>
+          <div className="row" style={{ padding: "20px" }}>
+            <div className="col-2" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <img className="product-image__img" style={{ width: "100px", height: "100px" }} src={product.merchantImg !== undefined ? product.merchantImg : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+            </div>
+            <div className="col-3" >
+              <label style={{ fontSize: "17pt", paddingTop: "9pt" }} >{product.MerchantShopName}</label>
+            </div>
+            <Divider orientation="vertical" style={{ height: "120px" }} />
+            <div className="col-3" style={{ paddingLeft: "70px", paddingTop: "20px" }} >
+              <div className="row">
+                <label style={{ fontSize: "12pt", color: "#808080" }} >Rating : </label>
+                <label style={{ fontSize: "13pt", color: "primary", paddingLeft: "10px" }} >5.0</label>
+              </div>
+              <div className="row">
+                <label style={{ fontSize: "12pt", marginTop: "10px", color: "#808080" }} >Products : </label>
+                <label style={{ fontSize: "13pt", marginTop: "10px", color: "primary", paddingLeft: "10px" }} >   {this.props.productsByMerchantID.length}</label>
+              </div>
+            </div>
+            <div className="col-3" style={{ paddingLeft: "30px", paddingTop: "20px" }} >
+              <div className="row">
+                <label style={{ fontSize: "12pt", color: "#808080" }} >Joined :</label>
+                <label style={{ fontSize: "13pt", color: "primary", paddingLeft: "10px" }} > 14 months ago</label>
+              </div>
+              <div className="row">
+                <label style={{ fontSize: "12pt", marginTop: "10px", color: "#808080" }} >Response Time : </label>
+                <label style={{ fontSize: "13pt", marginTop: "10px", color: "primary", paddingLeft: "10px" }} > within minutes</label>
               </div>
             </div>
           </div>
         </div>
-        {this.props.version === "1" ? (
-          <ProductTabs
-            withSidebar
-            currentTab={this.state}
-            setCurrentTab={this.changeCurrentTab}
+
+        <div style={{ backgroundColor: "white" }}>
+          {this.props.version === "1" ? (
+            <ProductTabs
+              withSidebar
+              currentTab={this.state}
+              setCurrentTab={this.changeCurrentTab}
+            />
+          ) : (
+            <ProductTabs
+              product={product}
+              currentTab={this.state}
+              setCurrentTab={this.changeCurrentTab}
+            />
+          )}
+        </div>
+
+        <div style={{ marginTop: "20px" }}>
+          <BlockProductsCarousel
+            title="Recommended Product"
+            layout="grid-4"
+            rows={1}
+            products={this.props.product.ProductRecommendation !== null && this.props.product.ProductRecommendation !== undefined
+              ? JSON.parse(this.props.product.ProductRecommendation) : []}
           />
-        ) : (
-          <ProductTabs
-            product={product}
-            currentTab={this.state}
-            setCurrentTab={this.changeCurrentTab}
-          />
-        )}
+        </div>
       </div>
     );
   }
@@ -365,7 +428,8 @@ Product.defaultProps = {
 
 const mapStateToProps = (state) => ({
   wishlist: state.counterReducer.wishlist,
-  productcart: state.counterReducer.productcart
+  productcart: state.counterReducer.productcart,
+  productsByMerchantID: state.counterReducer.productsByMerchantID,
 });
 
 
@@ -375,7 +439,11 @@ const mapDispatchToProps = (dispatch) => {
     CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
+
+    CallProductsByMerchantID: (prodData) => dispatch(GitAction.CallProductsByMerchantID(prodData)),
   }
+
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

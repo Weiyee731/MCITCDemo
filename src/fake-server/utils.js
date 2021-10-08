@@ -14,6 +14,6 @@ export function nameToSlug(name) {
 
 export function categoryHasProducts(category, products) {
     return products.filter((product) => (
-        product.categories.findIndex((x) => x.slug === category.slug) !== -1
+        product.categories.findIndex((x) => x.slug === category.ProductName) !== -1
     )).length > 0;
 }
