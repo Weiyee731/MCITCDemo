@@ -64,7 +64,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { Fade } from "shards-react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
-import { convertDateTimeToString, getFileExtension, getFileTypeByExtension } from "../../Utilities/UtilRepo"
+import { convertDateTimeToString, getFileExtension, getFileTypeByExtension, convertArrayToStringWithSpecialCharacter } from "../../Utilities/UtilRepo"
 
 function mapStateToProps(state) {
   return {
@@ -336,14 +336,10 @@ class AddProductComponent extends Component {
     this.shippingInfo = React.createRef();
     this.OnSubmit = this.OnSubmit.bind(this)
     this.state = {
-      scrollTop: 0,
       name: "",
-      manufacturer: "",
       description: "",
       productCategory: "",
       productSupplier: localStorage.getItem("id"),
-      productShoplot: "",
-      productGrid: "",
       height: "",
       width: "",
       depth: "",
@@ -352,12 +348,7 @@ class AddProductComponent extends Component {
       brand: "",
       model: "",
       tags: "",
-      categoryList: [],
-      supplierList: [],
-      shopLotList: [],
-      gridList: [],
       index: 0,
-      rows: [],
       file: [],
       fileInfo: [],
       url: [],
@@ -371,9 +362,6 @@ class AddProductComponent extends Component {
       url3: [],
       url4: [],
       counter3: 0,
-      productImages: [],
-      productHeight: [],
-      productWidth: [],
       skuNotLongEnough: false,
       heightNotDecimal: false,
       widthNotDecimal: false,
@@ -412,14 +400,11 @@ class AddProductComponent extends Component {
       onImage: false,
       currentlyHovered: 0,
       ProductVariationSelectedData: [],
-      ProductCategroyName: "",
       ParentProductCategoryID: "",
-      Tags: "",
       HierarchyLevel: "",
       anchorEl: null,
       selectedItem: "Choose a Category",
       menuPosition: null,
-      buttonDisabled: true,
       categoryH1: "",
       categoryH2: null,
       categoryH3: null,
@@ -445,6 +430,7 @@ class AddProductComponent extends Component {
       progressMedia: 0,
       progressShipping: 0,
       progressDescription: 0,
+      progressSpecification: 0,
       supplierFilled: 0,
       skuFilled: 0,
       brandFilled: 0,
@@ -477,7 +463,9 @@ class AddProductComponent extends Component {
       FocusOn: false,
       helpText: [],
       editorState: null,
-      isButtonDisabled: true
+      isButtonDisabled: true,
+      productSpecificationOptions: [],
+      shippingOptions: []
     };
   }
 
@@ -1046,10 +1034,7 @@ class AddProductComponent extends Component {
   };
 
   checkProductCat = () => {
-    if (
-      this.state.productCategory === "" ||
-      this.state.productCategory === null
-    ) {
+    if (this.state.productCategory === "" || this.state.productCategory === null) {
       this.setState({
         productCategoryEmpty: true,
       });
@@ -1061,10 +1046,7 @@ class AddProductComponent extends Component {
   };
 
   checkProductSupplier = () => {
-    if (
-      this.state.productSupplier === "" ||
-      this.state.productSupplier === null
-    ) {
+    if (this.state.productSupplier === "" || this.state.productSupplier === null) {
       this.setState({
         productSupplierEmpty: true,
         supplierFilled: 0,
@@ -1078,11 +1060,7 @@ class AddProductComponent extends Component {
   };
 
   checkProductHeight = () => {
-    if (
-      this.state.height === "" ||
-      this.state.height === null ||
-      this.state.height === "0"
-    ) {
+    if (this.state.height === "" || this.state.height === null || this.state.height === "0") {
       this.setState({
         heightEmpty: true,
         heightFilled: 0,
@@ -1096,11 +1074,7 @@ class AddProductComponent extends Component {
   };
 
   checkProductWidth = () => {
-    if (
-      this.state.width === "" ||
-      this.state.width === null ||
-      this.state.width === "0"
-    ) {
+    if (this.state.width === "" || this.state.width === null || this.state.width === "0") {
       this.setState({
         widthEmpty: true,
         widthFilled: 0,
@@ -1114,11 +1088,7 @@ class AddProductComponent extends Component {
   };
 
   checkProductDepth = () => {
-    if (
-      this.state.depth === "" ||
-      this.state.depth === null ||
-      this.state.depth === "0"
-    ) {
+    if (this.state.depth === "" || this.state.depth === null || this.state.depth === "0") {
       this.setState({
         depthEmpty: true,
         depthFilled: 0,
@@ -1132,11 +1102,7 @@ class AddProductComponent extends Component {
   };
 
   checkProductWeight = () => {
-    if (
-      this.state.weight === "" ||
-      this.state.weight === null ||
-      this.state.weight === "0"
-    ) {
+    if (this.state.weight === "" || this.state.weight === null || this.state.weight === "0") {
       this.setState({
         weightEmpty: true,
         weightFilled: 0,
@@ -1777,23 +1743,22 @@ class AddProductComponent extends Component {
     if (data === "variant1") {
       if (this.state.variation2On) {
         var newVariant = [];
-        this.state.variation1.options[0].variation2Options.options.map(
-          (info, i) => {
-            const optionData = {
-              optionName: info.optionName,
-              price: null,
-              stock: null,
-              sku: null,
-              picture: null,
-              pictureURL: null,
-              variation2Options: {
-                name: "",
-                options: [{ optionName: "", price: "", stock: "", sku: "" }],
-              },
-            };
+        this.state.variation1.options[0].variation2Options.options.map((info, i) => {
+          const optionData = {
+            optionName: info.optionName,
+            price: null,
+            stock: null,
+            sku: null,
+            picture: null,
+            pictureURL: null,
+            variation2Options: {
+              name: "",
+              options: [{ optionName: "", price: "", stock: "", sku: "" }],
+            },
+          };
 
-            newVariant = [...newVariant, optionData];
-          }
+          newVariant = [...newVariant, optionData];
+        }
         );
 
         var editedVar = this.state.variation1;
@@ -1808,7 +1773,8 @@ class AddProductComponent extends Component {
           variation2Options: 0,
           variation1Options: this.state.variation2Options,
         });
-      } else {
+      }
+      else {
         this.setState({
           variation1On: false,
           variation1: [],
@@ -1816,7 +1782,8 @@ class AddProductComponent extends Component {
           variation1Name: "",
         });
       }
-    } else if (data === "variant1Option") {
+    }
+    else if (data === "variant1Option") {
       if (this.state.variation1Options > 1) {
         var newVariant = this.state.variation1.options;
         newVariant = newVariant.filter((file2, i) => i !== index);
@@ -1828,7 +1795,8 @@ class AddProductComponent extends Component {
           variation1: editedVar,
           variation1Options: this.state.variation1Options - 1,
         });
-      } else {
+      }
+      else {
         if (this.state.variation2On) {
           var newVariant = [];
           this.state.variation1.options[0].variation2Options.options.map(
@@ -1868,58 +1836,6 @@ class AddProductComponent extends Component {
             variation1: [],
             variation1Options: 0,
             variation1Name: "",
-          });
-        }
-      }
-    } else if (data === "variant2") {
-      const toBeAdded = { optionName: "", price: "", stock: "", sku: "" };
-
-      for (var i = 0; i < this.state.variation1Options; i++) {
-        var variations2 = this.state.variation1.options[i].variation2Options;
-        variations2.options = [toBeAdded];
-        variations2.name = "";
-
-        var variations = this.state.variation1;
-        variations.options[i].variation2Options = variations2;
-
-        this.setState({
-          variation1: variations,
-          variation2On: false,
-          variation2Options: 0,
-          variation2Name: "",
-        });
-      }
-    } else if (data === "variant2Option") {
-      if (this.state.variation2Options > 1) {
-        var newVariant = this.state.variation1.options[0].variation2Options
-          .options;
-        newVariant = newVariant.filter((file2, i) => i !== index);
-
-        for (var i = 0; i < this.state.variation1Options; i++) {
-          editedVar = this.state.variation1;
-          editedVar.options[i].variation2Options.options = newVariant;
-
-          this.setState({
-            variation1: editedVar,
-            variation2Options: this.state.variation2Options - 1,
-          });
-        }
-      } else {
-        const toBeAdded = { optionName: "", price: "", stock: "", sku: "" };
-
-        for (var i = 0; i < this.state.variation1Options; i++) {
-          var variations2 = this.state.variation1.options[i].variation2Options;
-          variations2.options = [toBeAdded];
-          variations2.name = "";
-
-          var variations = this.state.variation1;
-          variations.options[i].variation2Options = variations2;
-
-          this.setState({
-            variation1: variations,
-            variation2On: false,
-            variation2Options: 0,
-            variation2Name: "",
           });
         }
       }
@@ -2047,47 +1963,55 @@ class AddProductComponent extends Component {
       const config = { headers: { 'Content-Type': 'multipart/form-data' } };
       formData.append("ProductID", productID);
       //upload single file
-      let filenames = []
-      let variationID = []
-      let slideOrder = []
-      let mediaType = []
-      let imageWidth = []
-      let imageHeight = []
+      let filenames = ""
+      let variationID = ""
+      let slideOrder = ""
+      let mediaType = ""
+      let imageWidth = ""
+      let imageHeight = ""
 
       for (let i = 0; i < uploadingMedia.length; i++) {
         let fileExt = getFileExtension(uploadingMedia[i])
         let filename = productID + "_" + i + "_" + convertDateTimeToString(new Date())
 
-        filenames.push(filename + "." + fileExt)
-        mediaType.push(getFileTypeByExtension(fileExt))
-        variationID.push(0)
-        slideOrder.push(i)
-        imageWidth.push(0)
-        imageHeight.push(0)
+        filenames += filename + "." + fileExt
+        mediaType += getFileTypeByExtension(fileExt)
+        variationID += "0"
+        slideOrder += i.toString()
+        imageWidth += "0"
+        imageHeight += "0"
 
         formData.append("upload[]", uploadingMedia[i]);
         formData.append("imageName[]", filename);
-      }
 
-      filenames = JSON.stringify(filenames)
-      variationID = JSON.stringify(variationID)
-      slideOrder = JSON.stringify(slideOrder)
-      mediaType = JSON.stringify(mediaType)
-      imageWidth = JSON.stringify(imageWidth)
-      imageHeight = JSON.stringify(imageHeight)
+        if (i !== (uploadingMedia.length - 1)) {
+          filenames += ","
+          variationID += ","
+          slideOrder += ","
+          mediaType += ","
+          imageWidth += ","
+          imageHeight += ","
+        }
+
+        // in case, it needs to become array
+        // filenames.push(filename + "." + fileExt)
+        // mediaType.push(getFileTypeByExtension(fileExt))
+        // variationID.push(0)
+        // slideOrder.push(i)
+        // imageWidth.push(0)
+        // imageHeight.push(0)
+
+      }
 
       let object = {
         ProductID: productID,
-        imageName: filenames.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        mediaType: mediaType.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        variationID: variationID.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        sliderOrder: slideOrder.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        width: imageWidth.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        height: imageHeight.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
+        imageName: filenames,
+        mediaType: mediaType,
+        variationID: variationID,
+        sliderOrder: slideOrder,
+        width: imageWidth,
+        height: imageHeight,
       }
-
-      console.log(object.imageName)
-
       axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
@@ -2117,10 +2041,6 @@ class AddProductComponent extends Component {
         }.bind(this),
         200
       );
-    } else if (data === "manufacturer") {
-      this.setState({
-        manufacturer: e.target.value,
-      });
     } else if (data === "Product Category") {
       this.setState({
         productCategory: e.target.value,
@@ -2145,14 +2065,6 @@ class AddProductComponent extends Component {
         }.bind(this),
         1000
       );
-    } else if (data === "Shoplot") {
-      this.setState({
-        productShoplot: e.target.value,
-      });
-    } else if (data === "Product Grid Storage") {
-      this.setState({
-        productGrid: e.target.value,
-      });
     } else if (data === "height") {
       this.setState({
         height: e.target.value,
@@ -2819,8 +2731,7 @@ class AddProductComponent extends Component {
       this.setState({
         ParentProductCategoryID: elemId,
         selectedItem: elemName,
-        HierarchyLevel:
-          elemHierarchy && elemHierarchy !== "" ? elemHierarchy + 1 : 1,
+        HierarchyLevel: elemHierarchy && elemHierarchy !== "" ? elemHierarchy + 1 : 1,
       });
     } else {
       toast.warning("You are selecting too fast! \nPlease select again.");
@@ -2903,13 +2814,10 @@ class AddProductComponent extends Component {
           variation1Options: 1,
           variation1: variationObject,
         });
-      } else if (this.state.variation1On) {
-        this.setState({
-          variation2On: true,
-          variation2Options: 1,
-        });
       }
-    } else if (type == "priceTier") {
+
+    }
+    else if (type == "priceTier") {
       const priceTier = [
         {
           min: null,
@@ -3057,74 +2965,19 @@ class AddProductComponent extends Component {
 
   addOptions = (variantNum, e) => {
     if (variantNum == 1) {
-      if (
-        (this.state.variation1Options + 1) * this.state.variation2Options <
-        51
-      ) {
-        var option = null;
-        if (this.state.variation2On) {
-          option = {
-            optionName: "",
-            price: "",
-            stock: "",
-            sku: "",
-            picture: "",
-            pictureURL: "",
-            errorOption: false,
-            errorSKU: false,
-            errorPrice: false,
-            errorStock: false,
-            variation2Options: {
-              name: "",
-              options: [],
-            },
-          };
-
-          const toBeAdded = {
-            optionName: "",
-            price: "",
-            stock: "",
-            sku: "",
-            errorOption: false,
-            errorSKU: false,
-            errorPrice: false,
-            errorStock: false,
-          };
-          for (var i = 0; i < this.state.variation2Options + 1; i++) {
-            option.variation2Options.options = [
-              ...option.variation2Options.options,
-              toBeAdded,
-            ];
-          }
-        } else {
-          option = {
-            optionName: "",
-            price: "",
-            stock: "",
-            sku: "",
-            picture: "",
-            pictureURL: "",
-            errorOption: false,
-            errorSKU: false,
-            errorPrice: false,
-            errorStock: false,
-            variation2Options: {
-              name: "",
-              options: [
-                {
-                  optionName: "",
-                  price: "",
-                  stock: "",
-                  sku: "",
-                  errorOption: false,
-                  errorSKU: false,
-                  errorPrice: false,
-                  errorStock: false,
-                },
-              ],
-            },
-          };
-        }
+      if ((this.state.variation1Options + 1) < 30) {
+        var option = {
+          optionName: "",
+          price: "",
+          stock: "",
+          sku: "",
+          picture: "",
+          pictureURL: "",
+          errorOption: false,
+          errorSKU: false,
+          errorPrice: false,
+          errorStock: false,
+        };
 
         var variations = this.state.variation1;
 
@@ -3135,59 +2988,9 @@ class AddProductComponent extends Component {
           variation1: variations,
         });
 
-        // var variant2Option = this.state.variation1.options[
-        //   this.state.variation1Options
-        // ].variation2Options.options;
-        // const toBeAdded = { optionName: "", price: "", stock: "", sku: "" };
-
-        // for (var i = 0; i < this.state.variation2Options - 1; i++) {
-        //   variant2Option = [...variant2Option, toBeAdded];
-        // }
-        // variations.options[
-        //   this.state.variation1Options
-        // ].variation2Options.options = variant2Option;
-        // console.log(variations);
-
-        // console.log("check, this: ");
-        // console.log(variant2Option);
-
-        // this.setState({
-        //   variation1: variations,
-        // });
       }
-    } else if (variantNum == 2) {
-      if (
-        this.state.variation1Options * (this.state.variation2Options + 1) <
-        51
-      ) {
-        this.setState({
-          variation2Options: this.state.variation2Options + 1,
-        });
-
-        const toBeAdded = {
-          optionName: "",
-          price: "",
-          stock: "",
-          sku: "",
-          errorOption: false,
-          errorSKU: false,
-          errorPrice: false,
-          errorStock: false,
-        };
-
-        for (var i = 0; i < this.state.variation1Options; i++) {
-          var variations2 = this.state.variation1.options[i].variation2Options;
-          variations2.options = [...variations2.options, toBeAdded];
-
-          var variations = this.state.variation1;
-          variations.options[i].variation2Options = variations2;
-
-          this.setState({
-            variation1: variations,
-          });
-        }
-      }
-    } else if (variantNum == "priceTier") {
+    }
+    else if (variantNum == "priceTier") {
       const priceTier = {
         min: 0,
         max: 0,
@@ -3233,7 +3036,6 @@ class AddProductComponent extends Component {
 
     let object = {
       name: this.state.name,
-      manufacturer: this.state.manufacturer === "" ? "-" : this.state.manufacturer,
       description: this.state.description,
       productCategory: this.state.productCategory,
       productSupplier: this.state.productSupplier,
@@ -3265,6 +3067,7 @@ class AddProductComponent extends Component {
       this.props.CallResetProductReturnVal()
     }
 
+    console.log(this.props.resultsMedia)
     if (typeof this.props.resultsMedia !== "undefined" && this.props.resultsMedia.length > 0 && this.props.resultsMedia[0].ReturnVal == 1) {
       this.props.CallResetProductMediaResult()
     }
@@ -3360,34 +3163,6 @@ class AddProductComponent extends Component {
         );
       });
     }
-
-    const Shoplots = () => (
-      <Select
-        value={this.state.productShoplot}
-        onChange={this.handleChange.bind(this, "Shoplot")}
-        inputProps={{
-          name: "Product Shoplot",
-          id: "productShoplot",
-        }}
-        className="ItemContainer"
-      >
-        <option aria-label="None" value="" />
-      </Select>
-    );
-
-    const Grid = () => (
-      <Select
-        value={this.state.productGrid}
-        onChange={this.handleChange.bind(this, "Product Grid Storage")}
-        inputProps={{
-          name: "Product Grid Storage",
-          id: "productGridStorage",
-        }}
-        className="ItemContainer"
-      >
-        <option aria-label="None" value="" />
-      </Select>
-    );
 
     const productVariation = {};
     const columns = [];
@@ -4131,6 +3906,22 @@ class AddProductComponent extends Component {
               </CardContent>
             </Card>
             <br />
+            <Card id="specification" className="SubContainer">
+              <CardContent>
+                <p className="Heading">Product Specification</p>
+                <Button
+                  variant="outlined"
+                  className="AddButton"
+                  onClick={this.addProductVariant.bind(this, "variation")}
+                >
+                  Add Variant
+                </Button>
+                {
+
+                }
+              </CardContent>
+            </Card>
+            <br />
             <Card className="SubContainer" id="productVariation">
               <CardContent>
                 <p className="Heading">Product Pricing</p>
@@ -4195,31 +3986,24 @@ class AddProductComponent extends Component {
                 {this.state.variation1On ? (
                   <div className="VariantMain">
                     <div className="VariantText">
-                      <p>Variation 1</p>
+                      <p>Product Variation</p>
                     </div>
                     <div className="VariantOptionsSection">
-                      <TextField
-                        className="InputField"
-                        InputLabelProps={{
-                          shrink: "true",
-                        }}
-                        onChange={this.handleChange.bind(
-                          this,
-                          "Variation1Name"
-                        )}
-                        value={this.state.variation1Name}
-                        error={this.state.variation1NameEmpty}
-                        label="Name"
-                        id="standard-start-adornment"
-                        size="small"
-                        variant="outlined"
-                        onFocus={this.setHint.bind(this, "VariationName")}
-                        onBlur={() =>
-                          this.setState({
-                            FocusOn: false,
-                          })
-                        }
-                      />
+                      <FormControl variant="outlined" className="w-100">
+                        <InputLabel id="demo-simple-select-outlined-label">Product Variation</InputLabel>
+                        <Select
+                          labelId="Product_Variation"
+                          id="Product_Variation"
+                          value={10}
+                          onChange={(e) => { }}
+                          label="Product Variation"
+                        >
+                          <MenuItem value=""><em>None</em></MenuItem>
+                          <MenuItem value={10}>Ten</MenuItem>
+                          <MenuItem value={20}>Twenty</MenuItem>
+                          <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                      </FormControl>
                       {this.state.variation1NameEmpty ? (
                         <p className="error">
                           Variation name has to be filled.
@@ -4232,39 +4016,21 @@ class AddProductComponent extends Component {
                             <RemoveCircleOutlineIcon
                               className="DeleteOptionButton"
                               color="secondary"
-                              onClick={this.onDeleteVariant.bind(
-                                this,
-                                i,
-                                "variant1Option"
-                              )}
+                              onClick={this.onDeleteVariant.bind(this, i, "variant1Option")}
                             />
                             <TextField
                               className="InputField"
-                              InputLabelProps={{
-                                shrink: "true",
-                              }}
+                              InputLabelProps={{ shrink: "true", }}
                               label={"Option " + (i + 1)}
                               id="standard-start-adornment"
                               size="small"
                               variant="outlined"
                               key={i}
-                              onChange={this.handleChangeOptions.bind(
-                                this,
-                                "variant1Options",
-                                i
-                              )}
-                              error={
-                                this.state.variation1.options[i].errorOption
-                              }
+                              onChange={this.handleChangeOptions.bind(this, "variant1Options", i)}
+                              error={this.state.variation1.options[i].errorOption}
                               onFocus={this.setHint.bind(this, "VariantOption")}
-                              onBlur={() =>
-                                this.setState({
-                                  FocusOn: false,
-                                })
-                              }
-                              value={
-                                this.state.variation1.options[i].optionName
-                              }
+                              onBlur={() => this.setState({ FocusOn: false, })}
+                              value={this.state.variation1.options[i].optionName}
                             />
                           </div>
                           {this.state.variation1.options[i].errorOption ? (
@@ -4293,111 +4059,8 @@ class AddProductComponent extends Component {
                 ) : null}
                 {this.state.variation1On ? <br /> : null}
 
-                {this.state.variation2On ? (
-                  <div className="VariantMain">
-                    <div className="VariantText">
-                      <p>Variation 2</p>
-                    </div>
-                    <div className="VariantOptionsSection">
-                      <TextField
-                        className="InputField"
-                        InputLabelProps={{
-                          shrink: "true",
-                        }}
-                        onChange={this.handleChange.bind(
-                          this,
-                          "Variation2Name"
-                        )}
-                        onFocus={this.setHint.bind(this, "VariationName")}
-                        onBlur={() =>
-                          this.setState({
-                            FocusOn: false,
-                          })
-                        }
-                        value={this.state.variation2Name}
-                        error={this.state.variation2NameEmpty}
-                        label="Name"
-                        id="standard-start-adornment"
-                        size="small"
-                        variant="outlined"
-                      />
-
-                      {this.state.variation2NameEmpty ? (
-                        <p className="error">
-                          Variation name has to be filled.
-                        </p>
-                      ) : null}
-
-                      {[...Array(this.state.variation2Options)].map((e, i) => (
-                        <div>
-                          <div className="VariantOption">
-                            <RemoveCircleOutlineIcon
-                              className="DeleteOptionButton"
-                              color="secondary"
-                              onClick={this.onDeleteVariant.bind(
-                                this,
-                                i,
-                                "variant2Option"
-                              )}
-                            />
-                            <TextField
-                              className="InputField"
-                              InputLabelProps={{
-                                shrink: "true",
-                              }}
-                              label={"Option " + (i + 1)}
-                              id="standard-start-adornment"
-                              size="small"
-                              variant="outlined"
-                              onChange={this.handleChangeOptionsVariant2.bind(
-                                this,
-                                "variant2Options",
-                                0,
-                                i
-                              )}
-                              onFocus={this.setHint.bind(this, "VariantOption")}
-                              onBlur={() =>
-                                this.setState({
-                                  FocusOn: false,
-                                })
-                              }
-                              value={
-                                this.state.variation1.options[0]
-                                  .variation2Options.options[i].optionName
-                              }
-                              error={
-                                this.state.variation1.options[0]
-                                  .variation2Options.options[i].errorOption
-                              }
-                            />
-                          </div>
-                          {this.state.variation1.options[0].variation2Options
-                            .options[i].errorOption ? (
-                            <p className="error">
-                              Variation option name has to be filled.
-                            </p>
-                          ) : null}
-                        </div>
-                      ))}
-                      <Button
-                        variant="outlined"
-                        className="AddButton"
-                        onClick={this.addOptions.bind(this, "2")}
-                      >
-                        Add Option
-                      </Button>
-                    </div>
-                    <br />
-                    <CloseIcon
-                      className="DeleteVariantButton"
-                      color="secondary"
-                      onClick={this.onDeleteVariant.bind(this, -1, "variant2")}
-                    />
-                  </div>
-                ) : null}
-
-                {this.state.variation2On ? <br /> : null}
-                {!this.state.variation1On || !this.state.variation2On ? (
+                <hr />
+                {!this.state.variation1On ? (
                   <div className="ItemContainer">
                     <Button
                       variant="outlined"
@@ -4416,6 +4079,7 @@ class AddProductComponent extends Component {
                   <div className="VariantMain">
                     <div className="ItemContainer">
                       <div className="VariantContainer">
+
                         <InputGroup className="ItemContainer">
                           <InputGroupAddon type="prepend">
                             <InputGroupText className="groupText">
@@ -4830,6 +4494,7 @@ class AddProductComponent extends Component {
                   </table>
                 ) : null}
 
+                <hr />
                 <p className="FontType1">Wholesale Prices</p>
                 {!this.state.wholeSaleOn ? (
                   <div className="ItemContainer">
@@ -5766,7 +5431,7 @@ class AddProductComponent extends Component {
           </div>
           <br />
           <div className="SubmitButtonContainer">
-            <Button variant="outlined" className="SubmitButton" onClick={() => { this.uploadFile(555) }}>
+            <Button variant="outlined" className="SubmitButton" onClick={() => { this.uploadFile(111) }}>
               Review Product Details
             </Button>
           </div>
@@ -5825,6 +5490,21 @@ class AddProductComponent extends Component {
                       <StepContent>
                         <LinearProgressWithLabel
                           value={this.state.progressDescription}
+                        />
+                      </StepContent>
+                    </Step>
+                    <Step key="specification">
+                      <StepLabel>
+                        <HashLink
+                          to="/addProductsAllIn#specification"
+                          className="FontType4"
+                        >
+                          Product Specification
+                        </HashLink>
+                      </StepLabel>
+                      <StepContent>
+                        <LinearProgressWithLabel
+                          value={this.state.progressSpecification}
                         />
                       </StepContent>
                     </Step>

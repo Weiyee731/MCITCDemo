@@ -42,7 +42,22 @@ export const convertDateTimeTo112Format_Moment = (date) => {
 // text transformation functions
 export const capitalizeFirstLetterOfSentences = (text) => { return (typeof text !== "undefined" ? text.slice(0, 1).toUpperCase() + text.slice(1, text.length) : "") }
 export const capitalizeEveryFirstLetter = (text) => { return (typeof text !== "undefined" ? text.replace(/\b(\w)/g, s => s.toUpperCase()) : "") }
-
+export const convertArrayToStringWithSpecialCharacter = (list, sc) => { 
+    sc = (sc !== null) ? sc : ", "
+    if(!Array.isArray(list))
+        return "";
+    else{
+        let text = ""
+        for(let i = 0; i < list.length; i++){
+            text += list[i]
+            if(i == list.length - 1 )
+                break;
+            else
+                text += sc
+        }
+        return text;
+    }
+}
 
 // image utilities functions
 export const getImageOrientationType = (imageWidth, imageHeight) => {
