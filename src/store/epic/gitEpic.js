@@ -8,59 +8,48 @@ const url = "http://tourism.denoo.my/emporiaApi/api/emporia/"
 export class GitEpic {
   //==================USER==========================//
   getAllUserByTypeId = (action$) =>
-    action$.ofType(GitAction.GetUser).switchMap(({ payload }) => {
-      return fetch(url +
-        "User_ProfileListByUserType?UserTypeID=17"
-      )
-        .then((response) => response.json())
-        .then((json) => {
-          if (json !== "fail") {
-            json = JSON.parse(json);
-          } else {
-            json = [];
-          }
-          return {
-            type: "GOT-USERS",
-            payload: json,
-          };
-        })
-        .catch((error) => {
-          alert('user: ' + error)
-          return {
-            type: "GOT-USERS",
-            payload: [],
-          };
-        });
+    action$.ofType(GitAction.GetUser).switchMap(async ({ }) => {
+      try {
+        const response = await fetch(url +
+          "User_ProfileListByUserType?UserTypeID=17"
+        );
+        let json = await response.json();
+        json = JSON.parse(json)
+        return {
+          type: GitAction.GotUser,
+          payload: json,
+        };
+      } catch (error) {
+        alert('getAllUserByTypeId: ' + error);
+        return {
+          type: GitAction.GotUser,
+          payload: [],
+        };
+      }
     });
 
   LoginUser = (action$) =>
-    action$.ofType(GitAction.Login).switchMap(({ payload }) => {
-      return fetch(url +
-        "User_Login?username=" +
-        payload.username +
-        "&password=" +
-        payload.password
-      )
-        .then((response) => response.json())
-        .then((json) => {
-          if (json !== "fail") {
-            try {
-              json = JSON.parse(json);
-              window.location.reload(false);
-            }
-            catch (e) {
-              toast.error("Invalid username or password")
-            }
-          } else {
-            json = [];
-            toast.error("Invalid username or password")
-          }
-          return {
-            type: "SUCCESSFULLY-LOGIN-WITH-DATA",
-            payload: json,
-          };
-        })
-        .catch((error) => toast.error(error));
+    action$.ofType(GitAction.Login).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(url +
+          "User_Login?username=" +
+          payload.username +
+          "&password=" +
+          payload.password
+        );
+        let json = await response.json();
+        json = JSON.parse(json)
+        return {
+          type: GitAction.UserLoggedInWithData,
+          payload: json,
+        };
+      } catch (error) {
+        alert('LoginUser: ' + error);
+        return {
+          type: GitAction.UserLoggedInWithData,
+          payload: [],
+        };
+      }
     });
 
   LogoutUser = (action$) =>
@@ -489,7 +478,7 @@ export class GitEpic {
     });
 
   // PROMOTION
-  
+
   getAllPromotion = (action$) =>
     action$.ofType(GitAction.GetPromotion).switchMap(({ payload }) => {
       return fetch(url +
