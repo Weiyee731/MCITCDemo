@@ -509,7 +509,7 @@ function DeletableTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
+          onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
@@ -596,8 +596,8 @@ class DisplayTable extends Component {
     }
   }
 
-  handleDetailShown = (value) =>{
-    this.setState({detailsShown: value})
+  handleDetailShown = (value) => {
+    this.setState({ detailsShown: value })
   }
 
   handleChangePage = (event, newPage) => {
@@ -679,12 +679,12 @@ class DisplayTable extends Component {
       width: 1,
     };
 
-    
+
 
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailsComponent data={this.state} data2={this.props} isEndorsement={false} setDetailShown={this.handleDetailShown}  />
+          <ProductDetailsComponent data={this.state} data2={this.props} isEndorsement={false} setDetailShown={this.handleDetailShown} />
         ) : this.state.deleteActive ? (
           <div>
             <h1>Product List</h1>
@@ -843,7 +843,7 @@ class DisplayTable extends Component {
                   count={this.props.Data.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onChangePage={this.handleChangePage}
+                  onPageChange={this.handleChangePage}
                   onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>

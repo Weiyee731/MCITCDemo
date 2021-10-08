@@ -426,8 +426,8 @@ const headCells = [
 //                   count={this.props.Data.length}
 //                   rowsPerPage={this.state.rowsPerPage}
 //                   page={this.state.page}
-//                   onChangePage={this.handleChangePage}
-//                   onChangeRowsPerPage={this.handleChangeRowsPerPage}
+//                   onPageChange={this.handleChangePage}
+//                   onRowsPerPageChange={this.handleChangeRowsPerPage}
 //                 />
 //               </Paper>
 //             </div>
@@ -486,14 +486,14 @@ class ViewPayableComponent extends Component {
     };
     this.props.CallGetPayableList();
   }
-  
-  payFunction(orderId, orderStatus){
+
+  payFunction(orderId, orderStatus) {
     console.log(orderId)
     console.log(orderStatus)
   }
 
   render() {
-    
+
 
     return (
       // <div style={{ width: "100%" }}>
@@ -547,7 +547,7 @@ class ViewPayableComponent extends Component {
                   row.map((d, i) => {
                     console.log(d)
                     d.PaidButton = (
-                      <Button 
+                      <Button
                         variant="contained"
                         style={{ backgroundColor: "#FBBB73" }}
                         onClick={this.payFunction(d.ProductPurchaseOrderID, d.ProductPurchaseOrderStatus)}
@@ -564,7 +564,7 @@ class ViewPayableComponent extends Component {
                         columns={[
                           {
                             title: "Purchase Order Code",
-                            field:"ProductPurchaseOrderCode",
+                            field: "ProductPurchaseOrderCode",
                           },
                           {
                             title: "Supplier Invoice No",
@@ -581,109 +581,109 @@ class ViewPayableComponent extends Component {
                           {
                             title: "Total Payable Price",
                             field: "TotalPayablePrice",
-                          },  
+                          },
                           {
                             title: "Action",
                             field: "PaidButton",
-                          },  
+                          },
                         ]}
-                    
+
                         data={row}
                         options={{
                           paging: false,
                           search: false,
                         }}
-                        // editable={{
-                        //   onRowAdd: (newData) =>
-                        //     new Promise(
-                        //       (
-                        //         resolve,
-                        //         reject
-                        //       ) => {
-                        //         setTimeout(
-                        //           () => {
-                        //             var newArr = {
-                        //               ProductVariation:
-                        //                 newData.ProductVariation,
-                        //               ProductCategoryID:
-                        //                 rowData.ProductCategoryID,
-                        //               CustomizableIndicator: 0,
-                        //             };
-                        //             // setData([...data, newData]);
-                        //             this.addRowData(
-                        //               newArr
-                        //             );
-                        //             resolve();
-                        //           },
-                        //           1000
-                        //         );
-                        //       }
-                        //     ),
-                        //   onRowUpdate: (
-                        //     newData,
-                        //     oldData
-                        //   ) =>
-                        //     new Promise(
-                        //       (
-                        //         resolve,
-                        //         reject
-                        //       ) => {
-                        //         setTimeout(
-                        //           () => {
-                        //             const dataUpdate = [
-                        //               ...row,
-                        //             ];
-                        //             const index =
-                        //               oldData
-                        //                 .tableData
-                        //                 .id;
-                        //             dataUpdate[
-                        //               index
-                        //             ] = newData;
-                        //             // setData([...dataUpdate]);
-                        //             this.addRowData(
-                        //               [
-                        //                 ...dataUpdate,
-                        //               ]
-                        //             );
-                        //             resolve();
-                        //           },
-                        //           1000
-                        //         );
-                        //       }
-                        //     ),
-                        //   onRowDelete: (oldData) =>
-                        //     new Promise(
-                        //       (
-                        //         resolve,
-                        //         reject
-                        //       ) => {
-                        //         setTimeout(
-                        //           () => {
-                        //             const dataDelete = [
-                        //               ...row,
-                        //             ];
-                        //             const index =
-                        //               oldData
-                        //                 .tableData
-                        //                 .id;
-                        //             dataDelete.splice(
-                        //               index,
-                        //               1
-                        //             );
-                        //             // setData([...dataDelete]);
-                        //             this.addRowData(
-                        //               [
-                        //                 ...dataDelete,
-                        //               ]
-                        //             );
-                        //             resolve();
-                        //           },
-                        //           1000
-                        //         );
-                        //       }
-                        //     ),
-                        // }}
+                      // editable={{
+                      //   onRowAdd: (newData) =>
+                      //     new Promise(
+                      //       (
+                      //         resolve,
+                      //         reject
+                      //       ) => {
+                      //         setTimeout(
+                      //           () => {
+                      //             var newArr = {
+                      //               ProductVariation:
+                      //                 newData.ProductVariation,
+                      //               ProductCategoryID:
+                      //                 rowData.ProductCategoryID,
+                      //               CustomizableIndicator: 0,
+                      //             };
+                      //             // setData([...data, newData]);
+                      //             this.addRowData(
+                      //               newArr
+                      //             );
+                      //             resolve();
+                      //           },
+                      //           1000
+                      //         );
+                      //       }
+                      //     ),
+                      //   onRowUpdate: (
+                      //     newData,
+                      //     oldData
+                      //   ) =>
+                      //     new Promise(
+                      //       (
+                      //         resolve,
+                      //         reject
+                      //       ) => {
+                      //         setTimeout(
+                      //           () => {
+                      //             const dataUpdate = [
+                      //               ...row,
+                      //             ];
+                      //             const index =
+                      //               oldData
+                      //                 .tableData
+                      //                 .id;
+                      //             dataUpdate[
+                      //               index
+                      //             ] = newData;
+                      //             // setData([...dataUpdate]);
+                      //             this.addRowData(
+                      //               [
+                      //                 ...dataUpdate,
+                      //               ]
+                      //             );
+                      //             resolve();
+                      //           },
+                      //           1000
+                      //         );
+                      //       }
+                      //     ),
+                      //   onRowDelete: (oldData) =>
+                      //     new Promise(
+                      //       (
+                      //         resolve,
+                      //         reject
+                      //       ) => {
+                      //         setTimeout(
+                      //           () => {
+                      //             const dataDelete = [
+                      //               ...row,
+                      //             ];
+                      //             const index =
+                      //               oldData
+                      //                 .tableData
+                      //                 .id;
+                      //             dataDelete.splice(
+                      //               index,
+                      //               1
+                      //             );
+                      //             // setData([...dataDelete]);
+                      //             this.addRowData(
+                      //               [
+                      //                 ...dataDelete,
+                      //               ]
+                      //             );
+                      //             resolve();
+                      //           },
+                      //           1000
+                      //         );
+                      //       }
+                      //     ),
+                      // }}
                       ></MaterialTable>
                     </div>
                   );

@@ -583,7 +583,7 @@ class DisplayTable extends Component {
                       .slice(
                         this.state.page * this.state.rowsPerPage,
                         this.state.page * this.state.rowsPerPage +
-                          this.state.rowsPerPage
+                        this.state.rowsPerPage
                       )
                       .map((row, index) => {
                         const isItemSelected = this.isSelected(row.Quantity);
@@ -633,8 +633,8 @@ class DisplayTable extends Component {
                 count={this.props.Data.length}
                 rowsPerPage={this.state.rowsPerPage}
                 page={this.state.page}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                onPageChange={this.handleChangePage}
+                onRowsPerPageChange={this.handleChangeRowsPerPage}
               />
             </Paper>
           </div>
@@ -990,14 +990,14 @@ class PromoCodeDetailsComponent extends Component {
   render() {
     let allProductsData = this.props.allproducts
       ? Object.keys(this.props.allproducts).map((key) => {
-          return this.props.allproducts[key];
-        })
+        return this.props.allproducts[key];
+      })
       : {};
 
     let allpromosData = this.props.allpromos
       ? Object.keys(this.props.allpromos).map((key) => {
-          return this.props.allpromos[key];
-        })
+        return this.props.allpromos[key];
+      })
       : {};
     if (allpromosData.length > 0) {
       var createMenusForDropDownPromos = allpromosData.map((d, i) => {
@@ -1251,7 +1251,7 @@ class PromoCodeDetailsComponent extends Component {
                         }
                       />
                       {this.state.startDateNotSet ||
-                      this.state.startDateInvalid ? (
+                        this.state.startDateInvalid ? (
                         <FormHelperText style={{ color: "red" }}>
                           Please enter a valid start date.
                         </FormHelperText>
@@ -1298,8 +1298,8 @@ class PromoCodeDetailsComponent extends Component {
                   productsListFromProps={
                     this.props.data.promoCodeDetail
                       ? JSON.parse(this.props.data.promoCodeDetail).map(
-                          (product) => product.ProductName
-                        )
+                        (product) => product.ProductName
+                      )
                       : []
                   }
                   imagesChosen={this.state.imagesChosen}

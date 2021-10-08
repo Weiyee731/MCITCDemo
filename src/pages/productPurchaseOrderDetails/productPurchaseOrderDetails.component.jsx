@@ -569,12 +569,12 @@ class DisplayTable extends Component {
 
                   {this.props.Data
                     ? this.props.Data.filter((searchedItem) =>
-                        searchedItem.ProductName.toLowerCase().includes(
-                          this.state.searchFilter
-                        )
-                      ).map((filteredItem) => {
-                        filteredProduct.push(filteredItem);
-                      })
+                      searchedItem.ProductName.toLowerCase().includes(
+                        this.state.searchFilter
+                      )
+                    ).map((filteredItem) => {
+                      filteredProduct.push(filteredItem);
+                    })
                     : null}
                   <TableBody>
                     {stableSort(
@@ -584,7 +584,7 @@ class DisplayTable extends Component {
                       .slice(
                         this.state.page * this.state.rowsPerPage,
                         this.state.page * this.state.rowsPerPage +
-                          this.state.rowsPerPage
+                        this.state.rowsPerPage
                       )
                       .map((row, index) => {
                         const isItemSelected = this.isSelected(row.Quantity);
@@ -632,8 +632,8 @@ class DisplayTable extends Component {
                 count={this.props.Data ? this.props.Data.length : 0}
                 rowsPerPage={this.state.rowsPerPage}
                 page={this.state.page}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                onPageChange={this.handleChangePage}
+                onRowsPerPageChange={this.handleChangeRowsPerPage}
               />
             </Paper>
           </div>
@@ -680,14 +680,14 @@ class ProductPurchaseOrderDetails extends Component {
   render() {
     let allProductsData = this.props.allproducts
       ? Object.keys(this.props.allproducts).map((key) => {
-          return this.props.allproducts[key];
-        })
+        return this.props.allproducts[key];
+      })
       : {};
 
     let allpromosData = this.props.allpromos
       ? Object.keys(this.props.allpromos).map((key) => {
-          return this.props.allpromos[key];
-        })
+        return this.props.allpromos[key];
+      })
       : {};
     if (allpromosData.length > 0) {
       var createMenusForDropDownPromos = allpromosData.map((d, i) => {
