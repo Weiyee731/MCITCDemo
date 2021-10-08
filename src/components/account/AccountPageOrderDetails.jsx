@@ -1,5 +1,5 @@
 // react
-import React, { Component } from "react";
+import React from "react";
 
 // third-party
 import { Helmet } from "react-helmet-async";
@@ -8,371 +8,435 @@ import { Link } from "react-router-dom";
 // data stubs
 import theme from "../../data/theme";
 import Logo from "../../assets/Emporia.png";
-import { GitAction } from "../../store/action/gitAction";
-import { connect } from 'react-redux';
+import { browserHistory } from "react-router";
 
-const mapStateToProps = (state) => ({
-  order: state.counterReducer.order,
-  orderByID: state.counterReducer.orderByID
+//Display by Order Along with Tracking No
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import Divider from '@mui/material/Divider';
 
-});
+// Display Card
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    CallGetOrderListByID: (prodData) => dispatch(GitAction.CallGetOrderListByID(prodData)),
-    CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
+//stepper
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import StepContent from '@mui/material/StepContent';
+import Box from '@mui/material/Box';
+
+
+
+//stepper content
+const steps = [
+  {
+    
+    date: '1/12/2021',
+    time:'12:00',
+    description: 'Sender is preparing to ship your parcel'
+  },
+  {
+    date: '2/12/2021',
+    time:'10:20',
+    description:'Parcel has been picked up by courier',
+  },
+  {
+    date: '3/12/2021',
+    time:'08:35',
+    description: 'Parcel has arrived at Station J&T SWKAIR GATEWAY',
+  },
+  {
+    date: '4/12/2021',
+    time:'12:45',
+    description: 'Parcel has been delivered to Ali Abu',
+    receipt: "https://www.mhoopay.com/assets/images/faq-my/packaging/poslaju06.png"
+  },
+];
+
+
+
+export default function AccountPageOrderDetails(props) {
+  //dialog
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  //Stepper
+  // const [activeStep, setActiveStep] = React.useState(0);
+
+  // const handleNext = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  // };
+
+  // const handleBack = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  // };
+
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
+
+  //display Image for Delivery Proof
+  // const [display, setDisplay] = React.useState(false);
+
+  // const handleOpenImg = () => {
+  //   setDisplay(true);
+  // };
+
+  // const handleCloseImg = () => {
+  //   setDisplay(false);
+  // };
+
+  const orderDetail = props.location.orderdetails;
+  if (orderDetail === undefined) {
+    browserHistory.push("../account/orders");
+    window.location.reload(false);
   }
 
-};
+  const address = props.location.address;
+  const creditcard = props.location.creditcards;
 
-class AccountPageOrderDetails extends Component {
+  const subtotal = orderDetail.OrderProductDetail !== null ? JSON.parse(orderDetail.OrderProductDetail).map(
+    (orders) => orders.ProductSellingPrice * orders.ProductQuantity
+  ) : "";
+  var subtotalPrice = 0;
+  var totalOverall = 0;
+  var shipping = 25;
+  var tax = 0;
+  var storecredit = 0;
 
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      cart: [],
-      subtotal: 0,
-      total: 0,
-      shipping: 25,
-      tax: 0,
-    };
-    this.setDetails = this.setDetails.bind(this)
-    this.props.CallGetOrderListByID({ OrderID: this.props.location.pathname.split("/")[3] })
-
+  if (subtotal.length > 0) {
+    subtotalPrice = subtotal.reduce((previous, current) => previous + current, 0);
+  } else {
+    subtotalPrice = subtotal;
   }
 
-  setDetails(order) {
+  totalOverall = subtotalPrice + parseInt(shipping + tax - storecredit)
 
-    // console.log("order", order)
-    order.map((x) => {
-      this.state.cart.push(
-        {
-          id: x.UserCartID,
-          product: x,
-          options: [],
-          price: x.ProductSellingPrice,
-          total: x.ProductQuantity * x.ProductSellingPrice,
-          quantity: x.ProductQuantity
-        }
-
-      )
-      // console.log("x", x)
-    })
-    this.setState({ subtotal: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) })
-    this.setState({ total: this.state.cart.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
-  }
-
-  componentDidMount() {
-
-    // if (this.props.orderByID !== undefined) {
-    //   if (this.props.orderByID.OrderProductDetail !== undefined) {
-    //     this.setDetails(JSON.parse(this.props.orderByID.OrderProductDetail))
-    //   }
-    // }
-
-    // if (this.props.orderByID !== undefined) {
-    //   this.setState({
-    //     CreatedDate : this.props.orderByID.CreatedDate,
-    //     OrderID: this.props.orderByID.OrderID,
-    //   })
-    // if (this.props.orderByID.OrderProductDetail !== undefined) {
-    //   this.setDetails(JSON.parse(this.props.orderByID.OrderProductDetail))
-    // }
-    // }
-
-    if (this.props.location.orderdetails !== undefined) {
-
-      if (this.props.location.orderdetails.OrderProductDetail !== undefined) {
-        this.setDetails(JSON.parse(this.props.location.orderdetails.OrderProductDetail))
-      }
-    }
-  }
-
-  render() {
-
-    // console.log("this.props.orderByID", this.props.orderByID)
-    // console.log(this.props.location.pathname)
-    // console.log("HELLO", this.props.location.pathname.split("/")[3])
-
-    // if (this.props.state === undefined) {
-    const orderDetail = this.props.location.orderdetails;
-
-    const orderproduct = orderDetail !== undefined ? JSON.parse(orderDetail.OrderProductDetail).map(
-      (orders) => orders.ProductQuantity
-    ) : ""
-    const orderTotalPrice = this.props.location.orderprice;
-    const address = this.props.location.address;
-    const creditcard = this.props.location.creditcards;
-    // }
-
-
-    // console.log("this.props", this.props)
-    // console.log("match.params.orderId", this.props.match.params.orderId)
-
-    return (
-      <React.Fragment>
-
-        <Helmet>
-          <title>{`Order Details — ${theme.name}`}</title>
-        </Helmet>
-        <div className="card">
-          <div className="order-header">
-            <div className="order-header__actions">
-              <Link to="/account/orders" className="btn btn-xs btn-secondary">
-                Back to list
-              </Link>
-            </div>
-            {/* {
-              this.props.location.state !== undefined ? */}
-            <>
-              <h5 className="order-header__title">Order #{orderDetail !== undefined ? orderDetail.OrderID : ""}</h5>
-              <div className="order-header__subtitle">
-                Was placed on{" "}
-                <mark className="order-header__date">
-                  {orderDetail !== undefined ? orderDetail.CreatedDate : ""}
-                </mark>{" "}
-                and is currently{" "}
-                <mark className="order-header__status">
-                  {orderDetail !== undefined ? orderDetail.TrackingStatus : ""}
-                </mark>
-                .
-              </div>
-            </>
-            {/* : ""
-            } */}
-
+  return (
+    <React.Fragment>
+      <Helmet>
+        <title>{`Order Details — ${theme.name}`}</title>
+      </Helmet>
+      <div className="card">
+        <div className="order-header">
+          <div className="order-header__actions">
+            <Link to="/account/orders" className="btn btn-xs btn-secondary">
+              Back to list
+            </Link>
           </div>
-
-          <div className="card-divider" />
-          <div className="card-table">
-            <div className="table-responsive-sm">
-              {orderDetail.OrderProductDetail !== null ?
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Preview</th>
-                      <th>Product</th>
-                      <th>Unit Price</th>
-                      <th>Quantity</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  {/* {console.log("orderdetail", orderDetail)} */}
-                  {orderDetail.OrderProductDetail !== null ? JSON.parse(orderDetail.OrderProductDetail).map((orders) => (
-                    <tbody className="card-table__body card-table__body--merge-rows">
-                      <tr>
-                        <td>
-                          <img
-                            className="product-image dropcart__product-image"
-                            src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
-                            alt=""
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = Logo;
-                            }}
-                          />
-                        </td>
-                        <td>{orders.ProductName}</td>
-                        <td>RM{orders.ProductSellingPrice}</td>
-                        <td>{orders.ProductQuantity}</td>
-                        <td>RM{orders.ProductSellingPrice * orders.ProductQuantity}</td>
-                      </tr>
-                    </tbody>
-                  )) : ""}
-
+          <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
+          <div className="order-header__subtitle">
+            Was placed on{" "}
+            <mark className="order-header__date">
+              {orderDetail.CreatedDate}
+            </mark>{" "}
+            and is currently{" "}
+            <mark className="order-header__status">
+              {orderDetail.TrackingStatus}
+            </mark>
+            .
+          </div>
+        </div>
+        <div className="card-divider" />
+        <div style={{backgroundColor:'#F9D295'}}>
+        <Divider light/>  
+        <div style={{display:'flex', flexDirection:'row'}}>
+        <Typography style={{marginLeft:'4%', marginTop:'1%'}}>Order 1</Typography>
+        <Typography style={{marginLeft:'4%', marginTop:'1%'}}>Tracking No: AA987654321BB</Typography>
+        <IconButton aria-label="View" style={{marginLeft:'auto'}} onClick={handleClickOpen}> <VisibilityIcon/></IconButton>
+            <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            >
+           <Typography variants = "body1" style={{marginLeft:'10%', marginTop:'7%'}}>
+              {"Tracking No:  AA987654321BB"}
+            </Typography>
+            <DialogContent>
+                {/* Stepper Content */}
+                <Box sx={{ maxWidth: 400 }}>
+                  <Stepper orientation="vertical" >
+                    {steps.map((step, index) => (
+                      <Step key={step.date} expanded="true">
+                        <StepLabel
+                          // optional={
+                          //   index === 3 ? (
+                          //     <div>
+                          //     <Button variant="text" color="secondary" size="small" onClick={handleOpenImg} >View Delivery Proof</Button>
+                          //     { display &&
+                          //     <div>
+                          //     <img src={step.receipt} alt="" style={{width:'90%'}} /> 
+                          //      <Button variant="text" color="primary" size="small" onClick={handleCloseImg} >Close</Button> </div>}</div>
+                          //   ) : null
+                          // }
+                        >
+                          <div style={{display:'flex', flexDirection:'row'}}>
+                         <Typography variant="caption"> {step.date} </Typography>
+                         <Typography variant="caption" style={{marginLeft:"auto"}}> {step.time} </Typography>
+                         </div>
+                        </StepLabel>
+                        <StepContent>
+                          <Typography variant="caption">{step.description}</Typography>
+                        </StepContent>
+                      </Step>
+                    ))}
+                  </Stepper>
+                  {/* {activeStep === steps.length && (
+                    <Paper square elevation={0} sx={{ p: 3 }}>
+                      <Typography>All steps completed - you&apos;re finished</Typography>
+                      <Button onClick={handleOpenImg} sx={{ mt: 1, mr: 1 }}>
+                        Delivery Proof
+                      </Button>
+                     
+                    </Paper>
+                  )} */}
+                </Box>
+    {/* ---------------------------------------------------------------------- */}
+            </DialogContent>
+            <DialogActions>
+            
+              <Button onClick={handleClose} autoFocus>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+        </div>
+        <div className="card-table">
+          <div className="table-responsive-sm">
+            {orderDetail.OrderProductDetail !== null ?
+              <table>
+                <thead>
+                  <tr>
+                    <th>Preview</th>
+                    <th>Product</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                {orderDetail.OrderProductDetail !== null ? JSON.parse(orderDetail.OrderProductDetail).map((orders) => (
                   <tbody className="card-table__body card-table__body--merge-rows">
                     <tr>
-                      <th>Subtotal</th>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>RM{this.state.subtotal}</td>
-                    </tr>
-                    <tr>
-                      <th>Shipping</th>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>{this.state.shipping}</td>
+                      <td>
+                        <img
+                          className="product-image dropcart__product-image"
+                          src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
+                          alt=""
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = Logo;
+                          }}
+                        />
+                      </td>
+                      <td>{orders.ProductName}</td>
+                      <td>RM{orders.ProductSellingPrice}</td>
+                      <td>{orders.ProductQuantity}</td>
+                      <td>RM{orders.ProductSellingPrice * orders.ProductQuantity}</td>
                     </tr>
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Total</th>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>{this.state.total}</td>
-                    </tr>
-                  </tfoot>
-                </table>
-                :
-                <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                  <div style={{ marginBottom: "20px" }}>
-                    Something went wrong
-                  </div>
-                  <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                )) : ""}
+
+                <tbody className="card-table__body card-table__body--merge-rows">
+                  <tr>
+                    <th>Subtotal</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>RM{subtotalPrice}</td>
+                  </tr>
+                  {/* <tr>
+                  <th>Store Credit</th>
+                  <td></td>
+                  <td>$-20.00</td>
+                </tr> */}
+                  <tr>
+                    <th>Shipping</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>RM{shipping}</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>Total</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>RM{totalOverall}</td>
+                  </tr>
+                </tfoot>
+
+              </table>
+              :
+              <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                <div style={{ marginBottom: "20px" }}>
+                  Something went wrong
                 </div>
-              }
+                <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+      {
+        orderDetail.UserAddresID !== 0 ?
+          address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
+            <div className="row mt-3 no-gutters mx-n2">
+              <div className="col-sm-6 col-12 px-2">
+                <div className="card address-card address-card--featured">
+                  <div className="address-card__body">
+                    <div className="address-card__badge address-card__badge--muted">
+                      Shipping Address
+                    </div>
+                    <div className="address-card__name">
+                      {addresspreview.UserAddressName}
+                    </div>
+                    <div className="address-card__row">
+                      {addresspreview.UserAddressLine1}
+                      <br />
+                      {addresspreview.UserAddressLine2}
+                      <br />
+                      {addresspreview.UserCity} {addresspreview.UserPoscode}{" "}
+                      {addresspreview.UserState}
+                    </div>
+                    <div className="address-card__row">
+                      <div className="address-card__row-title">Phone Number</div>
+                      <div className="address-card__row-content">
+                        {addresspreview.UserContactNo}
+                      </div>
+                    </div>
+                    <div className="address-card__row">
+                      <div className="address-card__row-title">Email Address</div>
+                      <div className="address-card__row-content">
+                        {addresspreview.UserEmail}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+          :
+          <div className="row mt-3 no-gutters mx-n2">
+            <div className="col-sm-6 col-12 px-2">
+              <div className="card address-card address-card--featured">
+                <div className="address-card__body">
+                  <div className="address-card__badge address-card__badge--muted">
+                    Self Pick Up
+                  </div>
+                  <div className="address-card__name">
+                    User Self Pick Up
+                  </div>
+                  <div className="address-card__name">
+                    {orderDetail.UserFullName}
+                  </div>
+                  <div className="address-card__row">
+                    {orderDetail.UserContactNo}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          {/* :
-              ""
-          } */}
+      }
 
-        </div>
-
+      <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
         {
-          orderDetail.UserAddresID !== 0 ?
-            address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
-              <div className="row mt-3 no-gutters mx-n2">
-                <div className="col-sm-6 col-12 px-2">
-                  <div className="card address-card address-card--featured">
-                    <div className="address-card__body">
-                      <div className="address-card__badge address-card__badge--muted">
-                        Shipping Address
-                      </div>
-                      <div className="address-card__name">
-                        {addresspreview.UserAddressName}
-                      </div>
-                      <div className="address-card__row">
-                        {addresspreview.UserAddressLine1}
-                        <br />
-                        {addresspreview.UserAddressLine2}
-                        <br />
-                        {addresspreview.UserCity} {addresspreview.UserPoscode}{" "}
-                        {addresspreview.UserState}
-                      </div>
-                      <div className="address-card__row">
-                        <div className="address-card__row-title">Phone Number</div>
-                        <div className="address-card__row-content">
-                          {addresspreview.UserContactNo}
-                        </div>
-                      </div>
-                      <div className="address-card__row">
-                        <div className="address-card__row-title">Email Address</div>
-                        <div className="address-card__row-content">
-                          {addresspreview.UserEmail}
-                        </div>
-                      </div>
+          orderDetail.PaymentMethodID === 0 ?
+            creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
+              <div className="card address-card address-card--featured">
+                <div className="address-card__body">
+                  <div className="address-card__badge address-card__badge--muted">
+                    Credit Card
+                  </div>
+                  <div className="address-card__name">
+                    {paymentcard.UserCardName}
+                  </div>
+                  <div className="address-card__row">
+                    <div className="address-card__row-title">
+                      User Card Number
+                    </div>
+                    {paymentcard.UserCardNo}
+                  </div>
+                  <div className="address-card__row">
+                    <div className="address-card__row-title">Expiry Date</div>
+                    <div className="address-card__row-content">
+                      {paymentcard.UserCardExpireDate}
+                    </div>
+                  </div>
+                  <div className="address-card__row">
+                    <div className="address-card__row-title">Card Type</div>
+                    <div className="address-card__row-content">
+                      {paymentcard.UserCardType}
                     </div>
                   </div>
                 </div>
               </div>
             ))
             :
-            <div className="row mt-3 no-gutters mx-n2">
-              <div className="col-sm-6 col-12 px-2">
+            <>
+              {
+                orderDetail.PaymentMethodID === 1 &&
                 <div className="card address-card address-card--featured">
                   <div className="address-card__body">
                     <div className="address-card__badge address-card__badge--muted">
-                      Self Pick Up
-                    </div>
-                    <div className="address-card__name">
-                      User Self Pick Up
-                    </div>
-                    <div className="address-card__name">
-                      {orderDetail.UserFullName}
+                      E-WALLET
                     </div>
                     <div className="address-card__row">
-                      {orderDetail.UserContactNo}
+                      <div className="address-card__name">
+                        E-WALLET PAYMENT
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              }
+              {
+                orderDetail.PaymentMethodID === 2 &&
+                <div className="card address-card address-card--featured">
+                  <div className="address-card__body">
+                    <div className="address-card__badge address-card__badge--muted">
+                      FPX
+                    </div>
+                    <div className="address-card__row">
+                      <div className="address-card__name">
+                        FPX PAYMENT
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+              {
+                orderDetail.PaymentMethodID === 3 &&
+                <div className="card address-card address-card--featured">
+                  <div className="address-card__body">
+                    <div className="address-card__badge address-card__badge--muted">
+                      PAYPAL
+                    </div>
+                    <div className="address-card__row">
+                      <div className="address-card__name">
+                        PAYPAL PAYMENT
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+
+            </>
         }
-        <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
-          {
-            orderDetail.PaymentMethodID === 0 ?
-              creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
-                <div className="card address-card address-card--featured">
-                  <div className="address-card__body">
-                    <div className="address-card__badge address-card__badge--muted">
-                      Credit Card
-                    </div>
-                    <div className="address-card__name">
-                      {paymentcard.UserCardName}
-                    </div>
-                    <div className="address-card__row">
-                      <div className="address-card__row-title">
-                        User Card Number
-                      </div>
-                      {paymentcard.UserCardNo}
-                    </div>
-                    <div className="address-card__row">
-                      <div className="address-card__row-title">Expiry Date</div>
-                      <div className="address-card__row-content">
-                        {paymentcard.UserCardExpireDate}
-                      </div>
-                    </div>
-                    <div className="address-card__row">
-                      <div className="address-card__row-title">Card Type</div>
-                      <div className="address-card__row-content">
-                        {paymentcard.UserCardType}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-              :
-              <>
-                {
-                  orderDetail.PaymentMethodID === 1 &&
-                  <div className="card address-card address-card--featured">
-                    <div className="address-card__body">
-                      <div className="address-card__badge address-card__badge--muted">
-                        E-WALLET
-                      </div>
-                      <div className="address-card__row">
-                        <div className="address-card__name">
-                          E-WALLET PAYMENT
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                }
-                {
-                  orderDetail.PaymentMethodID === 2 &&
-                  <div className="card address-card address-card--featured">
-                    <div className="address-card__body">
-                      <div className="address-card__badge address-card__badge--muted">
-                        FPX
-                      </div>
-                      <div className="address-card__row">
-                        <div className="address-card__name">
-                          FPX PAYMENT
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                }
-                {
-                  orderDetail.PaymentMethodID === 3 &&
-                  <div className="card address-card address-card--featured">
-                    <div className="address-card__body">
-                      <div className="address-card__badge address-card__badge--muted">
-                        PAYPAL
-                      </div>
-                      <div className="address-card__row">
-                        <div className="address-card__name">
-                          PAYPAL PAYMENT
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                }
 
-              </>
-          }
-
-        </div>
-      </React.Fragment>
-    );
-  }
+      </div>
+    </React.Fragment>
+  );
 }
-export default connect(mapStateToProps, mapDispatchToProps)(AccountPageOrderDetails);
-
-

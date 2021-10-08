@@ -89,13 +89,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -252,7 +252,7 @@ class DisplayTable extends Component {
     this.setState({ dense: event.target.checked });
   };
 
-  isSelected = (name) => {};
+  isSelected = (name) => { };
 
   onDelivery = (row) => {
     this.props.propsData.CallUpdateOrderProductStatus(row);
@@ -332,12 +332,12 @@ class DisplayTable extends Component {
                   />
                   {this.props.Data
                     ? this.props.Data.filter((searchedItem) =>
-                        searchedItem.ProductName.toLowerCase().includes(
-                          this.state.searchFilter
-                        )
-                      ).map((filteredItem) => {
-                        filteredProduct.push(filteredItem);
-                      })
+                      searchedItem.ProductName.toLowerCase().includes(
+                        this.state.searchFilter
+                      )
+                    ).map((filteredItem) => {
+                      filteredProduct.push(filteredItem);
+                    })
                     : null}
                   <TableBody>
                     {stableSort(
@@ -347,7 +347,7 @@ class DisplayTable extends Component {
                       .slice(
                         this.state.page * this.state.rowsPerPage,
                         this.state.page * this.state.rowsPerPage +
-                          this.state.rowsPerPage
+                        this.state.rowsPerPage
                       )
                       .map((row, index) => {
                         const isItemSelected = this.isSelected(row.ProductID);
@@ -410,8 +410,8 @@ class DisplayTable extends Component {
                 count={this.props.Data ? this.props.Data.length : 0}
                 rowsPerPage={this.state.rowsPerPage}
                 page={this.state.page}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                onPageChange={this.handleChangePage}
+                onRowsPerPageChange={this.handleChangeRowsPerPage}
               />
             </Paper>
           </div>
@@ -437,7 +437,7 @@ class DeliverableTransactionDetails extends Component {
     };
   }
 
-  handleChange = () => {};
+  handleChange = () => { };
 
   render() {
     const back = () => {

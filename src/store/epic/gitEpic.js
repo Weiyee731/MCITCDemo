@@ -1220,15 +1220,47 @@ export class GitEpic {
 
   AddProductMedia = (action$) =>
     action$.ofType(GitAction.AddProductMedia).switchMap(({ payload }) => {
-      return fetch(url +
+      console.log(
+        url +
         "Product_AddProductMedia?" +
-        "PRODUCTID=" +
-        payload.productID +
-        "&PRODUCTVARIATIONDETAILID=0&WIDTH=" +
-        payload.width +
-        "&HEIGHT=" +
-        payload.height
-      );
+        "PRODUCTID=" + payload.ProductID +
+        "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
+        "&PRODUCTSLIDEORDER=" + payload.slideOrder +
+        "&TYPE=" + payload.mediaType +
+        "&WIDTH=" + payload.imageWidth +
+        "&HEIGHT=" + payload.imageHeight +
+        "&IMAGENAME=" + payload.imageName
+      )
+      return fetch(
+        url +
+        "Product_AddProductMedia?" +
+        "PRODUCTID=" + payload.ProductID +
+        "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
+        "&PRODUCTSLIDEORDER=" + payload.slideOrder +
+        "&TYPE=" + payload.mediaType +
+        "&WIDTH=" + payload.imageWidth +
+        "&HEIGHT=" + payload.imageHeight +
+        "&IMAGENAME=" + payload.imageName
+      )
+        .then((resposne) => resposne.json())
+        .then((json) => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+          return {
+            type: GitAction.ProductMediaAdded,
+            payload: json,
+          };
+        })
+        .catch((error) => {
+          toast.error(error)
+          return {
+            type: GitAction.ProductMediaAdded,
+            payload: [],
+          };
+        });
     });
 
   // PRODUCT VARIATION DETAIL
@@ -2458,6 +2490,54 @@ export class GitEpic {
       } catch (error) {
         return toast.error(error);
       }
+    });
+
+  //=================================== PROMOTION BANNER ===================================//
+
+  AddPromotionBannerByIds = action$ =>
+    action$.ofType(GitAction.addPromotionBanner).switchMap(({ payload }) => {
+      return fetch(
+        this.url +
+        "AddPostMedia?POSTID=" +
+        payload.postId +
+        "&MEDIATYPE=" +
+        payload.mediaType +
+        "&MEDIATITLE=" +
+        payload.mediaTitle +
+        "&MEDIAURL=" +
+        payload.mediaUrl +
+        "&MEDIADESC=" +
+        payload.mediaDesc +
+        "&SLIDEORDER=" +
+        payload.slideOrder +
+        "&MEDIASOURCE=" +
+        payload.mediaSource
+      )
+        .then(response => response.json())
+        .then(json => {
+          if (json !== "fail") {
+            json = JSON.parse(json);
+          } else {
+            json = [];
+          }
+
+          return fetch(this.url + "viewPost?POSTTYPE=1")
+            .then(response => response.json())
+            .then(json2 => {
+              if (json2 !== "fail") {
+                json2 = json2;
+              } else {
+                json2 = [];
+              }
+              return {
+                type: GitAction.addedPromotionBanner,
+                payload: json,
+                payload2: json2
+              };
+            })
+            .catch(error => console.log("Add promotion banner error code: 4002.1", error));
+        })
+        .catch(error => console.log("Add promotion banner error code: 4002.2", error));
     });
 }
 export let gitEpic = new GitEpic();

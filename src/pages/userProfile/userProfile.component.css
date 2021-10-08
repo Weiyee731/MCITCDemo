@@ -46,6 +46,10 @@ body {
     width: 98%;
   }
   
+  .input-row{
+    margin-bottom: 1.875rem !important;
+  }
+
   #left-sidebar-nav span.badge.new {
     line-height: 20px;
     margin-top: 11px;

@@ -2041,7 +2041,6 @@ class AddProductComponent extends Component {
 
     if (typeof productID !== "undefined" && productID !== null && uploadingMedia.length > 0) {
       //basic form setup
-      // const uploadFileUrl = "http://192.168.137.177/UnimasMarketplaceImage/uploadproductImages.php";
       const uploadFileUrl = "http://tourism.denoo.my/UnimasMarketplaceApi/api/UnimasMarketplace/"
       const formData = new FormData()
 
@@ -2087,14 +2086,10 @@ class AddProductComponent extends Component {
         height: imageHeight.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
       }
 
-      console.log(object)
+      console.log(object.imageName)
 
-      // axios.post("http://192.168.137.177/UnimasMarketplaceImage/uploadproductImages.php", formData, config).then((res) => {
-      axios.post("http://tourism.denoo.my/UnimasMarketplaceImage/uploadproductImages.php", formData, config).then((res) => {
+      axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
-
-
-
           this.props.callAddProductMedia(object)
           toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
         }
@@ -2703,10 +2698,6 @@ class AddProductComponent extends Component {
     });
   };
 
-  onNavigationProductStockIn() {
-    browserHistory.push("/UnimasMarketplace/productStocksIn");
-  }
-
   checkEverything = () => {
     this.checkSKULength();
     this.checkBrand();
@@ -2764,7 +2755,6 @@ class AddProductComponent extends Component {
         this.state.notEnoughFiles512x512
       )
     ) {
-      // this.addProductForm();
       if (this.state.index === 0) {
         this.initData(this.props.variations);
       }
@@ -2772,51 +2762,6 @@ class AddProductComponent extends Component {
         return { index: prevState.index + 1 };
       });
     }
-  };
-
-  addProductForm = () => {
-    // this.setState((state) => {
-    //   const productImages = state.productImages.concat(
-    //     state.file.map((file) => file)
-    //   );
-    //   return {
-    //     productImages,
-    //   };
-    // });
-    // this.setState((state) => {
-    //   const productImages = state.productImages.concat(
-    //     state.file2.map((file) => file)
-    //   );
-    //   return {
-    //     productImages,
-    //   };
-    // });
-    // for (var i = 0; i < this.state.file.length; i++) {
-    //   this.setState({
-    //     productWidth: [...this.state.productWidth, "512"],
-    //     productHeight: [...this.state.productHeight, "512"],
-    //   });
-    // }
-    // for (var i = 0; i < this.state.file2.length; i++) {
-    //   this.setState({
-    //     productWidth: [...this.state.productWidth, "1600"],
-    //     productHeight: [...this.state.productHeight, "900"],
-    //   });
-    // }
-
-    setTimeout(
-      function () {
-        this.props.callAddProduct(this.state);
-      }.bind(this),
-      1500
-    );
-
-    setTimeout(
-      function () {
-        this.setState({ dataSent: true });
-      }.bind(this),
-      2000
-    );
   };
 
   addProductVariation = (newData) => {
@@ -3402,8 +3347,8 @@ class AddProductComponent extends Component {
 
     let allusersData = this.props.allUser
       ? Object.keys(this.props.allUser).map((key) => {
-          return this.props.allUser[key];
-        })
+        return this.props.allUser[key];
+      })
       : {};
 
     if (allusersData.length > 0) {
@@ -4011,7 +3956,7 @@ class AddProductComponent extends Component {
                     {/* {createSupplierMenu} */}
                     {/* {createSupplierMenu} */}
                     <option value={localStorage.getItem("id")}>
-                      {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")} 
+                      {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")}
                     </option>
                   </Select>
                 </FormControl>
@@ -5021,7 +4966,7 @@ class AddProductComponent extends Component {
                       onClick={this.onDeleteVariant.bind(this, -1, "wholeSale")}
                     />
                   </div>
-                ) : null} 
+                ) : null}
               </CardContent>
             </Card>
             <br />
@@ -5821,7 +5766,7 @@ class AddProductComponent extends Component {
           </div>
           <br />
           <div className="SubmitButtonContainer">
-            <Button variant="outlined" className="SubmitButton" onClick={() => { this.OnSubmit() }}>
+            <Button variant="outlined" className="SubmitButton" onClick={() => { this.uploadFile(555) }}>
               Review Product Details
             </Button>
           </div>

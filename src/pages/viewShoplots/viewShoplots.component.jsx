@@ -112,13 +112,13 @@ const useStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -455,8 +455,8 @@ function DeletableTable(props) {
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
@@ -806,7 +806,7 @@ class ViewShoplotsComponent extends Component {
                                     .slice(
                                       this.state.page * this.state.rowsPerPage,
                                       this.state.page * this.state.rowsPerPage +
-                                        this.state.rowsPerPage
+                                      this.state.rowsPerPage
                                     )
                                     .map((row, index) => {
                                       const isItemSelected = this.isSelected(
@@ -884,8 +884,8 @@ class ViewShoplotsComponent extends Component {
                               count={this.props.shoplots.length}
                               rowsPerPage={this.state.rowsPerPage}
                               page={this.state.page}
-                              onChangePage={this.handleChangePage}
-                              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                              onPageChange={this.handleChangePage}
+                              onRowsPerPageChange={this.handleChangeRowsPerPage}
                             />
                           </Paper>
                           <SimpleDialog
@@ -927,7 +927,7 @@ class ViewShoplotsComponent extends Component {
                                     .slice(
                                       this.state.page * this.state.rowsPerPage,
                                       this.state.page * this.state.rowsPerPage +
-                                        this.state.rowsPerPage
+                                      this.state.rowsPerPage
                                     )
                                     .map((row, index) => {
                                       const isItemSelected = this.isSelected(
@@ -1005,8 +1005,8 @@ class ViewShoplotsComponent extends Component {
                               count={this.props.shoplots.length}
                               rowsPerPage={this.state.rowsPerPage}
                               page={this.state.page}
-                              onChangePage={this.handleChangePage}
-                              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                              onPageChange={this.handleChangePage}
+                              onRowsPerPageChange={this.handleChangeRowsPerPage}
                             />
                           </Paper>
                           <SimpleDialog
@@ -1048,7 +1048,7 @@ class ViewShoplotsComponent extends Component {
                                     .slice(
                                       this.state.page * this.state.rowsPerPage,
                                       this.state.page * this.state.rowsPerPage +
-                                        this.state.rowsPerPage
+                                      this.state.rowsPerPage
                                     )
                                     .map((row, index) => {
                                       const isItemSelected = this.isSelected(
@@ -1127,8 +1127,8 @@ class ViewShoplotsComponent extends Component {
                               count={this.props.shoplots.length}
                               rowsPerPage={this.state.rowsPerPage}
                               page={this.state.page}
-                              onChangePage={this.handleChangePage}
-                              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                              onPageChange={this.handleChangePage}
+                              onRowsPerPageChange={this.handleChangeRowsPerPage}
                             />
                           </Paper>
                           <SimpleDialog

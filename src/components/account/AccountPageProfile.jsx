@@ -12,35 +12,18 @@ import { GitAction } from "../../store/action/gitAction";
 import "./AccountPageProfile.component.css";
 import {
   Card,
-  CardMedia,
-  TableHead,
-  Typography,
   Divider,
 } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import CardContent from "@material-ui/core/CardContent";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import MuiTableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { toast } from "react-toastify";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import "./AccountPageProfile.css";
 import moment from 'moment';
-
-const TableCell = withStyles({
-  root: {
-    borderBottom: "none",
-  },
-})(MuiTableCell);
+import CloseIcon from '@mui/icons-material/Close';
 
 function mapStateToProps(state) {
   return {
@@ -97,7 +80,7 @@ class AccountPageProfile extends Component {
       url: "",
       imageFile: null,
       imageName: null,
-      
+
       validfirstName: false,
       validlastName: false,
       validDOB: false,
@@ -355,9 +338,6 @@ class AccountPageProfile extends Component {
 
 
   render() {
-    const rowStyle = { width: "16vw", textAlign: "left", paddingLeft: "3rem" };
-
-    console.log("this.state in user profile", this.state)
 
     const getUploadParams = () => {
       return { url: "http://pmappapi.com/Memo/uploads/uploads/" };
@@ -396,76 +376,38 @@ class AccountPageProfile extends Component {
             <div className="col-6">
               <h5
                 style={{
-                  textAlign: "left",
-                  fontWeight: "bold",
+                  textAlign: "left"
                 }}
               >
                 My Profile
               </h5>
 
-              <Typography
-                style={{
-                  fontSize: "15px",
-                  fontFamily: "Calibri Light,sans-serif",
-                }}
-              >
+              <div className="font font-subtitle">
                 Manage your personal information
-              </Typography>
+              </div>
             </div>
             <div className="col-6" style={{ textAlign: "right" }}>
-              <Button
+              <button
                 variant="contained"
-                color="primary"
+                className="btn btn-primary"
                 onClick={() => this.addProfile()}
               >
                 Save
-              </Button>
+              </button>
             </div>
           </div>
           <Divider variant="fullWidth" className="dividerbottom" />
-          {/* profile image */}
-          <div onClick={() => this.modalOpen()} className="imagecontainer">
-            <CardMedia
-              component="img"
-              alt="Profile Picture"
-              height="180"
-              image={JSON.stringify(
-                this.props.userprofiledata.map((i) => i.UserProfileImage)
-              )}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src =
-                  "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg";
-              }}
-              style={{
-                display: "inline",
-                margin: "0 auto",
-                marginLeft: "-25%", //centers the image
-                height: "100%",
-                width: "auto",
-                cursor: "pointer",
-              }}
-            />
-            <div className="overlay">Edit</div>
-          </div>
 
-          <TableContainer
-            component={Paper}
-            style={{
-              float: "left",
-              borderCollapse: "collapse",
-              border: "none",
-              boxShadow: "none",
-              marginBottom: "4%",
-            }}
-          >
-            {this.props.userprofiledata.map((row) => (
-              <Table>
-                <TableBody>
-                  <TableRow style={{ width: "100%  " }}>
-                    <TableCell className="rowStyle">First Name</TableCell>
-                    <TableCell>
+          {/* profile image */}
+          <div className="row">
+            <container className="container col-8">
+              {this.props.userprofiledata.map((row) => (
+                <container>
+                  <div className="row" >
+                    <div className="col-4 rowStyle">First Name</div>
+                    <div className="col-7 ">
                       <TextField
+                        className="font"
                         variant="outlined"
                         size="small"
                         id="userfirstname"
@@ -473,12 +415,13 @@ class AccountPageProfile extends Component {
                         onChange={this.handleChangeforFirstName.bind(this)}
                         style={{ marginRight: "5px", width: "100%" }}
                       />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="rowStyle">Last Name</TableCell>
-                    <TableCell>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4 rowStyle">Last Name</div>
+                    <div className="col-7">
                       <TextField
+                        className="font"
                         variant="outlined"
                         size="small"
                         id="userlastname"
@@ -486,12 +429,13 @@ class AccountPageProfile extends Component {
                         onChange={this.handleChangeforLastName.bind(this)}
                         style={{ marginRight: "5px", width: "100%" }}
                       />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="rowStyle">Date of Birth</TableCell>
-                    <TableCell>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className=" col-4 rowStyle">Date of Birth</div>
+                    <div className="col-7">
                       <TextField
+                        className="font"
                         variant="outlined"
                         size="small"
                         id="userdob"
@@ -500,12 +444,12 @@ class AccountPageProfile extends Component {
                         onChange={this.handleChangeforDOB.bind(this)}
                         style={{ marginRight: "5px", width: "100%" }}
                       />
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                  </div>
 
-                  <TableRow>
-                    <TableCell className="rowStyle">Gender</TableCell>
-                    <TableCell>
+                  <div className="row">
+                    <div className="col-4 rowStyle">Gender</div>
+                    <div className="col-7">
                       <FormControl component="fieldset">
                         <RadioGroup
                           aria-label="USERGENDER"
@@ -515,41 +459,39 @@ class AccountPageProfile extends Component {
                           onChange={this.handleChangeforGender}
                         >
                           <FormControlLabel
+                            className=" MuiTypography-body1"
                             value="Male"
-                            fontSize="14px"
-                            fontWeight="400"
                             control={<Radio />}
                             label="Male"
                           />
                           <FormControlLabel
+                            className=" MuiTypography-body1"
                             value="Female"
-                            fontSize="14px"
-                            fontWeight="400"
                             control={<Radio />}
                             label="Female"
                           />
                           <FormControlLabel
+                            className=" MuiTypography-body1"
                             value="RatherNotToSay"
-                            fontSize="14px"
-                            fontWeight="400"
                             control={<Radio />}
                             label="Rather Not To Say"
                           />
                         </RadioGroup>
                       </FormControl>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="rowStyle">Contact Number</TableCell>
-                    <TableCell>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4 rowStyle">Contact Number</div>
+                    <div className="col-7">
                       {
                         this.state.editContact === false ?
                           <>
                             {row.UserContactNo !== null ? censorContact(row.UserContactNo) : "-"}
-                            <Button onClick={() => this.setState({ editContact: true })} style={{ float: "right" }}>Change Contact</Button>
+                            <button className="btn btn-primary" onClick={() => this.setState({ editContact: true })} style={{ float: "right" }}>Change Contact</button>
                           </>
                           :
                           <input
+                            className="font"
                             variant="outlined"
                             size="small"
                             id="usercontact"
@@ -560,19 +502,20 @@ class AccountPageProfile extends Component {
                             style={{ marginRight: "5px", width: "100%" }}
                           />
                       }
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="rowStyle">Email Address</TableCell>
-                    <TableCell>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4 rowStyle">Email Address</div>
+                    <div className="col-7">
                       {
                         this.state.editEmail === false ?
                           <>
                             {row.UserEmailAddress !== null ? censorEmail(row.UserEmailAddress) : "-"}
-                            <Button onClick={() => this.setState({ editEmail: true })} style={{ float: "right" }}>Change Email</Button>
+                            <button onClick={() => this.setState({ editEmail: true })} style={{ float: "right" }}>Change Email</button>
                           </>
                           :
                           <input
+                            className="font"
                             variant="outlined"
                             size="small"
                             id="useremail"
@@ -582,13 +525,30 @@ class AccountPageProfile extends Component {
                             style={{ marginRight: "5px", width: "100%" }}
                           />
                       }
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            ))}
-          </TableContainer>
+                    </div>
+                  </div>
+                </container>
+              ))}
+            </container>
+            <div className="col-4 border-line">
 
+              <div onClick={() => this.modalOpen()} className=" imagecontainer">
+                <img
+                  className="profilePic"
+                  src={JSON.stringify(
+                    this.props.userprofiledata.map((i) => i.UserProfileImage)
+                  )}
+                  alt="Profile"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg";
+                  }}
+                />
+                <div className="overlay">Edit</div>
+              </div>
+            </div>
+          </div>
         </CardContent>
 
         <div
@@ -603,6 +563,10 @@ class AccountPageProfile extends Component {
             toggle={() => this.modalClose()}
           >
             <ModalBody>
+              <CloseIcon
+                className="closeIcon"
+                onClick={() => this.modalClose()}
+                data-dismiss="modal" />
               <div
                 align="center"
                 className="form-content p-2"
@@ -673,9 +637,8 @@ class AccountPageProfile extends Component {
                         >
                           <input {...getInputProps()} />
                           <div>
-                            <br />
                             {this.state.fileAdded ? (
-                              <div>{this.state.imageName}</div>
+                              <div className="droppedFileName">{this.state.imageName}</div>
                             ) : (
                               <div>
                                 {!isDragActive && "Drop a file"}
@@ -691,41 +654,39 @@ class AccountPageProfile extends Component {
                   </Dropzone>
                 </div>
                 {this.state.fileAdded && (
-                  <div style={{ float: "right" }}>
-                    <Button
+                  <div >
+                    <button
                       size="sm"
                       theme="light"
-                      className="mb-2 mr-1"
+                      className="mb-2 mr-1 btn btn-primary"
                       onClick={() => {
                         this.removeFile();
                       }}
                     >
-                      <span className="text-danger">
-                        <i className="material-icons">clear</i>
-                      </span>{" "}
+                      <CloseIcon />
                       Remove file
-                    </Button>
+                    </button>
                   </div>
                 )}
                 {this.state.fileAdded ? (
-                  <Button
-                    type="button"
-                    theme="success"
-                    onClick={this.onFileUpload}
-                  >
-                    Upload Profile Photo
-                  </Button>
+                  // <button style={{ float: "left" }}
+                  //   className="btn btn-primary"
+                  //   onClick={this.onFileUpload}
+                  // >
+                  //   Upload Profile Photo
+                  // </button>
+                  <div>Click on the box to change the photo</div>
                 ) : (
                   <div>Please drop the photo into the box</div>
                 )}
-                <button
+                {/* <button
                   type="button"
                   className="btn btn-primary mr-1"
                   onClick={() => this.modalClose()}
                   data-dismiss="modal"
                 >
                   Close
-                </button>
+                </button> */}
               </div>
             </ModalBody>
           </Modal>

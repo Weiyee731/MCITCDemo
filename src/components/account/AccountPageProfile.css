@@ -1,12 +1,18 @@
 .imagecontainer {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   position: relative;
   overflow: hidden;
   border-radius: 50%;
   margin: auto;
 }
 
+/* .modal-dialog-centered{
+  float: right;
+} */
+.border-line{
+      border-left: .0625rem solid #efefef;
+}
 .image {
   display: block;
   width: 100%;
@@ -31,6 +37,22 @@
   color: white;
 }
 
+.droppedFileName{
+overflow: hidden;
+}
+
+.closeIcon{
+  cursor: pointer;
+  float: right;
+}
+.MuiTypography-body1{
+font-size: 14px!important;
+}
+
+.MuiInputBase-input{
+  font-size: 14px!important;
+}
+
 .imagecontainer:hover .overlay {
   opacity: 0.7;
 }
@@ -50,12 +72,43 @@
   color: #eee;
 }
 
+.profilePic{
+       display: inline;
+       margin: 0 auto;
+      margin-left: -59%;
+      height: 180px;
+      /* width: auto!important; */
+     cursor: pointer;
+}
 .dividerbottom {
   margin-bottom: 1rem!important;
 }
 
+.font{
+   font-size: 14px!important;
+   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.00938em;
+}
+
+.font-subtitle{
+color:#555;
+}
 .rowStyle {
+  font-size: 14px!important;
   width: 16vw;
+  color: rgba(85,85,85,.8);
+  margin-bottom: 1.875rem;
   text-align: left!important;
   padding-left: 3rem!important;
 }
+
+.container{      
+              width: 100%;
+              float: "left";
+              /* borderCollapse: "collapse"; */
+              border: "none";
+              /* boxShadow: "none";
+              marginBottom: "4%"; */
+}  

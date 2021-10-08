@@ -128,7 +128,9 @@ const rootEpic = combineEpics(
   //====================== PRODUCT WISHLIST ====================//
   gitEpic.viewProductWishlist,
   gitEpic.addProductWishlist,
-  gitEpic.deleteProductWishlist
+  gitEpic.deleteProductWishlist,
+  //====================== PROMOTION BANNER ====================//
+  gitEpic.AddPromotionBannerByIds,
 );
 
 // const rootReducerCombine = rootReducer;
