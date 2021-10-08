@@ -195,6 +195,11 @@ export class GitAction {
   static GetProductsByCategoryIDEmpty = "GET-PRODUCT-BY-CATEGORY-ID-EMPTY";
   static GotProductsByCategoryIDEmpty = "GOT-PRODUCT-BY-CATEGORY-ID-EMPTY";
 
+  static ResetProductReturnVal = "RESET-PRODUCT-RETURN-VALUE";
+  static ResetProductMediaReturnVal = "RESET-PRODUCT-MEDIA-RETURN-VALUE";
+  static ResetProductManagementValue = "RESET-PRODUCT-MANAGEMENT-RETURN-VALUE";
+
+
   static CallAllProducts(propData) {
     return {
       type: GitAction.GetProduct,
@@ -242,6 +247,12 @@ export class GitAction {
     };
   }
 
+  static CallResetProductReturnVal() {
+    return {
+      type: GitAction.ResetProductReturnVal,
+    };
+  }
+
   static CallEndorseProduct(prodData) {
     return {
       type: GitAction.EndorseProduct,
@@ -263,6 +274,12 @@ export class GitAction {
     };
   }
 
+  static CallResetProductMgmtReturnVal() {
+    return {
+      type: GitAction.ResetProductManagementValue
+    }
+  }
+
   static CallCheckProduct(prodData) {
     return {
       type: GitAction.CheckProduct,
@@ -277,6 +294,13 @@ export class GitAction {
     };
   }
 
+  static CallResetProductMediaResult() {
+    return {
+      type: GitAction.ResetProductMediaReturnVal,
+    };
+  }
+
+
   static CallAddProductPurchaseOrder(prodData) {
     return {
       type: GitAction.AddProductPurchaseOrder,
@@ -290,6 +314,7 @@ export class GitAction {
       payload: prodData,
     };
   }
+  
 
   // Product Variation
   static GetProductVariation = "GET-PRODUCTVARIATION";

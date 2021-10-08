@@ -43,8 +43,9 @@ const INITIAL_STATE = {
   productcart: [],
   wishlist: [],
   order: [],
-  orderByID: []
-
+  orderByID: [],
+  updatedProducts: [],
+  productMgmtResult: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -249,9 +250,13 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.DeleteProduct:
       return Object.assign({}, state, { loading: true });
     case GitAction.ProductDeleted:
-      var newProdObj = Object.assign({}, state);
-      newProdObj.loading = false;
-      return newProdObj;
+      return Object.assign({}, state, {
+        loading: false,
+        productMgmtResult: action.payload,
+      });
+
+    case GitAction.ResetProductManagementValue:
+      return Object.assign({}, state, { productMgmtResult: [] });
 
     case GitAction.CheckProduct:
       return Object.assign({}, state, { loading: true });
@@ -271,9 +276,10 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.AddProductMedia:
       return Object.assign({}, state, { loading: true });
     case GitAction.ProductMediaAdded:
-      var productMediaResult = Object.assign({}, state);
-      productMediaResult.loading = false;
-      return productMediaResult;
+      return Object.assign({}, state, {
+        loading: false,
+        productMediaResult: [],
+      });
 
     case GitAction.AddProductPurchaseOrder:
       return Object.assign({}, state, { loading: true });
@@ -281,6 +287,21 @@ export function counterReducer(state = INITIAL_STATE, action) {
       var productMediaResult = Object.assign({}, state);
       productMediaResult.loading = false;
       return productMediaResult;
+
+
+    case GitAction.ResetProductReturnVal:
+      return Object.assign({}, state, {
+        loading: false,
+        addResult: [],
+      });
+
+
+    case GitAction.ResetProductMediaReturnVal:
+      return Object.assign({}, state, {
+        loading: false,
+        productMediaResult: [],
+      });
+
 
     //==============PRODUCTVARIATION===============//
     case GitAction.GetProductVariation:
