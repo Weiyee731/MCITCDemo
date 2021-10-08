@@ -199,7 +199,6 @@ export class GitAction {
   static ResetProductMediaReturnVal = "RESET-PRODUCT-MEDIA-RETURN-VALUE";
   static ResetProductManagementValue = "RESET-PRODUCT-MANAGEMENT-RETURN-VALUE";
 
-
   static CallAllProducts(propData) {
     return {
       type: GitAction.GetProduct,

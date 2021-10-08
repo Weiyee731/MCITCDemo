@@ -658,6 +658,34 @@ export class GitEpic {
 
   addProduct = (action$) =>
     action$.ofType(GitAction.AddProduct).switchMap(({ payload }) => {
+      console.log(url +
+        "Product_AddProductVariationMedia?name=" +
+        payload.name +
+        "&manufacturer=1" +
+        payload.manufacturer +
+        "&description=" +
+        payload.description +
+        "&productCategory=" +
+        payload.productCategory +
+        "&productSupplier=1" +
+        payload.productSupplier +
+        "&productShoplot=1&productGrid=1&height=" +
+        payload.height +
+        "&width=" +
+        payload.width +
+        "&depth=" +
+        payload.depth +
+        "&weight=" +
+        payload.weight +
+        "&sku=" +
+        payload.sku +
+        "&brand=" +
+        payload.brand +
+        "&model=" +
+        payload.model +
+        "&tags=" +
+        payload.tags
+      )
       return fetch(url +
         "Product_AddProductVariationMedia?name=" +
         payload.name +
@@ -808,20 +836,27 @@ export class GitEpic {
             payload: json,
           };
         })
-        .catch((error) => toast.error(error));
+        .catch((error) => {
+          
+          return {
+            type: "CHECKED-PRODUCT",
+            payload: [],
+          };
+        });
     });
 
   AddProductMedia = (action$) =>
     action$.ofType(GitAction.AddProductMedia).switchMap(({ payload }) => {
+      console.log(payload)
       console.log(
         url +
         "Product_AddProductMedia?" +
         "PRODUCTID=" + payload.ProductID +
         "&PRODUCTVARIATIONDETAILID=" + payload.variationID + 
-        "&PRODUCTSLIDEORDER=" + payload.slideOrder +
+        "&PRODUCTSLIDEORDER=" + payload.sliderOrder +
         "&TYPE=" + payload.mediaType + 
-        "&WIDTH=" +  payload.imageWidth + 
-        "&HEIGHT=" +  payload.imageHeight + 
+        "&WIDTH=" +  payload.width + 
+        "&HEIGHT=" +  payload.height + 
         "&IMAGENAME=" + payload.imageName
       )
       return fetch(
@@ -829,10 +864,10 @@ export class GitEpic {
         "Product_AddProductMedia?" +
         "PRODUCTID=" + payload.ProductID +
         "&PRODUCTVARIATIONDETAILID=" + payload.variationID + 
-        "&PRODUCTSLIDEORDER=" + payload.slideOrder +
+        "&PRODUCTSLIDEORDER=" + payload.sliderOrder +
         "&TYPE=" + payload.mediaType + 
-        "&WIDTH=" +  payload.imageWidth + 
-        "&HEIGHT=" +  payload.imageHeight + 
+        "&WIDTH=" +  payload.width + 
+        "&HEIGHT=" +  payload.height + 
         "&IMAGENAME=" + payload.imageName
       )
       .then((resposne) => resposne.json())

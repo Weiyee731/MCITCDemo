@@ -64,7 +64,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { Fade } from "shards-react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
-import { convertDateTimeToString, getFileExtension, getFileTypeByExtension } from "../../Utilities/UtilRepo"
+import { convertDateTimeToString, getFileExtension, getFileTypeByExtension, convertArrayToStringWithSpecialCharacter } from "../../Utilities/UtilRepo"
 
 function mapStateToProps(state) {
   return {
@@ -445,6 +445,7 @@ class AddProductComponent extends Component {
       progressMedia: 0,
       progressShipping: 0,
       progressDescription: 0,
+      progressSpecification: 0,
       supplierFilled: 0,
       skuFilled: 0,
       brandFilled: 0,
@@ -2047,47 +2048,55 @@ class AddProductComponent extends Component {
       const config = { headers: { 'Content-Type': 'multipart/form-data' } };
       formData.append("ProductID", productID);
       //upload single file
-      let filenames = []
-      let variationID = []
-      let slideOrder = []
-      let mediaType = []
-      let imageWidth = []
-      let imageHeight = []
+      let filenames = ""
+      let variationID = ""
+      let slideOrder = ""
+      let mediaType = ""
+      let imageWidth = ""
+      let imageHeight = ""
 
       for (let i = 0; i < uploadingMedia.length; i++) {
         let fileExt = getFileExtension(uploadingMedia[i])
         let filename = productID + "_" + i + "_" + convertDateTimeToString(new Date())
 
-        filenames.push(filename + "." + fileExt)
-        mediaType.push(getFileTypeByExtension(fileExt))
-        variationID.push(0)
-        slideOrder.push(i)
-        imageWidth.push(0)
-        imageHeight.push(0)
+        filenames += filename + "." + fileExt
+        mediaType += getFileTypeByExtension(fileExt)
+        variationID += "0"
+        slideOrder += i.toString()
+        imageWidth += "0"
+        imageHeight += "0"
 
         formData.append("upload[]", uploadingMedia[i]);
         formData.append("imageName[]", filename);
-      }
 
-      filenames = JSON.stringify(filenames)
-      variationID = JSON.stringify(variationID)
-      slideOrder = JSON.stringify(slideOrder)
-      mediaType = JSON.stringify(mediaType)
-      imageWidth = JSON.stringify(imageWidth)
-      imageHeight = JSON.stringify(imageHeight)
+        if (i !== (uploadingMedia.length - 1)) {
+          filenames += ","
+          variationID += ","
+          slideOrder += ","
+          mediaType += ","
+          imageWidth += ","
+          imageHeight += ","
+        }
+
+        // in case, it needs to become array
+        // filenames.push(filename + "." + fileExt)
+        // mediaType.push(getFileTypeByExtension(fileExt))
+        // variationID.push(0)
+        // slideOrder.push(i)
+        // imageWidth.push(0)
+        // imageHeight.push(0)
+
+      }
 
       let object = {
         ProductID: productID,
-        imageName: filenames.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        mediaType: mediaType.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        variationID: variationID.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        sliderOrder: slideOrder.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        width: imageWidth.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
-        height: imageHeight.replace("[", "").replace("]", "").replace("\\", "").replace('"', ''),
+        imageName: filenames,
+        mediaType: mediaType,
+        variationID: variationID,
+        sliderOrder: slideOrder,
+        width: imageWidth,
+        height: imageHeight,
       }
-
-      console.log(object.imageName)
-
       axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
@@ -3265,6 +3274,7 @@ class AddProductComponent extends Component {
       this.props.CallResetProductReturnVal()
     }
 
+    console.log(this.props.resultsMedia)
     if (typeof this.props.resultsMedia !== "undefined" && this.props.resultsMedia.length > 0 && this.props.resultsMedia[0].ReturnVal == 1) {
       this.props.CallResetProductMediaResult()
     }
@@ -3347,8 +3357,8 @@ class AddProductComponent extends Component {
 
     let allusersData = this.props.allUser
       ? Object.keys(this.props.allUser).map((key) => {
-          return this.props.allUser[key];
-        })
+        return this.props.allUser[key];
+      })
       : {};
 
     if (allusersData.length > 0) {
@@ -3956,7 +3966,7 @@ class AddProductComponent extends Component {
                     {/* {createSupplierMenu} */}
                     {/* {createSupplierMenu} */}
                     <option value={localStorage.getItem("id")}>
-                      {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")} 
+                      {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")}
                     </option>
                   </Select>
                 </FormControl>
@@ -4131,6 +4141,12 @@ class AddProductComponent extends Component {
               </CardContent>
             </Card>
             <br />
+            <Card id="specification" className="SubContainer">
+              <CardContent>
+                <p className="Heading">Product Specification</p>
+              </CardContent>
+            </Card>
+            <br />
             <Card className="SubContainer" id="productVariation">
               <CardContent>
                 <p className="Heading">Product Pricing</p>
@@ -4240,31 +4256,17 @@ class AddProductComponent extends Component {
                             />
                             <TextField
                               className="InputField"
-                              InputLabelProps={{
-                                shrink: "true",
-                              }}
+                              InputLabelProps={{ shrink: "true", }}
                               label={"Option " + (i + 1)}
                               id="standard-start-adornment"
                               size="small"
                               variant="outlined"
                               key={i}
-                              onChange={this.handleChangeOptions.bind(
-                                this,
-                                "variant1Options",
-                                i
-                              )}
-                              error={
-                                this.state.variation1.options[i].errorOption
-                              }
+                              onChange={this.handleChangeOptions.bind( this, "variant1Options", i )}
+                              error={ this.state.variation1.options[i].errorOption }
                               onFocus={this.setHint.bind(this, "VariantOption")}
-                              onBlur={() =>
-                                this.setState({
-                                  FocusOn: false,
-                                })
-                              }
-                              value={
-                                this.state.variation1.options[i].optionName
-                              }
+                              onBlur={() => this.setState({ FocusOn: false, }) }
+                              value={ this.state.variation1.options[i].optionName}
                             />
                           </div>
                           {this.state.variation1.options[i].errorOption ? (
@@ -4371,6 +4373,7 @@ class AddProductComponent extends Component {
                               }
                             />
                           </div>
+                          
                           {this.state.variation1.options[0].variation2Options
                             .options[i].errorOption ? (
                             <p className="error">
@@ -4416,6 +4419,7 @@ class AddProductComponent extends Component {
                   <div className="VariantMain">
                     <div className="ItemContainer">
                       <div className="VariantContainer">
+
                         <InputGroup className="ItemContainer">
                           <InputGroupAddon type="prepend">
                             <InputGroupText className="groupText">
@@ -4966,7 +4970,7 @@ class AddProductComponent extends Component {
                       onClick={this.onDeleteVariant.bind(this, -1, "wholeSale")}
                     />
                   </div>
-                ) : null} 
+                ) : null}
               </CardContent>
             </Card>
             <br />
@@ -5766,7 +5770,7 @@ class AddProductComponent extends Component {
           </div>
           <br />
           <div className="SubmitButtonContainer">
-            <Button variant="outlined" className="SubmitButton" onClick={() => { this.uploadFile(555) }}>
+            <Button variant="outlined" className="SubmitButton" onClick={() => { this.uploadFile(111) }}>
               Review Product Details
             </Button>
           </div>
@@ -5825,6 +5829,21 @@ class AddProductComponent extends Component {
                       <StepContent>
                         <LinearProgressWithLabel
                           value={this.state.progressDescription}
+                        />
+                      </StepContent>
+                    </Step>
+                    <Step key="specification">
+                      <StepLabel>
+                        <HashLink
+                          to="/addProductsAllIn#specification"
+                          className="FontType4"
+                        >
+                          Product Specification
+                        </HashLink>
+                      </StepLabel>
+                      <StepContent>
+                        <LinearProgressWithLabel
+                          value={this.state.progressSpecification}
                         />
                       </StepContent>
                     </Step>
