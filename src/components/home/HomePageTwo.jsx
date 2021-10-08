@@ -41,7 +41,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProducts: (data) => dispatch(GitAction.CallAllProducts(data)),
+    CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
     CallViewMoreFunctionProduct: (propsData) => dispatch(GitAction.CallViewMoreFunctionProduct(propsData)),
     CallViewMoreEmpty: () => dispatch(GitAction.CallViewMoreEmpty()),
     CallGetProductByProductCategoryID: (propsData) => dispatch(GitAction.CallGetProductByProductCategoryID(propsData)),
@@ -49,9 +49,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 function HomePageTwo(props) {
-  /**
-   * Featured products.
-   */
   const featuredProducts = useProductTabs(
     useMemo(() => [
       { id: 1, name: 'All', categorySlug: undefined },
@@ -62,57 +59,10 @@ function HomePageTwo(props) {
     (tab) => shopApi.getPopularProducts({ limit: 12, category: tab.categorySlug }),
   );
 
-  /**
-   * Bestsellers.
-   */
   const bestsellers = useDeferredData(() => (
     shopApi.getPopularProducts({ limit: 7 })
   ), []);
 
-  /**
-   * Latest products.
-   */
-  const latestProducts = useProductTabs(
-    useMemo(() => [
-      { id: 1, name: 'All', categorySlug: undefined },
-      { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
-      { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
-      { id: 4, name: 'Plumbing', categorySlug: 'plumbing' },
-    ], []),
-    (tab) => shopApi.getLatestProducts({ limit: 8, category: tab.categorySlug }),
-  );
-
-  // const allProducts = useProductTabs(
-  //   useMemo(() => [
-  //     { id: 1, name: 'All', categorySlug: undefined },
-  //     { id: 404, name: 'Power Tools', ProductCategoryID: '404' },
-  //     { id: 357, name: 'Hand Tools', ProductCategoryID: '357' },
-  //     { id: 401, name: 'Plumbing', ProductCategoryID: '401' },
-  //   ], []),
-  //   (tab) => shopApi.getAllProducts(),
-  //   // (tab) => props.CallGetProductByProductCategoryID({ProductCategoryID: tab.ProductCategoryID, ProductPerPage: 4, Page: 0, Filter:"-"} ),
-  //   // (tab) => tab,
-  //   // (handleTabChange) => 
-  // );
-  // props.CallGetProductByProductCategoryID({ProductCategoryID: 404, ProductPerPage: 4, Page: 0, Filter:"-"} )
-  // console.log("props.productsByID", props.productsByID)
-  // const allProducts = useProductTabs(
-  //   useMemo(() => [
-  //     { id: 1, name: 'All', categorySlug: undefined },
-  //     { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
-  //     { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
-  //     { id: 4, name: 'Plumbing', categorySlug: 'plumbing' },
-  //   ], []),
-  //   (tab) => shopApi.getAllProducts()
-  // );
-
-  // const viewMoreProducts = useDeferredData(() => (
-  //   shopApi.getViewMoreProducts()
-  // ), []);
-
-  /**
-   * Product columns.
-   */
   let allProductsCategoryData = props.allcategories;
   let allProductsData = props.allproducts;
   const columns = useProductColumns(
@@ -135,37 +85,21 @@ function HomePageTwo(props) {
   const [postsToShow, setPostsToShow] = useState([]);
   let tempArray = []
   const [page, setPage] = useState(1);
-  let productPerPage = 4
+  let productPerPage = 20
 
   const loopWithSlice = () => {
-    if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal === "0") { toast.warning("There is no more product") }
-    else {
-      tempArray = [...postsToShow, ...props.viewMoreProducts];
-      setPostsToShow(tempArray)
-      props.CallViewMoreEmpty()
-    }
+    tempArray = [...postsToShow, ...props.products];
+    setPostsToShow(tempArray)
   };
 
   const handleShowMorePosts = () => {
     setPage(page + 1)
-    props.CallViewMoreFunctionProduct({ page, productPerPage })
   };
 
   useEffect(() => {
-    console.log("CallViewMoreFunctionProduct", props)
-    if (page <= 1) {
-      setPage(page + 1)
-      props.CallViewMoreFunctionProduct({ page, productPerPage })
-
-    }
-    if (props.viewMoreProducts.length > 0) {
-      loopWithSlice()
-    }
-  }, [props.viewMoreProducts])
-
-  function testing() {
-    console.log("testing")
-  }
+    props.CallAllProducts({ merchantId: 0, productPage: productPerPage, page: page })
+    loopWithSlice()
+  }, [page])
 
   return (
     <React.Fragment>
@@ -184,19 +118,19 @@ function HomePageTwo(props) {
             title="New Arrivals"
             layout="grid-4"
             rows={2}
-            products={props.products !== [] ? props.products : []}
-            // loading={props.loading}
-            // groups={allProducts.tabs}
-            onGroupClick={testing}
+            products={props.products}
+          // loading={props.loading}
+          // groups={allProducts.tabs}
+          // onGroupClick={testing}
           />
-        ), [props.products])}
+        ), [props.loading, props.products])}
 
         {useMemo(() => (
           postsToShow !== undefined && postsToShow.length > 0 &&
           <BlockProducts
             title="Featured Products"
             layout="large-first"
-            products={postsToShow !== [] ? postsToShow : []}
+            products={postsToShow}
           // loading={allProducts.loading}
           // groups={allProducts.tabs}
           // onGroupClick={allProducts.handleTabChange}

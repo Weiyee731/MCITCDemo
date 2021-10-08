@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Line, Pie,Bar } from "react-chartjs-2";
+import { Line, Pie } from "react-chartjs-2";
 import { GitAction } from "../../store/action/gitAction";
 import "./dashboard.component.css";
 import {
@@ -84,46 +84,6 @@ class Dashboard extends Component {
       });
     }
 
-    const bardata = {
-      labels: ['Merchant A', 'Merchant B', 'Merchant C', 'Merchant D', 'Merchant E', 'Merchant F'],
-      datasets: [
-        {
-          label: 'Top Sales of the Month',
-          data: [12000, 19000, 13000, 12500, 11200, 10300],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-          ],
-          borderWidth: 1,
-        },
-      ],
-    };
-
-    const barOptions = {
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-            },
-          },
-        ],
-      },
-    };
-    
-
     const data = {
       labels: Date,
       datasets: [
@@ -206,7 +166,7 @@ class Dashboard extends Component {
     return (
       <div>
         <div className="p-1">
-          <h1>Administrative Dashboard</h1>
+          <h1>Merchant Dashboard</h1>
         </div>
 
         {this.state.RevenueAndProfit.map((RevenueData) => {
@@ -218,7 +178,7 @@ class Dashboard extends Component {
                     <Row>
                       <div className="numbers">
                         <CardTitle style={{ fontSize: "24pt", fontWeight: 600, color: "white" }}>
-                          RM {RevenueData.OverallRevenue}
+                          RM 3,495.03
                         </CardTitle>
                         <p className="" style={{ color: "white", }}>
                           {/* {RevenueData.OverallRevenueTitle} */}
@@ -247,12 +207,12 @@ class Dashboard extends Component {
                         <div style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.33)", padding: '5px 10px', textAlign: 'left' }}>
                           <span style={{ color: 'white', fontSize: '12pt', marginRight: '10px' }}>Daily Sales</span>
                           <span style={{ fontSize: "24pt", fontWeight: 600, color: "white", width: '100%' }}>
-                            RM {RevenueData.OverallProfit}
+                            RM 415.13
                           </span>
                         </div>
                         <div style={{ padding: '5p 10px', textAlign: 'right' }}>
                           <span style={{ fontSize: "24pt", fontWeight: 600, color: "white", width: '100%', marginRight: '10px' }}>
-                            369
+                            45
                           </span>
                           <span style={{ color: 'white', fontSize: '12pt' }}>Orders</span>
                         </div>
@@ -269,7 +229,7 @@ class Dashboard extends Component {
                       <div className="numbers">
                         <CardTitle style={{ fontSize: "24pt", fontWeight: 600, color: "white" }}>
                           {/* {RevenueData.MonthlyProfit} */}
-                          10,642
+                          71
                         </CardTitle>
                         <p className="" style={{ color: "white", }}>
                           {/* {RevenueData.OverallRevenueTitle} */}
@@ -285,66 +245,19 @@ class Dashboard extends Component {
         })}
 
         <Row>
-          <Col md="5">
+          <Col md="8">
             <div className="py-2">
-              <h5 className="ml-3"><b>Top Merchants</b></h5>
-              <Bar data={bardata} options={barOptions} />
+              <h5 className="ml-3"><b>Weekly Sales Revenue</b></h5>
+              <Line data={data} width={100} height={30} />
             </div>
           </Col>
 
 
-          <Col md="7">
-            {/* <div>
-              <h5><b>Preference Statistics</b></h5>
-              <div className="TopProduct">
-                <Pie
-                  label={Label}
-                  data={PieData}
-                  options={dashboardEmailStatisticsChart.options}
-                />
-              </div>
-            </div> */}
-
+          <Col md="4">
             <div className="row" style={{ fontSize: 12, width: '100%', height: "40vh", overflowY: 'auto' }} >
-              <div className="col-6">
-
+              <div className="col-12">
                 <MaterialTable
-                  title="Hot Sales Items"
-                  columns={[
-                    {
-                      title: "Product",
-                      field: "ProductImage",
-                    },
-                    {
-                      title: "Name",
-                      field: "ProductName",
-                    },
-                    {
-                      title: "Stocks",
-                      field: "ProductStockAmountInital",
-                    },
-                    {
-                      title: "Ratings",
-                      field: "ProductRating",
-                    },
-                  ]}
-                  data={this.state.TopProduct}
-                  options={{
-                    paging: false,
-                    search: false,
-                    headerStyle: {
-                      backgroundColor: '#333333',
-                      color: '#FFF'
-                    }, 
-                    rowStyle: {
-                      padding: '5px'
-                    }
-                  }}
-                />
-              </div>
-              <div className="col-6">
-                <MaterialTable
-                  title="Hot Sales Items"
+                  title="Current Stock "
                   columns={[
                     {
                       title: "Product",
@@ -383,25 +296,17 @@ class Dashboard extends Component {
         </Row>
 
         <Row>
-          <Col md="8">
-            <div className="py-2">
-              <h5 className="ml-3"><b>Total Sales Revenue</b></h5>
-              <Line data={data} width={80} height={30} />
-            </div>
-          </Col>
-
-
           <Col md="4">
             <div>
               <MaterialTable
-                title="Top Category Browsing"
+                title="Customer Reviews"
                 columns={[
                   {
-                    title: "Category",
+                    title: "Item",
                     field: "Category",
                   },
                   {
-                    title: "Volume",
+                    title: "Review",
                     field: "Volume",
                   },
                 ]}
@@ -418,6 +323,80 @@ class Dashboard extends Component {
                   }
                 }}
               />
+            </div>
+          </Col>
+          <Col md="4">
+            <div>
+              <MaterialTable
+                  title="Hot Sales Items"
+                  columns={[
+                    {
+                      title: "Product",
+                      field: "ProductImage",
+                    },
+                    {
+                      title: "Name",
+                      field: "ProductName",
+                    },
+                    {
+                      title: "Stocks",
+                      field: "ProductStockAmountInital",
+                    },
+                    {
+                      title: "Ratings",
+                      field: "ProductRating",
+                    },
+                  ]}
+                  data={this.state.TopProduct}
+                  options={{
+                    paging: false,
+                    search: false,
+                    headerStyle: {
+                      backgroundColor: '#333333',
+                      color: '#FFF'
+                    },
+                    rowStyle: {
+                      padding: '5px'
+                    }
+                  }}
+                />
+            </div>
+          </Col>
+          <Col md="4">
+            <div>
+              <MaterialTable
+                  title="Cold Sales Items"
+                  columns={[
+                    {
+                      title: "Product",
+                      field: "ProductImage",
+                    },
+                    {
+                      title: "Name",
+                      field: "ProductName",
+                    },
+                    {
+                      title: "Stocks",
+                      field: "ProductStockAmountInital",
+                    },
+                    {
+                      title: "Ratings",
+                      field: "ProductRating",
+                    },
+                  ]}
+                  data={this.state.TopProduct}
+                  options={{
+                    paging: false,
+                    search: false,
+                    headerStyle: {
+                      backgroundColor: '#333333',
+                      color: '#FFF'
+                    },
+                    rowStyle: {
+                      padding: '5px'
+                    }
+                  }}
+                />
             </div>
           </Col>
         </Row>

@@ -21,9 +21,16 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
+import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import Box from "@material-ui/core/Box";
+import { Typography } from "@material-ui/core/styles/createTypography";
+
 function FormDialog(props) {
   const [open, setOpen] = React.useState(false);
-  const [quantity, setQuantity] = React.useState(0);
+  const [quantity, setQuantity] = React.useState(props.quantity);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -33,16 +40,44 @@ function FormDialog(props) {
     setOpen(false);
   };
 
-  const handleChange = (event) => {
-    setQuantity(event.target.value);
+  const handleChange = (ID, event) => {
+    var dataToBeModified = quantity;
+
+    if (quantity.length != 0) {
+      quantity.map((value, i) => {
+        if (ID == value.productVariantID) {
+          console.log(ID + " " + event.target.value);
+          dataToBeModified[i].quantity = event.target.value;
+        }
+      });
+    }
+
+    console.log(dataToBeModified);
+
+    setQuantity(dataToBeModified);
   };
 
   const handleUpdate = (event) => {
+    var listOfIDs = "";
+    var listOfQuantities = "";
+    if (quantity.length != 0) {
+      quantity.map((value, i) => {
+        if (value.quantity != 0) {
+          listOfIDs = listOfIDs + value.productVariantID;
+          listOfQuantities = listOfQuantities + value.quantity;
+        }
+      });
+    }
+    console.log(listOfIDs);
+    console.log(listOfQuantities);
+
     var datatoBeSent = {
-      SelectedProductID: props.Data.ProductID,
-      SelectedProductStock: quantity,
-      ProductStatus: "Endorsed",
-      UserID: localStorage.getItem("id"),
+      // SelectedProductID: props.Data.ProductID,
+      // SelectedProductStock: quantity,
+      // ProductStatus: "Endorsed",`Zjnm`,./
+      // UserID: localStorage.getItem("id"),
+      productsKids: listOfIDs,
+      productsStock: listOfQuantities,
     };
     props.CallUpdateProductStock(datatoBeSent);
     handleClose();
@@ -50,7 +85,7 @@ function FormDialog(props) {
       function () {
         reloadWindow();
       }.bind(this),
-      1000
+      5000
     );
   };
 
@@ -68,11 +103,13 @@ function FormDialog(props) {
         Request Stock
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Request Additional Stock</DialogTitle>
+        <DialogTitle style={{ paddingBottom: "0" }}>
+          Request Additional Stock
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText style={{ paddingTop: "0" }}>
             Please insert the number of stock to be requested for the following
-            item
+            item's variants
           </DialogContentText>
           <div style={{ display: "flex" }}>
             <img
@@ -87,15 +124,53 @@ function FormDialog(props) {
               {props.Data.ProductName}
             </p>
           </div>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Quantity"
-            type="number"
-            fullWidth
-            variant="standard"
-            onChange={handleChange}
-          />
+
+          {/* {JSON.parse(props.Data.ProductStock).map((ProductStock) => (
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <p style={{ marginTop: "20px", marginLeft: "10px" }}>
+                {props.Data.ProductName}
+              </p>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Quantity"
+                type="number"
+                fullWidth
+                variant="standard"
+                onChange={handleChange}
+                size="small"
+                style={{ width: "100px" }}
+              />
+            </div>
+          ))} */}
+          <Table size="small" style={{ width: "100%" }}>
+            <TableBody>
+              {JSON.parse(props.Data.ProductStock).map((ProductStock, i) => (
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    {ProductStock.ProductVariationValue}
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      label="Quantity"
+                      type="number"
+                      fullWidth
+                      variant="standard"
+                      onChange={handleChange.bind(
+                        this,
+                        ProductStock.ProductStockID
+                      )}
+                      size="small"
+                      // value={quantity[i].quantity}
+                      style={{ width: "50%" }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
@@ -191,6 +266,7 @@ function DisplayTableHead(props) {
   return (
     <TableHead>
       <TableRow>
+        <TableCell />
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -227,6 +303,138 @@ DisplayTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+  const [quantity, setQuantity] = React.useState([]);
+
+  const handleOpen = () => {
+    setOpen(!open);
+    var dataToBeModified = [];
+
+    for (var i = 0; i < JSON.parse(row.ProductStock).length; i++) {
+      var dataSample = {
+        productVariantID: JSON.parse(row.ProductStock)[i].ProductStockID,
+        quantity: 0,
+      };
+      dataToBeModified.push(dataSample);
+    }
+
+    setQuantity(dataToBeModified);
+  };
+
+  return (
+    <React.Fragment>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        {/* <TableRow
+        hover
+        onClick={(event) => props.onRowClick(event, props.row, props.index)}
+        aria-checked={props.isItemSelected}
+        tabIndex={-1}
+        key={row.ProductID}
+        selected={props.isItemSelected}
+      > */}
+        <TableCell>
+          <IconButton aria-label="expand row" size="small" onClick={handleOpen}>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell align="th" scope="row">
+          <div>
+            <img
+              height={50}
+              src={
+                JSON.parse(row.ProductImages)
+                  ? JSON.parse(row.ProductImages)[0].ProductMediaUrl
+                  : "https://www.unimas.my/images/logo/UNIMAS-logo.png"
+              }
+            />
+          </div>
+        </TableCell>
+        <TableCell align="left">{row.ProductName}</TableCell>
+
+        {/* <TableCell align="left">{row.ProductName}</TableCell> */}
+        <TableCell align="right">{row.ProductStockAmount}</TableCell>
+        <TableCell align="right">{row.ProductStockAmountInital}</TableCell>
+        {/* <TableCell align="left">{row.ProductStockStatus}</TableCell> */}
+        {/* <TableCell align="left"> */}
+        {/* <FormDialog
+            Data={row}
+            CallUpdateProductStock={props.CallUpdateProductStock}
+          /> */}
+        {/* {open ? (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              Show Variants
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              Hide Variants
+            </Button>
+          )} */}
+        {/* </TableCell> */}
+      </TableRow>
+      <TableRow
+      //  style={{ backgroundColor: "#e6e6e6" }}
+      >
+        <TableCell style={{ padding: "0" }} colSpan={7}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              {/* <Typography variant="h6" gutterBottom component="div">
+                Variants
+              </Typography> */}
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Variation Name</TableCell>
+                    <TableCell align="right"> Current Stock</TableCell>
+                    <TableCell align="right">Reserved</TableCell>
+                    <TableCell align="left">Current Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {JSON.parse(row.ProductStock).map((ProductStock) => (
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        {ProductStock.ProductVariationValue}
+                      </TableCell>
+                      <TableCell align="right">
+                        {ProductStock.ProductStockAmount}
+                      </TableCell>
+                      <TableCell align="right">
+                        {ProductStock.ProductStockAmountReserved}
+                      </TableCell>
+                      <TableCell align="left">
+                        {ProductStock.ProductStockStatus}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      <FormDialog
+                        quantity={quantity}
+                        Data={row}
+                        CallUpdateProductStock={props.CallUpdateProductStock}
+                      />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
+
 class DisplayTable extends Component {
   constructor(props) {
     super(props);
@@ -240,6 +448,7 @@ class DisplayTable extends Component {
       rowsPerPage: 5,
       detailsShown: false,
       searchFilter: "",
+      open: false,
     };
 
     this.handleRequestSort = this.handleRequestSort.bind(this);
@@ -293,6 +502,10 @@ class DisplayTable extends Component {
     }
   };
 
+  setOpen = () => {
+    this.setState({ open: !this.state.open });
+  };
+
   handleChangePage = (event, newPage) => {
     this.setState({ page: newPage });
   };
@@ -312,20 +525,6 @@ class DisplayTable extends Component {
         this.state.rowsPerPage,
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
-    this.props.Data.map((d, i) => {
-      d.Picture = (
-        <div>
-          <img
-            height={50}
-            src={
-              JSON.parse(d.ProductImages)
-                ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
-                : ""
-            }
-          />
-        </div>
-      );
-    });
 
     const divStyle = {
       width: "100%",
@@ -385,37 +584,16 @@ class DisplayTable extends Component {
                     .map((row, index) => {
                       const isItemSelected = this.isSelected(row.ProductName);
                       return (
-                        <TableRow
-                          hover
-                          onClick={(event) =>
-                            this.onRowClick(event, row, index)
+                        <Row
+                          index={index}
+                          row={row}
+                          // key={row.ProductID}
+                          onRowClick={this.onRowClick}
+                          isItemSelected={isItemSelected}
+                          CallUpdateProductStock={
+                            this.props.CallUpdateProductStock
                           }
-                          aria-checked={isItemSelected}
-                          tabIndex={-1}
-                          key={row.ProductID}
-                          selected={isItemSelected}
-                        >
-                          <TableCell align="left">{row.Picture}</TableCell>
-                          <TableCell align="left">{row.ProductName}</TableCell>
-                          <TableCell align="right">
-                            {row.ProductStockAmountInital}
-                          </TableCell>
-                          <TableCell align="right">
-                            {row.ProductStockAmount}
-                          </TableCell>
-                          <TableCell align="left">
-                            {row.ProductStockStatus}
-                          </TableCell>
-                          <TableCell align="left">
-                            {/* <SimplePopper Data={row} /> */}
-                            <FormDialog
-                              Data={row}
-                              CallUpdateProductStock={
-                                this.props.CallUpdateProductStock
-                              }
-                            />
-                          </TableCell>
-                        </TableRow>
+                        />
                       );
                     })}
                   {emptyRows > 0 && (
@@ -427,6 +605,7 @@ class DisplayTable extends Component {
                       <TableCell colSpan={6} />
                     </TableRow>
                   )}
+                  <TableRow></TableRow>
                 </TableBody>
               </Table>
             </TableContainer>

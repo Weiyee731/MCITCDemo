@@ -5,26 +5,23 @@ import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import "react-table/react-table.css";
 
-
 import MainTable from "./Components/TableView.component";
-import {Card, CardContent} from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
 import GoogleMaps from "../../components/googleMaps/googleMaps";
-
 
 import Button from "@material-ui/core/Button";
 
 function mapStateToProps(state) {
   return {
-    allstocks: state.counterReducer["products"],
+    products: state.counterReducer["products"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
-    CallUpdateProductStock: (prodData) =>
-      dispatch(GitAction.CallUpdateProductStock(prodData)),
+    CallUpdateProductStockIn: (prodData) => dispatch(GitAction.CallUpdateProductStockIn(prodData)),
+    CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
+    
   };
 }
 class AddManualStockInComponent extends Component {
@@ -36,9 +33,13 @@ class AddManualStockInComponent extends Component {
       ProductStatus: "Endorsed",
       UserID: localStorage.getItem("id"),
     };
-    this.props.CallAllProductsByProductStatus(this.state);
-  }
 
+    this.props.CallAllProducts({
+      merchantId: 0,
+      productPage: 999,
+      page: 1
+    })
+  }
 
   handleInputChange = (event, index) => {
     let newSelected = this.state.SelectedProductStock;
@@ -48,7 +49,7 @@ class AddManualStockInComponent extends Component {
     });
     this.setState({ SelectedProductStock: newSelected });
     let newSelectedProductID = this.state.SelectedProductID;
-    newSelectedProductID[index] = this.props.allstocks[index].ProductID;
+    newSelectedProductID[index] = this.props.products[index].ProductID;
     newSelectedProductID = newSelectedProductID.filter(function (el) {
       return el !== "empty";
     });
@@ -84,37 +85,55 @@ class AddManualStockInComponent extends Component {
 
   updateProduct = () => {
     // console.log(this.state);
-    this.props.CallUpdateProductStock(this.state);
+    this.props.CallUpdateProductStockIn(this.state);
   };
 
   render() {
-    // console.log(this.props.allstocks);
-    let allStocksData = this.props.allstocks
-    ? Object.keys(this.props.allstocks).map((key) => {
-      return this.props.allstocks[key];
-    })
-  : {};
+    console.log(this.props.products);
+    let allStocksData = this.props.products
+      ? Object.keys(this.props.products).map((key) => {
+          return this.props.products[key];
+        })
+      : {};
 
-  var FilterList=["ProductName", "Model", "ProductStockStatus", "ProductTag"];
-  
-  var ListedAttributes = [
-  {name:"ProductImage", isNum:false, displayName: "Product Image"}, 
-  {name:"ProductName", isNum:false, displayName: "Product Name"}, 
-  {name:"ProductStockAmountInital", isNum:true, displayName: "Current Stock"},
-  {name:"ProductStockAmount", isNum:true, displayName: "Awaiting Approval"},
-  {name:"ProductStockStatus", isNum:false, displayName: "Stock Status"},
-  ]
+    var FilterList = [
+      "ProductName",
+      "Model",
+      "ProductStockStatus",
+      "ProductTag",
+    ];
+
+    var ListedAttributes = [
+      { name: "ProductImage", isNum: false, displayName: "Product Image" },
+      { name: "ProductName", isNum: false, displayName: "Product Name" },
+      {
+        name: "ProductStockAmountInital",
+        isNum: true,
+        displayName: "Current Stock",
+      },
+      {
+        name: "ProductStockAmount",
+        isNum: true,
+        displayName: "Awaiting Approval",
+      },
+      // { name: "ProductStockStatus", isNum: false, displayName: "Stock Status" },
+    ];
 
     return (
       <div className="MainContainer">
         <h1>Product Stock In</h1>
         <Card className="MainCard">
           <CardContent className="MainContent">
-            <MainTable CallUpdateProductStock={this.props.CallUpdateProductStock} ListedAttributes={ListedAttributes} Data={allStocksData} filterList={FilterList} changeValue={this.updateList}/>
+            <MainTable
+              CallUpdateProductStock={this.props.CallUpdateProductStockIn}
+              ListedAttributes={ListedAttributes}
+              Data={allStocksData}
+              filterList={FilterList}
+              changeValue={this.updateList}
+            />
           </CardContent>
         </Card>
       </div>
-           
     );
   }
 }

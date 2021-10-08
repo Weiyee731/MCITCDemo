@@ -2092,9 +2092,6 @@ class AddProductComponent extends Component {
       // axios.post("http://192.168.137.177/UnimasMarketplaceImage/uploadproductImages.php", formData, config).then((res) => {
       axios.post("http://tourism.denoo.my/UnimasMarketplaceImage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
-
-
-
           this.props.callAddProductMedia(object)
           toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
         }
@@ -3427,7 +3424,6 @@ class AddProductComponent extends Component {
         className="ItemContainer"
       >
         <option aria-label="None" value="" />
-        {/* {createMenusForDropDownShoplots} */}
       </Select>
     );
 
@@ -3442,7 +3438,6 @@ class AddProductComponent extends Component {
         className="ItemContainer"
       >
         <option aria-label="None" value="" />
-        {/* {createMenusForDropDownGrid} */}
       </Select>
     );
 

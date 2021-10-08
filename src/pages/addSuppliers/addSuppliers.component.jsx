@@ -1073,7 +1073,6 @@ class AddSuppliersComponent extends Component {
         style={{ width: "100%" }}
       >
         <option aria-label="None" value="" />
-        {/* {createMenusForDropDownShoplots} */}
       </Select>
     );
 
@@ -1088,7 +1087,6 @@ class AddSuppliersComponent extends Component {
         style={{ width: "100%" }}
       >
         <option aria-label="None" value="" />
-        {/* {createMenusForDropDownGrid} */}
       </Select>
     );
 

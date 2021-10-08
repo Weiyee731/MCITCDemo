@@ -399,7 +399,6 @@ function Layout(props) {
       <ToastContainer autoClose={5000} hideProgressBar />
       <Quickview />
       <MobileMenu />
-      {/* {alert(localStorage.getItem("management"))} */}
       {localStorage.getItem("management") === "true" ? (
         Access()
       ) : (
@@ -453,7 +452,7 @@ function Layout(props) {
                   />
                 )}
               />
-              {/* {productLayouts} */}
+              {productLayouts}
               <Route exact path="/shop/cart" component={PageCart} />
               <Route exact path="/shop/checkout" component={PageCheckout} />
               <Route

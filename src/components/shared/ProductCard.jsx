@@ -1,5 +1,5 @@
 // react
-import React, { useState} from "react";
+import React, { useState } from "react";
 
 // third-party
 import classNames from "classnames";
@@ -142,13 +142,13 @@ function ProductCard(props) {
   //   badges = badges.length ? (
   //     <div className="product-card__badges-list">{badges}</div>
   //   ) : null;
-  if (product.ProductImages && product.ProductImages.length > 0) {
+  if (product.ProductImage !== null) {
     image = (
       <div className="product-card__image product-image">
         <Link to={url.product(product)} className="product-image__body">
           <img
             className="product-image__img"
-            src={JSON.parse(product.ProductImages)[0].ProductMediaUrl}
+            src={product.ProductImage}
             onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
             alt=""
           />
@@ -211,48 +211,48 @@ function ProductCard(props) {
         </div>
         {features}
       </div>
-      
-        <div className="product-card__actions">
-          <div className="product-card__availability">
-            Availability:{" "}
-            <span style={{ color: "#3d464d" }}>In Stock</span>
-          </div>
-          {price}
-          <div className="product-card__buttons">
-            <button
-              type="button"
-              onClick={() => window.localStorage.getItem("id") ? handleCart(product) : login()}
-              className={classNames("btn btn-primary product-card__addtocart")}
-            >
-              Add To Cart
-            </button>
 
-            {
-              props.wishlist.length > 0 ?
-                props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-                  props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-                    return (
-                      <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
-                        className={classNames('btn btn-light btn-sm btn-svg-icon')}
-                      ><Wishlist16Svg fill="red" />
-                      </button>
-                    )
-                  }) :
-                  (
+      <div className="product-card__actions">
+        <div className="product-card__availability">
+          Availability:{" "}
+          <span style={{ color: "#3d464d" }}>In Stock</span>
+        </div>
+        {price}
+        <div className="product-card__buttons">
+          <button
+            type="button"
+            onClick={() => window.localStorage.getItem("id") ? handleCart(product) : login()}
+            className={classNames("btn btn-primary product-card__addtocart")}
+          >
+            Add To Cart
+          </button>
+
+          {
+            props.wishlist.length > 0 ?
+              props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+                props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+                  return (
                     <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
-                      className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
-                    ><Wishlist16Svg />
+                      className={classNames('btn btn-light btn-sm btn-svg-icon')}
+                    ><Wishlist16Svg fill="red" />
                     </button>
-                  ) :
+                  )
+                }) :
                 (
                   <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
                     className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
                   ><Wishlist16Svg />
                   </button>
-                )
-            }
+                ) :
+              (
+                <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
+                  className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
+                ><Wishlist16Svg />
+                </button>
+              )
+          }
 
-            {/* <AsyncAction
+          {/* <AsyncAction
             action={() => compareAddItem(product)}
             render={({ run, loading }) => (
               <button
@@ -269,9 +269,9 @@ function ProductCard(props) {
               </button>
             )}
           /> */}
-          </div>
         </div>
-      
+      </div>
+
       <Modal isOpen={isQuickViewOpen} centered size="xl">
         <div className="quickview">
           <button className="quickview__close" type="button" onClick={() => setModal(false)}>

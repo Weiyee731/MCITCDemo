@@ -11,6 +11,7 @@ import Product from "../shared/Product";
 import ProductTabs from "./ProductTabs";
 import shopApi from "../../api/shop";
 import { url } from "../../services/utils";
+import { GitAction } from "../../store/action/gitAction";
 
 // blocks
 import BlockLoader from "../blocks/BlockLoader";
@@ -23,6 +24,20 @@ import WidgetProducts from "../widgets/WidgetProducts";
 // data stubs
 import categories from "../../data/shopWidgetCategories";
 import theme from "../../data/theme";
+import { connect } from "react-redux";
+
+function mapStateToProps(state) {
+  return {
+    loading: state.counterReducer["loading"],
+    products: state.counterReducer["products"],
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
+  };
+}
 
 function ShopPageProduct(props) {
   const { productSlug, layout, sidebarPosition } = props;
@@ -37,17 +52,26 @@ function ShopPageProduct(props) {
 
     setIsLoading(true);
 
-    shopApi.getAllProducts().then((product) => {
-      if (canceled) {
-        return;
+    console.log(props)
+
+    props.products.map((productToBeUsed) => {
+      if (productToBeUsed.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_') === productSlug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_')) {
+        setProduct(productToBeUsed);
+        setIsLoading(false);
       }
-      product.map((productToBeUsed) => {
-        if (productToBeUsed.slug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_') === productSlug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')) {
-          setProduct(productToBeUsed);
-          setIsLoading(false);
-        }
-      });
     });
+
+    // props.CallAllProducts({ merchantId: 0, productPage: 999, page: 1 }).then((product) => {
+    //   if (canceled) {
+    //     return;
+    //   }
+    //   product.map((productToBeUsed) => {
+    //     if (productToBeUsed.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_') === productSlug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_')) {
+    //       setProduct(productToBeUsed);
+    //       setIsLoading(false);
+    //     }
+    //   });
+    // });
 
     return () => {
       canceled = true;
@@ -193,4 +217,4 @@ ShopPageProduct.defaultProps = {
   sidebarPosition: "start",
 };
 
-export default ShopPageProduct;
+export default connect(mapStateToProps, mapDispatchToProps)(ShopPageProduct);

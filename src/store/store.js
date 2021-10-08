@@ -54,7 +54,7 @@ const rootEpic = combineEpics(
   gitEpic.deleteCreditCard,
   //==================PRODUCT==========================//
   gitEpic.getAllProducts,
-  gitEpic.getViewMoreProducts,
+  gitEpic.getProductDetail,
   gitEpic.getAllProductsByStatus,
   gitEpic.addProduct,
   gitEpic.updateProduct,
@@ -156,7 +156,7 @@ const rootEpic = combineEpics(
   gitEpic.deleteProductCart,
   gitEpic.updateProductCart,
   gitEpic.addProductCart,
-  gitEpic.viewProductCartList,  
+  gitEpic.viewProductCartList,
   //====================== PRODUCT WISHLIST ====================//
   gitEpic.viewProductWishlist,
   gitEpic.addProductWishlist,
