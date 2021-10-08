@@ -43,7 +43,8 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAllProductsByProductStatus: (prodData) => dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
     CallResetProductMgmtReturnVal: () => dispatch(GitAction.CallResetProductMgmtReturnVal()),
-    CallDeleteProduct: (prodData) => dispatch(GitAction.CallDeleteProduct(prodData)),
+    CallDeleteProduct: (prodData) =>
+      dispatch(GitAction.CallDeleteProduct(prodData)),
   };
 }
 

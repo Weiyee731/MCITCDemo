@@ -613,7 +613,11 @@ export class GitEpic {
             payload: json,
           };
         } catch (error) {
-          return toast.error(error);
+          console.log(error)
+          return {
+            type: "GOT-PRODUCT-BYPRODUCTSTATUS",
+            payload: [],
+          };
         }
       });
 
