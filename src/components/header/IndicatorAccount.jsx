@@ -186,14 +186,15 @@ class IndicatorAccount extends Component {
                 <Link to="/account/profile">My Profile</Link>
               </li>
               <li>
+                <Link to="/account/companyprofile">Company Profile</Link>
+              </li>
+              <li>
                 <Link to="/account/addresses">My Addresses</Link>
               </li>
               <li>
                 <Link to="/account/creditcard">My Credit Cards</Link>
               </li>
-              <li>
-                <Link to="/account/companyprofile">Company Profile</Link>
-              </li>
+              
               <li>
                 <Link to="/account/orders">Order History</Link>
               </li>

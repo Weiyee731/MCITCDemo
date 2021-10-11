@@ -28,7 +28,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Switch from "@material-ui/core/Switch";
 // import AddBoxIcon from "@material-ui/icons/AddBox";
-import ProductQuotationPDF from "../productQuotationPDF/productQuotationPDF.component";
+// import ProductQuotationPDF from "../productQuotationPDF/productQuotationPDF.component";
 // import { render } from "@testing-library/react";
 import Input from "@material-ui/core/Input";
 import Logo from "../../assets/Emporia.png";
@@ -411,12 +411,13 @@ function DeletableTable(props) {
   return (
     <div>
       {postSubmitted ? (
-        <ProductQuotationPDF
-          SelectedData={selected}
-          PropsData={props}
-          selectAmount={Amount}
-          FirstCreatedFlag={"1"}
-        />
+        // <ProductQuotationPDF
+        <></>
+        //   SelectedData={selected}
+        //   PropsData={props}
+        //   selectAmount={Amount}
+        //   FirstCreatedFlag={"1"}
+        // />
       ) : (
         <div>
           <Paper className={classes.paper} style={divStyle}>

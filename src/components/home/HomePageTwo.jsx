@@ -34,12 +34,14 @@ function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
     products: state.counterReducer["products"],
+    viewMoreProducts: state.counterReducer["viewMoreProducts"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
+    CallViewMoreFunctionProduct: (propData) => dispatch(GitAction.CallViewMoreFunctionProduct(propData)),
   };
 }
 

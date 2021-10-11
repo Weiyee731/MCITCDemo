@@ -89,7 +89,7 @@ import addPromotion from "../pages/addPromotion/addPromotion.component";
 import supplierResponse from "../pages/supplierResponse/supplierResponse.component";
 import ViewProductStockOutComponent from "../pages/viewProductStockOut/viewProductStockOut.component";
 import ViewStockOutDetailsComponent from "../pages/viewStockOutDetails/viewStockOutDetails.component";
-import ViewReceivableComponent from "../pages/viewReceivable/viewReceivable.component";
+// import ViewReceivableComponent from "../pages/viewReceivable/viewReceivable.component";
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
 // import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
 
@@ -251,7 +251,7 @@ const Access = () => {
               path="/viewTargetCustomer"
               component={ViewProductComponent}
             />
-            <Route path="/viewReceivable" component={ViewReceivableComponent} />
+            {/* <Route path="/viewReceivable" component={ViewReceivableComponent} /> */}
             <Route
               path="/viewDeliverableTransaction"
               component={ViewDeliverableComponent}
