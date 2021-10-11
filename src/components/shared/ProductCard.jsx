@@ -1,9 +1,5 @@
 // react
-<<<<<<< Updated upstream
-import React, { useState } from "react";
-=======
 import React, { useEffect, useState } from "react";
->>>>>>> Stashed changes
 
 // third-party
 import classNames from "classnames";
