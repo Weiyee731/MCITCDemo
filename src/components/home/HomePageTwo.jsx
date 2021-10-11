@@ -50,41 +50,39 @@ function HomePageTwo(props) {
   let productPerPage = 20
 
   const loopWithSlice = () => {
-    if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal !== "1") { toast.warning("There is no more product") }
-    else {
-      tempArray = [...postsToShow, ...props.viewMoreProducts];
-      setPostsToShow(tempArray)
-      props.CallViewMoreEmpty()
-    }
+    let products = JSON.parse(props.products)
+    tempArray = [...postsToShow, ...products];
+    setPostsToShow(tempArray)
+    // if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal !== "1") { toast.warning("There is no more product") }
+    // else {
+
+    //   props.CallViewMoreEmpty()
+    // }
   };
 
   const handleShowMorePosts = () => {
     setPage(page + 1)
-    props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
+    // props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
   };
 
-  useEffect(() => {
-    if (page <= 1) {
-      setPage(page + 1)
-      props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
-    }
-    if (props.viewMoreProducts.length > 0) {
-      loopWithSlice()
-    }
-  }, [props.viewMoreProducts])
+  // useEffect(() => {
+  //   if (page <= 1) {
+  //     setPage(page + 1)
+  //     props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
+  //   }
+  //   if (props.viewMoreProducts.length > 0) {
+  //     loopWithSlice()
+  //   }
+  // }, [props.viewMoreProducts])
 
   useEffect(() => {
-    props.CallAllProducts({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: 999, page: 1 })
-  }, [])
-
-  console.log("IN HOMEPAGE props", props)
-  // console.log("IN HOMEPAGE postsToShow", postsToShow)
-  // console.log("IN HOMEPAGE products", props.products)
+    props.CallAllProducts({ type: "Merchant", typeValue: 0, userId: 0, productPage: 999, page: page })
+    loopWithSlice()
+  }, [page])
 
   return (
     <React.Fragment>
       <div className="block--margin-top">
-        {console.log("hello", props)}
         <Helmet>
           <title>{theme.name}</title>
         </Helmet>
@@ -98,7 +96,7 @@ function HomePageTwo(props) {
             title="New Arrivals"
             layout="grid-4"
             rows={2}
-            products={props.products !== [] ? props.products : []}
+            products={props.products.length > 0 ? props.products : []}
           />
         ), [props.loading, props.products])}
 
@@ -107,7 +105,8 @@ function HomePageTwo(props) {
           <BlockProducts
             title="Featured Products"
             layout="large-first"
-            products={postsToShow !== [] ? postsToShow : []}
+            products={postsToShow.length > 0 ? postsToShow : []}
+            rows={2}
           />
         ), [postsToShow])}
         {

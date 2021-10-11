@@ -158,8 +158,6 @@ export class GitAction {
 
   static GetProductDetail = "GET-PRODUCT-DETAIL";
   static GotProductDetail = "GOT-PRODUCT-DETAIL";
-  static GetProductByID = "GET-PRODUCT-BYID";
-  static GotProductByID = "GOT-PRODUCT-BYID";
 
   static GetProductByMerchantID = "GET-PRODUCT-BYMERCHANTID";
   static GotProductByMerchantID = "GOT-PRODUCT-BYMERCHANTID";
@@ -194,9 +192,6 @@ export class GitAction {
   static AddProductPurchaseOrder = "ADD-PRODUCTPURCHASEORDER";
   static AddedProductPurchaseOrder = "ADDED-PRODUCTPURCHASEORDER";
 
-  static GetProductsByCategoryID = "GET-PRODUCT-BY-CATEGORY-ID";
-  static GotProductsByCategoryID = "GOT-PRODUCT-BY-CATEGORY-ID";
-
   static GetProductsByCategoryIDEmpty = "GET-PRODUCT-BY-CATEGORY-ID-EMPTY";
   static GotProductsByCategoryIDEmpty = "GOT-PRODUCT-BY-CATEGORY-ID-EMPTY";
 
@@ -215,20 +210,6 @@ export class GitAction {
     return {
       type: GitAction.GetProductDetail,
       payload: propData
-    };
-  }
-
-  static CallProductsByID(prodData) {
-    return {
-      type: GitAction.GetProductByID,
-      payload: prodData,
-    };
-  }
-
-  static CallProductsByMerchantID(prodData) {
-    return {
-      type: GitAction.GetProductByMerchantID,
-      payload: prodData,
     };
   }
 
@@ -322,13 +303,6 @@ export class GitAction {
   static CallAddProductPurchaseOrder(prodData) {
     return {
       type: GitAction.AddProductPurchaseOrder,
-      payload: prodData,
-    };
-  }
-
-  static CallGetProductByProductCategoryID(prodData) {
-    return {
-      type: GitAction.GetProductsByCategoryID,
       payload: prodData,
     };
   }
