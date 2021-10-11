@@ -64,8 +64,8 @@ function NavPanel(props) {
             {searchIndicator}
 
             {/* <Indicator url="/shop/wishlist" value={wishlist.length} icon={<Heart20Svg />} />
-                        <CartIndicator />
-                        <IndicatorAccount /> */}
+            <CartIndicator />
+            <IndicatorAccount /> */}
           </div>
         </div>
       </div>

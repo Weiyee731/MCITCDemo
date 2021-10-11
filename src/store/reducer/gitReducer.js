@@ -49,6 +49,7 @@ const INITIAL_STATE = {
   orderByID: [],
   updatedProducts: [],
   productMgmtResult: [],
+  addProductVariationResult: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -320,20 +321,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
         productSpecsDetail: action.payload,
       });
 
+    case GitAction.ResetProductSpecsDetailResult:
+      return Object.assign({}, state, {
+        loading: false,
+        productSpecsDetail: [],
+      });
 
     case GitAction.ResetProductReturnVal:
       return Object.assign({}, state, {
         loading: false,
         addResult: [],
       });
-
-
-    case GitAction.ResetProductMediaReturnVal:
-      return Object.assign({}, state, {
-        loading: false,
-        productMediaResult: [],
-      });
-
 
     //==============PRODUCTVARIATION===============//
     case GitAction.GetProductVariation:
@@ -427,7 +425,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.AddedProductVariationDetail:
       return Object.assign({}, state, {
         loading: false,
-        categories: action.payload,
+        addProductVariationResult: action.payload,
       });
 
     case GitAction.DeleteProductVariationDetail:
@@ -435,7 +433,13 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.DeletedProductVariationDetail:
       return Object.assign({}, state, {
         loading: false,
-        categories: action.payload,
+        addProductVariationResult: action.payload,
+      });
+
+    case GitAction.ResetProductVariationDetailResult:
+      return Object.assign({}, state, {
+        loading: false,
+        addProductVariationResult: []
       });
 
     //=======================SUPPLIER========================//

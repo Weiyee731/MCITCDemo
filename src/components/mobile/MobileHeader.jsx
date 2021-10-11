@@ -14,6 +14,8 @@ import {
     Search20Svg,
     Heart20Svg,
     Cart20Svg,
+    Person20Svg,
+    
 } from '../../svg';
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Search from '../header/Search';
@@ -72,18 +74,19 @@ class MobileHeader extends Component {
                                     onClick={this.handleOpenSearch}
                                     icon={<Search20Svg />}
                                 />
-                                <Indicator
-                                    className="indicator--mobile d-sm-flex d-none"
-                                    url="/shop/wishlist"
-                                    value={wishlist.length}
-                                    icon={<Heart20Svg />}
-                                />
+
                                 <Indicator
                                     className="indicator--mobile"
                                     url="/shop/cart"
-                                    // value={cart.quantity}
                                     value={cart.items.length}
                                     icon={<Cart20Svg />}
+                                />
+
+                                <Indicator
+                                    className="indicator--mobile"
+                                    url="/account"
+                                    // value={cart.items.length}
+                                    icon={<Person20Svg />}
                                 />
 
                             </div>

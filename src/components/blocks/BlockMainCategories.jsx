@@ -37,11 +37,11 @@ class BlockMainCategories extends Component {
      */
     const categoryStyle = {
       backgroundColor: "#fff",
-      // display: "flex"
+      display: "flex"
     }
 
     const categoryGrid = {
-      // padding: "16px"
+      padding: "16px",
       textAlign: "center",
       cursor: "pointer"
     }
