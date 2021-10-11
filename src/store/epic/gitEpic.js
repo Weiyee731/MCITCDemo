@@ -1293,6 +1293,17 @@ export class GitEpic {
   addProductVariationDetail = (action$) =>
     action$.ofType(GitAction.AddProductVariationDetail).switchMap(async ({ payload }) => {
       try {
+        console.log(
+          url +
+          "Product_AddProductVariationDetail?PRODUCTIDVARIATION=" +
+          payload.ProductVariation +
+          "&PRODUCTID=" +
+          payload.ProductID +
+          "&CUSTOMIZABLE=" +
+          payload.Customizable +
+          "&VALUE=" +
+          payload.Value
+        )
         const response = await fetch(
           url +
           "Product_AddProductVariationDetail?PRODUCTIDVARIATION=" +
@@ -1322,6 +1333,15 @@ export class GitEpic {
   addProductSpecsDetail = (action$) =>
     action$.ofType(GitAction.AddProductSpecsDetail).switchMap(async ({ payload }) => {
       try {
+        console.log(
+          url +
+          "Product_AddProductSpecificationDetail?PRODUCTVARIATIONID=" +
+          payload.ProductVariation +
+          "&PRODUCTID=" +
+          payload.ProductID +
+          "&PRODUCTSPECIFICATIONVALUE=" +
+          payload.value
+        )
         const response = await fetch(
           url +
           "Product_AddProductSpecificationDetail?PRODUCTVARIATIONID=" +

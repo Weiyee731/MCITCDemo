@@ -388,11 +388,18 @@ export class GitAction {
 
   static AddProductSpecsDetail = "DELETE-PRODUCTVARIATION";
   static AddedProductSpecsDetail = "DELETED-PRODUCTVARIATION";
+  static ResetProductSpecsDetailResult = "RESET-PRODUCTVARIATION";
 
-  static CallAllProductSpecsDetail(prodData) {
+  static CallAddProductSpecsDetail(prodData) {
     return {
       type: GitAction.AddProductSpecsDetail,
       payload: prodData
+    };
+  }
+
+  static CallResetProductSpecsDetailResults() {
+    return {
+      type: GitAction.ResetProductSpecsDetailResult,
     };
   }
 
@@ -454,6 +461,7 @@ export class GitAction {
 
   static DeleteProductVariationDetail = "DELETE-PRODUCTVARIATIONDETAIL";
   static DeletedProductVariationDetail = "DELETED-PRODUCTVARIATIONDETAIL";
+  static ResetProductVariationDetailResult = "RESET-PRODUCTVARIATIONDETAIL";
 
   static CallAllProductVariationDetail(prodData) {
     return {
@@ -473,6 +481,12 @@ export class GitAction {
     return {
       type: GitAction.DeleteProductVariationDetail,
       payload: prodData,
+    };
+  }
+
+  static CallResetProductVariationDetailResult() {
+    return {
+      type: GitAction.ResetProductVariationDetailResult,
     };
   }
 
