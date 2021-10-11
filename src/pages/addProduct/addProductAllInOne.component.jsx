@@ -326,6 +326,9 @@ class AddProductComponent extends Component {
     this.props.callAllSupplierByUserStatus("endorsed");
     this.handlePrevClickButton = this.handlePrevClickButton.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleProductSpecificationInput = this.handleProductSpecificationInput.bind(this);
+    this.handleCourierInput = this.handleCourierInput.bind(this);
+    this.handleProductVariantInput = this.handleProductVariantInput.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
     this.props.CallAllProductsCategories();
 
@@ -464,8 +467,10 @@ class AddProductComponent extends Component {
       helpText: [],
       editorState: null,
       isButtonDisabled: true,
+
       productSpecificationOptions: [],
-      shippingOptions: []
+      courierOptions: [],
+      selectedVariationID: 0,
     };
   }
 
@@ -1977,7 +1982,7 @@ class AddProductComponent extends Component {
         filenames += filename + "." + fileExt
         mediaType += getFileTypeByExtension(fileExt)
         variationID += "0"
-        slideOrder += i.toString()
+        slideOrder += i
         imageWidth += "0"
         imageHeight += "0"
 
@@ -2003,15 +2008,19 @@ class AddProductComponent extends Component {
 
       }
 
+      
+
       let object = {
         ProductID: productID,
         imageName: filenames,
         mediaType: mediaType,
         variationID: variationID,
         sliderOrder: slideOrder,
-        width: imageWidth,
-        height: imageHeight,
+        imageWidth: imageWidth,
+        imageHeight: imageHeight,
       }
+
+      console.log(object)
       axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
@@ -2028,6 +2037,10 @@ class AddProductComponent extends Component {
     }
   };
 
+  onSubmitProductVariation = (ProductID) => {
+    
+  }
+
   handleChange(data, e) {
     if (data === "product") {
       this.setState({
@@ -2042,10 +2055,7 @@ class AddProductComponent extends Component {
         200
       );
     } else if (data === "Product Category") {
-      this.setState({
-        productCategory: e.target.value,
-      });
-      this.props.CallAllProductVariationByCategoryID(e.target.value);
+      this.setState({ productCategory: e.target.value, });
       setTimeout(
         function () {
           this.checkProductCat();
@@ -2289,17 +2299,14 @@ class AddProductComponent extends Component {
         errorPrice: this.state.variation1.options[index].errorPrice,
         errorSKU: this.state.variation1.options[index].errorSKU,
         errorStock: this.state.variation1.options[index].errorStock,
-        variation2Options: this.state.variation1.options[index]
-          .variation2Options,
+        variation2Options: this.state.variation1.options[index].variation2Options,
       };
 
       var variations = this.state.variation1;
 
       variations.options[index] = optionData;
 
-      this.setState({
-        variation1: variations,
-      });
+      this.setState({ variation1: variations, });
 
       setTimeout(
         function () {
@@ -2668,7 +2675,7 @@ class AddProductComponent extends Component {
       )
     ) {
       if (this.state.index === 0) {
-        this.initData(this.props.variations);
+        // this.initData(this.props.variations);
       }
       this.setState((prevState, props) => {
         return { index: prevState.index + 1 };
@@ -2697,9 +2704,9 @@ class AddProductComponent extends Component {
     });
   };
 
-  initData = (data) => {
-    this.setState({ ProductVariationSelectedData: data });
-  };
+  // initData = (data) => {
+  //   this.setState({ ProductVariationSelectedData: data });
+  // };
 
   handleClick = (event) => {
     this.setState({
@@ -2965,30 +2972,27 @@ class AddProductComponent extends Component {
 
   addOptions = (variantNum, e) => {
     if (variantNum == 1) {
-      if ((this.state.variation1Options + 1) < 30) {
-        var option = {
-          optionName: "",
-          price: "",
-          stock: "",
-          sku: "",
-          picture: "",
-          pictureURL: "",
-          errorOption: false,
-          errorSKU: false,
-          errorPrice: false,
-          errorStock: false,
-        };
+      var option = {
+        optionName: "",
+        price: "",
+        stock: "",
+        sku: "",
+        picture: "",
+        pictureURL: "",
+        errorOption: false,
+        errorSKU: false,
+        errorPrice: false,
+        errorStock: false,
+      };
 
-        var variations = this.state.variation1;
+      var variations = this.state.variation1;
+      variations.options = [...variations.options, option];
 
-        variations.options = [...variations.options, option];
+      this.setState({
+        variation1Options: this.state.variation1Options + 1,
+        variation1: variations,
+      });
 
-        this.setState({
-          variation1Options: this.state.variation1Options + 1,
-          variation1: variations,
-        });
-
-      }
     }
     else if (variantNum == "priceTier") {
       const priceTier = {
@@ -3040,7 +3044,7 @@ class AddProductComponent extends Component {
       productCategory: this.state.productCategory,
       productSupplier: this.state.productSupplier,
       height: this.state.height,
-      width: this.state.weight,
+      width: this.state.width,
       depth: this.state.depth,
       weight: this.state.weight,
       sku: this.state.sku,
@@ -3059,18 +3063,90 @@ class AddProductComponent extends Component {
     // after all files are uploaded, upload video if have video, then done
     // 
 
+    //call the variations for product specifications and product category
     if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
       if (this.state.file.length > 0) {
         let ProductID = this.props.result[0].ProductID
         this.uploadFile(ProductID)
       }
+      if(this.state.productSpecificationOptions.length > 0 ){
+
+      }
+
       this.props.CallResetProductReturnVal()
     }
 
-    console.log(this.props.resultsMedia)
     if (typeof this.props.resultsMedia !== "undefined" && this.props.resultsMedia.length > 0 && this.props.resultsMedia[0].ReturnVal == 1) {
       this.props.CallResetProductMediaResult()
     }
+  }
+
+  handleAddProductSpecification = (addOrRemove, index) => {
+    if (addOrRemove === "add") {
+      let object = { categoryId: "", value: "" }
+      let specificationArray = [...this.state.productSpecificationOptions, object]
+      this.setState({ productSpecificationOptions: specificationArray })
+    }
+    else {
+      if (typeof index !== 'undefined' && index !== null) {
+        try {
+          let list = this.state.productSpecificationOptions
+          list.splice(Number(index), 1)
+          this.setState({ productSpecificationOptions: list })
+        }
+        catch (e) {
+          console.log("handleAddProductSpecification: " + e)
+        }
+      }
+    }
+  }
+
+  handleProductSpecificationInput = (idx, type, e) => {
+    let specificationObject = this.state.productSpecificationOptions
+
+    if (type === "input")
+      specificationObject[idx].value = e.target.value
+    else
+      specificationObject[idx].categoryId = e.target.value
+
+    this.setState({ productSpecificationOptions: specificationObject })
+  }
+
+  handleAddCourier = (addOrRemove, index) => {
+    if (addOrRemove === "add") {
+      let object = { courierId: 0, value: "" }
+      let list = [...this.state.courierOptions, object]
+      this.setState({ courierOptions: list })
+    }
+    else {
+      if (typeof index !== 'undefined' && index !== null) {
+        try {
+          let list = this.state.courierOptions
+          list.splice(Number(index), 1)
+          this.setState({ courierOptions: list })
+        }
+        catch (e) {
+          console.log("handleAddCourier: " + e)
+        }
+      }
+    }
+  }
+
+  handleCourierInput = (idx, type, e) => {
+    let courierObject = this.state.courierOptions
+    console.log(e.target.value)
+    if (type === "input")
+      courierObject[idx].value = e.target.value
+    else
+      courierObject[idx].courierId = e.target.value
+
+    this.setState({ courierOptions: courierObject })
+  }
+
+  handleProductVariantInput = (type, e) => {
+    if (type === "select")
+      this.setState({ selectedVariationID: e.target.value })
+
   }
 
   render() {
@@ -3280,16 +3356,10 @@ class AddProductComponent extends Component {
             });
           } else if (category.HierarchyID == 2) {
             productCategoriesList.map((categoryItem) => {
-              if (
-                categoryItem.ProductCategoryID ==
-                category.ParentProductCategoryID
-              ) {
+              if (categoryItem.ProductCategoryID == category.ParentProductCategoryID) {
                 JSON.parse(categoryItem.HierarchyItem).map(
                   (firstNestedList) => {
-                    if (
-                      category.ProductCategoryID ==
-                      firstNestedList.ProductCategoryID
-                    ) {
+                    if (category.ProductCategoryID == firstNestedList.ProductCategoryID) {
                       this.setState({
                         categoryH1: category.ParentProductCategoryID,
                         categoryH1Name: categoryItem.ProductCategory,
@@ -3430,7 +3500,13 @@ class AddProductComponent extends Component {
         1000
       );
     };
+
+    // handle select product category
     const categoryClick = (level, e) => {
+      if (typeof e.currentTarget.id !== "undefined" && e.currentTarget.id !== null) {
+        this.props.CallAllProductVariationByCategoryID(e.currentTarget.id)
+      }
+
       if (level == "1") {
         productCategoriesList.map((categoryItem) => {
           if (categoryItem.ProductCategoryID == e.currentTarget.id) {
@@ -3517,23 +3593,14 @@ class AddProductComponent extends Component {
                   id="productName"
                   value={this.state.name}
                   onChange={this.handleChange.bind(this, "product")}
-                  InputLabelProps={{
-                    shrink: "true",
-                  }}
-                  error={
-                    this.state.productNameEmpty ||
-                    this.state.productNameDublicated
-                  }
+                  InputLabelProps={{ shrink: "true", }}
+                  error={this.state.productNameEmpty || this.state.productNameDublicated}
                   className="InputField"
                   size="small"
                   label="Product Name"
                   variant="outlined"
                   onFocus={this.setHint.bind(this, "ProductName")}
-                  onBlur={() =>
-                    this.setState({
-                      FocusOn: false,
-                    })
-                  }
+                  onBlur={() => this.setState({ FocusOn: false, })}
                 />
 
                 {this.state.productNameEmpty && (
@@ -3912,12 +3979,59 @@ class AddProductComponent extends Component {
                 <Button
                   variant="outlined"
                   className="AddButton"
-                  onClick={this.addProductVariant.bind(this, "variation")}
+                  onClick={this.handleAddProductSpecification.bind(this, "add", '')}
                 >
-                  Add Variant
+                  Add Product Specification
                 </Button>
                 {
+                  this.state.productSpecificationOptions.length > 0 && this.state.productSpecificationOptions.map((el, idx) => {
+                    return (
+                      <div>
+                        <div className="d-flex align-items-center" >
+                          <RemoveCircleOutlineIcon
+                            className="DeleteOptionButton mr-2"
+                            style={{ cursor: 'pointer' }}
+                            color="secondary"
+                            onClick={this.handleAddProductSpecification.bind(this, "remove", idx)}
+                          />
+                          <FormControl variant="outlined" className="mr-2 w-50" size="small">
+                            <InputLabel id="specifications-dropdown">Specifications</InputLabel>
+                            <Select
+                              labelId="specifications-dropdown"
+                              id="specifications-dropdown-label"
+                              defaultValue={this.state.productSpecificationOptions[idx].categoryId}
+                              value={this.state.productSpecificationOptions[idx].categoryId}
+                              onChange={e => this.handleProductSpecificationInput(idx, "select", e)}
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              {
+                                this.props.variations.length > 0 && typeof this.props.variations[0].ReturnVal === "undefined" &&
+                                this.props.variations.map((el, idx) => {
+                                  return (<MenuItem key={idx} value={el.ProductVariationID}>{el.ProductVariation}</MenuItem>)
+                                })
+                              }
+                            </Select>
+                          </FormControl>
+                          <TextField
+                            className="InputField"
+                            InputLabelProps={{ shrink: "true", }}
+                            label={"Specification " + (idx + 1)}
+                            id="standard-start-adornment"
+                            size="small"
+                            variant="outlined"
+                            key={idx}
+                            onChange={e => this.handleProductSpecificationInput(idx, "input", e)}
+                            error={false}
+                            defaultValue={this.state.productSpecificationOptions[idx].value}
+                            value={this.state.productSpecificationOptions[idx].value}
+                          />
+                        </div>
 
+                      </div>
+                    )
+                  })
                 }
               </CardContent>
             </Card>
@@ -3989,20 +4103,25 @@ class AddProductComponent extends Component {
                       <p>Product Variation</p>
                     </div>
                     <div className="VariantOptionsSection">
-                      <FormControl variant="outlined" className="w-100">
+                      <FormControl variant="outlined" className="w-100" size="small">
                         <InputLabel id="demo-simple-select-outlined-label">Product Variation</InputLabel>
                         <Select
                           labelId="Product_Variation"
                           id="Product_Variation"
-                          value={10}
-                          onChange={(e) => { }}
+                          value={this.state.selectedVariationID}
+                          defaultValue={this.state.selectedVariationID}
+                          onChange={(e) => { this.handleProductVariantInput("select", e) }}
                           label="Product Variation"
                         >
                           <MenuItem value=""><em>None</em></MenuItem>
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
+                          {
+                            this.props.variations.length > 0 && typeof this.props.variations[0].ReturnVal === "undefined" &&
+                            this.props.variations.map((el, idx) => {
+                              return (<MenuItem key={idx} value={el.ProductVariationID}>{el.ProductVariation}</MenuItem>)
+                            })
+                          }
                         </Select>
+
                       </FormControl>
                       {this.state.variation1NameEmpty ? (
                         <p className="error">
@@ -4012,7 +4131,7 @@ class AddProductComponent extends Component {
 
                       {[...Array(this.state.variation1Options)].map((e, i) => (
                         <div>
-                          <div className="VariantOption">
+                          <div className="VariantOption align-items-center">
                             <RemoveCircleOutlineIcon
                               className="DeleteOptionButton"
                               color="secondary"
@@ -4039,7 +4158,8 @@ class AddProductComponent extends Component {
                             </p>
                           ) : null}
                         </div>
-                      ))}
+                      ))
+                      }
 
                       <Button
                         variant="outlined"
@@ -4160,17 +4280,8 @@ class AddProductComponent extends Component {
                   <table className="TableMain">
                     <tr className="trHeading">
                       <td className="tdHeading">
-                        {this.state.variation1Name
-                          ? this.state.variation1Name
-                          : "Variation 1 Name"}
+                        {this.state.variation1Name ? this.state.variation1Name : "Variation 1 Name"}
                       </td>
-                      {this.state.variation2On ? (
-                        <td className="tdHeading">
-                          {this.state.variation2Name
-                            ? this.state.variation2Name
-                            : "Variation 2 Name"}
-                        </td>
-                      ) : null}
                       <td className="tdHeading"> Price </td>
                       <td className="tdHeading"> Stock </td>
                       <td className="tdHeading">SKU</td>
@@ -4511,7 +4622,7 @@ class AddProductComponent extends Component {
                   <div className="wholeSale">
                     <div>
                       {[...Array(this.state.wholeSaleOptions)].map((e, i) => (
-                        <div className="wholeSaleRows">
+                        <div className="wholeSaleRows  align-items-center">
                           <RemoveCircleOutlineIcon
                             className="deleteButtonWholeSale"
                             color="secondary"
@@ -5417,6 +5528,68 @@ class AddProductComponent extends Component {
                     </InputGroup>
                   </div>
                 </div>
+
+                <div>
+                  <p className="Heading">Courier Options</p>
+                  <Button
+                    variant="outlined"
+                    className="AddButton"
+                    onClick={this.handleAddCourier.bind(this, "add", -1)}
+                  >
+                    Add Courier
+                  </Button>
+                  {
+                    this.state.courierOptions.length > 0 && this.state.courierOptions.map((el, idx) => {
+                      return (
+                        <div>
+                          <div className="d-flex  align-items-center">
+                            <RemoveCircleOutlineIcon
+                              className="DeleteOptionButton mr-2"
+                              style={{ cursor: 'pointer' }}
+                              color="secondary"
+                              onClick={this.handleAddCourier.bind(this, "remove", idx)}
+                            />
+                            <FormControl variant="outlined" className="mr-2 w-50" size="small">
+                              <InputLabel id="courier-dropdown">Couriers</InputLabel>
+                              <Select
+                                labelId="courier-dropdown"
+                                id="courier-dropdown-label"
+                                defaultValue={this.state.courierOptions[idx].courierId}
+                                value={this.state.courierOptions[idx].courierId}
+                                onChange={e => this.handleCourierInput(idx, "select", e)}
+                              >
+                                <MenuItem value="">
+                                  <em>None</em>
+                                </MenuItem>
+                                {
+                                  this.props.variations.length > 0 && typeof this.props.variations[0].ReturnVal === "undefined" &&
+                                  this.props.variations.map((el, idx) => {
+                                    return (<MenuItem key={idx} value={el.ProductVariationID}>{el.ProductVariation}</MenuItem>)
+                                  })
+                                }
+                              </Select>
+                            </FormControl>
+
+                            <TextField
+                              className="InputField"
+                              InputLabelProps={{ shrink: "true", }}
+                              label={"Courier " + (idx + 1)}
+                              id="standard-start-adornment"
+                              size="small"
+                              variant="outlined"
+                              key={idx}
+                              onChange={e => this.handleCourierInput(idx, "input", e)}
+                              error={false}
+                              defaultValue={this.state.courierOptions[idx].value}
+                              value={this.state.courierOptions[idx].value}
+                            />
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+
                 {this.state.weightEmpty && (
                   <p className="error">Product weight cannot be empty.</p>
                 )}
@@ -5431,7 +5604,7 @@ class AddProductComponent extends Component {
           </div>
           <br />
           <div className="SubmitButtonContainer">
-            <Button variant="outlined" className="SubmitButton" onClick={() => { this.uploadFile(111) }}>
+            <Button variant="outlined" className="SubmitButton" onClick={() => { this.OnSubmit() }}>
               Review Product Details
             </Button>
           </div>

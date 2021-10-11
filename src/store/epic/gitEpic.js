@@ -1026,6 +1026,31 @@ export class GitEpic {
   addProduct = (action$) =>
     action$.ofType(GitAction.AddProduct).switchMap(async ({ payload }) => {
       try {
+        console.log(url +
+          "Product_AddProduct?PRODUCTNAME=" +
+          payload.name +
+          "&PRODUCTDESC=" +
+          payload.description +
+          "&PRODUCTCATEGORYID=" +
+          payload.productCategory +
+          "&MERCHANTID=" +
+          payload.productSupplier +
+          "&PRODUCTHEIGHT=" +
+          payload.height +
+          "&PRODUCTWIDTH=" +
+          payload.width +
+          "&PRODUCTDEPTH=" +
+          payload.depth +
+          "&PRODUCTWEIGHT=" +
+          payload.weight +
+          "&PRODUCTSKU=" +
+          payload.sku +
+          "&PRODUCTBRAND=" +
+          payload.brand +
+          "&PRODUCTMODEL=" +
+          payload.model +
+          "&PRODUCTTAG=" +
+          payload.tags)
         const response = await fetch(
           url +
           "Product_AddProduct?PRODUCTNAME=" +
@@ -1201,7 +1226,7 @@ export class GitEpic {
         "Product_AddProductMedia?" +
         "PRODUCTID=" + payload.ProductID +
         "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
-        "&PRODUCTSLIDEORDER=" + payload.slideOrder +
+        "&PRODUCTSLIDEORDER=" + payload.sliderOrder +
         "&TYPE=" + payload.mediaType +
         "&WIDTH=" + payload.imageWidth +
         "&HEIGHT=" + payload.imageHeight +
@@ -1212,7 +1237,7 @@ export class GitEpic {
         "Product_AddProductMedia?" +
         "PRODUCTID=" + payload.ProductID +
         "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
-        "&PRODUCTSLIDEORDER=" + payload.slideOrder +
+        "&PRODUCTSLIDEORDER=" + payload.sliderOrder +
         "&TYPE=" + payload.mediaType +
         "&WIDTH=" + payload.imageWidth +
         "&HEIGHT=" + payload.imageHeight +
@@ -1324,10 +1349,9 @@ export class GitEpic {
   getAllProductVariationByCategoryID = (action$) =>
     action$.ofType(GitAction.GetProductVariationByCategoryID).switchMap(async ({ payload }) => {
       try {
+        console.log(url + "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" + payload)
         const response = await fetch(
-          url +
-          "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" +
-          payload
+          url + "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" + payload
         );
         let json = await response.json();
         json = JSON.parse(json);
