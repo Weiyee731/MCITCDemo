@@ -1982,7 +1982,7 @@ class AddProductComponent extends Component {
         filenames += filename + "." + fileExt
         mediaType += getFileTypeByExtension(fileExt)
         variationID += "0"
-        slideOrder += i.toString()
+        slideOrder += i
         imageWidth += "0"
         imageHeight += "0"
 
@@ -2008,15 +2008,19 @@ class AddProductComponent extends Component {
 
       }
 
+      
+
       let object = {
         ProductID: productID,
         imageName: filenames,
         mediaType: mediaType,
         variationID: variationID,
         sliderOrder: slideOrder,
-        width: imageWidth,
-        height: imageHeight,
+        imageWidth: imageWidth,
+        imageHeight: imageHeight,
       }
+
+      console.log(object)
       axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
@@ -2032,6 +2036,10 @@ class AddProductComponent extends Component {
       })
     }
   };
+
+  onSubmitProductVariation = (ProductID) => {
+    
+  }
 
   handleChange(data, e) {
     if (data === "product") {
@@ -3036,7 +3044,7 @@ class AddProductComponent extends Component {
       productCategory: this.state.productCategory,
       productSupplier: this.state.productSupplier,
       height: this.state.height,
-      width: this.state.weight,
+      width: this.state.width,
       depth: this.state.depth,
       weight: this.state.weight,
       sku: this.state.sku,
@@ -3061,6 +3069,10 @@ class AddProductComponent extends Component {
         let ProductID = this.props.result[0].ProductID
         this.uploadFile(ProductID)
       }
+      if(this.state.productSpecificationOptions.length > 0 ){
+
+      }
+
       this.props.CallResetProductReturnVal()
     }
 
@@ -5592,7 +5604,7 @@ class AddProductComponent extends Component {
           </div>
           <br />
           <div className="SubmitButtonContainer">
-            <Button variant="outlined" className="SubmitButton" onClick={() => { this.uploadFile(111) }}>
+            <Button variant="outlined" className="SubmitButton" onClick={() => { this.OnSubmit() }}>
               Review Product Details
             </Button>
           </div>
