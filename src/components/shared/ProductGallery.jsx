@@ -392,7 +392,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) =>{
   return {
-    CallAllProducts: (data) => dispatch(GitAction.CallAllProducts(data)),
  };
 }
 

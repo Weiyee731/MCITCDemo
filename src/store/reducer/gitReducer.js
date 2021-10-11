@@ -207,9 +207,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         products: action.payload,
       });
 
-    case GitAction.GetProductByID:
+    case GitAction.GetProductDetail:
       return Object.assign({}, state, { loading: true });
-    case GitAction.GotProductByID:
+    case GitAction.GotProductDetail:
       return Object.assign({}, state, {
         loading: false,
         productsByID: action.payload,
@@ -236,13 +236,6 @@ export function counterReducer(state = INITIAL_STATE, action) {
         viewMoreProducts: [],
       });
 
-    case GitAction.GetProductsByCategoryID:
-      return Object.assign({}, state, { loading: true });
-    case GitAction.GotProductsByCategoryID:
-      return Object.assign({}, state, {
-        loading: false,
-        products: action.payload,
-      });
     case GitAction.GetProductsByCategoryIDEmpty:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotProductsByCategoryIDEmpty:

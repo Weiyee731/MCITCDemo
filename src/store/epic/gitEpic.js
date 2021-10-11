@@ -937,7 +937,6 @@ export class GitEpic {
   getAllProducts = (action$) =>
     action$.ofType(GitAction.GetProduct).switchMap(async ({ payload }) => {
       try {
-        console.log('bbbbbbbb')
         const response = await fetch(
           url +
           "Product_ItemListByType?Type=" +
@@ -969,6 +968,13 @@ export class GitEpic {
   getProductDetail = (action$) =>
     action$.ofType(GitAction.GetProductDetail).switchMap(async ({ payload }) => {
       try {
+        console.log(
+          url +
+          "Product_ItemDetailByProductID?ProductID=" +
+          payload.productId +
+          "&USERID=" +
+          payload.userId
+        )
         const response = await fetch(
           url +
           "Product_ItemDetailByProductID?ProductID=" +
@@ -1012,36 +1018,6 @@ export class GitEpic {
         alert('getAllProductsByStatus: ' + error);
         return {
           type: GitAction.GotProductByProductStatus,
-          payload: [],
-        };
-      }
-    });
-
-  GetProduct_ItemListByCategoryID = (action$) =>
-    action$.ofType(GitAction.GetProductsByCategoryID).switchMap(async ({ payload }) => {
-      try {
-        console.log('aaaaaaaaa')
-        const response = await fetch(
-          url +
-          "Product_ItemListByCategory?ProductCategoryID=" +
-          payload.ProductCategoryID +
-          "&ProductPerPage=" +
-          payload.ProductPerPage +
-          "&Page=" +
-          payload.Page +
-          "&Filter=" +
-          payload.Filter
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductsByCategoryID,
-          payload: json,
-        };
-      } catch (error) {
-        alert('GetProduct_ItemListByCategoryID: ' + error);
-        return {
-          type: GitAction.GotProductsByCategoryID,
           payload: [],
         };
       }
@@ -1613,7 +1589,7 @@ export class GitEpic {
       try {
         const response = await fetch(
           url +
-          "General_NotificationList?UserID=" +
+          "User_ViewNotification?UserID=" +
           payload
         );
         let json = await response.json();

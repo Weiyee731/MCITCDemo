@@ -78,7 +78,7 @@ class BlockMainCategories extends Component {
 }
 
 BlockMainCategories.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   categories: PropTypes.array,
   layout: PropTypes.oneOf(["classic", "compact"]),
 };

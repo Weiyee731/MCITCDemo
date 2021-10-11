@@ -1,11 +1,8 @@
-import React, { Component, useMemo } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 // blocks
-import BlockSlideShow from '../blocks/BlockSlideShow';
 import TextField from '@material-ui/core/TextField';
 // components
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
@@ -15,23 +12,16 @@ import LocalShippingOutlinedIcon from '@material-ui/icons/LocalShippingOutlined'
 import MonetizationOnOutlinedIcon from '@material-ui/icons/MonetizationOnOutlined';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import Button from '@material-ui/core/Button';
-import { green } from '@material-ui/core/colors';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { withStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 
 // styles
@@ -49,9 +39,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
-        CallGetProductByProductCategoryID: (propsData) => dispatch(GitAction.CallGetProductByProductCategoryID(propsData)),
-        CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
-        // CallProductByProductCategoryIDEmpty: () => dispatch(GitAction.CallProductByProductCategoryIDEmpty()),
+        CallAllProducts: (propsData) => dispatch(GitAction.CallAllProducts(propsData)),
     };
 }
 
@@ -95,14 +83,13 @@ class BlockCategoryDetails extends Component {
 
     componentDidMount() {
         if (!isStringNullOrEmpty(this.props.match.params.categoryID)) {
-            // this.props.CallProductByProductCategoryIDEmpty()
-            let propsData = {
-                ProductCategoryID: Number(this.props.match.params.categoryID),
-                ProductPerPage: 30,
-                Page: 1,
-                Filter: "1"
-            }
-            this.props.CallGetProductByProductCategoryID(propsData)
+            this.props.CallAllProducts({
+                type: "Merchant",
+                typeValue: 0,
+                userId: 0,
+                productPage: 999,
+                page: 1
+            })
         }
 
         if (Array.isArray(this.props.productCategories) && this.props.productCategories.length === 0) {
@@ -268,6 +255,7 @@ class BlockCategoryDetails extends Component {
     }
 
     render() {
+        console.log(this.state.products)
         return (
             <div className="container-fluid px-5 block block--margin-top">
                 <div className="row">

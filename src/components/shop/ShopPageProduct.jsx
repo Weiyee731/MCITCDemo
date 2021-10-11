@@ -29,13 +29,14 @@ import { connect } from "react-redux";
 function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
-    products: state.counterReducer["products"],
+    product: state.counterReducer["productsByID"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
+    CallProductDetail: (propData) => dispatch(GitAction.CallProductDetail(propData)),
   };
 }
 
@@ -52,20 +53,18 @@ function ShopPageProduct(props) {
 
     setIsLoading(true);
     console.log("in shop page product", props)
+    props.CallProductDetail({productId: productSlug, userId: 1})
+    
+    setProduct(props.product);
+    setIsLoading(false);
 
-    shopApi.getProductByID(productSlug).then((product) => {
-      if (canceled) {
-        return;
-      }
-      product.map((productToBeUsed) => {
-        // if (productToBeUsed.slug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_') === productSlug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')) {
-          setProduct(productToBeUsed);
-          setIsLoading(false);
-        // }
-      });
-      // setProduct(product);
-      // setIsLoading(false);
-    });
+    // shopApi.getProductByID(productSlug).then((product) => {
+    //   if (canceled) {
+    //     return;
+    //   }
+    //   product.map((productToBeUsed) => {
+    //   });
+    // });
 
     // props.CallAllProducts({ merchantId: 0, productPage: 999, page: 1 }).then((product) => {
     //   if (canceled) {
@@ -82,6 +81,7 @@ function ShopPageProduct(props) {
     return () => {
       canceled = true;
     };
+    
   }, [productSlug, setIsLoading]);
 
   // Load related products.

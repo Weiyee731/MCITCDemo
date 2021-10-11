@@ -167,6 +167,7 @@ export default class BlockProductsCarousel extends Component {
     let { products } = this.props;
 
     if (rows > 0) {
+      products = JSON.parse(products)
       products = products.slice();
 
       while (products.length > 0) {
@@ -251,7 +252,7 @@ BlockProductsCarousel.propTypes = {
   title: PropTypes.string.isRequired,
   layout: PropTypes.oneOf(["grid-4", "grid-4-sm", "grid-5", "horizontal"]),
   rows: PropTypes.number,
-  products: PropTypes.array,
+  products: PropTypes.any,
   groups: PropTypes.array,
   withSidebar: PropTypes.bool,
   loading: PropTypes.bool,

@@ -26,7 +26,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProducts: (credentials) => dispatch(GitAction.CallAllProducts(credentials)),
   };
 }
 
