@@ -1348,10 +1348,9 @@ export class GitEpic {
   getAllProductVariationByCategoryID = (action$) =>
     action$.ofType(GitAction.GetProductVariationByCategoryID).switchMap(async ({ payload }) => {
       try {
+        console.log(url + "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" + payload)
         const response = await fetch(
-          url +
-          "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" +
-          payload
+          url + "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" + payload
         );
         let json = await response.json();
         json = JSON.parse(json);
