@@ -108,6 +108,16 @@ export class GitAction {
     };
   }
 
+  //==================PAYMENT METHOD==========================//
+  static GetPaymentMethod = "GET-PAYMENTMETHID";
+  static GotPaymentMethod = "GOT-PAYMENTMETHID";
+
+  static CallAllPaymentMethod() {
+    return {
+      type: GitAction.GetPaymentMethod,
+    };
+  }
+
   //==================CREDIT CARD==========================//
   static GetCreditCard = "GET-CREDITCARD";
   static GotCreditCard = "GOT-CREDITCARD";

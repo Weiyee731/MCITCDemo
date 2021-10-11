@@ -41,6 +41,7 @@ const INITIAL_STATE = {
   subscriber: [],
   addsubs: [],
   creditcards: [],
+  paymentmethod: [],
   updatedCreditCard: [],
   productcart: [],
   wishlist: [],
@@ -122,6 +123,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         countries: action.payload,
       });
+
+    //==================PAYMENT METHOD==========================//
+    case GitAction.GetPaymentMethod:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotPaymentMethod:
+      return Object.assign({}, state, {
+        loading: false,
+        paymentmethod: action.payload,
+      });
+
+
     //=======================CREDIT CARD========================//
     case GitAction.GetCreditCard:
       return Object.assign({}, state, { loading: true });

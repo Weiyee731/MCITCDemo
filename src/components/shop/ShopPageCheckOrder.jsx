@@ -125,8 +125,7 @@ class PageCheckOrder extends Component {
       UserAddressBookID: 0,
       UserCity: 'Self Collect'
     }
-
-    const addresses = this.props.addresses.length > 0 && this.props.addresses.map((address) => (
+    const addresses = this.props.addresses !== undefined && this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0" && this.props.addresses.map((address) => (
 
       <React.Fragment key={address.UserAddressBookID}>
         <div className="addresses-list__item card address-card">
@@ -159,21 +158,21 @@ class PageCheckOrder extends Component {
               </div>
             </div>
             <div className="address-card__footer">
-              <Link
+              <Button
                 to="/account/addresses"
                 // to="/account/addresses/5"
                 onClick={(e) => this.goEdit(e, address.UserAddressBookID)}
               >
                 Edit
-              </Link>
+              </Button>
               &nbsp;&nbsp;
-              <Link
+              <Button
                 onClick={(e) =>
                   this.handleRemoveClick(e, address.UserAddressBookID)
                 }
               >
                 Remove
-              </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -201,7 +200,7 @@ class PageCheckOrder extends Component {
         {addresses}
 
         <Link
-          to="/account/address"
+          to="Emporia/account/addresses"
           className="addresses-list__item addresses-list__item--new"
         >
           <div className="addresses-list__plus" />

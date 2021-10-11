@@ -158,7 +158,8 @@ class AccountPageAddresses extends Component {
               <Divider variant="fullWidth" />
 
               <div>
-                {this.props.addresses.map((address) => (
+                {this.props.addresses !== undefined &&  this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0" &&
+                this.props.addresses.map((address) => (
                   <div key={address.UserAddressBookID}>
                     <Card
                       style={{

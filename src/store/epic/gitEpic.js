@@ -759,6 +759,34 @@ export class GitEpic {
       }
     });
 
+  // All Payment Method
+  getAllPaymentMethod = (action$) =>
+    action$.ofType(GitAction.GetPaymentMethod).switchMap(async ({ payload }) => {
+      console.log( url +
+        "General_ViewPaymentMethod")
+      try {
+        const response = await fetch(
+          url +
+          "General_ViewPaymentMethod"
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        
+        console.log("json",json)
+        return {
+          type: GitAction.GotPaymentMethod,
+          payload: json,
+        };
+
+      } catch (error) {
+        alert('getAllPaymentMethod: ' + error);
+        return {
+          type: GitAction.GotPaymentMethod,
+          payload: [],
+        };
+      }
+    });
+
   // CREDIT CARD
 
   getAllCreditCard = (action$) =>
@@ -1872,6 +1900,24 @@ export class GitEpic {
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
       try {
+        console.log(url +
+          "Order_AddOrder?USERID=" +
+          payload.UserID +
+          "&USERADDRESSID=" +
+          payload.UserAddressID +
+          "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" +
+          payload.PaymentMethodID +
+          "&USERPAYMENTMETHODID=" +
+          payload.UserPaymentMethodID +
+          "&ORDERTOTALAMOUNT=" +
+          payload.OrderTotalAmount +
+          "&ORDERPAIDAMOUNT=" +
+          payload.OrderPaidAmount +
+          "&PRODUCTID=" +
+          payload.ProductID +
+          "&PRODUCTQUANTITY=" +
+          payload.ProductQuantity)
+          
         const response = await fetch(
           url +
           "Order_AddOrder?USERID=" +
@@ -1880,12 +1926,14 @@ export class GitEpic {
           payload.UserAddressID +
           "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" +
           payload.PaymentMethodID +
-          "&PRODUCTVARIATIONDETAILID=" +
-          payload.ProductID +
+          "&USERPAYMENTMETHODID=" +
+          payload.UserPaymentMethodID +
+          "&ORDERTOTALAMOUNT=" +
+          payload.OrderTotalAmount +
+          "&ORDERPAIDAMOUNT=" +
+          payload.OrderPaidAmount +
           "&PRODUCTID=" +
           payload.ProductID +
-          "&PRODUCTVARIATIONDETAILID=" +
-          payload.ProductVariationDetailID +
           "&PRODUCTQUANTITY=" +
           payload.ProductQuantity
         );
@@ -1901,7 +1949,7 @@ export class GitEpic {
             payload.UserCartID
           );
           let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1)
+          json_1 = json_1
           return {
             type: GitAction.AddedOrder,
             payload: json_1,
@@ -1913,7 +1961,8 @@ export class GitEpic {
             payload: [],
           };
         }
-      } catch (error) {
+      }
+       catch (error) {
         alert('deleteProductCart: ' + error);
         return {
           type: GitAction.AddedOrder,

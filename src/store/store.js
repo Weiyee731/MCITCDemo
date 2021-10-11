@@ -47,6 +47,8 @@ const rootEpic = combineEpics(
   gitEpic.updateProfileImage,
   //==================COUNTRY==========================//
   gitEpic.getCountry,
+  //==================PAYMENT METHOD==========================//
+  gitEpic.getAllPaymentMethod,
   //==================CREDIT CARD==========================//
   gitEpic.getAllCreditCard,
   gitEpic.addCreditCard,
