@@ -1,14 +1,14 @@
 export default [
     {
         title: 'Home',
-        url: '',
-        submenu: {
-            type: 'menu',
-            menu: [
-                { title: 'Home 1', url: '/' },
-                { title: 'Home 2', url: '/home-two' },
-            ],
-        },
+        url: '/',
+        // submenu: {
+        //     type: 'menu',
+        //     menu: [
+        //         { title: 'Home 1', url: '/' },
+        //         { title: 'Home 2', url: '/home-two' },
+        //     ],
+        // },
     },
     {
         title: 'Megamenu',

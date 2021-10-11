@@ -40,7 +40,7 @@ function MobileLinks(props) {
                             subLinks = (
                                 <div className="mobile-links__item-sub-links" ref={setContentRef}>
                                     <MobileLinks
-                                        links={link.children}
+                                        links={link.children[0]}
                                         level={level + 1}
                                         onItemClick={onItemClick}
                                     />

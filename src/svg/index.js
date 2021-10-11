@@ -28,7 +28,7 @@ export { ReactComponent as LayoutGrid16x16Svg } from './layout-grid-16x16.svg';
 export { ReactComponent as LayoutGridWithDetails16x16Svg } from './layout-grid-with-details-16x16.svg';
 export { ReactComponent as LayoutList16x16Svg } from './layout-list-16x16.svg';
 export { ReactComponent as LogoSvg } from './Emporia.svg';
-export { ReactComponent as LogoSmallSvg } from './Emporia.svg';
+export { ReactComponent as LogoSmallSvg } from './Emporia-sm.svg';
 export { ReactComponent as Logout20Svg } from './logout-20.svg';
 export { ReactComponent as Menu18x14Svg } from './menu-18x14.svg';
 export { ReactComponent as Person20Svg } from './person-20.svg';
