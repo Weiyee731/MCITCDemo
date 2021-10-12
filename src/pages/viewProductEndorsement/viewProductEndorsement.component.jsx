@@ -578,7 +578,7 @@ class DisplayTable extends Component {
       supplier: row.SupplierID,
       grid: row.GridStorageID,
       shoplot: row.ShoplotID,
-      picture: JSON.parse(this.props.Data).ProductImage,
+      picture: this.props.Data.ProductImage,
       row: index,
     });
 
@@ -623,9 +623,9 @@ class DisplayTable extends Component {
       this.state.rowsPerPage -
       Math.min(
         this.state.rowsPerPage,
-        JSON.parse(this.props.Data).length - this.state.page * this.state.rowsPerPage
+        this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
-    JSON.parse(this.props.Data).map((d, i) => {
+    this.props.Data.map((d, i) => {
       d.Picture = (
         <div>
           <img
@@ -700,7 +700,7 @@ class DisplayTable extends Component {
               placeholder="Search..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
-            {JSON.parse(this.props.Data).filter((searchedItem) =>
+            {this.props.Data.filter((searchedItem) =>
               searchedItem.ProductName.toLowerCase().includes(
                 this.state.searchFilter
               )
@@ -743,7 +743,7 @@ class DisplayTable extends Component {
             />
             <div>
               <Paper style={divStyle}>
-                <DisplayTableToolbar numSelected={this.state.selected.length} />
+                {/* <DisplayTableToolbar numSelected={this.state.selected.length} /> */}
                 <TableContainer>
                   <Table
                     className={table}
@@ -757,9 +757,9 @@ class DisplayTable extends Component {
                       order={this.state.order}
                       orderBy={this.state.orderBy}
                       onRequestSort={this.handleRequestSort}
-                      rowCount={JSON.parse(this.props.Data).length}
+                      rowCount={this.props.Data.length}
                     />
-                    {JSON.parse(this.props.Data).filter((searchedItem) =>
+                    {this.props.Data.filter((searchedItem) =>
                       searchedItem.ProductName.toLowerCase().includes(
                         this.state.searchFilter
                       )
