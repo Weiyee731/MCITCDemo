@@ -168,6 +168,8 @@ class Product extends Component {
     const { quantity } = this.state;
     let prices;
 
+
+    
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
     console.log("here", product)
 
@@ -177,6 +179,10 @@ class Product extends Component {
           style={{ width: "100%", backgroundColor: "white", padding: "20px" }}
           className={`product product--layout--${layout}`}
         >
+          {console.log("product.ProductImages", product.ProductImages)}
+          {console.log("product", product)}
+       
+       
           <div className="product__content">
             <ProductGallery
               layout={layout}
@@ -384,7 +390,7 @@ class Product extends Component {
           </div>
         </div>
 
-        <div style={{ backgroundColor: "white" }}>
+        {/* <div style={{ backgroundColor: "white" }}>
           {this.props.version === "1" ? (
             <ProductTabs
               withSidebar
@@ -398,9 +404,9 @@ class Product extends Component {
               setCurrentTab={this.changeCurrentTab}
             />
           )}
-        </div>
+        </div> */}
 
-        <div style={{ marginTop: "20px" }}>
+        {/* <div style={{ marginTop: "20px" }}>
           <BlockProductsCarousel
             title="Recommended Product"
             layout="grid-4"
@@ -408,7 +414,7 @@ class Product extends Component {
             products={this.props.product.ProductRecommendation !== null && this.props.product.ProductRecommendation !== undefined
               ? JSON.parse(this.props.product.ProductRecommendation) : []}
           />
-        </div>
+        </div> */}
       </div>
     );
   }

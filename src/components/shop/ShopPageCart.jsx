@@ -144,8 +144,8 @@ class ShopPageCart extends Component {
             items.map((row) => {
                 this.props.productcart.filter((x) => x.UserCartID === row.product.UserCartID).map((items) => {
                     if (row.product.ProductStock < items.ProductQuantity) {
-                        checkProductStockAmount.push(row.product.ProductID)
-                        checkName.push(row.product.ProductName)
+                        // checkProductStockAmount.push(row.product.ProductID)
+                        // checkName.push(row.product.ProductName)
                     }
                     if (checkProductStockAmount.length > 0) {
                         this.setState({ ProductStockAmountlimit: true, overProductStockAmountLimitID: checkProductStockAmount })
@@ -408,6 +408,8 @@ class ShopPageCart extends Component {
     }
 
     render() {
+
+        console.log("this.state", this.state)
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },

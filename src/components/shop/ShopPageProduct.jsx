@@ -55,6 +55,7 @@ function ShopPageProduct(props) {
     console.log("in shop page product", props)
     props.CallProductDetail({productId: productSlug, userId: 1})
     
+    console.log("props.product", props.product)
     setProduct(props.product);
     setIsLoading(false);
 

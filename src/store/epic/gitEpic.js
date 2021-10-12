@@ -762,7 +762,7 @@ export class GitEpic {
   // All Payment Method
   getAllPaymentMethod = (action$) =>
     action$.ofType(GitAction.GetPaymentMethod).switchMap(async ({ payload }) => {
-      console.log( url +
+      console.log(url +
         "General_ViewPaymentMethod")
       try {
         const response = await fetch(
@@ -771,8 +771,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
-        
-        console.log("json",json)
+
+        console.log("json", json)
         return {
           type: GitAction.GotPaymentMethod,
           payload: json,
@@ -988,6 +988,37 @@ export class GitEpic {
         alert('getAllProducts: ' + error);
         return {
           type: GitAction.GotProduct,
+          payload: [],
+        };
+      }
+    });
+
+  getProductsListing = (action$) =>
+    action$.ofType(GitAction.GetProductListing).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "Product_ItemListByType?Type=" +
+          payload.type +
+          "&TypeValue=" +
+          payload.typeValue +
+          "&USERID=" +
+          payload.userId +
+          "&PRODUCTPERPAGE=" +
+          payload.productPage +
+          "&PAGE=" +
+          payload.page
+        );
+        const json = await response.json();
+        // json = JSON.parse(json);
+        return {
+          type: GitAction.GotProductListing,
+          payload: json,
+        };
+      } catch (error) {
+        alert('getProductsListing: ' + error);
+        return {
+          type: GitAction.GotProductListing,
           payload: [],
         };
       }
@@ -1920,24 +1951,6 @@ export class GitEpic {
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
-          "Order_AddOrder?USERID=" +
-          payload.UserID +
-          "&USERADDRESSID=" +
-          payload.UserAddressID +
-          "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" +
-          payload.PaymentMethodID +
-          "&USERPAYMENTMETHODID=" +
-          payload.UserPaymentMethodID +
-          "&ORDERTOTALAMOUNT=" +
-          payload.OrderTotalAmount +
-          "&ORDERPAIDAMOUNT=" +
-          payload.OrderPaidAmount +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&PRODUCTQUANTITY=" +
-          payload.ProductQuantity)
-          
         const response = await fetch(
           url +
           "Order_AddOrder?USERID=" +
@@ -1955,14 +1968,23 @@ export class GitEpic {
           "&PRODUCTID=" +
           payload.ProductID +
           "&PRODUCTQUANTITY=" +
-          payload.ProductQuantity
+          payload.ProductQuantity +
+          "&PRODUCTVARIATIONDETAILID=" +
+          payload.ProductVariationDetailID +
+          "&TRACKINGSTATUSID=" +
+          payload.TrackingStatusID
         );
         let json = await response.json();
+        console.log("json in add order1", json)
         json = JSON.parse(json);
+        console.log("json in add order", json)
         if (json[0].ReturnVal === 1) {
           toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
         }
         try {
+          console.log(url +
+            "Product_DeleteProductCart?USERCARTID=" +
+            payload.UserCartID)
           const response_1 = await fetch(
             url +
             "Product_DeleteProductCart?USERCARTID=" +
@@ -1972,7 +1994,7 @@ export class GitEpic {
           json_1 = json_1
           return {
             type: GitAction.AddedOrder,
-            payload: json_1,
+            payload: json,
           };
         } catch (error) {
           alert('deleteProductCart: ' + error);
@@ -1982,7 +2004,7 @@ export class GitEpic {
           };
         }
       }
-       catch (error) {
+      catch (error) {
         alert('deleteProductCart: ' + error);
         return {
           type: GitAction.AddedOrder,
