@@ -135,8 +135,7 @@ const productLayouts = [
       <ShopPageProduct
         {...props}
         {...options}
-        productSlug={props.match.params.productSlug}
-      // productSlug="brandix-screwdriver-screw1500acc"
+        productId={props.match.params.productSlug}
       />
     )}
   />
@@ -394,12 +393,12 @@ function Layout(props) {
               {/* {categoryLayouts} */}
               <Route
                 exact
-                path="/shop/products/:productSlug"
+                path="/shop/products/:productId"
                 render={(props) => (
                   <ShopPageProduct
                     {...props}
                     layout="standard"
-                    productSlug={props.match.params.productSlug}
+                    productId={props.match.params.productId}
                   />
                 )}
               />

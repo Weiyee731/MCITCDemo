@@ -43,11 +43,12 @@ class Product extends Component {
     this.wishlisting = this.wishlisting.bind(this)
     this.login = this.login.bind(this)
     this.checkCart = this.checkCart.bind(this)
-    this.props.CallAllProducts({ type: "Merchant", typeValue: this.props.product.MerchantID, userId: 0, productPerPage: 999, page: 1 })
+    // this.props.CallAllProducts({ type: "Merchant", typeValue: this.props.product.MerchantID, userId: 0, productPerPage: 999, page: 1 })
   }
 
   componentDidMount() {
-    JSON.parse(this.props.product.ProductVariation).map((variation) => {
+    const { product } = this.props
+    product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
       variation.ProductVariationValue === "-" &&
         this.setState({
           productVariation: variation.ProductVariationValue,
@@ -55,7 +56,7 @@ class Product extends Component {
           productVariationDetailID: variation.ProductVariationDetailID
         })
     })
-    this.setState({ productPrice: this.props.product.ProductPrice })
+    this.setState({ productPrice: product.ProductPrice })
   }
 
   checkCart(product, quantity) {
@@ -63,7 +64,6 @@ class Product extends Component {
       toast.error("Please Select One of the Variation")
     else
       this.addCart(product, quantity)
-    // this.addCart(product, quantity)
   }
 
   handleChangeQuantity = (quantity) => {
@@ -167,9 +167,8 @@ class Product extends Component {
     } = this.props;
     const { quantity } = this.state;
     let prices;
-
+    
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
-    console.log("here", product)
 
     return (
       <div className="block" >
@@ -180,8 +179,7 @@ class Product extends Component {
           <div className="product__content">
             <ProductGallery
               layout={layout}
-              // images={typeof product.ProductImages === "string" && product.ProductImages !== null && product.ProductImages !== undefined ? JSON.parse(product.ProductImages) : product.ProductImages}
-              images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : product.ProductImages}
+              images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : Logo}
             />
             <div className="product__info">
               <div className="product__wishlist-compare">
@@ -196,13 +194,15 @@ class Product extends Component {
                   <HashLink
                     onClick={this.changeCurrentTab.bind(this, "reviews")}
                     to="#reviews"
-                  >{`${product.ProductRating != null
-                    ? parseFloat(product.ProductRating)
-                    : "0"
-                    }/5 (`}{`${product.ProductReviewCount != null
-                      ? product.ProductReviewCount
+                  >
+                    {`${product.ProductRating != null
+                      ? parseFloat(product.ProductRating)
                       : "0"
-                      } Reviews)`}</HashLink>
+                      }/5 (`}{`${product.ProductReviewCount != null
+                        ? product.ProductReviewCount
+                        : "0"
+                        } Reviews)`}
+                  </HashLink>
                   <span>/</span>
                   <HashLink
                     onClick={this.changeCurrentTab.bind(this, "reviews")}
@@ -231,13 +231,13 @@ class Product extends Component {
               <div className="product__availability">
                 Availability:{" "}
                 <span className="text-success">
-                  {product.ProductStockAmount > 0 ? "In Stock" : "Out of Stock"}
+                  {product.ProductStockAmount !== null && product.ProductStockAmount > 0 ? "In Stock" : "Out of Stock"}
                 </span>
               </div>
-              {console.log("this.props.product.ProductVariation ", JSON.parse(this.props.product.ProductVariation))}
+
               <div className="product__prices" style={{ fontSize: "28pt" }}>{prices}</div>
               {
-                this.props.product.ProductVariation !== null &&
+                product.ProductVariation !== null &&
                 (
                   <>
                     <label
@@ -248,56 +248,50 @@ class Product extends Component {
                     </label>
                     <div className="product__variation">
                       {
-                        JSON.parse(this.props.product.ProductVariation).map((variation) => {
-                          return (
-                            variation.ProductVariationValue !== "null" ?
-                              <>
+                        product.ProductVariation !== null ?
+                          JSON.parse(product.ProductVariation).map((variation) => {
+                            return (
+                              variation.ProductVariationValue !== "null" ?
                                 <button
                                   type="button"
-                                  style={{ paddingLeft: "20px", paddingRight: "20px", paddingTop: "5px", paddingBottom: "5px", backgroundColor: "white", borderColor: "#D3D3D3" }}
-                                  onClick={() => this.setState({ productVariation: variation.ProductVariationValue, productQuantity: variation.ProductStockAmount, productPrice: variation.ProductVariationPrice, productVariationDetailID: variation.ProductVariationDetailID, isVariationClick: true })}
-
-                                >{variation.ProductVariationValue}
+                                  style={{
+                                    paddingLeft: "20px",
+                                    paddingRight: "20px",
+                                    paddingTop: "5px",
+                                    paddingBottom: "5px",
+                                    backgroundColor: "white",
+                                    borderColor: "#D3D3D3"
+                                  }}
+                                  onClick={() => this.setState({
+                                    productVariation: variation.ProductVariationValue,
+                                    productQuantity: variation.ProductStockAmount,
+                                    productPrice: variation.ProductVariationPrice,
+                                    productVariationDetailID: variation.ProductVariationDetailID,
+                                    isVariationClick: true
+                                  })}
+                                >
+                                  {variation.ProductVariationValue}
                                 </button>
-                                <label style={{ padding: "10px" }}></label>
-                              </>
-                              :
-                              <label
-                                className="product__option-label"
-                                style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9" }}
-                              >
-                                No Variation
-                              </label>
-                          )
-
-                        })
+                                :
+                                <label
+                                  className="product__option-label"
+                                  style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9" }}
+                                >
+                                  No Variation
+                                </label>
+                            )
+                          })
+                          :
+                          <label
+                            className="product__option-label"
+                            style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9" }}
+                          >
+                            No Variation
+                          </label>
                       }
                     </div>
-                    {/* <div className="row">
-                      <label
-                        className="product__option-label"
-                        style={{ fontSize: "14pt", paddingTop: "9pt" }}
-                      >
-                        Available Quantity
-                      </label>
-                      <div className="product__variation">
-                        {
-                          JSON.parse(this.props.product.ProductVariation).map((variation) => {
-                            return (
-                              <label
-                                className="product__option-label"
-                                style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9", paddingLeft:"20px" }}
-                              >{variation.ProductVariationValue !== "-" ? variation.QuantityPerUnit : 0}
-                              </label>
-                            )
-
-                          })
-                        }
-                      </div>
-                    </div> */}
                   </>
                 )
-
               }
 
               <form className="product__options">
@@ -384,7 +378,7 @@ class Product extends Component {
           </div>
         </div>
 
-        <div style={{ backgroundColor: "white" }}>
+        {/* <div style={{ backgroundColor: "white" }}>
           {this.props.version === "1" ? (
             <ProductTabs
               withSidebar
@@ -398,17 +392,17 @@ class Product extends Component {
               setCurrentTab={this.changeCurrentTab}
             />
           )}
-        </div>
+        </div> */}
 
-        <div style={{ marginTop: "20px" }}>
+        {/* <div style={{ marginTop: "20px" }}>
           <BlockProductsCarousel
             title="Recommended Product"
             layout="grid-4"
             rows={1}
-            products={this.props.product.ProductRecommendation !== null && this.props.product.ProductRecommendation !== undefined
-              ? JSON.parse(this.props.product.ProductRecommendation) : []}
+            products={product.ProductRecommendation !== null && product.ProductRecommendation !== undefined
+              ? JSON.parse(product.ProductRecommendation) : []}
           />
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -438,7 +432,7 @@ const mapDispatchToProps = (dispatch) => {
     CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
-    CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
+    // CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
   }
 };
 
