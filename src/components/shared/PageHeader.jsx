@@ -27,7 +27,7 @@ function PageHeader(props) {
 
             if (lastIndex === index) {
                 link = <li key={index} className="breadcrumb-item active" aria-current="page">{item.title}</li>;
-            } 
+            }
             else {
                 link = (
                     <li key={index} className="breadcrumb-item">
@@ -43,7 +43,7 @@ function PageHeader(props) {
         breadcrumb = (
             <div className="page-header__breadcrumb">
                 <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb"  style={{marginTop:"120px"}}>
+                    <ol className="breadcrumb" style={{ marginTop: "120px" }}>
                         {breadcrumb}
                     </ol>
                 </nav>
@@ -53,9 +53,9 @@ function PageHeader(props) {
 
     return (
         <div className="page-header">
-            <div className="page-header__container container">
+            <div className="page-header__container space-limiter left-spacing">
                 {breadcrumb}
-                {header}
+                {/* {header} */}
             </div>
         </div>
     );

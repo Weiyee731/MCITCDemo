@@ -789,8 +789,6 @@ export class GitEpic {
   // All Payment Method
   getAllPaymentMethod = (action$) =>
     action$.ofType(GitAction.GetPaymentMethod).switchMap(async ({ payload }) => {
-      console.log(url +
-        "General_ViewPaymentMethod")
       try {
         const response = await fetch(
           url +
@@ -798,8 +796,6 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
-
-        console.log("json", json)
         return {
           type: GitAction.GotPaymentMethod,
           payload: json,
@@ -1005,8 +1001,8 @@ export class GitEpic {
           "&PAGE=" +
           payload.page
         );
-        const json = await response.json();
-        // json = JSON.parse(json);
+        let json = await response.json();
+        json = JSON.parse(json);
         return {
           type: GitAction.GotProduct,
           payload: json,
@@ -1079,7 +1075,6 @@ export class GitEpic {
   getAllProductsByStatus = (action$) =>
     action$.ofType(GitAction.GetProductByProductStatus).switchMap(async ({ payload }) => {
       try {
-        console.log('hhhhhhhhhh')
         const response = await fetch(
           url +
           "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
@@ -1105,31 +1100,6 @@ export class GitEpic {
   addProduct = (action$) =>
     action$.ofType(GitAction.AddProduct).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
-          "Product_AddProduct?PRODUCTNAME=" +
-          payload.name +
-          "&PRODUCTDESC=" +
-          payload.description +
-          "&PRODUCTCATEGORYID=" +
-          payload.productCategory +
-          "&MERCHANTID=" +
-          payload.productSupplier +
-          "&PRODUCTHEIGHT=" +
-          payload.height +
-          "&PRODUCTWIDTH=" +
-          payload.width +
-          "&PRODUCTDEPTH=" +
-          payload.depth +
-          "&PRODUCTWEIGHT=" +
-          payload.weight +
-          "&PRODUCTSKU=" +
-          payload.sku +
-          "&PRODUCTBRAND=" +
-          payload.brand +
-          "&PRODUCTMODEL=" +
-          payload.model +
-          "&PRODUCTTAG=" +
-          payload.tags)
         const response = await fetch(
           url +
           "Product_AddProduct?PRODUCTNAME=" +
@@ -1299,37 +1269,32 @@ export class GitEpic {
     });
 
   AddProductMedia = (action$) =>
-    action$.ofType(GitAction.AddProductMedia).switchMap(({ payload }) => {
-      return fetch(
-        url +
-        "Product_AddProductMedia?" +
-        "PRODUCTID=" + payload.ProductID +
-        "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
-        "&PRODUCTSLIDEORDER=" + payload.sliderOrder +
-        "&TYPE=" + payload.mediaType +
-        "&WIDTH=" + payload.imageWidth +
-        "&HEIGHT=" + payload.imageHeight +
-        "&IMAGENAME=" + payload.imageName
-      )
-        .then((resposne) => resposne.json())
-        .then((json) => {
-          if (json !== "fail") {
-            json = JSON.parse(json);
-          } else {
-            json = [];
-          }
-          return {
-            type: GitAction.ProductMediaAdded,
-            payload: json,
-          };
-        })
-        .catch((error) => {
-          toast.error(error)
-          return {
-            type: GitAction.ProductMediaAdded,
-            payload: [],
-          };
-        });
+    action$.ofType(GitAction.AddProductMedia).switchMap(async ({ payload }) => {
+      try {
+        const resposne = await fetch(
+          url +
+          "Product_AddProductMedia?" +
+          "PRODUCTID=" + payload.ProductID +
+          "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
+          "&PRODUCTSLIDEORDER=" + payload.sliderOrder +
+          "&TYPE=" + payload.mediaType +
+          "&WIDTH=" + payload.imageWidth +
+          "&HEIGHT=" + payload.imageHeight +
+          "&IMAGENAME=" + payload.imageName
+        );
+        let json = await resposne.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.ProductMediaAdded,
+          payload: json,
+        };
+      } catch (error) {
+        alert('AddProductMedia: ' + error);
+        return {
+          type: GitAction.ProductMediaAdded,
+          payload: [],
+        };
+      }
     });
 
   // PRODUCT VARIATION DETAIL
@@ -1365,15 +1330,6 @@ export class GitEpic {
   addProductSpecsDetail = (action$) =>
     action$.ofType(GitAction.AddProductSpecsDetail).switchMap(async ({ payload }) => {
       try {
-        console.log(
-          url +
-          "Product_AddProductSpecificationDetail?PRODUCTVARIATIONID=" +
-          payload.ProductVariation +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&PRODUCTSPECIFICATIONVALUE=" +
-          payload.value
-        )
         const response = await fetch(
           url +
           "Product_AddProductSpecificationDetail?PRODUCTVARIATIONID=" +
@@ -1965,16 +1921,11 @@ export class GitEpic {
           payload.TrackingStatusID
         );
         let json = await response.json();
-        console.log("json in add order1", json)
         json = JSON.parse(json);
-        console.log("json in add order", json)
         if (json[0].ReturnVal === 1) {
           toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
         }
         try {
-          console.log(url +
-            "Product_DeleteProductCart?USERCARTID=" +
-            payload.UserCartID)
           const response_1 = await fetch(
             url +
             "Product_DeleteProductCart?USERCARTID=" +

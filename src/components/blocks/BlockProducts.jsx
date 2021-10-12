@@ -10,7 +10,7 @@ import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
 
 export default function BlockProducts(props) {
-  const { title, layout, featuredProduct, products, loading } = props;
+  const { title, layout, featuredProduct, products, loading, withSidebar } = props;
 
   let large;
   let smalls;
@@ -40,7 +40,9 @@ export default function BlockProducts(props) {
   return (
     <div className={`block block-products block-products--layout--${layout}`}>
       {
-        products.length === 0 ? "" :
+        typeof products.ReturnVal !== 'undefined' && products.ReturnVal !== 1 ?
+          ""
+          :
           (
             <div className="container">
               <BlockHeader title={title} />
@@ -52,9 +54,7 @@ export default function BlockProducts(props) {
               </div>
             </div>
           )
-
       }
-
     </div>
   );
 }

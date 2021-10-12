@@ -3,3 +3,16 @@
   font-size: 1.5rem;
   margin-right: 0.3rem;
 }
+
+.space-limiter {
+  padding: 0 1rem 0 1rem;
+}
+
+.left-spacing {
+  margin-left: 12px;
+}
+
+.otp {
+  align-items: center;
+  justify-content: center;
+}

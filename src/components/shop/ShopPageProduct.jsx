@@ -41,9 +41,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 function ShopPageProduct(props) {
-  const { productSlug, layout, sidebarPosition } = props;
-  const [isLoading, setIsLoading] = useState(true);
-  const [product, setProduct] = useState(null);
+  const { productId, layout, sidebarPosition } = props;
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [latestProducts, setLatestProducts] = useState([]);
 
@@ -51,44 +49,19 @@ function ShopPageProduct(props) {
   useEffect(() => {
     let canceled = false;
 
-    setIsLoading(true);
-    console.log("in shop page product", props)
-    props.CallProductDetail({productId: productSlug, userId: 1})
-    
-    setProduct(props.product);
-    setIsLoading(false);
-
-    // shopApi.getProductByID(productSlug).then((product) => {
-    //   if (canceled) {
-    //     return;
-    //   }
-    //   product.map((productToBeUsed) => {
-    //   });
-    // });
-
-    // props.CallAllProducts({ merchantId: 0, productPage: 999, page: 1 }).then((product) => {
-    //   if (canceled) {
-    //     return;
-    //   }
-    //   product.map((productToBeUsed) => {
-    //     if (productToBeUsed.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_') === productSlug.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_')) {
-    //       setProduct(productToBeUsed);
-    //       setIsLoading(false);
-    //     }
-    //   });
-    // });
+    props.CallProductDetail({ productId: productId, userId: 1 })
 
     return () => {
       canceled = true;
     };
-    
-  }, [productSlug, setIsLoading]);
+
+  }, [productId]);
 
   // Load related products.
   useEffect(() => {
     let canceled = false;
 
-    shopApi.getRelatedProducts(productSlug, { limit: 8 }).then((products) => {
+    shopApi.getRelatedProducts(productId, { limit: 8 }).then((products) => {
       if (canceled) {
         return;
       }
@@ -99,7 +72,7 @@ function ShopPageProduct(props) {
     return () => {
       canceled = true;
     };
-  }, [productSlug, setRelatedProducts]);
+  }, [productId, setRelatedProducts]);
 
   // Load latest products.
   useEffect(() => {
@@ -122,17 +95,17 @@ function ShopPageProduct(props) {
     };
   }, [layout]);
 
-  if (isLoading) {
-    return <BlockLoader />;
-  }
-
-  const breadcrumb = [
-    { title: "Home", url: url.home() },
-    // { title: "Shop", url: url.catalog() },
-    { title: product.slug, url: url.product(product) },
-  ];
-
   let content;
+  let breadcrumb;
+
+  let product = props.product[0]
+
+  if (!props.loading && product !== null) {
+    breadcrumb = [
+      { title: "Home", url: url.home() },
+      { title: product.ProductName, url: url.product(product) },
+    ];
+  }
 
   if (layout === "sidebar") {
     const sidebar = (
@@ -194,20 +167,25 @@ function ShopPageProduct(props) {
 
   return (
     <React.Fragment>
-      <Helmet>
-        <title>{`${product.ProductName} — ${theme.name}`}</title>
-      </Helmet>
+      {props.loading ? <BlockLoader />
+        :
+        <>
+          <Helmet>
+            <title>{`${props.product.ProductName} — ${theme.name}`}</title>
+          </Helmet>
 
-      <PageHeader breadcrumb={breadcrumb} />
+          <PageHeader breadcrumb={breadcrumb} />
 
-      {content}
+          {content}
+        </>
+      }
     </React.Fragment>
   );
 }
 
 ShopPageProduct.propTypes = {
   /** Product slug. */
-  productSlug: PropTypes.string,
+  productId: PropTypes.string,
   /** one of ['standard', 'sidebar', 'columnar', 'quickview'] (default: 'standard') */
   layout: PropTypes.oneOf(["standard", "sidebar", "columnar", "quickview"]),
   /**

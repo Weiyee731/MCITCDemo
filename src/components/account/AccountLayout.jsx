@@ -15,6 +15,7 @@ import AccountPageEditAddress from "./AccountPageEditAddress";
 import AccountPageOrderDetails from "./AccountPageOrderDetails";
 import AccountPageOrders from "./AccountPageOrders";
 import AccountPagePassword from "./AccountPagePassword";
+import AccountPageChangeContact from "./AccountPageChangeContact";
 import AccountPageProfile from "./AccountPageProfile";
 import AccountPageAddAddress from "./AccountPageAddAddress";
 import AccountPageCompanyProfile from "./AccountPageCompanyProfile";
@@ -50,13 +51,13 @@ export default function AccountLayout(props) {
   // ];
   const links = [
     // { title: "Dashboard", url: "dashboard" },
-    { title: "My Profile", url: "profile", icons:  <AccountCircleOutlinedIcon className="titleicon" /> },
-    { title: "Company Profile", url: "companyprofile", icons:  <BusinessOutlinedIcon className="titleicon"/> },
-    { title: "My Address", url: "addresses", icons:  <LocationOnOutlinedIcon className="titleicon"/> },
-    { title: "My Credit Cards", url: "creditcard", icons:  <CreditCardOutlinedIcon className="titleicon"/> },
-    { title: "Order History", url: "orders", icons:  <HistoryOutlinedIcon className="titleicon"/> },
-    { title: "Password", url: "password", icons:  <PasswordIcon className="titleicon"/> },
-    { title: "Logout", url: "login", icons:  <ExitToAppOutlinedIcon className="titleicon"/> },
+    { title: "My Profile", url: "profile", icons: <AccountCircleOutlinedIcon className="titleicon" /> },
+    { title: "Company Profile", url: "companyprofile", icons: <BusinessOutlinedIcon className="titleicon" /> },
+    { title: "My Address", url: "addresses", icons: <LocationOnOutlinedIcon className="titleicon" /> },
+    { title: "My Credit Cards", url: "creditcard", icons: <CreditCardOutlinedIcon className="titleicon" /> },
+    { title: "Order History", url: "orders", icons: <HistoryOutlinedIcon className="titleicon" /> },
+    { title: "Password", url: "password", icons: <PasswordIcon className="titleicon" /> },
+    { title: "Logout", url: "login", icons: <ExitToAppOutlinedIcon className="titleicon" /> },
   ].map((link) => {
     const url = `${match.url}/${link.url}`;
     const isActive = matchPath(location.pathname, { path: url, exact: true });
@@ -83,7 +84,7 @@ export default function AccountLayout(props) {
         );
       }
     } else if (localStorage.getItem("roleid") == 15) {
-      if (link.title === "Dashboard") {
+      if (link.title === "My Profile") {
         return (
           <li
             key={link.url}
@@ -114,7 +115,7 @@ export default function AccountLayout(props) {
       <PageHeader header="My Account" breadcrumb={breadcrumb} />
 
       <div className="block">
-        <div className="container">
+        <div className="space-limiter">
           <div className="row">
             <div className="col-12 col-lg-3 d-flex">
               <div
@@ -123,22 +124,27 @@ export default function AccountLayout(props) {
               >
                 <h4 className="account-nav__title">Navigation</h4>
                 <ul>
-                  { links}
+                  {links}
                 </ul>
               </div>
             </div>
-            <div className="col-12 col-lg-9 mt-4 mt-lg-0">
+            <div className="col-12 col-lg-9 mt-lg-0">
               <Switch>
                 <Redirect
                   exact
                   from={match.path}
-                  to={`${match.path}/dashboard`}
+                  to={`${match.path}/profile`}
                 />
-                <Route
+                {/* <Redirect
+                  exact
+                  from={match.path}
+                  to={`${match.path}/dashboard`}
+                /> */}
+                {/* <Route
                   exact
                   path={`${match.path}/dashboard`}
                   component={AccountPageDashboard}
-                />
+                /> */}
                 <Route
                   exact
                   path={`${match.path}/profile`}
@@ -184,6 +190,11 @@ export default function AccountLayout(props) {
                   path={`${match.path}/creditcard/:cardId`}
                   component={AccountPageAddCreditCard}
                 /> */}
+                <Route
+                  exact
+                  path={`${match.path}/changeContact`}
+                  component={AccountPageChangeContact}
+                />
                 <Route
                   exact
                   path={`${match.path}/password`}

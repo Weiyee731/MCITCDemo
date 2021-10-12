@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import { Card, CardContent, CardActions } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -29,15 +31,14 @@ import Box from "@material-ui/core/Box";
 import Tab from "@material-ui/core/Tab";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
+import "../../scss/inventory/inventory-merchant-details.scss";
 
 function mapStateToProps(state) {
   return {
     allmerchantorders: state.counterReducer["merchantOrders"],
     allpromocodes: state.counterReducer["promoCodes"],
     allstocks: state.counterReducer["products"],
-    // alltransactions: state.counterReducer["transactions"],
     alltransactionstatus: state.counterReducer["transactionStatus"],
-    currentUser: state.counterReducer["currentUser"]
   };
 }
 
@@ -53,7 +54,6 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
     CallGetTransactionStatus: () =>
       dispatch(GitAction.CallGetTransactionStatus()),
-    CallUserProfile: (prodData) => dispatch(GitAction.CallUserProfile(prodData)),
   };
 }
 function descendingComparator(a, b, orderBy) {
@@ -202,7 +202,7 @@ DisplayTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  // onSelectAllClick: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -214,7 +214,6 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteProduct = () => {
-    console.log(props.selectedData);
     props.ProductProps.CallDeletePromoCode(props.selectedData);
     setTimeout(
       function () {
@@ -235,7 +234,7 @@ const DeletableTableToolbar = (props) => {
           className={classes.title}
           color="inherit"
           variant="subtitle1"
-          component={'div'}
+          component="div"
         >
           {numSelected} selected
         </Typography>
@@ -244,7 +243,7 @@ const DeletableTableToolbar = (props) => {
           className={classes.title}
           // variant="h6"
           id="tableTitle"
-          component={'div'}
+          component="div"
         >
           Please select the promo codes that you want to delete.
         </Typography>
@@ -328,7 +327,6 @@ class DisplayTable extends Component {
       address: row.UserAddressLine1,
       detailsShown: false,
     });
-    console.log(this.props.Data[index]);
 
     if (this.state.detailsShown) {
       this.setState({
@@ -528,12 +526,12 @@ class DisplayTable extends Component {
   }
 }
 
-class UserDetailsComponent extends Component {
+class MerchantDetailsComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // companyName: this.props.data.name,
-      userContact: this.props.data.userContact,
+      companyName: this.props.data.name,
+      companyContactNo: this.props.data.companyContactNo,
       firstName: this.props.data.firstName,
       lastName: this.props.data.lastName,
       companyDescription: this.props.data.companyDescription,
@@ -543,7 +541,9 @@ class UserDetailsComponent extends Component {
       companyPoscode: this.props.data.companyPoscode,
       companyCity: this.props.data.companyCity,
       companyState: this.props.data.companyState,
+      UserStatus: this.props.data.UserStatus,
       trackingStatus: "In Cart",
+      showTerminatebutton: null,
       fixedHeader: true,
       fixedFooter: true,
       stripedRows: false,
@@ -580,24 +580,28 @@ class UserDetailsComponent extends Component {
       backPage: "viewProduct",
       value: 0,
       tabsHidden: false,
-      // USERID: this.props.
     };
-
-  }
-  componentDidMount() {
-    // getUserProfile
     this.props.CallGetTransactionStatus();
     this.props.CallGetTransaction("In Cart");
+    // this.props.CallAllProductsByProductStatus({
+    //   ProductStatus: this.state.productStatus,
+    //   Username: window.localStorage.getItem("id"),
+    // });
 
     this.props.CallGetMerchantsOrders({
       trackingStatus: this.state.trackingStatus,
       UserID: window.localStorage.getItem("id"),
     });
   }
+  componentDidMount() {
+    if (this.state.UserStatus && typeof this.state.UserStatus !== "undefined" && this.state.UserStatus === "Endorsed") {
+      this.setState({ showTerminatebutton: true });
+    } else if (this.state.UserStatus && typeof this.state.UserStatus !== "undefined" && this.state.UserStatus === "Pending") {
+      this.setState({ showTerminatebutton: false });
+    } else return (<div>The user status is undefined, please contact administrator</div>)
+  }
   handleChange = (data, e) => { };
   render() {
-    console.log(this.props.data.name.UserID)
-    console.log(this.props.data.name.UserTypeID)
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -622,7 +626,7 @@ class UserDetailsComponent extends Component {
         >
           {value === index && (
             <Box p={3}>
-              <Typography component={'div'}>{children}</Typography>
+              <Typography>{children}</Typography>
             </Box>
           )}
         </div>
@@ -630,11 +634,11 @@ class UserDetailsComponent extends Component {
     }
 
     const back = () => {
-      window.location.reload(false);
-      // this.props.setDetailsShown(false);
+      //   window.location.reload(false);
+      this.props.setDetailsShown(false);
     };
 
-    let allTransactionStatusData = this.props.alltransactionstatus.length > 0 && this.props.alltransactionstatus[0].ReturnVal !== "0" && this.props.alltransactionstatus !== undefined && this.props.alltransactionstatus
+    let allTransactionStatusData = this.props.alltransactionstatus
       ? Object.keys(this.props.alltransactionstatus).map((key) => {
         return this.props.alltransactionstatus[key];
       })
@@ -644,7 +648,6 @@ class UserDetailsComponent extends Component {
       var generateTabs = allTransactionStatusData.map((status, i) => {
         return (
           <Tab
-            key={i}
             label={status.TrackingStatus}
             {...a11yProps(i)}
           // onClick={changeData.bind(this, status.TrackingStatus)}
@@ -652,13 +655,13 @@ class UserDetailsComponent extends Component {
         );
       });
       var generatePanels = allTransactionStatusData.map((status, i) => {
-        var transactionList = this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== "0" && this.props.allmerchantorders !== undefined && this.props.allmerchantorders ? this.props.allmerchantorders : [];
+        var transactionList = this.props.allmerchantorders;
         transactionList = transactionList.filter(
           (items) =>
             items.TrackingStatus == allTransactionStatusData[i].TrackingStatus
         );
         return (
-          <TabPanel value={this.state.value} key={i} index={i}>
+          <TabPanel value={this.state.value} index={i}>
             <DisplayTable
               Data={transactionList}
               ProductProps={this.props}
@@ -671,131 +674,255 @@ class UserDetailsComponent extends Component {
       });
     }
 
+    console.log(this.state)
+    console.log(this.props)
     return (
       <div>
-        <h2>User Details</h2>
-        <Button onClick={back}>
-          <i className="fas fa-chevron-left"></i>Back
-        </Button>
-        <Card style={{ width: "80%", margin: "0 auto" }}>
-          <CardContent>
-            <div style={{ display: "flex", width: "100%" }}>
-              <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                <InputLabel htmlFor="component-simple">First Name</InputLabel>
+        {this.state.showTerminatebutton ? (<div>  <h2>Merchant Details</h2>
+          <Button onClick={back}>
+            <i className="fas fa-chevron-left"></i>Back
+          </Button>
+          <Card style={{ width: "80%", margin: "0 auto" }}>
+            <CardContent>
+              <Button variant="outlined" size="medium" className="float-right-button">Terminate this merchant</Button>
+              <h5>Representative Details</h5>
+              <div style={{ display: "flex", width: "100%" }}>
+                <FormControl style={{ width: "100%", marginRight: "5px" }}>
+                  <InputLabel htmlFor="component-simple">
+                    Representative First Name
+                  </InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.firstName}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+                <FormControl style={{ width: "100%", marginLeft: "5px" }}>
+                  <InputLabel htmlFor="component-simple">
+                    Representative Last Name
+                  </InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.lastName}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+              </div>
+              <h5 style={{ marginTop: "5px" }}>Company Details</h5>
+              <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                <InputLabel htmlFor="component-simple">Company Name</InputLabel>
                 <Input
                   id="component-simple"
-                  value={this.state.firstName}
+                  value={this.state.companyName}
                   onChange={this.handleChange}
                   readOnly
                 />
               </FormControl>
-              <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                <InputLabel htmlFor="component-simple">Last Name</InputLabel>
+              <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
                 <Input
                   id="component-simple"
-                  value={this.state.lastName}
+                  value={this.state.companyContactNo}
                   onChange={this.handleChange}
                   readOnly
                 />
               </FormControl>
-            </div>
-            {/* <h5 style={{ marginTop: "5px" }}>Company Details</h5> */}
-            {/* <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Company Name</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.companyName}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl> */}
-            <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.userContact}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl>
-            <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Website</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.companyWebsite}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl>
-            <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.companyAddressLine1}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl>
-            <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.companyAddressLine2}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl>
-            <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
-              <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                <InputLabel htmlFor="component-simple">City</InputLabel>
+              <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                <InputLabel htmlFor="component-simple">Website</InputLabel>
                 <Input
                   id="component-simple"
-                  value={this.state.companyCity}
+                  value={this.state.companyWebsite}
                   onChange={this.handleChange}
                   readOnly
                 />
               </FormControl>
-              <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                <InputLabel htmlFor="component-simple">State</InputLabel>
+              <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
                 <Input
                   id="component-simple"
-                  value={this.state.companyState}
+                  value={this.state.companyAddressLine1}
                   onChange={this.handleChange}
                   readOnly
                 />
               </FormControl>
-            </div>
-            {/* <TextField
-              style={{ width: "100%", marginTop: "5px" }}
-              id="outlined-multiline-flexible"
-              label="Description"
-              multiline
-              rowsMax={4}
-              value={this.state.companyDescription}
-              onChange={this.handleChange}
-              inputProps={{ readonly: true }}
-            /> */}
-            <h5 style={{ marginTop: "5px" }}>Purchase Order History</h5>
-            <div style={{ width: "100%" }}>
-              {!this.state.detailsShown ? (
-                <AppBar position="static" color="default">
-                  <Tabs
-                    value={this.state.value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    aria-label="scrollable auto tabs example"
-                  >
-                    {generateTabs}
-                  </Tabs>
-                </AppBar>
-              ) : null}
-              {generatePanels}
-            </div>
-          </CardContent>
-        </Card>
+              <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
+                <Input
+                  id="component-simple"
+                  value={this.state.companyAddressLine2}
+                  onChange={this.handleChange}
+                  readOnly
+                />
+              </FormControl>
+              <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
+                <FormControl style={{ width: "100%", marginRight: "5px" }}>
+                  <InputLabel htmlFor="component-simple">City</InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.companyCity}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+                <FormControl style={{ width: "100%", marginLeft: "5px" }}>
+                  <InputLabel htmlFor="component-simple">State</InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.companyState}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+              </div>
+              <TextField
+                style={{ width: "100%", marginTop: "5px" }}
+                id="outlined-multiline-flexible"
+                label="Company Description"
+                multiline
+                maxRows={4}
+                value={this.state.companyDescription}
+                onChange={this.handleChange}
+                inputProps={{ readOnly: true }}
+              />
+              <h5 style={{ marginTop: "5px" }}>Purchase Order History</h5>
+              {/* <DisplayTable Data={JSON.parse(this.props.data.promoCodeDetail)} /> */}
+              <div style={{ width: "100%" }}>
+                {!this.state.detailsShown ? (
+                  <AppBar position="static" color="default">
+                    <Tabs
+                      value={this.state.value}
+                      onChange={handleChange}
+                      indicatorColor="primary"
+                      textColor="primary"
+                      variant="scrollable"
+                      scrollButtons="auto"
+                      aria-label="scrollable auto tabs example"
+                    >
+                      {generateTabs}
+                    </Tabs>
+                  </AppBar>
+                ) : null}
+                {generatePanels}
+              </div>
+            </CardContent>
+          </Card>
+        </div>)
+          :
+          (<div>
+            <h2>Merchant Details</h2>
+            <Button onClick={back}>
+              <i className="fas fa-chevron-left"></i>Back
+            </Button>
+            <Card style={{ width: "80%", margin: "0 auto" }}>
+              <CardContent>
+                <Button variant="outlined" size="medium" className="float-right-accept-button">Endorse</Button>
+                <Button size="medium" className="float-right-reject-button">Reject</Button>
+                <h5>Representative Details</h5>
+                <div style={{ display: "flex", width: "100%" }}>
+                  <FormControl style={{ width: "100%", marginRight: "5px" }}>
+                    <InputLabel htmlFor="component-simple">
+                      Representative First Name
+                    </InputLabel>
+                    <Input
+                      id="component-simple"
+                      value={this.state.firstName}
+                      onChange={this.handleChange}
+                      readOnly
+                    />
+                  </FormControl>
+                  <FormControl style={{ width: "100%", marginLeft: "5px" }}>
+                    <InputLabel htmlFor="component-simple">
+                      Representative Last Name
+                    </InputLabel>
+                    <Input
+                      id="component-simple"
+                      value={this.state.lastName}
+                      onChange={this.handleChange}
+                      readOnly
+                    />
+                  </FormControl>
+                </div>
+                <h5 style={{ marginTop: "5px" }}>Company Details</h5>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Company Name</InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.companyName}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.companyContactNo}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Website</InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.companyWebsite}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.companyAddressLine1}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.companyAddressLine2}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+                <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
+                  <FormControl style={{ width: "100%", marginRight: "5px" }}>
+                    <InputLabel htmlFor="component-simple">City</InputLabel>
+                    <Input
+                      id="component-simple"
+                      value={this.state.companyCity}
+                      onChange={this.handleChange}
+                      readOnly
+                    />
+                  </FormControl>
+                  <FormControl style={{ width: "100%", marginLeft: "5px" }}>
+                    <InputLabel htmlFor="component-simple">State</InputLabel>
+                    <Input
+                      id="component-simple"
+                      value={this.state.companyState}
+                      onChange={this.handleChange}
+                      readOnly
+                    />
+                  </FormControl>
+                </div>
+                <TextField
+                  style={{ width: "100%", marginTop: "5px" }}
+                  id="outlined-multiline-flexible"
+                  label="Company Description"
+                  multiline
+                  maxRows={4}
+                  value={this.state.companyDescription}
+                  onChange={this.handleChange}
+                  inputProps={{ readOnly: true }}
+                />
+              </CardContent>
+            </Card></div>)}
+
       </div>
     );
   }
@@ -803,4 +930,4 @@ class UserDetailsComponent extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(UserDetailsComponent);
+)(MerchantDetailsComponent);

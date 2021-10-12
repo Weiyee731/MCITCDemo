@@ -620,10 +620,10 @@ class DisplayTable extends Component {
         {this.state.detailsShown ? (
           // "<ProductDetailsComponent data={this.state} data2={this.props} />"
           <SupplierEndorsementDetails
-            userData={this.props.allUser}
             singleUserData={this.state}
             backLink={this.handleSetDetailShown}
-          />
+          >
+          </SupplierEndorsementDetails>
         ) : this.state.deleteActive ? (
           <div>
             <h1>Suppliers List</h1>
@@ -713,7 +713,7 @@ class DisplayTable extends Component {
                   >
                     <DisplayTableHead
                       classes={classes2}
-                      numSelected={this.state.selected.length}
+                      // numSelected={this.state.selected.length}
                       order={this.state.order}
                       orderBy={this.state.orderBy}
                       onRequestSort={this.handleRequestSort}
@@ -804,8 +804,6 @@ class DisplayTable extends Component {
 class ViewSupplierComponent extends Component {
   constructor(props) {
     super(props);
-    this.props.callAllSupplierByUserStatus("endorsed");
-
     this.state = {
       fixedHeader: true,
       fixedFooter: true,
@@ -843,11 +841,22 @@ class ViewSupplierComponent extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.callAllSupplierByUserStatus("endorsed");
+  }
+  componentDidUpdate() {
+    this.props.callAllSupplierByUserStatus("endorsed");
+  }
+  componentWillUnmount() {
+    clearImmediate(this.props.allUser)
+  }
   render() {
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable
-          Data={this.props.allUser}
+          Data={this.props.allUser.length > 0 &&
+            this.props.allUser !== undefined &&
+            this.props.allUser[0].ReturnVal !== "0" ? this.props.allUser : []}
           ProductProps={this.props}
         ></DisplayTable>
       </div>

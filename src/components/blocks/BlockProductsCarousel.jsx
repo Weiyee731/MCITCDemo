@@ -184,6 +184,7 @@ export default class BlockProductsCarousel extends Component {
       onGroupClick,
       groups,
       loading,
+      products
     } = this.props;
 
     const columns = this.productsColumns().map((column, index) => {
@@ -204,13 +205,15 @@ export default class BlockProductsCarousel extends Component {
       "block-products-carousel--loading": loading,
       "block-products-carousel--has-items": columns.length > 0,
     });
+
     const containerClasses = classNames({
       container: !withSidebar,
     });
+
     return (
       <div className={blockClasses} data-layout={layout}>
         {
-          this.props.products.length === 0 ?
+          typeof products.ReturnVal !== 'undefined' && products.ReturnVal !== 1 ?
             (
               <div className={containerClasses} style={{ textAlign: "center" }}>
                 <label>Connection Has Times Out, Try Again Later</label>
