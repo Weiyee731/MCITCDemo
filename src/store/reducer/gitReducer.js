@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   supplier: [],
   statistic: [],
   products: [],
+  productsListing: [],
   productsByID: [],
   productSpecsDetail: [],
   productsByMerchantID: [],
@@ -41,6 +42,7 @@ const INITIAL_STATE = {
   subscriber: [],
   addsubs: [],
   creditcards: [],
+  paymentmethod: [],
   updatedCreditCard: [],
   productcart: [],
   wishlist: [],
@@ -48,13 +50,17 @@ const INITIAL_STATE = {
   orderByID: [],
   updatedProducts: [],
   productMgmtResult: [],
+  addProductVariationResult: [],
+  updatePassword: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case GitAction.GetData:
       return Object.assign({}, state, { loading: true });
+
     //=======================USER========================//
+
     case GitAction.Register:
       return Object.assign({}, state, { loading: true });
     case GitAction.UserRegistered:
@@ -84,8 +90,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.CheckedUser:
       return Object.assign({}, state, {
         loading: false,
+        updatePassword: action.payload,
+      });
+
+    case GitAction.UpdatePassword:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedPassword:
+      return Object.assign({}, state, {
+        loading: false,
         exists: action.payload,
       });
+
     case GitAction.GetPages:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotPages:
@@ -93,6 +108,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         pages: action.payload,
       });
+
     case GitAction.GetUserProfile:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotUserProfile:
@@ -100,6 +116,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         currentUser: action.payload,
       });
+
     case GitAction.EditUserProfile:
       return Object.assign({}, state, { loading: true });
     case GitAction.EditedUserProfile:
@@ -107,6 +124,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         currentUser: action.payload,
       });
+
     case GitAction.UpdateProfileImage:
       return Object.assign({}, state, { loading: true });
     case GitAction.UpdatedProfileImage:
@@ -114,7 +132,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         currentUser: action.payload,
       });
+
     //=======================COUNTRY========================//
+
     case GitAction.GetCountry:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotCountry:
@@ -122,6 +142,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         countries: action.payload,
       });
+
+    //==================PAYMENT METHOD==========================//
+    case GitAction.GetPaymentMethod:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotPaymentMethod:
+      return Object.assign({}, state, {
+        loading: false,
+        paymentmethod: action.payload,
+      });
+
+
     //=======================CREDIT CARD========================//
     case GitAction.GetCreditCard:
       return Object.assign({}, state, { loading: true });
@@ -207,9 +238,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
         products: action.payload,
       });
 
-    case GitAction.GetProductByID:
+    case GitAction.GetProductListing:
       return Object.assign({}, state, { loading: true });
-    case GitAction.GotProductByID:
+    case GitAction.GotProductListing:
+      return Object.assign({}, state, {
+        loading: false,
+        productsListing: action.payload,
+      });
+
+    case GitAction.GetProductDetail:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotProductDetail:
       return Object.assign({}, state, {
         loading: false,
         productsByID: action.payload,
@@ -236,13 +275,6 @@ export function counterReducer(state = INITIAL_STATE, action) {
         viewMoreProducts: [],
       });
 
-    case GitAction.GetProductsByCategoryID:
-      return Object.assign({}, state, { loading: true });
-    case GitAction.GotProductsByCategoryID:
-      return Object.assign({}, state, {
-        loading: false,
-        products: action.payload,
-      });
     case GitAction.GetProductsByCategoryIDEmpty:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotProductsByCategoryIDEmpty:
@@ -315,20 +347,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
         productSpecsDetail: action.payload,
       });
 
+    case GitAction.ResetProductSpecsDetailResult:
+      return Object.assign({}, state, {
+        loading: false,
+        productSpecsDetail: [],
+      });
 
     case GitAction.ResetProductReturnVal:
       return Object.assign({}, state, {
         loading: false,
         addResult: [],
       });
-
-
-    case GitAction.ResetProductMediaReturnVal:
-      return Object.assign({}, state, {
-        loading: false,
-        productMediaResult: [],
-      });
-
 
     //==============PRODUCTVARIATION===============//
     case GitAction.GetProductVariation:
@@ -422,7 +451,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.AddedProductVariationDetail:
       return Object.assign({}, state, {
         loading: false,
-        categories: action.payload,
+        addProductVariationResult: action.payload,
       });
 
     case GitAction.DeleteProductVariationDetail:
@@ -430,7 +459,13 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.DeletedProductVariationDetail:
       return Object.assign({}, state, {
         loading: false,
-        categories: action.payload,
+        addProductVariationResult: action.payload,
+      });
+
+    case GitAction.ResetProductVariationDetailResult:
+      return Object.assign({}, state, {
+        loading: false,
+        addProductVariationResult: []
       });
 
     //=======================SUPPLIER========================//

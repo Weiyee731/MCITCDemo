@@ -17,7 +17,7 @@ import PageHeader from '../shared/PageHeader';
 import { cartRemoveItem, cartUpdateQuantities, cartAddItem } from '../../store/cart';
 import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
-import Logo from "../../assets/Emporia.png"
+import Logo from "../../assets/Emporia.png";
 import PageCheckout from "./ShopPageCheckout";
 import { Button } from "@material-ui/core";
 import shopApi from "../../api/shop";
@@ -143,9 +143,9 @@ class ShopPageCart extends Component {
 
             items.map((row) => {
                 this.props.productcart.filter((x) => x.UserCartID === row.product.UserCartID).map((items) => {
-                    if (row.product.ProductStockAmount < items.ProductQuantity) {
-                        checkProductStockAmount.push(row.product.ProductID)
-                        checkName.push(row.product.ProductName)
+                    if (row.product.ProductStock < items.ProductQuantity) {
+                        // checkProductStockAmount.push(row.product.ProductID)
+                        // checkName.push(row.product.ProductName)
                     }
                     if (checkProductStockAmount.length > 0) {
                         this.setState({ ProductStockAmountlimit: true, overProductStockAmountLimitID: checkProductStockAmount })
@@ -240,13 +240,8 @@ class ShopPageCart extends Component {
         return displayCart.map((item, i) => {
             let image;
             let options = [];
-
-            console.log("item.product IN ACRT", item.product.ReturnVal)
-            console.log("item.product IN ACRT", item)
-            // const productImage = item.ReturnVal !== 0 ? item.ProductImage : ""
-            // console.log("productImage",productImage)
             
-            if (item.product.ProductImage !== undefined && item.product.ProductImage.length > 0) {
+            if (item.product.ProductImage !== null && item.product.ProductImage !== undefined && item.product.ProductImage.length > 0) {
                 image = (
                     <div className="product-image">
                         <Link to={url.product(item.product)} className="product-image__body">
@@ -295,7 +290,7 @@ class ShopPageCart extends Component {
                                         return (
                                             <>
                                                 <br></br>
-                                                <label style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.ProductStockAmount !== null ? item.product.ProductStockAmount : "0"} </label>
+                                                <label style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
                                             </>
                                         )
                                     })
@@ -305,7 +300,7 @@ class ShopPageCart extends Component {
                     </td>
 
                     <td className="cart-table__column cart-table__column--price" data-title="Price">
-                        <Currency value={item.product.ProductPrice} currency={"RM"} />
+                        <Currency value={item.product.ProductPrice !== null ? item.product.ProductPrice : 0} currency={"RM"} />
                     </td>
                     <td className="cart-table__column cart-table__column--quantity" data-title="Quantity">
                         {
@@ -397,10 +392,10 @@ class ShopPageCart extends Component {
                                     <div className="col-2" ><Currency value={this.state.total}></Currency></div>
                                 </div> */}
                                 <div className="mt-5">
-                                    <Link className="btn btn-primary" variant="outlined" color="primary"
+                                    <button className="btn btn-primary" variant="outlined" color="primary"
                                         onClick={() => this.CheckOutOnClick(this.state.selectedProductDetailList)}
                                     > Checkout
-                                    </Link>
+                                    </button>
                                 </div>
                             </div>
                             :
@@ -413,7 +408,8 @@ class ShopPageCart extends Component {
     }
 
     render() {
-        console.log("this.props IN CART", this.props)
+
+        console.log("this.state", this.state)
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },

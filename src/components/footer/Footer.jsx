@@ -5,6 +5,8 @@ import React from "react";
 import FooterContacts from "./FooterContacts";
 import FooterLinks from "./FooterLinks";
 import FooterNewsletter from "./FooterNewsletter";
+import PaymentFooter from "./PaymentFooter";
+import LogisticsFooter from "./LogisticsFooter";
 import ToTop from "./ToTop";
 import googleplaystore from "../../assets/googleplay.png";
 import appstore from "../../assets/appstore.png";
@@ -33,19 +35,22 @@ export default function Footer() {
     // { title: "Contact Us", url: "/site/contact-us" },
   ];
 
+
   return (
     <div className="site-footer">
       <div className="container">
         <div className="site-footer__widgets">
           <div className="row">
-            <div className="col-12 col-md-6 col-lg-4">
-              <FooterContacts />
-            </div>
-            <div className="col-6 col-md-3 col-lg-2">
+            <div className="col-12 col-md-3 col-lg-2">
+              {/* <FooterContacts /> */}
               <FooterLinks title="Emporia" items={informationLinks} />
             </div>
-            <div className="col-6 col-md-3 col-lg-2">
+            <div className="col-12 col-md-3 col-lg-2">
               <FooterLinks title="Information" items={otherInformationLinks} />
+            </div>
+            <div className="col-12 col-md-3 col-lg-4">
+            <PaymentFooter />
+            <LogisticsFooter />
             </div>
             {/* <div className="lzd-footer-app-downloads">
               <div>
@@ -60,8 +65,8 @@ export default function Footer() {
               </div>
             </div> */}
             <div className="col-12 col-md-12 col-lg-4">
-                            <FooterNewsletter />
-                        </div>
+              <FooterNewsletter />
+            </div>
           </div>
         </div>
 

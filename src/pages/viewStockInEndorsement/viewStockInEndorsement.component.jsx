@@ -28,7 +28,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Switch from "@material-ui/core/Switch";
 // import AddBoxIcon from "@material-ui/icons/AddBox";
-import ProductQuotationPDF from "../productQuotationPDF/productQuotationPDF.component";
 // import { render } from "@testing-library/react";
 import Input from "@material-ui/core/Input";
 import Logo from "../../assets/Emporia.png";
@@ -410,116 +409,105 @@ function DeletableTable(props) {
 
   return (
     <div>
-      {postSubmitted ? (
-        <ProductQuotationPDF
-          SelectedData={selected}
-          PropsData={props}
-          selectAmount={Amount}
-          FirstCreatedFlag={"1"}
+      <Paper className={classes.paper} style={divStyle}>
+        <DeletableTableToolbar
+          numSelected={selected.length}
+          selectedData={selected}
+          submitValues={submitValues}
+          ProductProps={props.ProductProps}
         />
-      ) : (
-        <div>
-          <Paper className={classes.paper} style={divStyle}>
-            <DeletableTableToolbar
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
+            aria-label="enhanced table"
+          >
+            <DeletableTableHead
+              classes={classes}
               numSelected={selected.length}
-              selectedData={selected}
-              submitValues={submitValues}
-              ProductProps={props.ProductProps}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={props.Data.length}
             />
-            <TableContainer>
-              <Table
-                className={classes.table}
-                aria-labelledby="tableTitle"
-                size={dense ? "small" : "medium"}
-                aria-label="enhanced table"
-              >
-                <DeletableTableHead
-                  classes={classes}
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={props.Data.length}
-                />
-                <TableBody>
-                  {stableSort(props.Data, getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
-                      const isItemSelected = isSelected(row.ProductID);
-                      const labelId = `enhanced-table-checkbox-${index}`;
+            <TableBody>
+              {stableSort(props.Data, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.ProductID);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          aria-checked={isItemSelected}
-                          tabIndex={-1}
-                          key={row.ProductID}
-                          selected={isItemSelected}
-                        >
-                          <TableCell
-                            onClick={(event) =>
-                              handleClick(
-                                event,
-                                row.ProductID,
-                                row.ProductStockAmount
-                              )
-                            }
-                            padding="checkbox"
-                          >
-                            <Checkbox
-                              checked={isItemSelected}
-                              inputProps={{ "aria-labelledby": labelId }}
-                            />
-                          </TableCell>
-                          <TableCell align="center">
-                            <img
-                              height={50}
-                              src={row.ProductName}
-                              onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = Logo;
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell align="left">{row.ProductName}</TableCell>
-                          <TableCell align="right">{row.CompanyName}</TableCell>
-                          <TableCell align="right">{row.FullName}</TableCell>
-                          <TableCell align="right">
-                            {row.ProductStockAmountInital}
-                          </TableCell>
-                          <TableCell align="right">
-                            {row.ProductStockAmount}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                      <TableCell colSpan={6} />
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.ProductID}
+                      selected={isItemSelected}
+                    >
+                      <TableCell
+                        onClick={(event) =>
+                          handleClick(
+                            event,
+                            row.ProductID,
+                            row.ProductStockAmount
+                          )
+                        }
+                        padding="checkbox"
+                      >
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ "aria-labelledby": labelId }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <img
+                          height={50}
+                          src={row.ProductName}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = Logo;
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="left">{row.ProductName}</TableCell>
+                      <TableCell align="right">{row.CompanyName}</TableCell>
+                      <TableCell align="right">{row.FullName}</TableCell>
+                      <TableCell align="right">
+                        {row.ProductStockAmountInital}
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.ProductStockAmount}
+                      </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={props.Data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
-          <div style={{ marginBottom: "5%", float: "right" }}>
-            <Button onClick={submitPost} style={submitButton}>
-              Submit
-            </Button>
-          </div>
-        </div>
-      )}
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={props.Data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+      <div style={{ marginBottom: "5%", float: "right" }}>
+        <Button onClick={submitPost} style={submitButton}>
+          Submit
+        </Button>
+      </div>
     </div>
   );
 }

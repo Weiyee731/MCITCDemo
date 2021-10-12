@@ -76,6 +76,8 @@ function mapStateToProps(state) {
     variations: state.counterReducer["variations"],
     productCategories: state.counterReducer["productCategories"],
     productCategoriesFullList: state.counterReducer["categories"],
+    addProductVariationResult: state.counterReducer["addProductVariationResult"],
+    productSpecsDetail: state.counterReducer["productSpecsDetail"],
   };
 }
 const editorConfiguration = {
@@ -108,6 +110,10 @@ function mapDispatchToProps(dispatch) {
     CallAllProductsCategories: () => dispatch(GitAction.CallAllProductCategory()),
     CallResetProductReturnVal: () => dispatch(GitAction.CallResetProductReturnVal()),
     CallResetProductMediaResult: () => dispatch(GitAction.CallResetProductMediaResult()),
+    CallAddProductVariationDetail: (prodData) => dispatch(GitAction.CallAddProductVariationDetail(prodData)),
+    CallResetProductVariationDetailResult: () => dispatch(GitAction.CallResetProductVariationDetailResult()),
+    CallAddProductSpecsDetail: (prodData) => dispatch(GitAction.CallAddProductSpecsDetail(prodData)),
+    CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
   };
 }
 
@@ -330,6 +336,8 @@ class AddProductComponent extends Component {
     this.handleCourierInput = this.handleCourierInput.bind(this);
     this.handleProductVariantInput = this.handleProductVariantInput.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
+    this.onSubmitProductVariation = this.onSubmitProductVariation.bind(this);
+    this.onSubmitProductSpecification = this.onSubmitProductSpecification.bind(this);
     this.props.CallAllProductsCategories();
 
     this.basicInfo = React.createRef();
@@ -2008,7 +2016,7 @@ class AddProductComponent extends Component {
 
       }
 
-      
+
 
       let object = {
         ProductID: productID,
@@ -2038,7 +2046,56 @@ class AddProductComponent extends Component {
   };
 
   onSubmitProductVariation = (ProductID) => {
-    
+    const { selectedVariationID, variation1 } = this.state
+    console.log(variation1)
+    let Customizable = "" 
+    let Value = "" 
+
+    if(variation1.options.length > 0 ){
+      for (let i = 0; i < variation1.options.length; i++) {
+        Customizable += '0'
+        Value += variation1.options[i].optionName
+  
+        if (i !== (variation1.length - 1)) {
+          Customizable += ","
+          Value += ","
+        }
+      }
+  
+    }
+
+    let object = {
+      ProductVariation: selectedVariationID,
+      ProductID: ProductID,
+      Customizable: Customizable,
+      Value: Value
+    }
+
+    console.log(object)
+
+  }
+
+  onSubmitProductSpecification = (ProductID) => {
+    const { productSpecificationOptions } = this.state
+    let ProductVariation = ""
+    let values = ""
+    for (let i = 0; i < productSpecificationOptions.length; i++) {
+      ProductVariation += productSpecificationOptions[i].categoryId
+      values += productSpecificationOptions[i].value
+
+      if (i !== (productSpecificationOptions.length - 1)) {
+        ProductVariation += ","
+        values += ","
+      }
+    }
+
+    let object = {
+      ProductVariation: ProductVariation,
+      ProductID: ProductID,
+      value: values,
+    }
+    console.log(object)
+    // this.props.CallAddProductSpecsDetail(object)
   }
 
   handleChange(data, e) {
@@ -3065,13 +3122,20 @@ class AddProductComponent extends Component {
 
     //call the variations for product specifications and product category
     if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
-      if (this.state.file.length > 0) {
-        let ProductID = this.props.result[0].ProductID
-        this.uploadFile(ProductID)
-      }
-      if(this.state.productSpecificationOptions.length > 0 ){
+      const { variation1, productSpecificationOptions } = this.state
+      let ProductID = this.props.result[0].ProductID
 
-      }
+      //submit the images and videos 
+      if (this.state.file.length > 0) 
+        this.uploadFile(ProductID)
+
+      // submit the product variation 
+      if ( variation1.length > 0 && typeof  variation1.options !== "undefined" && variation1.options.length > 0) 
+        this.onSubmitProductVariation(ProductID)
+
+      // submit the product specifications 
+      if (productSpecificationOptions.length > 0) 
+        this.onSubmitProductSpecification(ProductID)
 
       this.props.CallResetProductReturnVal()
     }
@@ -3083,7 +3147,7 @@ class AddProductComponent extends Component {
 
   handleAddProductSpecification = (addOrRemove, index) => {
     if (addOrRemove === "add") {
-      let object = { categoryId: "", value: "" }
+      let object = { categoryId: 0, value: "" }
       let specificationArray = [...this.state.productSpecificationOptions, object]
       this.setState({ productSpecificationOptions: specificationArray })
     }
@@ -4003,7 +4067,7 @@ class AddProductComponent extends Component {
                               value={this.state.productSpecificationOptions[idx].categoryId}
                               onChange={e => this.handleProductSpecificationInput(idx, "select", e)}
                             >
-                              <MenuItem value="">
+                              <MenuItem value="0">
                                 <em>None</em>
                               </MenuItem>
                               {
@@ -5604,8 +5668,8 @@ class AddProductComponent extends Component {
           </div>
           <br />
           <div className="SubmitButtonContainer">
-            <Button variant="outlined" className="SubmitButton" onClick={() => { this.OnSubmit() }}>
-              Review Product Details
+            <Button variant="outlined" className="SubmitButton" onClick={() => { this.onSubmitProductSpecification(1) }}>
+              Submit to Review
             </Button>
           </div>
         </div>

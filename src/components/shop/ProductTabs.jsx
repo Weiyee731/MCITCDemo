@@ -22,6 +22,8 @@ class ProductTabs extends Component {
 
   render() {
     const { withSidebar } = this.props;
+    let { product } = this.props;
+
     const classes = classNames("product-tabs", {
       "product-tabs--layout--sidebar": withSidebar,
     });
@@ -31,17 +33,17 @@ class ProductTabs extends Component {
       {
         key: "description",
         title: "Description",
-        content: <ProductTabDescription product={this.props.product} />,
+        content: <ProductTabDescription product={product} />,
       },
       {
         key: "specification",
         title: "Specification",
-        content: <ProductTabSpecification product={this.props.product} />,
+        content: <ProductTabSpecification product={product} />,
       },
       {
         key: "reviews",
         title: "Reviews",
-        content: <ProductTabReviews product={this.props.product} />,
+        content: <ProductTabReviews product={product} />,
       },
     ];
 

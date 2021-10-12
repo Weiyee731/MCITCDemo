@@ -27,6 +27,7 @@ import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import CreditCardOutlinedIcon from "@material-ui/icons/CreditCardOutlined";
 import HistoryOutlinedIcon from "@material-ui/icons/HistoryOutlined";
 import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
+import PasswordIcon from '@mui/icons-material/Password';
 import icons from "../../pages/dashboard/variables/icons";
 import "./AccountLayout.css";
 
@@ -54,6 +55,7 @@ export default function AccountLayout(props) {
     { title: "My Address", url: "addresses", icons:  <LocationOnOutlinedIcon className="titleicon"/> },
     { title: "My Credit Cards", url: "creditcard", icons:  <CreditCardOutlinedIcon className="titleicon"/> },
     { title: "Order History", url: "orders", icons:  <HistoryOutlinedIcon className="titleicon"/> },
+    { title: "Password", url: "password", icons:  <PasswordIcon className="titleicon"/> },
     { title: "Logout", url: "login", icons:  <ExitToAppOutlinedIcon className="titleicon"/> },
   ].map((link) => {
     const url = `${match.url}/${link.url}`;

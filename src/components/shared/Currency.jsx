@@ -19,7 +19,7 @@ Currency.propTypes = {
   /** price value */
   value: PropTypes.number.isRequired,
   /** currency object, specify to override currentCurrency */
-  currency: PropTypes.object,
+  currency: PropTypes.any,
   /** currency object */
   currentCurrency: PropTypes.object,
 };

@@ -43,9 +43,8 @@ class Product extends Component {
     this.wishlisting = this.wishlisting.bind(this)
     this.login = this.login.bind(this)
     this.checkCart = this.checkCart.bind(this)
-    this.props.CallProductsByMerchantID({ type: "Merchant", typeValue: this.props.product.MerchantID, productPerPage: 999, page: 1 })
+    this.props.CallAllProducts({ type: "Merchant", typeValue: this.props.product.MerchantID, userId: 0, productPerPage: 999, page: 1 })
   }
-
 
   componentDidMount() {
     JSON.parse(this.props.product.ProductVariation).map((variation) => {
@@ -439,11 +438,8 @@ const mapDispatchToProps = (dispatch) => {
     CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
-
-    CallProductsByMerchantID: (prodData) => dispatch(GitAction.CallProductsByMerchantID(prodData)),
+    CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
   }
-
-
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

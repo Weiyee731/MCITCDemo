@@ -40,6 +40,7 @@ const rootEpic = combineEpics(
   gitEpic.ViewAddress,
   gitEpic.addAddress,
   gitEpic.checkUser,
+  gitEpic.updatePassword,
   gitEpic.updateAddress,
   gitEpic.deleteAddress,
   gitEpic.getUserProfile,
@@ -47,6 +48,8 @@ const rootEpic = combineEpics(
   gitEpic.updateProfileImage,
   //==================COUNTRY==========================//
   gitEpic.getCountry,
+  //==================PAYMENT METHOD==========================//
+  gitEpic.getAllPaymentMethod,
   //==================CREDIT CARD==========================//
   gitEpic.getAllCreditCard,
   gitEpic.addCreditCard,
@@ -54,6 +57,7 @@ const rootEpic = combineEpics(
   gitEpic.deleteCreditCard,
   //==================PRODUCT==========================//
   gitEpic.getAllProducts,
+  gitEpic.getProductsListing,
   gitEpic.getProductDetail,
   gitEpic.getAllProductsByStatus,
   gitEpic.addProduct,
@@ -73,7 +77,6 @@ const rootEpic = combineEpics(
   gitEpic.updateProductCategory,
   gitEpic.deleteProductCategory,
   gitEpic.addProductPurchaseOrder,
-  gitEpic.GetProduct_ItemListByCategoryID,
   gitEpic.AddProductMedia,
   //=================PROMOTION=============================//
   gitEpic.getAllPromotion,

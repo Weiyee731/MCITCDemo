@@ -113,7 +113,6 @@ class Indicator extends Component {
 
     if (url) {
       button = (
-
         <Link
           to={url}
           className="indicator__button"

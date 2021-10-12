@@ -35,7 +35,9 @@ class AddManualStockInComponent extends Component {
     };
 
     this.props.CallAllProducts({
-      merchantId: 0,
+      type: "Merchant",
+      typeValue: 0,
+      userId: 0,
       productPage: 999,
       page: 1
     })

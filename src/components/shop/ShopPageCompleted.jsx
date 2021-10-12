@@ -44,6 +44,8 @@ class PageCompleted extends Component {
     })
     this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
     this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+    
+    this.props.handleGetTotal(this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping)
   }
 
   componentDidMount() {
@@ -170,10 +172,8 @@ class PageCompleted extends Component {
                 }
                 {
                   this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.PaymentMethodID !== 0 ?
-                    <h5 >  Payment Method:{this.props.addresss.state.PaymentID}  </h5> :
-                    this.props.addresss.state.PaymentID !== 0 ?
-                      <h5 > Payment Method: Credit Card  </h5> :
-                      <h5 > Payment Method: No Payment Method Selected  </h5>
+                    <h5 > Payment Method: {this.props.addresss.state.PaymentMethodType} - {this.props.addresss.state.PaymentMethod}  </h5> :
+                    <h5 > Payment Method: No Payment Method Selected  </h5>
                 }
                 {this.renderCart()}
               </div>

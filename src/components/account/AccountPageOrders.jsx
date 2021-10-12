@@ -229,7 +229,7 @@ class AccountPageOrders extends Component {
 
           return (
             <>
-            {console.log("this.state.TrackingStatus", this.state.TrackingStatus)}
+              {console.log("this.state.TrackingStatus", this.state.TrackingStatus)}
               {this.state.TrackingStatus !== "-" ?
                 order.TrackingStatus === this.state.TrackingStatus ?
                   <tr key={order.OrderID}>
@@ -279,41 +279,46 @@ class AccountPageOrders extends Component {
         <Helmet>
           <title>{`Order History — ${theme.name}`}</title>
         </Helmet>
-        <div className="card-header">
-          <h5>Order History</h5>
-        </div>
-
-        <div style={{ marginLeft: '7.5%', marginBottom: '2%', display: 'flex', flexDirection: 'row' }}>
-          <TextField
-            id="standard-helperText"
-            label="Tracking Number"
-            defaultValue="Default Value"
-            helperText="Tracking Order"
-            variant="standard"
-          />
-
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <div style={{ width: "50%", marginBottom: '2%', marginLeft: '5%' }}>
-              <KeyboardDatePicker
-                disableToolbar
-                helperText="Filter Order"
-                variant="inline"
-                format="dd/MM/yyyy"
-                id="date-picker-inline"
-                label="Select Date"
-                value={this.state.selectedDate}
-                onChange={this.handleDateChange.bind(this, "selectedDate")}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
-                style={{ width: "50%" }}
-              />
+        <div className="row">
+          <div className="card-header col-6">
+            <h5>Order History</h5>
+          </div>
+          <div className="card-header col-6">
+            <div style={{ marginBottom: '2%', display: 'flex', flexDirection: 'row' }}>
+              <div className="col-6">
+                <TextField
+                  id="standard-helperText"
+                  label="Tracking Number"
+                  // defaultValue="Default Value"
+                  // helperText="Tracking Order"
+                  variant="standard"
+                />
+              </div>
+              <div className="col-6">
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <div style={{ marginBottom: '2%' }}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      // helperText="Filter Order"
+                      variant="inline"
+                      format="dd/MM/yyyy"
+                      id="date-picker-inline"
+                      label="Select Date"
+                      value={this.state.selectedDate}
+                      onChange={this.handleDateChange.bind(this, "selectedDate")}
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                    // style={{ width: "60%" }}
+                    />
+                  </div>
+                </MuiPickersUtilsProvider>
+              </div>
             </div>
-
-          </MuiPickersUtilsProvider>
+          </div>
         </div>
         <div style={{ margin: 'auto' }}>
-          <Box sx={{ bgcolor: 'background.paper', width: 700 }}>
+          <Box sx={{ bgcolor: 'background.paper', width: 820 }}>
             <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
               <Tabs
                 value={this.state.value}
@@ -336,24 +341,23 @@ class AccountPageOrders extends Component {
             >
               {/* ---------------------------------------------------- All ----------------------------------------------------- */}
               <TabPanel value={this.state.value} index={0} dir={theme.direction}>
-                <div className="card-divider" />
-                <div className="card-table">
+                {/* <div className="card-divider" /> */}
+                <div className="card-table" style={{ width: '85%', margin: 'auto' }}>
                   <div className="table-responsive-sm">
                     <table>
                       <thead>
                         <tr>
-                          <th>Order</th>
-                          <th>Date</th>
-                          <th>Status</th>
-                          <th>Total</th>
+                          <th style={{ textAlign: 'center' }}>Order</th>
+                          <th style={{ textAlign: 'center' }}>Date</th>
+                          <th style={{ textAlign: 'center' }}>Status</th>
+                          <th style={{ textAlign: 'center' }}>Total</th>
                         </tr>
                       </thead>
                       <tbody>{ordersList !== undefined && ordersList.length > 0 ? ordersList : ""}</tbody>
                     </table>
-
                   </div>
                 </div>
-                <div className="card-divider" />
+                {/* <div className="card-divider" /> */}
                 <div className="card-footer">
                   {
                     ordersList !== undefined && ordersList.length > 0 ?
@@ -373,43 +377,37 @@ class AccountPageOrders extends Component {
                         <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                       </div>
                   }
-
                 </div>
               </TabPanel>
               {/* ---------------------------------------------------- In Cart ----------------------------------------------------- */}
               <TabPanel value={this.state.value} index={1} dir={theme.direction}>
-                <div className="card-divider" />
-                <div className="card-table">
+                {/* <div className="card-divider" /> */}
+                <div className="card-table" style={{ width: '85%', margin: 'auto' }}>
                   <div className="table-responsive-sm">
                     <table>
                       <thead>
                         <tr>
-                          <th>Order</th>
-                          <th>Date</th>
-                          <th>Status</th>
-                          <th>Total</th>
+                          <th style={{ textAlign: 'center' }}>Order</th>
+                          <th style={{ textAlign: 'center' }}>Date</th>
+                          <th style={{ textAlign: 'center' }}>Status</th>
+                          <th style={{ textAlign: 'center' }}>Total</th>
                         </tr>
                       </thead>
-
                       <tbody>{ordersList !== undefined && ordersList.length > 0 ? ordersList : ""}</tbody>
-
                     </table>
-
                   </div>
                 </div>
-                <div className="card-divider" />
+                {/* <div className="card-divider" /> */}
                 <div className="card-footer">
-
                   {
                     ordersList !== undefined && ordersList.length > 0 ?
                       <Pagination
                         current={page}
                         total={
-                          ordersList.length != null
+                          ordersList != null
                             ? Math.ceil(ordersList.length / this.state.rowsPerPage)
                             : 1
                         }
-
                         onPageChange={this.handlePageChange}
                       /> :
                       <div style={{ textAlign: "center", marginBottom: "20px" }}>
@@ -424,33 +422,31 @@ class AccountPageOrders extends Component {
 
               {/* ----------------------------------------- In Purchasing ----------------------------------------------------------- */}
               <TabPanel value={this.state.value} index={2} dir={theme.direction}>
-                <div className="card-divider" />
-                <div className="card-table">
+                {/* <div className="card-divider" /> */}
+                <div className="card-table" style={{ width: '85%', margin: 'auto' }}>
                   <div className="table-responsive-sm">
                     <table>
                       <thead>
                         <tr>
-                          <th>Order</th>
-                          <th>Date</th>
-                          <th>Status</th>
-                          <th>Total</th>
+                          <th style={{ textAlign: 'center' }}>Order</th>
+                          <th style={{ textAlign: 'center' }}>Date</th>
+                          <th style={{ textAlign: 'center' }}>Status</th>
+                          <th style={{ textAlign: 'center' }}>Total</th>
                         </tr>
                       </thead>
                       <tbody>{ordersList !== undefined && ordersList.length > 0 ? ordersList : ""}</tbody>
                     </table>
-
                   </div>
                 </div>
-                <div className="card-divider" />
+                {/* <div className="card-divider" /> */}
                 <div className="card-footer">
-
                   {
                     ordersList !== undefined && ordersList.length > 0 ?
                       <Pagination
                         current={page}
                         total={
-                          this.props.allmerchantorders != null
-                            ? Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
+                          ordersList != null
+                            ? Math.ceil(ordersList.length / this.state.rowsPerPage)
                             : 1
                         }
                         onPageChange={this.handlePageChange}
@@ -462,40 +458,36 @@ class AccountPageOrders extends Component {
                         <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                       </div>
                   }
-
                 </div>
               </TabPanel>
 
               {/* -------------------------------------------- In Shipping -------------------------------------------------------- */}
               <TabPanel value={this.state.value} index={3} dir={theme.direction}>
-                <div className="card-divider" />
-                <div className="card-table">
+                {/* <div className="card-divider" /> */}
+                <div className="card-table" style={{ width: '85%', margin: 'auto' }}>
                   <div className="table-responsive-sm">
                     <table>
                       <thead>
                         <tr>
-                          <th>Order</th>
-                          <th>Date</th>
-                          <th>Status</th>
-                          <th>Total</th>
+                          <th style={{ textAlign: 'center' }}>Order</th>
+                          <th style={{ textAlign: 'center' }}>Date</th>
+                          <th style={{ textAlign: 'center' }}>Status</th>
+                          <th style={{ textAlign: 'center' }}>Total</th>
                         </tr>
                       </thead>
-
                       <tbody>{ordersList !== undefined && ordersList.length > 0 ? ordersList : ""}</tbody>
-
                     </table>
-
                   </div>
                 </div>
-                <div className="card-divider" />
+                {/* <div className="card-divider" /> */}
                 <div className="card-footer">
                   {
                     ordersList !== undefined && ordersList.length > 0 ?
                       <Pagination
                         current={page}
                         total={
-                          this.props.allmerchantorders != null
-                            ? Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
+                          ordersList != null
+                            ? Math.ceil(ordersList.length / this.state.rowsPerPage)
                             : 1
                         }
                         onPageChange={this.handlePageChange}
@@ -507,7 +499,6 @@ class AccountPageOrders extends Component {
                         <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                       </div>
                   }
-
                 </div>
               </TabPanel>
 

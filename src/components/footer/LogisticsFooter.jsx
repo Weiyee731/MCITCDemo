@@ -1,0 +1,21 @@
+// react
+import React from 'react';
+import { Image } from 'react-bootstrap';
+
+// application
+import SocialLinks from '../shared/SocialLinks';
+import JNT from '../../assets/J&TExpress.jpg';
+
+
+export default function LogisticsFooter() {
+    return (
+        <div className="site-footer__widget footer-newsletter">
+            <h5 className="footer-newsletter__title">Logistics</h5>
+            <div className='row'>
+                <div className="col-4">
+                <Image width="70px" height="35px" src={JNT} />
+                </div>
+            </div>
+        </div>
+    );
+}

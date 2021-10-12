@@ -65,23 +65,32 @@ class PageCheckout extends Component {
       ProductQuantity: [],
       UserCartID: [],
       ProductVariationDetailID: [],
+      TrackingStatusID: 0,
       address: 0,
-      PaymentID: 0,
-      PaymentMethodID: 0
+      PaymentMethodID: 0,
+      PaymentMethodTypeID: 0,
+      PaymentMethod: "",
+      PaymentMethodType: "",
+      OrderTotalAmount: 0
+
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
   onFormSubmit() {
-    if (this.state.PaymentID === 0) {
+    if (this.state.PaymentMethodID === 0) {
       toast.error("Please fill in correct payment method info to continue")
     }
     else {
+
       this.props.data.map((x) => {
+
+        console.log("x", x)
         this.state.ProductID.push(x.product.ProductID)
         this.state.UserCartID.push(x.product.UserCartID)
         this.state.ProductQuantity.push(x.product.ProductQuantity)
         this.state.ProductVariationDetailID.push(x.product.ProductVariationDetailID)
+        // this.state.TrackingStatusID.push(0)
       })
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
@@ -90,21 +99,26 @@ class PageCheckout extends Component {
         UserCartID: this.state.UserCartID,
         UserAddressID: this.state.address,
         PaymentMethodID: this.state.PaymentMethodID,
+        UserPaymentMethodID: this.state.PaymentMethodTypeID,
+        OrderTotalAmount: this.state.OrderTotalAmount,
+        OrderPaidAmount: this.state.OrderTotalAmount,
         ProductVariationDetailID: this.state.ProductVariationDetailID,
-        PAYMENTID: this.state.PaymentID,
+        TrackingStatusID: this.state.TrackingStatusID
       })
+      console.log("this.state after click", this.state)
     }
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.order !== this.props.order) {
-      browserHistory.push("/Emporia");
-      window.location.reload(false);
+      if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
+        browserHistory.push("/Emporia");
+        window.location.reload(false);
+      }
     }
   }
 
   render() {
-
     const breadcrumb = [
       { title: "Home", url: "" },
       // { title: "Shopping Cart", url: "/shop/cart" },
@@ -124,9 +138,15 @@ class PageCheckout extends Component {
         this.setState({ address: value })
     }
 
-    const handleGetPaymentId = (paymentmethodId, paymentID) => {
-      if (paymentmethodId.length !== 0 && paymentID.length !== 0)
-        this.setState({ PaymentMethodID: paymentmethodId, PaymentID: paymentID })
+    const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
+      if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0)
+        this.setState({ PaymentMethodID: payment.PaymentMethodID, PaymentMethod: payment.PaymentMethod, PaymentMethodTypeID: paymentmethodtypeId, PaymentMethodType: paymentmethodtype })
+    }
+
+    const handleGetTotal = (total) => {
+      if (total !== 0)
+        this.setState({ OrderTotalAmount: total })
+      console.log("ordertotalamount", total)
     }
 
     const step1Content = (
@@ -146,11 +166,9 @@ class PageCheckout extends Component {
     );
     const step4Content = (
       <div style={{ width: "100%" }}>
-        <PageCompleted addresss={this} data={this.props.data} />
+        <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} />
       </div>
     );
-
-    // const query = queryString.parse(this.props.location.search);
     return (
       <React.Fragment>
         <Helmet>
@@ -164,7 +182,6 @@ class PageCheckout extends Component {
               className="row"
               primaryBtnClass="btn-lg"
               secondaryBtnClass="btn-link"
-              // style={{ width: "100%", color:"white" }}
               onSubmit={() => this.onFormSubmit()}
               steps={[
                 {

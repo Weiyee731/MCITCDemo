@@ -31,6 +31,9 @@ export class GitAction {
   static CheckUser = "CHECK-USER";
   static CheckedUser = "CHECKED-USER";
 
+  static UpdatePassword = "UPDATE-PASSWORD";
+  static UpdatedPassword = "UPDATED-PASSWORD";
+
   static GetPages = "GET-USERPAGE";
   static GotPages = "GOT-USERPAGE";
 
@@ -40,6 +43,13 @@ export class GitAction {
   static CallCheckUserExists(credentials) {
     return {
       type: GitAction.CheckUser,
+      payload: credentials,
+    };
+  }
+
+  static CallUpdatePassword(credentials) {
+    return {
+      type: GitAction.UpdatePassword,
       payload: credentials,
     };
   }
@@ -108,6 +118,16 @@ export class GitAction {
     };
   }
 
+  //==================PAYMENT METHOD==========================//
+  static GetPaymentMethod = "GET-PAYMENTMETHID";
+  static GotPaymentMethod = "GOT-PAYMENTMETHID";
+
+  static CallAllPaymentMethod() {
+    return {
+      type: GitAction.GetPaymentMethod,
+    };
+  }
+
   //==================CREDIT CARD==========================//
   static GetCreditCard = "GET-CREDITCARD";
   static GotCreditCard = "GOT-CREDITCARD";
@@ -156,10 +176,11 @@ export class GitAction {
   static GetProduct = "GET-PRODUCT";
   static GotProduct = "GOT-PRODUCT";
 
+  static GetProductListing = "GET-PRODUCTLISTING";
+  static GotProductListing = "GOT-PRODUCTLISTING";
+
   static GetProductDetail = "GET-PRODUCT-DETAIL";
   static GotProductDetail = "GOT-PRODUCT-DETAIL";
-  static GetProductByID = "GET-PRODUCT-BYID";
-  static GotProductByID = "GOT-PRODUCT-BYID";
 
   static GetProductByMerchantID = "GET-PRODUCT-BYMERCHANTID";
   static GotProductByMerchantID = "GOT-PRODUCT-BYMERCHANTID";
@@ -194,9 +215,6 @@ export class GitAction {
   static AddProductPurchaseOrder = "ADD-PRODUCTPURCHASEORDER";
   static AddedProductPurchaseOrder = "ADDED-PRODUCTPURCHASEORDER";
 
-  static GetProductsByCategoryID = "GET-PRODUCT-BY-CATEGORY-ID";
-  static GotProductsByCategoryID = "GOT-PRODUCT-BY-CATEGORY-ID";
-
   static GetProductsByCategoryIDEmpty = "GET-PRODUCT-BY-CATEGORY-ID-EMPTY";
   static GotProductsByCategoryIDEmpty = "GOT-PRODUCT-BY-CATEGORY-ID-EMPTY";
 
@@ -211,24 +229,17 @@ export class GitAction {
     };
   }
 
-  static CallProductDetail(propData) {
+  static CallAllProductsListing(propData) {
     return {
-      type: GitAction.GetProductDetail,
+      type: GitAction.GetProductListing,
       payload: propData
     };
   }
 
-  static CallProductsByID(prodData) {
+  static CallProductDetail(propData) {
     return {
-      type: GitAction.GetProductByID,
-      payload: prodData,
-    };
-  }
-
-  static CallProductsByMerchantID(prodData) {
-    return {
-      type: GitAction.GetProductByMerchantID,
-      payload: prodData,
+      type: GitAction.GetProductDetail,
+      payload: propData
     };
   }
 
@@ -325,13 +336,6 @@ export class GitAction {
       payload: prodData,
     };
   }
-
-  static CallGetProductByProductCategoryID(prodData) {
-    return {
-      type: GitAction.GetProductsByCategoryID,
-      payload: prodData,
-    };
-  }
   
 
   // Product Variation
@@ -388,11 +392,18 @@ export class GitAction {
 
   static AddProductSpecsDetail = "DELETE-PRODUCTVARIATION";
   static AddedProductSpecsDetail = "DELETED-PRODUCTVARIATION";
+  static ResetProductSpecsDetailResult = "RESET-PRODUCTVARIATION";
 
-  static CallAllProductSpecsDetail(prodData) {
+  static CallAddProductSpecsDetail(prodData) {
     return {
       type: GitAction.AddProductSpecsDetail,
       payload: prodData
+    };
+  }
+
+  static CallResetProductSpecsDetailResults() {
+    return {
+      type: GitAction.ResetProductSpecsDetailResult,
     };
   }
 
@@ -454,6 +465,7 @@ export class GitAction {
 
   static DeleteProductVariationDetail = "DELETE-PRODUCTVARIATIONDETAIL";
   static DeletedProductVariationDetail = "DELETED-PRODUCTVARIATIONDETAIL";
+  static ResetProductVariationDetailResult = "RESET-PRODUCTVARIATIONDETAIL";
 
   static CallAllProductVariationDetail(prodData) {
     return {
@@ -473,6 +485,12 @@ export class GitAction {
     return {
       type: GitAction.DeleteProductVariationDetail,
       payload: prodData,
+    };
+  }
+
+  static CallResetProductVariationDetailResult() {
+    return {
+      type: GitAction.ResetProductVariationDetailResult,
     };
   }
 

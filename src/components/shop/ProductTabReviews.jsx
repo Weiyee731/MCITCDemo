@@ -184,7 +184,6 @@ class ProductTabReviews extends Component {
       );
     }
 
-    console.log("this.props in product tab review", JSON.parse(this.props.product.ProductReview))
     return (
       this.props.loading === false ?
         <div div className="reviews-view" id="reviews" >

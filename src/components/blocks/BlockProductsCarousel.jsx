@@ -251,7 +251,7 @@ BlockProductsCarousel.propTypes = {
   title: PropTypes.string.isRequired,
   layout: PropTypes.oneOf(["grid-4", "grid-4-sm", "grid-5", "horizontal"]),
   rows: PropTypes.number,
-  products: PropTypes.array,
+  products: PropTypes.any,
   groups: PropTypes.array,
   withSidebar: PropTypes.bool,
   loading: PropTypes.bool,

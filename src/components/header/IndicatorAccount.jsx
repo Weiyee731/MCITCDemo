@@ -174,7 +174,6 @@ class IndicatorAccount extends Component {
             </Link>
             <div className="account-menu__divider" />
             <ul className="account-menu__links">
-              {/* {console.log(localStorage.getItem("roleid"))} */}
               {localStorage.getItem("roleid") <= 15 ? (
                 <li onClick={() => backtoinventory("Dashboard")}>
                   <Link to="/dashboard">Inventory</Link>
@@ -186,14 +185,15 @@ class IndicatorAccount extends Component {
                 <Link to="/account/profile">My Profile</Link>
               </li>
               <li>
+                <Link to="/account/companyprofile">Company Profile</Link>
+              </li>
+              <li>
                 <Link to="/account/addresses">My Addresses</Link>
               </li>
               <li>
                 <Link to="/account/creditcard">My Credit Cards</Link>
               </li>
-              <li>
-                <Link to="/account/companyprofile">Company Profile</Link>
-              </li>
+              
               <li>
                 <Link to="/account/orders">Order History</Link>
               </li>
@@ -211,48 +211,6 @@ class IndicatorAccount extends Component {
               </li>
             </ul>
           </div>
-          // : (
-          // <div className="form-group">
-          //   <label htmlFor="header-signin-email" className="sr-only">
-          //     Username
-          //   </label>
-          //   <TextField
-          //     className="form-control"
-          //     id="text-field-controlled"
-          //     type="text"
-          //     hintText="Email"
-          //     value={this.state.email}
-          //     onChange={({ target }) => {
-          //       this.setState({ email: target.value });
-          //     }}
-          //   />
-          // </div>
-          // <div className="form-group">
-          //   <label htmlFor="header-signin-password" className="sr-only">
-          //     Password
-          //   </label>
-          //   <div className="account-menu__form-forgot">
-          //     <TextField
-          //       className="form-control"
-          //       id="text-field-controlled1"
-          //       hintText="Password"
-          //       value={this.state.password}
-          //       type="password"
-          //       onChange={({ target }) => {
-          //         this.setState({ password: target.value });
-          //       }}
-          //     />
-          //     <Link
-          //       to="/account/login"
-          //       className="account-menu__form-forgot-link"
-          //     >
-          //       Forgot?
-          //     </Link>
-          //   </div>
-          // </div>
-          // <div className="account-menu__form-link">
-          //   <Link to="/account/login">Create An Account</Link>
-          // </div>
         )}
       </div>
     );

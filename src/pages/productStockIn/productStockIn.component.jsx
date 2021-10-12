@@ -17,7 +17,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    callAllProducts: () => dispatch(GitAction.CallAllProducts()),
     CallDeleteProduct: (prodData) =>
       dispatch(GitAction.CallDeleteProduct(prodData)),
   };

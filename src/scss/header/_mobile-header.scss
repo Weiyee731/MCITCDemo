@@ -1,14 +1,14 @@
 /*
 // .mobile-header
 */
+
 @import '../variables';
 @import '../functions';
 @import '../mixins/direction';
-
-
 .mobile-header {
     height: $nav-panel-height;
 }
+
 .mobile-header__panel {
     z-index: 10;
     position: relative;
@@ -17,11 +17,13 @@
     color: $nav-panel-font-color;
     position: relative;
 }
+
 .mobile-header__body {
     display: flex;
     align-items: center;
     height: $nav-panel-height;
 }
+
 .mobile-header__menu-button {
     flex-shrink: 0;
     width: 36px;
@@ -37,54 +39,49 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     &:focus {
         outline: none;
     }
-
     &:focus,
     &:hover {
         background: $mobile-header-menu-button-hover-bg;
         fill: $mobile-header-menu-button-hover-color;
     }
 }
+
 .mobile-header__indicators {
     display: flex;
-
     @include direction {
         #{$margin-inline-start}: auto;
     }
 }
+
 .mobile-header__logo {
     margin: 0;
     color: inherit;
     fill: currentColor;
-
     @include direction {
         #{$margin-inline-end}: 16px;
         #{$margin-inline-start}: 12px;
     }
-
     &:hover {
         color: inherit;
     }
-
     svg {
         display: block;
     }
 }
 
-
 @media (min-width: breakpoint(md-start)) and (max-width: breakpoint(md-end)) {
     .mobile-header__search {
         flex-grow: 1;
         height: 36px;
-
         @include direction {
             #{$margin-inline-end}: 8px;
         }
     }
 }
+
 @media (max-width: breakpoint(sm-end)) {
     .mobile-header__search {
         top: 0;
@@ -99,7 +96,6 @@
         transition: transform .3s ease-in-out, visibility 0s .3s, opacity .3s;
         display: flex;
         pointer-events: none;
-
         @include direction {
             #{$inset-inline-start}: 0;
         }

@@ -112,6 +112,8 @@ function HomePageOne(props) {
     )
   );
 
+  console.log("HomePageOne")
+
   return (
     <React.Fragment>
       <Helmet>
