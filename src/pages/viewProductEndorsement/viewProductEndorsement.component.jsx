@@ -126,34 +126,34 @@ const headCells = [
     disablePadding: false,
     label: "Product Name",
   },
+  // {
+  //   id: "ProductDescription",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Product Description",
+  // },
+  // { id: "Brand", numeric: false, disablePadding: false, label: "Brand" },
+  // {
+  //   id: "ProductWeight",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Product Weight",
+  // },
+  // {
+  //   id: "ProductDimensionWidth",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Product Dimension",
+  // },
+  // {
+  //   id: "ProductStockAmountInital",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Current Stock",
+  // },
   {
-    id: "ProductDescription",
+    id: "ProductPrice",
     numeric: false,
-    disablePadding: false,
-    label: "Product Description",
-  },
-  { id: "Brand", numeric: false, disablePadding: false, label: "Brand" },
-  {
-    id: "ProductWeight",
-    numeric: true,
-    disablePadding: false,
-    label: "Product Weight",
-  },
-  {
-    id: "ProductDimensionWidth",
-    numeric: true,
-    disablePadding: false,
-    label: "Product Dimension",
-  },
-  {
-    id: "ProductStockAmountInital",
-    numeric: true,
-    disablePadding: false,
-    label: "Current Stock",
-  },
-  {
-    id: "ProductSellingPrice",
-    numeric: true,
     disablePadding: false,
     label: "Price Sold",
   },
@@ -190,6 +190,7 @@ function EndorseTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
+            style={{width: headCell.id == "ProductImage" ? "140px": ""}}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -232,6 +233,7 @@ function DisplayTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
+            style={{width: headCell.id == "ProductImage" ? "140px": ""}}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -472,7 +474,7 @@ function DeletableTable(props) {
                       </TableCell>
                       <TableCell align="center">{row.Picture}</TableCell>
                       <TableCell align="left">{row.ProductName}</TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         {row.ProductDescription}
                       </TableCell>
                       <TableCell align="left">{row.Brand}</TableCell>
@@ -486,9 +488,9 @@ function DeletableTable(props) {
                       </TableCell>
                       <TableCell align="right">
                         {row.ProductStockAmountInital}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="right">
-                        {row.ProductSellingPrice}
+                        {row.ProductPrice}
                       </TableCell>
                     </TableRow>
                   );
@@ -798,7 +800,7 @@ class DisplayTable extends Component {
                               <TableCell align="left">
                                 {row.ProductName}
                               </TableCell>
-                              <TableCell align="left">
+                              {/* <TableCell align="left">
                                 {row.ProductDescription}
                               </TableCell>
                               <TableCell align="left">{row.Brand}</TableCell>
@@ -814,9 +816,9 @@ class DisplayTable extends Component {
                               </TableCell>
                               <TableCell align="right">
                                 {row.ProductStockAmountInital}
-                              </TableCell>
-                              <TableCell align="right">
-                                {row.ProductSellingPrice}
+                              </TableCell> */}
+                              <TableCell align="left">
+                                {row.ProductPrice}
                               </TableCell>
                             </TableRow>
                           );
