@@ -328,15 +328,22 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.ProductMediaAdded:
       return Object.assign({}, state, {
         loading: false,
-        productMediaResult: [],
+        productMediaResult: action.payload,
+      });
+
+    case GitAction.ResetProductMediaReturnVal:
+      return Object.assign({}, state, {
+        loading: false,
+        productMediaResult: []
       });
 
     case GitAction.AddProductPurchaseOrder:
       return Object.assign({}, state, { loading: true });
     case GitAction.AddedProductPurchaseOrder:
-      var productMediaResult = Object.assign({}, state);
-      productMediaResult.loading = false;
-      return productMediaResult;
+      var object = Object.assign({}, state);
+      object.loading = false;
+      object.productMediaResult = false;
+      return object;
 
     //==============PRODUCT SPECS DETAIL===============//
     case GitAction.AddProductSpecsDetail:

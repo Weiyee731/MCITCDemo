@@ -72,7 +72,7 @@ function mapStateToProps(state) {
     suppliers: state.counterReducer["supplier"],
     exist: state.counterReducer["exists"],
     result: state.counterReducer["addResult"],
-    resultsMedia: state.counterReducer["productMediaResult"],
+    productMediaResult: state.counterReducer["productMediaResult"],
     variations: state.counterReducer["variations"],
     productCategories: state.counterReducer["productCategories"],
     productCategoriesFullList: state.counterReducer["categories"],
@@ -323,6 +323,142 @@ function getStepContent(step) {
   }
 }
 
+const INITIAL_STATE = {
+  name: "",
+  description: "",
+  productCategory: "",
+  productSupplier: localStorage.getItem("id"),
+  height: "",
+  width: "",
+  depth: "",
+  weight: "",
+  sku: "",
+  brand: "",
+  model: "",
+  tags: "",
+  index: 0,
+  file: [],
+  fileInfo: [],
+  url: [],
+  counter: 0,
+  counter2: 0,
+  file2: [],
+  fileInfo2: [],
+  url2: [],
+  file3: [],
+  fileInfo3: [],
+  url3: [],
+  url4: [],
+  counter3: 0,
+  skuNotLongEnough: false,
+  heightNotDecimal: false,
+  widthNotDecimal: false,
+  depthNotDecimal: false,
+  dimensionsNotDecimal: false,
+  productNameEmpty: false,
+  productNameDublicated: false,
+  productCategoryEmpty: false,
+  productSupplierEmpty: false,
+  heightEmpty: false,
+  widthEmpty: false,
+  depthEmpty: false,
+  weightEmpty: false,
+  weightNotDecimal: false,
+  productDesciptionEmpty: false,
+  skuEmpty: false,
+  brandEmpty: false,
+  modelEmpty: false,
+  productTagsEmpty: false,
+  priceEmpty: false,
+  stockEmpty: false,
+  variation1NameEmpty: false,
+  variation2NameEmpty: false,
+  notEnoughFiles512x512: false,
+  notEnoughFiles1600x900: false,
+  notEnoughFilesVideo: false,
+  productID: null,
+  dataSent: false,
+  file1Added: false,
+  file2Added: false,
+  file3Added: false,
+  file1Added2: false,
+  file2Added2: false,
+  file3Added2: false,
+  file1Added3: false,
+  onImage: false,
+  currentlyHovered: 0,
+  ProductVariationSelectedData: [],
+  ParentProductCategoryID: "",
+  HierarchyLevel: "",
+  anchorEl: null,
+  selectedItem: "Choose a Category",
+  menuPosition: null,
+  categoryH1: "",
+  categoryH2: null,
+  categoryH3: null,
+  categoryH4: null,
+  categoryH2ID: "",
+  categoryH3ID: "",
+  categoryH4ID: "",
+  categoryH1Name: "",
+  categoryH2Name: "",
+  categoryH3Name: "",
+  categoryH4Name: "",
+  basicInfoVisible: true,
+  productDetailsVisible: false,
+  productsVariationsVisible: false,
+  productMediaVisible: false,
+  shippingInfoVisible: false,
+  productDescriptionVisible: false,
+  variation1Name: "",
+  variation2Name: "",
+  progressBasic: 0,
+  progressDetails: 0,
+  progressVariation: 0,
+  progressMedia: 0,
+  progressShipping: 0,
+  progressDescription: 0,
+  progressSpecification: 0,
+  supplierFilled: 0,
+  skuFilled: 0,
+  brandFilled: 0,
+  modelFilled: 0,
+  descriptionFilled: 0,
+  tagsFilled: 0,
+  priceFilled: 0,
+  stockFilled: 0,
+  widthFilled: 0,
+  heightFilled: 0,
+  depthFilled: 0,
+  weightFilled: 0,
+  variation1NameFilled: 0,
+  variation2NameFilled: 0,
+  variation1On: false,
+  variation2On: false,
+  variation1Options: 0,
+  variation2Options: 0,
+  wholeSaleOn: false,
+  wholeSaleOptions: 1,
+  activeStep: 0,
+  price: null,
+  stock: null,
+  variation1: [],
+  priceTierList: [],
+  variantImagesTotal: 0.0,
+  Total512x512: 0.0,
+  Total1600x900: 0.0,
+  videoFilled: 0,
+  FocusOn: false,
+  helpText: [],
+  editorState: null,
+  isButtonDisabled: true,
+
+  productSpecificationOptions: [],
+  courierOptions: [],
+  selectedVariationID: 0,
+  isSubmit: false,
+}
+
 class AddProductComponent extends Component {
   constructor(props) {
     super(props);
@@ -330,6 +466,8 @@ class AddProductComponent extends Component {
     this.myRef = React.createRef();
     this.props.CallAllProductCategoryListing();
     this.props.callAllSupplierByUserStatus("endorsed");
+    this.props.CallAllProductsCategories();
+
     this.handlePrevClickButton = this.handlePrevClickButton.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleProductSpecificationInput = this.handleProductSpecificationInput.bind(this);
@@ -338,7 +476,7 @@ class AddProductComponent extends Component {
     this.uploadFile = this.uploadFile.bind(this);
     this.onSubmitProductVariation = this.onSubmitProductVariation.bind(this);
     this.onSubmitProductSpecification = this.onSubmitProductSpecification.bind(this);
-    this.props.CallAllProductsCategories();
+    this.applyToAllVariant = this.applyToAllVariant.bind(this);
 
     this.basicInfo = React.createRef();
     this.productDetails = React.createRef();
@@ -346,140 +484,7 @@ class AddProductComponent extends Component {
     this.productMedia = React.createRef();
     this.shippingInfo = React.createRef();
     this.OnSubmit = this.OnSubmit.bind(this)
-    this.state = {
-      name: "",
-      description: "",
-      productCategory: "",
-      productSupplier: localStorage.getItem("id"),
-      height: "",
-      width: "",
-      depth: "",
-      weight: "",
-      sku: "",
-      brand: "",
-      model: "",
-      tags: "",
-      index: 0,
-      file: [],
-      fileInfo: [],
-      url: [],
-      counter: 0,
-      counter2: 0,
-      file2: [],
-      fileInfo2: [],
-      url2: [],
-      file3: [],
-      fileInfo3: [],
-      url3: [],
-      url4: [],
-      counter3: 0,
-      skuNotLongEnough: false,
-      heightNotDecimal: false,
-      widthNotDecimal: false,
-      depthNotDecimal: false,
-      dimensionsNotDecimal: false,
-      productNameEmpty: false,
-      productNameDublicated: false,
-      productCategoryEmpty: false,
-      productSupplierEmpty: false,
-      heightEmpty: false,
-      widthEmpty: false,
-      depthEmpty: false,
-      weightEmpty: false,
-      weightNotDecimal: false,
-      productDesciptionEmpty: false,
-      skuEmpty: false,
-      brandEmpty: false,
-      modelEmpty: false,
-      productTagsEmpty: false,
-      priceEmpty: false,
-      stockEmpty: false,
-      variation1NameEmpty: false,
-      variation2NameEmpty: false,
-      notEnoughFiles512x512: false,
-      notEnoughFiles1600x900: false,
-      notEnoughFilesVideo: false,
-      productID: null,
-      dataSent: false,
-      file1Added: false,
-      file2Added: false,
-      file3Added: false,
-      file1Added2: false,
-      file2Added2: false,
-      file3Added2: false,
-      file1Added3: false,
-      onImage: false,
-      currentlyHovered: 0,
-      ProductVariationSelectedData: [],
-      ParentProductCategoryID: "",
-      HierarchyLevel: "",
-      anchorEl: null,
-      selectedItem: "Choose a Category",
-      menuPosition: null,
-      categoryH1: "",
-      categoryH2: null,
-      categoryH3: null,
-      categoryH4: null,
-      categoryH2ID: "",
-      categoryH3ID: "",
-      categoryH4ID: "",
-      categoryH1Name: "",
-      categoryH2Name: "",
-      categoryH3Name: "",
-      categoryH4Name: "",
-      basicInfoVisible: true,
-      productDetailsVisible: false,
-      productsVariationsVisible: false,
-      productMediaVisible: false,
-      shippingInfoVisible: false,
-      productDescriptionVisible: false,
-      variation1Name: "",
-      variation2Name: "",
-      progressBasic: 0,
-      progressDetails: 0,
-      progressVariation: 0,
-      progressMedia: 0,
-      progressShipping: 0,
-      progressDescription: 0,
-      progressSpecification: 0,
-      supplierFilled: 0,
-      skuFilled: 0,
-      brandFilled: 0,
-      modelFilled: 0,
-      descriptionFilled: 0,
-      tagsFilled: 0,
-      priceFilled: 0,
-      stockFilled: 0,
-      widthFilled: 0,
-      heightFilled: 0,
-      depthFilled: 0,
-      weightFilled: 0,
-      variation1NameFilled: 0,
-      variation2NameFilled: 0,
-      variation1On: false,
-      variation2On: false,
-      variation1Options: 0,
-      variation2Options: 0,
-      wholeSaleOn: false,
-      wholeSaleOptions: 1,
-      activeStep: 0,
-      price: null,
-      stock: null,
-      variation1: [],
-      priceTierList: [],
-      variantImagesTotal: 0.0,
-      Total512x512: 0.0,
-      Total1600x900: 0.0,
-      videoFilled: 0,
-      FocusOn: false,
-      helpText: [],
-      editorState: null,
-      isButtonDisabled: true,
-
-      productSpecificationOptions: [],
-      courierOptions: [],
-      selectedVariationID: 0,
-    };
+    this.state = INITIAL_STATE
   }
 
   setHint = (data, e) => {
@@ -2005,18 +2010,7 @@ class AddProductComponent extends Component {
           imageWidth += ","
           imageHeight += ","
         }
-
-        // in case, it needs to become array
-        // filenames.push(filename + "." + fileExt)
-        // mediaType.push(getFileTypeByExtension(fileExt))
-        // variationID.push(0)
-        // slideOrder.push(i)
-        // imageWidth.push(0)
-        // imageHeight.push(0)
-
       }
-
-
 
       let object = {
         ProductID: productID,
@@ -2032,7 +2026,6 @@ class AddProductComponent extends Component {
       axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
-          toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
         }
         else {
           console.log(res)
@@ -2046,36 +2039,46 @@ class AddProductComponent extends Component {
   };
 
   onSubmitProductVariation = (ProductID) => {
+    console.log('onSubmitProductVariation', ProductID)
     const { selectedVariationID, variation1 } = this.state
     console.log(variation1)
-    let Customizable = "" 
-    let Value = "" 
+    let Customizable = ""
+    let Value = ""
+    let stock = ""
+    let price = ""
 
-    if(variation1.options.length > 0 ){
+    if (variation1.options.length > 0) {
       for (let i = 0; i < variation1.options.length; i++) {
         Customizable += '0'
         Value += variation1.options[i].optionName
-  
-        if (i !== (variation1.length - 1)) {
+        stock += variation1.options[i].stock
+        price += variation1.options[i].price
+
+        if (i !== (variation1.options.length - 1)) {
           Customizable += ","
           Value += ","
+          stock += ","
+          price += ","
         }
       }
-  
     }
 
     let object = {
       ProductVariation: selectedVariationID,
       ProductID: ProductID,
       Customizable: Customizable,
-      Value: Value
+      Value: Value,
+      stock: stock,
+      price: price,
     }
 
     console.log(object)
+    this.props.CallAddProductVariationDetail(object)
 
   }
 
   onSubmitProductSpecification = (ProductID) => {
+    console.log('onSubmitProductSpecification', ProductID)
     const { productSpecificationOptions } = this.state
     let ProductVariation = ""
     let values = ""
@@ -2094,8 +2097,7 @@ class AddProductComponent extends Component {
       ProductID: ProductID,
       value: values,
     }
-    console.log(object)
-    // this.props.CallAddProductSpecsDetail(object)
+    this.props.CallAddProductSpecsDetail(object)
   }
 
   handleChange(data, e) {
@@ -3021,6 +3023,10 @@ class AddProductComponent extends Component {
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll, true);
+
+    // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
+    console.log(this.props.ProductID)
+    console.log(this.props.ProductName)
   }
 
   componentWillUnmount() {
@@ -3111,6 +3117,7 @@ class AddProductComponent extends Component {
     }
     this.props.callAddProduct(object)
 
+    this.setState({ isSubmit: true })
     // console.log(this.state.file)
   }
 
@@ -3126,22 +3133,60 @@ class AddProductComponent extends Component {
       let ProductID = this.props.result[0].ProductID
 
       //submit the images and videos 
-      if (this.state.file.length > 0) 
+      if (this.state.file.length > 0)
         this.uploadFile(ProductID)
 
       // submit the product variation 
-      if ( variation1.length > 0 && typeof  variation1.options !== "undefined" && variation1.options.length > 0) 
+      console.log(variation1.options.length)
+      if (typeof variation1.options !== "undefined" && variation1.options.length > 0) {
+        console.log('askjdh')
+
         this.onSubmitProductVariation(ProductID)
+      }
 
       // submit the product specifications 
-      if (productSpecificationOptions.length > 0) 
+      if (productSpecificationOptions.length > 0)
         this.onSubmitProductSpecification(ProductID)
 
       this.props.CallResetProductReturnVal()
     }
 
-    if (typeof this.props.resultsMedia !== "undefined" && this.props.resultsMedia.length > 0 && this.props.resultsMedia[0].ReturnVal == 1) {
-      this.props.CallResetProductMediaResult()
+
+    // check if the product specs return value is exists, or/and variation return value is exists, reset those props and reset the media return value if it is exists
+    let isProductSpecReset = false
+    let isProductVariantReset = false
+
+    //reset product specs return value if there is
+    console.log('productSpecsDetail', this.props.productSpecsDetail)
+    if (typeof this.props.productSpecsDetail !== "undefined" && this.props.productSpecsDetail.length > 0 && this.props.productSpecsDetail[0].ReturnVal == 1)
+      this.props.CallResetProductSpecsDetailResults()
+    else
+      isProductSpecReset = true
+
+    //reset product variation return value if there is
+    console.log('addProductVariationResult', this.props.addProductVariationResult)
+    if (typeof this.props.addProductVariationResult !== "undefined" && this.props.addProductVariationResult.length > 0 && this.props.addProductVariationResult[0].ReturnVal == 1)
+      this.props.CallResetProductVariationDetailResult()
+    else
+      isProductVariantReset = true
+
+    console.log('resultsMedia', this.props.productMediaResult)
+    console.log('check', isProductSpecReset, isProductVariantReset)
+    if (isProductSpecReset && isProductVariantReset) {
+      console.log('yes')
+      if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal == 1) {
+        console.log('yes22')
+        toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
+        this.props.CallResetProductMediaResult()
+        this.setState({ isSubmit: false })
+      }
+      else {
+        if (this.state.isSubmit === true) {
+          console.log('yes32')
+          toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
+          this.setState({ isSubmit: false })
+        }
+      }
     }
   }
 
@@ -3213,7 +3258,23 @@ class AddProductComponent extends Component {
 
   }
 
+  applyToAllVariant = () => {
+    const { variation1, sku, price, stock } = this.state
+    let tempObject = variation1
+    if (typeof tempObject.options !== "undefined" && tempObject.options.length > 1) {
+      for (let i = 0; i < tempObject.options.length; i++) {
+        tempObject.options[i].price = price
+        tempObject.options[i].sku = sku
+        tempObject.options[i].stock = stock
+      }
+
+      this.setState({ variation1: tempObject })
+    }
+  }
+
   render() {
+    const { isOnViewState } = this.props  //this props used to indicate it is on the state of viewing product details or it is adding product
+
     const steps = [
       "Basic Information",
       "Product Details",
@@ -3253,7 +3314,7 @@ class AddProductComponent extends Component {
     //   });
     // }
 
-    const query = queryString.parse(this.props.location.search);
+    // const query = queryString.parse(this.props.location.search);
 
     const previewStyle = {
       display: "inline",
@@ -3638,14 +3699,27 @@ class AddProductComponent extends Component {
         <div className="MainTab">
           <div>
             <div>
-              <h1>Add Product</h1>
+              {
+                !this.props.isOnViewState ? <h1>Add Product</h1> : <h1>{typeof this.props.ProductName !== "undefined" ? this.props.ProductName : "Product Information"}</h1>
+              }
             </div>
-            <Button>
-              <i className="fas fa-chevron-left"></i>
-              <Link className="nav-link" to={"/viewProduct"}>
-                Back
-              </Link>
-            </Button>
+
+            {
+              this.props.isOnViewState ?
+                <Button onClick={() => typeof this.props.backToList === "function" && this.props.backToList()  }>
+                  <i className="fas fa-chevron-left"></i>
+                  <Link className="nav-link" to={"/viewProduct"}>
+                    Back
+                  </Link>
+                </Button>
+                :
+                <Button>
+                  <i className="fas fa-chevron-left"></i>
+                  <Link className="nav-link" to={"/viewProduct"}>
+                    Back
+                  </Link>
+                </Button>
+            }
           </div>
 
           <div>
@@ -4331,7 +4405,7 @@ class AddProductComponent extends Component {
                       />
                     </div>
 
-                    <Button variant="outlined" className="ApplyAllButton">
+                    <Button variant="outlined" className="ApplyAllButton" onClick={() => this.applyToAllVariant()}>
                       Apply to All
                     </Button>
                   </div>
@@ -4669,9 +4743,9 @@ class AddProductComponent extends Component {
                   </table>
                 ) : null}
 
-                <hr />
-                <p className="FontType1">Wholesale Prices</p>
-                {!this.state.wholeSaleOn ? (
+                {/* <hr />
+                <p className="FontType1">Wholesale Prices</p> */}
+                {/* {!this.state.wholeSaleOn ? (
                   <div className="ItemContainer">
                     <Button
                       variant="outlined"
@@ -4681,8 +4755,8 @@ class AddProductComponent extends Component {
                       Add Price Tiers
                     </Button>
                   </div>
-                ) : null}
-                {this.state.wholeSaleOn ? (
+                ) : null} */}
+                {/* {this.state.wholeSaleOn ? (
                   <div className="wholeSale">
                     <div>
                       {[...Array(this.state.wholeSaleOptions)].map((e, i) => (
@@ -4806,7 +4880,7 @@ class AddProductComponent extends Component {
                       onClick={this.onDeleteVariant.bind(this, -1, "wholeSale")}
                     />
                   </div>
-                ) : null}
+                ) : null} */}
               </CardContent>
             </Card>
             <br />
@@ -5358,10 +5432,10 @@ class AddProductComponent extends Component {
                     There has to be at least 1 video added.
                   </p>
                 )}
-                {this.state.variation1On ? (
+                {/* {this.state.variation1On ? (
                   <p className="FontType1">Product Variant 1:</p>
-                ) : null}
-                <div className="DropZoneVariantMain">
+                ) : null} */}
+                {/* <div className="DropZoneVariantMain">
                   <div className="DropZoneGrid">
                     {[...Array(this.state.variation1Options)].map((e, i) =>
                       !this.state.variation1.options[i].picture ? (
@@ -5459,7 +5533,7 @@ class AddProductComponent extends Component {
                       )
                     )}
                   </div>
-                </div>
+                </div> */}
               </CardContent>
             </Card>
             <br />
@@ -5593,7 +5667,7 @@ class AddProductComponent extends Component {
                   </div>
                 </div>
 
-                <div>
+                {/* <div>
                   <p className="Heading">Courier Options</p>
                   <Button
                     variant="outlined"
@@ -5652,7 +5726,7 @@ class AddProductComponent extends Component {
                       )
                     })
                   }
-                </div>
+                </div> */}
 
                 {this.state.weightEmpty && (
                   <p className="error">Product weight cannot be empty.</p>
@@ -5667,8 +5741,8 @@ class AddProductComponent extends Component {
             </Card>
           </div>
           <br />
-          <div className="SubmitButtonContainer">
-            <Button variant="outlined" className="SubmitButton" onClick={() => { this.onSubmitProductSpecification(1) }}>
+          <div className="SubmitButtonContainer w-100">
+            <Button variant="contained" className="w-100" onClick={() => { this.OnSubmit() }} color="primary">
               Submit to Review
             </Button>
           </div>

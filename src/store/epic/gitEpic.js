@@ -1304,14 +1304,12 @@ export class GitEpic {
       try {
         const response = await fetch(
           url +
-          "Product_AddProductVariationDetail?PRODUCTIDVARIATION=" +
-          payload.ProductVariation +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&CUSTOMIZABLE=" +
-          payload.Customizable +
-          "&VALUE=" +
-          payload.Value
+          "Product_AddProductVariationDetail?PRODUCTIDVARIATION=" + payload.ProductVariation +
+          "&PRODUCTID=" + payload.ProductID +
+          "&CUSTOMIZABLE=" + payload.Customizable +
+          "&VALUE=" + payload.Value +
+          "&PRODUCTSTOCK=" + payload.stock +
+          "&PRODUCTVARIATIONPRICE=" + payload.price
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -1343,13 +1341,13 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
         return {
-          type: GitAction.AddedProductVariationDetail,
+          type: GitAction.AddedProductSpecsDetail,
           payload: json,
         };
       } catch (error) {
         alert('addProductSpecsDetail: ' + error);
         return {
-          type: GitAction.AddedProductVariationDetail,
+          type: GitAction.AddedProductSpecsDetail,
           payload: [],
         };
       }
@@ -1400,92 +1398,87 @@ export class GitEpic {
       }
     });
 
-  addProductVariation = (action$) =>
-    action$.ofType(GitAction.AddProductVariation).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_AddProductVariation?PRODUCTVARIATION=" +
-          payload.ProductVariation +
-          "&PRODUCTCATEGORYID=" +
-          payload.ProductCategoryID +
-          "&CUSTOMIZABLE=" +
-          payload.CustomizableIndicator
-        );
-        const json = await response.json();
-        if (json !== "fail") {
-          json = JSON.parse(json);
-        } else {
-          json = [];
-        }
-        return {
-          type: GitAction.AddedProductVariation,
-          payload: json,
-        };
-      } catch (error) {
-        alert('addProductVariation: ' + error);
-        return {
-          type: GitAction.AddedProductVariation,
-          payload: [],
-        };
-      }
-    });
-
-  updateProductVariation = (action$) =>
-    action$.ofType(GitAction.UpdateProductVariation).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_UpdateProductVariation?PRODUCTVARIATIONID=" +
-          payload.ProductVariationID +
-          "&PRODUCTVARIATION=" +
-          payload.ProductVariation +
-          "&PRODUCTCATEGORYID=" +
-          payload.ProductCategoryID +
-          "&CUSTOMIZABLE=" +
-          payload.Customizable
-        );
-        let json = await response.json();
+  addProductVariation = (action$) => action$.ofType(GitAction.AddProductVariation).switchMap(async ({ payload }) => {
+    try {
+      const response = await fetch(
+        url +
+        "Product_AddProductVariation?PRODUCTVARIATION=" +
+        payload.ProductVariation +
+        "&PRODUCTCATEGORYID=" +
+        payload.ProductCategoryID +
+        "&CUSTOMIZABLE=" +
+        payload.CustomizableIndicator
+      );
+      const json = await response.json();
+      if (json !== "fail") {
         json = JSON.parse(json);
-        return {
-          type: GitAction.UpdatedProductVariation,
-          payload: json,
-        };
-      } catch (error) {
-        alert('updateProductVariation: ' + error);
-        return {
-          type: GitAction.UpdatedProductVariation,
-          payload: [],
-        };
+      } else {
+        json = [];
       }
-    });
+      return {
+        type: GitAction.AddedProductVariation,
+        payload: json,
+      };
+    } catch (error) {
+      alert('addProductVariation: ' + error);
+      return {
+        type: GitAction.AddedProductVariation,
+        payload: [],
+      };
+    }
+  });
 
-  deleteProductVariation = (action$) =>
-    action$.ofType(GitAction.DeleteProductVariation).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_DeleteProductVariation?PRODUCTVARIATIONID=" +
-          payload.ProductVariationID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json !== "fail") {
-        } else {
-          json = [];
-        }
-        return {
-          type: GitAction.DeletedProductVariation,
-          payload: json,
-        };
-      } catch (error) {
-        alert('deleteProductVariation: ' + error);
-        return {
-          type: GitAction.DeletedProductVariation,
-          payload: [],
-        };
+  updateProductVariation = (action$) => action$.ofType(GitAction.UpdateProductVariation).switchMap(async ({ payload }) => {
+    try {
+      const response = await fetch(
+        url +
+        "Product_UpdateProductVariation?PRODUCTVARIATIONID=" +
+        payload.ProductVariationID +
+        "&PRODUCTVARIATION=" +
+        payload.ProductVariation +
+        "&PRODUCTCATEGORYID=" +
+        payload.ProductCategoryID +
+        "&CUSTOMIZABLE=" +
+        payload.Customizable
+      );
+      let json = await response.json();
+      json = JSON.parse(json);
+      return {
+        type: GitAction.UpdatedProductVariation,
+        payload: json,
+      };
+    } catch (error) {
+      alert('updateProductVariation: ' + error);
+      return {
+        type: GitAction.UpdatedProductVariation,
+        payload: [],
+      };
+    }
+  });
+
+  deleteProductVariation = (action$) => action$.ofType(GitAction.DeleteProductVariation).switchMap(async ({ payload }) => {
+    try {
+      const response = await fetch( url + "Product_DeleteProductVariation?PRODUCTVARIATIONID=" + payload.ProductVariationID
+      );
+      let json = await response.json();
+      json = JSON.parse(json);
+      if (json !== "fail") {
+      } else {
+        json = [];
       }
-    });
+      return {
+        type: GitAction.DeletedProductVariation,
+        payload: json,
+      };
+    } catch (error) {
+      console.log()
+      alert('deleteProductVariation: ' + error);
+      return {
+        type: GitAction.DeletedProductVariation,
+        payload: [],
+      };
+    }
+  });
 
   addProductPurchaseOrder = (action$) =>
     action$.ofType(GitAction.AddProductPurchaseOrder).switchMap(async ({ payload }) => {
