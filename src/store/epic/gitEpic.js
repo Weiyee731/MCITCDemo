@@ -131,6 +131,33 @@ export class GitEpic {
       }
     });
 
+  updatePassword = (action$) =>
+    action$.ofType(GitAction.UpdatePassword).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "User_UpdatePassword?USERID=" +
+          payload.userId +
+          "&USERPREVPASSWORD=" +
+          payload.oldPassword +
+          "&USERNEWPASSWORD=" +
+          payload.newPassword
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.UpdatedPassword,
+          payload: json,
+        };
+      } catch (error) {
+        alert('updatePassword: ' + error);
+        return {
+          type: GitAction.UpdatedPassword,
+          payload: [],
+        };
+      }
+    });
+
   getUserPage = (action$) =>
     action$.ofType(GitAction.GetPages).switchMap(async ({ payload }) => {
       try {
@@ -762,7 +789,7 @@ export class GitEpic {
   // All Payment Method
   getAllPaymentMethod = (action$) =>
     action$.ofType(GitAction.GetPaymentMethod).switchMap(async ({ payload }) => {
-      console.log( url +
+      console.log(url +
         "General_ViewPaymentMethod")
       try {
         const response = await fetch(
@@ -771,8 +798,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
-        
-        console.log("json",json)
+
+        console.log("json", json)
         return {
           type: GitAction.GotPaymentMethod,
           payload: json,
@@ -996,13 +1023,6 @@ export class GitEpic {
   getProductDetail = (action$) =>
     action$.ofType(GitAction.GetProductDetail).switchMap(async ({ payload }) => {
       try {
-        console.log(
-          url +
-          "Product_ItemDetailByProductID?ProductID=" +
-          payload.productId +
-          "&USERID=" +
-          payload.userId
-        )
         const response = await fetch(
           url +
           "Product_ItemDetailByProductID?ProductID=" +
@@ -1937,7 +1957,7 @@ export class GitEpic {
           payload.ProductID +
           "&PRODUCTQUANTITY=" +
           payload.ProductQuantity)
-          
+
         const response = await fetch(
           url +
           "Order_AddOrder?USERID=" +
@@ -1982,7 +2002,7 @@ export class GitEpic {
           };
         }
       }
-       catch (error) {
+      catch (error) {
         alert('deleteProductCart: ' + error);
         return {
           type: GitAction.AddedOrder,

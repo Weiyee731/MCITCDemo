@@ -31,6 +31,9 @@ export class GitAction {
   static CheckUser = "CHECK-USER";
   static CheckedUser = "CHECKED-USER";
 
+  static UpdatePassword = "UPDATE-PASSWORD";
+  static UpdatedPassword = "UPDATED-PASSWORD";
+
   static GetPages = "GET-USERPAGE";
   static GotPages = "GOT-USERPAGE";
 
@@ -40,6 +43,13 @@ export class GitAction {
   static CallCheckUserExists(credentials) {
     return {
       type: GitAction.CheckUser,
+      payload: credentials,
+    };
+  }
+
+  static CallUpdatePassword(credentials) {
+    return {
+      type: GitAction.UpdatePassword,
       payload: credentials,
     };
   }

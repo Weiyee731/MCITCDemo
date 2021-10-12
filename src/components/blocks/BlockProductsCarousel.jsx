@@ -167,7 +167,6 @@ export default class BlockProductsCarousel extends Component {
     let { products } = this.props;
 
     if (rows > 0) {
-      products = JSON.parse(products)
       products = products.slice();
 
       while (products.length > 0) {
