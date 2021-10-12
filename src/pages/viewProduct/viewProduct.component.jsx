@@ -13,6 +13,7 @@ import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import "react-table/react-table.css";
 import ProductDetailsComponent from "../../pages/productDetails/productDetails.component";
+import ProductDetailComponent from "../../pages/addProduct/addProductAllInOne.component";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -544,6 +545,7 @@ class DisplayTable extends Component {
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeDense = this.handleChangeDense.bind(this);
     this.isSelected = this.isSelected.bind(this);
+    this.handleSetDetailShown = this.handleSetDetailShown.bind(this);
   }
 
   handleRequestSort = (event, property) => {
@@ -632,6 +634,10 @@ class DisplayTable extends Component {
     });
   }
 
+  handleSetDetailShown = () =>{
+    this.setState({detailsShown: false})
+  }
+
   render() {
     const { classes } = this.props;
     const emptyRows = 
@@ -694,7 +700,7 @@ class DisplayTable extends Component {
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailsComponent data={this.state} data2={this.props} isEndorsement={false} setDetailShown={this.handleDetailShown} />
+          <ProductDetailComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
         ) : this.state.deleteActive ? (
           <div>
             <h1>Product List</h1>

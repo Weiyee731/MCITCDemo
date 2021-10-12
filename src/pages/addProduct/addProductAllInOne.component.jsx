@@ -3023,6 +3023,10 @@ class AddProductComponent extends Component {
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll, true);
+
+    // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
+    console.log(this.props.ProductID)
+    console.log(this.props.ProductName)
   }
 
   componentWillUnmount() {
@@ -3264,11 +3268,13 @@ class AddProductComponent extends Component {
         tempObject.options[i].stock = stock
       }
 
-      this.setState({ variation1: tempObject})
+      this.setState({ variation1: tempObject })
     }
   }
 
   render() {
+    const { isOnViewState } = this.props  //this props used to indicate it is on the state of viewing product details or it is adding product
+
     const steps = [
       "Basic Information",
       "Product Details",
@@ -3308,7 +3314,7 @@ class AddProductComponent extends Component {
     //   });
     // }
 
-    const query = queryString.parse(this.props.location.search);
+    // const query = queryString.parse(this.props.location.search);
 
     const previewStyle = {
       display: "inline",
@@ -3693,14 +3699,27 @@ class AddProductComponent extends Component {
         <div className="MainTab">
           <div>
             <div>
-              <h1>Add Product</h1>
+              {
+                !this.props.isOnViewState ? <h1>Add Product</h1> : <h1>{typeof this.props.ProductName !== "undefined" ? this.props.ProductName : "Product Information"}</h1>
+              }
             </div>
-            <Button>
-              <i className="fas fa-chevron-left"></i>
-              <Link className="nav-link" to={"/viewProduct"}>
-                Back
-              </Link>
-            </Button>
+
+            {
+              this.props.isOnViewState ?
+                <Button onClick={() => typeof this.props.backToList === "function" && this.props.backToList()  }>
+                  <i className="fas fa-chevron-left"></i>
+                  <Link className="nav-link" to={"/viewProduct"}>
+                    Back
+                  </Link>
+                </Button>
+                :
+                <Button>
+                  <i className="fas fa-chevron-left"></i>
+                  <Link className="nav-link" to={"/viewProduct"}>
+                    Back
+                  </Link>
+                </Button>
+            }
           </div>
 
           <div>
