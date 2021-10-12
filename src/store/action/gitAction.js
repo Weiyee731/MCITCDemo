@@ -370,9 +370,9 @@ export class GitAction {
 
   // PRODUCT SPECS
 
-  static AddProductSpecsDetail = "DELETE-PRODUCTVARIATION";
-  static AddedProductSpecsDetail = "DELETED-PRODUCTVARIATION";
-  static ResetProductSpecsDetailResult = "RESET-PRODUCTVARIATION";
+  static AddProductSpecsDetail = "ADD-PRODUCT-SPECS-DETAILS";
+  static AddedProductSpecsDetail = "ADDED-PRODUCT-SPECS-DETAILS";
+  static ResetProductSpecsDetailResult = "RESET-PRODUCT-SPECS-DETAILS";
 
   static CallAddProductSpecsDetail(prodData) {
     return {

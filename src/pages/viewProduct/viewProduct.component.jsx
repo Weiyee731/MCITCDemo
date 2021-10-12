@@ -633,10 +633,11 @@ class DisplayTable extends Component {
         this.state.rowsPerPage,
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
-    this.props.Data.map((d, i) => {
+      this.props.Data.length > 0 && this.props.Data.map((d, i) => {
       d.Picture = (
         <div>
           <img
+            alt={i}
             height={50}
             src={
               JSON.parse(d.ProductImages)
