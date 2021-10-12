@@ -4,7 +4,6 @@ import React, { Component } from "react";
 
 class ProductTabDescription extends Component {
     render() {
-
         const htmlString = this.props.product.ProductDescription
         return (
             <div className="typography">

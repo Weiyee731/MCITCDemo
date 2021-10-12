@@ -40,7 +40,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProductsByProductStatus: (prodData) => dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
     CallEndorseProduct: (prodData) => dispatch(GitAction.CallEndorseProduct(prodData)),
     CallResetEndorseProductReturnValue: (prodData) => dispatch(GitAction.CallResetEndorseProductReturnValue(prodData)),
   };
@@ -126,34 +126,34 @@ const headCells = [
     disablePadding: false,
     label: "Product Name",
   },
+  // {
+  //   id: "ProductDescription",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Product Description",
+  // },
+  // { id: "Brand", numeric: false, disablePadding: false, label: "Brand" },
+  // {
+  //   id: "ProductWeight",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Product Weight",
+  // },
+  // {
+  //   id: "ProductDimensionWidth",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Product Dimension",
+  // },
+  // {
+  //   id: "ProductStockAmountInital",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Current Stock",
+  // },
   {
-    id: "ProductDescription",
+    id: "ProductPrice",
     numeric: false,
-    disablePadding: false,
-    label: "Product Description",
-  },
-  { id: "Brand", numeric: false, disablePadding: false, label: "Brand" },
-  {
-    id: "ProductWeight",
-    numeric: true,
-    disablePadding: false,
-    label: "Product Weight",
-  },
-  {
-    id: "ProductDimensionWidth",
-    numeric: true,
-    disablePadding: false,
-    label: "Product Dimension",
-  },
-  {
-    id: "ProductStockAmountInital",
-    numeric: true,
-    disablePadding: false,
-    label: "Current Stock",
-  },
-  {
-    id: "ProductSellingPrice",
-    numeric: true,
     disablePadding: false,
     label: "Price Sold",
   },
@@ -190,6 +190,7 @@ function EndorseTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
+            style={{width: headCell.id == "ProductImage" ? "140px": ""}}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -232,6 +233,7 @@ function DisplayTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
+            style={{width: headCell.id == "ProductImage" ? "140px": ""}}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -409,8 +411,8 @@ function DeletableTable(props) {
         <img
           height={50}
           src={
-            JSON.parse(d.ProductImages)
-              ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
+            d.ProductImage
+              ? d.ProductImage
               : Logo
           }
           onError={(e) => {
@@ -472,7 +474,7 @@ function DeletableTable(props) {
                       </TableCell>
                       <TableCell align="center">{row.Picture}</TableCell>
                       <TableCell align="left">{row.ProductName}</TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         {row.ProductDescription}
                       </TableCell>
                       <TableCell align="left">{row.Brand}</TableCell>
@@ -486,9 +488,9 @@ function DeletableTable(props) {
                       </TableCell>
                       <TableCell align="right">
                         {row.ProductStockAmountInital}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="right">
-                        {row.ProductSellingPrice}
+                        {row.ProductPrice}
                       </TableCell>
                     </TableRow>
                   );
@@ -576,7 +578,7 @@ class DisplayTable extends Component {
       supplier: row.SupplierID,
       grid: row.GridStorageID,
       shoplot: row.ShoplotID,
-      picture: this.props.Data,
+      picture: JSON.parse(this.props.Data).ProductImage,
       row: index,
     });
 
@@ -621,16 +623,16 @@ class DisplayTable extends Component {
       this.state.rowsPerPage -
       Math.min(
         this.state.rowsPerPage,
-        this.props.Data.length - this.state.page * this.state.rowsPerPage
+        JSON.parse(this.props.Data).length - this.state.page * this.state.rowsPerPage
       );
-    this.props.Data.map((d, i) => {
+    JSON.parse(this.props.Data).map((d, i) => {
       d.Picture = (
         <div>
           <img
             height={70}
             src={
-              JSON.parse(d.ProductImages)
-                ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
+              d.ProductImage
+                ? d.ProductImage
                 : Logo
             }
             onError={(e) => {
@@ -698,7 +700,7 @@ class DisplayTable extends Component {
               placeholder="Search..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
-            {this.props.Data.filter((searchedItem) =>
+            {JSON.parse(this.props.Data).filter((searchedItem) =>
               searchedItem.ProductName.toLowerCase().includes(
                 this.state.searchFilter
               )
@@ -755,9 +757,9 @@ class DisplayTable extends Component {
                       order={this.state.order}
                       orderBy={this.state.orderBy}
                       onRequestSort={this.handleRequestSort}
-                      rowCount={this.props.Data.length}
+                      rowCount={JSON.parse(this.props.Data).length}
                     />
-                    {this.props.Data.filter((searchedItem) =>
+                    {JSON.parse(this.props.Data).filter((searchedItem) =>
                       searchedItem.ProductName.toLowerCase().includes(
                         this.state.searchFilter
                       )
@@ -798,7 +800,7 @@ class DisplayTable extends Component {
                               <TableCell align="left">
                                 {row.ProductName}
                               </TableCell>
-                              <TableCell align="left">
+                              {/* <TableCell align="left">
                                 {row.ProductDescription}
                               </TableCell>
                               <TableCell align="left">{row.Brand}</TableCell>
@@ -814,9 +816,9 @@ class DisplayTable extends Component {
                               </TableCell>
                               <TableCell align="right">
                                 {row.ProductStockAmountInital}
-                              </TableCell>
-                              <TableCell align="right">
-                                {row.ProductSellingPrice}
+                              </TableCell> */}
+                              <TableCell align="left">
+                                {row.ProductPrice}
                               </TableCell>
                             </TableRow>
                           );
@@ -891,9 +893,12 @@ class ViewProductEndorsementComponent extends Component {
       productStatus: "Pending",
       backPage: "viewProductEndorsement",
     };
-    this.props.CallAllProductsByProductStatus({
-      ProductStatus: this.state.productStatus,
-      UserID: window.localStorage.getItem("id"),
+    this.props.CallAllProducts({
+      type: 'Merchant',
+        typeValue:'0',
+        userId: window.localStorage.getItem("id"),
+        productPage:'999',
+        page:'1'
     });
   }
 

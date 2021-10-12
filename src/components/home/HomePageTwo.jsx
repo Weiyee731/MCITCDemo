@@ -34,7 +34,7 @@ function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
     products: state.counterReducer["products"],
-    viewMoreProducts: state.counterReducer["viewMoreProducts"],
+    // viewMoreProducts: state.counterReducer["viewMoreProducts"],
   };
 }
 
@@ -42,7 +42,7 @@ function mapDispatchToProps(dispatch) {
   return {
     // CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
-    CallViewMoreFunctionProduct: (propData) => dispatch(GitAction.CallViewMoreFunctionProduct(propData)),
+    // CallViewMoreFunctionProduct: (propData) => dispatch(GitAction.CallViewMoreFunctionProduct(propData)),
   };
 }
 
@@ -53,8 +53,7 @@ function HomePageTwo(props) {
   let productPerPage = 20
 
   const loopWithSlice = () => {
-    let products = JSON.parse(props.products)
-    tempArray = [...postsToShow, ...products];
+    tempArray = [...postsToShow, ...props.products];
     setPostsToShow(tempArray)
     // if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal !== "1") { toast.warning("There is no more product") }
     // else {
@@ -79,7 +78,13 @@ function HomePageTwo(props) {
   // }, [props.viewMoreProducts])
 
   useEffect(() => {
-    props.CallAllProducts({ type: "Merchant", typeValue: 0, userId: 0, productPage: 999, page: page })
+    props.CallAllProducts({
+      type: "Merchant",
+      typeValue: 0,
+      userId: 0,
+      productPage: 999,
+      page: page
+    })
     loopWithSlice()
   }, [page])
 
@@ -90,31 +95,23 @@ function HomePageTwo(props) {
         <Helmet>
           <title>{theme.name}</title>
         </Helmet>
-        {useMemo(() => <BlockSlideShow />, [])}
-        {useMemo(() => <BlockMainCategories />, [])}
-        {useMemo(() => <BlockFeatures layout="boxed" />, [])}
-
-        {useMemo(() => (
-          props.products !== undefined && props.products.length > 0 &&
-          <BlockProductsCarousel
-            title="New Arrivals"
-            layout="grid-4"
-            rows={2}
-            products={props.products.length > 0 ? props.products : []}
-          />
-        ), [props.loading, props.products])}
-
-        {useMemo(() => (
-          postsToShow !== undefined && postsToShow.length > 0 &&
-          <BlockProducts
-            title="Featured Products"
-            layout="large-first"
-            products={postsToShow.length > 0 ? postsToShow : []}
-            rows={2}
-          />
-        ), [postsToShow])}
+        <BlockSlideShow />
+        <BlockMainCategories />
+        <BlockFeatures layout="boxed" />
+        <BlockProductsCarousel
+          title="New Arrivals"
+          layout="grid-4"
+          rows={2}
+          products={props.products.length > 0 ? props.products : []}
+        />
+        <BlockProducts
+          title="Featured Products"
+          layout="large-first"
+          products={postsToShow.length > 0 ? postsToShow : []}
+          rows={2}
+        />
         {
-          props.products.length === 0 ? "" :
+          typeof props.products.ReturnVal !== 'undefined' && props.products.ReturnVal !== 1 ? "" :
             (
               <div className="my-4">
                 <BlockMoreButton viewMore={handleShowMorePosts} />

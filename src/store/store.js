@@ -40,6 +40,7 @@ const rootEpic = combineEpics(
   gitEpic.ViewAddress,
   gitEpic.addAddress,
   gitEpic.checkUser,
+  gitEpic.updatePassword,
   gitEpic.updateAddress,
   gitEpic.deleteAddress,
   gitEpic.getUserProfile,

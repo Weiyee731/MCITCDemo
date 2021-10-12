@@ -226,7 +226,7 @@ DisplayTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
+  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -529,7 +529,6 @@ class DisplayTable extends Component {
         {this.state.detailsShown ? (
           // "<ProductDetailsComponent data={this.state} data2={this.props} />"
           <UserDetailsComponent
-            userData={this.props.allUser}
             data={this.state}
           />
         ) : this.state.deleteActive ? (
@@ -666,7 +665,6 @@ class DisplayTable extends Component {
 class ViewUserComponent extends Component {
   constructor(props) {
     super(props);
-    this.props.CallAllUsers();
 
     this.state = {
       fixedHeader: true,
@@ -705,12 +703,29 @@ class ViewUserComponent extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.CallAllUsers();
+  }
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.reviews !== this.props.reviews) {
+
+  //   }
+  // }
+
+  componentWillUnmount() {
+    clearImmediate(this.props.allUser)
+  }
+
   render() {
     // console.log(this.props.allUser);
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable
-          Data={this.props.allUser}
+          Data={this.props.allUser.length > 0 &&
+            this.props.allUser !== undefined &&
+            this.props.allUser[0].ReturnVal !== "0" ? this.props.allUser : []}
+          // Data={this.props.allUser}
           ProductProps={this.props}
         ></DisplayTable>
       </div>

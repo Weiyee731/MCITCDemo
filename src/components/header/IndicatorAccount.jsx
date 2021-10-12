@@ -44,7 +44,7 @@ function mapDispatchToProps(dispatch) {
   return {
     callLogout: (credentials) => dispatch(GitAction.CallLogout(credentials)),
     loginUser: (credentials) => dispatch(GitAction.CallLogin(credentials)),
-    
+
   };
 }
 
@@ -154,7 +154,7 @@ class IndicatorAccount extends Component {
         {localStorage.getItem("isLogin") !== "false" && (
           <div>
             <div className="account-menu__divider" />
-            <Link to="/account/dashboard" className="account-menu__user">
+            <Link to="/account/profile" className="account-menu__user">
               <div className="account-menu__user-avatar">
                 <img
                   className="img-responsive img-rounded"
@@ -193,7 +193,7 @@ class IndicatorAccount extends Component {
               <li>
                 <Link to="/account/creditcard">My Credit Cards</Link>
               </li>
-              
+
               <li>
                 <Link to="/account/orders">Order History</Link>
               </li>
