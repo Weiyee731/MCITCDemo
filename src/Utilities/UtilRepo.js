@@ -97,6 +97,7 @@ export const getFileTypeByExtension = (ext) => {
     }
     else {
         ext = ext.replace(".", "")
+        ext = ext.toLowerCase()
         switch (ext) {
             case "jpg":
             case "jpeg":
