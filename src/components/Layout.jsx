@@ -90,6 +90,7 @@ import supplierResponse from "../pages/supplierResponse/supplierResponse.compone
 import ViewProductStockOutComponent from "../pages/viewProductStockOut/viewProductStockOut.component";
 import ViewStockOutDetailsComponent from "../pages/viewStockOutDetails/viewStockOutDetails.component";
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
+import ViewMerchantsComponent from "../pages/viewMerchant/viewMerchants.component";
 // import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
 
 import AddProductAllInOne from "../pages/addProduct/addProductAllInOne.component";
@@ -319,6 +320,7 @@ const Access = () => {
               component={ViewPromoCodesDetails}
             />
             <Route path="/viewUser" component={viewUserComponent} />
+            <Route path="/viewMerchants" component={ViewMerchantsComponent} />
             <Route path="/viewProductOrders" component={ViewProductOrders} />
             <Route
               path="/viewStockEndorsement"
@@ -492,7 +494,6 @@ function Layout(props) {
               {/* <Route path="/resetPassword" component={ResetPassword}/> */}
               <Route exact path="/signup" component={SignUp} />
               <Route path="/account" component={AccountLayout} />
-
               <Redirect exact from="/site" to="/site/about-us" />
               <Route exact path="/site/about-us" component={SitePageAboutUs} />
               <Route exact path="/site/policy" component={SitePagePolicy} />

@@ -63,7 +63,7 @@ class SupplierDetailsComponent extends Component {
     };
   }
 
-  
+
 
   endorseProduct = (data) => {
     this.setState({
@@ -124,6 +124,9 @@ class SupplierDetailsComponent extends Component {
           onChangeIndex={this.handleSlideChangeIndex}
         >
           <div style={Object.assign({})}>
+            <Button className="mt-3 mb-1" onClick={() => { this.props.backLink(false) }}>
+              <i className="fas fa-chevron-left"></i> {"  Back"}
+            </Button>
             <Card
               style={{
                 width: "80%",
@@ -135,9 +138,7 @@ class SupplierDetailsComponent extends Component {
                 {/* <button onClick={this.tester}> CheckData </button> */}
                 <h2>Supplier's Information</h2>
                 <h3>Representative's Details</h3>
-                <Button className="mt-3 mb-1" onClick={() => {this.props.backLink(false)}}>
-                  <i className="fas fa-chevron-left"></i> {"  Back" }
-                </Button>
+
                 <div
                   style={{
                     display: "flex",

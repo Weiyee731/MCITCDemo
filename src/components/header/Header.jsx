@@ -35,6 +35,7 @@ function Header(props) {
     bannerSection = (
       <div className="site-header__middle container">
         <div>
+          {/* <div className="site-header__logo"> */}
           <Link to="/">
             <LogoSvg />
           </Link>

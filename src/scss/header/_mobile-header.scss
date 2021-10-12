@@ -55,11 +55,33 @@
         #{$margin-inline-start}: auto;
     }
 }
+// .mobile-header__logo {
+//     margin: 0;
+//     color: inherit;
+//     fill: currentColor;
+
+//     @include direction {
+//         #{$margin-inline-end}: 16px;
+//         #{$margin-inline-start}: 12px;
+//     }
+
+//     &:hover {
+//         color: inherit;
+//     }
+
+//     svg {
+//         display: block;
+//     }
+// }
 
 .mobile-header__logo {
     margin: 0;
     color: inherit;
     fill: currentColor;
+    // height: inherit;
+    // padding-top: 0.35rem;
+    // padding-bottom: 0.35rem;
+
     @include direction {
         #{$margin-inline-end}: 16px;
         #{$margin-inline-start}: 12px;

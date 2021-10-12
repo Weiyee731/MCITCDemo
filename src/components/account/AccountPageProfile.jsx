@@ -8,6 +8,7 @@ import { Modal, ModalBody } from "reactstrap";
 import Dropzone from "react-dropzone";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
+import { Link } from 'react-router-dom';
 
 import "./AccountPageProfile.component.css";
 import {
@@ -24,6 +25,8 @@ import axios from "axios";
 import "./AccountPageProfile.css";
 import moment from 'moment';
 import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
+import PageChangeContact from "./AccountPageChangeContact.jsx";
 
 function mapStateToProps(state) {
   return {
@@ -81,6 +84,8 @@ class AccountPageProfile extends Component {
       imageFile: null,
       imageName: null,
 
+      editContact: false,
+      editEmail: false,
       validfirstName: false,
       validlastName: false,
       validDOB: false,
@@ -250,7 +255,6 @@ class AccountPageProfile extends Component {
         validContact: true,
       });
     } else {
-      console.log(" contact null");
       this.setState({
         validContact: false,
       });
@@ -392,6 +396,7 @@ class AccountPageProfile extends Component {
                 className="btn btn-primary"
                 onClick={() => this.addProfile()}
               >
+                <DoneIcon className="saveicon" />
                 Save
               </button>
             </div>
@@ -400,98 +405,98 @@ class AccountPageProfile extends Component {
 
           {/* profile image */}
           <div className="row">
-            <container className="container col-8">
-              {this.props.userprofiledata.map((row) => (
-                <container>
-                  <div className="row" >
-                    <div className="col-4 rowStyle">First Name</div>
-                    <div className="col-7 ">
-                      <TextField
-                        className="font"
-                        variant="outlined"
-                        size="small"
-                        id="userfirstname"
-                        defaultValue={row.FirstName}
-                        onChange={this.handleChangeforFirstName.bind(this)}
-                        style={{ marginRight: "5px", width: "100%" }}
-                      />
+            <div className="container col-8">
+              {this.props.userprofiledata && this.props.userprofiledata.length > 0 && this.props.userprofiledata !== null &&
+                this.props.userprofiledata.map((row) => (
+                  <div className="container">
+                    <div className="row" >
+                      <div className="col-3 rowStyle vertical-align">First Name</div>
+                      <div className="col-8 ">
+                        <TextField
+                          className="font"
+                          variant="outlined"
+                          size="small"
+                          id="userfirstname"
+                          defaultValue={row.FirstName}
+                          onChange={this.handleChangeforFirstName.bind(this)}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-4 rowStyle">Last Name</div>
-                    <div className="col-7">
-                      <TextField
-                        className="font"
-                        variant="outlined"
-                        size="small"
-                        id="userlastname"
-                        defaultValue={row.LastName}
-                        onChange={this.handleChangeforLastName.bind(this)}
-                        style={{ marginRight: "5px", width: "100%" }}
-                      />
+                    <div className="row">
+                      <div className="col-3 rowStyle vertical-align">Last Name</div>
+                      <div className="col-8">
+                        <TextField
+                          className="font"
+                          variant="outlined"
+                          size="small"
+                          id="userlastname"
+                          defaultValue={row.LastName}
+                          onChange={this.handleChangeforLastName.bind(this)}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className=" col-4 rowStyle">Date of Birth</div>
-                    <div className="col-7">
-                      <TextField
-                        className="font"
-                        variant="outlined"
-                        size="small"
-                        id="userdob"
-                        type="date"
-                        value={moment(this.state.USERDATEBIRTH).format('YYYY-MM-DD')}
-                        onChange={this.handleChangeforDOB.bind(this)}
-                        style={{ marginRight: "5px", width: "100%" }}
-                      />
+                    <div className="row">
+                      <div className=" col-3 rowStyle vertical-align">Date of Birth</div>
+                      <div className="col-8">
+                        <TextField
+                          className="font"
+                          variant="outlined"
+                          size="small"
+                          id="userdob"
+                          type="date"
+                          value={moment(this.state.USERDATEBIRTH).format('YYYY-MM-DD')}
+                          onChange={this.handleChangeforDOB.bind(this)}
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="row">
-                    <div className="col-4 rowStyle">Gender</div>
-                    <div className="col-7">
-                      <FormControl component="fieldset">
-                        <RadioGroup
-                          aria-label="USERGENDER"
-                          name="USERGENDER"
-                          defaultValue={row.UserGender}
-                          value={this.state.USERGENDER}
-                          onChange={this.handleChangeforGender}
-                        >
-                          <FormControlLabel
-                            className=" MuiTypography-body1"
-                            value="Male"
-                            control={<Radio />}
-                            label="Male"
-                          />
-                          <FormControlLabel
-                            className=" MuiTypography-body1"
-                            value="Female"
-                            control={<Radio />}
-                            label="Female"
-                          />
-                          <FormControlLabel
-                            className=" MuiTypography-body1"
-                            value="RatherNotToSay"
-                            control={<Radio />}
-                            label="Rather Not To Say"
-                          />
-                        </RadioGroup>
-                      </FormControl>
+                    <div className="row">
+                      <div className="col-3 rowStyle">Gender</div>
+                      <div className="col-8">
+                        <FormControl component="fieldset">
+                          <RadioGroup
+                            aria-label="USERGENDER"
+                            name="USERGENDER"
+                            defaultValue={row.UserGender}
+                            value={this.state.USERGENDER}
+                            onChange={this.handleChangeforGender}
+                          >
+                            <FormControlLabel
+                              className=" MuiTypography-body1 "
+                              value="Male"
+                              control={<Radio />}
+                              label="Male"
+                            />
+                            <FormControlLabel
+                              className=" MuiTypography-body1"
+                              value="Female"
+                              control={<Radio />}
+                              label="Female"
+                            />
+                            <FormControlLabel
+                              className=" MuiTypography-body1"
+                              value="RatherNotToSay"
+                              control={<Radio />}
+                              label="Rather Not To Say"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </div>
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-4 rowStyle">Contact Number</div>
-                    <div className="col-7">
-                      {
-                        this.state.editContact === false ?
-                          <>
-                            {row.UserContactNo !== null ? censorContact(row.UserContactNo) : "-"}
-                            <button className="btn btn-primary" onClick={() => this.setState({ editContact: true })} style={{ float: "right" }}>Change Contact</button>
-                          </>
-                          :
+                    <div className="row">
+                      <div className="col-3 rowStyle">Contact Number</div>
+                      <div className="col-8 font">
+                        {/* {
+                        this.state.editContact === false ? */}
+                        <>
+                          {row.UserContactNo !== null ? censorContact(row.UserContactNo) : "-"}
+                          <Link to={{ pathname: "/account/changeContact" }}>
+                            {/* <Link to="/account/changeContact" > */}
+                            <div className="change-contact-mail" >Change Contact</div>
+                          </Link>
+                        </>
+                        {/* :
                           <input
-                            className="font"
                             variant="outlined"
                             size="small"
                             id="usercontact"
@@ -499,37 +504,37 @@ class AccountPageProfile extends Component {
                             pattern="[\d| ]{16,22}"
                             defaultValue={row.UserContactNo}
                             onChange={this.handleChangeforContact.bind(this)}
-                            style={{ marginRight: "5px", width: "100%" }}
                           />
-                      }
+                      } */}
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-3 rowStyle">Email Address</div>
+                      <div className="col-8 font">
+                        {/* {
+                        this.state.editEmail === false ? */}
+                        <>
+                          {row.UserEmailAddress !== null ? censorEmail(row.UserEmailAddress) : "-"}
+                          <Link to="/account/changeContact">
+                            <div className="change-contact-mail" onClick={() => this.setState({ editContact: true })}>Change Email</div>
+                          </Link>
+                        </>
+                        {/* :
+                          <PageChangeEmail />
+                        // <input
+                        //   variant="outlined"
+                        //   size="small"
+                        //   id="useremail"
+                        //   type="text"
+                        //   defaultValue={row.UserEmailAddress}
+                        //   onChange={this.handleChangeforEmail.bind(this)}
+                        // />
+                      } */}
+                      </div>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-4 rowStyle">Email Address</div>
-                    <div className="col-7">
-                      {
-                        this.state.editEmail === false ?
-                          <>
-                            {row.UserEmailAddress !== null ? censorEmail(row.UserEmailAddress) : "-"}
-                            <button onClick={() => this.setState({ editEmail: true })} style={{ float: "right" }}>Change Email</button>
-                          </>
-                          :
-                          <input
-                            className="font"
-                            variant="outlined"
-                            size="small"
-                            id="useremail"
-                            type="text"
-                            defaultValue={row.UserEmailAddress}
-                            onChange={this.handleChangeforEmail.bind(this)}
-                            style={{ marginRight: "5px", width: "100%" }}
-                          />
-                      }
-                    </div>
-                  </div>
-                </container>
-              ))}
-            </container>
+                ))}
+            </div>
             <div className="col-4 border-line">
 
               <div onClick={() => this.modalOpen()} className=" imagecontainer">
@@ -547,6 +552,7 @@ class AccountPageProfile extends Component {
                 />
                 <div className="overlay">Edit</div>
               </div>
+              <div className="description"><br /> Click on the image above to edit profile picture</div>
             </div>
           </div>
         </CardContent>
@@ -570,7 +576,6 @@ class AccountPageProfile extends Component {
               <div
                 align="center"
                 className="form-content p-2"
-              // style={{ width: "100vw", height: "60vh"}}
               >
                 <div>
                   <Dropzone

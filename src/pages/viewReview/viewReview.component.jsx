@@ -81,10 +81,45 @@ class ViewReviewComponent extends Component {
     this.props.CallProductReview({
       UserID: window.localStorage.getItem("id"),
     });
+    console.log(this.props.reviews)
     // if (this.props.reviews && this.props.reviews !== undefined) {
     //   this.setState({ reviews: this.props.reviews })
     // }
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.reviews !== this.props.reviews) {
+
+      this.props.reviews &&
+        this.props.reviews.length > 0 &&
+        this.props.reviews !== undefined &&
+        this.props.reviews[0].ReturnVal !== "0" &&
+        this.props.reviews.map((d, i) => {
+          const Picture = d.ProductMediaUrl;
+          d.ProductMediaUrl = (
+            <div key={i}>
+              <img height={50} src={Picture} alt={d.Name} />
+            </div>
+          );
+
+          const RatingReview = d.ProductAverageRating;
+          d.ProductAverageRating = (
+            <div>
+              <Rating
+                name="productAverageReviewRating"
+                value={RatingReview}
+                precision={0.5}
+                readOnly
+              />
+            </div>
+          );
+        });
+    }
+  }
+
+  // componentWillUnmount() {
+  //   clearImmediate(this.props.reviews)
+  // }
 
   handleDisplayAllComments = (value) => {
     this.setState({
@@ -122,31 +157,37 @@ class ViewReviewComponent extends Component {
       marginTop: "15px",
     };
 
-    console.log(this.props.reviews)
+    // this.props.reviews &&
+    //   this.props.reviews.length > 0 &&
+    //   this.props.reviews !== undefined &&
+    //   this.props.reviews[0].ReturnVal !== "0" &&
+    //   this.props.reviews.map((d, i) => {
+    //     const Picture = d.ProductMediaUrl;
+    //     d.ProductMediaUrl = (
+    //       <div key={i}>
+    //         <img height={50} src={Picture} alt={d.Name} />
+    //       </div>
+    //     );
 
-    this.props.reviews.map((d, i) => {
-      const Picture = d.ProductMediaUrl;
-      d.ProductMediaUrl = (
-        <div key={i}>
-          <img height={50} src={Picture} alt={d.Name} />
-        </div>
-      );
+    //     const RatingReview = d.ProductAverageRating;
+    //     d.ProductAverageRating = (
+    //       <div>
+    //         <Rating
+    //           name="productAverageReviewRating"
+    //           value={RatingReview}
+    //           precision={0.5}
+    //           readOnly
+    //         />
+    //       </div>
+    //     );
+    //   });
 
-      const RatingReview = d.ProductAverageRating;
-      d.ProductAverageRating = (
-        <div>
-          <Rating
-            name="productAverageReviewRating"
-            value={RatingReview}
-            precision={0.5}
-            readOnly
-          />
-        </div>
-      );
-    });
-
-    this.props.reviews && this.props.reviews !== 'undefined' && this.props.reviews.filter((searchedItem) => typeof searchedItem !== 'undefined' && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
-      .map((filteredItem) => { filteredProduct.push(filteredItem); })
+    this.props.reviews &&
+      this.props.reviews.length > 0 &&
+      this.props.reviews !== undefined &&
+      this.props.reviews[0].ReturnVal !== "0" &&
+      this.props.reviews.filter((searchedItem) => typeof searchedItem !== 'undefined' && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+        .map((filteredItem) => { filteredProduct.push(filteredItem); })
 
     return (
       <div className="App" style={{ padding: "50px 50px 0px" }}>
@@ -274,7 +315,7 @@ class ViewReviewComponent extends Component {
                         Reply To:
                       </div>
                       <div className='float-right'>
-                        <IconButton color="#ffffff" style={{ marginLeft: 'auto', backgroundColor: 'rgba(255, 255, 255, 0.95)' }} onClick={() => { this.setState({ selectedComment: '' }) }}> <CloseIcon /></IconButton>
+                        <IconButton className="icon" onClick={() => { this.setState({ selectedComment: '' }) }}> <CloseIcon /></IconButton>
                       </div>
                     </div>
                     <div style={{ fontSize: '14pt' }}>
@@ -308,7 +349,7 @@ class ViewReviewComponent extends Component {
                 />
               </div>
               <div className="col-1">
-                <IconButton color="#ffffff" style={{ marginLeft: 'auto', backgroundColor: 'rgba(255, 255, 255, 0.95)' }} onClick={e => { console.log('send message') }}> <SendIcon /></IconButton>
+                <IconButton className="icon" onClick={e => { console.log('send message') }}> <SendIcon /></IconButton>
               </div>
             </div>
           </div>
