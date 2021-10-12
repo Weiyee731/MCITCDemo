@@ -31,6 +31,9 @@ export class GitAction {
   static CheckUser = "CHECK-USER";
   static CheckedUser = "CHECKED-USER";
 
+  static UpdatePassword = "UPDATE-PASSWORD";
+  static UpdatedPassword = "UPDATED-PASSWORD";
+
   static GetPages = "GET-USERPAGE";
   static GotPages = "GOT-USERPAGE";
 
@@ -40,6 +43,13 @@ export class GitAction {
   static CallCheckUserExists(credentials) {
     return {
       type: GitAction.CheckUser,
+      payload: credentials,
+    };
+  }
+
+  static CallUpdatePassword(credentials) {
+    return {
+      type: GitAction.UpdatePassword,
       payload: credentials,
     };
   }
@@ -166,6 +176,9 @@ export class GitAction {
   static GetProduct = "GET-PRODUCT";
   static GotProduct = "GOT-PRODUCT";
 
+  static GetProductListing = "GET-PRODUCTLISTING";
+  static GotProductListing = "GOT-PRODUCTLISTING";
+
   static GetProductDetail = "GET-PRODUCT-DETAIL";
   static GotProductDetail = "GOT-PRODUCT-DETAIL";
 
@@ -212,6 +225,13 @@ export class GitAction {
   static CallAllProducts(propData) {
     return {
       type: GitAction.GetProduct,
+      payload: propData
+    };
+  }
+
+  static CallAllProductsListing(propData) {
+    return {
+      type: GitAction.GetProductListing,
       payload: propData
     };
   }

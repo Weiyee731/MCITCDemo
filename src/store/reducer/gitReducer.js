@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   supplier: [],
   statistic: [],
   products: [],
+  productsListing: [],
   productsByID: [],
   productSpecsDetail: [],
   productsByMerchantID: [],
@@ -50,13 +51,16 @@ const INITIAL_STATE = {
   updatedProducts: [],
   productMgmtResult: [],
   addProductVariationResult: [],
+  updatePassword: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case GitAction.GetData:
       return Object.assign({}, state, { loading: true });
+
     //=======================USER========================//
+
     case GitAction.Register:
       return Object.assign({}, state, { loading: true });
     case GitAction.UserRegistered:
@@ -86,8 +90,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.CheckedUser:
       return Object.assign({}, state, {
         loading: false,
+        updatePassword: action.payload,
+      });
+
+    case GitAction.UpdatePassword:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedPassword:
+      return Object.assign({}, state, {
+        loading: false,
         exists: action.payload,
       });
+
     case GitAction.GetPages:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotPages:
@@ -95,6 +108,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         pages: action.payload,
       });
+
     case GitAction.GetUserProfile:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotUserProfile:
@@ -102,6 +116,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         currentUser: action.payload,
       });
+
     case GitAction.EditUserProfile:
       return Object.assign({}, state, { loading: true });
     case GitAction.EditedUserProfile:
@@ -109,6 +124,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         currentUser: action.payload,
       });
+
     case GitAction.UpdateProfileImage:
       return Object.assign({}, state, { loading: true });
     case GitAction.UpdatedProfileImage:
@@ -116,7 +132,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         currentUser: action.payload,
       });
+
     //=======================COUNTRY========================//
+
     case GitAction.GetCountry:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotCountry:
@@ -218,6 +236,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         products: action.payload,
+      });
+
+    case GitAction.GetProductListing:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotProductListing:
+      return Object.assign({}, state, {
+        loading: false,
+        productsListing: action.payload,
       });
 
     case GitAction.GetProductDetail:

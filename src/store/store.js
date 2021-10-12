@@ -40,6 +40,7 @@ const rootEpic = combineEpics(
   gitEpic.ViewAddress,
   gitEpic.addAddress,
   gitEpic.checkUser,
+  gitEpic.updatePassword,
   gitEpic.updateAddress,
   gitEpic.deleteAddress,
   gitEpic.getUserProfile,
@@ -56,6 +57,7 @@ const rootEpic = combineEpics(
   gitEpic.deleteCreditCard,
   //==================PRODUCT==========================//
   gitEpic.getAllProducts,
+  gitEpic.getProductsListing,
   gitEpic.getProductDetail,
   gitEpic.getAllProductsByStatus,
   gitEpic.addProduct,

@@ -93,12 +93,11 @@ function HomePageTwo(props) {
         {useMemo(() => <BlockFeatures layout="boxed" />, [])}
 
         {useMemo(() => (
-          props.products !== undefined && props.products.length > 0 &&
           <BlockProductsCarousel
             title="New Arrivals"
             layout="grid-4"
             rows={2}
-            products={props.products.length > 0 ? props.products : []}
+            products={JSON.parse(props.products).length > 0 ? JSON.parse(props.products) : []}
           />
         ), [props.loading, props.products])}
 
