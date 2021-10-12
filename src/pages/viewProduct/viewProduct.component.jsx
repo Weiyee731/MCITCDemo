@@ -41,7 +41,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProductsByProductStatus: (prodData) => dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
     CallResetProductMgmtReturnVal: () => dispatch(GitAction.CallResetProductMgmtReturnVal()),
     CallDeleteProduct: (prodData) =>
       dispatch(GitAction.CallDeleteProduct(prodData)),
@@ -405,21 +405,22 @@ function DeletableTable(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, props.Data.length - page * rowsPerPage);
 
-  props.Data.map((d, i) => {
+ props.Data.map((d, i) => {
     d.Picture = (
       <div>
-        <img
-          height={50}
-          src={
-            JSON.parse(d.ProductImages)
-              ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
-              : ""
-          }
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = Logo;
-          }}
-        />
+         <img
+            height={50}
+            src={
+              d.ProductImage
+                // ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
+                ?  d.ProductImage
+                : ""
+            }
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = Logo;
+            }}
+          />
       </div>
     );
   });
@@ -587,9 +588,12 @@ class DisplayTable extends Component {
     if (typeof this.props.ProductProps.productMgmtResult !== "undefined" && this.props.ProductProps.productMgmtResult.length > 0) {
       this.ToggleDeletable();
       this.props.ProductProps.CallResetProductMgmtReturnVal();
-      this.props.ProductProps.CallAllProductsByProductStatus({
-        ProductStatus: this.state.productStatus,
-        UserID: window.localStorage.getItem("id"),
+      this.props.ProductProps.CallAllProducts({
+        type: 'Merchant',
+        typeValue:'0',
+        userId: window.localStorage.getItem("id"),
+        productPage:'999',
+        page:'1'
       });
 
       toast.success("Selected products removed successfully.")
@@ -633,14 +637,17 @@ class DisplayTable extends Component {
         this.state.rowsPerPage,
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
-    this.props.Data.map((d, i) => {
+      console.log( this.props.Data);
+    JSON.parse(this.props.Data).map((d, i) => {
+      console.log(d)
       d.Picture = (
         <div>
-          <img
+         <img
             height={50}
             src={
-              JSON.parse(d.ProductImages)
-                ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
+              d.ProductImage
+                // ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
+                ?  d.ProductImage
                 : ""
             }
             onError={(e) => {
@@ -715,7 +722,7 @@ class DisplayTable extends Component {
               placeholder="Search..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
-            {this.props.Data.filter((searchedItem) =>
+            {JSON.parse(this.props.Data).filter((searchedItem) =>
               searchedItem.ProductName.toLowerCase().includes(
                 this.state.searchFilter
               )
@@ -773,9 +780,9 @@ class DisplayTable extends Component {
                       order={this.state.order}
                       orderBy={this.state.orderBy}
                       onRequestSort={this.handleRequestSort}
-                      rowCount={this.props.Data.length}
+                      rowCount={JSON.parse(this.props.Data).length}
                     />
-                    {this.props.Data.filter((searchedItem) =>
+                    {JSON.parse(this.props.Data).filter((searchedItem) =>
                       searchedItem.ProductName.toLowerCase().includes(
                         this.state.searchFilter
                       )
@@ -840,7 +847,7 @@ class DisplayTable extends Component {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
-                  count={this.props.Data.length}
+                  count={JSON.parse(this.props.Data).length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
                   onPageChange={this.handleChangePage}
@@ -896,9 +903,12 @@ class ViewProductComponent extends Component {
       backPage: "viewProduct",
     };
 
-    this.props.CallAllProductsByProductStatus({
-      ProductStatus: this.state.productStatus,
-      UserID: window.localStorage.getItem("id"),
+    this.props.CallAllProducts({
+      type: 'Merchant',
+        typeValue:'0',
+        userId: window.localStorage.getItem("id"),
+        productPage:'999',
+        page:'1'
     });
   }
 
