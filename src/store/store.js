@@ -57,6 +57,7 @@ const rootEpic = combineEpics(
   gitEpic.deleteCreditCard,
   //==================PRODUCT==========================//
   gitEpic.getAllProducts,
+  gitEpic.getProductsListing,
   gitEpic.getProductDetail,
   gitEpic.getAllProductsByStatus,
   gitEpic.addProduct,

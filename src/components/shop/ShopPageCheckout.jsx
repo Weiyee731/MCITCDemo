@@ -64,9 +64,9 @@ class PageCheckout extends Component {
       ProductID: [],
       ProductQuantity: [],
       UserCartID: [],
-      // ProductVariationDetailID: [],
+      ProductVariationDetailID: [],
+      TrackingStatusID: 0,
       address: 0,
-      // PaymentID: 0,
       PaymentMethodID: 0,
       PaymentMethodTypeID: 0,
       PaymentMethod: "",
@@ -84,10 +84,13 @@ class PageCheckout extends Component {
     else {
 
       this.props.data.map((x) => {
+
+        console.log("x", x)
         this.state.ProductID.push(x.product.ProductID)
         this.state.UserCartID.push(x.product.UserCartID)
         this.state.ProductQuantity.push(x.product.ProductQuantity)
-        // this.state.ProductVariationDetailID.push(x.product.ProductVariationDetailID)
+        this.state.ProductVariationDetailID.push(x.product.ProductVariationDetailID)
+        // this.state.TrackingStatusID.push(0)
       })
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
@@ -98,9 +101,9 @@ class PageCheckout extends Component {
         PaymentMethodID: this.state.PaymentMethodID,
         UserPaymentMethodID: this.state.PaymentMethodTypeID,
         OrderTotalAmount: this.state.OrderTotalAmount,
-        OrderPaidAmount: this.state.OrderTotalAmount
-        // ProductVariationDetailID: this.state.ProductVariationDetailID,
-        // PAYMENTID: this.state.PaymentID,
+        OrderPaidAmount: this.state.OrderTotalAmount,
+        ProductVariationDetailID: this.state.ProductVariationDetailID,
+        TrackingStatusID: this.state.TrackingStatusID
       })
       console.log("this.state after click", this.state)
     }
@@ -108,14 +111,14 @@ class PageCheckout extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.order !== this.props.order) {
-      // browserHistory.push("/Emporia");
-      // window.location.reload(false);
+      if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
+        browserHistory.push("/Emporia");
+        window.location.reload(false);
+      }
     }
   }
 
   render() {
-    console.log("this.props.data IN CHECKOUT", this.props.data)
-
     const breadcrumb = [
       { title: "Home", url: "" },
       // { title: "Shopping Cart", url: "/shop/cart" },
