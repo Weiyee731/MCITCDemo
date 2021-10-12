@@ -45,7 +45,7 @@ class BlockMainCategories extends Component {
       textAlign: "center",
       cursor: "pointer"
     }
-  
+
 
     return (
       <div className="container">
@@ -55,12 +55,17 @@ class BlockMainCategories extends Component {
             return (
               <div key={index} style={categoryGrid} className="col-lg-3 col-md-3 p-2"
                 onMouseDown={(e) => {
-                  if (e.button === 1) {
-                    window.location.href = "/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory
-                  }
+                  console.log("e", e)
+                  console.log("e.button", e.button)
+                  // if (e.button === 1) {
+                  window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
+                  // }
                 }}
                 onClick={(e) => {
-                  window.location.href = "/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory
+                  console.log("e.onClick", e)
+                  console.log("e.onClick", e.button)
+                  window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
+                  // window.location.href = "/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory
                 }}
               >
                 <div>

@@ -17,6 +17,7 @@ import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
 import { wishlistRemoveItem } from '../../store/wishlist';
 import { GitAction } from "../../store/action/gitAction";
+import Logo from "../../assets/Emporia.png";
 
 
 // data stubs
@@ -41,9 +42,9 @@ function ShopPageWishlist(props) {
         browserHistory.push("/Emporia/login");
         window.location.reload(false);
     }
-    
+
     const deleteWishlist = (product) => {
-        console.log("item", product)
+
         props.CallDeleteProductWishlist({
             userID: localStorage.getItem("id"),
             userWishlistID: product.UserWishlistID,
@@ -80,36 +81,26 @@ function ShopPageWishlist(props) {
 
     let content;
     if (props.wishlist !== undefined && props.wishlist.length) {
-
         const itemsList = wishlist.map((item) => {
             let image;
-            const productImage = JSON.parse(item.ProductImages)
-            if (productImage.length > 0) {
+
+            if (item.ProductImage !== null && item.ProductImage !== undefined && item.ProductImage.length > 0) {
                 image = (
                     <div className="product-image">
                         <Link to={url.product(item)} className="product-image__body">
-                            <img className="product-image__img" src={productImage[0].ProductMediaUrl} alt="" />
+                            <img className="product-image__img" src={item.ProductImage !== null ? item.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                         </Link>
-
+                    </div>
+                );
+            } else {
+                image = (
+                    <div className="product-image">
+                        <Link to={url.product(item)} className="product-image__body">
+                            <img className="product-image__img" src={Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                        </Link>
                     </div>
                 );
             }
-
-            // const renderAddToCarButton = ({ run, loading }) => {
-            //     const classes = classNames('btn btn-primary btn-sm', {
-            //         'btn-loading': loading,
-            //     });
-
-            //     return <button type="button" onClick={run} className={classes}>Add To Cart</button>;
-            // };
-
-            // const renderRemoveButton = ({ run, loading }) => {
-            //     const classes = classNames('btn btn-light btn-sm btn-svg-icon', {
-            //         'btn-loading': loading,
-            //     });
-
-            //     return <button type="button" onClick={run} className={classes} aria-label="Remove"><Cross12Svg /></button>;
-            // };
 
             return (
                 <tr key={item.id} className="wishlist__row">
@@ -126,22 +117,14 @@ function ShopPageWishlist(props) {
                     <td className="wishlist__column wishlist__column--stock">
                         <div className="badge badge-success">In Stock</div>
                     </td>
-                    <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductSellingPrice} currency={"RM"} /></td>
+                    <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? item.ProductPrice : 0} currency={"RM"} /></td>
                     <td className="wishlist__column wishlist__column--tocart">
-                        {/* <AsyncAction
-                            action={() => cartAddItem(item)
-                            }
-                            render={renderAddToCarButton}
-                        /> */}
+
                         <button type="button" onClick={() => addCart(item)} className={'btn btn-primary btn-sm'}>Add To Cart</button>
                     </td>
                     <td className="wishlist__column wishlist__column--remove">
                         <button type="button" onClick={() => deleteWishlist(item)} className={'btn btn-light btn-sm btn-svg-icon'} aria-label="Remove"><Cross12Svg /></button>
-                        {/* {renderRemoveButton} */}
-                        {/* <AsyncAction
-                            action={() => wishlistRemoveItem(item.ProductID)}
-                            render={renderRemoveButton}
-                        /> */}
+
                     </td>
                 </tr>
             );

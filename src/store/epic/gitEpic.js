@@ -30,6 +30,44 @@ export class GitEpic {
       }
     });
 
+
+  getAllMerchantList = (action$) =>
+    action$.ofType(GitAction.GetUserProfileListByType).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "User_ProfileListByType?TYPE=" +
+          payload.Type +
+          "&TYPEVALUE="+
+          payload.TypeValue +
+          "&USERID="+
+          payload.UserID +
+          "&UserRoleID="+
+          payload.UserRoleID +
+          "&LISTPERPAGE="+
+          payload.ListPerPage +
+          "&PAGE="+
+          payload.Page 
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        if (json !== "fail") {
+        } else {
+          json = [];
+        }
+        return {
+          type: GitAction.GotUserProfileListByType,
+          payload: json,
+        };
+      } catch (error) {
+        alert('User_ProfileListByType: ' + error);
+        return {
+          type: GitAction.GetUserProfileListByType,
+          payload: [],
+        };
+      }
+    });
+
   LoginUser = (action$) =>
     action$.ofType(GitAction.Login).switchMap(async ({ payload }) => {
       try {
@@ -473,12 +511,16 @@ export class GitEpic {
   deleteProductCart = (action$) =>
     action$.ofType(GitAction.DeleteProductCart).switchMap(async ({ payload }) => {
       try {
+        console.log(url +
+          "Product_DeleteProductCart?USERCARTID=" +
+          payload.userCartID)
         const response = await fetch(
           url +
           "Product_DeleteProductCart?USERCARTID=" +
           payload.userCartID
         );
         let json = await response.json();
+        console.log("DELETE CART", json)
         json = JSON.parse(json);
         if (json[0].ReturnVal === 1) {
           toast.success("Product " + payload.productName + " is removed from cart!");
@@ -490,7 +532,7 @@ export class GitEpic {
             payload.userID
           );
           let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
+          json_1 = json_1;
           return {
             type: GitAction.DeletedProductCart,
             payload: json_1,
@@ -704,6 +746,7 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+        console.log("remove wishlist", json)
         if (json[0].ReturnVal === 1) {
           toast.success("Product " + payload.productName + " is removed from wishlist!");
         }
@@ -965,6 +1008,19 @@ export class GitEpic {
   getAllProducts = (action$) =>
     action$.ofType(GitAction.GetProduct).switchMap(async ({ payload }) => {
       try {
+
+        console.log(url +
+          "Product_ItemListByType?Type=" +
+          payload.type +
+          "&TypeValue=" +
+          payload.typeValue +
+          "&USERID=" +
+          payload.userId +
+          "&PRODUCTPERPAGE=" +
+          payload.productPage +
+          "&PAGE=" +
+          payload.page)
+
         const response = await fetch(
           url +
           "Product_ItemListByType?Type=" +
@@ -996,6 +1052,17 @@ export class GitEpic {
   getProductsListing = (action$) =>
     action$.ofType(GitAction.GetProductListing).switchMap(async ({ payload }) => {
       try {
+        console.log(url +
+          "Product_ItemListByType?Type=" +
+          payload.type +
+          "&TypeValue=" +
+          payload.typeValue +
+          "&USERID=" +
+          payload.userId +
+          "&PRODUCTPERPAGE=" +
+          payload.productPage +
+          "&PAGE=" +
+          payload.page)
         const response = await fetch(
           url +
           "Product_ItemListByType?Type=" +

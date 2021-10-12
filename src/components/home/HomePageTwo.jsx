@@ -40,6 +40,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    // CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
     CallViewMoreFunctionProduct: (propData) => dispatch(GitAction.CallViewMoreFunctionProduct(propData)),
   };
@@ -82,6 +83,7 @@ function HomePageTwo(props) {
     loopWithSlice()
   }, [page])
 
+  console.log("products IN HOMEPAGE", props.products)
   return (
     <React.Fragment>
       <div className="block--margin-top">

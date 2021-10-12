@@ -48,7 +48,7 @@ import SitePageTypography from "./site/SitePageTypography";
 import SitePageHowToBuy from "./site/SitePageHowToBuy";
 import SitePageHowToReturn from "./site/SitePageHowToReturn";
 import SitePageShippingDelivery from "./site/sitePageShippingDelivery";
-import BlockCategoryDetails from "./blocks/BlockCategoryDetails";
+import BlockListingDetails from "./blocks/BlockListingDetails";
 import BlockAllProductCategory from "./blocks/BlockAllProductCategory";
 
 // data stubs
@@ -550,21 +550,24 @@ function Layout(props) {
               />
               <Route
                 exact
-                path="/shop/ProductCategory/:categoryID/:categorySlug"
+                path="/shop/ProductListing/type:selectedtype&typevalue:selectedtypevalue"
                 render={(props) => (
-                  <BlockCategoryDetails
-                    {...props}
-                    layout="standard"
-                    categorySlug={props.match.params.categorySlug}
-                    categoryID={props.match.params.categoryID}
-                  />
+                  <>
+                    {console.log("props.match.params", props)}
+                    <BlockListingDetails
+                      {...props}
+                      layout="standard"
+                      selectedtype={props.match.params.type}
+                      selectedtypevalue={props.match.params.typevalue}
+                    />
+                  </>
                 )}
               />
-              <Route
+              {/* <Route
                 exact
-                path="/shop/ProductCategory/:parentCategoryID/:categorySlug/:categoryID/:childcategorySlug"
+                path="/shop/ProductListing/:parentCategoryID/:categorySlug/:categoryID/:childcategorySlug"
                 render={(props) => (
-                  <BlockCategoryDetails
+                  <BlockListingDetails
                     {...props}
                     layout="standard"
                     categorySlug={props.match.params.categorySlug}
@@ -573,7 +576,7 @@ function Layout(props) {
                     parentCategoryID={props.match.params.parentCategoryID}
                   />
                 )}
-              />
+              /> */}
               <Route
                 exact
                 path="/shop/AllProductCategory/"

@@ -183,7 +183,7 @@ class IndicatorCart extends React.Component {
     //   />
     // );
 
-    if (this.props.productcart.length) {
+    if (this.props.productcart !== undefined && this.props.productcart[0] !== undefined && this.props.productcart[0].ReturnVal === undefined) {
       // const dropdown = (
       //   <div className="dropcart">
       //     <div className="dropcart__products-list">{items}</div>

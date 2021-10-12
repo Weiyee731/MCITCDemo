@@ -84,8 +84,6 @@ class PageCheckout extends Component {
     else {
 
       this.props.data.map((x) => {
-
-        console.log("x", x)
         this.state.ProductID.push(x.product.ProductID)
         this.state.UserCartID.push(x.product.UserCartID)
         this.state.ProductQuantity.push(x.product.ProductQuantity)
@@ -105,7 +103,6 @@ class PageCheckout extends Component {
         ProductVariationDetailID: this.state.ProductVariationDetailID,
         TrackingStatusID: this.state.TrackingStatusID
       })
-      console.log("this.state after click", this.state)
     }
   }
 
@@ -139,14 +136,21 @@ class PageCheckout extends Component {
     }
 
     const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
-      if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0)
-        this.setState({ PaymentMethodID: payment.PaymentMethodID, PaymentMethod: payment.PaymentMethod, PaymentMethodTypeID: paymentmethodtypeId, PaymentMethodType: paymentmethodtype })
+
+      if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0) {
+        if (payment.UserPaymentMethodID !== undefined)
+          this.setState({ PaymentMethodID: payment.UserPaymentMethodID, PaymentMethod: payment.UserCardType })
+        else
+          this.setState({ PaymentMethodID: payment.PaymentMethodID, PaymentMethod: payment.PaymentMethod })
+
+        this.setState({ PaymentMethodTypeID: paymentmethodtypeId, PaymentMethodType: paymentmethodtype })
+      }
+
     }
 
     const handleGetTotal = (total) => {
       if (total !== 0)
         this.setState({ OrderTotalAmount: total })
-      console.log("ordertotalamount", total)
     }
 
     const step1Content = (

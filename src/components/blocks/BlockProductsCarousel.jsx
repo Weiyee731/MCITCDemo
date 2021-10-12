@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
 import StroykaSlick from "../shared/StroykaSlick";
+import { Button } from "@material-ui/core";
 
 const slickSettings = {
   "grid-4": {
@@ -159,6 +160,7 @@ export default class BlockProductsCarousel extends Component {
 
   setSlickRef = (ref) => {
     this.slickRef = ref;
+
   };
 
   productsColumns() {
@@ -232,6 +234,13 @@ export default class BlockProductsCarousel extends Component {
                   onPrev={this.handlePrevClick}
                   onGroupClick={onGroupClick}
                 />
+                <div style={{ textAlign: "right" }}>
+                  <Button style={{ fontWeight: "bold", color: "red", fontSize: "16px" }}
+                    onClick={(e) => {
+                      window.location.href = "/shop/ProductListing/type:Merchant&typevalue:" + 0
+                    }}
+                  >View All</Button>
+                </div>
 
                 <div className="block-products-carousel__slider">
                   <div className="block-products-carousel__preloader" />
