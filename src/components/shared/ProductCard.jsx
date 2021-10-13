@@ -132,7 +132,6 @@ function ProductCard(props) {
       login()
   }
 
-  { console.log("product.ProductImage", product.ProductImage) }
   if (product.ProductImage !== null && product.ProductImage !== undefined && product.ProductImage.length > 0) {
     image = (
       <div className="product-card__image product-image">
@@ -146,7 +145,7 @@ function ProductCard(props) {
         </Link>
       </div>
     );
-  } 
+  }
   else {
     image = (
       <div className="product-card__image product-image">
@@ -199,7 +198,6 @@ function ProductCard(props) {
     <div className={containerClasses}>
       {badges}
       {image}
-      {console.log("productListing", product)}
       <div className="product-card__info">
         <div className="product-card__name">
           <Link to={url.product(product)}>{product.ProductName}</Link>

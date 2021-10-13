@@ -159,7 +159,7 @@ function MobileMenu(props) {
         {
             type: 'link',
             label: 'Account',
-            url: '/account',
+            url: localStorage.getItem('isLogin') === 'true' ? '/account' : '/Emporia/login',
             // children: [
             //     { type: 'link', label: 'Login', url: '/Emporia/login' },
             //     { type: 'link', label: 'Dashboard', url: '/account/dashboard' },
@@ -172,6 +172,8 @@ function MobileMenu(props) {
             // ],
         },
     ];
+
+    console.log(localStorage.getItem('id'))
 
     return (
         <div className={classes}>

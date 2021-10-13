@@ -43,7 +43,7 @@ function PageHeader(props) {
         breadcrumb = (
             <div className="page-header__breadcrumb">
                 <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb" style={{ marginTop: "120px" }}>
+                    <ol className="breadcrumb">
                         {breadcrumb}
                     </ol>
                 </nav>

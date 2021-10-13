@@ -48,9 +48,9 @@ function mapDispatchToProps(dispatch) {
 
 function HomePageTwo(props) {
   const [postsToShow, setPostsToShow] = useState([]);
-  let tempArray = []
   const [page, setPage] = useState(1);
   let productPerPage = 20
+  let tempArray = []
 
   const loopWithSlice = () => {
     tempArray = [...postsToShow, ...props.products];
@@ -78,17 +78,20 @@ function HomePageTwo(props) {
   // }, [props.viewMoreProducts])
 
   useEffect(() => {
+    let didCancel = false
     props.CallAllProducts({
       type: "Merchant",
       typeValue: 0,
       userId: 0,
       productPage: 999,
-      page: page
+      page: page,
     })
     loopWithSlice()
+    return () => {
+      didCancel = true;
+    }
   }, [page])
 
-  console.log("products IN HOMEPAGE", props.products)
   return (
     <React.Fragment>
       <div className="block--margin-top">
