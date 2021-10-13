@@ -64,11 +64,10 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { Fade } from "shards-react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
-import { convertDateTimeToString, getFileExtension, getFileTypeByExtension, convertArrayToStringWithSpecialCharacter } from "../../Utilities/UtilRepo"
+import { convertDateTimeToString, getFileExtension, getFileTypeByExtension, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 
 function mapStateToProps(state) {
   return {
-    allUser: state.counterReducer["supplier"],
     suppliers: state.counterReducer["supplier"],
     exist: state.counterReducer["exists"],
     result: state.counterReducer["addResult"],
@@ -78,6 +77,7 @@ function mapStateToProps(state) {
     productCategoriesFullList: state.counterReducer["categories"],
     addProductVariationResult: state.counterReducer["addProductVariationResult"],
     productSpecsDetail: state.counterReducer["productSpecsDetail"],
+    productInfo: state.counterReducer["productsByID"],
   };
 }
 const editorConfiguration = {
@@ -114,6 +114,7 @@ function mapDispatchToProps(dispatch) {
     CallResetProductVariationDetailResult: () => dispatch(GitAction.CallResetProductVariationDetailResult()),
     CallAddProductSpecsDetail: (prodData) => dispatch(GitAction.CallAddProductSpecsDetail(prodData)),
     CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
+    CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData))
   };
 }
 
@@ -457,6 +458,7 @@ const INITIAL_STATE = {
   courierOptions: [],
   selectedVariationID: 0,
   isSubmit: false,
+  isProductIntoBind: false,
 }
 
 class AddProductComponent extends Component {
@@ -465,7 +467,6 @@ class AddProductComponent extends Component {
 
     this.myRef = React.createRef();
     this.props.CallAllProductCategoryListing();
-    this.props.callAllSupplierByUserStatus("endorsed");
     this.props.CallAllProductsCategories();
 
     this.handlePrevClickButton = this.handlePrevClickButton.bind(this);
@@ -477,9 +478,11 @@ class AddProductComponent extends Component {
     this.onSubmitProductVariation = this.onSubmitProductVariation.bind(this);
     this.onSubmitProductSpecification = this.onSubmitProductSpecification.bind(this);
     this.applyToAllVariant = this.applyToAllVariant.bind(this);
+    this.bindProductInfoToState = this.bindProductInfoToState.bind(this);
 
     this.basicInfo = React.createRef();
     this.productDetails = React.createRef();
+    this.productSpecification = React.createRef();
     this.productVarient = React.createRef();
     this.productMedia = React.createRef();
     this.shippingInfo = React.createRef();
@@ -1972,10 +1975,8 @@ class AddProductComponent extends Component {
   uploadFile = (productID) => {
     // combine images and video for upload in an array
     let uploadingMedia = [...this.state.file, ...this.state.file3]
-
     if (typeof productID !== "undefined" && productID !== null && uploadingMedia.length > 0) {
       //basic form setup
-      const uploadFileUrl = "http://tourism.denoo.my/UnimasMarketplaceApi/api/UnimasMarketplace/"
       const formData = new FormData()
 
       const config = { headers: { 'Content-Type': 'multipart/form-data' } };
@@ -2022,7 +2023,6 @@ class AddProductComponent extends Component {
         imageHeight: imageHeight,
       }
 
-      console.log(object)
       axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
@@ -2039,13 +2039,12 @@ class AddProductComponent extends Component {
   };
 
   onSubmitProductVariation = (ProductID) => {
-    console.log('onSubmitProductVariation', ProductID)
     const { selectedVariationID, variation1 } = this.state
-    console.log(variation1)
     let Customizable = ""
     let Value = ""
     let stock = ""
     let price = ""
+    let sku = ""
 
     if (variation1.options.length > 0) {
       for (let i = 0; i < variation1.options.length; i++) {
@@ -2053,12 +2052,14 @@ class AddProductComponent extends Component {
         Value += variation1.options[i].optionName
         stock += variation1.options[i].stock
         price += variation1.options[i].price
+        sku += variation1.options[i].sku
 
         if (i !== (variation1.options.length - 1)) {
           Customizable += ","
           Value += ","
           stock += ","
           price += ","
+          sku += ","
         }
       }
     }
@@ -2070,15 +2071,14 @@ class AddProductComponent extends Component {
       Value: Value,
       stock: stock,
       price: price,
+      sku: sku,
     }
 
-    console.log(object)
     this.props.CallAddProductVariationDetail(object)
 
   }
 
   onSubmitProductSpecification = (ProductID) => {
-    console.log('onSubmitProductSpecification', ProductID)
     const { productSpecificationOptions } = this.state
     let ProductVariation = ""
     let values = ""
@@ -2910,6 +2910,7 @@ class AddProductComponent extends Component {
     var basicInfo = document.getElementById("basicInfo");
     var productDetails = document.getElementById("productDetails");
     var productVariation = document.getElementById("productVariation");
+    var productSpecification = document.getElementById("specification");
     var productMedia = document.getElementById("productMedia");
     var shippingInfo = document.getElementById("shippingInfo");
     var descriptionCard = document.getElementById("descriptionCard");
@@ -3025,8 +3026,19 @@ class AddProductComponent extends Component {
     window.addEventListener("scroll", this.handleScroll, true);
 
     // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
-    console.log(this.props.ProductID)
-    console.log(this.props.ProductName)
+    let userId = window.localStorage.getItem("id")
+    if( !isStringNullOrEmpty(userId) && !isStringNullOrEmpty(this.props.ProductID)){
+      this.setState({
+        ProductID: this.props.ProductID,
+        userId:  window.localStorage.getItem("id"),
+        name: this.props.ProductName
+      })
+
+      this.props.CallProductDetail({
+        productId: this.props.ProductID,
+        userId:  window.localStorage.getItem("id"),
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -3098,7 +3110,6 @@ class AddProductComponent extends Component {
   };
 
   OnSubmit = () => {
-
     this.checkEverything();
 
     let object = {
@@ -3121,11 +3132,28 @@ class AddProductComponent extends Component {
     // console.log(this.state.file)
   }
 
+  bindProductInfoToState = () =>{
+    console.log(this.props.productInfo)
+    //do something here yomna, and then bind the values to the state at the function below
+
+    this.setState({
+      isProductIntoBind: true, // to stop the looping of calling this function from componentdidupdate
+      // something : aaa ,
+    })
+  }
+
   componentDidUpdate(prevProps) {
     // check product is upload, 
     // upload one or multiple file, php will handle the api that saving the file path to db
     // after all files are uploaded, upload video if have video, then done
     // 
+
+    // This section will used to bind the product info to the state with a passing function.
+    // Since in the React lifecycle it did mentioned the componentdidupdate will be triggered if any updates occur on this page,
+    // then we need a state to check the allows to prevent the infinite looping of this function
+    if(this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind){
+      this.bindProductInfoToState()
+    }
 
     //call the variations for product specifications and product category
     if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
@@ -3137,10 +3165,7 @@ class AddProductComponent extends Component {
         this.uploadFile(ProductID)
 
       // submit the product variation 
-      console.log(variation1.options.length)
       if (typeof variation1.options !== "undefined" && variation1.options.length > 0) {
-        console.log('askjdh')
-
         this.onSubmitProductVariation(ProductID)
       }
 
@@ -3157,32 +3182,25 @@ class AddProductComponent extends Component {
     let isProductVariantReset = false
 
     //reset product specs return value if there is
-    console.log('productSpecsDetail', this.props.productSpecsDetail)
     if (typeof this.props.productSpecsDetail !== "undefined" && this.props.productSpecsDetail.length > 0 && this.props.productSpecsDetail[0].ReturnVal == 1)
       this.props.CallResetProductSpecsDetailResults()
     else
       isProductSpecReset = true
 
     //reset product variation return value if there is
-    console.log('addProductVariationResult', this.props.addProductVariationResult)
     if (typeof this.props.addProductVariationResult !== "undefined" && this.props.addProductVariationResult.length > 0 && this.props.addProductVariationResult[0].ReturnVal == 1)
       this.props.CallResetProductVariationDetailResult()
     else
       isProductVariantReset = true
 
-    console.log('resultsMedia', this.props.productMediaResult)
-    console.log('check', isProductSpecReset, isProductVariantReset)
-    if (isProductSpecReset && isProductVariantReset) {
-      console.log('yes')
+    if (isProductSpecReset && isProductVariantReset && this.state.isSubmit === true) {
       if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal == 1) {
-        console.log('yes22')
         toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
         this.props.CallResetProductMediaResult()
         this.setState({ isSubmit: false })
       }
       else {
         if (this.state.isSubmit === true) {
-          console.log('yes32')
           toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
           this.setState({ isSubmit: false })
         }
@@ -3243,7 +3261,6 @@ class AddProductComponent extends Component {
 
   handleCourierInput = (idx, type, e) => {
     let courierObject = this.state.courierOptions
-    console.log(e.target.value)
     if (type === "input")
       courierObject[idx].value = e.target.value
     else
@@ -3349,21 +3366,6 @@ class AddProductComponent extends Component {
       });
     }
 
-    let allusersData = this.props.allUser
-      ? Object.keys(this.props.allUser).map((key) => {
-        return this.props.allUser[key];
-      })
-      : {};
-
-    if (allusersData.length > 0) {
-      var createSupplierMenu = allusersData.map((d, i) => {
-        return (
-          <option value={d.UserID}>
-            {d.FirstName + d.LastName} ({d.CompanyName})
-          </option>
-        );
-      });
-    }
 
     const productVariation = {};
     const columns = [];
@@ -4087,7 +4089,7 @@ class AddProductComponent extends Component {
                   data=""
                   onReady={(editor) => {
                     // You can store the "editor" and use when it is needed.
-                    console.log("Editor is ready to use!", editor);
+                    // console.log("Editor is ready to use!", editor);
                   }}
                   onChange={(event, editor) => {
                     const data = editor.getData();

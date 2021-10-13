@@ -1382,11 +1382,12 @@ export class GitEpic {
       try {
         const response = await fetch(
           url +
-          "Product_AddProductVariationDetail?PRODUCTIDVARIATION=" + payload.ProductVariation +
+          "Product_AddProductVariationDetail?PRODUCTVARIATIONID=" + payload.ProductVariation +
           "&PRODUCTID=" + payload.ProductID +
           "&CUSTOMIZABLE=" + payload.Customizable +
           "&VALUE=" + payload.Value +
           "&PRODUCTSTOCK=" + payload.stock +
+          "&PRODUCTVARIATIONSKU=" + payload.sku +
           "&PRODUCTVARIATIONPRICE=" + payload.price
         );
         let json = await response.json();
@@ -1549,7 +1550,6 @@ export class GitEpic {
         payload: json,
       };
     } catch (error) {
-      console.log()
       alert('deleteProductVariation: ' + error);
       return {
         type: GitAction.DeletedProductVariation,
