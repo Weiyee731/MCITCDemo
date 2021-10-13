@@ -222,10 +222,21 @@ export class GitEpic {
   getUserProfile = (action$) =>
     action$.ofType(GitAction.GetUserProfile).switchMap(async ({ payload }) => {
       try {
+        console.log(url +
+          "User_ProfileListByType?TYPE=" + payload.TYPE +
+          "&TYPEVALUE=" + payload.TYPEVALUE +
+          "&USERID=" + payload.USERID +
+          "&UserRoleID=" + payload.USERROLEID +
+          "&LISTPERPAGE=" + payload.LISTPERPAGE +
+          "&PAGE=" + payload.PAGE)
         const response = await fetch(
           url +
-          "User_ProfileByID?USERID=" +
-          payload
+          "User_ProfileListByType?TYPE=" + payload.TYPE +
+          "&TYPEVALUE=" + payload.TYPEVALUE +
+          "&USERID=" + payload.USERID +
+          "&UserRoleID=" + payload.USERROLEID +
+          "&LISTPERPAGE=" + payload.LISTPERPAGE +
+          "&PAGE=" + payload.PAGE
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -1526,7 +1537,7 @@ export class GitEpic {
 
   deleteProductVariation = (action$) => action$.ofType(GitAction.DeleteProductVariation).switchMap(async ({ payload }) => {
     try {
-      const response = await fetch( url + "Product_DeleteProductVariation?PRODUCTVARIATIONID=" + payload.ProductVariationID
+      const response = await fetch(url + "Product_DeleteProductVariation?PRODUCTVARIATIONID=" + payload.ProductVariationID
       );
       let json = await response.json();
       json = JSON.parse(json);
@@ -2594,49 +2605,45 @@ export class GitEpic {
   //=================================== PROMOTION BANNER ===================================//
 
   AddPromotionBannerByIds = action$ =>
-    action$.ofType(GitAction.addPromotionBanner).switchMap(({ payload }) => {
-      return fetch(
-        this.url +
-        "AddPostMedia?POSTID=" +
-        payload.postId +
-        "&MEDIATYPE=" +
-        payload.mediaType +
-        "&MEDIATITLE=" +
-        payload.mediaTitle +
-        "&MEDIAURL=" +
-        payload.mediaUrl +
-        "&MEDIADESC=" +
-        payload.mediaDesc +
-        "&SLIDEORDER=" +
-        payload.slideOrder +
-        "&MEDIASOURCE=" +
-        payload.mediaSource
-      )
-        .then(response => response.json())
-        .then(json => {
-          if (json !== "fail") {
-            json = JSON.parse(json);
-          } else {
-            json = [];
-          }
-
-          return fetch(this.url + "viewPost?POSTTYPE=1")
-            .then(response => response.json())
-            .then(json2 => {
-              if (json2 !== "fail") {
-                json2 = json2;
-              } else {
-                json2 = [];
-              }
-              return {
-                type: GitAction.addedPromotionBanner,
-                payload: json,
-                payload2: json2
-              };
-            })
-            .catch(error => console.log("Add promotion banner error code: 4002.1", error));
-        })
-        .catch(error => console.log("Add promotion banner error code: 4002.2", error));
+    action$.ofType(GitAction.addPromotionBanner).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          this.url +
+          "AddPostMedia?POSTID=" +
+          payload.postId +
+          "&MEDIATYPE=" +
+          payload.mediaType +
+          "&MEDIATITLE=" +
+          payload.mediaTitle +
+          "&MEDIAURL=" +
+          payload.mediaUrl +
+          "&MEDIADESC=" +
+          payload.mediaDesc +
+          "&SLIDEORDER=" +
+          payload.slideOrder +
+          "&MEDIASOURCE=" +
+          payload.mediaSource
+        );
+        let json = await response.json();
+        if (json !== "fail") {
+          json = JSON.parse(json);
+        } else {
+          json = [];
+        }
+        try {
+          const response_1 = await fetch(this.url + "viewPost?POSTTYPE=1");
+          let json2 = await response_1.json();
+          return {
+            type: GitAction.addedPromotionBanner,
+            payload: json,
+            payload2: json2
+          };
+        } catch (error) {
+          return console.log("Add promotion banner error code: 4002.1", error);
+        }
+      } catch (error_1) {
+        return console.log("Add promotion banner error code: 4002.2", error_1);
+      }
     });
 }
 export let gitEpic = new GitEpic();

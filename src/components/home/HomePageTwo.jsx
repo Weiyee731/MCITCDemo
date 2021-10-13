@@ -98,12 +98,12 @@ function HomePageTwo(props) {
         <BlockSlideShow />
         <BlockMainCategories />
         <BlockFeatures layout="boxed" />
-        <BlockProductsCarousel
+        {/* <BlockProductsCarousel
           title="New Arrivals"
           layout="grid-4"
           rows={2}
           products={props.products.length > 0 ? props.products : []}
-        />
+        /> */}
         <BlockProducts
           title="Featured Products"
           layout="large-first"
