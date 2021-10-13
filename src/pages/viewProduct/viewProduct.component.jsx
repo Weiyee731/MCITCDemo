@@ -647,9 +647,9 @@ class DisplayTable extends Component {
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
 
-    console.log(this.props.Data);
+    // console.log(this.props.Data);
     this.props.Data.map((d, i) => {
-      console.log(d)
+      // console.log(d)
       d.Picture = (
         <div>
            <img
@@ -700,7 +700,7 @@ class DisplayTable extends Component {
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
+          <ProductDetailsComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
         ) : this.state.deleteActive ? (
           <div>
             <h1>Product List</h1>
