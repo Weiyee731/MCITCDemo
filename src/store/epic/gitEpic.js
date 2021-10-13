@@ -1299,11 +1299,7 @@ export class GitEpic {
   endorseProduct = (action$) =>
     action$.ofType(GitAction.EndorseProduct).switchMap(async ({ payload }) => {
       try {
-        const response = await fetch(
-          url +
-          "Product_EndorseProducts?ProductIDs=" +
-          payload
-        );
+        const response = await fetch( url + "Product_EndorseProducts?ProductIDs=" + payload );
         let json = await response.json();
         json = JSON.parse(json);
         return {
