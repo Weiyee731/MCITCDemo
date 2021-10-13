@@ -3151,29 +3151,33 @@ class AddProductComponent extends Component {
     // This section will used to bind the product info to the state with a passing function.
     // Since in the React lifecycle it did mentioned the componentdidupdate will be triggered if any updates occur on this page,
     // then we need a state to check the allows to prevent the infinite looping of this function
-    if(this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind){
-      this.bindProductInfoToState()
+    if(this.props.productinfo){
+      if(this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind){
+        this.bindProductInfoToState()
+      }
     }
 
     //call the variations for product specifications and product category
-    if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
-      const { variation1, productSpecificationOptions } = this.state
-      let ProductID = this.props.result[0].ProductID
+    if(this.props.result){
+      if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
+        const { variation1, productSpecificationOptions } = this.state
+        let ProductID = this.props.result[0].ProductID
 
-      //submit the images and videos 
-      if (this.state.file.length > 0)
-        this.uploadFile(ProductID)
+        //submit the images and videos 
+        if (this.state.file.length > 0)
+          this.uploadFile(ProductID)
 
-      // submit the product variation 
-      if (typeof variation1.options !== "undefined" && variation1.options.length > 0) {
-        this.onSubmitProductVariation(ProductID)
+        // submit the product variation 
+        if (typeof variation1.options !== "undefined" && variation1.options.length > 0) {
+          this.onSubmitProductVariation(ProductID)
+        }
+
+        // submit the product specifications 
+        if (productSpecificationOptions.length > 0)
+          this.onSubmitProductSpecification(ProductID)
+
+        this.props.CallResetProductReturnVal()
       }
-
-      // submit the product specifications 
-      if (productSpecificationOptions.length > 0)
-        this.onSubmitProductSpecification(ProductID)
-
-      this.props.CallResetProductReturnVal()
     }
 
 

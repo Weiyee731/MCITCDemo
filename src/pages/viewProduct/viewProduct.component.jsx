@@ -700,7 +700,7 @@ class DisplayTable extends Component {
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
+          <ProductDetailsComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
         ) : this.state.deleteActive ? (
           <div>
             <h1>Product List</h1>
