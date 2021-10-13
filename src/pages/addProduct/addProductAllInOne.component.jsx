@@ -64,7 +64,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import { Fade } from "shards-react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
-import { convertDateTimeToString, getFileExtension, getFileTypeByExtension, convertArrayToStringWithSpecialCharacter } from "../../Utilities/UtilRepo"
+import { convertDateTimeToString, getFileExtension, getFileTypeByExtension, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 
 function mapStateToProps(state) {
   return {
@@ -77,6 +77,7 @@ function mapStateToProps(state) {
     productCategoriesFullList: state.counterReducer["categories"],
     addProductVariationResult: state.counterReducer["addProductVariationResult"],
     productSpecsDetail: state.counterReducer["productSpecsDetail"],
+    productInfo: state.counterReducer["productsByID"],
   };
 }
 const editorConfiguration = {
@@ -113,6 +114,7 @@ function mapDispatchToProps(dispatch) {
     CallResetProductVariationDetailResult: () => dispatch(GitAction.CallResetProductVariationDetailResult()),
     CallAddProductSpecsDetail: (prodData) => dispatch(GitAction.CallAddProductSpecsDetail(prodData)),
     CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
+    CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData))
   };
 }
 
@@ -456,6 +458,7 @@ const INITIAL_STATE = {
   courierOptions: [],
   selectedVariationID: 0,
   isSubmit: false,
+  isProductIntoBind: false,
 }
 
 class AddProductComponent extends Component {
@@ -475,9 +478,11 @@ class AddProductComponent extends Component {
     this.onSubmitProductVariation = this.onSubmitProductVariation.bind(this);
     this.onSubmitProductSpecification = this.onSubmitProductSpecification.bind(this);
     this.applyToAllVariant = this.applyToAllVariant.bind(this);
+    this.bindProductInfoToState = this.bindProductInfoToState.bind(this);
 
     this.basicInfo = React.createRef();
     this.productDetails = React.createRef();
+    this.productSpecification = React.createRef();
     this.productVarient = React.createRef();
     this.productMedia = React.createRef();
     this.shippingInfo = React.createRef();
@@ -2905,6 +2910,7 @@ class AddProductComponent extends Component {
     var basicInfo = document.getElementById("basicInfo");
     var productDetails = document.getElementById("productDetails");
     var productVariation = document.getElementById("productVariation");
+    var productSpecification = document.getElementById("specification");
     var productMedia = document.getElementById("productMedia");
     var shippingInfo = document.getElementById("shippingInfo");
     var descriptionCard = document.getElementById("descriptionCard");
@@ -3020,8 +3026,19 @@ class AddProductComponent extends Component {
     window.addEventListener("scroll", this.handleScroll, true);
 
     // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
-    console.log(this.props.ProductID)
-    console.log(this.props.ProductName)
+    let userId = window.localStorage.getItem("id")
+    if( !isStringNullOrEmpty(userId) && !isStringNullOrEmpty(this.props.ProductID)){
+      this.setState({
+        ProductID: this.props.ProductID,
+        userId:  window.localStorage.getItem("id"),
+        name: this.props.ProductName
+      })
+
+      this.props.CallProductDetail({
+        productId: this.props.ProductID,
+        userId:  window.localStorage.getItem("id"),
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -3093,7 +3110,6 @@ class AddProductComponent extends Component {
   };
 
   OnSubmit = () => {
-
     this.checkEverything();
 
     let object = {
@@ -3116,11 +3132,28 @@ class AddProductComponent extends Component {
     // console.log(this.state.file)
   }
 
+  bindProductInfoToState = () =>{
+    console.log(this.props.productInfo)
+    //do something here yomna, and then bind the values to the state at the function below
+
+    this.setState({
+      isProductIntoBind: true, // to stop the looping of calling this function from componentdidupdate
+      // something : aaa ,
+    })
+  }
+
   componentDidUpdate(prevProps) {
     // check product is upload, 
     // upload one or multiple file, php will handle the api that saving the file path to db
     // after all files are uploaded, upload video if have video, then done
     // 
+
+    // This section will used to bind the product info to the state with a passing function.
+    // Since in the React lifecycle it did mentioned the componentdidupdate will be triggered if any updates occur on this page,
+    // then we need a state to check the allows to prevent the infinite looping of this function
+    if(this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind){
+      this.bindProductInfoToState()
+    }
 
     //call the variations for product specifications and product category
     if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
