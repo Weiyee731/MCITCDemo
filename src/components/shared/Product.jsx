@@ -167,19 +167,21 @@ class Product extends Component {
     } = this.props;
     const { quantity } = this.state;
     let prices;
-    
+    console.log(this.props)
+
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
 
     return (
       <div className="block" >
+        {/* Product info */}
         <div
-          style={{ width: "100%", backgroundColor: "white", padding: "20px" }}
+          style={{ backgroundColor: "white", padding: "20px" }}
           className={`product product--layout--${layout}`}
         >
           <div className="product__content">
             <ProductGallery
               layout={layout}
-              images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : Logo}
+              images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : [Logo]}
             />
             <div className="product__info">
               <div className="product__wishlist-compare">
@@ -190,15 +192,15 @@ class Product extends Component {
                 <div className="product__rating-stars">
                   <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
                 </div>
-                <div className="product__rating-legend" style={{ fontSize: "13pt" }}>
+                <div className="product__rating-legend">
                   <HashLink
                     onClick={this.changeCurrentTab.bind(this, "reviews")}
                     to="#reviews"
                   >
-                    {`${product.ProductRating != null
-                      ? parseFloat(product.ProductRating)
+                    {`${product.ProductRating !== null
+                      ? parseFloat(product.ProductRating).toFixed(1)
                       : "0"
-                      }/5 (`}{`${product.ProductReviewCount != null
+                      }/5 (`}{`${product.ProductReviewCount !== null
                         ? product.ProductReviewCount
                         : "0"
                         } Reviews)`}
@@ -212,30 +214,35 @@ class Product extends Component {
                   </HashLink>
                 </div>
               </div>
-              <ul className="product__meta" style={{ fontSize: "13pt" }}>
+              <ul className="product__meta">
                 <li className="product__meta-availability">
-                  Availability: <span className="text-success">In Stock</span>
-                  <span style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9", paddingLeft: "20px" }}
-                  >({this.state.productQuantity})
+                  Availability: {" "}
+                  <span className="text-success">
+                    {product.ProductStockAmount !== null && product.ProductStockAmount > 0 ? "In Stock" : "Out of Stock"}
                   </span>
+                  &nbsp;
+                  ({this.state.productQuantity})
                 </li>
                 <li>
-                  Brand:
+                  Brand:{" "}
                   <Link to="/">{product.Brand}</Link>
                 </li>
-                <li>SKU:{product.SKU}</li>
+                <li>SKU:{" "}{product.SKU}</li>
+                <li className="product__seller">
+                  Seller:{" "}
+                  {/* {product.MerchantShopName} */}
+                  Merchant A
+                </li>
+                <div className="product__seller-hide">
+                  <div className="product__seller-info">
+                    hello
+                  </div>
+                </div>
               </ul>
             </div>
 
             <div className="product__sidebar">
-              <div className="product__availability">
-                Availability:{" "}
-                <span className="text-success">
-                  {product.ProductStockAmount !== null && product.ProductStockAmount > 0 ? "In Stock" : "Out of Stock"}
-                </span>
-              </div>
-
-              <div className="product__prices" style={{ fontSize: "28pt" }}>{prices}</div>
+              <div className="product__prices">{prices}</div>
               {
                 product.ProductVariation !== null &&
                 (
@@ -294,8 +301,8 @@ class Product extends Component {
                 )
               }
 
-              <form className="product__options">
-                <div className="row form-group product__option" style={{ marginLeft: "-45pt" }}>
+              <div className="product__options">
+                <div className="row form-group product__option">
                   <div className="col-3">
                     <label
                       htmlFor="product-quantity"
@@ -318,13 +325,13 @@ class Product extends Component {
                   </div>
                 </div>
 
-                <div className="form-group product__option" >
-                  <div className="product__actions" style={{ paddingTop: "10pt", float: "right", marginRight: "-40pt" }}>
+                <div className="form-group product__option product__add-to-cart" >
+                  <div className="product__actions">
                     <div className="product__actions-item product__actions-item--addtocart mx-1">
                       <button
                         type="button"
                         onClick={() => window.localStorage.getItem("id") ? this.checkCart(product, quantity) : this.login()}
-                        className={classNames("btn btn-primary product-card__addtocart")}
+                        className="btn btn-primary product-card__addtocart"
                       >
                         Add To Cart
                       </button>
@@ -334,51 +341,12 @@ class Product extends Component {
                     </div>
                   </div>
                 </div>
-              </form>
-            </div>
-
-            <div className="product__footer">
-              <div className="product__tags tags">
-                <div className="tags__list">
-                  <Link to="/">{product.ProductTag}</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style={{ backgroundColor: "white", height: "150px", width: "100%", marginTop: "30px" }}>
-          <div className="row" style={{ padding: "20px" }}>
-            <div className="col-2" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <img className="product-image__img" style={{ width: "100px", height: "100px" }} src={product.merchantImg !== undefined ? product.merchantImg : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
-            </div>
-            <div className="col-3" >
-              <label style={{ fontSize: "17pt", paddingTop: "9pt" }} >{product.MerchantShopName}</label>
-            </div>
-            <Divider orientation="vertical" style={{ height: "120px" }} />
-            <div className="col-3" style={{ paddingLeft: "70px", paddingTop: "20px" }} >
-              <div className="row">
-                <label style={{ fontSize: "12pt", color: "#808080" }} >Rating : </label>
-                <label style={{ fontSize: "13pt", color: "primary", paddingLeft: "10px" }} >5.0</label>
-              </div>
-              <div className="row">
-                <label style={{ fontSize: "12pt", marginTop: "10px", color: "#808080" }} >Products : </label>
-                <label style={{ fontSize: "13pt", marginTop: "10px", color: "primary", paddingLeft: "10px" }} >   {this.props.productsByMerchantID.length}</label>
-              </div>
-            </div>
-            <div className="col-3" style={{ paddingLeft: "30px", paddingTop: "20px" }} >
-              <div className="row">
-                <label style={{ fontSize: "12pt", color: "#808080" }} >Joined :</label>
-                <label style={{ fontSize: "13pt", color: "primary", paddingLeft: "10px" }} > 14 months ago</label>
-              </div>
-              <div className="row">
-                <label style={{ fontSize: "12pt", marginTop: "10px", color: "#808080" }} >Response Time : </label>
-                <label style={{ fontSize: "13pt", marginTop: "10px", color: "primary", paddingLeft: "10px" }} > within minutes</label>
               </div>
             </div>
           </div>
         </div>
 
-        {/* <div style={{ backgroundColor: "white" }}>
+        <div style={{ backgroundColor: "white" }}>
           {this.props.version === "1" ? (
             <ProductTabs
               withSidebar
@@ -392,9 +360,9 @@ class Product extends Component {
               setCurrentTab={this.changeCurrentTab}
             />
           )}
-        </div> */}
+        </div>
 
-        {/* <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "20px" }}>
           <BlockProductsCarousel
             title="Recommended Product"
             layout="grid-4"
@@ -402,7 +370,7 @@ class Product extends Component {
             products={product.ProductRecommendation !== null && product.ProductRecommendation !== undefined
               ? JSON.parse(product.ProductRecommendation) : []}
           />
-        </div> */}
+        </div>
       </div>
     );
   }

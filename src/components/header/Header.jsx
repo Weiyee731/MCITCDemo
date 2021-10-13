@@ -25,8 +25,8 @@ function Header(props) {
 
   const backgroundColor = {
     backgroundColor: "#fff",
-    position: "fixed",
-    top: 0
+    // position: "fixed",
+    // top: 0
   }
 
   let bannerSection;
