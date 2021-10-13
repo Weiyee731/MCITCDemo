@@ -3027,7 +3027,7 @@ class AddProductComponent extends Component {
 
     // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
     let userId = window.localStorage.getItem("id")
-    if( !isStringNullOrEmpty(userId) && !isStringNullOrEmpty(this.props.ProductID)){
+    if( this.props.isOnViewState && !isStringNullOrEmpty(userId) && !isStringNullOrEmpty(this.props.ProductID)){
       this.setState({
         ProductID: this.props.ProductID,
         userId:  window.localStorage.getItem("id"),
@@ -3714,9 +3714,7 @@ class AddProductComponent extends Component {
               this.props.isOnViewState ?
                 <Button onClick={() => typeof this.props.backToList === "function" && this.props.backToList()  }>
                   <i className="fas fa-chevron-left"></i>
-                  <Link className="nav-link" to={"/viewProduct"}>
                     Back
-                  </Link>
                 </Button>
                 :
                 <Button>
