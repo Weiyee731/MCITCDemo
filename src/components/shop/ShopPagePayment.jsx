@@ -61,8 +61,10 @@ class PagePayment extends Component {
     this.state = {
       payment: "bank",
       paymentMethods: "",
+      paymentMethodsID: "",
 
       cart: [],
+      cardList: [],
       subtotal: 0,
       total: 6,
       shipping: 25,
@@ -87,6 +89,7 @@ class PagePayment extends Component {
     this.handleAddNewCard = this.handleAddNewCard.bind(this);
     this.handleAddCreditCard = this.handleAddCreditCard.bind(this);
     this.handleChangeCardType = this.handleChangeCardType.bind(this);
+    this.handleCardClick = this.handleCardClick.bind(this);
     this.resetData = this.resetData.bind(this);
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.props.CallAllPaymentMethod();
@@ -118,6 +121,7 @@ class PagePayment extends Component {
 
       cvcVisible: false,
       paymentMethods: "",
+      paymentMethodsID: "",
       cvc: ""
     })
   }
@@ -131,14 +135,10 @@ class PagePayment extends Component {
   };
 
   handleInputFocus = (e) => {
-    console.log("handleInputFocus", e.target.name)
     this.setState({ focus: e.target.name });
   };
 
   handleInputChange = ({ target }) => {
-    console.log("handleInputChange", target)
-    console.log("handleInputChange", target.name)
-    console.log("handleInputChange", target.value)
     if (target.name === "newnumber") {
       if (target.value.length > 1) {
         target.value = formatCreditCardNumber(target.value)[1].replace(
@@ -158,14 +158,11 @@ class PagePayment extends Component {
     }
 
     this.setState({ [target.name]: target.value });
-    this.props.handleGetPaymentId(this.state.tabvalue, this.state.paymentMethods)
+    // this.props.handleGetPaymentId(this.state.tabvalue, this.state.paymentMethods)
+    this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
   };
 
   handlePaymentChange = (value, typeid, typevalue) => {
-
-    console.log("handlepaymentchange", value)
-    console.log("typeid", typeid)
-    console.log("typevalue", typevalue)
     this.setState({ paymentMethods: value.PaymentMethod })
     this.props.handleGetPaymentId(value, typeid, typevalue)
   };
@@ -174,12 +171,20 @@ class PagePayment extends Component {
     this.setState({ isAddNewCard: true })
   }
 
+  handleCardClick = (cards, value) => {
+    if (value === true) {
+      this.setState({ cvcVisible: true, paymentMethodsID: cards.UserPaymentMethodID, cvc: "" })
+      this.state.cardList.push(cards)
+    }else{
+      this.setState({ cvcVisible: false, paymentMethodsID: cards.UserPaymentMethodID, cvc: "" })
+      this.state.cardList.splice(0, this.state.cardList.length)
+    }
+    // this.setState({ cvcVisible: false, paymentMethodsID: cards.UserPaymentMethodID, cvc: "" })
+  }
+
+
   handleAddCreditCard = () => {
-    console.log("THIS TO ADD NEW CARD")
-    console.log("this.state", this.state)
-    console.log("HERE")
     if (this.state.newname.length && this.state.newnumber.length && this.state.newexpiry.length && this.state.cardtype.length && this.state.cardtype.length) {
-      console.log("handleAddCreditCard")
       this.props.CallAddCreditCard({
         USERID: localStorage.getItem("id"),
         name: this.state.newname,
@@ -338,13 +343,13 @@ class PagePayment extends Component {
                               <Grid item style={{ margin: "2vw", marginTop: "1vw", marginBottom: "1vw", }} >
                                 <div>
                                   {
-                                    this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethods ?
+                                    this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethodsID ?
                                       <>
                                         <Tooltip title="Edit" style={{ right: "-230px" }}  >
                                           <IconButton aria-label="Edit">
                                             <RadioButtonCheckedIcon
                                               fontSize="small"
-                                              onClick={() => this.setState({ cvcVisible: false, paymentMethods: cards.UserPaymentMethodID, cvc: "" })} />
+                                              onClick={() => this.handleCardClick(cards, false)} />
                                           </IconButton>
                                         </Tooltip>
                                         <Cards
@@ -376,7 +381,8 @@ class PagePayment extends Component {
                                           <IconButton aria-label="Edit">
                                             <RadioButtonUncheckedIcon
                                               fontSize="small"
-                                              onClick={() => this.setState({ cvcVisible: true, paymentMethods: cards.UserPaymentMethodID, cvc: "" })} />
+                                              // onClick={() => this.setState({ cvcVisible: true, paymentMethodsID: cards.UserPaymentMethodID, cvc: "", cardList:[] })} />
+                                              onClick={() => this.handleCardClick(cards, true)} />
                                           </IconButton>
                                         </Tooltip>
                                         <Cards
@@ -537,10 +543,8 @@ class PagePayment extends Component {
                                       <CardContent>
                                         <h4>{method.PaymentMethodType !== undefined && method.PaymentMethodType !== null ? method.PaymentMethodType : ""}</h4>
                                         {/* <h5>Selected : {isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()}</h5> */}
-                                        {console.log("method.PaymentMethodTypeID", method.PaymentMethodTypeID)}
-                                        {console.log("this.state.paymentMethods", this.state.paymentMethods)}
                                         <h5>Selected : {method.PaymentMethodTypeID !== 6 ?
-                                          this.state.paymentMethods.toUpperCase()
+                                          isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()
                                           : method.PaymentMethodType.toUpperCase()}</h5>
                                         <br />
                                         {
@@ -576,7 +580,6 @@ class PagePayment extends Component {
 
   render() {
 
-    console.log("this.props.data. in page payment", this.props.data)
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }

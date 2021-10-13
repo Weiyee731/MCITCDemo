@@ -25,21 +25,24 @@ import Select from '@material-ui/core/Select';
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 
 // styles
-import './styles/BlockCategoryDetails.css'
+import './styles/BlockListingDetails.css'
 import ProductCard from "../shared/ProductCard";
 
 function mapStateToProps(state) {
     return {
         productCategories: state.counterReducer["productCategories"], // with sub hierarchy item
         products: state.counterReducer["products"],
+        productsListing: state.counterReducer["productsListing"],
         loading: state.counterReducer["loading"],
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
+        CallAllProductsListing: (propsData) => dispatch(GitAction.CallAllProductsListing(propsData)),
         CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
         CallAllProducts: (propsData) => dispatch(GitAction.CallAllProducts(propsData)),
+
     };
 }
 
@@ -70,84 +73,97 @@ const GreenCheckbox = withStyles({
     checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-class BlockCategoryDetails extends Component {
+class BlockListingDetails extends Component {
     constructor(props) {
         super(props);
 
         this.state = initialState;
 
+        this.props.CallAllProductsListing({
+            type: this.props.match.params.selectedtype !== undefined && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
+            typeValue: this.props.match.params.selectedtypevalue !== undefined && this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
+            userId: localStorage.getItem("isLogin") !== "false" ? 0 : localStorage.getItem("id"),
+            productPage: 999,
+            page: 1
+        })
+        this.props.CallAllProductCategoryListing();
         this.handleFilterOption = this.handleFilterOption.bind(this)
         this.resetFilter = this.resetFilter.bind(this)
     }
 
 
     componentDidMount() {
-        if (!isStringNullOrEmpty(this.props.match.params.categoryID)) {
-            this.props.CallAllProducts({
-                type: "Merchant",
-                typeValue: 0,
-                userId: 0,
-                productPage: 999,
-                page: 1
-            })
-        }
 
-        if (Array.isArray(this.props.productCategories) && this.props.productCategories.length === 0) {
-            this.props.CallAllProductCategoryListing();
-        }
-        else {
+        // console.log("this.props.match.params.selectedtypevalue", this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''))
+        // console.log("this.props.match.params.selectedtype", this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''))
+        console.log("this.props.productCategories", this.props.productCategories)
 
-            let selectedCategory = ""
-            let selectedParentCategory = ""
-            if (this.props.match.params.parentCategoryID === undefined)
-                selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
-            else {
-                selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.childcategorySlug)
-                selectedParentCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
-            }
+        // if (!isStringNullOrEmpty(this.props.match.params.categoryID)) {
+        //     this.props.CallAllProducts({
+        //         type: "Merchant",
+        //         typeValue: 0,
+        //         userId: 0,
+        //         productPage: 999,
+        //         page: 1
+        //     })
+        // }
 
-            try {
-                if (selectedCategory.length > 0 && selectedParentCategory.length === 0) {
-                    if (selectedCategory[0].HierarchyItem !== null) {
-                        let subCategories = JSON.parse(selectedCategory[0].HierarchyItem)
-                        this.setState({
-                            productSubCategories: subCategories,
-                            isHierarchyItemExist: true,
-                            selectedSubCategory: (subCategories.length > 0) ? subCategories[0].ProductCategory : ""
-                        })
-                    }
-                    else {
-                        this.setState({
-                            productSubCategories: [],
-                        })
-                    }
-                }
-                else if (selectedParentCategory.length > 0) {
-                    if (selectedParentCategory[0].HierarchyItem !== null) {
-                        let subCategories = JSON.parse(selectedParentCategory[0].HierarchyItem)
-                        this.setState({
-                            productSubCategories: subCategories,
-                            selectedSubCategory: (subCategories.length > 0) ? this.props.match.params.childcategorySlug : ""
-                        })
-                    }
-                    else {
-                        this.setState({
-                            productSubCategories: [],
-                        })
-                    }
-                }
-                else {
-                    this.setState({
-                        productSubCategories: [],
-                    })
-                }
-            }
-            catch (e) {
-                this.setState({
-                    productSubCategories: [],
-                })
-            }
-        }
+        // if (Array.isArray(this.props.productCategories) && this.props.productCategories.length === 0) {
+        //     this.props.CallAllProductCategoryListing();
+        // }
+        // else {
+
+        //     let selectedCategory = ""
+        //     let selectedParentCategory = ""
+        //     if (this.props.match.params.parentCategoryID === undefined)
+        //         selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
+        //     else {
+        //         selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.childcategorySlug)
+        //         selectedParentCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
+        //     }
+
+        //     try {
+        //         if (selectedCategory.length > 0 && selectedParentCategory.length === 0) {
+        //             if (selectedCategory[0].HierarchyItem !== null) {
+        //                 let subCategories = JSON.parse(selectedCategory[0].HierarchyItem)
+        //                 this.setState({
+        //                     productSubCategories: subCategories,
+        //                     isHierarchyItemExist: true,
+        //                     selectedSubCategory: (subCategories.length > 0) ? subCategories[0].ProductCategory : ""
+        //                 })
+        //             }
+        //             else {
+        //                 this.setState({
+        //                     productSubCategories: [],
+        //                 })
+        //             }
+        //         }
+        //         else if (selectedParentCategory.length > 0) {
+        //             if (selectedParentCategory[0].HierarchyItem !== null) {
+        //                 let subCategories = JSON.parse(selectedParentCategory[0].HierarchyItem)
+        //                 this.setState({
+        //                     productSubCategories: subCategories,
+        //                     selectedSubCategory: (subCategories.length > 0) ? this.props.match.params.childcategorySlug : ""
+        //                 })
+        //             }
+        //             else {
+        //                 this.setState({
+        //                     productSubCategories: [],
+        //                 })
+        //             }
+        //         }
+        //         else {
+        //             this.setState({
+        //                 productSubCategories: [],
+        //             })
+        //         }
+        //     }
+        //     catch (e) {
+        //         this.setState({
+        //             productSubCategories: [],
+        //         })
+        //     }
+        // }
     }
 
     componentDidUpdate(prevProps) {
@@ -255,7 +271,7 @@ class BlockCategoryDetails extends Component {
     }
 
     render() {
-        console.log(this.state.products)
+
         return (
             <div className="container-fluid px-5 block block--margin-top">
                 <div className="row">
@@ -275,8 +291,7 @@ class BlockCategoryDetails extends Component {
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div>
-                            {console.log("parentCategoryID", this.props.parentCategoryID)}
-                            <div style={{ fontSize: '10pt' }}>
+                            {/* <div style={{ fontSize: '10pt' }}>
                                 {
                                     this.state.productSubCategories.map((el, idx) => {
                                         return (
@@ -310,10 +325,9 @@ class BlockCategoryDetails extends Component {
                                         )
                                     })
                                 }
-                            </div>
+                            </div> */}
                         </div>
                         <hr />
-                        {console.log(this.props)}
                         <div className="filtering-segment mt-3">
                             <div className="location-segment">
                                 <div className="filter-options-label"><LocalShippingOutlinedIcon /> SHIPPED FROM</div>
@@ -420,10 +434,28 @@ class BlockCategoryDetails extends Component {
                     <div className="col-md-10 col-12">
                         <div className="d-flex sorting-options-panel align-middle  px-3 mb-2 ">
                             <div className="flex-grow-1 d-flex my-auto">
-                                <div className="sorting-option-label">{this.props.childcategorySlug !== undefined ?
-                                    this.props.categorySlug + " - " + this.props.childcategorySlug :
-                                    this.props.categorySlug + " - " + this.state.selectedSubCategory}
-                                </div>
+                                {
+                                    this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
+
+                                    this.props.productCategories.filter((x) => x.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''))
+                                        .map((category) => {
+                                            return (
+                                                <div className="sorting-option-label">
+                                                    Category - {category.ProductCategory}
+                                                </div>
+                                            )
+                                        })
+                                }
+                                {
+                                    this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Keyword" &&
+                                    <div className="sorting-option-label">
+                                        Keyword Search - {this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')}
+                                    </div>
+                                }
+                                {/* {this.props.childcategorySlug !== undefined ?
+                                        this.props.categorySlug + " - " + this.props.childcategorySlug :
+                                        this.props.categorySlug + " - " + this.state.selectedSubCategory} */}
+
                             </div>
                             <div>
                                 <FormControl variant="outlined" style={{ width: 100, height: 40 }} size="small" >
@@ -449,17 +481,27 @@ class BlockCategoryDetails extends Component {
                         <div className="product-list container-fluid">
                             <div className="row pl-2">
                                 {
-                                    this.state.products.length > 0
+                                    this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined
                                         ?
-                                        this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).length > 0 ?
-                                            this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).map((x) => {
-                                                return (
-                                                    <div className="products__list-item">
-                                                        <ProductCard product={x}></ProductCard>
-                                                    </div>
-                                                )
-                                            })
-                                            : <div className="ml-2"><i>No products for this category</i></div>
+                                        JSON.parse(this.props.productsListing).map((products) => {
+                                            return (
+                                                <div className="products__list-item">
+                                                    <ProductCard product={products}></ProductCard>
+                                                </div>
+                                            )
+                                        })
+                                        // console.log("this.props.productsListing123", this.props.productsListing)
+
+
+                                        // this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).length > 0 ?
+                                        //     this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).map((x) => {
+                                        //         return (
+                                        //             <div className="products__list-item">
+                                        //                 <ProductCard product={this.state.products}></ProductCard>
+                                        //             </div>
+                                        //         )
+                                        //     })
+                                        //     : <div className="ml-2"><i>No products for this category</i></div>
                                         :
                                         <div className="ml-2"><i>No products for this category</i></div>
                                 }
@@ -474,4 +516,4 @@ class BlockCategoryDetails extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BlockCategoryDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(BlockListingDetails);
