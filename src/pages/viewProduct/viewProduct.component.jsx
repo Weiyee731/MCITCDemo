@@ -158,7 +158,7 @@ const headCells = [
     id: "ProductPrice",
     numeric: false,
     disablePadding: false,
-    label: "Price Sold",
+    label: "Price Sold (RM)",
   },
 ];
 
@@ -647,9 +647,9 @@ class DisplayTable extends Component {
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
 
-    console.log( JSON.parse(this.props.Data));
-    JSON.parse(this.props.Data).map((d, i) => {
-      console.log(d)
+    // console.log(this.props.Data);
+    this.props.Data.map((d, i) => {
+      // console.log(d)
       d.Picture = (
         <div>
            <img
@@ -700,7 +700,7 @@ class DisplayTable extends Component {
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
+          <ProductDetailsComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
         ) : this.state.deleteActive ? (
           <div>
             <h1>Product List</h1>
@@ -731,7 +731,7 @@ class DisplayTable extends Component {
               placeholder="Search..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
-            {JSON.parse(this.props.Data).filter((searchedItem) =>
+            {this.props.Data.filter((searchedItem) =>
               searchedItem.ProductName.toLowerCase().includes(
                 this.state.searchFilter
               )
@@ -775,7 +775,7 @@ class DisplayTable extends Component {
 
             <div>
               <Paper style={divStyle}>
-                <DisplayTableToolbar numSelected={this.state.selected.length} />
+                {/* <DisplayTableToolbar numSelected={this.state.selected.length} /> */}
                 <TableContainer>
                   <Table
                     className={table}
@@ -789,9 +789,9 @@ class DisplayTable extends Component {
                       order={this.state.order}
                       orderBy={this.state.orderBy}
                       onRequestSort={this.handleRequestSort}
-                      rowCount={JSON.parse(this.props.Data).length}
+                      rowCount={this.props.Data.length}
                     />
-                    {JSON.parse(this.props.Data).filter((searchedItem) =>
+                    {this.props.Data.filter((searchedItem) =>
                       searchedItem.ProductName.toLowerCase().includes(
                         this.state.searchFilter
                       )
@@ -837,7 +837,7 @@ class DisplayTable extends Component {
                                   row.ProductDimensionHeight}
                               </TableCell>
                               <TableCell align="right"> {row.ProductStockAmountInital}</TableCell> */}
-                              <TableCell align="right"> {row.ProductPrice} </TableCell>
+                              <TableCell align="left"> {row.ProductPrice} </TableCell>
                             </TableRow>
                           );
                         })}
@@ -856,7 +856,7 @@ class DisplayTable extends Component {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
-                  count={JSON.parse(this.props.Data).length}
+                  count={this.props.Data.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
                   onPageChange={this.handleChangePage}
@@ -924,6 +924,7 @@ class ViewProductComponent extends Component {
 
 
   render() {
+  
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable

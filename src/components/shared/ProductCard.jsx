@@ -73,7 +73,7 @@ function ProductCard(props) {
   // }, [props.productsByID]);
 
   const login = () => {
-    browserHistory.push("/Emporia/login");
+    browserHistory.push("Emporia/login");
     window.location.reload(false);
   }
 
@@ -107,7 +107,6 @@ function ProductCard(props) {
       }
     } else
       login()
-
   }
 
   const handleWishlist = (product) => {
@@ -133,15 +132,30 @@ function ProductCard(props) {
       login()
   }
 
-  if (product.ProductImage && product.ProductImage.length > 0) {
+  { console.log("product.ProductImage", product.ProductImage) }
+  if (product.ProductImage !== null && product.ProductImage !== undefined && product.ProductImage.length > 0) {
     image = (
       <div className="product-card__image product-image">
         <Link to={url.product(product)} className="product-image__body">
           <img
             className="product-image__img"
-            src={product.ProductImage !== undefined ? product.ProductImage : Logo}
+            src={product.ProductImage !== null ? product.ProductImage : Logo}
             onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-            alt=""
+            alt={product.ProductName}
+          />
+        </Link>
+      </div>
+    );
+  } 
+  else {
+    image = (
+      <div className="product-card__image product-image">
+        <Link to={url.product(product)} className="product-image__body">
+          <img
+            className="product-image__img"
+            src={Logo}
+            onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+            alt={product.ProductName}
           />
         </Link>
       </div>
@@ -183,15 +197,9 @@ function ProductCard(props) {
 
   return (
     <div className={containerClasses}>
-      {/* <button
-        type="button"
-        onClick={() => setModal(true)}
-        className={classNames("product-card__quickview")}
-      >
-        <Quickview16Svg />
-      </button> */}
       {badges}
       {image}
+      {console.log("productListing", product)}
       <div className="product-card__info">
         <div className="product-card__name">
           <Link to={url.product(product)}>{product.ProductName}</Link>
