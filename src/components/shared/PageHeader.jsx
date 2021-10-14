@@ -53,7 +53,7 @@ function PageHeader(props) {
 
     return (
         <div className="page-header">
-            <div className="page-header__container space-limiter left-spacing">
+            <div className="page-header__container container">
                 {breadcrumb}
                 {/* {header} */}
             </div>

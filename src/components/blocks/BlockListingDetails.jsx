@@ -27,6 +27,7 @@ import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 // styles
 import './styles/BlockListingDetails.css'
 import ProductCard from "../shared/ProductCard";
+import { toast } from "react-toastify";
 
 function mapStateToProps(state) {
     return {
@@ -48,6 +49,7 @@ function mapDispatchToProps(dispatch) {
 
 const initialState = {
     products: [],
+    productList: [],
     selectedCategory: [],
     productSubCategories: [],
     selectedSubCategory: "",
@@ -60,6 +62,7 @@ const initialState = {
         rating: 1
     },
     isDataBind: false,
+    isFilter: false
 
 }
 
@@ -72,6 +75,14 @@ const GreenCheckbox = withStyles({
     },
     checked: {},
 })((props) => <Checkbox color="default" {...props} />);
+
+
+const sortingOption = [
+    { value: 'latest', label: 'Latest' },
+    { value: 'top-sales', label: 'Top Sales' },
+    { value: 'low-to-high', label: 'Price Low to High' },
+    { value: 'high-to-low', label: 'Price High to Low' }
+]
 
 class BlockListingDetails extends Component {
     constructor(props) {
@@ -88,192 +99,186 @@ class BlockListingDetails extends Component {
         })
         this.props.CallAllProductCategoryListing();
         this.handleFilterOption = this.handleFilterOption.bind(this)
+        this.handleShipFilter = this.handleShipFilter.bind(this)
         this.resetFilter = this.resetFilter.bind(this)
+        this.setListing = this.setListing.bind(this)
+        this.handleSorting = this.handleSorting.bind(this)
     }
 
 
     componentDidMount() {
-
-        // console.log("this.props.match.params.selectedtypevalue", this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''))
-        // console.log("this.props.match.params.selectedtype", this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''))
-        console.log("this.props.productCategories", this.props.productCategories)
-
-        // if (!isStringNullOrEmpty(this.props.match.params.categoryID)) {
-        //     this.props.CallAllProducts({
-        //         type: "Merchant",
-        //         typeValue: 0,
-        //         userId: 0,
-        //         productPage: 999,
-        //         page: 1
-        //     })
-        // }
-
-        // if (Array.isArray(this.props.productCategories) && this.props.productCategories.length === 0) {
-        //     this.props.CallAllProductCategoryListing();
-        // }
-        // else {
-
-        //     let selectedCategory = ""
-        //     let selectedParentCategory = ""
-        //     if (this.props.match.params.parentCategoryID === undefined)
-        //         selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
-        //     else {
-        //         selectedCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.childcategorySlug)
-        //         selectedParentCategory = this.props.productCategories.filter(el => el.ProductCategory === this.props.match.params.categorySlug)
-        //     }
-
-        //     try {
-        //         if (selectedCategory.length > 0 && selectedParentCategory.length === 0) {
-        //             if (selectedCategory[0].HierarchyItem !== null) {
-        //                 let subCategories = JSON.parse(selectedCategory[0].HierarchyItem)
-        //                 this.setState({
-        //                     productSubCategories: subCategories,
-        //                     isHierarchyItemExist: true,
-        //                     selectedSubCategory: (subCategories.length > 0) ? subCategories[0].ProductCategory : ""
-        //                 })
-        //             }
-        //             else {
-        //                 this.setState({
-        //                     productSubCategories: [],
-        //                 })
-        //             }
-        //         }
-        //         else if (selectedParentCategory.length > 0) {
-        //             if (selectedParentCategory[0].HierarchyItem !== null) {
-        //                 let subCategories = JSON.parse(selectedParentCategory[0].HierarchyItem)
-        //                 this.setState({
-        //                     productSubCategories: subCategories,
-        //                     selectedSubCategory: (subCategories.length > 0) ? this.props.match.params.childcategorySlug : ""
-        //                 })
-        //             }
-        //             else {
-        //                 this.setState({
-        //                     productSubCategories: [],
-        //                 })
-        //             }
-        //         }
-        //         else {
-        //             this.setState({
-        //                 productSubCategories: [],
-        //             })
-        //         }
-        //     }
-        //     catch (e) {
-        //         this.setState({
-        //             productSubCategories: [],
-        //         })
-        //     }
-        // }
+        this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined &&
+            this.state.productList.push(JSON.parse(this.props.productsListing))
     }
 
     componentDidUpdate(prevProps) {
         if (!this.state.isDataBind) {
             this.setState({ products: this.props.products, isDataBind: true })
         }
+
+        if (prevProps.productsListing !== this.props.productsListing) {
+            if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+                this.state.productList.splice(0, this.state.productList.length)
+                this.state.productList.push(JSON.parse(this.props.productsListing))
+            }
+        }
     }
 
     handleFilterOption(e) {
-        let tempObject = this.state.filterOptions
-        let tempList = this.props.products
-        switch (e.target.id) {
-            case "min-price":
-                tempObject.minPrice = Number(e.target.value)
-                this.setState({ filterOptions: tempObject })
-                break;
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+            let tempObject = this.state.filterOptions
+            let tempList = JSON.parse(this.props.productsListing)
 
-            case "max-price":
-                tempObject.maxPrice = Number(e.target.value)
-                this.setState({ filterOptions: tempObject })
-                break;
+            switch (e.target.id) {
+                case "min-price":
+                    tempObject.minPrice = Number(e.target.value)
+                    this.setState({ filterOptions: tempObject })
+                    break;
 
-            case "fllter-5-stars":
-                tempObject.rating = 5
-                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
-                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                case "max-price":
+                    tempObject.maxPrice = Number(e.target.value)
+                    this.setState({ filterOptions: tempObject })
+                    break;
 
-                tempList = tempList.filter(el => el.ProductRating >= 5)
-                this.setState({ filterOptions: tempObject, products: tempList })
-                break;
+                case "fllter-5-stars":
+                    tempObject.rating = 5
+                    if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                        tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
 
-            case "fllter-4-stars":
-                tempObject.rating = 4
-                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
-                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
-                tempList = tempList.filter(el => el.ProductRating >= 4 && el.ProductRating < 5)
-                this.setState({ filterOptions: tempObject, products: tempList })
-                break;
+                    tempList = tempList.filter(el => el.ProductRating >= 5)
+                    this.setListing(tempList)
+                    this.setState({ filterOptions: tempObject })
+                    break;
 
-            case "fllter-3-stars":
-                tempObject.rating = 3
-                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
-                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
-                tempList = tempList.filter(el => el.ProductRating >= 3 && el.ProductRating < 4)
-                this.setState({ filterOptions: tempObject, products: tempList })
-                break;
+                case "fllter-4-stars":
+                    tempObject.rating = 4
+                    if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                        tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                    tempList = tempList.filter(el => el.ProductRating >= 4 && el.ProductRating < 5)
+                    this.setListing(tempList)
+                    this.setState({ filterOptions: tempObject })
+                    break;
 
-            case "fllter-2-stars":
-                tempObject.rating = 2
-                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
-                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
-                tempList = tempList.filter(el => el.ProductRating >= 2 && el.ProductRating < 3)
-                this.setState({ filterOptions: tempObject, products: tempList })
-                break;
+                case "fllter-3-stars":
+                    tempObject.rating = 3
+                    if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                        tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                    tempList = tempList.filter(el => el.ProductRating >= 3 && el.ProductRating < 4)
+                    this.setListing(tempList)
+                    this.setState({ filterOptions: tempObject })
+                    break;
 
-            case "fllter-1-stars":
-                tempObject.rating = 1
-                if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
-                    tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
-                tempList = tempList.filter(el => el.ProductRating >= 1 && el.ProductRating < 2)
-                this.setState({ filterOptions: tempObject, products: tempList })
-                break;
+                case "fllter-2-stars":
+                    tempObject.rating = 2
+                    if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                        tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                    tempList = tempList.filter(el => el.ProductRating >= 2 && el.ProductRating < 3)
+                    this.setListing(tempList)
+                    this.setState({ filterOptions: tempObject })
+                    break;
 
-            case "fllter-no-stars":
-                tempObject.rating = 0
-                tempList = tempList.filter(el => el.ProductRating >= 0 && el.ProductRating < 1)
-                this.setState({ filterOptions: tempObject, products: tempList })
-                break;
+                case "fllter-1-stars":
+                    tempObject.rating = 1
+                    if (tempObject.minPrice > 0 || tempObject.maxPrice > 0)
+                        tempList = tempList.filter(el => el.ProductSellingPrice >= Number(this.state.filterOptions.minPrice) && el.ProductSellingPrice <= Number(this.state.filterOptions.maxPrice))
+                    tempList = tempList.filter(el => el.ProductRating >= 1 && el.ProductRating < 2)
+                    this.setListing(tempList)
+                    this.setState({ filterOptions: tempObject })
+                    break;
 
-            default:
-                break;
+                case "fllter-no-stars":
+                    tempObject.rating = 0
+                    tempList = tempList.filter(el => el.ProductRating >= 0 && el.ProductRating < 1)
+                    this.setListing(tempList)
+                    this.setState({ filterOptions: tempObject })
+                    break;
+
+                default:
+                    break;
+            }
         }
+
     }
 
     handleFilterPriceButton() {
         let minPrice = this.state.filterOptions.minPrice
         let maxPrice = this.state.filterOptions.maxPrice
-        let list = this.props.products
-        if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-            if (minPrice > maxPrice) {
-                list = list.filter(el => el.ProductSellingPrice > minPrice)
-                this.setState({ products: list })
-            }
-            else if (minPrice < 0 && maxPrice < 0) {
-                let tempObject = this.state.filterOptions
-                tempObject.minPrice = 0
-                tempObject.maxPrice = 0
-                this.setState({ filterOptions: tempObject })
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+            let list = JSON.parse(this.props.productsListing)
+
+            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+                if (minPrice > maxPrice) {
+                    list = list.filter(el => el.ProductSellingPrice > minPrice)
+                    this.setListing(list)
+                }
+                else if (minPrice < 0 && maxPrice < 0) {
+                    toast.error("Please set a correct value to filter")
+                }
+                else {
+                    list = list.filter(el => el.ProductPrice >= minPrice && el.ProductPrice <= maxPrice)
+                    this.setListing(list)
+                }
             }
             else {
-                list = list.filter(el => el.ProductSellingPrice >= minPrice && el.ProductSellingPrice <= maxPrice)
-                this.setState({ products: list })
+                this.setState({ products: this.props.products })
             }
-        }
-        else {
-            this.setState({ products: this.props.products })
+        } else {
+            toast.error("No product available to filter")
         }
     }
 
     resetFilter() {
-        this.setState({
-            filterOptions: initialState.filterOptions,
-            products: this.props.products
-        })
+        this.setListing(JSON.parse(this.props.productsListing))
+        this.setState({ filterOptions: initialState.filterOptions })
+    }
+
+
+    handleSorting(options) {
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+            let list = JSON.parse(this.props.productsListing)
+
+            switch (options.target.value) {
+                case "latest":
+                    break;
+                case "top-sales":
+                    list.sort((a, b) => (a.ProductSold - b.ProductSold))
+                    this.setListing(list)
+                    break;
+                case "low-to-high":
+                    list.sort((a, b) => (a.ProductPrice - b.ProductPrice))
+                    this.setListing(list)
+                    break;
+                case "high-to-low":
+                    list.sort((a, b) => (b.ProductPrice - a.ProductPrice))
+                    this.setListing(list)
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    setListing(listingValue) {
+        this.state.productList.splice(0, this.state.productList.length)
+        this.state.productList.push(listingValue)
+        this.setState({ isFilter: true })
+    }
+
+    handleShipFilter(value) {
+        console.log("value handleShipFilter", value.target.name)
+
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+            let list = JSON.parse(this.props.productsListing)
+
+            console.log("ss", list)
+        }
     }
 
     render() {
 
         return (
-            <div className="container-fluid px-5 block block--margin-top">
+            <div className="container-fluid block block--margin-top" style={{ paddingRight: "5rem", paddingLeft: "5rem" }}>
                 <div className="row">
                     <div className="col-md-2 col-12">
                         <div className="category-segment">
@@ -284,48 +289,47 @@ class BlockListingDetails extends Component {
                                         window.open("/shop/AllProductCategory/")
                                     }
                                 }}
-
                                 onClick={(e) => {
                                     window.location.href = "/shop/AllProductCategory/"
                                 }}
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div>
-                            {/* <div style={{ fontSize: '10pt' }}>
-                                {
-                                    this.state.productSubCategories.map((el, idx) => {
-                                        return (
-                                            this.state.selectedSubCategory === el.ProductCategory ?
-                                                <div key={el.ProductCategory} className="sub-category-items active">
-                                                    <DoubleArrowIcon fontSize='sm' /> {el.ProductCategory}
-                                                </div>
-                                                :
-                                                <div key={el.ProductCategory} className="sub-category-items">
-                                                    {
-                                                        this.props.childcategorySlug === undefined ?
-                                                            <FiberManualRecordOutlinedIcon fontSize='sm'
-                                                                onClick={() => {
-                                                                    this.setState({ selectedSubCategory: el.ProductCategory });
-                                                                    window.location.href = "/shop/ProductCategory/" + this.props.categoryID + "/" + this.props.categorySlug + "/" + el.ProductCategoryID + "/" + el.ProductCategory
-                                                                }}
-                                                            /> :
-                                                            <FiberManualRecordOutlinedIcon fontSize='sm'
-                                                                onClick={() => {
-                                                                    this.setState({ selectedSubCategory: el.ProductCategory });
-                                                                    window.location.href = "/shop/ProductCategory/" + this.props.parentCategoryID + "/" + this.props.categorySlug + "/" + el.ProductCategoryID + "/" + el.ProductCategory
-                                                                }}
-                                                            />
-                                                    }
-                                                    <label onClick={() => {
-                                                        this.setState({ selectedSubCategory: el.ProductCategory });
-                                                        window.location.href = "/shop/ProductCategory/" + this.props.parentCategoryID + "/" + this.props.categorySlug + "/" + el.ProductCategoryID + "/" + el.ProductCategory
-                                                    }}
-                                                    >{el.ProductCategory}</label>
-                                                </div>
-                                        )
-                                    })
-                                }
-                            </div> */}
+                            {
+
+                                this.props.productCategories.map((item) => {
+                                    // console.log(item.HierarchyItem)
+                                    item.HierarchyItem !== null &&
+                                        JSON.parse(item.HierarchyItem).map((x) => {
+                                            console.log("this is the list", x)
+                                        })
+                                })
+                            }
+                            <div style={{ fontSize: '10pt' }}>
+                                {this.props.productCategories.map((category) => {
+                                    return (
+                                        <div key={category.ProductCategory} className="sub-category-items">
+                                            {
+                                                this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
+                                                    this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == category.ProductCategoryID ?
+                                                    <div key={category.ProductCategory} className="sub-category-items active">
+                                                        <DoubleArrowIcon fontSize='sm' /> {category.ProductCategory}
+
+                                                    </div>
+                                                    :
+                                                    <>
+                                                        <FiberManualRecordOutlinedIcon fontSize='sm'
+                                                            onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                        />
+                                                        <label onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                        >{category.ProductCategory}</label>
+                                                    </>
+                                            }
+                                        </div>
+                                    )
+
+                                })}
+                            </div>
                         </div>
                         <hr />
                         <div className="filtering-segment mt-3">
@@ -333,22 +337,22 @@ class BlockListingDetails extends Component {
                                 <div className="filter-options-label"><LocalShippingOutlinedIcon /> SHIPPED FROM</div>
                                 <div>
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="WM" />}
+                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter(e)} name="WM" />}
                                         label="West Malaysia"
                                         className="location-segment-checkboxes"
                                     />
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="EM" />}
+                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter(e)} name="EM" />}
                                         label="East Malaysia"
                                         className="location-segment-checkboxes"
                                     />
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="Local" />}
+                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter(e)} name="Local" />}
                                         label="Local"
                                         className="location-segment-checkboxes"
                                     />
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="Overseas" />}
+                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter(e)} name="Overseas" />}
                                         label="Overseas"
                                         className="location-segment-checkboxes"
                                     />
@@ -432,7 +436,7 @@ class BlockListingDetails extends Component {
                         </div>
                     </div>
                     <div className="col-md-10 col-12">
-                        <div className="d-flex sorting-options-panel align-middle  px-3 mb-2 ">
+                        <div className="d-flex sorting-options-panel align-middle px-3 mb-2 ">
                             <div className="flex-grow-1 d-flex my-auto">
                                 {
                                     this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
@@ -452,63 +456,54 @@ class BlockListingDetails extends Component {
                                         Keyword Search - {this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')}
                                     </div>
                                 }
-                                {/* {this.props.childcategorySlug !== undefined ?
-                                        this.props.categorySlug + " - " + this.props.childcategorySlug :
-                                        this.props.categorySlug + " - " + this.state.selectedSubCategory} */}
-
                             </div>
                             <div>
-                                <FormControl variant="outlined" style={{ width: 100, height: 40 }} size="small" >
+                                <FormControl variant="outlined" style={{ width: 200, height: 40 }} size="small" >
                                     <InputLabel id="demo-simple-select-outlined-label">Sort By</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-outlined-label"
                                         id="demo-simple-select-outlined"
-                                        value={""}
-                                        onChange={() => { }}
+                                        // value={value}
+                                        onChange={(x) => this.handleSorting(x)}
                                         label="Sort By"
                                         color="primary"
                                     >
-                                        <MenuItem value="latest">Latest</MenuItem>
-                                        <MenuItem value="top-sales">Top Sales</MenuItem>
-                                        <MenuItem value="low-to-high">Price Low to High</MenuItem>
-                                        <MenuItem value="high-to-low">Price High to Low</MenuItem>
+                                        {
+                                            sortingOption.map((options) => {
+                                                return (
+                                                    <MenuItem value={options.value}>{options.label}</MenuItem>
+                                                )
+                                            })
+                                        }
                                     </Select>
                                 </FormControl>
                             </div>
                         </div>
 
-                        {/* product catalog */}
                         <div className="product-list container-fluid">
                             <div className="row pl-2">
                                 {
-                                    this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined
-                                        ?
-                                        JSON.parse(this.props.productsListing).map((products) => {
-                                            return (
-                                                <div className="products__list-item">
-                                                    <ProductCard product={products}></ProductCard>
-                                                </div>
-                                            )
-                                        })
-                                        // console.log("this.props.productsListing123", this.props.productsListing)
+                                    this.state.productList.length > 0 ?
+                                        this.state.productList[0].length > 0 && this.state.productList[0] !== undefined ?
+                                            this.state.productList[0].map((products) => {
 
-
-                                        // this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).length > 0 ?
-                                        //     this.state.products.filter(x => x.ProductCategoryID === parseInt(this.props.categoryID)).map((x) => {
-                                        //         return (
-                                        //             <div className="products__list-item">
-                                        //                 <ProductCard product={this.state.products}></ProductCard>
-                                        //             </div>
-                                        //         )
-                                        //     })
-                                        //     : <div className="ml-2"><i>No products for this category</i></div>
+                                                return (
+                                                    <>
+                                                        {console.log("products", products)}
+                                                        <div className="products__list-item">
+                                                            <ProductCard product={products}></ProductCard>
+                                                        </div>
+                                                    </>
+                                                )
+                                            })
+                                            :
+                                            <div className="ml-2"><i>No products for this section</i></div>
                                         :
-                                        <div className="ml-2"><i>No products for this category</i></div>
+                                        <div className="ml-2"><i>No products for this section</i></div>
                                 }
                                 <div></div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
