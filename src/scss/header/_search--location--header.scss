@@ -24,6 +24,7 @@ $local-suggestion-transition: .2s;
     .search__body {
         position: relative;
         z-index: 2;
+        width: 100%;
     }
     .search__form {
         height: $header-search-height;

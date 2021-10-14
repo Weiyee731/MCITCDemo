@@ -39,6 +39,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import FormControl from '@mui/material/FormControl';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 function mapStateToProps(state) {
     return {
@@ -76,17 +77,27 @@ class PageChangeContact extends Component {
             validpassword: false,
             userid: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
             otp: "",
-            startCountDown: false
+            startCountDown: false,
+            passwordErr: false,
+            hidden: true,
+
+            TYPE: "UserProfile",
+            TYPEVALUE: window.localStorage.getItem("id"),
+            USERROLEID: "0",
+            LISTPERPAGE: "999",
+            PAGE: "1"
         };
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.handleChangeForPassword = this.handleChangeForPassword.bind(this);
         this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
+        this.toggleShow = this.toggleShow.bind(this);
         // this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
     }
 
     componentDidMount() {
         this.state.userid && this.state.userid.length > 0 &&
-            this.props.CallUserProfile(this.state.userid);
+            this.props.CallUserProfile(this.state);
+
     }
     onFormSubmit() {
         if (this.state.PaymentID === 0) {
@@ -137,7 +148,7 @@ class PageChangeContact extends Component {
 
     handleChangeForOTP = otp => {
         this.setState({ otp: otp });
-        console.log(this.state.otp)
+        // console.log(this.state.otp)
     }
 
     censorContact = (str) => {
@@ -159,9 +170,13 @@ class PageChangeContact extends Component {
         } else return "No email was found";
     };
 
+    toggleShow() {
+        this.setState({ hidden: !this.state.hidden });
+        console.log(this.state.hidden)
+    }
 
     handleClickShowPassword = () => {
-        console.log(this.state.showpassword)
+        // console.log(this.state.showpassword)
         this.setState({
             showpassword: !this.state.showpassword,
         });
@@ -198,46 +213,77 @@ class PageChangeContact extends Component {
             caretColor: "blue"
         }
 
-        const step1Content = (
-            <div style={{ width: "100%" }}>
-                {/* <PageCart data={this.props.data} /> */}
-                <div className="row">
-                    <div className=" col-3 rowStyle vertical-align mt-5">Original Contact Number</div>
-                    <div className="col-8 mt-5 vertical-align">
-                        {this.state.UserContactNo !== null && this.state.UserContactNo ? this.censorContact(this.state.UserContactNo) : "-"}
-                    </div>
-                </div>
-                <div className="row">
-                    <div className=" col-3 rowStyle vertical-align">Password</div>
-                    <div className="col-8">
-                        {console.log(this.state.showpassword)}
-                        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-                            <OutlinedInput
-                                id="password"
-                                className="font"
-                                size="small"
-                                type={this.state.showpassword === true ? 'text' : 'password'}
-                                // value={this.state.password}
-                                onChange={this.handleChangeforPassword}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={() => this.handleClickShowPassword()}
-                                            onMouseDown={this.handleMouseDownPassword}
-                                            edge="end"
-                                        >
-                                            {this.state.showpassword === true ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                            />
-                        </FormControl>
+        // const step1Content = (
+        //     <div style={{ width: "100%" }}>
+        //         {/* <PageCart data={this.props.data} /> */}
+        //         <div className="row">
+        //             <div className=" col-3 rowStyle vertical-align mt-5">Original Contact Number</div>
+        //             <div className="col-8 mt-5 vertical-align">
+        //                 {this.state.UserContactNo !== null && this.state.UserContactNo ? this.censorContact(this.state.UserContactNo) : "-"}
+        //             </div>
+        //         </div>
+        //         {/* <form
+        //             style={{ padding: "16px", margin: "0px" }}
+        //             className="LoginForm"
+        //             onSubmit={this.OnSubmitLogin}
+        //         > */}
+        //         <div className="row">
+        //             <div className=" col-3 rowStyle vertical-align">Password</div>
+        //             <div className="col-8">
+        //                 {/* {console.log(this.state.showpassword)} */}
+        //                 {/* <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+        //                     <OutlinedInput
+        //                         id="password"
+        //                         className="font"
+        //                         size="small"
+        //                         type={this.state.showpassword === true ? 'text' : 'password'}
+        //                         // value={this.state.password}
+        //                         onChange={this.handleChangeforPassword}
+        //                         endAdornment={
+        //                             <InputAdornment position="end">
+        //                                 <IconButton
+        //                                     aria-label="toggle password visibility"
+        //                                     onClick={() => this.handleClickShowPassword()}
+        //                                     onMouseDown={this.handleMouseDownPassword}
+        //                                     edge="end"
+        //                                 >
+        //                                     {this.state.showpassword === true ? <VisibilityOff /> : <Visibility />}
+        //                                 </IconButton>
+        //                             </InputAdornment>
+        //                         }
+        //                     />
+        //                 </FormControl> */}
+        //                 <FormControl variant="outlined" className="w-100 my-2">
+        //                     {/* <InputLabel htmlFor="password">Password</InputLabel> */}
+        //                     <OutlinedInput
+        //                         id="password"
+        //                         error={this.state.passwordErr}
+        //                         type={this.state.hidden ? 'password' : 'text'}
+        //                         value={this.state.password}
+        //                         onChange={({ target }) => {
+        //                             this.setState({ password: target.value });
+        //                             // console.log(this.state.password)
+        //                         }}
+        //                         endAdornment={
+        //                             <InputAdornment position="end">
+        //                                 <IconButton
+        //                                     aria-label="toggle password visibility"
+        //                                     onClick={this.toggleShow}
+        //                                 >
 
-                    </div>
-                </div>
-            </div>
-        );
+        //                                     {this.state.hidden ? <VisibilityOff /> : <Visibility />}
+        //                                 </IconButton>
+        //                             </InputAdornment>
+        //                         }
+        //                     />
+        //                     {this.state.passwordErr && <FormHelperText style={{ color: "red" }}>Invalid password</FormHelperText>}
+        //                 </FormControl>
+        //             </div>
+        //         </div>
+        //         {/* </form > */}
+        //     </div>
+
+        // );
 
         var step2Content = (
             <div style={{ width: "100%" }}>
@@ -257,7 +303,7 @@ class PageChangeContact extends Component {
                         separator={<span> </span>}
                         inputStyle={inputstyle}
                     /> */}
-                    {console.log(this.state.otp)}
+                    {/* {console.log(this.state.otp)} */}
                     {this.state.startCountDown ? "1" : "2"}
                     {/* <Link>Resend OTP</Link> */}
                     <a>Resend OTP</a>
@@ -326,7 +372,73 @@ class PageChangeContact extends Component {
                 {
                     label: "Verification",
                     name: "step 1",
-                    content: step1Content,
+                    content: <div style={{ width: "100%" }}>
+                        {/* <PageCart data={this.props.data} /> */}
+                        <div className="row">
+                            <div className=" col-3 rowStyle vertical-align mt-5">Original Contact Number</div>
+                            <div className="col-8 mt-5 vertical-align">
+                                {this.state.UserContactNo !== null && this.state.UserContactNo ? this.censorContact(this.state.UserContactNo) : "-"}
+                            </div>
+                        </div>
+                        {/* <form
+                    style={{ padding: "16px", margin: "0px" }}
+                    className="LoginForm"
+                    onSubmit={this.OnSubmitLogin}
+                > */}
+                        <div className="row">
+                            <div className=" col-3 rowStyle vertical-align">Password</div>
+                            <div className="col-8">
+                                {/* {console.log(this.state.showpassword)} */}
+                                {/* <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                            <OutlinedInput
+                                id="password"
+                                className="font"
+                                size="small"
+                                type={this.state.showpassword === true ? 'text' : 'password'}
+                                // value={this.state.password}
+                                onChange={this.handleChangeforPassword}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => this.handleClickShowPassword()}
+                                            onMouseDown={this.handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {this.state.showpassword === true ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl> */}
+                                <FormControl variant="outlined" className="w-100 my-2">
+                                    {/* <InputLabel htmlFor="password">Password</InputLabel> */}
+                                    <OutlinedInput
+                                        id="password"
+                                        error={this.state.passwordErr}
+                                        type={this.state.hidden ? 'password' : 'text'}
+                                        value={this.state.password}
+                                        onChange={({ target }) => {
+                                            this.setState({ password: target.value });
+                                            // console.log(this.state.password)
+                                        }}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={this.toggleShow}
+                                                >
+                                                    {this.state.hidden ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                    />
+                                    {this.state.passwordErr && <FormHelperText style={{ color: "red" }}>Invalid password</FormHelperText>}
+                                </FormControl>
+                            </div>
+                        </div>
+                        {/* </form > */}
+                    </div>,
                 },
                 {
                     label: "Authentication",
@@ -365,7 +477,66 @@ class PageChangeContact extends Component {
                                     primaryBtnClass="btn-lg"
                                     secondaryBtnClass="btn-link"
                                     onSubmit={() => this.onFormSubmit()}
-                                    steps={steps}
+                                    steps={[
+                                        {
+                                            label: "Verification",
+                                            name: "step 1",
+                                            content: (<div style={{ width: "100%" }}>
+                                                <div className="row">
+                                                    <div className=" col-3 rowStyle vertical-align mt-5">Original Contact Number</div>
+                                                    <div className="col-8 mt-5 vertical-align">
+                                                        {this.state.UserContactNo !== null && this.state.UserContactNo ? this.censorContact(this.state.UserContactNo) : "-"}
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className=" col-3 rowStyle vertical-align">Password</div>
+                                                    <div className="col-8">
+                                                        <FormControl variant="outlined" className="w-100 my-2">
+                                                            <OutlinedInput
+                                                                id="password"
+                                                                error={this.state.passwordErr}
+                                                                type={this.state.hidden ? 'password' : 'text'}
+                                                                value={this.state.password}
+                                                                onChange={({ target }) => {
+                                                                    this.setState({ password: target.value });
+                                                                    console.log(this.state.password)
+                                                                }}
+                                                                endAdornment={
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            aria-label="toggle password visibility"
+                                                                            onClick={() => this.toggleShow()}
+                                                                        >
+                                                                            {this.state.hidden ? <VisibilityOff /> : <Visibility />}
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                }
+                                                            />
+                                                            {this.state.passwordErr && <FormHelperText style={{ color: "red" }}>Invalid password</FormHelperText>}
+                                                        </FormControl>
+                                                    </div>
+                                                </div>
+                                            </div>)
+                                        },
+                                        {
+                                            label: "Authentication",
+                                            name: "step 2",
+                                            content: step2Content,
+                                            // validator: step2Validator
+                                        },
+                                        {
+                                            label: "Update Phone Number",
+                                            name: "step 3",
+                                            content: step3Content,
+                                            // validator: step3Validator
+                                        },
+                                        {
+                                            label: "Complete",
+                                            name: "step 4",
+                                            content: step4Content,
+                                            // validator: step3Validator
+                                        },
+                                    ]}
                                 />
                             </div>
                         </div>

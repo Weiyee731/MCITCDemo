@@ -345,6 +345,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       object.productMediaResult = false;
       return object;
 
+    case GitAction.EndorseProduct:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ProductEndorsed:
+      var object = Object.assign({}, state);
+      object.loading = false;
+      object.productMgmtResult = action.payload;
+      return object;
+
     //==============PRODUCT SPECS DETAIL===============//
     case GitAction.AddProductSpecsDetail:
       return Object.assign({}, state, { loading: true });

@@ -15,7 +15,7 @@ import {
     Heart20Svg,
     Cart20Svg,
     Person20Svg,
-    
+
 } from '../../svg';
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Search from '../header/Search';
@@ -53,6 +53,8 @@ class MobileHeader extends Component {
             'mobile-header__search--open': searchOpen,
         });
 
+        console.log(this.props)
+
         return (
             <div className="mobile-header">
                 <div className="mobile-header__panel">
@@ -63,7 +65,7 @@ class MobileHeader extends Component {
                             </button>
                             <Link to="/" className="mobile-header__logo"><LogoSmallSvg /></Link>
                             <Search
-                                context="mobile-header"
+                                context="header"
                                 className={searchClasses}
                                 inputRef={this.searchInput}
                                 onClose={this.handleCloseSearch}
@@ -74,6 +76,14 @@ class MobileHeader extends Component {
                                     onClick={this.handleOpenSearch}
                                     icon={<Search20Svg />}
                                 />
+                                
+                                {localStorage.getItem("isLogin") === 'true' &&
+                                    <Indicator
+                                        url="/shop/wishlist"
+                                        value={this.props.wishlist !== undefined ? this.props.wishlist.length : 0}
+                                        icon={<Heart20Svg />}
+                                    />
+                                }
 
                                 <Indicator
                                     className="indicator--mobile"
@@ -84,8 +94,7 @@ class MobileHeader extends Component {
 
                                 <Indicator
                                     className="indicator--mobile"
-                                    url="/account"
-                                    // value={cart.items.length}
+                                    url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/Emporia/login'}
                                     icon={<Person20Svg />}
                                 />
 

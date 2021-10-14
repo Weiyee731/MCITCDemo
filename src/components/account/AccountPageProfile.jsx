@@ -27,6 +27,7 @@ import moment from 'moment';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import PageChangeContact from "./AccountPageChangeContact.jsx";
+import LoginComponent from "../../pages/login/login.component";
 
 function mapStateToProps(state) {
   return {
@@ -53,8 +54,6 @@ function mapDispatchToProps(dispatch) {
 class AccountPageProfile extends Component {
   constructor(props) {
     super(props);
-    this.props.CallUserProfile(window.localStorage.getItem("id"));
-    this.props.CallCountry();
 
     this.state = {
       USERID: window.localStorage.getItem("id"),
@@ -92,41 +91,53 @@ class AccountPageProfile extends Component {
       validGender: false,
       validContact: false,
       validEmail: false,
+
+      TYPE: "UserProfile",
+      TYPEVALUE: window.localStorage.getItem("id"),
+      USERROLEID: "0",
+      LISTPERPAGE: "999",
+      PAGE: "1"
     };
   }
   /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
 
 
   componentDidMount() {
-    console.log()
-    if (this.props.userprofiledata !== null) {
-      let userDetails = this.props.userprofiledata[0];
-      this.setState({
-        USERFIRSTNAME: userDetails.FirstName !== null ? userDetails.FirstName : "-",
-        USERLASTNAME: userDetails.LastName !== null ? userDetails.LastName : "-",
-        USERCONTACTNO: userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
-        USERDATEBIRTH: userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
-        USEREMAIL: userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
-        USERGENDER: userDetails.UserGender !== null ? userDetails.UserGender : "-",
-        USERADDRESSLINE1: userDetails.UserAddressLine1 !== null ? userDetails.UserAddressLine1 : "-",
-        USERADDRESSLINE2: userDetails.UserAddressLine2 !== null ? userDetails.UserAddressLine2 : "-",
-        USERPOSCODE: userDetails.UserPoscode !== null ? userDetails.UserPoscode : "-",
-        USERCITY: userDetails.UserCity !== null ? userDetails.UserCity : "-",
-        USERSTATE: userDetails.UserState !== null ? userDetails.UserState : "-",
-        USERCOUNTRYID: userDetails.CountryID !== null ? userDetails.CountryID : "148",
-        USERNOTIFICATIONIND: userDetails.UserNotificationInd !== null ? userDetails.UserNotificationInd : "1",
-        USERLANGCODE: userDetails.UserLanguageCode !== null ? userDetails.UserLanguageCode : "en",
-        USERAPPDARKMODE: userDetails.AppDarkMode !== null ? userDetails.AppDarkMode : "1",
-        CountryName: "-",
+    if (this.state.USERID && this.state.USERID.length > 0 && this.state.USERID !== undefined) {
+      this.props.CallUserProfile(this.state);
+      this.props.CallCountry();
+      console.log()
+      if (this.props.userprofiledata !== null) {
+        let userDetails = this.props.userprofiledata[0];
+        console.log(userDetails)
+        this.setState({
+          USERFIRSTNAME: userDetails.FirstName !== null ? userDetails.FirstName : "-",
+          USERLASTNAME: userDetails.LastName !== null ? userDetails.LastName : "-",
+          USERCONTACTNO: userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
+          USERDATEBIRTH: userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
+          USEREMAIL: userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
+          USERGENDER: userDetails.UserGender !== null ? userDetails.UserGender : "-",
+          USERADDRESSLINE1: userDetails.UserAddressLine1 !== null ? userDetails.UserAddressLine1 : "-",
+          USERADDRESSLINE2: userDetails.UserAddressLine2 !== null ? userDetails.UserAddressLine2 : "-",
+          USERPOSCODE: userDetails.UserPoscode !== null ? userDetails.UserPoscode : "-",
+          USERCITY: userDetails.UserCity !== null ? userDetails.UserCity : "-",
+          USERSTATE: userDetails.UserState !== null ? userDetails.UserState : "-",
+          USERCOUNTRYID: userDetails.CountryID !== null ? userDetails.CountryID : "148",
+          USERNOTIFICATIONIND: userDetails.UserNotificationInd !== null ? userDetails.UserNotificationInd : "1",
+          USERLANGCODE: userDetails.UserLanguageCode !== null ? userDetails.UserLanguageCode : "en",
+          USERAPPDARKMODE: userDetails.AppDarkMode !== null ? userDetails.AppDarkMode : "1",
+          CountryName: "-",
 
-        validfirstName: userDetails.FirstName !== null ? true : false,
-        validlastName: userDetails.LastName !== null ? true : false,
-        validDOB: userDetails.UserDOB !== null ? true : false,
-        validGender: userDetails.UserGender !== null ? true : false,
-        validContact: userDetails.UserContactNo !== null ? true : false,
-        validEmail: userDetails.UserEmailAddress !== null ? true : false,
-      })
-    }
+          validfirstName: userDetails.FirstName !== null ? true : false,
+          validlastName: userDetails.LastName !== null ? true : false,
+          validDOB: userDetails.UserDOB !== null ? true : false,
+          validGender: userDetails.UserGender !== null ? true : false,
+          validContact: userDetails.UserContactNo !== null ? true : false,
+          validEmail: userDetails.UserEmailAddress !== null ? true : false,
+        })
+      }
+    } else { }
+    // { <LoginComponent/>}
   }
   onFileUpload = () => {
     const formData = new FormData();

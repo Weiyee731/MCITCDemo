@@ -1,7 +1,7 @@
 import React from "react"
 
 // validation functions
-export const isStringNullOrEmpty = (value) => { return (value === null || typeof value === 'undefined' || value === '') ? true : (value.trim() === "") ? true : false }
+export const isStringNullOrEmpty = (value) => {return ( typeof value === 'undefined' ) ? true : (value === null || value == null ) ? true : ( typeof value === "string" && value.trim() === "") ? true : false }
 export const isContactValid = (contact) => { return (typeof contact !== 'undefined' && contact !== '' && /^(0|1)[0-46-9.\-]*[0-9.\-]{7,8}?$/.test(contact)) }
 export const isEmailValid = (email) => { return (typeof email === 'undefined' || email === '' || !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) ? false : true }
 export const isLongitude = (longitude) => { return isFinite(longitude) && Math.abs(longitude) <= 180; }
@@ -97,6 +97,7 @@ export const getFileTypeByExtension = (ext) => {
     }
     else {
         ext = ext.replace(".", "")
+        ext = ext.toLowerCase()
         switch (ext) {
             case "jpg":
             case "jpeg":

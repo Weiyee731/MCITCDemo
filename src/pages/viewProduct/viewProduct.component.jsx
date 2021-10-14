@@ -647,9 +647,9 @@ class DisplayTable extends Component {
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
 
-    console.log(this.props.Data);
+    // console.log(this.props.Data);
     this.props.Data.map((d, i) => {
-      console.log(d)
+      // console.log(d)
       d.Picture = (
         <div>
            <img

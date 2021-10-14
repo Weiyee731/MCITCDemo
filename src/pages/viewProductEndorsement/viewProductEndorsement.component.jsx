@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button";
 import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import "react-table/react-table.css";
-import ProductDetailsComponent from "../../pages/productDetails/productDetails.component";
+import ProductDetailsComponent from "./ProductInfo";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -616,6 +616,10 @@ class DisplayTable extends Component {
     });
   }
 
+  handleSetDetailShown = () =>{
+    this.setState({detailsShown: false})
+  }
+
   render() {
 
     const { classes } = this.props;
@@ -674,7 +678,7 @@ class DisplayTable extends Component {
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailsComponent data={this.state} data2={this.props} isEndorsement={true} setDetailShown={this.handleDetailShown} />
+          <ProductDetailsComponent ProductID={this.state.productID} ProductName={this.state.name} backToList={this.handleDetailShown} />
         ) : this.state.deleteActive ? (
           <div>
             <h1>Product Endorsement List</h1>
