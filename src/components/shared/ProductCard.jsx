@@ -73,34 +73,47 @@ function ProductCard(props) {
       login()
   }
 
-  if (product.ProductImage !== null && product.ProductImage !== undefined && product.ProductImage.length > 0) {
-    image = (
-      <div className="product-card__image product-image">
-        <Link to={url.product(product)} className="product-image__body">
-          <img
-            className="product-image__img"
-            src={product.ProductImage !== null ? product.ProductImage : Logo}
-            onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-            alt={product.ProductName}
-          />
-        </Link>
+  image = (
+    <div className="product-card__image product-image">
+      <div className="product-image__body">
+        <img
+          className="product-image__img"
+          src={product.ProductImage !== null ? product.ProductImage : Logo}
+          onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+          alt={product.ProductName}
+        />
       </div>
-    );
-  }
-  else {
-    image = (
-      <div className="product-card__image product-image">
-        <Link to={url.product(product)} className="product-image__body">
-          <img
-            className="product-image__img"
-            src={Logo}
-            onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-            alt={product.ProductName}
-          />
-        </Link>
-      </div>
-    );
-  }
+    </div>
+  );
+
+  // if (product.ProductImage !== null && product.ProductImage !== undefined && product.ProductImage.length > 0) {
+  //   image = (
+  //     <div className="product-card__image product-image">
+  //       <Link to={url.product(product)} className="product-image__body">
+  //         <img
+  //           className="product-image__img"
+  //           src={product.ProductImage !== null ? product.ProductImage : Logo}
+  //           onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+  //           alt={product.ProductName}
+  //         />
+  //       </Link>
+  //     </div>
+  //   );
+  // }
+  // else {
+  //   image = (
+  //     <div className="product-card__image product-image">
+  //       <div className="product-image__body">
+  //         <img
+  //           className="product-image__img"
+  //           src={Logo}
+  //           onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+  //           alt={product.ProductName}
+  //         />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (product.compareAtPrice) {
     price = (
@@ -137,38 +150,30 @@ function ProductCard(props) {
 
   wishlistView =
     (
-      props.wishlist.length > 0 ?
-        props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-            return (
-              <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
-                className={classNames('btn btn-light btn-sm btn-svg-icon')}
-              ><Wishlist16Svg fill="red" />
-              </button>
-            )
-          }) :
-          (
+      props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+        props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+          return (
             <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
-              className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
-            ><Wishlist16Svg />
+              className={classNames('btn btn-light btn-sm btn-svg-icon')}
+            ><Wishlist16Svg fill="red" />
             </button>
-          ) :
+          )
+        }) :
         (
           <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
             className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
           ><Wishlist16Svg />
           </button>
         )
-
     );
 
   return (
-    <div className={containerClasses}>
+    <Link to={url.product(product)} className={containerClasses}>
       {badges}
       {image}
       <div className="product-card__info">
         <div className="product-card__name">
-          <Link to={url.product(product)}>{product.ProductName}</Link>
+          {product.ProductName}
         </div>
         <div className="product-card__rating">
           <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
@@ -176,7 +181,6 @@ function ProductCard(props) {
           {
             product.ProductSold !== "0" && product.ProductSold !== null &&
             <div className=" product-card__rating-legend">{`(${product.ProductSold} Sold)`}</div>
-
           }
         </div>
         {features}
@@ -206,7 +210,7 @@ function ProductCard(props) {
           </div>
         }
       </div>
-    </div >
+    </Link >
   );
 
 
