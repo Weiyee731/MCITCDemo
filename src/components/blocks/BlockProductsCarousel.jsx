@@ -236,12 +236,15 @@ export default class BlockProductsCarousel extends Component {
                   onPrev={this.handlePrevClick}
                   onGroupClick={onGroupClick}
                 />
-                <div style={{ textAlign: "right" }}>
-                  <Button style={{ fontWeight: "bold", color: "red", fontSize: "16px" }}
+
+                <div style={{ textAlign: "right", marginBottom: '5px' }}>
+                  <Button
                     onClick={(e) => {
                       window.location.href = "/shop/ProductListing/type:Merchant&typevalue:" + 0
                     }}
-                  >View All</Button>
+                  >
+                    View All
+                  </Button>
                 </div>
 
                 <div className="block-products-carousel__slider">

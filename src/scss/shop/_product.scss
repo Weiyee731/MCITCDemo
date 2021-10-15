@@ -6,7 +6,9 @@
 @import '../functions';
 @import '../mixins/hacks';
 @import '../mixins/direction';
-.product {}
+.product {
+    width: 100%;
+}
 
 .product__content {
     display: -ms-grid;
@@ -69,6 +71,23 @@
     }
 }
 
+.product__variation-button {
+    padding: 5px 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: white;
+    color: $accent-color;
+    border-color: $accent-color;
+}
+
+.product__variation-button--selected {
+    padding: 5px 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #fff;
+    background-color: $accent-color;
+}
+
 .product__rating-legend {
     font-size: 14px;
     line-height: 20px;
@@ -84,6 +103,12 @@
         content: '/';
         padding: 0 7px;
     }
+}
+
+.product__description--title {
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 15px;
 }
 
 .product__description {
@@ -181,19 +206,50 @@
     justify-content: flex-end;
 }
 
-.product__seller-hide {
-    display: none;
-}
-
-.product__seller:hover+.product__seller-hide {
+.product__seller {
     display: block;
+    position: relative;
 }
 
-.product__seller-info {
+.product__seller .product__seller-info {
+    visibility: hidden;
     width: 340px;
     height: 120px;
+    flex: 1;
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: normal;
     background-color: white;
-    box-shadow: 0 0 5px hsla( 0, 0%, 0%, .3);
+    border-radius: 10px;
+    padding: 15px;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 110%;
+    border-color: grey;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.product__seller .product__seller-info::after {
+    content: "";
+    position: absolute;
+    top: 11%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent white transparent transparent;
+}
+
+.product__seller:hover .product__seller-info {
+    visibility: visible;
+}
+
+.product__seller-info-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
 }
 
 .product__option-label {

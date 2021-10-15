@@ -1,6 +1,7 @@
 // react
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+
 // third-party
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet-async";
@@ -9,6 +10,7 @@ import { Helmet } from "react-helmet-async";
 import PageHeader from "../shared/PageHeader";
 import Product from "../shared/Product";
 import ProductTabs from "./ProductTabs";
+import SitePageNotFound from "../site/SitePageNotFound";
 import shopApi from "../../api/shop";
 import { url } from "../../services/utils";
 import { GitAction } from "../../store/action/gitAction";
@@ -47,6 +49,7 @@ function ShopPageProduct(props) {
 
   // Load product.
   useEffect(() => {
+    console.log("loading...")
     let canceled = false;
 
     props.CallProductDetail({ productId: productId, userId: 1 })
@@ -100,7 +103,7 @@ function ShopPageProduct(props) {
 
   let product = props.product[0]
 
-  if (!props.loading && product !== null) {
+  if (!props.loading && product !== undefined) {
     breadcrumb = [
       { title: "Home", url: url.home() },
       { title: product.ProductName, url: url.product(product) },
@@ -170,13 +173,18 @@ function ShopPageProduct(props) {
       {props.loading ? <BlockLoader />
         :
         <>
-          <Helmet>
-            <title>{`${props.product.ProductName} — ${theme.name}`}</title>
-          </Helmet>
+          {props.product.length > 0 ?
+            <div>
+              <Helmet>
+                <title>{`${props.product.ProductName} — ${theme.name}`}</title>
+              </Helmet>
 
-          <PageHeader breadcrumb={breadcrumb} />
+              <PageHeader breadcrumb={breadcrumb} />
 
-          {content}
+              {content}
+            </div>
+            : <SitePageNotFound />
+          }
         </>
       }
     </React.Fragment>

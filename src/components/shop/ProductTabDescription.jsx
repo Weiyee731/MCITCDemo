@@ -7,7 +7,7 @@ class ProductTabDescription extends Component {
         const htmlString = this.props.product.ProductDescription
         return (
             <div className="typography">
-                <h3>Product Full Description</h3>
+                <div className="product__description--title">Product Description</div>
                 <div className="product__description" dangerouslySetInnerHTML={{ __html: htmlString }}>
                 </div>
             </div>
