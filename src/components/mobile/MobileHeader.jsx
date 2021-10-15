@@ -53,6 +53,8 @@ class MobileHeader extends Component {
             'mobile-header__search--open': searchOpen,
         });
 
+        console.log(this.props)
+
         return (
             <div className="mobile-header">
                 <div className="mobile-header__panel">
@@ -107,7 +109,7 @@ class MobileHeader extends Component {
 
 const mapStateToProps = (state) => ({
     cart: state.cart,
-    wishlist: state.wishlist,
+    wishlist: state.counterReducer.wishlist,
     productcart: state.counterReducer.productcart,
 });
 
