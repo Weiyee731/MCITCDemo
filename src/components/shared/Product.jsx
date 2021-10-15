@@ -97,11 +97,10 @@ class Product extends Component {
       }
     } else
       this.login()
-
   }
 
   login() {
-    browserHistory.push("/Emporia/login");
+    browserHistory.push("/login");
     window.location.reload(false);
   }
 

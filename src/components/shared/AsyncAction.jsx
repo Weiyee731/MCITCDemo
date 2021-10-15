@@ -41,7 +41,7 @@ class AsyncAction extends Component {
       });
     }
     else {
-      browserHistory.push("/Emporia/login");
+      browserHistory.push("/login");
       window.location.reload(false)
 
     }

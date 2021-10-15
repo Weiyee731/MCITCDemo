@@ -341,7 +341,7 @@ const SignUp = (props) => {
 
     useEffect(() => {
         if (props.currentUser.length > 0 && submitRegisterForm === true) {
-            browserHistory.push("/Emporia/login");
+            browserHistory.push("/login");
             window.location.reload(false);
         }
     }, [props.currentUser], setSubmitRegisterForm);
@@ -507,7 +507,7 @@ const SignUp = (props) => {
 
             <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
                 <div className="SignUpForm-Submit mb-2">
-                    Already have an account? <a href="/Emporia/login"><b>Login</b></a>
+                    Already have an account? <a href="/login"><b>Login</b></a>
                 </div>
                 <button
                     type="submit"

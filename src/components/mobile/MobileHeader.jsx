@@ -92,7 +92,7 @@ class MobileHeader extends Component {
 
                                 <Indicator
                                     className="indicator--mobile"
-                                    url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/Emporia/login'}
+                                    url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/login'}
                                     icon={<Person20Svg />}
                                 />
 

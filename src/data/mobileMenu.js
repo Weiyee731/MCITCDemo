@@ -82,7 +82,7 @@ export default [
         label: 'Account',
         url: '/account',
         children: [
-            { type: 'link', label: 'Login', url: '/Emporia/login' },
+            { type: 'link', label: 'Login', url: '/login' },
             { type: 'link', label: 'Dashboard', url: '/account/dashboard' },
             { type: 'link', label: 'Edit Profile', url: '/account/profile' },
             { type: 'link', label: 'Order History', url: '/account/orders' },
