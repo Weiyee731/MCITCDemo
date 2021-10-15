@@ -1128,13 +1128,6 @@ export class GitEpic {
   getProductDetail = (action$) =>
     action$.ofType(GitAction.GetProductDetail).switchMap(async ({ payload }) => {
       try {
-        console.log(
-          url +
-          "Product_ItemDetailByProductID?ProductID=" +
-          payload.productId +
-          "&USERID=" +
-          payload.userId
-        )
         const response = await fetch(
           url +
           "Product_ItemDetailByProductID?ProductID=" +
