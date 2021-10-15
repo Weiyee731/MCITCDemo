@@ -37,7 +37,8 @@ class BlockMainCategories extends Component {
      */
     const categoryStyle = {
       backgroundColor: "#fff",
-      display: "flex"
+      display: "flex",
+      justifyContent: 'center'
     }
 
     const categoryGrid = {
@@ -49,27 +50,22 @@ class BlockMainCategories extends Component {
 
     return (
       <div className="container">
-        <h3 className="block-header__title mb-4">Categories</h3>
-        <div style={categoryStyle} className="row mb-5">
+        <h3 className="block-header__title mb-3">Categories</h3>
+        <div style={categoryStyle} className="row mb-4">
           {this.props.productCategories.map((data, index) => {
             return (
-              <div key={index} style={categoryGrid} className="col-lg-3 col-md-3 p-2"
+              <div key={index} style={categoryGrid} className="col-lg-2 col-md-2 col-sm-2 p-3"
                 onMouseDown={(e) => {
-                  console.log("e", e)
-                  console.log("e.button", e.button)
-                  // if (e.button === 1) {
                   window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
-                  // }
                 }}
                 onClick={(e) => {
                   console.log("e.onClick", e)
                   console.log("e.onClick", e.button)
                   window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
-                  // window.location.href = "/shop/ProductCategory/" + data.ProductCategoryID + "/" + data.ProductCategory
                 }}
               >
                 <div>
-                  <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="150px" height="150px" />
+                  <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="100%" height="auto" />
                   <br />
                   {data.ProductCategory}
                 </div>
