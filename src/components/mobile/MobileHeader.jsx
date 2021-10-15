@@ -47,13 +47,11 @@ class MobileHeader extends Component {
     };
 
     render() {
-        const { openMobileMenu, wishlist, cart } = this.props;
+        const { openMobileMenu, wishlist, cart, productcart } = this.props;
         const { searchOpen } = this.state;
         const searchClasses = classNames('mobile-header__search', {
             'mobile-header__search--open': searchOpen,
         });
-
-        console.log(this.props)
 
         return (
             <div className="mobile-header">
@@ -76,7 +74,7 @@ class MobileHeader extends Component {
                                     onClick={this.handleOpenSearch}
                                     icon={<Search20Svg />}
                                 />
-                                
+
                                 {localStorage.getItem("isLogin") === 'true' &&
                                     <Indicator
                                         url="/shop/wishlist"
@@ -88,7 +86,7 @@ class MobileHeader extends Component {
                                 <Indicator
                                     className="indicator--mobile"
                                     url="/shop/cart"
-                                    value={cart.items.length}
+                                    value={productcart.length}
                                     icon={<Cart20Svg />}
                                 />
 
@@ -110,6 +108,7 @@ class MobileHeader extends Component {
 const mapStateToProps = (state) => ({
     cart: state.cart,
     wishlist: state.wishlist,
+    productcart: state.counterReducer.productcart,
 });
 
 const mapDispatchToProps = {
