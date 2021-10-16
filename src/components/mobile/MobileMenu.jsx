@@ -159,9 +159,9 @@ function MobileMenu(props) {
         {
             type: 'link',
             label: 'Account',
-            url: localStorage.getItem('isLogin') === 'true' ? '/account' : '/Emporia/login',
+            url: localStorage.getItem('isLogin') === 'true' ? '/account' : '/login',
             // children: [
-            //     { type: 'link', label: 'Login', url: '/Emporia/login' },
+            //     { type: 'link', label: 'Login', url: '/login' },
             //     { type: 'link', label: 'Dashboard', url: '/account/dashboard' },
             //     { type: 'link', label: 'Edit Profile', url: '/account/profile' },
             //     { type: 'link', label: 'Order History', url: '/account/orders' },

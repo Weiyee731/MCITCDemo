@@ -14,15 +14,14 @@ export default function PaymentFooter() {
         <div className="site-footer__widget footer-newsletter">
             <h5 className="footer-newsletter__title">Payment</h5>
             <div className='row'>
-                
                 <div className="col-4">
-                <Image width="62px" height="35px" src={VISA} />
+                    <Image width="100%" height="auto" src={VISA} />
                 </div>
                 <div className="col-4">
-                <Image width="62px" height="35px" src={MASTER} />
+                    <Image width="100%" height="auto" src={MASTER} />
                 </div>
                 <div className="col-4">
-                <Image width="62px" height="35px" src={FPX} />
+                    <Image width="100%" height="auto" src={FPX} />
                 </div>
             </div>
         </div>

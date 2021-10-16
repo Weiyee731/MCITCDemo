@@ -1,20 +1,20 @@
 /*
 // .product__tabs
 */
+
 @import '../variables';
 @import '../functions';
 @import '../mixins/direction';
-
-
 .product-tabs {
     margin-top: 36px;
+    margin-bottom: 36px;
 }
+
 .product-tabs__list {
     display: flex;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     margin-bottom: -$product-tabs-border-width;
-
     &::after,
     &::before {
         content: '';
@@ -23,8 +23,9 @@
         flex-shrink: 0;
     }
 }
+
 .product-tabs__item {
-    font-size: 20px;
+    font-size: 16px;
     padding: 18px 48px;
     background: none;
     border: none;
@@ -33,7 +34,6 @@
     font-weight: $font-weight-medium;
     border-radius: 3px 3px 0 0;
     transition: all .15s;
-
     &:focus {
         outline: none;
     }
@@ -42,7 +42,6 @@
         background: $product-tabs-hover-bg;
         border-bottom-color: $product-tabs-hover-border-color;
     }
-
     &:first-child {
         @include direction {
             #{$margin-inline-start}: auto;
@@ -54,9 +53,9 @@
         }
     }
 }
+
 .product-tabs__item--active {
     transition-duration: 0s;
-
     &,
     &:hover {
         cursor: default;
@@ -64,24 +63,25 @@
         background: transparent;
     }
 }
+
 .product-tabs__content {
     border: $product-tabs-border;
     border-radius: $product-tabs-border-radius;
     padding: 80px 90px;
 }
+
 .product-tabs__pane {
     overflow: hidden;
     height: 0;
     opacity: 0;
     transition: opacity .5s;
 }
+
 .product-tabs__pane--active {
     overflow: visible;
     height: auto;
     opacity: 1;
 }
-
-
 
 .product-tabs--layout--sidebar {
     .product-tabs__item {
@@ -92,15 +92,12 @@
     }
 }
 
-
-
-
-
 @media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(lg-end)) {
     .product-tabs__content {
         padding: 60px 70px;
     }
 }
+
 @media (min-width: breakpoint(md-start)) and (max-width: breakpoint(md-end)) {
     .product-tabs {
         margin-top: 40px;
@@ -112,6 +109,7 @@
         padding: 40px 50px;
     }
 }
+
 @media (max-width: breakpoint(sm-end)) {
     .product-tabs {
         margin-top: 30px;

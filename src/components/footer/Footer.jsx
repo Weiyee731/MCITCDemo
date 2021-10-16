@@ -49,8 +49,8 @@ export default function Footer() {
               <FooterLinks title="Information" items={otherInformationLinks} />
             </div>
             <div className="col-12 col-md-3 col-lg-4">
-            <PaymentFooter />
-            <LogisticsFooter />
+              <PaymentFooter />
+              <LogisticsFooter />
             </div>
             {/* <div className="lzd-footer-app-downloads">
               <div>
@@ -64,28 +64,28 @@ export default function Footer() {
                 <img width="200" src={appstore} alt="App Store"></img>
               </div>
             </div> */}
-            <div className="col-12 col-md-12 col-lg-4">
+            <div className="col-12 col-md-3 col-lg-4">
               <FooterNewsletter />
             </div>
           </div>
         </div>
 
         {/* <div className="site-footer__bottom">
-                    <div className="site-footer__copyright">
-                        Powered by
-                        {' '}
-                        <a href="https://reactjs.org/" rel="noopener noreferrer" target="_blank">React</a>
-                        {' '}
-                        — Design by
-                        {' '}
-                        <a href={theme.author.profile_url} target="_blank" rel="noopener noreferrer">
-                            {theme.author.name}
-                        </a>
-                    </div>
-                    <div className="site-footer__payments">
-                        <img src="images/payments.png" alt="" />
-                    </div>
-                </div> */}
+          <div className="site-footer__copyright">
+            Powered by
+            {' '}
+            <a href="https://reactjs.org/" rel="noopener noreferrer" target="_blank">React</a>
+            {' '}
+            — Design by
+            {' '}
+            <a href={theme.author.profile_url} target="_blank" rel="noopener noreferrer">
+              {theme.author.name}
+            </a>
+          </div>
+          <div className="site-footer__payments">
+            <img src="images/payments.png" alt="" />
+          </div>
+        </div> */}
       </div>
       <ToTop />
     </div>

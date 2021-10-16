@@ -1,13 +1,15 @@
 /*
 // .reviews-view
 */
+
 @import '../variables';
 @import '../functions';
-
-
 .reviews-view__header {
-    margin-bottom: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 25px;
 }
+
 .reviews-view__form {
     margin-top: 40px;
     border-top: 1px solid $card-divider-color;
@@ -16,7 +18,9 @@
 
 @media (max-width: breakpoint(xs-end)) {
     .reviews-view__header {
-        margin-bottom: 32px;
+        font-size: 20px;
+        font-weight: bold;
+        padding-bottom: 25px;
     }
     .reviews-view__form {
         margin-top: 30px;

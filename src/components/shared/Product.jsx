@@ -12,18 +12,14 @@ import Currency from "./Currency";
 import InputNumber from "./InputNumber";
 import ProductGallery from "./ProductGallery";
 import Rating from "./Rating";
-import { Wishlist16Svg, Compare16Svg } from "../../svg";
+import { Wishlist16Svg } from "../../svg";
 import { HashLink } from "react-router-hash-link";
 import ProductTabs from "../shop/ProductTabs";
 import { GitAction } from "../../store/action/gitAction";
 import { browserHistory } from "react-router";
 import Logo from "../../assets/Emporia.png"
-import {
-  Divider,
-} from "@material-ui/core";
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { toast } from "react-toastify";
-
 
 class Product extends Component {
   constructor(props) {
@@ -36,14 +32,13 @@ class Product extends Component {
       productPrice: "",
       productQuantity: 0,
       productVariationDetailID: "",
-      isVariationClick: false
+      selectedVariation: ""
     };
     this.addCart = this.addCart.bind(this)
     this.handleWishlist = this.handleWishlist.bind(this)
     this.wishlisting = this.wishlisting.bind(this)
     this.login = this.login.bind(this)
     this.checkCart = this.checkCart.bind(this)
-    // this.props.CallAllProducts({ type: "Merchant", typeValue: this.props.product.MerchantID, userId: 0, productPerPage: 999, page: 1 })
   }
 
   componentDidMount() {
@@ -102,11 +97,10 @@ class Product extends Component {
       }
     } else
       this.login()
-
   }
 
   login() {
-    browserHistory.push("/Emporia/login");
+    browserHistory.push("/login");
     window.location.reload(false);
   }
 
@@ -137,7 +131,6 @@ class Product extends Component {
     return (
       typeof this.props.wishlist !== "undefined" && this.props.wishlist.length > 0 ?
         this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-
           this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
             return (
               <button type="button" onClick={() => window.localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
@@ -160,6 +153,7 @@ class Product extends Component {
         )
     )
   }
+
   render() {
     const {
       product,
@@ -170,6 +164,9 @@ class Product extends Component {
     console.log(this.props)
 
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
+
+    let merchant = JSON.parse(product.MerchantDetail)[0]
+    let variation = JSON.parse(product.ProductVariation)[0]
 
     return (
       <div className="block" >
@@ -230,84 +227,94 @@ class Product extends Component {
                 <li>SKU:{" "}{product.SKU}</li>
                 <li className="product__seller">
                   Seller:{" "}
-                  {/* {product.MerchantShopName} */}
-                  Merchant A
+                  {merchant.ShopName}
+                  <span className="product__seller-info">
+                    <div className="row">
+                      <div className="col-4">
+                        <img
+                          className="product__seller-info-image"
+                          src={product.merchantImg !== undefined ? product.merchantImg : Logo}
+                          alt="Emporia"
+                          onError={(e) => {
+                            e.target.onerror = null; e.target.src = Logo
+                          }}
+                        />
+                      </div>
+                      <div className="col-4">
+                        Seller:{" "}
+                        {merchant.ShopName}
+                        <br />
+                        State:{" "}
+                        {merchant.ShopState}
+                        <br />
+                        Shop Rating:{" "}
+                        <div className="product__rating-stars">
+                          <Rating value={merchant.ShopRating !== null ? merchant.ShopRating : 0} />
+                          {merchant.ShopRating}
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        Products:{" "}
+                        {merchant.MerchantTotalProduct}
+                        <br />
+                        Last Joined:{" "}
+                        {merchant.LastJoined}
+                      </div>
+                    </div>
+                  </span>
                 </li>
-                <div className="product__seller-hide">
-                  <div className="product__seller-info">
-                    hello
-                  </div>
-                </div>
               </ul>
             </div>
 
             <div className="product__sidebar">
               <div className="product__prices">{prices}</div>
               {
-                product.ProductVariation !== null &&
+                variation !== null && variation.ProductVariation !== "None" &&
                 (
-                  <>
+                  <div className="product__option">
                     <label
                       className="product__option-label"
-                      style={{ fontSize: "14pt", paddingTop: "9pt" }}
                     >
-                      Variation
+                      {variation.ProductVariation}
                     </label>
                     <div className="product__variation">
                       {
-                        product.ProductVariation !== null ?
-                          JSON.parse(product.ProductVariation).map((variation) => {
-                            return (
-                              variation.ProductVariationValue !== "null" ?
-                                <button
-                                  type="button"
-                                  style={{
-                                    paddingLeft: "20px",
-                                    paddingRight: "20px",
-                                    paddingTop: "5px",
-                                    paddingBottom: "5px",
-                                    backgroundColor: "white",
-                                    borderColor: "#D3D3D3"
-                                  }}
-                                  onClick={() => this.setState({
-                                    productVariation: variation.ProductVariationValue,
-                                    productQuantity: variation.ProductStockAmount,
-                                    productPrice: variation.ProductVariationPrice,
-                                    productVariationDetailID: variation.ProductVariationDetailID,
-                                    isVariationClick: true
-                                  })}
-                                >
-                                  {variation.ProductVariationValue}
-                                </button>
-                                :
-                                <label
-                                  className="product__option-label"
-                                  style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9" }}
-                                >
-                                  No Variation
-                                </label>
-                            )
-                          })
-                          :
-                          <label
-                            className="product__option-label"
-                            style={{ fontSize: "12pt", paddingTop: "9pt", color: "#A9A9A9" }}
-                          >
-                            No Variation
-                          </label>
+                        variation !== null &&
+                        JSON.parse(product.ProductVariation).map((variation, index) => {
+                          console.log(variation)
+                          return (
+                            <button
+                              key={index}
+                              type="button"
+                              className={
+                                variation.ProductVariationDetailID === this.state.productVariationDetailID ?
+                                  'btn product__variation-button--selected'
+                                  : 'btn product__variation-button'
+                              }
+                              onClick={() => this.setState({
+                                productVariation: variation.ProductVariationValue,
+                                productQuantity: variation.ProductStockAmount,
+                                productPrice: variation.ProductVariationPrice,
+                                productVariationDetailID: variation.ProductVariationDetailID,
+                                selectedVariation: variation
+                              })}
+                            >
+                              {variation.ProductVariationValue}
+                            </button>
+                          )
+                        })
                       }
                     </div>
-                  </>
+                  </div>
                 )
               }
 
-              <div className="product__options">
-                <div className="row form-group product__option">
+              <div className="product__option">
+                <div className="row form-group product__option d-flex align-items-center">
                   <div className="col-3">
                     <label
                       htmlFor="product-quantity"
                       className="product__option-label"
-                      style={{ fontSize: "14pt", paddingTop: "9pt" }}
                     >
                       Quantity
                     </label>
@@ -330,6 +337,7 @@ class Product extends Component {
                     <div className="product__actions-item product__actions-item--addtocart mx-1">
                       <button
                         type="button"
+                        disabled={product.ProductStockAmount > 0 ? false : true}
                         onClick={() => window.localStorage.getItem("id") ? this.checkCart(product, quantity) : this.login()}
                         className="btn btn-primary product-card__addtocart"
                       >
@@ -371,7 +379,7 @@ class Product extends Component {
               ? JSON.parse(product.ProductRecommendation) : []}
           />
         </div>
-      </div>
+      </div >
     );
   }
 }
