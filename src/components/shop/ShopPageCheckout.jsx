@@ -29,6 +29,7 @@ import "react-step-progress/dist/index.css";
 import PageCart from "./ShopPageCart";
 import PageCompleted from "./ShopPageCompleted";
 import { toast } from "react-toastify";
+import { url } from "../../services/utils";
 
 function step2Validator() {
   // return a boolean
@@ -117,8 +118,8 @@ class PageCheckout extends Component {
 
   render() {
     const breadcrumb = [
-      { title: "Home", url: "" },
-      // { title: "Shopping Cart", url: "/shop/cart" },
+      { title: "Home", url: url.home },
+      { title: "Shopping Cart", url: url.productCart },
       { title: "Checkout", url: "" },
     ];
 

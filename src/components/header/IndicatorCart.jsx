@@ -6,15 +6,14 @@ import classNames from "classnames";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { browserHistory } from "react-router";
+
 // application
 import AsyncAction from "../shared/AsyncAction";
 import Currency from "../shared/Currency";
 import Indicator from "./Indicator";
 import { Cart20Svg, Cross10Svg } from "../../svg";
-// import { cartRemoveItem, cartItems } from "../../store/cart";
 import { url } from "../../services/utils";
 import Logo from "../../assets/Emporia.png";
-import shopApi from "../../api/shop";
 import { Button } from "@material-ui/core";
 import { GitAction } from "../../store/action/gitAction";
 
@@ -36,36 +35,7 @@ class IndicatorCart extends React.Component {
     }
   }
 
-  // const { this.props.cart, cartRemoveItem } = props;
-  // const [added, setadd] = useState(localStorage.getItem("checkoutind"));
-  // const [orderid, setOrderid] = useState(0);
-  // let dropdown;
-
-  // CheckOutOnClick = (items) => {
-  //   let ProductIDs = [];
-  //   let ProductQuantity = [];
-  //   items.map((row) => {
-  //     ProductIDs.push(row.product.ProductID);
-  //     ProductQuantity.push(row.quantity);
-  //   });
-  //   // alert("ww");
-  //   shopApi
-  //     .addOrder({
-  //       UserID: localStorage.getItem("id"),
-  //       Products: ProductIDs,
-  //       ProductQuantity: ProductQuantity,
-  //     })
-  //     .then((json) => {
-  //       // localStorage.setItem("checkoutind", true);
-  //       // setadd(true);
-  //       // setOrderid(json[0].OrderID);
-  //       browserHistory.push("/shop/checkout?order=" + json[0].OrderID);
-  //       window.location.reload(false);
-  //     });
-  // };
   render() {
-
-    // const {cartItems} = this.props
     var totals;
     if (this.props.cart.extraLines.length > 0) {
       const extraLines = this.props.cart.extraLines.map((extraLine, index) => (
@@ -89,6 +59,7 @@ class IndicatorCart extends React.Component {
         </React.Fragment>
       );
     }
+
     const items = this.props.cart.items.map((item) => {
       let options;
       let image;
@@ -104,6 +75,7 @@ class IndicatorCart extends React.Component {
           </ul>
         );
       }
+
       if (item.product.ProductImages) {
         if (item.product.ProductImages.length) {
           image = (
@@ -129,25 +101,6 @@ class IndicatorCart extends React.Component {
         }
       }
 
-      // const removeButton = (
-      //   <AsyncAction
-      //     action={() => cartRemoveItem(item.id)}
-      //     render={({ run, loading }) => {
-      //       const classes = classNames(
-      //         "dropcart__product-remove btn btn-light btn-sm btn-svg-icon",
-      //         {
-      //           "btn-loading": loading,
-      //         }
-      //       );
-      //       return (
-      //         <button type="button" onClick={run} className={classes}>
-      //           <Cross10Svg />
-      //         </button>
-      //       );
-      //     }}
-      //   />
-      // );
-
       return (
         <div key={item.id} className="dropcart__product">
           {image}
@@ -162,7 +115,6 @@ class IndicatorCart extends React.Component {
                 {item.quantity}
               </span>
               <span className="dropcart__product-price">
-                {/* <Currency value={item.price} /> */}
               </span>
             </div>
           </div>
@@ -173,73 +125,19 @@ class IndicatorCart extends React.Component {
         </div>
       );
     });
-    // return (
-    //   <Indicator
-    //     url="/shop/cart"
-    //     // dropdown={dropdown}
-    //     value={this.props.cart.items.length}
-    //     icon={<Cart20Svg />}
-    //     // onClick={cartItems(24)}
-    //   />
-    // );
 
     if (this.props.productcart !== undefined && this.props.productcart[0] !== undefined && this.props.productcart[0].ReturnVal === undefined) {
-      // const dropdown = (
-      //   <div className="dropcart">
-      //     <div className="dropcart__products-list">{items}</div>
-      //     <div className="dropcart__totals">
-      //       <table>
-      //         <tbody>
-      //           {totals}
-      //           <tr>
-      //             <th>Total</th>
-      //             <td>
-      //               <Currency value={this.props.cart.total} />
-      //             </td>
-      //           </tr>
-      //         </tbody>
-      //       </table>
-      //     </div>
-      //     <div className="dropcart__buttons">
-      //       <Link className="btn btn-secondary" to="/shop/cart">
-      //         View Cart
-      //       </Link>
-      //       {localStorage.getItem("id") ? (
-      //         <Button
-      //           onClick={this.CheckOutOnClick.bind(this, this.props.cart.items)}
-      //         >
-      //           {/* <Link className="btn btn-primary" to="/shop/checkout?id='`dd`'"> */}
-      //           Checkout
-      //           {/* </Link> */}
-      //         </Button>
-      //       ) : (
-      //         <Link className="btn btn-primary" to="/login">
-      //           Checkout
-      //         </Link>
-      //       )}
-      //     </div>
-      //   </div>
-      // );
       return (
         <Indicator
           url="/shop/cart"
-          // dropdown={dropdown}
           value={this.props.productcart.length}
           icon={<Cart20Svg />}
         />
       );
     } else {
-      // const dropdown = (
-      //   <div className="dropcart">
-      //     <div className="dropcart__empty">
-      //       Your shopping cart is empty!
-      //     </div>
-      //   </div>
-      // );
       return (
         <Indicator
           url="/shop/cart"
-          // dropdown={dropdown}
           value={0}
           icon={<Cart20Svg />}
         />

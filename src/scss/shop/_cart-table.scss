@@ -1,19 +1,25 @@
 /*
 // .cart-table
 */
+
 @import '../variables';
 @import '../functions';
 @import '../mixins/direction';
-
-
 .cart-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
 }
+
 .cart-table__product-name {
     color: inherit;
 }
+
+.cart-table__product-variation {
+    color: $body-font-muted-color;
+    font-size: 14px;
+}
+
 .cart-table__options {
     list-style: none;
     padding: 0;
@@ -21,10 +27,8 @@
     font-size: 14px;
     color: $cart-table-options-font-color;
     line-height: 19px;
-
     li {
         position: relative;
-
         @include direction {
             #{$padding-inline-start}: 12px;
         }
@@ -38,19 +42,16 @@
         height: 4px;
         border-radius: 2px;
         background: currentColor;
-
         @include direction {
             #{$inset-inline-start}: 1px;
         }
     }
 }
 
-
 @media (min-width: breakpoint(md-start)) {
     .cart-table__column {
         padding: 12px 18px;
         border-top: 1px solid $table-border-color;
-
         &:first-child {
             @include direction {
                 #{$border-inline-start}: 1px solid $table-border-color;
@@ -65,7 +66,6 @@
     .cart-table__head {
         background: $table-th-bg;
         font-size: 15px;
-
         .cart-table__column {
             font-weight: $font-weight-medium;
         }
@@ -104,18 +104,15 @@
     .cart-table__column--image {
         width: 1px;
         text-align: center;
-
         @include direction {
             #{$padding-inline-end}: 4px;
         }
-
         .product-image {
             width: 80px;
         }
     }
     .cart-table__column--price {
         width: 170px;
-
         @include direction {
             text-align: $inline-end;
         }
@@ -123,14 +120,12 @@
     .cart-table__column--quantity {
         text-align: center;
         width: 1px;
-
         @include direction {
             #{$padding-inline-start}: 90px;
         }
     }
     .cart-table__column--total {
         width: 170px;
-
         @include direction {
             text-align: $inline-end;
         }
@@ -139,6 +134,7 @@
         width: 1px;
     }
 }
+
 @media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(lg-end)) {
     .cart-table__column--quantity {
         @include direction {
@@ -150,6 +146,7 @@
         width: 130px;
     }
 }
+
 @media (min-width: breakpoint(md-start)) and (max-width: breakpoint(md-end)) {
     .cart-table__column--quantity {
         @include direction {
@@ -168,7 +165,6 @@
     }
 }
 
-
 @media (max-width: breakpoint(sm-end)) {
     .cart-table {
         display: block;
@@ -186,8 +182,7 @@
         display: block;
         border: 1px solid $cart-table-card-border-color;
         border-radius: 2px;
-
-        & + & {
+        &+& {
             margin-top: 15px;
         }
     }
@@ -198,7 +193,6 @@
     .cart-table__column--image {
         padding: 20px 20px 12px;
         text-align: center;
-
         .product-image {
             width: 100%;
             max-width: 160px;
@@ -217,13 +211,11 @@
         align-items: center;
         justify-content: space-between;
         padding: 8px 20px;
-
         &::before {
             font-weight: $font-weight-medium;
             width: 55%;
             flex-shrink: 0;
             content: attr(data-title) ": ";
-
             @include direction {
                 text-align: $inline-end;
             }
@@ -241,7 +233,6 @@
     .cart-table__column--remove {
         position: absolute;
         top: 5px;
-
         @include direction {
             #{$inset-inline-end}: 5px;
         }

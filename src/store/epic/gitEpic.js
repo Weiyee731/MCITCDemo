@@ -38,16 +38,16 @@ export class GitEpic {
           url +
           "User_ProfileListByType?TYPE=" +
           payload.Type +
-          "&TYPEVALUE="+
+          "&TYPEVALUE=" +
           payload.TypeValue +
-          "&USERID="+
+          "&USERID=" +
           payload.UserID +
-          "&UserRoleID="+
+          "&UserRoleID=" +
           payload.UserRoleID +
-          "&LISTPERPAGE="+
+          "&LISTPERPAGE=" +
           payload.ListPerPage +
-          "&PAGE="+
-          payload.Page 
+          "&PAGE=" +
+          payload.Page
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -549,19 +549,16 @@ export class GitEpic {
   deleteProductCart = (action$) =>
     action$.ofType(GitAction.DeleteProductCart).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
-          "Product_DeleteProductCart?USERCARTID=" +
-          payload.userCartID)
         const response = await fetch(
           url +
           "Product_DeleteProductCart?USERCARTID=" +
           payload.userCartID
         );
         let json = await response.json();
-        console.log("DELETE CART", json)
         json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Product " + payload.productName + " is removed from cart!");
+        console.log(json[0].ReturnVal)
+        if (json[0].ReturnVal !== '1') {
+          toast.error("Product " + payload.productName + " is NOT deleted! Please try again.");
         }
         try {
           const response_1 = await fetch(
@@ -570,7 +567,7 @@ export class GitEpic {
             payload.userID
           );
           let json_1 = await response_1.json();
-          json_1 = json_1;
+          json_1 = JSON.parse(json_1);
           return {
             type: GitAction.DeletedProductCart,
             payload: json_1,
@@ -603,8 +600,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Product " + payload.productName + " quantity is updated in cart!");
+        if (json[0].ReturnVal !== 1) {
+          toast.error("Product " + payload.productName + " is NOT updated! Please try again.");
         }
         try {
           const response_1 = await fetch(
@@ -654,6 +651,8 @@ export class GitEpic {
         json = JSON.parse(json);
         if (json[0].ReturnVal === 1) {
           toast.success("Product " + payload.productName + " is added to cart!");
+        } else {
+          toast.error("Product " + payload.productName + " is NOT added to cart! Please try again.");
         }
         try {
           const response_1 = await fetch(
@@ -1298,7 +1297,7 @@ export class GitEpic {
   endorseProduct = (action$) =>
     action$.ofType(GitAction.EndorseProduct).switchMap(async ({ payload }) => {
       try {
-        const response = await fetch( url + "Product_EndorseProducts?ProductIDs=" + payload );
+        const response = await fetch(url + "Product_EndorseProducts?ProductIDs=" + payload);
         let json = await response.json();
         json = JSON.parse(json);
         return {

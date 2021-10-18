@@ -5,10 +5,9 @@ export const url = {
 
   category: (category) => category.ProductName !== null ? `/shop/catalog/${category.ProductName}` : `/shop/catalog`,
 
-  // product: (product) => product.ProductName !== null ? `/shop/products/${product.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')}` :  `/shop/products/`,
- 
-  product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` :  `/shop/products/`,
-  // product: (product) => `/shop/products/${product.slug}`,
+  product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` : `/shop/products/`,
+
+  productCart: () => "/shop/cart",
 
   productcateogory: (category) => category.ProductName !== null ? `/shop/ProductCategory/${category.ProductName}` : `/shop/ProductCategory/`,
 };

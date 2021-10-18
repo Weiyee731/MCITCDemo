@@ -159,7 +159,7 @@ function MobileMenu(props) {
         {
             type: 'link',
             label: 'Account',
-            url: localStorage.getItem('isLogin') === 'true' ? '/account' : '/login',
+            url: localStorage.getItem('isLogin') === 'true' ? '/account/profile' : '/login',
             // children: [
             //     { type: 'link', label: 'Login', url: '/login' },
             //     { type: 'link', label: 'Dashboard', url: '/account/dashboard' },
