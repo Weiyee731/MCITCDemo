@@ -240,8 +240,9 @@ class ShopPageCart extends Component {
         return displayCart.map((item, i) => {
             let image;
             let options = [];
-            
+
             if (item.product.ProductImage !== null && item.product.ProductImage !== undefined && item.product.ProductImage.length > 0) {
+                console.log(item.product.ProductImage)
                 image = (
                     <div className="product-image">
                         <Link to={url.product(item.product)} className="product-image__body">

@@ -38,13 +38,14 @@
   color: white;
 }
 
-.droppedFileName {
-  overflow: hidden;
+.droppedFileImage {
+  /* overflow: hidden; */
 }
 
 .closeIcon {
   cursor: pointer;
   float: right;
+  color: rgba(85, 85, 85, .8);
 }
 
 .MuiTypography-body1 {
@@ -77,8 +78,8 @@
 .profilePic {
   display: inline;
   margin: 0 auto;
-  margin-left: -59%;
-  height: 180px;
+  margin-left: -29%;
+  height: 140px;
   /* width: auto!important; */
   cursor: pointer;
 }
@@ -112,17 +113,24 @@
 }
 
 .font-subtitle {
-  color: #555;
+  color: #555 !important;
 }
 
 
 .rowStyle {
   font-size: 14px !important;
-  width: 16vw;
+  /* width: 16vw; */
   color: rgba(85, 85, 85, .8);
   margin-bottom: 0.875rem;
   text-align: left !important;
   padding-left: 3rem !important;
+}
+
+.contactrowStyle {
+  font-size: 14px !important;
+  color: rgba(85, 85, 85, .8);
+  margin-bottom: 0.875rem;
+  text-align: left !important;
 }
 
 .saveicon {
@@ -144,4 +152,43 @@
   border: "none";
   /* boxShadow: "none";
               marginBottom: "4%"; */
+}
+
+.align-center {
+  text-align: center;
+}
+
+.color-red {
+  color: red;
+}
+
+.preview-img {
+  height: 100%;
+  width: 100%;
+}
+
+.preview-word {
+  padding: 45px;
+}
+
+.preview-container {
+  background: #f0f0f0;
+  width: 140px;
+  height: 140px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  border-width: 1px;
+  border-style: dashed;
+  margin: auto;
+  margin-bottom: 1em;
+  margin-top: 5px;
+  /* padding: 20px; */
+  font-weight: bold;
+  text-align: center;
+  align-self: center;
+}
+
+.button-font {
+  font-size: 14px;
 }

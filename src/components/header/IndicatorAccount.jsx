@@ -184,9 +184,9 @@ class IndicatorAccount extends Component {
               <li>
                 <Link to="/account/profile">My Profile</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/account/companyprofile">Company Profile</Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/account/addresses">My Addresses</Link>
               </li>
