@@ -46,6 +46,7 @@ const rootEpic = combineEpics(
   gitEpic.getUserProfile,
   gitEpic.updateUserProfile,
   gitEpic.updateProfileImage,
+  gitEpic.UpdateProfileSpecificField,
   //==================COUNTRY==========================//
   gitEpic.getCountry,
   //==================PAYMENT METHOD==========================//

@@ -28,6 +28,9 @@ export class GitAction {
   static EditUserProfile = "EDIT-USERPROFILE";
   static EditedUserProfile = "EDITED-USERPROFILE";
 
+  static UpdateProfileSpecificField = "UPDATE-PROFILESPECIFICFIELD";
+  static UpdatedProfileSpecificField = "UPDATED-PROFILESPECIFICFIELD";
+
   static CheckUser = "CHECK-USER";
   static CheckedUser = "CHECKED-USER";
 
@@ -98,6 +101,13 @@ export class GitAction {
   static CallUpdateUserProfile(propsData) {
     return {
       type: GitAction.EditUserProfile,
+      payload: propsData,
+    };
+  }
+
+  static CallUpdateProfileSpecificField(propsData) {
+    return {
+      type: GitAction.UpdateProfileSpecificField,
       payload: propsData,
     };
   }
@@ -336,7 +346,7 @@ export class GitAction {
       payload: prodData,
     };
   }
-  
+
 
   // Product Variation
   static GetProductVariation = "GET-PRODUCTVARIATION";

@@ -66,9 +66,8 @@ class PageChangeContact extends Component {
             // otp: '',
             startCountDown: false,
             hidden: true,
-            counter: 60,
+            counter: 300,
             confirmPasswordPage: true,
-            enableOTP: false,
 
             TYPE: "UserProfile",
             TYPEVALUE: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
@@ -170,9 +169,9 @@ class PageChangeContact extends Component {
         }
     };
 
-    censorContact = (str) => {
-        return str[0] + str[1] + "*".repeat(str.length - 2) + str.slice(-2);
-    };
+    // censorContact = (str) => {
+    //     return str[0] + str[1] + "*".repeat(str.length - 2) + str.slice(-2);
+    // };
 
     censorWord = (str) => {
         return str[0] + "*".repeat(str.length - 2) + str.slice(-1);
@@ -216,7 +215,8 @@ class PageChangeContact extends Component {
         this.props.loginUser(this.state);
         console.log(this.props.currentUser)
         if (this.props.currentUser !== undefined && this.props.currentUser.length > 0) {
-            this.setState({ confirmPasswordPage: false });
+            this.setState({ confirmPasswordPage: false, startCountDown: true });
+            this.runTimer();
         } else { toast.warning("The password is incorrect! Please try again") }
     }
 
@@ -224,8 +224,8 @@ class PageChangeContact extends Component {
         this.props.loginUser(this.state); //send otp
         console.log(this.props.currentUser)
         if (this.props.currentUser !== undefined && this.props.currentUser.length > 0) {
-            this.stopTimer(60);
-            this.setState({ startCountDown: true, enableOTP: true });
+            this.stopTimer(300);
+            this.setState({ startCountDown: true });
             this.runTimer();
         } else { toast.warning("Request failed! Please try again") }
     }
@@ -250,7 +250,7 @@ class PageChangeContact extends Component {
             this.setState({ counter: this.state.counter - 1 });
             if (this.state.counter <= 0) {
                 this.setState({ startCountDown: false });
-                this.stopTimer(60);
+                this.stopTimer(300);
             }
         }, 1000);
         // }
@@ -258,7 +258,7 @@ class PageChangeContact extends Component {
 
     clickedBack = (e) => {
         this.setState({ confirmPasswordPage: true, password: "" });
-        this.stopTimer(60);
+        this.stopTimer(300);
     }
 
     stopTimer(counter) {
@@ -297,13 +297,30 @@ class PageChangeContact extends Component {
                                     textAlign: "left"
                                 }}
                             >
-                                Change Contact
+                                Change Email
                             </h5>
                                 <div className="font font-subtitle">
-                                    Please key in the password for account verification purpose.
+                                    Please be informed that OTP generated will valid for 5 minutes. This information will not shared to merchant.
                                 </div>
                                 <Divider variant="fullWidth" className="dividerbottom" />
                                 <form onSubmit={this.OnSubmitChangeContact} className="container block">
+                                    <div className="row contactrowStyle">
+                                        <div className="col-6 font">Your Current Email is  {this.props.currentUser[0] !== undefined && this.props.currentUser[0].UserEmailAddress !== undefined ? this.censorContact(this.props.currentUser[0].UserEmailAddress) : ["No Email was found"]}</div>
+                                    </div>
+                                    <div className="row contactrowStyle">
+                                        <div className="col-6 font">New Email</div>
+                                        <div className="col-6 font">
+                                            <TextField
+                                                className="font"
+                                                variant="outlined"
+                                                size="small"
+                                                id="mewcontact"
+                                                type="tel"
+                                                onChange={this.handleChangeforContact.bind(this)}
+                                            />
+
+                                        </div>
+                                    </div>
                                     <div className="row contactrowStyle">
                                         <div className="col-6 font">Password</div>
                                         <div className="col-6 ">
@@ -346,50 +363,31 @@ class PageChangeContact extends Component {
                             </div>
                         </div>) : (<div className="checkout block" style={{ width: "100%" }}>
                             <div className="container" style={{ width: "100%" }}>
-
-                                {/* <form onSubmit={this.OnSubmitChangeContact} > */}
-                                <div className="row contactrowStyle">
-                                    <div className=" font">Your Current Contact Number is  {this.props.currentUser[0] !== undefined && this.props.currentUser[0].UserContactNo !== undefined ? this.censorContact(this.props.currentUser[0].UserContactNo) : ["No Contact Number was found"]}</div>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <p className=" font">
+                                            Enter the code we sent to new email {this.props.currentUser.length > 0 && this.props.currentUser[0].UserEmailAddress !== undefined && this.props.currentUser[0].UserEmailAddress ? this.censorEmail(this.props.currentUser[0].UserEmailAddress) : "-"}
+                                            <a className=" font font-subtitle" href onClick={() => this.getNewOTP()}>Send new OTP to my email</a>
+                                        </p>
+                                    </div>
+                                    {/* <div className="col-6">
+                                       
+                                    </div> */}
                                 </div>
                                 <div className="row contactrowStyle">
-                                    <div className="col-12 font">New Contact Number</div>
-                                    <div className="col-6 pr-0 font">
-                                        <TextField
-                                            className="font"
-                                            variant="outlined"
-                                            size="small"
-                                            id="mewcontact"
-                                            type="tel"
-                                            onChange={this.handleChangeforContact.bind(this)}
+                                    <div className="col-6 font otp">
+                                        <OtpInput
+                                            value={this.state.otp}
+                                            onChange={this.handleChange}
+                                            numInputs={6}
+                                            separator={<span>-</span>}
+                                            inputStyle={inputstyle}
                                         />
                                     </div>
-                                    <a className=" font col-4 change-contact-mail font-subtitle d-flex align-items-center pl-2" href onClick={() => this.getNewOTP()}>Send new OTP to my email</a>
+                                    <div className="col-4 d-flex align-items-center font">  {this.state.startCountDown === true ? this.state.counter + " seconds is remaining" : ""}</div>
                                 </div>
-                                {/* </form> */}
-                                {this.state.enableOTP ? (<div>
-                                    <div className="row contactrowStyle">
-                                        <div className="col-6">
-                                            <p className=" font">
-                                                Enter the code we sent to your email {this.props.currentUser.length > 0 && this.props.currentUser[0].UserEmailAddress !== undefined && this.props.currentUser[0].UserEmailAddress ? this.censorEmail(this.props.currentUser[0].UserEmailAddress) : "-"}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="row contactrowStyle">
-                                        <div className="col-6 font otp">
-                                            <OtpInput
-                                                value={this.state.otp}
-                                                onChange={this.handleChange}
-                                                numInputs={6}
-                                                separator={<span>-</span>}
-                                                inputStyle={inputstyle}
-                                            />
-                                            {/* <Link to={{ pathname: "/account/changeContact", props: this.state }}>Resend the OTP</Link> */}
-                                        </div>
-                                        <div className="col-4 d-flex align-items-center font">  {this.state.startCountDown === true ? this.state.counter + " seconds is remaining" : ""}</div>
-                                    </div>
-                                </div>) : ("")}
-                                <div div className="row mt-4">
-                                    {/* <div className="col-3 " style={{ textAlign: "left" }}>
+                                <div className="row mt-4">
+                                    <div className="col-3 " style={{ textAlign: "left" }}>
                                         <button
                                             variant="contained"
                                             className="btn btn-primary "
@@ -398,8 +396,8 @@ class PageChangeContact extends Component {
                                             <ClearIcon className="saveicon" />
                                             Back
                                         </button>
-                                    </div> */}
-                                    <div className="col-3" style={{ textAlign: "left" }}>
+                                    </div>
+                                    <div className="col-3" style={{ textAlign: "right" }}>
                                         <button
                                             variant="contained"
                                             className="btn btn-primary "
