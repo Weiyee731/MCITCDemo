@@ -190,7 +190,7 @@ function EndorseTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            style={{width: headCell.id == "ProductImage" ? "140px": ""}}
+            style={{ width: headCell.id == "ProductImage" ? "140px" : "" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -233,7 +233,7 @@ function DisplayTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            style={{width: headCell.id == "ProductImage" ? "140px": ""}}
+            style={{ width: headCell.id == "ProductImage" ? "140px" : "" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -393,7 +393,7 @@ function DeletableTable(props) {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(parseInt(event.target.value));
   };
 
   const handleChangeDense = (event) => {
@@ -409,6 +409,7 @@ function DeletableTable(props) {
     d.Picture = (
       <div>
         <img
+          alt={i}
           height={50}
           src={
             d.ProductImage
@@ -504,12 +505,12 @@ function DeletableTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 25, 50]}
           component="div"
           count={props.Data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
+          onChangePage={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
@@ -526,7 +527,7 @@ class DisplayTable extends Component {
       selected: [],
       page: 0,
       dense: false,
-      rowsPerPage: 5,
+      rowsPerPage: 10,
       detailsShown: false,
       deleteActive: false,
       searchFilter: "",
@@ -548,15 +549,10 @@ class DisplayTable extends Component {
   };
 
   componentDidUpdate(prevProps) {
-
-    if (prevProps.ProductProps.allstocks !== this.props.ProductProps.allstocks) {
-      this.setState({ deleteActive: false })
-      // toast.success("The product is endorse successfully")
-    }
   }
 
-  handleDetailShown = (value) =>{
-    this.setState({detailsShown: value})
+  handleDetailShown = (value) => {
+    this.setState({ detailsShown: value })
   }
 
   onRowClick = (event, row, index) => {
@@ -599,7 +595,7 @@ class DisplayTable extends Component {
 
   handleChangeRowsPerPage = (event) => {
     this.setState({ rowsPerPage: parseInt(event.target.value, 10) });
-    this.setState({ page: 0 });
+
   };
 
   handleChangeDense = (event) => {
@@ -616,8 +612,8 @@ class DisplayTable extends Component {
     });
   }
 
-  handleSetDetailShown = () =>{
-    this.setState({detailsShown: false})
+  handleSetDetailShown = () => {
+    this.setState({ detailsShown: false })
   }
 
   render() {
@@ -691,7 +687,7 @@ class DisplayTable extends Component {
               </Button> */}
 
               <FormControlLabel
-                control={ <Switch checked={this.state.deleteActive} onChange={this.ToggleDeletable} color="primary" /> }
+                control={<Switch checked={this.state.deleteActive} onChange={this.ToggleDeletable} color="primary" />}
                 label="Endorse"
                 style={{
                   float: "right",
@@ -704,13 +700,11 @@ class DisplayTable extends Component {
               placeholder="Search..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
-            {this.props.Data.filter((searchedItem) =>
-              searchedItem.ProductName.toLowerCase().includes(
-                this.state.searchFilter
-              )
-            ).map((filteredItem) => {
-              filteredProduct.push(filteredItem);
-            })}
+            {
+              this.props.Data.filter((searchedItem) => 
+                searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+                .map((filteredItem) => { filteredProduct.push(filteredItem); })
+            }
             <DeletableTable
               Data={filteredProduct}
               ProductProps={this.props.ProductProps}
@@ -763,67 +757,34 @@ class DisplayTable extends Component {
                       onRequestSort={this.handleRequestSort}
                       rowCount={this.props.Data.length}
                     />
-                    {this.props.Data.filter((searchedItem) =>
-                      searchedItem.ProductName.toLowerCase().includes(
-                        this.state.searchFilter
-                      )
-                    ).map((filteredItem) => {
-                      filteredProduct.push(filteredItem);
-                    })}
+                    {
+                      this.props.Data.filter((searchedItem) => searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+                        .map((filteredItem) => { filteredProduct.push(filteredItem); })
+                    }
                     <TableBody>
-                      {stableSort(
-                        filteredProduct,
-                        getComparator(this.state.order, this.state.orderBy)
-                      )
+                      {stableSort(filteredProduct, getComparator(this.state.order, this.state.orderBy))
                         .slice(
                           this.state.page * this.state.rowsPerPage,
                           this.state.page * this.state.rowsPerPage +
                           this.state.rowsPerPage
                         )
                         .map((row, index) => {
-                          const isItemSelected = this.isSelected(
-                            row.ProductName
-                          );
+                          const isItemSelected = this.isSelected(row.ProductName);
                           const labelId = `enhanced-table-checkbox-${index}`;
 
                           return (
                             <TableRow
                               hover
-                              onClick={(event) =>
-                                this.onRowClick(event, row, index)
-                              }
+                              onClick={(event) => this.onRowClick(event, row, index)}
                               role="checkbox"
                               aria-checked={isItemSelected}
                               tabIndex={-1}
                               key={row.ProductName}
                               selected={isItemSelected}
                             >
-                              <TableCell align="center">
-                                {row.Picture}
-                              </TableCell>
-                              <TableCell align="left">
-                                {row.ProductName}
-                              </TableCell>
-                              {/* <TableCell align="left">
-                                {row.ProductDescription}
-                              </TableCell>
-                              <TableCell align="left">{row.Brand}</TableCell>
-                              <TableCell align="right">
-                                {row.ProductWeight}
-                              </TableCell>
-                              <TableCell align="right">
-                                {row.ProductDimensionWidth +
-                                  " x " +
-                                  row.ProductDimensionDeep +
-                                  " x " +
-                                  row.ProductDimensionHeight}
-                              </TableCell>
-                              <TableCell align="right">
-                                {row.ProductStockAmountInital}
-                              </TableCell> */}
-                              <TableCell align="left">
-                                {row.ProductPrice}
-                              </TableCell>
+                              <TableCell align="center"> {row.Picture} </TableCell>
+                              <TableCell align="left"> {row.ProductName} </TableCell>
+                              <TableCell align="left">{row.ProductPrice}</TableCell>
                             </TableRow>
                           );
                         })}
@@ -840,12 +801,12 @@ class DisplayTable extends Component {
                   </Table>
                 </TableContainer>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={[10, 25, 50]}
                   component="div"
                   count={filteredProduct.length}
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
-                  onPageChange={this.handleChangePage}
+                  onChangePage={this.handleChangePage}
                   onRowsPerPageChange={this.handleChangeRowsPerPage}
                 />
               </Paper>
@@ -898,15 +859,16 @@ class ViewProductEndorsementComponent extends Component {
       backPage: "viewProductEndorsement",
     };
     this.props.CallAllProducts({
-      type: 'Merchant',
-        typeValue:'0',
-        userId: window.localStorage.getItem("id"),
-        productPage:'999',
-        page:'1'
+      type: 'Status',
+      typeValue: 'Pending',
+      userId: window.localStorage.getItem("id"),
+      productPage: '999',
+      page: '1'
     });
   }
 
   render() {
+    console.log(this.props)
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable
