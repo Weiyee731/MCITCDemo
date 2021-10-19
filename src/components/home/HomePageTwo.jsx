@@ -15,6 +15,7 @@ import BlockBanner from '../blocks/BlockBanner';
 import BlockBrands from '../blocks/BlockBrands';
 import BlockCategories from '../blocks/BlockCategories';
 import BlockFeatures from '../blocks/BlockFeatures';
+import BlockMerchant from '../blocks/BlockMerchant';
 import BlockPosts from '../blocks/BlockPosts';
 import BlockProductColumns from '../blocks/BlockProductColumns';
 import BlockProducts from '../blocks/BlockProducts';
@@ -34,13 +35,14 @@ function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
     products: state.counterReducer["products"],
+    merchant: state.counterReducer["merchant"],
     // viewMoreProducts: state.counterReducer["viewMoreProducts"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    // CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
+    CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
     // CallViewMoreFunctionProduct: (propData) => dispatch(GitAction.CallViewMoreFunctionProduct(propData)),
   };
@@ -54,6 +56,7 @@ function HomePageTwo(props) {
 
   const loopWithSlice = () => {
     tempArray = [...postsToShow, ...props.products];
+    
     setPostsToShow(tempArray)
     // if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal !== "1") { toast.warning("There is no more product") }
     // else {
@@ -83,7 +86,7 @@ function HomePageTwo(props) {
       type: "Merchant",
       typeValue: 0,
       userId: 0,
-      productPage: 999,
+      productPage: 20,
       page: page,
     })
     loopWithSlice()
@@ -92,6 +95,17 @@ function HomePageTwo(props) {
     }
   }, [page])
 
+  useEffect(() => {
+    props.CallMerchants({
+      type: "Status",
+      typeValue: "Endorsed",
+      userID: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("isLogin") === true ? localStorage.getItem("roleid") : 0,
+      productPage: 999,
+      page: 1,
+    })
+  }, [])
+
   return (
     <React.Fragment>
       <div className="block--margin-top">
@@ -99,7 +113,28 @@ function HomePageTwo(props) {
           <title>{theme.name}</title>
         </Helmet>
         <BlockSlideShow />
+
         <BlockMainCategories />
+        {/* {useMemo(() => (
+          props.merchant !== undefined && props.merchant.length > 0 && props.merchant[0].ReturnVal === undefined &&
+          <BlockMerchant
+            title="Top Merchants this week"
+            layout="grid-4"
+            rows={1}
+            merchants={props.merchant}
+          // onGroupClick={testing}
+          />
+        )
+          , [props.loading, props.merchants])} */}
+
+        <BlockMerchant
+          title="Top Merchants this week"
+          layout="grid-4"
+          rows={1}
+          merchants={props.merchant}
+        // onGroupClick={testing}
+        />
+
         <BlockFeatures layout="boxed" />
         {/* <BlockProductsCarousel
           title="New Arrivals"

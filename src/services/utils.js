@@ -7,6 +7,8 @@ export const url = {
 
   // product: (product) => product.ProductName !== null ? `/shop/products/${product.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')}` :  `/shop/products/`,
  
+  merchant: (merchant) => merchant.UserID !== null ? `/merchant/${merchant.UserID}` : `/merchant`,
+
   product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` :  `/shop/products/`,
   // product: (product) => `/shop/products/${product.slug}`,
 
