@@ -28,10 +28,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import PageChangeContact from "./AccountPageChangeContact.jsx";
 import LoginComponent from "../../pages/login/login.component";
+import { browserHistory } from "react-router";
 
 function mapStateToProps(state) {
   return {
-    userprofiledata: state.counterReducer["currentUser"],
+    currentUser: state.counterReducer["currentUser"],
     countrylist: state.counterReducer["countries"],
   };
 }
@@ -56,23 +57,13 @@ class AccountPageProfile extends Component {
     super(props);
 
     this.state = {
-      USERID: window.localStorage.getItem("id"),
+      USERID: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
       USERFIRSTNAME: "",
       USERLASTNAME: "",
       USERCONTACTNO: "",
       USERDATEBIRTH: "",
       USEREMAIL: "",
       USERGENDER: "",
-      USERADDRESSLINE1: "",
-      USERADDRESSLINE2: "",
-      USERPOSCODE: "",
-      USERCITY: "",
-      USERSTATE: "",
-      USERCOUNTRYID: "",
-      USERNOTIFICATIONIND: "",
-      USERLANGCODE: "",
-      USERAPPDARKMODE: "",
-      CountryName: "-",
       open: false,
       open1: false,
       showBoxForImage: false,
@@ -82,6 +73,7 @@ class AccountPageProfile extends Component {
       url: "",
       imageFile: null,
       imageName: null,
+      preview: null,
 
       editContact: false,
       editEmail: false,
@@ -93,7 +85,7 @@ class AccountPageProfile extends Component {
       validEmail: false,
 
       TYPE: "UserProfile",
-      TYPEVALUE: window.localStorage.getItem("id"),
+      TYPEVALUE: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
       USERROLEID: "0",
       LISTPERPAGE: "999",
       PAGE: "1"
@@ -103,59 +95,57 @@ class AccountPageProfile extends Component {
 
 
   componentDidMount() {
-    if (this.state.USERID && this.state.USERID.length > 0 && this.state.USERID !== undefined) {
+
+    if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.TYPEVALUE !== undefined) {
       this.props.CallUserProfile(this.state);
       this.props.CallCountry();
-      console.log()
-      if (this.props.userprofiledata !== null) {
-        let userDetails = this.props.userprofiledata[0];
-        console.log(userDetails)
-        this.setState({
-          USERFIRSTNAME: userDetails.FirstName !== null ? userDetails.FirstName : "-",
-          USERLASTNAME: userDetails.LastName !== null ? userDetails.LastName : "-",
-          USERCONTACTNO: userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
-          USERDATEBIRTH: userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
-          USEREMAIL: userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
-          USERGENDER: userDetails.UserGender !== null ? userDetails.UserGender : "-",
-          USERADDRESSLINE1: userDetails.UserAddressLine1 !== null ? userDetails.UserAddressLine1 : "-",
-          USERADDRESSLINE2: userDetails.UserAddressLine2 !== null ? userDetails.UserAddressLine2 : "-",
-          USERPOSCODE: userDetails.UserPoscode !== null ? userDetails.UserPoscode : "-",
-          USERCITY: userDetails.UserCity !== null ? userDetails.UserCity : "-",
-          USERSTATE: userDetails.UserState !== null ? userDetails.UserState : "-",
-          USERCOUNTRYID: userDetails.CountryID !== null ? userDetails.CountryID : "148",
-          USERNOTIFICATIONIND: userDetails.UserNotificationInd !== null ? userDetails.UserNotificationInd : "1",
-          USERLANGCODE: userDetails.UserLanguageCode !== null ? userDetails.UserLanguageCode : "en",
-          USERAPPDARKMODE: userDetails.AppDarkMode !== null ? userDetails.AppDarkMode : "1",
-          CountryName: "-",
-
-          validfirstName: userDetails.FirstName !== null ? true : false,
-          validlastName: userDetails.LastName !== null ? true : false,
-          validDOB: userDetails.UserDOB !== null ? true : false,
-          validGender: userDetails.UserGender !== null ? true : false,
-          validContact: userDetails.UserContactNo !== null ? true : false,
-          validEmail: userDetails.UserEmailAddress !== null ? true : false,
-        })
+      if (this.props.currentUser !== null) {
+        let userDetails = this.props.currentUser[0];
+        if (userDetails !== undefined) {
+          this.setState({
+            USERFIRSTNAME: userDetails.FirstName !== undefined ? userDetails.FirstName : "-",
+            USERLASTNAME: userDetails.LastName !== undefined ? userDetails.LastName : "-",
+            USERCONTACTNO: userDetails.UserContactNo !== undefined ? userDetails.UserContactNo : "-",
+            USERDATEBIRTH: userDetails.UserDOB !== undefined ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
+            USEREMAIL: userDetails.UserEmailAddress !== undefined ? userDetails.UserEmailAddress : "-",
+            USERGENDER: userDetails.UserGender !== undefined ? userDetails.UserGender : "-",
+            validfirstName: userDetails.FirstName !== undefined ? true : false,
+            validlastName: userDetails.LastName !== undefined ? true : false,
+            validDOB: userDetails.UserDOB !== undefined ? true : false,
+            validGender: userDetails.UserGender !== undefined ? true : false,
+            validContact: userDetails.UserContactNo !== undefined ? true : false,
+            validEmail: userDetails.UserEmailAddress !== undefined ? true : false,
+          })
+        }
       }
-    } else { }
-    // { <LoginComponent/>}
+    } else {
+      browserHistory.push("Emporia/login");
+      window.location.reload(false);
+    }
+
   }
   onFileUpload = () => {
     const formData = new FormData();
 
     let imageName = new Date().valueOf();
 
+    // let fileExt = this.state.imageFile.map((imagedetails) =>
+    //   imagedetails.type.substring("image/".length)
+    // );
     let fileExt = this.state.imageFile.map((imagedetails) =>
-      imagedetails.type.substring("image/".length)
-    );
+      imagedetails.name.split('.').pop());
+
     let FullImageName = JSON.stringify(imageName) + "." + fileExt;
-
+    console.log(imageName)
+    console.log(fileExt)
+    console.log(FullImageName)
     formData.append("imageFile", this.state.imageFile[0]);
-    formData.append("imageName", FullImageName);
+    formData.append("imageName", imageName);
 
-    console.log(JSON.stringify(FullImageName));
     let file = {
       USERID: window.localStorage.getItem("id"),
       USERPROFILEIMAGE: FullImageName,
+      TYPE: "PROFILEIMAGE",
     };
     axios
       .post(
@@ -164,8 +154,14 @@ class AccountPageProfile extends Component {
         {}
       )
       .then((res) => {
-        console.log(res);
-        this.props.CallUpdateProfileImage(file);
+        console.log(res.status);
+        if (res.status === 200) {
+          this.props.CallUpdateProfileImage(file);
+          // window.location.reload();
+          this.props.CallUserProfile(this.state);
+          console.log(this.state)
+
+        }
       });
   };
   ///////////////////////////DELETE PHOTO SELECTED////////////////////////////////
@@ -353,6 +349,7 @@ class AccountPageProfile extends Component {
 
 
   render() {
+    const imgurl = "http://tourism.denoo.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {
       return { url: "http://pmappapi.com/Memo/uploads/uploads/" };
@@ -368,7 +365,7 @@ class AccountPageProfile extends Component {
     };
 
     const censorContact = (str) => {
-      return str[0] + str[1] + "*".repeat(str.length - 2) + str.slice(-4);
+      return str[0] + str[1] + "*".repeat(str.length - 2) + str.slice(-2);
     };
     const censorWord = (str) => {
       return str[0] + "*".repeat(str.length - 2) + str.slice(-1);
@@ -414,11 +411,10 @@ class AccountPageProfile extends Component {
           </div>
           <Divider variant="fullWidth" className="dividerbottom" />
 
-          {/* profile image */}
           <div className="row">
             <div className="container col-8">
-              {this.props.userprofiledata && this.props.userprofiledata.length > 0 && this.props.userprofiledata !== null &&
-                this.props.userprofiledata.map((row) => (
+              {this.props.currentUser && this.props.currentUser.length > 0 && this.props.currentUser !== null &&
+                this.props.currentUser.map((row) => (
                   <div className="container">
                     <div className="row" >
                       <div className="col-3 rowStyle vertical-align">First Name</div>
@@ -500,7 +496,7 @@ class AccountPageProfile extends Component {
                         {/* {
                         this.state.editContact === false ? */}
                         <>
-                          {row.UserContactNo !== null ? censorContact(row.UserContactNo) : "-"}
+                          {row.UserContactNo !== null && row.UserContactNo !== undefined ? censorContact(row.UserContactNo) : "-"}
                           <Link to={{ pathname: "/account/changeContact" }}>
                             {/* <Link to="/account/changeContact" > */}
                             <div className="change-contact-mail" >Change Contact</div>
@@ -525,9 +521,9 @@ class AccountPageProfile extends Component {
                         {/* {
                         this.state.editEmail === false ? */}
                         <>
-                          {row.UserEmailAddress !== null ? censorEmail(row.UserEmailAddress) : "-"}
-                          <Link to="/account/changeContact">
-                            <div className="change-contact-mail" onClick={() => this.setState({ editContact: true })}>Change Email</div>
+                          {row.UserEmailAddress !== null && row.UserEmailAddress !== undefined ? censorEmail(row.UserEmailAddress) : "-"}
+                          <Link to="/account/changeEmail">
+                            <div className="change-contact-mail" onClick={() => this.setState({ editEmail: true })}>Change Email</div>
                           </Link>
                         </>
                         {/* :
@@ -547,13 +543,16 @@ class AccountPageProfile extends Component {
                 ))}
             </div>
             <div className="col-4 border-line">
-
+              {console.log(this.props.currentUser)}
               <div onClick={() => this.modalOpen()} className=" imagecontainer">
                 <img
                   className="profilePic"
-                  src={JSON.stringify(
-                    this.props.userprofiledata.map((i) => i.UserProfileImage)
-                  )}
+                  src={this.props.currentUser !== undefined &&
+                    this.props.currentUser.length > 0 &&
+                    this.props.currentUser[0].UserProfileImage !== null &&
+                    this.props.currentUser[0].UserProfileImage !== undefined
+                    ? imgurl + this.props.currentUser[0].UserProfileImage : "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg"}
+
                   alt="Profile"
                   onError={(e) => {
                     e.target.onerror = null;
@@ -594,6 +593,7 @@ class AccountPageProfile extends Component {
                     onDrop={(acceptedFiles) => {
                       if (acceptedFiles.length > 0) {
                         this.setState({
+                          preview: acceptedFiles.map(file => URL.createObjectURL(file)),
                           imageName: acceptedFiles[0].name,
                           fileAdded: true,
                           imageFile: acceptedFiles,
@@ -626,75 +626,71 @@ class AccountPageProfile extends Component {
                           {...getRootProps({
                             className: "dropzone",
                           })}
+                          className="preview-container"
                           style={{
-                            background: "#f0f0f0",
-                            padding: "20px",
-                            margin: "5px ",
-                            marginTop: "5px",
-                            borderStyle: "dashed",
                             borderColor: isDragActive
                               ? isDragReject
                                 ? "#fc5447"
                                 : "#a0d100"
                               : "#b8b8b8",
-                            borderWidth: "2px",
-                            borderRadius: "10px",
-                            textAlign: "center",
-                            selfAlign: "center",
-                            width: "100px",
-                            height: "100px",
                             color: isDragActive
                               ? isDragReject
                                 ? "#a31702"
                                 : "#507500"
                               : "#828282",
-                            fontWeight: "bold",
                           }}
                         >
                           <input {...getInputProps()} />
-                          <div>
-                            {this.state.fileAdded ? (
-                              <div className="droppedFileName">{this.state.imageName}</div>
-                            ) : (
-                              <div>
-                                {!isDragActive && "Drop a file"}
-                                {isDragActive &&
-                                  !isDragReject &&
-                                  "Drop the file here ..."}
-                              </div>
-                            )}
-                          </div>
+                          {this.state.fileAdded ? (
+                            <div className="droppedFileImage">
+                              <img className="profilePic" src={this.state.preview} alt={this.state.imageName} />
+                            </div>
+                          ) : (
+                            <div className="preview-word">
+                              {!isDragActive && "Drop a file"}
+                              {isDragActive &&
+                                !isDragReject &&
+                                "Drop the file here ..."}
+                            </div>
+                          )}
                         </div>
                       </section>
                     )}
                   </Dropzone>
                 </div>
-                {this.state.fileAdded && (
-                  <div >
-                    <button
-                      size="sm"
-                      theme="light"
-                      className="mb-2 mr-1 btn btn-primary"
-                      onClick={() => {
-                        this.removeFile();
-                      }}
-                    >
-                      <CloseIcon />
-                      Remove file
-                    </button>
+                <div className="row justify-content-center">
+                  <div className="col-6">
+                    {this.state.fileAdded && (
+                      <div >
+                        <button
+                          className="button-font mb-2 mr-1 btn btn-primary"
+                          size="sm"
+                          theme="light"
+                          onClick={() => {
+                            this.removeFile();
+                          }}
+                        >
+                          <CloseIcon />
+                          Remove file
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
-                {this.state.fileAdded ? (
-                  // <button style={{ float: "left" }}
-                  //   className="btn btn-primary"
-                  //   onClick={this.onFileUpload}
-                  // >
-                  //   Upload Profile Photo
-                  // </button>
-                  <div>Click on the box to change the photo</div>
-                ) : (
-                  <div>Please drop the photo into the box</div>
-                )}
+
+                  {this.state.fileAdded ? (
+                    <div className="col-6">
+                      <button style={{ float: "left" }}
+                        className="btn btn-primary button-font"
+                        onClick={this.onFileUpload}
+                      >
+                        Upload Image
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="justify-content-center contactrowStyle"><div>Click on the box to add or edit the photo</div></div>
+                  )}
+
+                </div>
                 {/* <button
                   type="button"
                   className="btn btn-primary mr-1"

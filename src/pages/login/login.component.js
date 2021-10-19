@@ -92,6 +92,7 @@ class LoginComponent extends Component {
         localStorage.setItem("lastname", this.props.currentUser[0].LastName);
         localStorage.setItem("role", this.props.currentUser[0].UserType);
         localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
+        localStorage.setItem("userName", this.state.username);
         localStorage.setItem(
           "productEndorsementBadge",
           this.props.currentUser[0].productEndorsementBadge
@@ -107,7 +108,7 @@ class LoginComponent extends Component {
           cookies.set("isLogin", true);
 
           cookies.set("rememberMe", this.state.rememberMe);
-
+          localStorage.setItem("userName", this.state.username);
           localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
           cookies.set("firstname", this.props.currentUser[0].FirstName);
           localStorage.setItem("lastname", this.props.currentUser[0].LastName);
@@ -124,7 +125,7 @@ class LoginComponent extends Component {
 
           cookies.set("rememberMe", this.state.rememberMe, options);
           localStorage.setItem("id", this.props.currentUser[0].UserID);
-
+          localStorage.setItem("userName", this.state.username);
           localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
           cookies.set("firstname", this.props.currentUser[0].FirstName, options);
           localStorage.setItem("lastname", this.props.currentUser[0].LastName);

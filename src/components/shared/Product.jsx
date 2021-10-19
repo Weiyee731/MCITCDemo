@@ -43,6 +43,9 @@ class Product extends Component {
 
   componentDidMount() {
     const { product } = this.props
+
+    window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
+
     product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
       variation.ProductVariationValue === "-" &&
         this.setState({
@@ -64,18 +67,18 @@ class Product extends Component {
   handleChangeQuantity = (quantity) => {
     this.setState({ quantity });
   };
+
   changeCurrentTab = (value) => {
     this.setState({
       currentTab: value,
     });
-
   };
 
   addCart = (product, quantity) => {
     let found = false
 
     if (this.props.productcart) {
-      this.props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+      this.props.productcart.filter(x => x.ProductID === product.ProductID && x.ProductVariationDetailID === product.ProductVariationDetailID).map((x) => {
         found = true
         this.props.CallUpdateProductCart({
           userID: localStorage.getItem("id"),
@@ -161,7 +164,6 @@ class Product extends Component {
     } = this.props;
     const { quantity } = this.state;
     let prices;
-    console.log(this.props)
 
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
 
@@ -281,7 +283,6 @@ class Product extends Component {
                       {
                         variation !== null &&
                         JSON.parse(product.ProductVariation).map((variation, index) => {
-                          console.log(variation)
                           return (
                             <button
                               key={index}
@@ -354,31 +355,27 @@ class Product extends Component {
           </div>
         </div>
 
-        <div style={{ backgroundColor: "white" }}>
-          {this.props.version === "1" ? (
-            <ProductTabs
-              withSidebar
-              currentTab={this.state}
-              setCurrentTab={this.changeCurrentTab}
-            />
-          ) : (
-            <ProductTabs
-              product={product}
-              currentTab={this.state}
-              setCurrentTab={this.changeCurrentTab}
-            />
-          )}
-        </div>
-
-        <div style={{ marginTop: "20px" }}>
-          <BlockProductsCarousel
-            title="Recommended Product"
-            layout="grid-4"
-            rows={1}
-            products={product.ProductRecommendation !== null && product.ProductRecommendation !== undefined
-              ? JSON.parse(product.ProductRecommendation) : []}
+        {this.props.version === "1" ? (
+          <ProductTabs
+            withSidebar
+            currentTab={this.state}
+            setCurrentTab={this.changeCurrentTab}
           />
-        </div>
+        ) : (
+          <ProductTabs
+            product={product}
+            currentTab={this.state}
+            setCurrentTab={this.changeCurrentTab}
+          />
+        )}
+
+        <BlockProductsCarousel
+          title="Recommended Product"
+          layout="grid-4"
+          rows={1}
+          products={product.ProductRecommendation !== null && product.ProductRecommendation !== undefined
+            ? JSON.parse(product.ProductRecommendation) : []}
+        />
       </div >
     );
   }

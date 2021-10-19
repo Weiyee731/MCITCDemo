@@ -176,7 +176,7 @@ function ShopPageProduct(props) {
           {props.product.length > 0 ?
             <div>
               <Helmet>
-                <title>{`${props.product.ProductName} — ${theme.name}`}</title>
+                <title>{`${product.ProductName} — ${theme.name}`}</title>
               </Helmet>
 
               <PageHeader breadcrumb={breadcrumb} />

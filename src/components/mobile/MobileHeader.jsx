@@ -15,10 +15,11 @@ import {
     Heart20Svg,
     Cart20Svg,
     Person20Svg,
-
 } from '../../svg';
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Search from '../header/Search';
+import IndicatorCart from '../../components/header/IndicatorCart'
+import IndicatorAccount from '../../components/header/IndicatorAccount'
 
 class MobileHeader extends Component {
     constructor(props) {
@@ -53,8 +54,6 @@ class MobileHeader extends Component {
             'mobile-header__search--open': searchOpen,
         });
 
-        console.log(this.props)
-
         return (
             <div className="mobile-header">
                 <div className="mobile-header__panel">
@@ -85,18 +84,9 @@ class MobileHeader extends Component {
                                     />
                                 }
 
-                                <Indicator
-                                    className="indicator--mobile"
-                                    url="/shop/cart"
-                                    value={productcart.length}
-                                    icon={<Cart20Svg />}
-                                />
+                                <IndicatorCart />
 
-                                <Indicator
-                                    className="indicator--mobile"
-                                    url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/login'}
-                                    icon={<Person20Svg />}
-                                />
+                                <IndicatorAccount />
 
                             </div>
                         </div>
@@ -108,7 +98,6 @@ class MobileHeader extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    cart: state.cart,
     wishlist: state.counterReducer.wishlist,
     productcart: state.counterReducer.productcart,
 });

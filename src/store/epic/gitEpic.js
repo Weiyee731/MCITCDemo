@@ -260,36 +260,18 @@ export class GitEpic {
           url +
           "User_EditProfile?USERID=" +
           payload.USERID +
-          "&USERFIRSTNAME=" +
+          "&FIRSTNAME=" +
           payload.USERFIRSTNAME +
-          "&USERLASTNAME=" +
+          "&LASTNAME=" +
           payload.USERLASTNAME +
           "&USERCONTACTNO=" +
           payload.USERCONTACTNO +
-          "&USERDATEBIRTH=" +
+          "&USERDOB=" +
           payload.USERDATEBIRTH +
           "&USEREMAIL=" +
           payload.USEREMAIL +
           "&USERGENDER=" +
-          payload.USERGENDER +
-          "&USERADDRESSLINE1=" +
-          payload.USERADDRESSLINE1 +
-          "&USERADDRESSLINE2=" +
-          payload.USERADDRESSLINE2 +
-          "&USERPOSCODE=" +
-          payload.USERPOSCODE +
-          "&USERCITY=" +
-          payload.USERCITY +
-          "&USERSTATE=" +
-          payload.USERSTATE +
-          "&USERCOUNTRYID=" +
-          payload.USERCOUNTRYID +
-          "&USERNOTIFICATIONIND=" +
-          payload.USERNOTIFICATIONIND +
-          "&USERLANGCODE=" +
-          payload.USERLANGCODE +
-          "&USERAPPDARKMODE=" +
-          payload.USERAPPDARKMODE
+          payload.USERGENDER
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -324,6 +306,48 @@ export class GitEpic {
       }
     });
 
+  UpdateProfileSpecificField = (action$) =>
+    action$.ofType(GitAction.UpdateProfileSpecificField).switchMap(async ({ payload }) => {
+      try {
+        console.log(url +
+          "User_UpdateProfileSpecificField?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.UPDATETYPE +
+          "&VALIDATIONFIELD=" +
+          payload.otp +
+          "&UPDATEDFIELD=" +
+          payload.USERCONTACTNO)
+        const response = await fetch(
+          url +
+          "User_UpdateProfileSpecificField?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.UPDATETYPE +
+          "&VALIDATIONFIELD=" +
+          payload.otp +
+          "&UPDATEDFIELD=" +
+          payload.USERCONTACTNO
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        console.log(json)
+        if (json.map((val) => val.ReturnVal === 1 && val.ReturnMsg === "The OTP was Wrong")) {
+          toast.warn("The OTP was not input correctly. Please kindly try again");
+        } else { toast.success("The new contact number was submitted"); }
+        return {
+          type: GitAction.UpdatedProfileSpecificField,
+          payload: json,
+        };
+      } catch (error) {
+        alert('User_UpdateProfileSpecificField: ' + error);
+        return {
+          type: GitAction.UpdatedProfileSpecificField,
+          payload: [],
+        };
+      }
+    });
+
   updateProfileImage = (action$) =>
     action$.ofType(GitAction.UpdateProfileImage).switchMap(async ({ payload }) => {
       try {
@@ -331,6 +355,8 @@ export class GitEpic {
           url +
           "User_UserUpdatePhoto?USERID=" +
           payload.USERID +
+          "&TYPE=" +
+          payload.TYPE +
           "&USERPROFILEIMAGE=" +
           payload.USERPROFILEIMAGE
         );
@@ -549,19 +575,16 @@ export class GitEpic {
   deleteProductCart = (action$) =>
     action$.ofType(GitAction.DeleteProductCart).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
-          "Product_DeleteProductCart?USERCARTID=" +
-          payload.userCartID)
         const response = await fetch(
           url +
           "Product_DeleteProductCart?USERCARTID=" +
           payload.userCartID
         );
         let json = await response.json();
-        console.log("DELETE CART", json)
         json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Product " + payload.productName + " is removed from cart!");
+        console.log(json[0].ReturnVal)
+        if (json[0].ReturnVal !== '1') {
+          toast.error("Product " + payload.productName + " is NOT deleted! Please try again.");
         }
         try {
           const response_1 = await fetch(
@@ -570,7 +593,7 @@ export class GitEpic {
             payload.userID
           );
           let json_1 = await response_1.json();
-          json_1 = json_1;
+          json_1 = JSON.parse(json_1);
           return {
             type: GitAction.DeletedProductCart,
             payload: json_1,
@@ -603,8 +626,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Product " + payload.productName + " quantity is updated in cart!");
+        if (json[0].ReturnVal !== 1) {
+          toast.error("Product " + payload.productName + " is NOT updated! Please try again.");
         }
         try {
           const response_1 = await fetch(
@@ -654,6 +677,8 @@ export class GitEpic {
         json = JSON.parse(json);
         if (json[0].ReturnVal === 1) {
           toast.success("Product " + payload.productName + " is added to cart!");
+        } else {
+          toast.error("Product " + payload.productName + " is NOT added to cart! Please try again.");
         }
         try {
           const response_1 = await fetch(
