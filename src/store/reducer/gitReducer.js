@@ -255,6 +255,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
         productsListing: action.payload,
       });
 
+    case GitAction.ClearProduct:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ClearedProduct:
+      return Object.assign({}, state, {
+        loading: false,
+        productsListing: [],
+      });
+
     case GitAction.GetProductDetail:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotProductDetail:

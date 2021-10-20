@@ -207,6 +207,9 @@ export class GitAction {
   static AddProduct = "ADD-PRODUCT";
   static AddedProduct = "ADDED-PRODUCT";
 
+  static ClearProduct = "CLEAR-PRODUCT";
+  static ClearedProduct = "CLEARED-PRODUCT";
+
   static UpdateProduct = "UPDATE-PRODUCT";
   static UpdatedProduct = "UPDATED-PRODUCT";
 
@@ -243,6 +246,12 @@ export class GitAction {
     return {
       type: GitAction.GetProductListing,
       payload: propData
+    };
+  }
+
+  static CallGetMoreProductEmpty() {
+    return {
+      type: GitAction.ClearProduct
     };
   }
 
@@ -1045,9 +1054,10 @@ export class GitAction {
   static GetMerchantOrders = "GET-MERCHANTSORDERS";
   static GotMerchantOrders = "GOT-MERCHANTSORDERS";
 
-  static CallMerchants() {
+  static CallMerchants(propsData) {
     return {
       type: GitAction.GetMerchants,
+      payload: propsData,
     };
   }
 

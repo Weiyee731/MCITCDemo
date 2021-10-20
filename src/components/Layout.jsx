@@ -50,6 +50,7 @@ import SitePageHowToReturn from "./site/SitePageHowToReturn";
 import SitePageShippingDelivery from "./site/sitePageShippingDelivery";
 import BlockListingDetails from "./blocks/BlockListingDetails";
 import BlockAllProductCategory from "./blocks/BlockAllProductCategory";
+import MerchantPage from "./merchant/merchantpage";
 
 // data stubs
 import SideBarMenu from "../components/navigationsidebar/SideBarMenu";
@@ -365,6 +366,18 @@ function Layout(props) {
                     />
                   )}
                 />
+                <Route
+                  exact
+                  path="/merchant/:merchantID"
+                  render={(props) => (
+                    <MerchantPage
+                      {...props}
+                      layout="standard"
+                      merchantID={props.match.params.merchantID}
+                    />
+                  )}
+                />
+
                 {/* {categoryLayouts} */}
                 <Route
                   exact

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 
@@ -23,6 +23,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
+import moment from 'moment';
 
 // styles
 import './styles/BlockListingDetails.css'
@@ -55,16 +56,24 @@ const initialState = {
     selectedSubCategory: "",
     isHierarchyItemExist: false,
     filterOptions: {
-        shippedFrom_checkbox: [false, false, false, false],
+        // shippedFrom_checkbox: [false, false, false, false],
         minPrice: 0,
         maxPrice: 0,
         promotion_checkbox: [false, false, false],
         rating: 1
     },
     isDataBind: false,
-    isFilter: false
+    isFilter: false,
+    isShippingFilter: false,
+    shippedFrom_checkbox: [false, false, false, false],
 
+    categoryHierachy: 0,
+    CategoryHierachyListing: [],
+    ParentCategory: [],
+    categoryName: ""
 }
+
+// const [shippedFrom_checkbox, setShipCheckBox] = useState([false, false, false, false]);
 
 const GreenCheckbox = withStyles({
     root: {
@@ -93,7 +102,7 @@ class BlockListingDetails extends Component {
         this.props.CallAllProductsListing({
             type: this.props.match.params.selectedtype !== undefined && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
             typeValue: this.props.match.params.selectedtypevalue !== undefined && this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
-            userId: localStorage.getItem("isLogin") !== "false" ? 0 : localStorage.getItem("id"),
+            userId: localStorage.getItem("isLogin") !== false ? 0 : localStorage.getItem("id"),
             productPage: 999,
             page: 1
         })
@@ -102,13 +111,71 @@ class BlockListingDetails extends Component {
         this.handleShipFilter = this.handleShipFilter.bind(this)
         this.resetFilter = this.resetFilter.bind(this)
         this.setListing = this.setListing.bind(this)
+        this.checkFilterStatus = this.checkFilterStatus.bind(this)
         this.handleSorting = this.handleSorting.bind(this)
+        this.handleShippingList = this.handleShippingList.bind(this)
     }
 
 
     componentDidMount() {
         this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined &&
             this.state.productList.push(JSON.parse(this.props.productsListing))
+
+        let tempCategoryHierachy = 0
+
+        if (this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == "Category" && this.state.categoryHierachy === 0) {
+
+            this.props.productCategories.map((category) => {
+                if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
+                    this.setState({ categoryHierachy: 1 })
+                    tempCategoryHierachy = 1
+                }
+            })
+            if (tempCategoryHierachy === 1) {
+                this.state.CategoryHierachyListing.push(this.props.productCategories)
+            }
+
+
+            if (tempCategoryHierachy === 0 && tempCategoryHierachy !== 1) {
+                this.props.productCategories.map((categoryList) => {
+                    categoryList.HierarchyItem !== null && categoryList.HierarchyItem !== undefined &&
+                        JSON.parse(categoryList.HierarchyItem).map((category) => {
+                            if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
+                                this.setState({ categoryHierachy: 2 })
+                                this.setState({ categoryName: category.ProductCategory })
+                                tempCategoryHierachy = 2
+                                this.state.ParentCategory.push(categoryList)
+                            }
+                        })
+                    if (tempCategoryHierachy === 2) {
+                        this.state.CategoryHierachyListing.push(JSON.parse(categoryList.HierarchyItem))
+
+                    }
+
+                })
+            }
+
+            if (tempCategoryHierachy === 0 && tempCategoryHierachy !== 1 && tempCategoryHierachy !== 2) {
+                this.props.productCategories.map((categoryListing) => {
+                    categoryListing.HierarchyItem !== null && categoryListing.HierarchyItem !== undefined &&
+                        JSON.parse(categoryListing.HierarchyItem).map((categoryList) => {
+                            categoryList.HierarchyItem !== null && categoryList.HierarchyItem !== undefined &&
+                                JSON.parse(categoryList.HierarchyItem).map((category) => {
+                                    if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
+                                        this.setState({ categoryHierachy: 3 })
+                                        this.setState({ categoryName: category.ProductCategory })
+                                        tempCategoryHierachy = 3
+                                        this.state.ParentCategory.push(categoryList)
+                                    }
+                                })
+
+                            if (tempCategoryHierachy === 3) {
+                                this.state.CategoryHierachyListing.push(JSON.parse(categoryList.HierarchyItem))
+                            }
+                        })
+                })
+            }
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -239,6 +306,8 @@ class BlockListingDetails extends Component {
 
             switch (options.target.value) {
                 case "latest":
+                    list.sort((a, b) => (moment(a.CreatedDate).format("YYYYMMDD") - moment(b.CreatedDate).format("YYYYMMDD")))
+                    this.setListing(list)
                     break;
                 case "top-sales":
                     list.sort((a, b) => (a.ProductSold - b.ProductSold))
@@ -266,13 +335,99 @@ class BlockListingDetails extends Component {
     }
 
     handleShipFilter(value) {
-        console.log("value handleShipFilter", value.target.name)
 
         if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
             let list = JSON.parse(this.props.productsListing)
 
-            console.log("ss", list)
+            switch (value) {
+                case "WM":
+                    this.checkFilterStatus(0)
+
+                    break;
+                case "EM":
+                    this.checkFilterStatus(1)
+
+                    break;
+                case "Local":
+                    this.checkFilterStatus(2)
+
+                    break;
+                case "Overseas":
+                    this.checkFilterStatus(3)
+
+                    break;
+
+                default:
+                    break;
+            }
         }
+    }
+
+    checkFilterStatus(index) {
+
+        let checkBox = false
+        if (this.state.shippedFrom_checkbox[index] === true) {
+            this.state.shippedFrom_checkbox[index] = false
+
+            this.state.shippedFrom_checkbox.filter(x => x === true).map((filtered) => {
+                checkBox = true
+            })
+
+            if (checkBox === true) {
+                this.handleShippingList()
+            }
+            else {
+                this.setListing(JSON.parse(this.props.productsListing))
+            }
+        }
+
+        else {
+            this.state.shippedFrom_checkbox[index] = true
+            this.handleShippingList()
+        }
+    }
+
+    handleShippingList() {
+        let oriList = JSON.parse(this.props.productsListing)
+        let tempFilterList = []
+        let Listing = []
+        let jointArray = []
+
+        this.state.shippedFrom_checkbox.map((shipped, index) => {
+            if (shipped === true) {
+                switch (index) {
+                    case 0:
+                        tempFilterList = oriList.filter(el => el.ProductWestMalaysiaInd === 1 && el.ProductLocalInd === 0)
+                        Listing.push(tempFilterList)
+                        Listing = [...Listing, tempFilterList]
+                        break;
+                    case 1:
+                        tempFilterList = oriList.filter(el => el.ProductWestMalaysiaInd === 0 && el.ProductLocalInd === 0)
+                        Listing = [...Listing, tempFilterList]
+                        break;
+                    case 2:
+                        tempFilterList = oriList.filter(el => el.ProductLocalInd === 0)
+                        Listing = [...Listing, tempFilterList]
+                        break;
+                    case 3:
+                        tempFilterList = oriList.filter(el => el.ProductLocalInd === 1)
+                        Listing = [...Listing, tempFilterList]
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        })
+
+
+        Listing.forEach(array => {
+            jointArray = [...jointArray, ...array]
+        });
+        const filterList = jointArray.filter((val, id, array) => {
+            return array.indexOf(val) == id;
+        });
+        this.setListing(filterList)
     }
 
     render() {
@@ -296,39 +451,57 @@ class BlockListingDetails extends Component {
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div>
                             {
-
-                                this.props.productCategories.map((item) => {
-                                    // console.log(item.HierarchyItem)
-                                    item.HierarchyItem !== null &&
-                                        JSON.parse(item.HierarchyItem).map((x) => {
-                                            console.log("this is the list", x)
-                                        })
-                                })
+                                this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 ?
+                                    <div style={{ fontSize: '15px', fontWeight: "bold", paddingTop: "10px" }}>
+                                        <label onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
+                                            {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
+                                        </label>
+                                    </div>
+                                    : ""
                             }
                             <div style={{ fontSize: '10pt' }}>
-                                {this.props.productCategories.map((category) => {
-                                    return (
-                                        <div key={category.ProductCategory} className="sub-category-items">
-                                            {
-                                                this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
-                                                    this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == category.ProductCategoryID ?
-                                                    <div key={category.ProductCategory} className="sub-category-items active">
-                                                        <DoubleArrowIcon fontSize='sm' /> {category.ProductCategory}
-
-                                                    </div>
-                                                    :
-                                                    <>
-                                                        <FiberManualRecordOutlinedIcon fontSize='sm'
-                                                            onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
-                                                        />
-                                                        <label onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
-                                                        >{category.ProductCategory}</label>
-                                                    </>
-                                            }
-                                        </div>
-                                    )
-
-                                })}
+                                {this.state.CategoryHierachyListing.length > 0 && this.state.CategoryHierachyListing[0] !== null &&
+                                    this.state.CategoryHierachyListing[0].map((category) => {
+                                        return (
+                                            <div key={category.ProductCategory} className="sub-category-items">
+                                                {
+                                                    this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
+                                                        this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == category.ProductCategoryID ?
+                                                        <>
+                                                            <div key={category.ProductCategory} className="sub-category-items active">
+                                                                <DoubleArrowIcon fontSize='sm' /> {category.ProductCategory}
+                                                            </div>
+                                                            {
+                                                                category.HierarchyItem !== null && JSON.parse(category.HierarchyItem).map((items) => {
+                                                                    return (
+                                                                        <>
+                                                                            {
+                                                                                this.state.categoryHierachy === 1 || this.state.categoryHierachy === 2 ?
+                                                                                    <div key={items.ProductCategory} className="sub-category-items" style={{ paddingLeft: "30px" }}>
+                                                                                        <FiberManualRecordOutlinedIcon fontSize='sm'
+                                                                                            onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                        />
+                                                                                        <label onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                        >{items.ProductCategory}</label>
+                                                                                    </div>
+                                                                                    : ""
+                                                                            }
+                                                                        </>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </> :
+                                                        <>
+                                                            <FiberManualRecordOutlinedIcon fontSize='sm'
+                                                                onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                            />
+                                                            <label onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                            >{category.ProductCategory}</label>
+                                                        </>
+                                                }
+                                            </div>
+                                        )
+                                    })}
                             </div>
                         </div>
                         <hr />
@@ -337,22 +510,22 @@ class BlockListingDetails extends Component {
                                 <div className="filter-options-label"><LocalShippingOutlinedIcon /> SHIPPED FROM</div>
                                 <div>
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter(e)} name="WM" />}
+                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("WM")} name="WM" />}
                                         label="West Malaysia"
                                         className="location-segment-checkboxes"
                                     />
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter(e)} name="EM" />}
+                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("EM")} name="EM" />}
                                         label="East Malaysia"
                                         className="location-segment-checkboxes"
                                     />
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter(e)} name="Local" />}
+                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("Local")} name="Local" />}
                                         label="Local"
                                         className="location-segment-checkboxes"
                                     />
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter(e)} name="Overseas" />}
+                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("Overseas")} name="Overseas" />}
                                         label="Overseas"
                                         className="location-segment-checkboxes"
                                     />
@@ -439,7 +612,7 @@ class BlockListingDetails extends Component {
                         <div className="d-flex sorting-options-panel align-middle px-3 mb-2 ">
                             <div className="flex-grow-1 d-flex my-auto">
                                 {
-                                    this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
+                                    this.state.categoryHierachy === 1 && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
 
                                     this.props.productCategories.filter((x) => x.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''))
                                         .map((category) => {
@@ -449,6 +622,14 @@ class BlockListingDetails extends Component {
                                                 </div>
                                             )
                                         })
+                                }
+                                {
+                                    this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 ?
+                                        <div className="sorting-option-label">
+                                            Category - {this.state.categoryName}
+                                            {/* {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}  */}
+                                        </div>
+                                        : ""
                                 }
                                 {
                                     this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Keyword" &&
@@ -484,12 +665,11 @@ class BlockListingDetails extends Component {
                             <div className="row pl-2">
                                 {
                                     this.state.productList.length > 0 ?
-                                        this.state.productList[0].length > 0 && this.state.productList[0] !== undefined ?
+                                        this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?
                                             this.state.productList[0].map((products) => {
 
                                                 return (
                                                     <>
-                                                        {console.log("products", products)}
                                                         <div className="products__list-item">
                                                             <ProductCard product={products}></ProductCard>
                                                         </div>
@@ -506,7 +686,7 @@ class BlockListingDetails extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         )
     }
 }

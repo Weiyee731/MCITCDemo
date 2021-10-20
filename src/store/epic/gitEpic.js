@@ -1121,6 +1121,7 @@ export class GitEpic {
           payload.productPage +
           "&PAGE=" +
           payload.page)
+
         const response = await fetch(
           url +
           "Product_ItemListByType?Type=" +
@@ -2506,14 +2507,68 @@ export class GitEpic {
 
   // MERCHANTS
 
-  getAllMerchants = (action$) =>
-    action$.ofType(GitAction.GetMerchants).switchMap(async () => {
+  // getAllMerchants = (action$) =>
+  //   action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
+  //     try {
+
+  //       console.log(url + "User_ProfileListByType?TYPE=" + payload.type +
+  //         "&TYPEVALUE=" + payload.typeValue +
+  //         "&USERID=" + payload.userID +
+  //         "&UserRoleID=" + payload.userRoleID +
+  //         "&LISTPERPAGE=999" +
+  //         "&PAGE=1")
+
+  //       const response = await fetch(url + "User_ProfileListByType?TYPE=" + payload.type +
+  //         "&TYPEVALUE=" + payload.typeValue +
+  //         "&USERID=" + payload.userID +
+  //         "&UserRoleID=" + payload.userRoleID +
+  //         "&LISTPERPAGE=" + payload.productPage +
+  //         "&PAGE=" + payload.page
+  //       );
+  //       console.log("getAllMerchants", json)
+
+  //       const json = await response.json();
+  //       json = JSON.parse(json);
+
+       
+  //       return {
+  //         type: GitAction.GotMerchants,
+  //         payload: json,
+  //       };
+  //     } catch (error) {
+  //       alert('getAllMerchants: ' + error);
+  //       return {
+  //         type: GitAction.GotMerchants,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
+    
+
+    getAllMerchants = (action$) =>
+    action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
+      console.log(url + "User_ProfileListByType?TYPE=" + payload.type +
+      "&TYPEVALUE=" + payload.typeValue +
+      "&USERID=" + payload.userID +
+      "&UserRoleID=" + payload.userRoleID +
+      "&LISTPERPAGE=" + payload.productPage +
+      "&PAGE=" + payload.page)
+      
       try {
-        const response = await fetch(url +
-          "User_ProfileListByUserType?UserTypeID=16"
+
+        const response = await fetch(url + "User_ProfileListByType?TYPE=" + payload.type +
+        "&TYPEVALUE=" + payload.typeValue +
+        "&USERID=" + payload.userID +
+        "&UserRoleID=" + payload.userRoleID +
+        "&LISTPERPAGE=" + payload.productPage +
+        "&PAGE=" + payload.page
         );
-        const json = await response.json();
+        let json = await response.json();
         json = JSON.parse(json);
+        if (json !== "fail") {
+        } else {
+          json = [];
+        }
         return {
           type: GitAction.GotMerchants,
           payload: json,
@@ -2526,6 +2581,7 @@ export class GitEpic {
         };
       }
     });
+
 
   getAllMerchantOrders = (action$) =>
     action$.ofType(GitAction.GetMerchantOrders).switchMap(async ({ payload }) => {

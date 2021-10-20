@@ -31,13 +31,6 @@ function ShopPageWishlist(props) {
         { title: 'Wishlist', url: '' },
     ];
 
-    // const [wishlisting, setWishlist] = useState("");
-
-    // Similar to componentDidMount and componentDidUpdate:
-    // useEffect(() => {
-    //     props.CallViewProductWishlist({ userID: window.localStorage.getItem("id") })
-    // }, [wishlist]);
-
     const login = () => {
         browserHistory.push("/login");
         window.location.reload(false);
@@ -52,32 +45,32 @@ function ShopPageWishlist(props) {
         })
     }
 
-    const addCart = (product) => {
-        let found = false
-        if (props.productcart !== undefined) {
-            props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
-                found = true
-                props.CallUpdateProductCart({
-                    userID: localStorage.getItem("id"),
-                    userCartID: x.UserCartID,
-                    productQuantity: parseInt(x.ProductQuantity) + 1,
-                    productName: product.ProductName
-                })
-            })
+    // const addCart = (product) => {
+    //     let found = false
+    //     if (props.productcart !== undefined) {
+    //         props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+    //             found = true
+    //             props.CallUpdateProductCart({
+    //                 userID: localStorage.getItem("id"),
+    //                 userCartID: x.UserCartID,
+    //                 productQuantity: parseInt(x.ProductQuantity) + 1,
+    //                 productName: product.ProductName
+    //             })
+    //         })
 
-            if (found === false) {
-                props.CallAddProductCart({
-                    userID: window.localStorage.getItem("id"),
-                    productID: product.ProductID,
-                    productQuantity: 1,
-                    productVariationDetailID: 1,
-                    applyingPromoCode: 0,
-                    productName: product.ProductName
-                })
-            }
-        } else
-            login()
-    }
+    //         if (found === false) {
+    //             props.CallAddProductCart({
+    //                 userID: window.localStorage.getItem("id"),
+    //                 productID: product.ProductID,
+    //                 productQuantity: 1,
+    //                 productVariationDetailID: 1,
+    //                 applyingPromoCode: 0,
+    //                 productName: product.ProductName
+    //             })
+    //         }
+    //     } else
+    //         login()
+    // }
 
     let content;
     if (props.wishlist !== undefined && props.wishlist.length) {
@@ -119,8 +112,7 @@ function ShopPageWishlist(props) {
                     </td>
                     <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? item.ProductPrice : 0} currency={"RM"} /></td>
                     <td className="wishlist__column wishlist__column--tocart">
-
-                        <button type="button" onClick={() => addCart(item)} className={'btn btn-primary btn-sm'}>Add To Cart</button>
+                        <button className={'btn btn-primary btn-sm'}><Link to={url.product(item)} className="wishlist__product-name">View Product</Link></button>
                     </td>
                     <td className="wishlist__column wishlist__column--remove">
                         <button type="button" onClick={() => deleteWishlist(item)} className={'btn btn-light btn-sm btn-svg-icon'} aria-label="Remove"><Cross12Svg /></button>
@@ -182,14 +174,14 @@ function ShopPageWishlist(props) {
 const mapStateToProps = (state) => ({
     // wishlist: state.wishlist,
     wishlist: state.counterReducer.wishlist,
-    productcart: state.counterReducer.productcart
+    // productcart: state.counterReducer.productcart
 });
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
+        // CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
         CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
-        CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
+        // CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
     }
 };
 

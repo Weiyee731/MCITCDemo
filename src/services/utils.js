@@ -5,9 +5,12 @@ export const url = {
 
   category: (category) => category.ProductName !== null ? `/shop/catalog/${category.ProductName}` : `/shop/catalog`,
 
-  product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` : `/shop/products/`,
+  // product: (product) => product.ProductName !== null ? `/shop/products/${product.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')}` :  `/shop/products/`,
+ 
+  merchant: (merchant) => merchant.UserID !== null ? `/merchant/${merchant.UserID}` : `/merchant`,
 
-  productCart: () => "/shop/cart",
+  product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` :  `/shop/products/`,
+  // product: (product) => `/shop/products/${product.slug}`,
 
   productcateogory: (category) => category.ProductName !== null ? `/shop/ProductCategory/${category.ProductName}` : `/shop/ProductCategory/`,
 };
