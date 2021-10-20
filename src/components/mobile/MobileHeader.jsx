@@ -13,13 +13,10 @@ import {
     LogoSmallSvg,
     Search20Svg,
     Heart20Svg,
-    Cart20Svg,
-    Person20Svg,
 } from '../../svg';
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Search from '../header/Search';
 import IndicatorCart from '../../components/header/IndicatorCart'
-import IndicatorAccount from '../../components/header/IndicatorAccount'
 
 class MobileHeader extends Component {
     constructor(props) {
@@ -76,17 +73,22 @@ class MobileHeader extends Component {
                                     icon={<Search20Svg />}
                                 />
 
-                                {localStorage.getItem("isLogin") === 'true' &&
+                                {
+                                    localStorage.getItem("isLogin") === 'true' &&
                                     <Indicator
                                         url="/shop/wishlist"
-                                        value={this.props.wishlist !== undefined ? this.props.wishlist.length : 0}
+                                        value={wishlist !== undefined ? wishlist.length : 0}
                                         icon={<Heart20Svg />}
                                     />
                                 }
 
                                 <IndicatorCart />
 
-                                <IndicatorAccount />
+                                {/* <Indicator
+                                    className="indicator--mobile"
+                                    url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/login'}
+                                    icon={<Person20Svg />}
+                                /> */}
 
                             </div>
                         </div>

@@ -32,18 +32,19 @@ import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
 import PasswordIcon from '@mui/icons-material/Password';
 import icons from "../../pages/dashboard/variables/icons";
 import "./AccountLayout.css";
+import { url } from "../../services/utils";
 
 const cookies = new Cookies();
 export default function AccountLayout(props) {
   const { match, location } = props;
 
   const breadcrumb = [
-    { title: "Home", url: "" },
+    { title: "Home", url: url.home },
     { title: "My Account", url: "" },
   ];
 
   const links = [
-    { title: "Dashboard", url: "dashboard" },
+    // { title: "Dashboard", url: "dashboard" },
     { title: "My Profile", url: "profile", icons: <AccountCircleOutlinedIcon className="titleicon" /> },
     // { title: "Company Profile", url: "companyprofile", icons: <BusinessOutlinedIcon className="titleicon" /> },
     { title: "My Address", url: "addresses", icons: <LocationOnOutlinedIcon className="titleicon" /> },
@@ -57,31 +58,14 @@ export default function AccountLayout(props) {
     const classes = classNames("account-nav__item", {
       "account-nav__item--active": isActive,
     });
+
     if (localStorage.getItem("roleid") <= 15) {
       if (link.title === "Dashboard") {
         return (
           <li
             key={link.url}
             className={classes}
-            onClick={localStorage.setItem("management", true)}
-          >
-            <Link to={"/dashboard"}>{link.title}</Link>
-          </li>
-        );
-      } else {
-        return (
-          <li key={link.url} className={classes}>
-            <Link to={url}>{link.icons}{link.title}</Link>
-          </li>
-        );
-      }
-    } else if (localStorage.getItem("roleid") == 15) {
-      if (link.title === "My Profile") {
-        return (
-          <li
-            key={link.url}
-            className={classes}
-            onClick={localStorage.setItem("management", true)}
+            // onClick={localStorage.setItem("management", true)}
           >
             <Link to={"/dashboard"}>{link.title}</Link>
           </li>
@@ -106,7 +90,7 @@ export default function AccountLayout(props) {
     <React.Fragment>
       <PageHeader header="My Account" breadcrumb={breadcrumb} />
 
-      <div className="block">
+      <div className="block container">
         <div className="space-limiter">
           <div className="row">
             <div className="col-12 col-lg-3 d-flex">

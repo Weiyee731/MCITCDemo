@@ -70,7 +70,6 @@ import AddProductCategoryComponent from "../pages/addProductCategory/addProductC
 import ViewProductVariationComponent from "../pages/viewProductVariation/viewProductVariation.component";
 import ViewReviewComponent from "../pages/viewReview/viewReview.component";
 import ProductStockInComponent from "../pages/productStockIn/productStockIn.component";
-import Cookie from "universal-cookie";
 import userProfile from "../pages/userProfile/userProfile.component";
 import addPromotionBannerComponent from "../pages/addPromotionBanner/addPromotionBanner";
 import ViewProductPromotionComponent from "../pages/viewProductPromotion/viewProductPromotion.component";
@@ -92,36 +91,7 @@ import ViewStockOutDetailsComponent from "../pages/viewStockOutDetails/viewStock
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
 import ViewMerchantsComponent from "../pages/viewMerchant/viewMerchants.component";
 // import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
-
 import AddProductAllInOne from "../pages/addProduct/addProductAllInOne.component";
-
-const cookie = new Cookie();
-
-const categoryLayouts = [
-  [
-    "/shop/category-grid-3-columns-sidebar",
-    { columns: 3, viewMode: "grid", sidebarPosition: "start" },
-  ],
-  ["/shop/category-grid-4-columns-full", { columns: 4, viewMode: "grid" }],
-  ["/shop/category-grid-5-columns-full", { columns: 5, viewMode: "grid" }],
-  [
-    "/shop/category-list",
-    { columns: 3, viewMode: "list", sidebarPosition: "start" },
-  ],
-  [
-    "/shop/category-right-sidebar",
-    { columns: 3, viewMode: "grid", sidebarPosition: "end" },
-  ],
-].map(([url, options]) => (
-  <Route
-    key={url}
-    exact
-    path={url}
-    render={(props) => (
-      <ShopPageCategory {...props} {...options} categorySlug="power-tools" />
-    )}
-  />
-));
 
 const productLayouts = [
   ["/shop/product-standard", { layout: "standard" }],
@@ -556,7 +526,6 @@ function Layout(props) {
                   path="/shop/ProductListing/type:selectedtype&typevalue:selectedtypevalue"
                   render={(props) => (
                     <>
-                      {console.log("props.match.params", props)}
                       <BlockListingDetails
                         {...props}
                         layout="standard"

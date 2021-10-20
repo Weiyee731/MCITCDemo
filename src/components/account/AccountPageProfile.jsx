@@ -128,17 +128,10 @@ class AccountPageProfile extends Component {
     const formData = new FormData();
 
     let imageName = new Date().valueOf();
-
-    // let fileExt = this.state.imageFile.map((imagedetails) =>
-    //   imagedetails.type.substring("image/".length)
-    // );
     let fileExt = this.state.imageFile.map((imagedetails) =>
       imagedetails.name.split('.').pop());
 
     let FullImageName = JSON.stringify(imageName) + "." + fileExt;
-    console.log(imageName)
-    console.log(fileExt)
-    console.log(FullImageName)
     formData.append("imageFile", this.state.imageFile[0]);
     formData.append("imageName", imageName);
 
@@ -154,13 +147,9 @@ class AccountPageProfile extends Component {
         {}
       )
       .then((res) => {
-        console.log(res.status);
         if (res.status === 200) {
           this.props.CallUpdateProfileImage(file);
-          // window.location.reload();
           this.props.CallUserProfile(this.state);
-          console.log(this.state)
-
         }
       });
   };
@@ -200,7 +189,6 @@ class AccountPageProfile extends Component {
         validfirstName: true,
       });
     } else {
-      console.log(" first name null");
       this.setState({
         validfirstName: false,
       });
@@ -216,7 +204,6 @@ class AccountPageProfile extends Component {
         validlastName: true,
       });
     } else {
-      console.log(" last name null");
       this.setState({
         validlastName: false,
       });
@@ -232,26 +219,11 @@ class AccountPageProfile extends Component {
         validGender: true,
       });
     } else {
-      console.log(" gender null");
       this.setState({
         validGender: false,
       });
     }
   };
-
-  // handleChangeforDOB = (e) => {
-  //   const { value } = e.target;
-  //   console.log("moment(date).format('YYYYMMDD')", moment(value).format("YYYYMMDD"))
-
-  //   if (value !== null) {
-  //     this.setState({
-  //       USERDATEBIRTH: value,
-  //       validDOB: true,
-  //     });
-  //   } else {
-  //     console.log(" dob null");
-  //   }
-  // };
 
   handleChangeforContact = (e) => {
     const { value } = e.target;
@@ -277,7 +249,6 @@ class AccountPageProfile extends Component {
         validEmail: true,
       });
     } else {
-      console.log(" email null");
       this.setState({
         validEmail: false,
       });
@@ -294,7 +265,6 @@ class AccountPageProfile extends Component {
       });
 
     } else {
-      console.log("dob null");
       this.setState({
         validDOB: false,
       });
@@ -384,15 +354,16 @@ class AccountPageProfile extends Component {
     return (
       <Card>
         <CardContent>
-          <div className="row" style={{ margin: "10px" }}>
+          <div className="row">
             <div className="col-6">
-              <h5
+              <div
                 style={{
-                  textAlign: "left"
+                  textAlign: "left",
+                  fontWeight: 800
                 }}
               >
                 My Profile
-              </h5>
+              </div>
 
               <div className="font font-subtitle">
                 Manage your personal information
@@ -543,8 +514,7 @@ class AccountPageProfile extends Component {
                 ))}
             </div>
             <div className="col-4 border-line">
-              {console.log(this.props.currentUser)}
-              <div onClick={() => this.modalOpen()} className=" imagecontainer">
+              <div onClick={() => this.modalOpen()} className="imagecontainer">
                 <img
                   className="profilePic"
                   src={this.props.currentUser !== undefined &&
