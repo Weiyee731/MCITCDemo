@@ -19,6 +19,9 @@ import "../../app/App.scss";
 import "./ProductInfo.css";
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import Logo from "../../assets/Emporia.png";
+import IconButton from '@material-ui/core/IconButton';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 function mapStateToProps(state) {
     return {
@@ -55,6 +58,7 @@ const INITIAL_STATE = {
     // any
     isProductIntoBind: false,
     currentProductIndex: 0,
+    currentImage: {}
 }
 
 class ProductEndorsementInfo extends Component {
@@ -143,6 +147,7 @@ class ProductEndorsementInfo extends Component {
             ProductSpecifications: specifications,
             ProductVariation: variations,
             MerchantDetail: merchantDetail,
+            currentImage: (medias.length > 0) ? medias[0] : { ProductMediaUrl: "", ProductMediaTitle: "", }
         })
     }
 
@@ -152,19 +157,58 @@ class ProductEndorsementInfo extends Component {
     }
 
     handleImageCarousel = (index) => {
-        const { ProductMedias, currentProductIndex, currentProductUrl } = this.state
+        const { ProductMedias, currentProductIndex } = this.state
         const totalMedias = ProductMedias.length
 
-        if (!isNaN(index)) {
-            let newIndex = currentProductIndex
+        if (ProductMedias.length > 0 && typeof index === "string") {
+            let newIndex = Number(currentProductIndex)
+            console.log('current Index', ProductMedias[newIndex])
+
+            if (index === 'prev') {
+                if ((newIndex - 1) < 0) {
+                    newIndex = totalMedias - 1
+                    this.setState({
+                        currentImage: ProductMedias[newIndex],
+                        currentProductIndex: newIndex
+                    })
+                }
+                else {
+                    newIndex = currentProductIndex - 1
+                    this.setState({
+                        currentImage: ProductMedias[newIndex],
+                        currentProductIndex: newIndex
+                    })
+                }
+            }
+            else if (index === 'next') {
+                console.log(index)
+                if ((newIndex + 1) > totalMedias - 1) {
+                    newIndex = totalMedias - 1
+                    this.setState({
+                        currentImage: ProductMedias[0],
+                        currentProductIndex: 0
+                    })
+
+                }
+                else {
+                    newIndex = currentProductIndex + 1
+                    this.setState({
+                        currentImage: ProductMedias[newIndex],
+                        currentProductIndex: newIndex
+                    })
+                }
+            }
+            console.log('new Index', ProductMedias[newIndex])
         }
-        else {
-            this.setState({ currentProductIndex: 0, currentProductUrl: Logo })
+        else if (ProductMedias.length > 0) {
+            console.log('new Index', ProductMedias[index])
+            this.setState({ currentProductIndex: Number(index), currentImage: ProductMedias[index] })
         }
     }
 
     render() {
         const { productInfo } = this.props
+        const { ProductMedias, currentImage } = this.state
         return (
             <div>
                 <div className="container pt-2">
@@ -174,12 +218,27 @@ class ProductEndorsementInfo extends Component {
                     {
                         typeof this.props.productInfo !== "undefined" && productInfo.length > 0 ?
                             <div className="row">
-                                <div className="col-4">
+                                <div className="col-4 m-0">
                                     <div className="product-medias">
                                         {
-                                            this.state.ProductMedias.length > 0 && this.state.ProductMedias.map((el, idx) => {
+                                            <img src={currentImage.ProductMediaUrl} alt={currentImage.ProductName} width="100%" height="100%" onError={(e) => { e.target.onerror = null; e.target.src = Logo; }} />
+                                        }
+                                        <div>
+                                            <IconButton aria-label="prev-image" style={{ position: 'absolute' }} className="product-carousel-button prev-btn" size="medium" variant="outlined" onClick={() => this.handleImageCarousel('prev')} >
+                                                <ChevronLeftIcon fontSize="inherit" />
+                                            </IconButton>
+                                            <IconButton aria-label="next-image" style={{ position: 'absolute' }} className="product-carousel-button next-btn" size="medium" variant="outlined" onClick={() => this.handleImageCarousel('next')}  >
+                                                <ChevronRightIcon fontSize="inherit" />
+                                            </IconButton>
+                                        </div>
+                                    </div>
+                                    <div className="product-medias-gallery">
+                                        {
+                                            ProductMedias.length > 0 && ProductMedias.map((el, idx) => {
                                                 return (
-                                                    <img src={el.ProductMediaUrl} alt={productInfo[0].ProductName} width="100%" height="100%" onError={(e) => { e.target.onerror = null; e.target.src = Logo; }} />
+                                                    <div className="product-medias-gallery-image">
+                                                        <img src={currentImage.ProductMediaUrl} alt={currentImage.ProductName} width="100%" height="100%" onError={(e) => { e.target.onerror = null; e.target.src = Logo; }}  onClick={() => this.handleImageCarousel(idx)}/>
+                                                    </div>
                                                 )
                                             })
                                         }
