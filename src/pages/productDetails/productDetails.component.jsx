@@ -65,6 +65,7 @@ import { Fade } from "shards-react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
 import { convertDateTimeToString, getFileExtension, getFileTypeByExtension, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
+import { Thermostat } from "@mui/icons-material";
 
 function mapStateToProps(state) {
   return {
@@ -81,6 +82,7 @@ function mapStateToProps(state) {
   };
 }
 const editorConfiguration = {
+
   toolbar: [
     "bold",
     "italic",
@@ -459,6 +461,8 @@ const INITIAL_STATE = {
   selectedVariationID: 0,
   isSubmit: false,
   isProductIntoBind: false,
+
+  toBeEdited: false,
 }
 
 class ProductDetailsComponent extends Component {
@@ -3134,11 +3138,29 @@ class ProductDetailsComponent extends Component {
 
   bindProductInfoToState = () =>{
     console.log(this.props.productInfo)
-    //do something here yomna, and then bind the values to the state at the function below
+    console.log(this.props.productCategories)
+
 
     this.setState({
       isProductIntoBind: true, // to stop the looping of calling this function from componentdidupdate
-      // something : aaa ,
+      name: this.props.productInfo[0].ProductName,
+      description: this.props.productInfo[0].ProductDescription,
+      height: this.props.productInfo[0].ProductDimensionHeight,
+      width: this.props.productInfo[0].ProductDimensionWidth,
+      depth: this.props.productInfo[0].ProductDimensionDeep,
+      weight:this.props.productInfo[0].ProductWeight,
+      brand:this.props.productInfo[0].Brand,
+      tags:this.props.productInfo[0].ProductTag,
+      model:this.props.productInfo[0].Model,
+      sku:this.props.productInfo[0].SKU,
+      productCategory:this.props.productInfo[0].ProductCategoryID,
+      stock:this.props.productInfo[0].ProductStockAmount,
+    })
+  }
+
+  setCategory = () => {
+    this.props.productCategories.map( (H1, i) => {
+      
     })
   }
 
@@ -3151,9 +3173,11 @@ class ProductDetailsComponent extends Component {
     // This section will used to bind the product info to the state with a passing function.
     // Since in the React lifecycle it did mentioned the componentdidupdate will be triggered if any updates occur on this page,
     // then we need a state to check the allows to prevent the infinite looping of this function
-    if(this.props.productinfo){
+    
+    if(this.props.productInfo){
       if(this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind){
         this.bindProductInfoToState()
+        console.log("Data Binded")
       }
     }
 
@@ -3351,7 +3375,7 @@ class ProductDetailsComponent extends Component {
       : {};
     if (existData.length > 0) {
       var checkDuplicate = existData.map((d, i) => {
-        if (d.ReturnVal === 1) {
+        if (d.ReturnVal === 1 && this.state.toBeEdited) {
           return <p className="error">Product name already exists.</p>;
         }
       });
@@ -3712,12 +3736,22 @@ class ProductDetailsComponent extends Component {
 
             {
               this.props.isOnViewState ?
-                <Button onClick={() => typeof this.props.backToList === "function" && this.props.backToList()  }>
+               
+              <div style={{display:"flex"}}>
+                  <Button onClick={() => typeof this.props.backToList === "function" && this.props.backToList()  }>
                   <i className="fas fa-chevron-left"></i>
                   <Link className="nav-link" to={"/viewProduct"}>
                     Back
                   </Link>
                 </Button>
+                
+                <Button style={{marginLeft:"80%"}} 
+                onClick={() => {
+                  console.log("Changed") 
+                  this.setState({tobeEdited: !this.state.toBeEdited})}
+                  }>{this.state.toBeEdited? "Cancel" : "Edit"}</Button>
+                </div>
+                
                 :
                 <Button>
                   <i className="fas fa-chevron-left"></i>
@@ -3727,7 +3761,8 @@ class ProductDetailsComponent extends Component {
                 </Button>
             }
           </div>
-
+          {/* <Button onClick={() => this.setState({tobeEdited: !this.state.toBeEdited})}>{this.state.toBeEdited? "Cancel" : "Edit"}</Button> */}
+               
           <div>
             <Card id="basicInfo" className="SubContainer">
               <CardContent id="basicInfo">
@@ -3738,7 +3773,10 @@ class ProductDetailsComponent extends Component {
                   value={this.state.name}
                   onChange={this.handleChange.bind(this, "product")}
                   InputLabelProps={{ shrink: "true", }}
-                  error={this.state.productNameEmpty || this.state.productNameDublicated}
+                  InputProps={{
+                    readOnly: !this.state.toBeEdited,
+                  }}
+                  error={(this.state.productNameEmpty || this.state.productNameDublicated) && this.state.toBeEdited}
                   className="InputField"
                   size="small"
                   label="Product Name"
@@ -3747,16 +3785,16 @@ class ProductDetailsComponent extends Component {
                   onBlur={() => this.setState({ FocusOn: false, })}
                 />
 
-                {this.state.productNameEmpty && (
+                {this.state.productNameEmpty && this.state.toBeEdited && (
                   <p className="error">Product name cannot be empty.</p>
                 )}
                 {/* {this.state.name && checkDuplicate} */}
 
-                {this.state.productCategoryEmpty && (
+                {this.state.productCategoryEmpty && this.state.toBeEdited && (
                   <p className="error">Product category cannot be empty.</p>
                 )}
-                <p className="Label">Product Category</p>
-                <div className="CategorySelector">
+                {this.state.tobeEdited ? <p className="Label">Product Category</p> : null}
+               {this.state.toBeEdited ?  <div className="CategorySelector">
                   <Autocomplete
                     id="free-solo-demo"
                     options={productCategoriesFullListList.map(
@@ -3772,6 +3810,9 @@ class ProductDetailsComponent extends Component {
                         size="small"
                         InputLabelProps={{
                           shrink: "true",
+                        }}
+                        InputProps={{
+                          readOnly: !this.state.toBeEdited,
                         }}
                         onFocus={this.setHint.bind(this, "Search")}
                         onBlur={() =>
@@ -3885,8 +3926,22 @@ class ProductDetailsComponent extends Component {
                     </div>
                   </div>
                 </div>
+                : null }
 
-                <p className="Label">Currently Chosen:</p>
+               {this.state.toBeEdited ? <p className="Label">Currently Chosen:</p>  :  <TextField
+                    id="productCategory"
+                    label="Product Category"
+                    defaultValue={this.state.productCategory}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps ={{
+                      shrink:true,
+                    }}
+                    size="small"
+                    variant="outlined"
+                    className="InputField"
+                  /> }
                 <div className="Label">
                   {this.state.categoryH1Name ? (
                     <span>
@@ -3913,6 +3968,7 @@ class ProductDetailsComponent extends Component {
             <Card id="productDetails" className="SubContainer">
               <CardContent>
                 <p className="Heading">Product Details</p>
+                {this.state.toBeEdited ?
                 <FormControl
                   variant="outlined"
                   className="InputField"
@@ -3921,7 +3977,7 @@ class ProductDetailsComponent extends Component {
                   <InputLabel shrink htmlFor="productSupplier">
                     Supplier
                   </InputLabel>
-                  <Select
+                   <Select
                     native
                     label="Supplier"
                     value={this.state.productSupplier}
@@ -3930,7 +3986,7 @@ class ProductDetailsComponent extends Component {
                       name: "Product Supplier",
                       id: "productSupplier",
                     }}
-                    error={this.state.productSupplierEmpty}
+                    error={this.state.productSupplierEmpty && this.state.toBeEdited}
                     onFocus={this.setHint.bind(this, "ProductSupplier")}
                     onBlur={() =>
                       this.setState({
@@ -3945,20 +4001,37 @@ class ProductDetailsComponent extends Component {
                       {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")}
                     </option>
                   </Select>
-                </FormControl>
-                {this.state.productSupplierEmpty && (
+                </FormControl> :
+                 <TextField
+                    id="productSupplier"
+                    label="Product Supplier"
+                    defaultValue={localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps ={{
+                      shrink:true,
+                    }}
+                    size="small"
+                    variant="outlined"
+                    className="InputField"
+                  />}
+                {this.state.productSupplierEmpty && this.state.toBeEdited && (
                   <p className="error">Product supplier cannot be empty.</p>
                 )}
                 <div className="HorizontalContainer">
                   <TextField
                     id="productSku"
                     value={this.state.sku}
-                    error={this.state.skuEmpty}
+                    error={this.state.skuEmpty && this.state.toBeEdited}
                     onChange={this.handleChange.bind(this, "SKU")}
                     InputLabelProps={{
                       shrink: "true",
                     }}
-                    error={this.state.skuEmpty || this.state.skuNotLongEnough}
+                    InputProps={{
+                      readOnly: !this.state.toBeEdited,
+                    }}
+                    error={(this.state.skuEmpty || this.state.skuNotLongEnough) && this.state.toBeEdited}
                     className="InputField"
                     size="small"
                     label="Parent SKU"
@@ -3969,6 +4042,7 @@ class ProductDetailsComponent extends Component {
                         FocusOn: false,
                       })
                     }
+                    
                   />
 
                   {/* <Link className="nav-link" to={"/productStocksIn"}>
@@ -3976,10 +4050,10 @@ class ProductDetailsComponent extends Component {
                   </Link> */}
                 </div>
 
-                {this.state.skuEmpty && (
+                {this.state.skuEmpty && this.state.toBeEdited && (
                   <p className="error">Product SKU cannot be empty.</p>
                 )}
-                {this.state.skuNotLongEnough && this.state.sku && (
+                {this.state.skuNotLongEnough && this.state.sku && this.state.toBeEdited && (
                   <p className="error">
                     Product SKU has to be at least 8 characters long.
                   </p>
@@ -3998,15 +4072,18 @@ class ProductDetailsComponent extends Component {
                           FocusOn: false,
                         })
                       }
-                      error={this.state.brandEmpty}
+                      error={this.state.brandEmpty && this.state.toBeEdited}
                       variant="outlined"
                       size="small"
                       InputLabelProps={{
                         shrink: "true",
                       }}
+                      InputProps={{
+                        readOnly: !this.state.toBeEdited,
+                      }}
                     />
-                    {this.state.brandEmpty && <br />}
-                    {this.state.brandEmpty && (
+                    {this.state.brandEmpty && this.state.toBeEdited && <br />}
+                    {this.state.brandEmpty && this.state.toBeEdited && (
                       <p className="error">Product brand cannot be empty.</p>
                     )}
                   </div>
@@ -4023,15 +4100,18 @@ class ProductDetailsComponent extends Component {
                           FocusOn: false,
                         })
                       }
-                      error={this.state.modelEmpty}
+                      error={this.state.modelEmpty && this.state.toBeEdited}
                       variant="outlined"
                       size="small"
                       InputLabelProps={{
                         shrink: "true",
                       }}
+                      InputProps={{
+                        readOnly: !this.state.toBeEdited,
+                      }}
                     />
                     <br />
-                    {this.state.modelEmpty && (
+                    {this.state.modelEmpty && this.state.toBeEdited && (
                       <p className="error">Product model cannot be empty.</p>
                     )}
                   </div>
@@ -4073,11 +4153,14 @@ class ProductDetailsComponent extends Component {
                   InputLabelProps={{
                     shrink: "true",
                   }}
+                  InputProps={{
+                    readOnly: !this.state.toBeEdited,
+                  }}
                   size="small"
                   variant="outlined"
-                  error={this.state.productTagsEmpty}
+                  error={this.state.productTagsEmpty && this.state.toBeEdited}
                 />
-                {this.state.productTagsEmpty && (
+                {this.state.productTagsEmpty && this.state.toBeEdited && (
                   <p className="error">Product tags cannot be empty.</p>
                 )}
               </CardContent>
@@ -4089,8 +4172,26 @@ class ProductDetailsComponent extends Component {
                 <CKEditor
                   className="descriptionContainer"
                   editor={Editor}
-                  config={editorConfiguration}
-                  data=""
+                  config={{ toolbar: [
+                    "bold",
+                    "italic",
+                    "heading",
+                    "bulletedList",
+                    "numberedList",
+                    "outdent",
+                    "indent",
+                    "imageUpload",
+                    "blockQuote",
+                    "insertTable",
+                    "mediaEmbed",
+                    "undo",
+                    "redo",
+                    "link",
+                  ],
+                  isReadOnly: !this.state.toBeEdited,}}
+                 
+                  data={this.state.description}
+                  disabled={!this.state.toBeEdited}
                   onReady={(editor) => {
                     // You can store the "editor" and use when it is needed.
                     // console.log("Editor is ready to use!", editor);
@@ -4103,6 +4204,7 @@ class ProductDetailsComponent extends Component {
                   }}
                   onFocus={(event, editor) => {
                   }}
+                  
                 />
                 {/* <Button
                   onClick={this.saveDesign}
@@ -4111,7 +4213,7 @@ class ProductDetailsComponent extends Component {
                 >
                   Save Design
                 </Button> */}
-                {this.state.productDesciptionEmpty && (
+                {this.state.productDesciptionEmpty && this.state.toBeEdited && (
                   <p className="error">Product description cannot be empty.</p>
                 )}
               </CardContent>
@@ -4120,13 +4222,13 @@ class ProductDetailsComponent extends Component {
             <Card id="specification" className="SubContainer">
               <CardContent>
                 <p className="Heading">Product Specification</p>
-                <Button
+                {this.state.toBeEdited ? <Button
                   variant="outlined"
                   className="AddButton"
                   onClick={this.handleAddProductSpecification.bind(this, "add", '')}
                 >
                   Add Product Specification
-                </Button>
+                </Button>: this.state.productSpecification ? null :<div style={{width:"100%", textAlign:"center"}}><p>This product has no specifications</p></div>}
                 {
                   this.state.productSpecificationOptions.length > 0 && this.state.productSpecificationOptions.map((el, idx) => {
                     return (
@@ -4161,6 +4263,9 @@ class ProductDetailsComponent extends Component {
                           <TextField
                             className="InputField"
                             InputLabelProps={{ shrink: "true", }}
+                            InputProps={{
+                              readOnly: !this.state.toBeEdited,
+                            }}
                             label={"Specification " + (idx + 1)}
                             id="standard-start-adornment"
                             size="small"
@@ -4206,7 +4311,7 @@ class ProductDetailsComponent extends Component {
                         }
                       />
                     </InputGroup>
-                    {this.state.priceEmpty ? (
+                    {this.state.priceEmpty && this.state.toBeEdited ? (
                       <p className="error">
                         Price has to be filled and not less than 0.
                       </p>
@@ -4220,9 +4325,12 @@ class ProductDetailsComponent extends Component {
                         InputLabelProps={{
                           shrink: "true",
                         }}
+                        InputProps={{
+                          readOnly: !this.state.toBeEdited,
+                        }}
                         size="small"
                         value={this.state.stock}
-                        error={this.state.stockEmpty}
+                        error={this.state.stockEmpty && this.state.toBeEdited}
                         type="number"
                         onChange={this.handleChange.bind(this, "stock")}
                         onFocus={this.setHint.bind(this, "ProductStock")}
@@ -4232,7 +4340,7 @@ class ProductDetailsComponent extends Component {
                           })
                         }
                       />
-                      {this.state.stockEmpty ? (
+                      {this.state.stockEmpty && this.state.toBeEdited ? (
                         <p className="error">
                           Stock has to be filled and not less than 0.
                         </p>
@@ -4258,16 +4366,17 @@ class ProductDetailsComponent extends Component {
                           label="Product Variation"
                         >
                           <MenuItem value=""><em>None</em></MenuItem>
-                          {
+                          {this.props.variations?
                             this.props.variations.length > 0 && typeof this.props.variations[0].ReturnVal === "undefined" &&
                             this.props.variations.map((el, idx) => {
                               return (<MenuItem key={idx} value={el.ProductVariationID}>{el.ProductVariation}</MenuItem>)
                             })
+                            : null
                           }
                         </Select>
 
                       </FormControl>
-                      {this.state.variation1NameEmpty ? (
+                      {this.state.variation1NameEmpty && this.state.toBeEdited ? (
                         <p className="error">
                           Variation name has to be filled.
                         </p>
@@ -4276,27 +4385,30 @@ class ProductDetailsComponent extends Component {
                       {[...Array(this.state.variation1Options)].map((e, i) => (
                         <div>
                           <div className="VariantOption align-items-center">
-                            <RemoveCircleOutlineIcon
+                            {this.state.toBeEdited ? <RemoveCircleOutlineIcon
                               className="DeleteOptionButton"
                               color="secondary"
                               onClick={this.onDeleteVariant.bind(this, i, "variant1Option")}
-                            />
-                            <TextField
+                            /> : null}
+                            {this.state.variation1.options[i].optionName ? <TextField
                               className="InputField"
                               InputLabelProps={{ shrink: "true", }}
+                              InputProps={{
+                                readOnly: !this.state.toBeEdited,
+                              }}
                               label={"Option " + (i + 1)}
                               id="standard-start-adornment"
                               size="small"
                               variant="outlined"
                               key={i}
                               onChange={this.handleChangeOptions.bind(this, "variant1Options", i)}
-                              error={this.state.variation1.options[i].errorOption}
+                              error={this.state.variation1.options[i].errorOption && this.state.toBeEdited}
                               onFocus={this.setHint.bind(this, "VariantOption")}
                               onBlur={() => this.setState({ FocusOn: false, })}
                               value={this.state.variation1.options[i].optionName}
-                            />
+                            />:null}
                           </div>
-                          {this.state.variation1.options[i].errorOption ? (
+                          {this.state.variation1.options[i].errorOption && this.state.toBeEdited ? (
                             <p className="error">
                               Variation option name has to be filled.
                             </p>
@@ -4305,13 +4417,14 @@ class ProductDetailsComponent extends Component {
                       ))
                       }
 
+                     {this.state.toBeEdited ?
                       <Button
                         variant="outlined"
                         className="AddButton"
                         onClick={this.addOptions.bind(this, "1")}
                       >
                         Add Option
-                      </Button>
+                      </Button> : null}
                     </div>
                     <br />
                     <CloseIcon
@@ -4326,6 +4439,7 @@ class ProductDetailsComponent extends Component {
                 <hr />
                 {!this.state.variation1On ? (
                   <div className="ItemContainer">
+                    {/* {this.toBeEdited?  */}
                     <Button
                       variant="outlined"
                       className="AddButton"
@@ -4333,6 +4447,7 @@ class ProductDetailsComponent extends Component {
                     >
                       Add Variant
                     </Button>
+                     {/* : null} */}
                   </div>
                 ) : null}
 
@@ -4376,6 +4491,9 @@ class ProductDetailsComponent extends Component {
                         InputLabelProps={{
                           shrink: "true",
                         }}
+                        InputProps={{
+                          readOnly: !this.state.toBeEdited,
+                        }}
                         type="number"
                         onChange={this.handleChange.bind(this, "stock")}
                         // error={this.state.stockEmpty}
@@ -4398,6 +4516,9 @@ class ProductDetailsComponent extends Component {
                         InputLabelProps={{
                           shrink: "true",
                         }}
+                        InputProps={{
+                          readOnly: !this.state.toBeEdited,
+                        }}
                         onChange={this.handleChange.bind(this, "SKU")}
                         onFocus={this.setHint.bind(this, "VariationSKU")}
                         onBlur={() =>
@@ -4411,9 +4532,9 @@ class ProductDetailsComponent extends Component {
                       />
                     </div>
 
-                    <Button variant="outlined" className="ApplyAllButton" onClick={() => this.applyToAllVariant()}>
+                    {this.state.toBeEdited ? <Button variant="outlined" className="ApplyAllButton" onClick={() => this.applyToAllVariant()}>
                       Apply to All
-                    </Button>
+                    </Button> : null }
                   </div>
                 ) : null}
 
@@ -4488,13 +4609,13 @@ class ProductDetailsComponent extends Component {
                                             invalid={
                                               this.state.variation1.options[x]
                                                 .variation2Options.options[i]
-                                                .errorPrice
+                                                .errorPrice && this.state.toBeEdited
                                             }
                                           />
                                         </InputGroup>
                                         {this.state.variation1.options[x]
                                           .variation2Options.options[i]
-                                          .errorPrice ? (
+                                          .errorPrice && this.state.toBeEdited ? (
                                           <Tooltip
                                             placement="top-end"
                                             title="Price has to be filled and greater than 0."
@@ -4525,6 +4646,9 @@ class ProductDetailsComponent extends Component {
                                               FocusOn: false,
                                             })
                                           }
+                                          InputProps={{
+                                            readOnly: !this.state.toBeEdited,
+                                          }}
                                           value={
                                             this.state.variation1.options[x]
                                               .variation2Options.options[i]
@@ -4533,7 +4657,7 @@ class ProductDetailsComponent extends Component {
                                           error={
                                             this.state.variation1.options[x]
                                               .variation2Options.options[i]
-                                              .errorStock
+                                              .errorStock && this.state.toBeEdited
                                           }
                                           type="number"
                                           InputLabelProps={{
@@ -4545,7 +4669,7 @@ class ProductDetailsComponent extends Component {
                                         />
                                         {this.state.variation1.options[x]
                                           .variation2Options.options[i]
-                                          .errorStock ? (
+                                          .errorStock && this.state.toBeEdited && this.state.toBeEdited ? (
                                           <Tooltip
                                             placement="top-end"
                                             title="Stock has to be filled and greater than 0."
@@ -4576,6 +4700,9 @@ class ProductDetailsComponent extends Component {
                                               FocusOn: false,
                                             })
                                           }
+                                          InputProps={{
+                                            readOnly: !this.state.toBeEdited,
+                                          }}
                                           value={
                                             this.state.variation1.options[x]
                                               .variation2Options.options[i].sku
@@ -4583,7 +4710,7 @@ class ProductDetailsComponent extends Component {
                                           error={
                                             this.state.variation1.options[x]
                                               .variation2Options.options[i]
-                                              .errorSKU
+                                              .errorSKU && this.state.toBeEdited
                                           }
                                           type="number"
                                           InputLabelProps={{
@@ -4595,7 +4722,7 @@ class ProductDetailsComponent extends Component {
                                         />
                                         {this.state.variation1.options[x]
                                           .variation2Options.options[i]
-                                          .errorSKU ? (
+                                          .errorSKU && this.state.toBeEdited ? (
                                           <Tooltip
                                             placement="top-end"
                                             title="SKU has to be filled and at least 8 characters long."
@@ -4646,11 +4773,11 @@ class ProductDetailsComponent extends Component {
                                   )}
                                   value={this.state.variation1.options[x].price}
                                   invalid={
-                                    this.state.variation1.options[x].errorPrice
+                                    this.state.variation1.options[x].errorPrice && this.state.toBeEdited
                                   }
                                 />
                               </InputGroup>
-                              {this.state.variation1.options[x].errorPrice ? (
+                              {this.state.variation1.options[x].errorPrice && this.state.toBeEdited ? (
                                 <Tooltip
                                   placement="top-end"
                                   title="Price has to be filled and greater than 0."
@@ -4667,7 +4794,7 @@ class ProductDetailsComponent extends Component {
                                 id="productStock1"
                                 value={this.state.variation1.options[x].stock}
                                 error={
-                                  this.state.variation1.options[x].errorStock
+                                  this.state.variation1.options[x].errorStock && this.state.toBeEdited
                                 }
                                 size="small"
                                 onFocus={this.setHint.bind(
@@ -4679,6 +4806,9 @@ class ProductDetailsComponent extends Component {
                                     FocusOn: false,
                                   })
                                 }
+                                InputProps={{
+                                  readOnly: !this.state.toBeEdited,
+                                }}
                                 onChange={this.handleChangeOptions.bind(
                                   this,
                                   "variation1Stock",
@@ -4692,7 +4822,7 @@ class ProductDetailsComponent extends Component {
                                 className="InputField2"
                               // error={this.state.stock || this.state.skuNotLongEnough}
                               />
-                              {this.state.variation1.options[x].errorStock ? (
+                              {this.state.variation1.options[x].errorStock && this.state.toBeEdited ? (
                                 <Tooltip
                                   placement="top-end"
                                   title="Stock has to be filled and greater than 0."
@@ -4723,16 +4853,19 @@ class ProductDetailsComponent extends Component {
                                   "variation1SKU",
                                   x
                                 )}
+                                InputProps={{
+                                  readOnly: !this.state.toBeEdited,
+                                }}
                                 InputLabelProps={{
                                   shrink: "true",
                                 }}
                                 variant="outlined"
                                 className="InputField2"
                                 error={
-                                  this.state.variation1.options[x].errorSKU
+                                  this.state.variation1.options[x].errorSKU && this.state.toBeEdited
                                 }
                               />
-                              {this.state.variation1.options[x].errorSKU ? (
+                              {this.state.variation1.options[x].errorSKU && this.state.toBeEdited ? (
                                 <Tooltip
                                   placement="top-end"
                                   title="SKU has to be filled and be at least 8 characters long."
@@ -5118,7 +5251,7 @@ class ProductDetailsComponent extends Component {
                     />
                   ))}
                 </div>
-                {this.state.notEnoughFiles512x512 && (
+                {this.state.notEnoughFiles512x512 && this.state.toBeEdited && (
                   <p className="error">
                     There has to be at least 1 images of the size 512x512 added.
                   </p>
@@ -5433,7 +5566,7 @@ class ProductDetailsComponent extends Component {
                     ))}
                   </div>
                 </div>
-                {this.state.notEnoughFilesVideo && (
+                {this.state.notEnoughFilesVideo && this.state.toBeEdited && (
                   <p className="error">
                     There has to be at least 1 video added.
                   </p>
@@ -5621,26 +5754,26 @@ class ProductDetailsComponent extends Component {
                   </div>
                 </div>
 
-                {this.state.heightEmpty && (
+                {this.state.heightEmpty && this.state.toBeEdited && (
                   <p className="error">Product height cannot be empty.</p>
                 )}
-                {this.state.heightNotDecimal && this.state.height && (
+                {this.state.heightNotDecimal && this.state.height && this.state.toBeEdited && (
                   <p className="error">
                     Product height has to be positive and in two decimal places.
                   </p>
                 )}
-                {this.state.widthEmpty && (
+                {this.state.widthEmpty && this.state.toBeEdited && (
                   <p className="error">Product width cannot be empty.</p>
                 )}
-                {this.state.widthNotDecimal && this.state.width && (
+                {this.state.widthNotDecimal && this.state.width && this.state.toBeEdited && (
                   <p className="error">
                     Product width has to be positive and in two decimal places.
                   </p>
                 )}
-                {this.state.depthEmpty && (
+                {this.state.depthEmpty && this.state.toBeEdited && (
                   <p className="error">Product depth cannot be empty.</p>
                 )}
-                {this.state.depthNotDecimal && this.state.depth && (
+                {this.state.depthNotDecimal && this.state.depth && this.state.toBeEdited && (
                   <p className="error">
                     Product depth has to be positive and in two decimal places.
                   </p>
@@ -5734,11 +5867,11 @@ class ProductDetailsComponent extends Component {
                   }
                 </div> */}
 
-                {this.state.weightEmpty && (
+                {this.state.weightEmpty && this.state.toBeEdited && (
                   <p className="error">Product weight cannot be empty.</p>
                 )}
 
-                {this.state.weightNotDecimal && this.state.weight && (
+                {this.state.weightNotDecimal && this.state.weight && this.state.toBeEdited && (
                   <p className="error">
                     Product weight has to be in two decimal place.
                   </p>
@@ -5748,9 +5881,10 @@ class ProductDetailsComponent extends Component {
           </div>
           <br />
           <div className="SubmitButtonContainer w-100">
-            <Button variant="contained" className="w-100" onClick={() => { this.OnSubmit() }} color="primary">
+            {this.state.toBeEdited ? 
+              <Button variant="contained" className="w-100" onClick={() => { this.OnSubmit() }} color="primary">
               Submit to Review
-            </Button>
+            </Button> : null}
           </div>
         </div>
 
