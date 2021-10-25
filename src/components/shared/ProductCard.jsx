@@ -8,24 +8,21 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // application
-import AsyncAction from "./AsyncAction";
 import Currency from "./Currency";
 import Rating from "./Rating";
-import { cartAddItem } from "../../store/cart";
-import { Compare16Svg, Quickview16Svg, Wishlist16Svg } from "../../svg";
-import { compareAddItem } from "../../store/compare";
-import { quickviewOpen } from "../../store/quickview";
+import { Wishlist16Svg } from "../../svg";
 import { url } from "../../services/utils";
-import { wishlistAddItem, wishlistRemoveItem } from "../../store/wishlist";
-import { mobileMenuOpen } from '../../store/mobile-menu';
 import Logo from "../../assets/Emporia.png"
 import { GitAction } from "../../store/action/gitAction";
 
 // application
-import { Modal } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter } from 'reactstrap';
 import Product from './Product';
 import { Cross20Svg } from '../../svg';
 import { browserHistory } from "react-router";
+import {
+  Divider, Button
+} from "@material-ui/core";
 
 
 function ProductCard(props) {
@@ -34,79 +31,23 @@ function ProductCard(props) {
     layout,
   } = props;
 
-  const [isQuickViewOpen, setModal] = useState(false)
-  const [isCartSet, setCart] = useState(false)
   const containerClasses = classNames("product-card", {
     "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
-    "product-card--layout--grid product-card--size--nl": layout === "grid-nl",
-    "product-card--layout--grid product-card--size--lg": layout === "grid-lg",
+    // "product-card--layout--grid product-card--size--nl": layout === "grid-nl",
+    // "product-card--layout--grid product-card--size--lg": layout === "grid-lg",
     "product-card--layout--list": layout === "list",
     "product-card--layout--horizontal": layout === "horizontal",
   });
-
-  if (window.localStorage.getItem("id") && isCartSet === true) {
-    props.CallViewProductCart({ userID: localStorage.getItem("id") })
-    props.CallViewProductWishlist({ userID: localStorage.getItem("id") })
-    setCart(true)
-  }
-
 
   let badges = [];
   let image;
   let price;
   let features;
-  let productView;
-
-  // if (product !== null && isQuickViewOpen) {
-  //   console.log(product.ProductID)
-  //   props.CallProductsByID({ ProductID: product.ProductID })
-  //   // if (props.productsByID !== undefined)
-  //   //   productView = <Product product={props.productsByID} layout="quickview" />;
-  // }
-
-  // useEffect(() => {
-  //   console.log("props.productsByID", props.productsByID)
-  //   if (product !== null && isQuickViewOpen) {
-  //     productView = <Product product={props.productsByID} layout="quickview" />;
-  //     setModal(false)
-  //   }
-  // }, [props.productsByID]);
+  let wishlistView;
 
   const login = () => {
-    browserHistory.push("Emporia/login");
+    browserHistory.push("/login");
     window.location.reload(false);
-  }
-
-  const handleQuickView = () => {
-    props.CallProductsByID({ ProductID: product.ProductID })
-  }
-
-  const handleCart = (product) => {
-    let found = false
-
-    if (props.productcart !== undefined) {
-      props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
-        found = true
-        props.CallUpdateProductCart({
-          userID: localStorage.getItem("id"),
-          userCartID: x.UserCartID,
-          productQuantity: parseInt(x.ProductQuantity) + 1,
-          productName: product.ProductName
-        })
-      })
-
-      if (found === false) {
-        props.CallAddProductCart({
-          userID: window.localStorage.getItem("id"),
-          productID: product.ProductID,
-          productQuantity: 1,
-          productVariationDetailID: 1,
-          applyingPromoCode: 0,
-          productName: product.ProductName
-        })
-      }
-    } else
-      login()
   }
 
   const handleWishlist = (product) => {
@@ -132,34 +73,47 @@ function ProductCard(props) {
       login()
   }
 
-  if (product.ProductImage !== null && product.ProductImage !== undefined && product.ProductImage.length > 0) {
-    image = (
-      <div className="product-card__image product-image">
-        <Link to={url.product(product)} className="product-image__body">
-          <img
-            className="product-image__img"
-            src={product.ProductImage !== null ? product.ProductImage : Logo}
-            onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-            alt={product.ProductName}
-          />
-        </Link>
+  image = (
+    <div className="product-card__image product-image">
+      <div className="product-image__body">
+        <img
+          className="product-image__img"
+          src={product.ProductImage !== null ? product.ProductImage : Logo}
+          onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+          alt={product.ProductName}
+        />
       </div>
-    );
-  }
-  else {
-    image = (
-      <div className="product-card__image product-image">
-        <Link to={url.product(product)} className="product-image__body">
-          <img
-            className="product-image__img"
-            src={Logo}
-            onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-            alt={product.ProductName}
-          />
-        </Link>
-      </div>
-    );
-  }
+    </div>
+  );
+
+  // if (product.ProductImage !== null && product.ProductImage !== undefined && product.ProductImage.length > 0) {
+  //   image = (
+  //     <div className="product-card__image product-image">
+  //       <Link to={url.product(product)} className="product-image__body">
+  //         <img
+  //           className="product-image__img"
+  //           src={product.ProductImage !== null ? product.ProductImage : Logo}
+  //           onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+  //           alt={product.ProductName}
+  //         />
+  //       </Link>
+  //     </div>
+  //   );
+  // }
+  // else {
+  //   image = (
+  //     <div className="product-card__image product-image">
+  //       <div className="product-image__body">
+  //         <img
+  //           className="product-image__img"
+  //           src={Logo}
+  //           onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+  //           alt={product.ProductName}
+  //         />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (product.compareAtPrice) {
     price = (
@@ -194,18 +148,40 @@ function ProductCard(props) {
     );
   }
 
+  wishlistView =
+    (
+      props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+        props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+          return (
+            <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
+              className={classNames('btn btn-light btn-sm btn-svg-icon')}
+            ><Wishlist16Svg fill="red" />
+            </button>
+          )
+        }) :
+        (
+          <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
+            className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
+          ><Wishlist16Svg />
+          </button>
+        )
+    );
+
   return (
-    <div className={containerClasses}>
+    <Link to={url.product(product)} className={containerClasses}>
       {badges}
       {image}
       <div className="product-card__info">
         <div className="product-card__name">
-          <Link to={url.product(product)}>{product.ProductName}</Link>
+          {product.ProductName}
         </div>
         <div className="product-card__rating">
           <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
-          <div className=" product-card__rating-legend">{`${product.ProductRating !== null ? product.ProductRating : 0}/5 (`}</div>
-          <div className=" product-card__rating-legend">{`${product.ProductReviewCount !== null ? product.ProductReviewCount : 0} Reviews )`}</div>
+          {/* <div className=" product-card__rating-legend">{`(${product.ProductReviewCount !== null ? product.ProductReviewCount : 0} Reviews)`}</div> */}
+          {
+            product.ProductSold !== "0" && product.ProductSold !== null &&
+            <div className=" product-card__rating-legend">{`(${product.ProductSold} Sold)`}</div>
+          }
         </div>
         {features}
       </div>
@@ -215,53 +191,26 @@ function ProductCard(props) {
           Availability:{" "}
           <span style={{ color: "#3d464d" }}>In Stock</span>
         </div>
-        {price}
-        <div className="product-card__buttons">
-          <button
-            type="button"
-            onClick={() => window.localStorage.getItem("id") ? handleCart(product) : login()}
-            className={classNames("btn btn-primary product-card__addtocart")}
-          >
-            Add To Cart
-          </button>
-
-          {
-            props.wishlist.length > 0 ?
-              props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-                props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-                  return (
-                    <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
-                      className={classNames('btn btn-light btn-sm btn-svg-icon')}
-                    ><Wishlist16Svg fill="red" />
-                    </button>
-                  )
-                }) :
-                (
-                  <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
-                    className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
-                  ><Wishlist16Svg />
-                  </button>
-                ) :
-              (
-                <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
-                  className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
-                ><Wishlist16Svg />
-                </button>
-              )
-          }
+        <div className="row"
+          style={{
+            flexDirection: 'row',
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            justifyContent: 'space-between'
+          }}>
+          <label style={{ fontSize: "20px" }}>{price}</label>
+          {wishlistView}
         </div>
+        {
+          product.ShopState !== null &&
+          <div style={{ textAlign: "right", paddingRight: "10px" }}>
+            <label style={{ color: "#2b535e" }}>
+              {product.ShopState}
+            </label>
+          </div>
+        }
       </div>
-
-      {/* <Modal isOpen={isQuickViewOpen} centered size="xl">
-        <div className="quickview">
-          <button className="quickview__close" type="button" onClick={() => handleQuickView()}>
-            <Cross20Svg />
-          </button>
-          {productView}
-        </div>
-      </Modal> */}
-
-    </div>
+    </Link >
   );
 
 
@@ -287,24 +236,13 @@ ProductCard.propTypes = {
 
 
 const mapStateToProps = (state) => ({
-  productcart: state.counterReducer.productcart,
   wishlist: state.counterReducer.wishlist,
-  productsByID: state.counterReducer.productsByID
-
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // CallDeleteProductCart: (prodData) => dispatch(GitAction.CallDeleteProductCart(prodData)),
-    CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
-    CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
-    CallViewProductWishlist: (propsData) => dispatch(GitAction.CallViewProductWishlist(propsData)),
-
-    CallViewProductCart: (prodData) => dispatch(GitAction.CallViewProductCart(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
-
-    CallProductsByID: (prodData) => dispatch(GitAction.CallProductsByID(prodData)),
   }
 };
 

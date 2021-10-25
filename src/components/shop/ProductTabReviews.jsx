@@ -188,7 +188,7 @@ class ProductTabReviews extends Component {
       this.props.loading === false ?
         <div div className="reviews-view" id="reviews" >
           <div className="reviews-view__list">
-            <h3 className="reviews-view__header">Customer Reviews</h3>
+            <div className="reviews-view__header">Customer Reviews</div>
             <div className="reviews-list">
               <ol className="reviews-list__content">{reviewsList}</ol>
               <div className="reviews-list__pagination">
@@ -204,7 +204,7 @@ class ProductTabReviews extends Component {
               </div>
             </div>
           </div>
-          <h3 className="reviews-view__header">Write A Review</h3>
+          <div className="reviews-view__header">Write A Review</div>
           <div style={{ textAlign: "center" }} id="writeReviews">
             <div style={{ display: "inline-block" }}>
 

@@ -1,23 +1,26 @@
 /*
 // .spec
 */
+
 @import '../variables';
 @import '../functions';
 @import '../mixins/direction';
-
-
 .spec {
-    font-size: 15px;
-    line-height: 18px;
+    font-size: 16px;
 }
+
 .spec__header {
-    margin-bottom: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 15px;
 }
+
 .spec__section {
-    & + & {
+    &+& {
         margin-top: 40px;
     }
 }
+
 .spec__section-title {
     font-weight: $font-weight-medium;
     font-size: 18px;
@@ -25,24 +28,25 @@
     line-height: 20px;
     margin: 0 0 12px;
 }
+
 .spec__row {
     padding: 8px 12px;
     display: flex;
     border-bottom: 1px solid $card-divider-color;
-
     &:first-of-type {
         border-top: 1px solid $card-divider-color;
     }
 }
+
 .spec__name {
     width: 230px;
     flex-shrink: 0;
     color: $card-font-muted-color;
-
     @include direction {
         #{$padding-inline-end}: 30px;
     }
 }
+
 .spec__disclaimer {
     margin-top: 40px;
     font-size: 14px;
@@ -55,6 +59,7 @@
         width: 170px;
     }
 }
+
 @media (max-width: breakpoint(xs-end)) {
     .spec__header {
         margin-bottom: 30px;

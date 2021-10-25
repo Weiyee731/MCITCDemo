@@ -11,13 +11,13 @@ function Currency(props) {
 
   return <React.Fragment>
     {/* {`${currency} ${value.toFixed(2)}`} */}
-  {`RM ${value === 'number' ? value.toFixed( 2 ) : value}`}
-    </React.Fragment>;
+    {`RM ${value === 'number' ? value.toFixed(2) : value}`}
+  </React.Fragment>;
 }
 
 Currency.propTypes = {
   /** price value */
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
   /** currency object, specify to override currentCurrency */
   currency: PropTypes.any,
   /** currency object */

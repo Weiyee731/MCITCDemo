@@ -28,6 +28,9 @@ export class GitAction {
   static EditUserProfile = "EDIT-USERPROFILE";
   static EditedUserProfile = "EDITED-USERPROFILE";
 
+  static UpdateProfileSpecificField = "UPDATE-PROFILESPECIFICFIELD";
+  static UpdatedProfileSpecificField = "UPDATED-PROFILESPECIFICFIELD";
+
   static CheckUser = "CHECK-USER";
   static CheckedUser = "CHECKED-USER";
 
@@ -98,6 +101,13 @@ export class GitAction {
   static CallUpdateUserProfile(propsData) {
     return {
       type: GitAction.EditUserProfile,
+      payload: propsData,
+    };
+  }
+
+  static CallUpdateProfileSpecificField(propsData) {
+    return {
+      type: GitAction.UpdateProfileSpecificField,
       payload: propsData,
     };
   }
@@ -197,6 +207,9 @@ export class GitAction {
   static AddProduct = "ADD-PRODUCT";
   static AddedProduct = "ADDED-PRODUCT";
 
+  static ClearProduct = "CLEAR-PRODUCT";
+  static ClearedProduct = "CLEARED-PRODUCT";
+
   static UpdateProduct = "UPDATE-PRODUCT";
   static UpdatedProduct = "UPDATED-PRODUCT";
 
@@ -233,6 +246,12 @@ export class GitAction {
     return {
       type: GitAction.GetProductListing,
       payload: propData
+    };
+  }
+
+  static CallGetMoreProductEmpty() {
+    return {
+      type: GitAction.ClearProduct
     };
   }
 
@@ -336,7 +355,7 @@ export class GitAction {
       payload: prodData,
     };
   }
-  
+
 
   // Product Variation
   static GetProductVariation = "GET-PRODUCTVARIATION";
@@ -1035,9 +1054,10 @@ export class GitAction {
   static GetMerchantOrders = "GET-MERCHANTSORDERS";
   static GotMerchantOrders = "GOT-MERCHANTSORDERS";
 
-  static CallMerchants() {
+  static CallMerchants(propsData) {
     return {
       type: GitAction.GetMerchants,
+      payload: propsData,
     };
   }
 

@@ -13,7 +13,7 @@ import Topbar from "./Topbar";
 import { LogoSvg } from "../../svg";
 import { Heart20Svg } from "../../svg";
 import Indicator from "./Indicator";
-import CartIndicator from "./IndicatorCart";
+import IndicatorCart from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
 import { Cart20Svg, Cross10Svg } from "../../svg";
 
@@ -47,7 +47,7 @@ function Header(props) {
           {localStorage.getItem("isLogin") === 'true' && <Indicator url="/shop/wishlist" 
           value={props.wishlist  !== undefined && props.wishlist[0] !== undefined && props.wishlist[0].ReturnVal === undefined? props.wishlist.length : 0}
            icon={<Heart20Svg />} />}
-          <CartIndicator />
+          <IndicatorCart />
           <IndicatorAccount />
         </div>
       </div>

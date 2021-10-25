@@ -52,6 +52,7 @@ const INITIAL_STATE = {
   productMgmtResult: [],
   addProductVariationResult: [],
   updatePassword: [],
+  profileUpdate: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -123,6 +124,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         currentUser: action.payload,
+      });
+
+    case GitAction.UpdateProfileSpecificField:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedProfileSpecificField:
+      return Object.assign({}, state, {
+        loading: false,
+        profileUpdate: action.payload,
       });
 
     case GitAction.UpdateProfileImage:
@@ -246,6 +255,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
         productsListing: action.payload,
       });
 
+    case GitAction.ClearProduct:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ClearedProduct:
+      return Object.assign({}, state, {
+        loading: false,
+        productsListing: [],
+      });
+
     case GitAction.GetProductDetail:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotProductDetail:
@@ -343,14 +360,6 @@ export function counterReducer(state = INITIAL_STATE, action) {
       var object = Object.assign({}, state);
       object.loading = false;
       object.productMediaResult = false;
-      return object;
-
-    case GitAction.EndorseProduct:
-      return Object.assign({}, state, { loading: true });
-    case GitAction.ProductEndorsed:
-      var object = Object.assign({}, state);
-      object.loading = false;
-      object.productMgmtResult = action.payload;
       return object;
 
     //==============PRODUCT SPECS DETAIL===============//

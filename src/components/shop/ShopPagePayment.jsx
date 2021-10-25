@@ -85,6 +85,7 @@ class PagePayment extends Component {
     this.setDetails = this.setDetails.bind(this)
     this.handleInputFocus = this.handleInputFocus.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleInputChangeCVC = this.handleInputChangeCVC.bind(this);
     this.handlePaymentChange = this.handlePaymentChange.bind(this);
     this.handleAddNewCard = this.handleAddNewCard.bind(this);
     this.handleAddCreditCard = this.handleAddCreditCard.bind(this);
@@ -138,6 +139,14 @@ class PagePayment extends Component {
     this.setState({ focus: e.target.name });
   };
 
+  handleInputChangeCVC = ({ target }) => {
+    if (target.name === "cvc") {
+      target.value = formatCVC(target.value);
+    }
+
+    this.setState({ [target.name]: target.value });
+    this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
+  };
   handleInputChange = ({ target }) => {
     if (target.name === "newnumber") {
       if (target.value.length > 1) {
@@ -153,13 +162,12 @@ class PagePayment extends Component {
       }
     } else if (target.name === "newexpiry") {
       target.value = formatExpirationDate(target.value);
-    } else if (target.name === "cvc") {
+    }
+    else if (target.name === "cvc") {
       target.value = formatCVC(target.value);
     }
-
     this.setState({ [target.name]: target.value });
     // this.props.handleGetPaymentId(this.state.tabvalue, this.state.paymentMethods)
-    this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
   };
 
   handlePaymentChange = (value, typeid, typevalue) => {
@@ -175,7 +183,7 @@ class PagePayment extends Component {
     if (value === true) {
       this.setState({ cvcVisible: true, paymentMethodsID: cards.UserPaymentMethodID, cvc: "" })
       this.state.cardList.push(cards)
-    }else{
+    } else {
       this.setState({ cvcVisible: false, paymentMethodsID: cards.UserPaymentMethodID, cvc: "" })
       this.state.cardList.splice(0, this.state.cardList.length)
     }
@@ -370,7 +378,7 @@ class PagePayment extends Component {
                                             pattern="\d{3,4}"
                                             required
                                             value={this.state.cvc}
-                                            onChange={this.handleInputChange}
+                                            onChange={this.handleInputChangeCVC}
                                             onFocus={this.handleInputFocus}
                                           />
                                         </div>
@@ -402,78 +410,79 @@ class PagePayment extends Component {
                       }
                       {
                         this.state.isAddNewCard === true ?
-                          <div className="row">
-                            <div className="col-6" style={{ marginTop: "20px" }}>
-                              <Cards
-                                cvc={this.state.cvc}
-                                expiry={this.state.newexpiry}
-                                focused={this.state.focus}
-                                name={this.state.newname}
-                                number={this.state.newnumber}
-                                preview={true}
-                              />
-                              <div style={{ textAlign: "center", marginTop: "10px", position: "absolute" }}>
-                                <button
-                                  onClick={() => this.handleAddCreditCard()}
-                                  className="btn btn-primary btn-block"
-                                  type="button"
-                                >
-                                  Add this Credit Card
-                                </button>
+                          <Grid item style={{ margin: "2vw", marginTop: "1vw", marginBottom: "1vw", }} >
+                            <div className="row">
+                              <div className="col-6" style={{ marginTop: "20px" }}>
+                                <Cards
+                                  // cvc={this.state.cvc}
+                                  expiry={this.state.newexpiry}
+                                  focused={this.state.focus}
+                                  name={this.state.newname}
+                                  number={this.state.newnumber}
+                                  preview={true}
+                                />
+                                <div style={{ textAlign: "center", marginTop: "10px", position: "absolute" }}>
+                                  <button
+                                    onClick={() => this.handleAddCreditCard()}
+                                    className="btn btn-primary btn-block"
+                                    type="button"
+                                  >
+                                    Add this Credit Card
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                            <div className="col-6" style={{ marginTop: "20px" }}>
-                              <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
-                                <div style={{ marginTop: "10px" }}>
-                                  <TextField
-                                    variant="outlined"
-                                    style={{ width: '100%' }}
-                                    size="small"
-                                    label="Card Number"
-                                    type="tel"
-                                    name="newnumber"
-                                    className="form-control"
-                                    placeholder="Card Number"
-                                    pattern="[\d| ]{16,22}"
-                                    maxLength="16"
-                                    required
-                                    onChange={this.handleInputChange}
-                                    onFocus={this.handleInputFocus}
-                                  />
-                                </div>
-                                <div style={{ marginTop: "10px" }}>
-                                  <TextField
-                                    variant="outlined"
-                                    style={{ width: '100%' }}
-                                    size="small"
-                                    label="Card Name"
-                                    type="text"
-                                    name="newname"
-                                    className="form-control"
-                                    placeholder="Name"
-                                    required
-                                    onChange={this.handleInputChange}
-                                    onFocus={this.handleInputFocus}
-                                  />
-                                </div>
+                              <div className="col-6" style={{ marginTop: "20px" }}>
+                                <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
+                                  <div style={{ marginTop: "10px" }}>
+                                    <TextField
+                                      variant="outlined"
+                                      style={{ width: '100%' }}
+                                      size="small"
+                                      label="Card Number"
+                                      type="tel"
+                                      name="newnumber"
+                                      className="form-control"
+                                      placeholder="Card Number"
+                                      pattern="[\d| ]{16,22}"
+                                      maxLength={16}
+                                      required
+                                      onChange={this.handleInputChange}
+                                      onFocus={this.handleInputFocus}
+                                    />
+                                  </div>
+                                  <div style={{ marginTop: "10px" }}>
+                                    <TextField
+                                      variant="outlined"
+                                      style={{ width: '100%' }}
+                                      size="small"
+                                      label="Card Name"
+                                      type="text"
+                                      name="newname"
+                                      className="form-control"
+                                      placeholder="Name"
+                                      required
+                                      onChange={this.handleInputChange}
+                                      onFocus={this.handleInputFocus}
+                                    />
+                                  </div>
 
-                                <div style={{ marginTop: "10px" }}>
-                                  <TextField
-                                    variant="outlined"
-                                    style={{ width: '100%' }}
-                                    size="small"
-                                    label="Valid Thru"
-                                    type="tel"
-                                    name="newexpiry"
-                                    className="form-control"
-                                    placeholder="Valid Thru"
-                                    pattern="\d\d/\d\d"
-                                    required
-                                    onChange={this.handleInputChange}
-                                    onFocus={this.handleInputFocus}
-                                  />
-                                </div>
-                                <div style={{ marginTop: "10px" }}>
+                                  <div style={{ marginTop: "10px" }}>
+                                    <TextField
+                                      variant="outlined"
+                                      style={{ width: '100%' }}
+                                      size="small"
+                                      label="Valid Thru"
+                                      type="tel"
+                                      name="newexpiry"
+                                      className="form-control"
+                                      placeholder="Valid Thru"
+                                      pattern="\d\d/\d\d"
+                                      required
+                                      onChange={this.handleInputChange}
+                                      onFocus={this.handleInputFocus}
+                                    />
+                                  </div>
+                                  {/* <div style={{ marginTop: "10px" }}>
                                   <TextField
                                     variant="outlined"
                                     style={{ width: '100%' }}
@@ -488,35 +497,36 @@ class PagePayment extends Component {
                                     onChange={this.handleInputChange}
                                     onFocus={this.handleInputFocus}
                                   />
-                                </div>
-                                <div>
-                                  <FormControl component="fieldset">
-                                    <RadioGroup
-                                      row aria-label="cardtype"
-                                      name="cardtype"
-                                      value={this.state.cardtype}
-                                      onChange={this.handleChangeCardType}
-                                    >
-                                      <div className="row">
-                                        <FormControlLabel
-                                          value="MasterCard"
-                                          control={<Radio />}
-                                          label="Master Card"
-                                        />
-                                        <FormControlLabel
-                                          value="VisaCard"
-                                          control={<Radio />}
-                                          label="Visa Card"
-                                        />
-                                      </div>
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>
-                                <div>
-                                </div>
-                              </form>
+                                </div> */}
+                                  <div style={{ paddingLeft: "20px" }}>
+                                    <FormControl component="fieldset">
+                                      <RadioGroup
+                                        row aria-label="cardtype"
+                                        name="cardtype"
+                                        value={this.state.cardtype}
+                                        onChange={this.handleChangeCardType}
+                                      >
+                                        <div className="row">
+                                          <FormControlLabel
+                                            value="MasterCard"
+                                            control={<Radio />}
+                                            label="Master Card"
+                                          />
+                                          <FormControlLabel
+                                            value="VisaCard"
+                                            control={<Radio />}
+                                            label="Visa Card"
+                                          />
+                                        </div>
+                                      </RadioGroup>
+                                    </FormControl>
+                                  </div>
+                                  <div>
+                                  </div>
+                                </form>
+                              </div>
                             </div>
-                          </div>
+                          </Grid>
                           : ""
                       }
 

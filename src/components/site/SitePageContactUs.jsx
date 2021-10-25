@@ -158,7 +158,7 @@ function SitePageContactUs() {
                         <label>Monday to Saturday: 10.00am - 07.00pm</label><br />
 
                         <label className="mt-3">EMAIL US:</label><br />
-                        <label>info@emporia.com</label><br />
+                        <label>myemporia.helpdesk@gmail.com</label><br />
 
                         <label className="mt-3">MAILING ADDRESS:</label><br />
                         <label>Penview Convention Centre Kuching</label><br /><label>Sejingkat, 93050 Kuching, Sarawak</label>

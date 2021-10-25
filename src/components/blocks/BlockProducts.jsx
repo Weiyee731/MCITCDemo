@@ -41,12 +41,11 @@ export default function BlockProducts(props) {
     <div className={`block block-products block-products--layout--${layout}`}>
       {
         typeof products.ReturnVal !== 'undefined' && products.ReturnVal !== 1 ?
-          ""
+          <div>This shop does not have any products yet</div>
           :
           (
             <div className="container">
               <BlockHeader title={title} />
-
               <div>
                 {layout === "large-first" && large}
                 {smalls}

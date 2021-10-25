@@ -1431,6 +1431,8 @@ class AddProductComponent extends Component {
 
     } else {
       if (data === "512x512") {
+        console.log(data)
+        console.log(acceptedFiles)
         if (this.state.fileInfo.length + acceptedFiles.length > 3) {
           this.setState({
 

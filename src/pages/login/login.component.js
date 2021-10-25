@@ -42,8 +42,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     loginUser: (credentials) => dispatch(GitAction.CallLogin(credentials)),
-    CallViewProductCart: (propsData) => dispatch(GitAction.CallViewProductCart(propsData)),
-    CallViewProductWishlist: (propsData) => dispatch(GitAction.CallViewProductWishlist(propsData)),
+    // CallViewProductCart: (propsData) => dispatch(GitAction.CallViewProductCart(propsData)),
+    // CallViewProductWishlist: (propsData) => dispatch(GitAction.CallViewProductWishlist(propsData)),
   };
 }
 
@@ -82,14 +82,17 @@ class LoginComponent extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.currentUser !== this.props.currentUser) {
       if (this.props.currentUser[0].ReturnVal !== "0") {
-        this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
-        this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
+
+
+        // this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
+        // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
 
         localStorage.setItem("isLogin", true);
         localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
         localStorage.setItem("lastname", this.props.currentUser[0].LastName);
         localStorage.setItem("role", this.props.currentUser[0].UserType);
         localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
+        localStorage.setItem("userName", this.state.username);
         localStorage.setItem(
           "productEndorsementBadge",
           this.props.currentUser[0].productEndorsementBadge
@@ -105,7 +108,7 @@ class LoginComponent extends Component {
           cookies.set("isLogin", true);
 
           cookies.set("rememberMe", this.state.rememberMe);
-
+          localStorage.setItem("userName", this.state.username);
           localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
           cookies.set("firstname", this.props.currentUser[0].FirstName);
           localStorage.setItem("lastname", this.props.currentUser[0].LastName);
@@ -122,7 +125,7 @@ class LoginComponent extends Component {
 
           cookies.set("rememberMe", this.state.rememberMe, options);
           localStorage.setItem("id", this.props.currentUser[0].UserID);
-
+          localStorage.setItem("userName", this.state.username);
           localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
           cookies.set("firstname", this.props.currentUser[0].FirstName, options);
           localStorage.setItem("lastname", this.props.currentUser[0].LastName);

@@ -49,7 +49,7 @@ function Topbar() {
     { title: "Order History", url: "/account/orders" },
     { title: "Addresses", url: "/account/addresses" },
     { title: "Password", url: "/account/password" },
-    { title: "Logout", url: "/Emporia/login" },
+    { title: "Logout", url: "/login" },
   ];
 
   const linksList = links.map((item, index) => (

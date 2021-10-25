@@ -13,11 +13,11 @@ import wishlistReducer from './wishlist';
 import { counterReducer } from "./reducer/gitReducer";
 
 export default combineReducers({
-    counterReducer:counterReducer,
+    counterReducer: counterReducer,
     version: (state = version) => state,
     cart: cartReducer,
     compare: compareReducer,
-    currency: currencyReducer, 
+    currency: currencyReducer,
     locale: localeReducer,
     mobileMenu: mobileMenuReducer,
     quickview: quickviewReducer,

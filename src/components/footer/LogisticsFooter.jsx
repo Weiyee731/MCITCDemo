@@ -13,7 +13,7 @@ export default function LogisticsFooter() {
             <h5 className="footer-newsletter__title">Logistics</h5>
             <div className='row'>
                 <div className="col-4">
-                <Image width="70px" height="35px" src={JNT} />
+                    <Image width="100%" height="auto" src={JNT} />
                 </div>
             </div>
         </div>

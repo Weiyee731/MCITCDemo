@@ -1,28 +1,8 @@
 // react
 import React, { Component } from "react";
-// import { connect } from "react-redux";
-// import { GitAction } from "../../store/action/gitAction";
 
 // data stubs
 import specification from "../../data/shopProductSpec";
-
-
-// function mapStateToProps(state) {
-//   return {
-//     reviews: state.counterReducer["reviews"],
-//     loading: state.counterReducer["loading"],
-//     products: state.counterReducer["products"],
-//   };
-// }
-
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     CallAddProductReview: (PropsData) => dispatch(GitAction.CallAddProductReview(PropsData)),
-//     CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
-//     CallAllProducts: () => dispatch(GitAction.CallAllProducts()),
-//   };
-// }
-
 
 class ProductTabSpecification extends Component {
 
@@ -30,16 +10,12 @@ class ProductTabSpecification extends Component {
     super(props);
     this.state = {
     }
-
-    // this.props.CallAllProducts();
   }
 
   render() {
-
     const sections = specification.map((section, index) => {
       const features = section.features.map((feature, index) => (
         <div key={index} className="spec__row">
-          {/* {console.log(feature)} */}
           <div className="spec__name">{feature.name}</div>
           <div className="spec__value">{feature.value}</div>
         </div>
@@ -47,18 +23,17 @@ class ProductTabSpecification extends Component {
 
       return (
         <div key={index} className="spec__section">
-          <h4 className="spec__section-title">{section.name}</h4>
+          <div className="spec__section-title">{section.name}</div>
           {features}
         </div>
       );
     });
+
     return (
-
-
       <div className="spec">
-        <h3 className="spec__header">Specification</h3>
+        <div className="spec__header">Specification</div>
         <div className="spec__section">
-          <h4 className="spec__section-title">General</h4>
+          <div className="spec__section-title">General</div>
 
           <div className="spec__row">
             <div className="spec__name">Brand</div>
@@ -71,7 +46,7 @@ class ProductTabSpecification extends Component {
           </div>
         </div>
         <div className="spec__section">
-          <h4 className="spec__section-title">Dimensions</h4>
+          <div className="spec__section-title">Dimensions</div>
           <div className="spec__row">
             <div className="spec__name">Width</div>
             <div className="spec__value">
@@ -106,5 +81,4 @@ class ProductTabSpecification extends Component {
 }
 
 export default ProductTabSpecification;
-// export default connect(mapStateToProps, mapDispatchToProps)(ProductTabSpecification);
 

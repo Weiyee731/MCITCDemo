@@ -13,12 +13,10 @@ import {
     LogoSmallSvg,
     Search20Svg,
     Heart20Svg,
-    Cart20Svg,
-    Person20Svg,
-
 } from '../../svg';
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Search from '../header/Search';
+import IndicatorCart from '../../components/header/IndicatorCart'
 
 class MobileHeader extends Component {
     constructor(props) {
@@ -47,13 +45,11 @@ class MobileHeader extends Component {
     };
 
     render() {
-        const { openMobileMenu, wishlist, cart } = this.props;
+        const { openMobileMenu, wishlist, cart, productcart } = this.props;
         const { searchOpen } = this.state;
         const searchClasses = classNames('mobile-header__search', {
             'mobile-header__search--open': searchOpen,
         });
-
-        console.log(this.props)
 
         return (
             <div className="mobile-header">
@@ -76,27 +72,23 @@ class MobileHeader extends Component {
                                     onClick={this.handleOpenSearch}
                                     icon={<Search20Svg />}
                                 />
-                                
-                                {localStorage.getItem("isLogin") === 'true' &&
+
+                                {
+                                    localStorage.getItem("isLogin") === 'true' &&
                                     <Indicator
                                         url="/shop/wishlist"
-                                        value={this.props.wishlist !== undefined ? this.props.wishlist.length : 0}
+                                        value={wishlist !== undefined ? wishlist.length : 0}
                                         icon={<Heart20Svg />}
                                     />
                                 }
 
-                                <Indicator
-                                    className="indicator--mobile"
-                                    url="/shop/cart"
-                                    value={cart.items.length}
-                                    icon={<Cart20Svg />}
-                                />
+                                <IndicatorCart />
 
-                                <Indicator
+                                {/* <Indicator
                                     className="indicator--mobile"
-                                    url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/Emporia/login'}
+                                    url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/login'}
                                     icon={<Person20Svg />}
-                                />
+                                /> */}
 
                             </div>
                         </div>
@@ -108,8 +100,8 @@ class MobileHeader extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    cart: state.cart,
-    wishlist: state.wishlist,
+    wishlist: state.counterReducer.wishlist,
+    productcart: state.counterReducer.productcart,
 });
 
 const mapDispatchToProps = {
