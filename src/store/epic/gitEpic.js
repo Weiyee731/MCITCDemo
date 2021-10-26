@@ -92,28 +92,27 @@ export class GitEpic {
       }
     });
 
-  LogoutUser = (action$) =>
-    action$.ofType(GitAction.Logout).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Audit_AddUserLogout?USERID=" +
-          payload.UserID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.UserLoggedOut,
-          payload: json,
-        };
-      } catch (error) {
-        alert('LogoutUser: ' + error);
-        return {
-          type: GitAction.UserLoggedOut,
-          payload: [],
-        };
-      }
+
+  LogoutUser = action$ =>
+    action$.ofType(GitAction.Logout).switchMap(({ payload }) => {
+      return fetch(url +
+        "Audit_AddUserLogout?USERID=" +
+        payload.UserID)
+        .then(response => response.json())
+        .then(json => {
+          if (json !== "fail") {
+            json = JSON.parse(json)
+          } else {
+            json = [];
+          }
+          return {
+            type: GitAction.UserLoggedOut,
+            payload: JSON.parse(json)
+          };
+        })
+        .catch(error => toast.error("Error code: 8001"));
     });
+
 
   RegisterUser = (action$) =>
     action$.ofType(GitAction.Register).switchMap(async ({ payload }) => {
@@ -628,6 +627,8 @@ export class GitEpic {
         json = JSON.parse(json);
         if (json[0].ReturnVal !== 1) {
           toast.error("Product " + payload.productName + " is NOT updated! Please try again.");
+        } else {
+          toast.success("Product " + payload.productName + " is updated");
         }
         try {
           const response_1 = await fetch(
@@ -2530,7 +2531,7 @@ export class GitEpic {
   //       const json = await response.json();
   //       json = JSON.parse(json);
 
-       
+
   //       return {
   //         type: GitAction.GotMerchants,
   //         payload: json,
@@ -2543,25 +2544,25 @@ export class GitEpic {
   //       };
   //     }
   //   });
-    
 
-    getAllMerchants = (action$) =>
+
+  getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
       console.log(url + "User_ProfileListByType?TYPE=" + payload.type +
-      "&TYPEVALUE=" + payload.typeValue +
-      "&USERID=" + payload.userID +
-      "&UserRoleID=" + payload.userRoleID +
-      "&LISTPERPAGE=" + payload.productPage +
-      "&PAGE=" + payload.page)
-      
-      try {
-
-        const response = await fetch(url + "User_ProfileListByType?TYPE=" + payload.type +
         "&TYPEVALUE=" + payload.typeValue +
         "&USERID=" + payload.userID +
         "&UserRoleID=" + payload.userRoleID +
         "&LISTPERPAGE=" + payload.productPage +
-        "&PAGE=" + payload.page
+        "&PAGE=" + payload.page)
+
+      try {
+
+        const response = await fetch(url + "User_ProfileListByType?TYPE=" + payload.type +
+          "&TYPEVALUE=" + payload.typeValue +
+          "&USERID=" + payload.userID +
+          "&UserRoleID=" + payload.userRoleID +
+          "&LISTPERPAGE=" + payload.productPage +
+          "&PAGE=" + payload.page
         );
         let json = await response.json();
         json = JSON.parse(json);

@@ -76,16 +76,18 @@ class Product extends Component {
 
   addCart = (product, quantity) => {
     let found = false
-
     if (this.props.productcart) {
-      this.props.productcart.filter(x => x.ProductID === product.ProductID && x.ProductVariationDetailID === product.ProductVariationDetailID).map((x) => {
-        found = true
-        this.props.CallUpdateProductCart({
-          userID: localStorage.getItem("id"),
-          userCartID: x.UserCartID,
-          productQuantity: parseInt(x.ProductQuantity) + quantity,
-          productName: product.ProductName
-        })
+
+      this.props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+        if (x.ProductVariationDetailID !== null && x.ProductVariationDetailID === this.state.productVariationDetailID) {
+          found = true
+          this.props.CallUpdateProductCart({
+            userID: localStorage.getItem("id"),
+            userCartID: x.UserCartID,
+            productQuantity: parseInt(x.ProductQuantity) + quantity,
+            productName: product.ProductName
+          })
+        }
       })
 
       if (found === false) {
@@ -165,7 +167,13 @@ class Product extends Component {
     const { quantity } = this.state;
     let prices;
 
+    console.log("merchanr", product)
+
+    console.log("this.satte", this.props)
+
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
+
+
 
     let merchant = JSON.parse(product.MerchantDetail)[0]
     let variation = JSON.parse(product.ProductVariation)[0]

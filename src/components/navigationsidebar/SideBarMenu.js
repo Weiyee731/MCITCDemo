@@ -74,30 +74,30 @@ const SideBarMenu = ({
     return pages.length === 0
       ? ""
       : pages.map((menu, index) => {
-          let liElementList = "";
-          if (menu.type === "header") {
-            liElementList = (
-              <li key={"dropdown" + index} className="header-menu">
-                <span>{menu.title}</span>
-              </li>
-            );
-          } else if (menu.type === "dropdown") {
-            // console.log(menuItems);
-            liElementList = (
-              <DropdownMenu
-                menu={menu}
-                active={
-                  menuItems[index].active ? menuItems[index].active : false
-                }
-                key={"sidebar" + index}
-                handleClick={(e) => handleMenuDropDownClick(e, index)}
-              />
-            );
-          } else if (menu.type === "simple") {
-            liElementList = <SimpleMenu key={menu} menu={menu} />;
-          }
-          return liElementList;
-        });
+        let liElementList = "";
+        if (menu.type === "header") {
+          liElementList = (
+            <li key={"dropdown" + index} className="header-menu">
+              <span>{menu.title}</span>
+            </li>
+          );
+        } else if (menu.type === "dropdown") {
+          // console.log(menuItems);
+          liElementList = (
+            <DropdownMenu
+              menu={menu}
+              active={
+                menuItems[index].active ? menuItems[index].active : false
+              }
+              key={"sidebar" + index}
+              handleClick={(e) => handleMenuDropDownClick(e, index)}
+            />
+          );
+        } else if (menu.type === "simple") {
+          liElementList = <SimpleMenu key={menu} menu={menu} />;
+        }
+        return liElementList;
+      });
   };
 
   const CustomDropDownToggle = React.forwardRef(

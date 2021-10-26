@@ -200,7 +200,7 @@ class PageCheckOrder extends Component {
         {addresses}
 
         <Link
-          to="Emporia/account/addresses"
+          to="/account/addresses"
           className="addresses-list__item addresses-list__item--new"
         >
           <div className="addresses-list__plus" />

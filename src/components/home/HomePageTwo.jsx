@@ -106,6 +106,8 @@ function HomePageTwo(props) {
     })
   }, [])
 
+  console.log("HOMEPAGE", localStorage)
+
   return (
     <React.Fragment>
       <div className="block--margin-top">

@@ -160,7 +160,7 @@ function MerchantPage(props) {
                                                 {profileimage}
                                             </div>
                                             <div className="col-6" style={{ fontWeight: "bold" }}>
-                                                <div className=" block-header__title">
+                                                <div style={{ fontSize: "15px" }}>
                                                     {merchantDetails.ShopName}
                                                     {/* {merchantDetails.ShopName} */}
                                                 </div>

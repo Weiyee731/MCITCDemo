@@ -125,6 +125,7 @@ class IndicatorAccount extends Component {
   }
 
   logout = () => {
+
     this.props.callLogout({ UserID: localStorage.getItem("id") });
     browserHistory.push("/Emporia");
     localStorage.clear();
