@@ -60,13 +60,16 @@ function MobileMenu(props) {
             label: 'Categories',
             url: '',
             children: [
-                productCategories.map((item, index) => (
-                    {
-                        type: 'link',
-                        label: item.ProductCategory,
-                        url: '',
-                    }
-                )),
+                productCategories.map((item, index) => {
+                    console.log(item[0])
+                    return (
+                        {
+                            type: 'link',
+                            label: item.ProductCategory,
+                            url: '',
+                        }
+                    )
+                }),
             ],
         },
 
@@ -159,21 +162,20 @@ function MobileMenu(props) {
         {
             type: 'link',
             label: 'Account',
-            url: localStorage.getItem('isLogin') === 'true' ? '/account/profile' : '/login',
-            // children: [
-            //     { type: 'link', label: 'Login', url: '/login' },
-            //     { type: 'link', label: 'Dashboard', url: '/account/dashboard' },
-            //     { type: 'link', label: 'Edit Profile', url: '/account/profile' },
-            //     { type: 'link', label: 'Order History', url: '/account/orders' },
-            //     { type: 'link', label: 'Order Details', url: '/account/orders/5' },
-            //     { type: 'link', label: 'Address Book', url: '/account/addresses' },
-            //     { type: 'link', label: 'Edit Address', url: '/account/addresses/5' },
-            //     { type: 'link', label: 'Change Password', url: '/account/password' },
-            // ],
+            url: '',
+            children: [
+                localStorage.getItem('isLogin') === 'false' && { type: 'link', label: 'Login', url: '/login' },
+                localStorage.getItem('roleid') <= 15 && { type: 'link', label: 'Inventory', url: '/dashboard' },
+                { type: 'link', label: 'Edit Profile', url: '/account' },
+                { type: 'link', label: 'Order History', url: '/account/orders' },
+                { type: 'link', label: 'Order Details', url: '/account/orders/5' },
+                { type: 'link', label: 'Address Book', url: '/account/addresses' },
+                { type: 'link', label: 'Edit Address', url: '/account/addresses/5' },
+                { type: 'link', label: 'Change Password', url: '/account/password' },
+                localStorage.getItem('isLogin') === 'true' && { type: 'link', label: 'Logout', url: '/login' },
+            ],
         },
     ];
-
-    console.log(localStorage.getItem('id'))
 
     return (
         <div className={classes}>
