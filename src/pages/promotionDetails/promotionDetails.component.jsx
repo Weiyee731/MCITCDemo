@@ -1103,7 +1103,7 @@ class PromotionDetailsComponent extends Component {
       setTimeout(
         function () {
           // this.props.history.push("/viewProductPromotion");
-          browserHistory.push("/UnimasMarketplace/viewProductPromotion");
+          browserHistory.push("/Emporia/viewProductPromotion");
           window.location.reload(false);
         }.bind(this),
         500

@@ -44,7 +44,7 @@ class BlockAllProductCategory extends Component {
                                 <div className="col-md-2 col-xs-2 col-2">
                                     <div className="text-center category-item">
                                         <img src={el.ProductCategoryImage} alt={el.ProductCategory} width="150px" height="150px" onClick={(e) => { 
-                                            window.location.href = "/shop/ProductListing/type:Category&typevalue:" + el.ProductCategoryID
+                                            window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + el.ProductCategoryID
                                             // window.location.href = "/shop/ProductCategory/" + el.ProductCategoryID + "/" + el.ProductCategory 
                                             }} />
                                         <br />
@@ -58,7 +58,7 @@ class BlockAllProductCategory extends Component {
                                             el.HierarchyItem === null
                                                 ? <div className="col-auto mr-2 mb-2 category-item" style={{ cursor: "pointer" }} >
                                                     <label onClick={(e) => {
-                                                        window.location.href = "/shop/ProductListing/type:Category&typevalue:" + el.ProductCategoryID
+                                                        window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + el.ProductCategoryID
                                                         // window.location.href = "/shop/ProductCategory/" + el.ProductCategoryID + "/" + el.ProductCategory
                                                     }}>{el.ProductCategory}</label>
                                                 </div>
@@ -67,7 +67,7 @@ class BlockAllProductCategory extends Component {
                                                         ml.HierarchyItem === null
                                                             ? <div className="col-auto mr-2 mb-2 category-item" style={{ cursor: "pointer" }}>
                                                                 <label onClick={(e) => {
-                                                                    window.location.href = "/shop/ProductListing/type:Category&typevalue:" + ml.ProductCategoryID
+                                                                    window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + ml.ProductCategoryID
                                                                     // window.location.href = "/shop/ProductCategory/" + el.ProductCategoryID + "/" + el.ProductCategory + "/" + ml.ProductCategoryID + "/" + ml.ProductCategory 
                                                                 }}>{ml.ProductCategory}</label>
                                                             </div>
@@ -77,7 +77,7 @@ class BlockAllProductCategory extends Component {
                                                                         {
                                                                             cl.HierarchyID < 3 ?
                                                                                 <label onClick={(e) => {
-                                                                                    window.location.href = "/shop/ProductListing/type:Category&typevalue:" + cl.ProductCategoryID
+                                                                                    window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + cl.ProductCategoryID
                                                                                     // window.location.href = "/shop/ProductCategory/" + el.ProductCategoryID + "/" + el.ProductCategory + "/" + cl.ProductCategoryID + "/" + cl.ProductCategory 
                                                                                 }}> {cl.ProductCategory}</label>
                                                                                 : cl.ProductCategory

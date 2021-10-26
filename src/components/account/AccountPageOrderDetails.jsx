@@ -98,7 +98,7 @@ export default function AccountPageOrderDetails(props) {
 
   const orderDetail = props.location.orderdetails;
   if (orderDetail === undefined) {
-    browserHistory.push("../account/orders");
+    browserHistory.push("/Emporia/account/orders");
     window.location.reload(false);
   }
 

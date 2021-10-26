@@ -217,7 +217,7 @@ function Search(props) {
             onClick={(e) => {
               console.log("e.onClick", e)
               console.log("e.onClick", e.button)
-              window.location.href = "/shop/ProductListing/type:Keyword&typevalue:" + searchquery
+              window.location.href = "/Emporia/shop/ProductListing/type:Keyword&typevalue:" + searchquery
             }}>
             <Search20Svg />
           </button>

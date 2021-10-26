@@ -236,7 +236,7 @@ class PageChangeContact extends Component {
         this.stopTimer(0);
         console.log(this.props.profileUpdate[0].ReturnMsg)
         if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-            browserHistory.push("account/profile");
+            browserHistory.push("/Emporia/account/profile");
             window.location.reload(false);
         } else { }
         // toast.error// remain in page
