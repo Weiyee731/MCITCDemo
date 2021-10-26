@@ -21,7 +21,7 @@ function mapDispatchToProps(dispatch) {
   return {
     CallUpdateProductStockIn: (prodData) => dispatch(GitAction.CallUpdateProductStockIn(prodData)),
     CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
-    
+
   };
 }
 class AddManualStockInComponent extends Component {
@@ -58,7 +58,7 @@ class AddManualStockInComponent extends Component {
     this.setState({ SelectedProductID: newSelectedProductID });
   };
 
-  handleBlur = () => {};
+  handleBlur = () => { };
 
   bindSubCategory = (row) => {
     let shoplotlocation = JSON.parse(row.ProductShoplocation);
@@ -94,8 +94,8 @@ class AddManualStockInComponent extends Component {
     console.log(this.props.products);
     let allStocksData = this.props.products
       ? Object.keys(this.props.products).map((key) => {
-          return this.props.products[key];
-        })
+        return this.props.products[key];
+      })
       : {};
 
     var FilterList = [

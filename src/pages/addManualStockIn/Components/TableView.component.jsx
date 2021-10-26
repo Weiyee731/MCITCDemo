@@ -93,6 +93,7 @@ function FormDialog(props) {
     window.location.reload();
   };
 
+  console.log(this.props)
   return (
     <div>
       <Button
@@ -114,11 +115,8 @@ function FormDialog(props) {
           <div style={{ display: "flex" }}>
             <img
               height={50}
-              src={
-                JSON.parse(props.Data.ProductImages)
-                  ? JSON.parse(props.Data.ProductImages)[0].ProductMediaUrl
-                  : ""
-              }
+              src={""}
+              alt=""
             />
             <p style={{ marginTop: "10px", marginLeft: "10px" }}>
               {props.Data.ProductName}
@@ -145,7 +143,7 @@ function FormDialog(props) {
           ))} */}
           <Table size="small" style={{ width: "100%" }}>
             <TableBody>
-              {JSON.parse(props.Data.ProductStock).map((ProductStock, i) => (
+              {/* {JSON.parse(props.Data.ProductStock).map((ProductStock, i) => (
                 <TableRow>
                   <TableCell component="th" scope="row">
                     {ProductStock.ProductVariationValue}
@@ -168,7 +166,7 @@ function FormDialog(props) {
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))} */}
             </TableBody>
           </Table>
         </DialogContent>
@@ -312,13 +310,14 @@ function Row(props) {
     setOpen(!open);
     var dataToBeModified = [];
 
-    for (var i = 0; i < JSON.parse(row.ProductStock).length; i++) {
-      var dataSample = {
-        productVariantID: JSON.parse(row.ProductStock)[i].ProductStockID,
-        quantity: 0,
-      };
-      dataToBeModified.push(dataSample);
-    }
+    console.log(row.ProductStock)
+    // for (var i = 0; i < JSON.parse(row.ProductStock).length; i++) {
+    //   var dataSample = {
+    //     productVariantID: JSON.parse(row.ProductStock)[i].ProductStockID,
+    //     quantity: 0,
+    //   };
+    //   dataToBeModified.push(dataSample);
+    // }
 
     setQuantity(dataToBeModified);
   };
@@ -343,11 +342,8 @@ function Row(props) {
           <div>
             <img
               height={50}
-              src={
-                JSON.parse(row.ProductImages)
-                  ? JSON.parse(row.ProductImages)[0].ProductMediaUrl
-                  : "https://www.unimas.my/images/logo/UNIMAS-logo.png"
-              }
+              src=""
+              alt=""
             />
           </div>
         </TableCell>
@@ -400,7 +396,7 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {JSON.parse(row.ProductStock).map((ProductStock) => (
+                  {/* {JSON.parse(row.ProductStock).map((ProductStock) => (
                     <TableRow>
                       <TableCell component="th" scope="row">
                         {ProductStock.ProductVariationValue}
@@ -415,7 +411,7 @@ function Row(props) {
                         {ProductStock.ProductStockStatus}
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ))} */}
                   <TableRow>
                     <TableCell colSpan={7} align="center">
                       <FormDialog
@@ -590,9 +586,7 @@ class DisplayTable extends Component {
                           // key={row.ProductID}
                           onRowClick={this.onRowClick}
                           isItemSelected={isItemSelected}
-                          CallUpdateProductStock={
-                            this.props.CallUpdateProductStock
-                          }
+                          CallUpdateProductStock={this.props.CallUpdateProductStock}
                         />
                       );
                     })}
