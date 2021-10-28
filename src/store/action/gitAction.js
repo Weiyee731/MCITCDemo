@@ -28,8 +28,8 @@ export class GitAction {
   static EditUserProfile = "EDIT-USERPROFILE";
   static EditedUserProfile = "EDITED-USERPROFILE";
 
-  static UpdateProfileSpecificField = "UPDATE-PROFILESPECIFICFIELD";
-  static UpdatedProfileSpecificField = "UPDATED-PROFILESPECIFICFIELD";
+  // static UpdateProfileSpecificField = "UPDATE-PROFILESPECIFICFIELD";
+  // static UpdatedProfileSpecificField = "UPDATED-PROFILESPECIFICFIELD";
 
   static CheckUser = "CHECK-USER";
   static CheckedUser = "CHECKED-USER";
@@ -42,6 +42,18 @@ export class GitAction {
 
   static UpdateProfileImage = "UPDATE-PROFILEIMAGE";
   static UpdatedProfileImage = "UPDATED-PROFILEIMAGE";
+
+  static VerifyPassword = "VERIFY-PASSWORD";
+  static VerifiedPassword = "VERIFIED-PASSWORD";
+
+  static SendOTPVerification = "SEND-OTP-VERIFICATION";
+  static SentOTPVerification = "SENT-OTP-VERIFICATION";
+
+  static UpdateContact = "UPDATE-CONTACT";
+  static UpdatedContact = "UPDATED-CONTACT";
+
+  static UpdateEmail = "UPDATE-EMAIL";
+  static UpdatedEmail = "UPDATED-EMAIL";
 
   static CallCheckUserExists(credentials) {
     return {
@@ -105,16 +117,44 @@ export class GitAction {
     };
   }
 
-  static CallUpdateProfileSpecificField(propsData) {
-    return {
-      type: GitAction.UpdateProfileSpecificField,
-      payload: propsData,
-    };
-  }
+  // static CallUpdateProfileSpecificField(propsData) {
+  //   return {
+  //     type: GitAction.UpdateProfileSpecificField,
+  //     payload: propsData,
+  //   };
+  // }
 
   static CallUpdateProfileImage(propsData) {
     return {
       type: GitAction.UpdateProfileImage,
+      payload: propsData,
+    };
+  }
+
+  static CallVerifyPassword(propsData) {
+    return {
+      type: GitAction.VerifyPassword,
+      payload: propsData,
+    };
+  }
+
+  static CallSendOTP(propsData) {
+    return {
+      type: GitAction.SendOTPVerification,
+      payload: propsData,
+    };
+  }
+
+  static CallUpdateContact(propsData) {
+    return {
+      type: GitAction.UpdateContact,
+      payload: propsData,
+    };
+  }
+
+  static CallUpdateEmail(propsData) {
+    return {
+      type: GitAction.updateEmail,
       payload: propsData,
     };
   }
