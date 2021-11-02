@@ -168,17 +168,149 @@ export class GitEpic {
       }
     });
 
+  verifyPassword = (action$) =>
+    action$.ofType(GitAction.VerifyPassword).switchMap(async ({ payload }) => {
+      try {
+        console.log(url + "User_ValidationByType?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.VerifyType +
+          "&VALIDATIONFIELD=" +
+          payload.password)
+        const response = await fetch(
+          url +
+          "User_ValidationByType?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.VerifyType +
+          "&VALIDATIONFIELD=" +
+          payload.password
+
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.VerifiedPassword,
+          payload: json,
+        };
+      } catch (error) {
+        alert('VerifiedPassword: ' + error);
+        return {
+          type: GitAction.VerifiedPassword,
+          payload: [],
+        };
+      }
+    });
+
+  sentOTPVerification = (action$) =>
+    action$.ofType(GitAction.SendOTPVerification).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "User_SentOTPVerification?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.GETOTPTYPE +
+          "&VALIDATIONFIELD=" +
+          payload.UpdatedValue
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.SentOTPVerification,
+          payload: json,
+        };
+      } catch (error) {
+        alert('SentOTPVerification: ' + error);
+        return {
+          type: GitAction.SentOTPVerification,
+          payload: [],
+        };
+      }
+    });
+
+  updateContact = (action$) =>
+    action$.ofType(GitAction.UpdateContact).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "User_UpdateProfileSpecificField?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.UPDATETYPE +
+          "&OTP=" +
+          payload.otp +
+          "&UPDATEDFIELD=" +
+          payload.UpdatedValue
+
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.UpdatedContact,
+          payload: json,
+        };
+      } catch (error) {
+        alert('UpdatedContact: ' + error);
+        return {
+          type: GitAction.UpdatedContact,
+          payload: [],
+        };
+      }
+    });
+
+  updateEmail = (action$) =>
+    action$.ofType(GitAction.UpdateContact).switchMap(async ({ payload }) => {
+      try {
+        console.log(url +
+          "User_UpdateProfileSpecificField?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.UPDATETYPE +
+          "&OTP=" +
+          payload.otp +
+          "&UPDATEDFIELD=" +
+          payload.UpdatedValue)
+        const response = await fetch(
+          url +
+          "User_UpdateProfileSpecificField?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.UPDATETYPE +
+          "&OTP=" +
+          payload.otp +
+          "&UPDATEDFIELD=" +
+          payload.UpdatedValue
+
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.UpdatedContact,
+          payload: json,
+        };
+      } catch (error) {
+        alert('UpdatedContact: ' + error);
+        return {
+          type: GitAction.UpdatedContact,
+          payload: [],
+        };
+      }
+    });
+
   updatePassword = (action$) =>
     action$.ofType(GitAction.UpdatePassword).switchMap(async ({ payload }) => {
       try {
         const response = await fetch(
           url +
-          "User_UpdatePassword?USERID=" +
-          payload.userId +
-          "&USERPREVPASSWORD=" +
-          payload.oldPassword +
-          "&USERNEWPASSWORD=" +
-          payload.newPassword
+          "User_UpdateProfileSpecificField?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.UPDATETYPE +
+          "&OTP=" +
+          payload.otp +
+          "&UPDATEDFIELD=" +
+          payload.UpdatedValue
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -194,7 +326,32 @@ export class GitEpic {
         };
       }
     });
-
+  // updatePassword = (action$) =>
+  //   action$.ofType(GitAction.UpdatePassword).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "User_UpdatePassword?USERID=" +
+  //         payload.userId +
+  //         "&USERPREVPASSWORD=" +
+  //         payload.oldPassword +
+  //         "&USERNEWPASSWORD=" +
+  //         payload.newPassword
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       return {
+  //         type: GitAction.UpdatedPassword,
+  //         payload: json,
+  //       };
+  //     } catch (error) {
+  //       alert('updatePassword: ' + error);
+  //       return {
+  //         type: GitAction.UpdatedPassword,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
   getUserPage = (action$) =>
     action$.ofType(GitAction.GetPages).switchMap(async ({ payload }) => {
       try {
@@ -305,47 +462,47 @@ export class GitEpic {
       }
     });
 
-  UpdateProfileSpecificField = (action$) =>
-    action$.ofType(GitAction.UpdateProfileSpecificField).switchMap(async ({ payload }) => {
-      try {
-        console.log(url +
-          "User_UpdateProfileSpecificField?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.UPDATETYPE +
-          "&VALIDATIONFIELD=" +
-          payload.otp +
-          "&UPDATEDFIELD=" +
-          payload.USERCONTACTNO)
-        const response = await fetch(
-          url +
-          "User_UpdateProfileSpecificField?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.UPDATETYPE +
-          "&VALIDATIONFIELD=" +
-          payload.otp +
-          "&UPDATEDFIELD=" +
-          payload.USERCONTACTNO
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        console.log(json)
-        if (json.map((val) => val.ReturnVal === 1 && val.ReturnMsg === "The OTP was Wrong")) {
-          toast.warn("The OTP was not input correctly. Please kindly try again");
-        } else { toast.success("The new contact number was submitted"); }
-        return {
-          type: GitAction.UpdatedProfileSpecificField,
-          payload: json,
-        };
-      } catch (error) {
-        alert('User_UpdateProfileSpecificField: ' + error);
-        return {
-          type: GitAction.UpdatedProfileSpecificField,
-          payload: [],
-        };
-      }
-    });
+  // UpdateProfileSpecificField = (action$) =>
+  //   action$.ofType(GitAction.UpdateProfileSpecificField).switchMap(async ({ payload }) => {
+  //     try {
+  //       console.log(url +
+  //         "User_UpdateProfileSpecificField?USERID=" +
+  //         payload.USERID +
+  //         "&TYPE=" +
+  //         payload.UPDATETYPE +
+  //         "&VALIDATIONFIELD=" +
+  //         payload.otp +
+  //         "&UPDATEDFIELD=" +
+  //         payload.USERCONTACTNO)
+  //       const response = await fetch(
+  //         url +
+  //         "User_UpdateProfileSpecificField?USERID=" +
+  //         payload.USERID +
+  //         "&TYPE=" +
+  //         payload.UPDATETYPE +
+  //         "&VALIDATIONFIELD=" +
+  //         payload.otp +
+  //         "&UPDATEDFIELD=" +
+  //         payload.USERCONTACTNO
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       console.log(json)
+  //       if (json.map((val) => val.ReturnVal === 1 && val.ReturnMsg === "The OTP was Wrong")) {
+  //         toast.warn("The OTP was not input correctly. Please kindly try again");
+  //       } else { toast.success("The new contact number was submitted"); }
+  //       return {
+  //         type: GitAction.UpdatedProfileSpecificField,
+  //         payload: json,
+  //       };
+  //     } catch (error) {
+  //       alert('User_UpdateProfileSpecificField: ' + error);
+  //       return {
+  //         type: GitAction.UpdatedProfileSpecificField,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
 
   updateProfileImage = (action$) =>
     action$.ofType(GitAction.UpdateProfileImage).switchMap(async ({ payload }) => {

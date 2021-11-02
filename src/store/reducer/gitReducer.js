@@ -53,6 +53,10 @@ const INITIAL_STATE = {
   addProductVariationResult: [],
   updatePassword: [],
   profileUpdate: [],
+  verifyPassword: [],
+  verifyOTP: [],
+  contactUpdated: [],
+  emailUpdated: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -99,7 +103,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.UpdatedPassword:
       return Object.assign({}, state, {
         loading: false,
-        exists: action.payload,
+        updatePassword: action.payload,
       });
 
     case GitAction.GetPages:
@@ -126,13 +130,13 @@ export function counterReducer(state = INITIAL_STATE, action) {
         currentUser: action.payload,
       });
 
-    case GitAction.UpdateProfileSpecificField:
-      return Object.assign({}, state, { loading: true });
-    case GitAction.UpdatedProfileSpecificField:
-      return Object.assign({}, state, {
-        loading: false,
-        profileUpdate: action.payload,
-      });
+    // case GitAction.UpdateProfileSpecificField:
+    //   return Object.assign({}, state, { loading: true });
+    // case GitAction.UpdatedProfileSpecificField:
+    //   return Object.assign({}, state, {
+    //     loading: false,
+    //     profileUpdate: action.payload,
+    //   });
 
     case GitAction.UpdateProfileImage:
       return Object.assign({}, state, { loading: true });
@@ -142,6 +146,37 @@ export function counterReducer(state = INITIAL_STATE, action) {
         currentUser: action.payload,
       });
 
+    case GitAction.VerifyPassword:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.VerifiedPassword:
+      return Object.assign({}, state, {
+        loading: false,
+        verifyPassword: action.payload,
+      });
+
+    case GitAction.SendOTPVerification:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.SentOTPVerification:
+      return Object.assign({}, state, {
+        loading: false,
+        verifyOTP: action.payload,
+      });
+
+    case GitAction.UpdateContact:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedContact:
+      return Object.assign({}, state, {
+        loading: false,
+        contactUpdated: action.payload,
+      });
+
+    case GitAction.UpdateEmail:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedEmail:
+      return Object.assign({}, state, {
+        loading: false,
+        emailUpdated: action.payload,
+      });
     //=======================COUNTRY========================//
 
     case GitAction.GetCountry:

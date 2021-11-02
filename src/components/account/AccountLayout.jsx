@@ -111,11 +111,11 @@ export default function AccountLayout(props) {
                   from={match.path}
                   to={`${match.path}/profile`}
                 />
-                <Redirect
+                {/* <Redirect
                   exact
                   from={match.path}
                   to={`${match.path}/dashboard`}
-                />
+                /> */}
                 {/* <Route
                   exact
                   path={`${match.path}/dashboard`}

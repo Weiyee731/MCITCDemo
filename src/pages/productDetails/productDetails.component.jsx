@@ -116,7 +116,8 @@ function mapDispatchToProps(dispatch) {
     CallResetProductVariationDetailResult: () => dispatch(GitAction.CallResetProductVariationDetailResult()),
     CallAddProductSpecsDetail: (prodData) => dispatch(GitAction.CallAddProductSpecsDetail(prodData)),
     CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
-    CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData))
+    CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData)),
+    CallUpdateProduct: (prodData) => dispatch(GitAction.CallUpdateProduct(prodData))
   };
 }
 
@@ -413,6 +414,7 @@ const INITIAL_STATE = {
   productMediaVisible: false,
   shippingInfoVisible: false,
   productDescriptionVisible: false,
+  productSpecificationVisible: false,
   variation1Name: "",
   variation2Name: "",
   progressBasic: 0,
@@ -486,6 +488,7 @@ class ProductDetailsComponent extends Component {
 
     this.basicInfo = React.createRef();
     this.productDetails = React.createRef();
+    this.productDescription = React.createRef();
     this.productSpecification = React.createRef();
     this.productVarient = React.createRef();
     this.productMedia = React.createRef();
@@ -787,15 +790,17 @@ class ProductDetailsComponent extends Component {
             FilledValues = FilledValues + 1;
           }
         });
-        if (
-          this.state.variation1.name == "" ||
-          this.state.variation1.name == null
-        ) {
-          TotalValue = TotalValue + 1;
-        } else {
-          TotalValue = TotalValue + 1;
-          FilledValues = FilledValues + 1;
-        }
+        // if (
+        //   this.state.variation1.name == "" ||
+        //   this.state.variation1.name == null
+        // ) {
+        //   TotalValue = TotalValue + 1;
+        // } else {
+        //   TotalValue = TotalValue + 1;
+        //   FilledValues = FilledValues + 1;
+        // }
+        console.log(FilledValues)
+        console.log(TotalValue)
         var Variant1Filled = FilledValues / TotalValue;
 
         if (this.state.wholeSaleOn) {
@@ -921,6 +926,8 @@ class ProductDetailsComponent extends Component {
             }
           });
 
+          
+
           var WholeSaleFilled = FilledValues2 / TotalValue2;
           this.setState({
             progressVariation: ((Variant1Filled + WholeSaleFilled) / 2) * 100,
@@ -932,6 +939,24 @@ class ProductDetailsComponent extends Component {
         }
       }
     }
+
+    if(this.state.productSpecificationOptions.length > 1){
+    var specFilled = 0;
+
+      this.state.productSpecificationOptions.map((spec) => {
+        if(spec.value !== "" && spec.value !== null){
+          specFilled = specFilled + 1;
+        }
+      })
+
+      this.setState ({
+        progressSpecification: (specFilled/this.state.productSpecificationOptions.length)*100
+      })
+    }else {
+    this.setState ({
+      progressSpecification: 100 
+    })
+  }
   };
 
   checkFiles512x512 = () => {
@@ -1455,6 +1480,7 @@ class ProductDetailsComponent extends Component {
               url,
             };
           });
+          console.log(acceptedFiles)
           // this.setState({
           //   file1Added: true,
           // });
@@ -1765,6 +1791,7 @@ class ProductDetailsComponent extends Component {
   };
 
   onDeleteVariant = (index, data) => {
+    console.log(data);
     if (data === "variant1") {
       if (this.state.variation2On) {
         var newVariant = [];
@@ -2914,10 +2941,12 @@ class ProductDetailsComponent extends Component {
     var basicInfo = document.getElementById("basicInfo");
     var productDetails = document.getElementById("productDetails");
     var productVariation = document.getElementById("productVariation");
+    var descriptionCard = document.getElementById("descriptionCard");
+    // var productDescription = document.getElementById("productDescription");
     var productSpecification = document.getElementById("specification");
     var productMedia = document.getElementById("productMedia");
     var shippingInfo = document.getElementById("shippingInfo");
-    var descriptionCard = document.getElementById("descriptionCard");
+    
     if (this.checkVisible(basicInfo)) {
       this.setState({
         basicInfoVisible: true,
@@ -2939,6 +2968,21 @@ class ProductDetailsComponent extends Component {
         productDetailsVisible: false,
       });
     }
+    // if (
+    //   this.checkVisible(productDescription) &&
+    //   !this.state.productDetailsVisible &&
+    //   !this.state.basicInfoVisible
+    // ) {
+    //   this.setState({
+    //     productDescriptionVisible: true,
+    //     activeStep: 2,
+    //   });
+    // } else {
+    //   this.setState({
+    //     productDescriptionVisible: false,
+    //   });
+    // }
+
     if (
       this.checkVisible(descriptionCard) &&
       !this.state.productDetailsVisible &&
@@ -2955,14 +2999,29 @@ class ProductDetailsComponent extends Component {
     }
 
     if (
+      this.checkVisible(productSpecification) &&
+      !this.state.productDetailsVisible &&
+      !this.state.basicInfoVisible && !this.state.productDescriptionVisible
+    ) {
+      this.setState({
+        productSpecificationVisible: true,
+        activeStep: 3,
+      });
+    } else {
+      this.setState({
+        productSpecificationVisible: false,
+      });
+    }
+
+    if (
       this.checkVisible(productVariation) &&
       !this.state.productDetailsVisible &&
       !this.state.basicInfoVisible &&
-      !this.state.productDescriptionVisible
+      !this.state.productDescriptionVisible && !this.state.productSpecificationVisible 
     ) {
       this.setState({
         productsVariationsVisible: true,
-        activeStep: 3,
+        activeStep: 4,
       });
     } else {
       this.setState({
@@ -2975,11 +3034,11 @@ class ProductDetailsComponent extends Component {
       !this.state.productDetailsVisible &&
       !this.state.basicInfoVisible &&
       !this.state.productsVariationsVisible &&
-      !this.state.productDescriptionVisible
+      !this.state.productDescriptionVisible && !this.state.productSpecificationVisible
     ) {
       this.setState({
         productMediaVisible: true,
-        activeStep: 4,
+        activeStep: 5,
       });
       this.setHint("ProductImages");
     } else {
@@ -2991,7 +3050,7 @@ class ProductDetailsComponent extends Component {
     if (e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight) {
       this.setState({
         shippingInfoVisible: true,
-        activeStep: 5,
+        activeStep: 6,
       });
     } else {
       this.setState({
@@ -3130,16 +3189,128 @@ class ProductDetailsComponent extends Component {
       model: this.state.model,
       tags: this.state.tags,
     }
-    this.props.callAddProduct(object)
+    this.props.CallUpdateProduct(object)
 
     this.setState({ isSubmit: true })
     // console.log(this.state.file)
   }
 
   bindProductInfoToState = () =>{
-    console.log(this.props.productInfo)
-    console.log(this.props.productCategories)
+    console.log(this.props.productInfo);
+  
+    //set tags
+    var tagList = "";
+    JSON.parse(this.props.productInfo[0].ProductTag.replace(/\\/g , "")).map((tag) => {
+        if(tagList == "") {
+          tagList = tag.tag;
+        }
+        else {
+          tagList = tagList + ","+ tag.tag;
+        }
+    })
+    
+    //set Variations
+    if(this.props.productInfo[0].ProductCategoryID){
+      this.props.CallAllProductVariationByCategoryID(this.props.productInfo[0].ProductCategoryID);
+    }
+    var variationIsOn = false;
+    if(JSON.parse(this.props.productInfo[0].ProductVariation).length > 1){
+      variationIsOn = true
+    }
+    else {
+      variationIsOn = false
+    }
+    const VariationValues = JSON.parse(this.props.productInfo[0].ProductVariation)
 
+    const variationObject = {
+      name: "",
+      options: [],
+    };
+
+    for(var x = 0; x < JSON.parse(this.props.productInfo[0].ProductVariation).length; x++){
+      var option = {
+        optionName: VariationValues[x].ProductVariationValue,
+        price:  VariationValues[x].ProductVariationPrice,
+        stock: VariationValues[x].ProductStockAmount,
+        //missing the sku for option
+        sku: this.props.productInfo[0].SKU,
+        picture: "",
+        pictureURL: "",
+        errorOption: false,
+        errorSKU: false,
+        errorPrice: false,
+        errorStock: false,
+        variation2Options: {
+          name: "",
+          options: [
+            {
+              optionName: "",
+              price: "",
+              stock: "",
+              sku: "",
+              errorOption: false,
+              errorSKU: false,
+              errorPrice: false,
+              errorStock: false,
+            },
+          ],
+        },
+      };
+
+    variationObject.options = [...variationObject.options, option];
+    }
+
+    //set Specifications
+    //Check the ID sent when adding the specifiction since the id in the productInfo
+    //doesn't match the ones listed in the list of variations fetched
+    var specificationArray = [];
+    
+    var productSpecs = JSON.parse(this.props.productInfo[0].ProductSpecification);
+    
+    for(var y = 0; y < JSON.parse(this.props.productInfo[0].ProductSpecification).length ; y++){
+      var object = { categoryId: productSpecs[y].ProductVariationID, value: productSpecs[y].ProductSpecificationValue, error: false}
+     specificationArray = [...specificationArray, object]
+    }
+   
+    //set Images
+    //check url sent from database since it says 404 not found
+    var productImages = JSON.parse(this.props.productInfo[0].ProductImages);
+    console.log(productImages)
+    var fileInfo = [];
+    var url = [];
+    var file1Added = false;
+    var file2Added = false;
+    var file3Added = false;
+    var file1Added3 = false;
+
+    for(var z = 0; z < productImages.length; z++){
+      fileInfo = [...fileInfo, productImages[z].ProductMediaTitle];
+      url = [...url, productImages[z].ProductMediaUrl];
+
+      if(z == 0  && productImages[z].ProductMediaType == "image") {
+        file1Added = true;
+      }else  if(z == 0  && productImages[z].ProductMediaType == "video") {
+        file1Added3 = true;
+      }
+      if(z == 1  && productImages[z].ProductMediaType == "image") {
+        file2Added = true;
+      }else  if(z == 1  && productImages[z].ProductMediaType == "video") {
+        file1Added3 = true;
+      }
+
+      if(z == 2  && productImages[z].ProductMediaType == "image") {
+        file3Added = true;
+      }else  if(z == 2  && productImages[z].ProductMediaType == "video") {
+        file1Added3 = true;
+      }
+
+       if(z == 3  && productImages[z].ProductMediaType == "video") {
+        file1Added3 = true;
+      }
+
+    }
+      
+    
 
     this.setState({
       isProductIntoBind: true, // to stop the looping of calling this function from componentdidupdate
@@ -3148,14 +3319,49 @@ class ProductDetailsComponent extends Component {
       height: this.props.productInfo[0].ProductDimensionHeight,
       width: this.props.productInfo[0].ProductDimensionWidth,
       depth: this.props.productInfo[0].ProductDimensionDeep,
-      weight:this.props.productInfo[0].ProductWeight,
-      brand:this.props.productInfo[0].Brand,
-      tags:this.props.productInfo[0].ProductTag,
-      model:this.props.productInfo[0].Model,
-      sku:this.props.productInfo[0].SKU,
-      productCategory:this.props.productInfo[0].ProductCategoryID,
-      stock:this.props.productInfo[0].ProductStockAmount,
+      weight: this.props.productInfo[0].ProductWeight,
+      brand: this.props.productInfo[0].Brand,
+      tags: tagList,
+      model: this.props.productInfo[0].Model,
+      sku: this.props.productInfo[0].SKU,
+      productCategory: this.props.productInfo[0].ProductCategoryID,
+      stock: this.props.productInfo[0].ProductStockAmount,
+      selectedVariationID: JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariationID,
+      selectedVariationName: JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariation,
+      variation1On: variationIsOn,
+      variation1: variationObject,
+      variation1Options: JSON.parse(this.props.productInfo[0].ProductVariation).length,
+      productSpecification: this.props.productInfo[0].ProductSpecification,
+      productSpecificationOptions: specificationArray,
+      file: this.props.productInfo[0].ProductImages,
+      fileInfo: fileInfo,
+      url: url,
+      file1Added:file1Added,
+      file2Added: file2Added,
+      file3Added: file3Added,
+      file1Added3: file1Added3,
+      progressBasic: 100,
+      progressDetails: 100,
+      progressVariation: 100,
+      progressMedia:100,
+      progressShipping: 100,
+      progressDescription: 100,
+      progressSpecification: 100,
+      supplierFilled: 1,
+      skuFilled: 1,
+      brandFilled: 1,
+      modelFilled: 1,
+      descriptionFilled: 1,
+      tagsFilled: 1,
+      priceFilled: 1,
+      stockFilled: 1,
+      widthFilled: 1,
+      heightFilled: 1,
+      depthFilled: 1,
+      weightFilled: 1,
+      variation1NameFilled: 1,
     })
+
   }
 
   setCategory = () => {
@@ -3238,7 +3444,7 @@ class ProductDetailsComponent extends Component {
 
   handleAddProductSpecification = (addOrRemove, index) => {
     if (addOrRemove === "add") {
-      let object = { categoryId: 0, value: "" }
+      let object = { categoryId: 0, value: "", error:false}
       let specificationArray = [...this.state.productSpecificationOptions, object]
       this.setState({ productSpecificationOptions: specificationArray })
     }
@@ -3259,11 +3465,26 @@ class ProductDetailsComponent extends Component {
   handleProductSpecificationInput = (idx, type, e) => {
     let specificationObject = this.state.productSpecificationOptions
 
-    if (type === "input")
+    if (type === "input"){
       specificationObject[idx].value = e.target.value
-    else
+      if(e.target.value == "") {
+        specificationObject[idx].error = true;
+      }
+      else {
+        specificationObject[idx].error = false;
+      }
+    }
+    else{
       specificationObject[idx].categoryId = e.target.value
+    }
 
+    setTimeout(
+      function () {
+        this.checkProgress();
+      }.bind(this),
+      500
+    );
+    
     this.setState({ productSpecificationOptions: specificationObject })
   }
 
@@ -3315,6 +3536,19 @@ class ProductDetailsComponent extends Component {
 
       this.setState({ variation1: tempObject })
     }
+  }
+
+  MakeEditable = () => {
+    
+      this.setState({toBeEdited: !this.state.toBeEdited})
+      console.log("supposed to be false" + this.state.toBeEdited)
+    
+    setTimeout(
+      function () {
+        console.log(this.state.toBeEdited);
+      }.bind(this),
+      500
+    );
   }
 
   render() {
@@ -3734,8 +3968,8 @@ class ProductDetailsComponent extends Component {
               }
             </div>
 
-            {
-              this.props.isOnViewState ?
+            {/* {
+              this.props.isOnViewState ? */}
                
               <div style={{display:"flex"}}>
                   <Button onClick={() => typeof this.props.backToList === "function" && this.props.backToList()  }>
@@ -3746,22 +3980,21 @@ class ProductDetailsComponent extends Component {
                 </Button>
                 
                 <Button style={{marginLeft:"80%"}} 
-                onClick={() => {
-                  console.log("Changed") 
-                  this.setState({tobeEdited: !this.state.toBeEdited})}
-                  }>{this.state.toBeEdited? "Cancel" : "Edit"}</Button>
+                onClick={this.MakeEditable.bind(this)}>
+                  {this.state.toBeEdited? "Cancel" : "Edit"}
+                </Button>
                 </div>
                 
-                :
-                <Button>
+                {/* : */}
+                {/* <Button>
                   <i className="fas fa-chevron-left"></i>
                   <Link className="nav-link" to={"/viewProduct"}>
                     Back
                   </Link>
                 </Button>
-            }
+            } */}
           </div>
-          {/* <Button onClick={() => this.setState({tobeEdited: !this.state.toBeEdited})}>{this.state.toBeEdited? "Cancel" : "Edit"}</Button> */}
+          {/* <Button onClick={() => this.setState({toBeEdited: !this.state.toBeEdited})}>{this.state.toBeEdited? "Cancel" : "Edit"}</Button> */}
                
           <div>
             <Card id="basicInfo" className="SubContainer">
@@ -3793,7 +4026,7 @@ class ProductDetailsComponent extends Component {
                 {this.state.productCategoryEmpty && this.state.toBeEdited && (
                   <p className="error">Product category cannot be empty.</p>
                 )}
-                {this.state.tobeEdited ? <p className="Label">Product Category</p> : null}
+                {this.state.toBeEdited ? <p className="Label">Product Category</p> : null}
                {this.state.toBeEdited ?  <div className="CategorySelector">
                   <Autocomplete
                     id="free-solo-demo"
@@ -3932,6 +4165,7 @@ class ProductDetailsComponent extends Component {
                     id="productCategory"
                     label="Product Category"
                     defaultValue={this.state.productCategory}
+                    value={this.state.productCategory}
                     InputProps={{
                       readOnly: true,
                     }}
@@ -4234,12 +4468,13 @@ class ProductDetailsComponent extends Component {
                     return (
                       <div>
                         <div className="d-flex align-items-center" >
+                         {this.toBeEdited ?
                           <RemoveCircleOutlineIcon
                             className="DeleteOptionButton mr-2"
                             style={{ cursor: 'pointer' }}
                             color="secondary"
                             onClick={this.handleAddProductSpecification.bind(this, "remove", idx)}
-                          />
+                          /> : null}
                           <FormControl variant="outlined" className="mr-2 w-50" size="small">
                             <InputLabel id="specifications-dropdown">Specifications</InputLabel>
                             <Select
@@ -4272,11 +4507,16 @@ class ProductDetailsComponent extends Component {
                             variant="outlined"
                             key={idx}
                             onChange={e => this.handleProductSpecificationInput(idx, "input", e)}
-                            error={false}
+                            error={this.state.toBeEdited ? el.error : false}
                             defaultValue={this.state.productSpecificationOptions[idx].value}
                             value={this.state.productSpecificationOptions[idx].value}
                           />
                         </div>
+                        {el.error && this.state.toBeEdited && (
+                            <p className="error">
+                              Specification name has to be filled.
+                            </p>
+                          )}
 
                       </div>
                     )
@@ -4349,12 +4589,13 @@ class ProductDetailsComponent extends Component {
                   </div>
                 ) : null}
 
-                {this.state.variation1On ? (
+                {this.state.variation1On && this.state.toBeEdited && (
                   <div className="VariantMain">
                     <div className="VariantText">
                       <p>Product Variation</p>
                     </div>
                     <div className="VariantOptionsSection">
+                     
                       <FormControl variant="outlined" className="w-100" size="small">
                         <InputLabel id="demo-simple-select-outlined-label">Product Variation</InputLabel>
                         <Select
@@ -4376,11 +4617,27 @@ class ProductDetailsComponent extends Component {
                         </Select>
 
                       </FormControl>
-                      {this.state.variation1NameEmpty && this.state.toBeEdited ? (
+                      
+                      {!this.state.toBeEdited && <TextField
+                        id="Variant Variation"
+                        label="Product Variation"
+                        defaultValue={this.state.selectedVariationName}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        InputLabelProps ={{
+                          shrink:true,
+                        }}
+                        size="small"
+                        variant="outlined"
+                        className="InputField"
+                      />}
+                      
+                      {this.state.variation1NameEmpty && this.state.toBeEdited && (
                         <p className="error">
                           Variation name has to be filled.
                         </p>
-                      ) : null}
+                      )}
 
                       {[...Array(this.state.variation1Options)].map((e, i) => (
                         <div>
@@ -4390,7 +4647,8 @@ class ProductDetailsComponent extends Component {
                               color="secondary"
                               onClick={this.onDeleteVariant.bind(this, i, "variant1Option")}
                             /> : null}
-                            {this.state.variation1.options[i].optionName ? <TextField
+                            {/* {this.state.variation1.options[i].optionName ? */}
+                             <TextField
                               className="InputField"
                               InputLabelProps={{ shrink: "true", }}
                               InputProps={{
@@ -4406,13 +4664,14 @@ class ProductDetailsComponent extends Component {
                               onFocus={this.setHint.bind(this, "VariantOption")}
                               onBlur={() => this.setState({ FocusOn: false, })}
                               value={this.state.variation1.options[i].optionName}
-                            />:null}
+                            />
+                            {/* :null} */}
                           </div>
-                          {this.state.variation1.options[i].errorOption && this.state.toBeEdited ? (
+                          {this.state.variation1.options[i].errorOption && this.state.toBeEdited && (
                             <p className="error">
                               Variation option name has to be filled.
                             </p>
-                          ) : null}
+                          )}
                         </div>
                       ))
                       }
@@ -4427,29 +4686,30 @@ class ProductDetailsComponent extends Component {
                       </Button> : null}
                     </div>
                     <br />
-                    <CloseIcon
-                      className="DeleteVariantButton"
-                      color="secondary"
-                      onClick={this.onDeleteVariant.bind(this, -1, "variant1")}
-                    />
+                    {this.state.toBeEdited? 
+                      <CloseIcon
+                        className="DeleteVariantButton"
+                        color="secondary"
+                        onClick={this.onDeleteVariant.bind(this, -1, "variant1")}
+                      />
+                    : null}
                   </div>
-                ) : null}
+                )}
                 {this.state.variation1On ? <br /> : null}
 
                 <hr />
-                {!this.state.variation1On ? (
+                
+                {!this.state.variation1On && this.state.toBeEdited && (
                   <div className="ItemContainer">
-                    {/* {this.toBeEdited?  */}
                     <Button
                       variant="outlined"
                       className="AddButton"
                       onClick={this.addProductVariant.bind(this, "variation")}
                     >
                       Add Variant
-                    </Button>
-                     {/* : null} */}
+                    </Button> 
                   </div>
-                ) : null}
+                )}
 
                 {this.state.variation1On ? (
                   <p className="FontType1">Variations Information</p>
@@ -5080,8 +5340,8 @@ class ProductDetailsComponent extends Component {
                         onMouseEnter={this.mouseIn.bind(this, 1)}
                         className="DropZoneImageMain"
                       >
-                        {this.state.onImage &&
-                          this.state.currentlyHovered === 1 && (
+                         {this.state.onImage &&
+                          this.state.currentlyHovered  === 1 && this.state.toBeEdited &&  (
                             <div className="DropZoneImageDeleteButtonDiv">
                               <IconButton
                                 className="DropZoneImageDeleteButtonIconLocation"
@@ -5150,7 +5410,7 @@ class ProductDetailsComponent extends Component {
                         className="DropZoneImageMain"
                       >
                         {this.state.onImage &&
-                          this.state.currentlyHovered === 2 && (
+                          this.state.currentlyHovered === 2 && this.state.toBeEdited && (
                             <div className="DropZoneImageDeleteButtonDiv">
                               <IconButton
                                 className="DropZoneImageDeleteButtonIconLocation"
@@ -5218,7 +5478,7 @@ class ProductDetailsComponent extends Component {
                         className="DropZoneImageMain"
                       >
                         {this.state.onImage &&
-                          this.state.currentlyHovered === 3 && (
+                          this.state.currentlyHovered === 3 && this.state.toBeEdited && (
                             <div className="DropZoneImageDeleteButtonDiv">
                               <IconButton
                                 className="DropZoneImageDeleteButtonIconLocation"
@@ -5536,7 +5796,7 @@ class ProductDetailsComponent extends Component {
                         className="DropZoneImageMain"
                       >
                         {this.state.onImage &&
-                          this.state.currentlyHovered === 7 && (
+                          this.state.currentlyHovered === 7  && this.state.toBeEdited && (
                             <div className="DropZoneImageDeleteButtonDiv">
                               <IconButton
                                 className="DropZoneImageDeleteButtonIconLocation"
@@ -6010,7 +6270,8 @@ class ProductDetailsComponent extends Component {
             </Card>
             <Fade in={this.state.FocusOn}>
               <br />
-              <Card className="HintsCard">
+              
+              {this.state.toBeEdited ? <Card className="HintsCard">
                 <CardContent>
                   <div className="HintsContainer">
                     <div className="HintsTitleContainer">
@@ -6031,7 +6292,7 @@ class ProductDetailsComponent extends Component {
                     </div>
                   </div>
                 </CardContent>
-              </Card>
+              </Card> : null}
             </Fade>
           </div>
         </div>

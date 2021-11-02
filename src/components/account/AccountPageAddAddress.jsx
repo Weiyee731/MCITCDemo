@@ -13,8 +13,10 @@ import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
-import FormControl from '@material-ui/core/FormControl';
+import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 import "../../app/App.scss";
 import {
   CountryDropdown,
@@ -41,20 +43,19 @@ function mapDispatchToProps(dispatch) {
 class AccountPageAddAddress extends Component {
   constructor(props) {
     super(props);
-    this.state =
-      {
-        Address: "",
-        USERID: JSON.parse(window.localStorage.getItem("id")),
-        ContactNo: "",
-        email: "",
-        USERADDRESSLINE1: "",
-        USERADDRESSLINE2: "",
-        USERPOSCODE: "",
-        USERSTATE: "",
-        USERCITY: "",
-        USERCOUNTRYID: 148,
-        // COUNTRYID: "1",
-      };
+    this.state = {
+      Address: "",
+      USERID: JSON.parse(window.localStorage.getItem("id")),
+      ContactNo: "",
+      email: "",
+      USERADDRESSLINE1: "",
+      USERADDRESSLINE2: "",
+      USERPOSCODE: "",
+      USERSTATE: "",
+      USERCITY: "",
+      USERCOUNTRYID: 148,
+      // COUNTRYID: "1",
+    };
     this.addAddress = this.addAddress.bind(this);
     this.selectCountry = this.selectCountry.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -102,7 +103,7 @@ class AccountPageAddAddress extends Component {
     }
   }
 
-  handleChangeforAddressLine1 =(e) => {
+  handleChangeforAddressLine1 = (e) => {
     const { value } = e.target;
 
     this.setState({
@@ -110,15 +111,15 @@ class AccountPageAddAddress extends Component {
     });
   };
 
-  handleChangeforAddressLine2 =(e) => {
+  handleChangeforAddressLine2 = (e) => {
     const { value } = e.target;
 
     this.setState({
       USERADDRESSLINE2: value,
     });
   };
-  
-  handleChangeforPoscode =(e) => {
+
+  handleChangeforPoscode = (e) => {
     const { value } = e.target;
 
     this.setState({
@@ -126,7 +127,7 @@ class AccountPageAddAddress extends Component {
     });
   };
 
-  handleChangeforCity =(e) => {
+  handleChangeforCity = (e) => {
     const { value } = e.target;
 
     this.setState({
@@ -134,7 +135,7 @@ class AccountPageAddAddress extends Component {
     });
   };
 
-  handleChangeforState =(e) => {
+  handleChangeforState = (e) => {
     const { value } = e.target;
 
     this.setState({
@@ -142,33 +143,37 @@ class AccountPageAddAddress extends Component {
     });
   };
 
-  handleChangeforCountry =(e) => {
+  handleChangeforCountry = (e) => {
     const { value } = e.target;
 
     this.setState({
       USERCOUNTRYID: value,
     });
   };
-  
+
   selectCountry(val) {
     this.setState({ COUNTRYID: val });
   }
 
   addAddress() {
-    if (this.state.ContactNo.length !== 0 && this.state.email.length !== 0 && this.state.USERADDRESSLINE1.length !== 0
-      && this.state.USERADDRESSLINE2.length !== 0 && this.state.USERPOSCODE.length !== 0 && this.state.USERSTATE.length !== 0
-      && this.state.USERCITY.length !== 0 && this.state.USERCOUNTRYID.length !== 0) {
-        
+    if (
+      this.state.ContactNo.length !== 0 &&
+      this.state.email.length !== 0 &&
+      this.state.USERADDRESSLINE1.length !== 0 &&
+      this.state.USERADDRESSLINE2.length !== 0 &&
+      this.state.USERPOSCODE.length !== 0 &&
+      this.state.USERSTATE.length !== 0 &&
+      this.state.USERCITY.length !== 0 &&
+      this.state.USERCOUNTRYID.length !== 0
+    ) {
       this.props.CallAddAddress(
         this.state,
-        (this.state.USERID = JSON.parse(window.localStorage.getItem("id"))),
+        (this.state.USERID = JSON.parse(window.localStorage.getItem("id")))
       );
       this.props.parentCallback(false);
+    } else {
+      toast.error("Please fill in all required data");
     }
-    else {
-      toast.error("Please fill in all required data")
-    }
-
   }
 
   render() {
@@ -286,7 +291,11 @@ class AccountPageAddAddress extends Component {
                 </div>
 
                 <div className="form-group col-md-6">
-                  <FormControl variant="filled" size="small" style={{width:"100%"}}>
+                  <FormControl
+                    variant="filled"
+                    size="small"
+                    style={{ width: "100%" }}
+                  >
                     <Select
                       id="Country"
                       // label="Country"
