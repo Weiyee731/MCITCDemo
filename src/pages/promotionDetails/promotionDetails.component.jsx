@@ -1383,6 +1383,8 @@ class PromotionDetailsComponent extends Component {
       }
     };
 
+    console.log("HERE")
+
     return (
       <div>
         {" "}

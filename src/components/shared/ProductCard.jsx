@@ -147,20 +147,22 @@ function ProductCard(props) {
       </ul>
     );
   }
-
+  // console.log("test login", window.localStorage.getItem("id"))
+  // console.log("test login", window.localStorage.getItem("isLogin"))
   wishlistView =
     (
       props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
         props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
           return (
-            <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
+            <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
               className={classNames('btn btn-light btn-sm btn-svg-icon')}
             ><Wishlist16Svg fill="red" />
             </button>
           )
         }) :
         (
-          <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
+          <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
+            // <button type="button" onClick={() => console.log("PRESS")}
             className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
           ><Wishlist16Svg />
           </button>
@@ -168,12 +170,12 @@ function ProductCard(props) {
     );
 
   return (
-    <Link to={url.product(product)} className={containerClasses}>
+    <div className={containerClasses}>
       {badges}
-      {image}
+      <Link to={url.product(product)}>{image}</Link>
       <div className="product-card__info">
         <div className="product-card__name">
-          {product.ProductName}
+          <Link to={url.product(product)}>{product.ProductName}</Link>
         </div>
         <div className="product-card__rating">
           <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
@@ -210,7 +212,7 @@ function ProductCard(props) {
           </div>
         }
       </div>
-    </Link >
+    </div>
   );
 
 

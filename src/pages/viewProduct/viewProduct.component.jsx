@@ -194,7 +194,7 @@ function DeletableTableHead(props) {
 
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            style={{width: headCell.id == "ProductImage" ? "140px": ""}}
+            style={{ width: headCell.id == "ProductImage" ? "140px" : "" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -237,7 +237,7 @@ function DisplayTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            style={{width: headCell.id == "ProductImage" ? "140px": ""}}
+            style={{ width: headCell.id == "ProductImage" ? "140px" : "" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -409,22 +409,22 @@ function DeletableTable(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, props.Data.length - page * rowsPerPage);
 
- props.Data.map((d, i) => {
+  props.Data.map((d, i) => {
     d.Picture = (
       <div>
-         <img
-            height={50}
-            src={
-              d.ProductImage
-                // ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
-                ?  d.ProductImage
-                : ""
-            }
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = Logo;
-            }}
-          />
+        <img
+          height={50}
+          src={
+            d.ProductImage
+              // ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
+              ? d.ProductImage
+              : ""
+          }
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = Logo;
+          }}
+        />
       </div>
     );
   });
@@ -595,10 +595,10 @@ class DisplayTable extends Component {
       this.props.ProductProps.CallResetProductMgmtReturnVal();
       this.props.ProductProps.CallAllProducts({
         type: 'Merchant',
-        typeValue:'0',
+        typeValue: '0',
         userId: window.localStorage.getItem("id"),
-        productPage:'999',
-        page:'1'
+        productPage: '999',
+        page: '1'
       });
 
       toast.success("Selected products removed successfully.")
@@ -634,13 +634,13 @@ class DisplayTable extends Component {
     });
   }
 
-  handleSetDetailShown = () =>{
-    this.setState({detailsShown: false})
+  handleSetDetailShown = () => {
+    this.setState({ detailsShown: false })
   }
 
   render() {
     const { classes } = this.props;
-    const emptyRows = 
+    const emptyRows =
       this.state.rowsPerPage -
       Math.min(
         this.state.rowsPerPage,
@@ -648,24 +648,24 @@ class DisplayTable extends Component {
       );
 
     // console.log(this.props.Data);
-    this.props.Data.map((d, i) => {
+    typeof this.props.Data !== "undefined" && this.props.Data.map((d, i) => {
       // console.log(d)
       d.Picture = (
         <div>
-           <img
-              height={50}
-              alt={'product_image_' + i}
-              src={
-                d.ProductImage
-                  // ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
-                  ?  d.ProductImage
-                  : ""
-              }
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = Logo;
-              }}
-            />
+          <img
+            height={50}
+            alt={'product_image_' + i}
+            src={
+              d.ProductImage
+                // ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
+                ? d.ProductImage
+                : ""
+            }
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = Logo;
+            }}
+          />
         </div>
       );
     });
@@ -792,6 +792,7 @@ class DisplayTable extends Component {
                       rowCount={this.props.Data.length}
                     />
                     {this.props.Data.filter((searchedItem) =>
+                      typeof searchedItem.ProductName !== "undefined" &&
                       searchedItem.ProductName.toLowerCase().includes(
                         this.state.searchFilter
                       )
@@ -914,17 +915,17 @@ class ViewProductComponent extends Component {
 
     this.props.CallAllProducts({
       type: 'Merchant',
-        typeValue:'0',
-        userId: window.localStorage.getItem("id"),
-        productPage:'999',
-        page:'1'
+      typeValue: '0',
+      userId: window.localStorage.getItem("id"),
+      productPage: '999',
+      page: '1'
     });
   }
 
 
 
   render() {
-  
+
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable

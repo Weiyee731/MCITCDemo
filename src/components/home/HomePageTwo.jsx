@@ -55,8 +55,11 @@ function HomePageTwo(props) {
   let tempArray = []
 
   const loopWithSlice = () => {
+
+    console.log("props.products", props.products)
+    console.log("props.postsToShow", postsToShow)
     tempArray = [...postsToShow, ...props.products];
-    
+
     setPostsToShow(tempArray)
     // if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal !== "1") { toast.warning("There is no more product") }
     // else {
@@ -94,6 +97,21 @@ function HomePageTwo(props) {
       didCancel = true;
     }
   }, [page])
+
+  useEffect(() => {
+    let didCancel = false
+    props.CallAllProducts({
+      type: "Merchant",
+      typeValue: 0,
+      userId: 0,
+      productPage: 20,
+      page: page,
+    })
+    loopWithSlice()
+    return () => {
+      didCancel = true;
+    }
+  }, [])
 
   useEffect(() => {
     props.CallMerchants({
