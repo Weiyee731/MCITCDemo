@@ -41,6 +41,7 @@ function mapStateToProps(state) {
     productcart: state.counterReducer.productcart,
     order: state.counterReducer.order,
     profileUpdate: state.counterReducer["profileUpdate"],
+    emailUpdated: state.counterReducer["emailUpdated"],
     verifyPassword: state.counterReducer["verifyPassword"],
     verifyOTP: state.counterReducer["verifyOTP"],
   };
@@ -233,11 +234,19 @@ class PageChangeEmail extends Component {
       this.setState({ otp });
     }
     // console.log(otp);
+
     if (otp.length === 6) {
       this.props.CallUpdateEmail(this.state, otp);
       this.setState({ startCountDown: false });
       this.stopTimer(60);
-      // if
+      if (this.props.emailUpdated && this.props.emailUpdated[0].ReturnMsg !== "The OTP was Wrong") {
+        toast.success("Your email contact has been updated");
+        browserHistory.push("account/profile");
+        window.location.reload(false);
+      } else {
+        toast.warn("The OTP key are incorrect. Please try again");
+        
+      }
     }
   };
 
@@ -267,7 +276,13 @@ class PageChangeEmail extends Component {
   }
 
   submitpassword = (e) => {
-    this.props.CallVerifyPassword(this.state);
+    if (this.state.password.length > 0) {
+      this.props.CallVerifyPassword(this.state);
+      this.checkPassword();
+    }
+  };
+
+  checkPassword = (e) => {
     if (
       this.props.verifyPassword[0].ValidationInd !== undefined &&
       this.props.verifyPassword[0].ValidationInd !== 0 &&
@@ -277,7 +292,8 @@ class PageChangeEmail extends Component {
     } else {
       toast.warning("The password is incorrect! Please try again");
     }
-  };
+  }
+
 
   getNewOTP = (e) => {
     this.props.CallSendOTP(this.state); //send otp
@@ -438,10 +454,10 @@ class PageChangeEmail extends Component {
                     <div className=" font">
                       Your Current Email Address is{" "}
                       {this.props.currentUser[0] !== undefined &&
-                      this.props.currentUser[0].UserEmailAddress !== undefined
+                        this.props.currentUser[0].UserEmailAddress !== undefined
                         ? this.censorEmail(
-                            this.props.currentUser[0].UserEmailAddress
-                          )
+                          this.props.currentUser[0].UserEmailAddress
+                        )
                         : ["No Email Address was found"]}
                     </div>
                   </div>
@@ -482,12 +498,12 @@ class PageChangeEmail extends Component {
                           <p className=" font">
                             Enter the code we sent to your email{" "}
                             {this.props.currentUser.length > 0 &&
-                            this.props.currentUser[0].UserEmailAddress !==
+                              this.props.currentUser[0].UserEmailAddress !==
                               undefined &&
-                            this.props.currentUser[0].UserEmailAddress
+                              this.props.currentUser[0].UserEmailAddress
                               ? this.censorEmail(
-                                  this.props.currentUser[0].UserEmailAddress
-                                )
+                                this.props.currentUser[0].UserEmailAddress
+                              )
                               : "-"}
                           </p>
                         </div>

@@ -222,7 +222,7 @@ export class GitEpic {
     });
 
   updateEmail = (action$) =>
-    action$.ofType(GitAction.UpdateContact).switchMap(async ({ payload }) => {
+    action$.ofType(GitAction.UpdateEmail).switchMap(async ({ payload }) => {
       try {
         console.log(url +
           "User_UpdateProfileSpecificField?USERID=" +
@@ -248,13 +248,13 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
         return {
-          type: GitAction.UpdatedContact,
+          type: GitAction.UpdatedEmail,
           payload: json,
         };
       } catch (error) {
         alert('UpdatedContact: ' + error);
         return {
-          type: GitAction.UpdatedContact,
+          type: GitAction.UpdatedEmail,
           payload: [],
         };
       }

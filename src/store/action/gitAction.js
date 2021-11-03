@@ -154,7 +154,7 @@ export class GitAction {
 
   static CallUpdateEmail(propsData) {
     return {
-      type: GitAction.updateEmail,
+      type: GitAction.UpdateEmail,
       payload: propsData,
     };
   }

@@ -263,11 +263,13 @@ class PageChangeContact extends Component {
       this.props.CallUpdateContact(this.state, otp); //submit otp
       this.setState({ startCountDown: false });
       this.stopTimer(60);
-      if (this.props.contactUpdated[0].ReturnMsg === "The OTP was Wrong") {
+
+      if (this.props.contactUpdated &&this.props.contactUpdated[0].ReturnMsg !== "The OTP was Wrong") {
+        toast.success("Your contact number has been updated");
         browserHistory.push("account/profile");
         window.location.reload(false);
-        toast.success("wrong");
       } else {
+       toast.success("The OTP key are incorrect. Please try again");
       }
     }
   };
@@ -275,7 +277,13 @@ class PageChangeContact extends Component {
   handleCounter = (counter) => this.setState({ counter });
 
   submitpassword = (e) => {
-    this.props.CallVerifyPassword(this.state);
+    if (this.state.password.length > 0) {
+      this.props.CallVerifyPassword(this.state);
+      this.checkPassword();
+    }
+  };
+
+  checkPassword = (e) => {
     if (
       this.props.verifyPassword !== undefined &&
       this.props.verifyPassword[0].ValidationInd !== undefined &&
@@ -284,12 +292,12 @@ class PageChangeContact extends Component {
     ) {
       this.setState({ confirmPasswordPage: false });
     } else {
-      toast.warning("The password is incorrect! Please try again");
+      toast.warn("The password is incorrect! Please try again");
     }
-  };
+  }
 
   getNewOTP = (e) => {
-    this.props.CallSendOTP(this.state); //send otp
+    if (this.state.UpdatedValue.length > 0) { this.props.CallSendOTP(this.state); }
     console.log(this.props.verifyOTP);
     if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
       this.stopTimer(60);
@@ -454,10 +462,10 @@ class PageChangeContact extends Component {
                     <div className=" font">
                       Your Current Contact Number is{" "}
                       {this.props.currentUser[0] !== undefined &&
-                      this.props.currentUser[0].UserContactNo !== undefined
+                        this.props.currentUser[0].UserContactNo !== undefined
                         ? this.censorContact(
-                            this.props.currentUser[0].UserContactNo
-                          )
+                          this.props.currentUser[0].UserContactNo
+                        )
                         : ["No Contact Number was found"]}
                     </div>
                   </div>
@@ -495,12 +503,12 @@ class PageChangeContact extends Component {
                           <p className=" font">
                             Enter the code we sent to your email{" "}
                             {this.props.currentUser.length > 0 &&
-                            this.props.currentUser[0].UserEmailAddress !==
+                              this.props.currentUser[0].UserEmailAddress !==
                               undefined &&
-                            this.props.currentUser[0].UserEmailAddress
+                              this.props.currentUser[0].UserEmailAddress
                               ? this.censorEmail(
-                                  this.props.currentUser[0].UserEmailAddress
-                                )
+                                this.props.currentUser[0].UserEmailAddress
+                              )
                               : "-"}
                           </p>
                         </div>
