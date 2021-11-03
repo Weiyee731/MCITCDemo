@@ -30,44 +30,6 @@ export class GitEpic {
       }
     });
 
-
-  getAllMerchantList = (action$) =>
-    action$.ofType(GitAction.GetUserProfileListByType).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ProfileListByType?TYPE=" +
-          payload.Type +
-          "&TYPEVALUE=" +
-          payload.TypeValue +
-          "&USERID=" +
-          payload.UserID +
-          "&UserRoleID=" +
-          payload.UserRoleID +
-          "&LISTPERPAGE=" +
-          payload.ListPerPage +
-          "&PAGE=" +
-          payload.Page
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json !== "fail") {
-        } else {
-          json = [];
-        }
-        return {
-          type: GitAction.GotUserProfileListByType,
-          payload: json,
-        };
-      } catch (error) {
-        alert('User_ProfileListByType: ' + error);
-        return {
-          type: GitAction.GetUserProfileListByType,
-          payload: [],
-        };
-      }
-    });
-
   LoginUser = (action$) =>
     action$.ofType(GitAction.Login).switchMap(async ({ payload }) => {
       try {
@@ -378,13 +340,6 @@ export class GitEpic {
   getUserProfile = (action$) =>
     action$.ofType(GitAction.GetUserProfile).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
-          "User_ProfileListByType?TYPE=" + payload.TYPE +
-          "&TYPEVALUE=" + payload.TYPEVALUE +
-          "&USERID=" + payload.USERID +
-          "&UserRoleID=" + payload.USERROLEID +
-          "&LISTPERPAGE=" + payload.LISTPERPAGE +
-          "&PAGE=" + payload.PAGE)
         const response = await fetch(
           url +
           "User_ProfileListByType?TYPE=" + payload.TYPE +
@@ -784,8 +739,6 @@ export class GitEpic {
         json = JSON.parse(json);
         if (json[0].ReturnVal !== 1) {
           toast.error("Product " + payload.productName + " is NOT updated! Please try again.");
-        } else {
-          toast.success("Product " + payload.productName + " is updated");
         }
         try {
           const response_1 = await fetch(
@@ -2663,58 +2616,12 @@ export class GitEpic {
       }
     });
 
-  // MERCHANTS
-
-  // getAllMerchants = (action$) =>
-  //   action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
-  //     try {
-
-  //       console.log(url + "User_ProfileListByType?TYPE=" + payload.type +
-  //         "&TYPEVALUE=" + payload.typeValue +
-  //         "&USERID=" + payload.userID +
-  //         "&UserRoleID=" + payload.userRoleID +
-  //         "&LISTPERPAGE=999" +
-  //         "&PAGE=1")
-
-  //       const response = await fetch(url + "User_ProfileListByType?TYPE=" + payload.type +
-  //         "&TYPEVALUE=" + payload.typeValue +
-  //         "&USERID=" + payload.userID +
-  //         "&UserRoleID=" + payload.userRoleID +
-  //         "&LISTPERPAGE=" + payload.productPage +
-  //         "&PAGE=" + payload.page
-  //       );
-  //       console.log("getAllMerchants", json)
-
-  //       const json = await response.json();
-  //       json = JSON.parse(json);
-
-
-  //       return {
-  //         type: GitAction.GotMerchants,
-  //         payload: json,
-  //       };
-  //     } catch (error) {
-  //       alert('getAllMerchants: ' + error);
-  //       return {
-  //         type: GitAction.GotMerchants,
-  //         payload: [],
-  //       };
-  //     }
-  //   });
-
 
   getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
-      console.log(url + "User_ProfileListByType?TYPE=" + payload.type +
-        "&TYPEVALUE=" + payload.typeValue +
-        "&USERID=" + payload.userID +
-        "&UserRoleID=" + payload.userRoleID +
-        "&LISTPERPAGE=" + payload.productPage +
-        "&PAGE=" + payload.page)
-
       try {
-
-        const response = await fetch(url + "User_ProfileListByType?TYPE=" + payload.type +
+        const response = await fetch(
+          url + "User_ProfileListByType?TYPE=" + payload.type +
           "&TYPEVALUE=" + payload.typeValue +
           "&USERID=" + payload.userID +
           "&UserRoleID=" + payload.userRoleID +

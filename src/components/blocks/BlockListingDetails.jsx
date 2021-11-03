@@ -433,9 +433,9 @@ class BlockListingDetails extends Component {
     render() {
 
         return (
-            <div className="container-fluid block block--margin-top" style={{ paddingRight: "5rem", paddingLeft: "5rem" }}>
+            <div className="container block mt-5">
                 <div className="row">
-                    <div className="col-md-2 col-12">
+                    <div className="col-lg-2 col-md-2 col-sm-2">
                         <div className="category-segment">
                             <div
                                 style={{ cursor: "pointer", fontWeight: 600 }}
@@ -451,15 +451,14 @@ class BlockListingDetails extends Component {
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div>
                             {
-                                this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 ?
-                                    <div style={{ fontSize: '15px', fontWeight: "bold", paddingTop: "10px" }}>
-                                        <label onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
-                                            {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
-                                        </label>
-                                    </div>
-                                    : ""
+                                this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
+                                <div style={{ fontSize: '15px', fontWeight: "bold", paddingTop: "10px" }}>
+                                    <label onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
+                                        {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
+                                    </label>
+                                </div>
                             }
-                            <div style={{ fontSize: '10pt' }}>
+                            <div>
                                 {this.state.CategoryHierachyListing.length > 0 && this.state.CategoryHierachyListing[0] !== null &&
                                     this.state.CategoryHierachyListing[0].map((category) => {
                                         return (
@@ -608,7 +607,7 @@ class BlockListingDetails extends Component {
                             <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: '#2b535d', width: "100%" }} onClick={() => this.resetFilter()}> Reset Fitlers</Button>
                         </div>
                     </div>
-                    <div className="col-md-10 col-12">
+                    <div className="col-lg-10 col-md-10 col-sm-10">
                         <div className="d-flex sorting-options-panel align-middle px-3 mb-2 ">
                             <div className="flex-grow-1 d-flex my-auto">
                                 {

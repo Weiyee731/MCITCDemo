@@ -61,7 +61,6 @@ function MobileMenu(props) {
             url: '',
             children: [
                 productCategories.map((item, index) => {
-                    console.log(item[0])
                     return (
                         {
                             type: 'link',
@@ -172,7 +171,7 @@ function MobileMenu(props) {
                 { type: 'link', label: 'Address Book', url: '/account/addresses' },
                 { type: 'link', label: 'Edit Address', url: '/account/addresses/5' },
                 { type: 'link', label: 'Change Password', url: '/account/password' },
-                localStorage.getItem('isLogin') === 'true' && { type: 'link', label: 'Logout', url: '/login' },
+                localStorage.getItem('isLogin') === 'true' && { type: 'link', label: 'Logout', url: '/' },
             ],
         },
     ];

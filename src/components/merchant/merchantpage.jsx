@@ -5,6 +5,10 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import classNames from "classnames";
 
+// shared
+import PageHeader from "../shared/PageHeader";
+import { url } from "../../services/utils";
+
 // application
 import shopApi from '../../api/shop';
 import { useDeferredData, useProductColumns, useProductTabs } from '../../services/hooks';
@@ -40,28 +44,22 @@ import {
     Divider,
     CardContent,
 } from "@material-ui/core";
+
 function mapStateToProps(state) {
     return {
         loading: state.counterReducer["loading"],
-        // viewMoreProducts: state.counterReducer["viewMoreProducts"],
         productsListing: state.counterReducer["productsListing"],
         merchant: state.counterReducer["merchant"],
-
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
-        // CallViewMoreFunctionProduct: (propsData) => dispatch(GitAction.CallViewMoreFunctionProduct(propsData)),
         CallGetMoreProductEmpty: () => dispatch(GitAction.CallGetMoreProductEmpty()),
         CallAllProductsListing: (propsData) => dispatch(GitAction.CallAllProductsListing(propsData)),
-
-        // CallGetProductByMerchantID: (propsData) => dispatch(GitAction.CallGetProductByMerchantID(propsData)),
     };
 }
-
-
 
 function MerchantPage(props) {
     useEffect(() => {
@@ -74,60 +72,30 @@ function MerchantPage(props) {
             productPage: 999,
             page: 1,
         })
-
-
     }, [])
 
     let profileimage;
-    let coverimage;
-    // console.log("merchan in merchant page", props.merchantID)
-    // console.log("merchant props", props.merchant)
-
-    // console.log("merchant product listing", props.productsListing)
-    // const picUrl = "http://tourism.denoo.my/UnimasMarketplaceImage/userprofile/";
-    // const UserId = props.location.state.id;
 
     const merchantDetails = props.merchant.length > 0 &&
         props.merchant[0].ReturnVal === undefined && props.merchant[0];
-    if (merchantDetails.ShopImage && merchantDetails.ShopImage.length > 0) {
-        profileimage = (<div className="imagecontainer">
+
+    profileimage = (
+        <div className="imagecontainer">
             <CardMedia
                 component="img"
                 alt="Profile Picture"
                 height="100"
-                image={Logo + merchantDetails.ShopImage}
+                image={merchantDetails.ShopImage && merchantDetails.ShopImage.length ? Logo + merchantDetails.ShopImage : Logo}
                 onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
                 style={{
-                    display: "inline",
-                    margin: "0 auto",
-                    marginLeft: "-25%", //centers the image
                     height: "100%",
                     width: "auto",
-                    cursor: "pointer",
                 }}
             />
-        </div>)
-    } else {
-        profileimage = (<div className="imagecontainer">
-            <CardMedia
-                component="img"
-                alt="Profile Picture"
-                height="100"
-                image={Logo}
-                onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-                style={{
-                    display: "inline",
-                    margin: "0 auto",
-                    marginLeft: "-25%", //centers the image
-                    height: "100%",
-                    width: "auto",
-                    cursor: "pointer",
-                }}
-            /> </div>)
-    }
-    const {
-        layout,
-    } = props;
+        </div>
+    )
+
+    const { layout } = props;
 
     const containerClasses = classNames("product-card", {
         "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
@@ -138,119 +106,51 @@ function MerchantPage(props) {
     });
 
     const Userprofile = (
-        <div style={{ paddingBottom: "1.2rem" }}>
-            <Card>
-                <CardContent>
-                    <div className="row" style={{ margin: "10px" }}>
-                        <div className="col-12 col-lg-5 col-xl-4 col-md-4 ">
-                            <div className={containerClasses}>
-                                {
-                                    merchantDetails.ShopCoverImage !== null &&
-                                    <img
-                                        className="product-image__img"
-                                        src={merchantDetails.ShopCoverImage}
-                                        onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-                                        alt=""
-                                    />
-                                }
-                                <div className="product-card__info">
-                                    <div className="product-card__name">
-                                        <div className="row" style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', }}>
-                                            <div className="col-6">
-                                                {profileimage}
-                                            </div>
-                                            <div className="col-6" style={{ fontWeight: "bold" }}>
-                                                <div style={{ fontSize: "15px" }}>
-                                                    {merchantDetails.ShopName}
-                                                    {/* {merchantDetails.ShopName} */}
-                                                </div>
-                                                {/* <div style={{ paddingTop: "20px" }}>
-                                                    
-                                                    {merchantDetails.UserFullName}
-                                                </div> */}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* <div className="col-12 col-lg-2 col-xl-2 col-md-6 align-middle block-header__title">
-                            <div className="mt-4 mb-2 word-color"> {merchantDetails.ShopName}</div>
-                            <div className="word-color"> {merchantDetails.UserFullName}</div>
-                        </div> */}
-                        <div className="col-10 col-lg-7 col-xl-7 " style={{ padding: "20px" }}>
-                            <div className="row" style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                                <div className="col-6">
-                                    <div className="row"  >
-                                        <div className="col-4">
-                                            <div className="row"  >
-                                                <label style={{ fontSize: "18px" }}>Products :</label>
-                                            </div>
-                                        </div>
-                                        <div className="col-2">
-                                            <div className="row"  >
-                                                <label style={{ color: "#ff0000", fontSize: "18px" }}>{merchantDetails.MerchantTotalProduct !== null ? merchantDetails.MerchantTotalProduct : 0}</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row" style={{ paddingTop: "10px" }}>
-                                        <div className="col-3">
-                                            <div className="row"  >
-                                                <label style={{ fontSize: "18px" }}>Origin :</label>
-                                            </div>
-                                        </div>
-                                        <div className="col-3">
-                                            <div className="row"  >
-                                                <label style={{ color: "#ff0000", fontSize: "18px" }}>{merchantDetails.ShopCity !== null ? merchantDetails.ShopCity : ""}</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-6">
-                                    <div className="row" style={{ paddingTop: "10px" }}>
-                                        <div className="col-3">
-                                            <div className="row"  >
-                                                <label style={{ fontSize: "18px" }}>Rating :</label>
-                                            </div>
-                                        </div>
-                                        <div className="col-4">
-                                            <div className="row"  >
-                                                <label style={{ color: "#ff0000", fontSize: "18px" }}>{merchantDetails.ShopRating !== null ? merchantDetails.ShopRating : 0} ({merchantDetails.ShopReviewCount !== null ? merchantDetails.ShopReviewCount : 0} Rating)</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row" style={{ paddingTop: "10px" }}>
-                                        <div className="col-3">
-                                            <div className="row"  >
-                                                <label style={{ fontSize: "18px" }}>Joined :</label>
-                                            </div>
-                                        </div>
-                                        <div className="col-3">
-                                            <div className="row"  >
-                                                <label style={{ color: "#ff0000", fontSize: "18px" }}>{merchantDetails.LastJoined !== null ? merchantDetails.LastJoined : ""}</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div className="row">
-                                <div className="col-2">
-                                    <div className="row">
-                                        <label style={{ fontSize: "18px" }}>Description：</label>
-                                    </div>
-                                </div>
-                                <div className="col-10">
-                                    <label style={{ color: "#ff0000", fontSize: "18px" }}>{merchantDetails.ShopDescription !== null ? merchantDetails.ShopDescription : "No Description"}</label>
+        <Card className='p-4 mb-4'>
+            <CardContent>
+                <div className="row">
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <div className={containerClasses}>
+                            {
+                                merchantDetails.ShopCoverImage !== null &&
+                                <img
+                                    className="product-image__img"
+                                    src={merchantDetails.ShopCoverImage}
+                                    onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+                                    alt=""
+                                />
+                            }
+                            <div className="product-card__info">
+                                <div className="product-card__name text-center">
+                                    {profileimage}
+                                    {merchantDetails.ShopName}
+                                    {merchantDetails.UserFullName}
                                 </div>
                             </div>
                         </div>
                     </div>
-                </CardContent>
-            </Card>
-            <div>
-            </div>
-        </div>
+                    <div className="col-lg-8 col-md-8 col-sm-12">
+                        <div className='row'>
+                            <div className='col-6'>
+                                <div className='m-2'>Products : {merchantDetails.MerchantTotalProduct !== null ? merchantDetails.MerchantTotalProduct : 0}</div>
+                            </div>
+                            <div className='col-6'>
+                                <div className='m-2'>Origin : {merchantDetails.ShopCity !== null ? merchantDetails.ShopCity : ""}</div>
+                            </div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-6'>
+                                <div className='m-2'>Rating : {merchantDetails.ShopRating !== null ? merchantDetails.ShopRating : 0} ({merchantDetails.ShopReviewCount !== null ? merchantDetails.ShopReviewCount : 0} Rating)</div>
+                            </div>
+                            <div className='col-6'>
+                                <div className='m-2'>Joined : {merchantDetails.LastJoined !== null ? merchantDetails.LastJoined : ""}</div>
+                            </div>
+                        </div>
+                        <div className='m-2'>Description：{merchantDetails.ShopDescription !== null ? merchantDetails.ShopDescription : "No Description"}</div>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
     )
 
     const [postsToShow, setPostsToShow] = useState([]);
@@ -261,20 +161,14 @@ function MerchantPage(props) {
     const loopWithSlice = () => {
         if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0].ReturnVal !== undefined) {
             toast.warning("There is no more product for the shop")
-        }
-        else {
-
+        } else {
             tempArray = [...postsToShow, ...JSON.parse(props.productsListing)];
 
             const filterList = tempArray.filter((val, id, array) => {
                 return array.indexOf(val) == id;
             });
 
-            // console.log("tempArray", tempArray)
-            // console.log("postsToShow", postsToShow)
-            // console.log("postsToShow", JSON.parse(props.productsListing))
             setPostsToShow(filterList)
-            // console.log("postsToShow BEHIND", postsToShow)
         }
     };
 
@@ -297,24 +191,33 @@ function MerchantPage(props) {
         setPage(page + 1)
     };
 
+    const breadcrumb = [
+        { title: "Home", url: url.home },
+        { title: merchantDetails.ShopName, url: "" },
+      ];
+
     return (
         <React.Fragment>
+            <PageHeader header="My Account" breadcrumb={breadcrumb} />
             <div className="block--margin-top">
-                <Helmet>
-                    <title>{theme.name}</title>
-                </Helmet>
-                <div className="container" style={{ padding: "0.5rem" }}>
+                <div className="container">
                     {Userprofile}
-                    <div style={{ paddingBottom: "1.2rem" }}>
-                        <Card >
-                            <CardContent>
-                                <div className="block-header__title" style={{ paddingLeft: "15px", paddingRight: "15px", fontFamily: "Fira Sans,sans-serif", color: "#363537", fontWeight: "700" }}>
-                                    About Shop
-                                </div>
-                                {useMemo(() => <BlockSlideShow merchantDetails={merchantDetails} />, [])}
-                            </CardContent>
-                        </Card>
-                    </div>
+                    <Card className='mb-4'>
+                        <CardContent>
+                            <div className="block-header__title"
+                                style={{
+                                    paddingLeft: "15px",
+                                    paddingRight: "15px",
+                                    fontFamily: "Fira Sans,sans-serif",
+                                    color: "#363537",
+                                    fontWeight: "700"
+                                }}
+                            >
+                                About Shop
+                            </div>
+                            <BlockSlideShow merchantDetails={merchantDetails} />
+                        </CardContent>
+                    </Card>
                 </div>
                 {
                     props.loading === false ?
@@ -322,21 +225,20 @@ function MerchantPage(props) {
                             <BlockProducts
                                 title="Featured Products"
                                 layout="large-first"
-                                products={postsToShow.length > 0 ? postsToShow : []}
+                                products={postsToShow}
                                 rows={2}
                             />
-                            {/* {
-                                postsToShow.length > 0 ?
-                                    (
-                                        <div className="my-4">
-                                            <BlockMoreButton viewMore={handleShowMorePosts} />
-                                        </div>
-                                    ) : ""
-                            } */}
+                            {
+                                postsToShow.length > 0 &&
+                                (
+                                    <div className="my-4">
+                                        <BlockMoreButton viewMore={handleShowMorePosts} />
+                                    </div>
+                                )
+                            }
                         </>
-                        : <LoadingPanel></LoadingPanel>
+                        : <LoadingPanel />
                 }
-
             </div>
         </React.Fragment>
     );
