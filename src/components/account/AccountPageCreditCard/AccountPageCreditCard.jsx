@@ -105,7 +105,7 @@ class AccountPageCreditCard extends Component {
 
   onDeleteClick = (data) => {
     let deletedCard = {
-      userId: this.state.USERID,
+      userId: window.localStorage.getItem("id"),
       cardId: data,
     };
 
@@ -234,7 +234,7 @@ class AccountPageCreditCard extends Component {
                     </div>
                   ) : (
                     <div>
-                       {console.log("NO")}
+                      {console.log("NO")}
                       Seems like you doesnt have credit card saved in this system.
                       Click on + button to add more.
                     </div>

@@ -17,6 +17,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import "react-credit-cards/es/styles-compiled.css";
 import "react-credit-cards/lib/styles.scss";
 import "./creditcardstyle.css";
+import { browserHistory } from "react-router";
 import TextField from "@material-ui/core/TextField";
 import {
   formatCreditCardNumber,
@@ -26,7 +27,9 @@ import {
 } from "./utils";
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    creditcards: state.counterReducer["creditcards"],
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -109,7 +112,16 @@ class AccountPageAddCreditCard extends Component {
     }
   };
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.creditcards !== this.props.creditcards && this.props.creditcards[0].ReturnVal === undefined) {
+      browserHistory.push("/Emporia/account/creditcard");
+      window.location.reload();
+    }
+  }
+
   render() {
+
+    console.log("this is a credit cards", this.props.creditcards)
     return (
       <div id="PaymentForm">
         <Cards
@@ -118,8 +130,8 @@ class AccountPageAddCreditCard extends Component {
           name={this.state.name}
           number={this.state.number}
         />
-          <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
-          <div className="row" style={{marginTop:"20px"}}>
+        <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
+          <div className="row" style={{ marginTop: "20px" }}>
             <TextField
               variant="outlined"
               style={{ width: '100%' }}
@@ -136,7 +148,7 @@ class AccountPageAddCreditCard extends Component {
               onFocus={this.handleInputFocus}
             />
           </div>
-          <div className="row" style={{marginTop:"20px"}}>
+          <div className="row" style={{ marginTop: "20px" }}>
             <TextField
               variant="outlined"
               style={{ width: '100%' }}
@@ -151,7 +163,7 @@ class AccountPageAddCreditCard extends Component {
               onFocus={this.handleInputFocus}
             />
           </div>
-          <div className="row" style={{marginTop:"20px"}}>
+          <div className="row" style={{ marginTop: "20px" }}>
             <TextField
               variant="outlined"
               style={{ width: '100%' }}

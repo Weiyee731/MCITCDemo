@@ -1140,6 +1140,7 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+        console.log("json", json)
         if (json[0].ReturnVal === 1) {
           toast.success("Credit Card selected successfully deleted");
         }
@@ -1147,10 +1148,12 @@ export class GitEpic {
           const response_1 = await fetch(
             url +
             "User_ViewUserPaymentMethod?USERID=" +
-            payload.USERID
+            payload.userId
           );
           let json_1 = await response_1.json();
+          console.log("json_1", json_1)
           json_1 = JSON.parse(json_1);
+
           return {
             type: GitAction.DeletedCreditCard,
             payloadCondition: json,
@@ -1288,6 +1291,13 @@ export class GitEpic {
 
   getAllProductsByStatus = (action$) =>
     action$.ofType(GitAction.GetProductByProductStatus).switchMap(async ({ payload }) => {
+
+      console.log(url +
+        "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
+        payload.ProductStatus +
+        "&USERID=" +
+        payload.UserID)
+
       try {
         const response = await fetch(
           url +
@@ -1297,7 +1307,7 @@ export class GitEpic {
           payload.UserID
         );
         let json = await response.json();
-        json = JSON.parse(json);
+        json = json;
         return {
           type: GitAction.GotProductByProductStatus,
           payload: json,
@@ -1978,6 +1988,12 @@ export class GitEpic {
 
   viewOverallSummary = (action$) =>
     action$.ofType(GitAction.GetOverallSummary).switchMap(async ({ payload }) => {
+
+      console.log(url +
+        "Report_OverallSummary?STARTDATETIME112=" +
+        payload.StartDateTime +
+        "&ENDDATETIME112=" +
+        payload.StartDateTime)
       try {
         const response = await fetch(
           url +
@@ -1987,6 +2003,7 @@ export class GitEpic {
           payload.StartDateTime
         );
         let json = await response.json();
+        console.log("json", json)
         json = JSON.parse(json);
         return {
           type: GitAction.GotOverallSummary,
@@ -2106,6 +2123,28 @@ export class GitEpic {
 
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
+
+      console.log(url +
+        "Order_AddOrder?USERID=" +
+        payload.UserID +
+        "&USERADDRESSID=" +
+        payload.UserAddressID +
+        "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" +
+        payload.PaymentMethodID +
+        "&USERPAYMENTMETHODID=" +
+        payload.UserPaymentMethodID +
+        "&ORDERTOTALAMOUNT=" +
+        payload.OrderTotalAmount +
+        "&ORDERPAIDAMOUNT=" +
+        payload.OrderPaidAmount +
+        "&PRODUCTID=" +
+        payload.ProductID +
+        "&PRODUCTQUANTITY=" +
+        payload.ProductQuantity +
+        "&PRODUCTVARIATIONDETAILID=" +
+        payload.ProductVariationDetailID +
+        "&TRACKINGSTATUSID=" +
+        payload.TrackingStatusID)
       try {
         const response = await fetch(
           url +
@@ -2460,6 +2499,9 @@ export class GitEpic {
 
   getAllTransactions = (action$) =>
     action$.ofType(GitAction.GetTransactions).switchMap(async ({ payload }) => {
+      console.log(url +
+        "Order_ViewOrder?TRACKINGSTATUS=" +
+        payload)
       try {
         const response = await fetch(
           url +
@@ -2660,6 +2702,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+
+        console.log("json", json)
         return {
           type: GitAction.GotMerchantOrders,
           payload: json,

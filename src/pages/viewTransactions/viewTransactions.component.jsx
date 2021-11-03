@@ -8,6 +8,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TextField,
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { GitAction } from "../../store/action/gitAction";
@@ -41,6 +42,7 @@ import "../viewTransactions/viewTransactions.css";
 import Collapse from "@material-ui/core/Collapse";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import Input from "@material-ui/core/Input";
 
 function mapStateToProps(state) {
   return {
@@ -368,6 +370,7 @@ function DeletableTable(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [open, setOpen] = React.useState(false);
 
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -420,6 +423,8 @@ function DeletableTable(props) {
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, props.Data.length - page * rowsPerPage);
+
+
 
   return (
     <div>
@@ -521,6 +526,10 @@ function Row(props) {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
+  const [trackingNumber, setTrackingNumber] = React.useState("");
+
+  console.log("trackingNumber", trackingNumber)
+
   return (
     <React.Fragment>
       <TableRow
@@ -569,7 +578,7 @@ function Row(props) {
             <Box margin={2}>
               <p className="subHeading">User Details</p>
               <div style={{ display: "flex" }}>
-                <div class>
+                <div className="subContainer">
                   <p className="subTextLeft">{"Full Name "}</p>
                   <p className="subTextField">
                     {row.UserFullName ? row.UserFullName : "-"}
@@ -602,45 +611,76 @@ function Row(props) {
                 <Table size="small" aria-label="products">
                   <TableHead>
                     <TableRow>
+                      <TableCell><Checkbox /></TableCell>
                       <TableCell>Product Image</TableCell>
                       <TableCell>Product Name</TableCell>
                       <TableCell>Quantity</TableCell>
                       <TableCell>Price per Unit (RM)</TableCell>
                       <TableCell>Total (RM)</TableCell>
                       <TableCell>Remark</TableCell>
+
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {row.OrderProductDetail
-                      ? JSON.parse(row.OrderProductDetail).map((product, i) => (
-                        <TableRow>
-                          <TableCell>
-                            <img
-                              height={50}
-                              src={
-                                JSON.parse(product.ProductImages)
-                                  ? JSON.parse(product.ProductImages)[0]
-                                    .ProductMediaUrl
-                                  : ""
-                              }
+                      ?
+                      <>
+                        {JSON.parse(row.OrderProductDetail).map((product, i) => (
+                          <TableRow>
+                            <TableCell><Checkbox /></TableCell>
+                            <TableCell>
+                              <img
+                                height={50}
+                                src={
+                                  JSON.parse(product.ProductImages)
+                                    ? JSON.parse(product.ProductImages)[0]
+                                      .ProductMediaUrl
+                                    : ""
+                                }
+                              />
+                            </TableCell>
+                            {console.log("price", product)}
+                            <TableCell>{product.ProductName}</TableCell>
+                            <TableCell>{product.ProductQuantity}</TableCell>
+                            <TableCell>{product.ProductVariationPrice}</TableCell>
+                            <TableCell>
+                              {product.ProductQuantity *
+                                product.ProductVariationPrice}
+                            </TableCell>
+                            <TableCell>{product.TrackingStatus}</TableCell>
+                            {/* <TableCell>
+                            <Input
+                              id="component-simple"
+                              value={this.state.userContactNo}
+                              onChange={this.handleChange}
                             />
-                          </TableCell>
-                          <TableCell>{product.ProductName}</TableCell>
-                          <TableCell>{product.ProductQuantity}</TableCell>
-                          <TableCell>{product.ProductSellingPrice}</TableCell>
-                          <TableCell>
-                            {product.ProductQuantity *
-                              product.ProductSellingPrice}
-                          </TableCell>
-                          <TableCell>{product.ProductStatus}</TableCell>
-                        </TableRow>
-                      ))
+                          </TableCell> */}
+                          </TableRow>
+                        ))
+                        }
+                      </>
                       : null}
+
                   </TableBody>
+
                 </Table>
+
               ) : (
                 <p className="fadedText">No Products To Display</p>
               )}
+
+              <div style={{ textAlign: "left" }}>
+                <p className="subTextField">
+                  <label className="px-6">Tracking Number : </label>
+                  <TextField
+                    id="outlined-size-small" size="small"
+                    className="px-6"
+                    value={trackingNumber}
+                    onChange={(x) => setTrackingNumber(x.target.value)}
+                  />
+                  <Button style={{ backgroundColor: "#28a745", color: "white" }} >SUBMIT</Button>
+                </p>
+              </div>
               {/* <Button
                 className="orderButton"
                 onClick={() => setData(row, index)}
@@ -956,10 +996,10 @@ class ViewTransactionsComponent extends Component {
       backPage: "viewProduct",
       value: 0,
       tabsHidden: false,
-      currentlyChosen: "In Cart",
+      currentlyChosen: "Payment Confirm",
     };
     this.props.CallGetTransactionStatus();
-    this.props.CallGetTransaction("In Cart");
+    this.props.CallGetTransaction("Payment Confirm");
     this.props.CallAllProductsByProductStatus({
       ProductStatus: this.state.productStatus,
       UserID: localStorage.getItem("id"),
@@ -1032,66 +1072,60 @@ class ViewTransactionsComponent extends Component {
     }
 
     if (allTransactionStatusData.length > 0) {
-      var generateTabs = allTransactionStatusData.map((status, i) => {
-        return (
-          <Tab
-            label={status.TrackingStatus}
-            {...a11yProps(i)}
-          // onClick={changeData.bind(this, status.TrackingStatus)}
-          />
-        );
-      });
-      var generatePanels = allTransactionStatusData.map((status, i) => {
-        var transactionList = this.props.alltransactions;
-        transactionList = transactionList.filter(
-          (items) =>
+      // var generateTabs = allTransactionStatusData.map((status, i) => {
+      //   return (
+      //     <Tab
+      //       label={status.TrackingStatus}
+      //       {...a11yProps(i)}
+      //     // onClick={changeData.bind(this, status.TrackingStatus)}
+      //     />
+      //   );
+      // });
+      // var generatePanels = allTransactionStatusData.map((status, i) => {
+      //   var transactionList = this.props.alltransactions;
+      //   transactionList = transactionList.filter(
+      //     (items) =>
 
-            items.TrackingStatusID === allTransactionStatusData[i].TrackingStatusID
-        );
-        return (
-          <TabPanel value={this.state.value} index={i}>
+      //       items.TrackingStatusID === allTransactionStatusData[i].TrackingStatusID
+      //   );
+      //   return (
+      //     <TabPanel value={this.state.value} index={i}>
+      //       <DisplayTable
+      //         Data={transactionList}
+      //         ProductProps={this.props}
+      //         history={this.props.history}
+      //         tabsHidden={this.state.tabsHidden}
+      //         setTabsHidden={this.setTabsHidden}
+      //       ></DisplayTable>
+      //     </TabPanel>
+      //   );
+      // });
+
+      let transactionList = []
+      this.props.alltransactions.filter((x) => x.TrackingStatus === this.state.currentlyChosen).map((y) => {
+        transactionList.push(y)
+      })
+
+      var generateTable =
+        (
+          <div>
             <DisplayTable
               Data={transactionList}
               ProductProps={this.props}
               history={this.props.history}
               tabsHidden={this.state.tabsHidden}
               setTabsHidden={this.setTabsHidden}
-            ></DisplayTable>
-          </TabPanel>
-        );
-      });
-
-      var generateTable = allTransactionStatusData.map((status, i) => {
-        var transactionList = this.props.alltransactions;
-        console.log(allTransactionStatusData);
-
-        transactionList = transactionList.filter(
-          (items) =>
-            items.TrackingStatus == allTransactionStatusData[i].TrackingStatus
-        );
-        console.log(transactionList);
-
-        return (
-          <div>
-            {this.state.currentlyChosen ==
-              allTransactionStatusData[i].TrackingStatus ? (
-              <DisplayTable
-                Data={transactionList}
-                ProductProps={this.props}
-                history={this.props.history}
-                tabsHidden={this.state.tabsHidden}
-                setTabsHidden={this.setTabsHidden}
-              />
-            ) : null}
+            />
           </div>
         );
-      });
+
     }
 
     return (
       <div className="mainContainer">
         {!this.state.tabsHidden ? (
           <div>
+            {console.log("HERE")}
             <p className="heading">Orders List</p>
             <div className="selectContainer">
               <FormControl variant="outlined" size="small">

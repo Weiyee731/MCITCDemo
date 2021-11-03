@@ -285,7 +285,7 @@ const Access = () => {
                 component={addPromotionBannerComponent}
               />
               <Route path="/addPromoCode" component={addPromoCodeComponent} />
-              <Route path="/viewTransaction" component={ViewTransactionsComponent} />
+              <Route path="/viewTransactions" component={ViewTransactionsComponent} />
               <Route path="/viewPromoCodes" component={ViewPromoCodes} />
               <Route
                 path="/viewPromoCodesDetails"
