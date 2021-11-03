@@ -34,6 +34,7 @@ import PhoneInput, {
   isPossiblePhoneNumber,
 } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 function mapStateToProps(state) {
   return {
@@ -214,6 +215,9 @@ class AccountPagePassword extends Component {
     // const { value } = e.target;
     var passwordPattern =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/im;
+    //       - at least 8 characters
+    // - must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
+    // - Can contain special characters
     console.log(e.target.value);
     if (e !== null) {
       this.setState({
@@ -379,7 +383,7 @@ class AccountPagePassword extends Component {
         <CardContent>
           <React.Fragment>
             <Helmet>
-              <title>{`ChangeEmail — ${theme.name}`}</title>
+              <title>{`Change Password — ${theme.name}`}</title>
             </Helmet>
             {this.state.confirmPasswordPage ? (
               <div className="checkout block" style={{ width: "100%" }}>
@@ -476,10 +480,10 @@ class AccountPagePassword extends Component {
                     <div className=" font">
                       Your Current Email Address is{" "}
                       {this.props.currentUser[0] !== undefined &&
-                      this.props.currentUser[0].UserEmailAddress !== undefined
+                        this.props.currentUser[0].UserEmailAddress !== undefined
                         ? this.censorEmail(
-                            this.props.currentUser[0].UserEmailAddress
-                          )
+                          this.props.currentUser[0].UserEmailAddress
+                        )
                         : ["No Email Address was found"]}
                     </div>
                   </div>
@@ -521,6 +525,15 @@ class AccountPagePassword extends Component {
                         </FormHelperText>
                       )}
                     </div>
+                    <div className="tooltip_1 d-flex align-items-center">
+                        <HelpOutlineIcon />
+                        <div className="tooltiptext1 ">
+                          Password must fullfll following requirement
+                          - at least 8 characters
+                          - must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
+                          - Can contain special characters
+                        </div>
+                      </div>
                     <div className="font col-4 link-button  change-contact-mail d-flex align-items-center pl-2">
                       {this.state.startCountDown === true ? (
                         <div className="link-button" disabled>
@@ -545,12 +558,12 @@ class AccountPagePassword extends Component {
                           <p className=" font">
                             Enter the code we sent to your email{" "}
                             {this.props.currentUser.length > 0 &&
-                            this.props.currentUser[0].UserEmailAddress !==
+                              this.props.currentUser[0].UserEmailAddress !==
                               undefined &&
-                            this.props.currentUser[0].UserEmailAddress
+                              this.props.currentUser[0].UserEmailAddress
                               ? this.censorEmail(
-                                  this.props.currentUser[0].UserEmailAddress
-                                )
+                                this.props.currentUser[0].UserEmailAddress
+                              )
                               : "-"}
                           </p>
                         </div>
