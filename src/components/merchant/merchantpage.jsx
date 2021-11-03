@@ -192,7 +192,7 @@ function MerchantPage(props) {
     };
 
     const breadcrumb = [
-        { title: "Home", url: url.home },
+        { title: "Home", url: url.home() },
         { title: merchantDetails.ShopName, url: "" },
       ];
 

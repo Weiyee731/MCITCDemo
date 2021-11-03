@@ -47,7 +47,7 @@ $local-product-margin: 5px;
 
 .products__list-item {
     display: flex;
-    width: calc(16.666% - #{$local-product-margin * 2});
+    width: calc(20% - #{$local-product-margin * 2});
     margin: $local-product-margin;
     .product-card {
         width: 100%;

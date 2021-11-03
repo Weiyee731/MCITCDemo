@@ -33,8 +33,8 @@ function ProductCard(props) {
 
   const containerClasses = classNames("product-card", {
     "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
-    // "product-card--layout--grid product-card--size--nl": layout === "grid-nl",
-    // "product-card--layout--grid product-card--size--lg": layout === "grid-lg",
+    "product-card--layout--grid product-card--size--nl": layout === "grid-nl",
+    "product-card--layout--grid product-card--size--lg": layout === "grid-lg",
     "product-card--layout--list": layout === "list",
     "product-card--layout--horizontal": layout === "horizontal",
   });
@@ -169,6 +169,8 @@ function ProductCard(props) {
         )
     );
 
+  console.log(product)
+
   return (
     <div className={containerClasses}>
       {badges}
@@ -179,12 +181,22 @@ function ProductCard(props) {
         </div>
         <div className="product-card__rating">
           <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
-          {/* <div className=" product-card__rating-legend">{`(${product.ProductReviewCount !== null ? product.ProductReviewCount : 0} Reviews)`}</div> */}
           {
             product.ProductSold !== "0" && product.ProductSold !== null &&
-            <div className=" product-card__rating-legend">{`(${product.ProductSold} Sold)`}</div>
+            <div className="product-card__rating-legend">{product.ProductRating}</div>
           }
         </div>
+        {
+          product.ProductSold !== "0" && product.ProductSold !== null &&
+          <div
+            className="product-card__rating-legend mt-1"
+            style={{
+              marginLeft: '0px'
+            }}
+          >
+            {`(${product.ProductSold} Sold)`}
+          </div>
+        }
         {features}
       </div>
 
@@ -193,13 +205,14 @@ function ProductCard(props) {
           Availability:{" "}
           <span style={{ color: "#3d464d" }}>In Stock</span>
         </div>
-        <div className="row"
+        <div
           style={{
+            display: 'flex',
             flexDirection: 'row',
-            paddingLeft: "10px",
-            paddingRight: "10px",
-            justifyContent: 'space-between'
-          }}>
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
           <label style={{ fontSize: "20px" }}>{price}</label>
           {wishlistView}
         </div>

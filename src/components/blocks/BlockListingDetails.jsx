@@ -668,11 +668,9 @@ class BlockListingDetails extends Component {
                                             this.state.productList[0].map((products) => {
 
                                                 return (
-                                                    <>
-                                                        <div className="products__list-item">
-                                                            <ProductCard product={products}></ProductCard>
-                                                        </div>
-                                                    </>
+                                                    <div className="products__list-item">
+                                                        <ProductCard product={products}></ProductCard>
+                                                    </div>
                                                 )
                                             })
                                             :
