@@ -108,7 +108,7 @@ class AccountPageOrders extends Component {
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.state = {
       page: 1,
-      rowsPerPage: 5,
+      rowsPerPage: 15,
       shipping: 25,
       tax: 0,
       value: 0,
@@ -186,7 +186,9 @@ class AccountPageOrders extends Component {
       <>
         {
           listing.length > 0 ?
-            ordersList = listing.slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
+            ordersList = 
+            listing
+            // .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
               .map((order) => {
                 const quantity = order.OrderProductDetail !== null ? JSON.parse(order.OrderProductDetail).map(
                   (orders) => orders.ProductQuantity

@@ -758,7 +758,7 @@ class DisplayTable extends Component {
                       rowCount={this.props.Data.length}
                     />
                     {
-                      this.props.Data.filter((searchedItem) => searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+                      this.props.Data.filter((searchedItem) => typeof  searchedItem.ProductName !== "undefined" && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
                         .map((filteredItem) => { filteredProduct.push(filteredItem); })
                     }
                     <TableBody>
