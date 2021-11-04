@@ -83,7 +83,6 @@ class AccountPageProfile extends Component {
       validGender: false,
       validContact: false,
       validEmail: false,
-
       TYPE: "UserProfile",
       TYPEVALUE: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
       USERROLEID: "0",
@@ -319,6 +318,7 @@ class AccountPageProfile extends Component {
 
 
   render() {
+    console.log(this.state)
     const imgurl = "http://tourism.denoo.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {

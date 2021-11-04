@@ -369,7 +369,7 @@ export class GitEpic {
       try {
         const response = await fetch(
           url +
-          "User_EditProfile?USERID=" +
+          "User_UpdateProfile?USERID=" +
           payload.USERID +
           "&FIRSTNAME=" +
           payload.USERFIRSTNAME +
