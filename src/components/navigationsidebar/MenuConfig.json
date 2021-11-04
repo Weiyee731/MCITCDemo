@@ -132,6 +132,18 @@
       ]
     },
     {
+      "title": "Shop",
+      "icon": "fas fa-store",
+      "active": false,
+      "type": "dropdown",
+      "submenus": [
+        {
+          "title": "Shop Profile",
+          "page": "/Emporia/editShopProfile"
+        }
+      ]
+    },
+    {
       "title": "Reports",
       "icon": "fa fa-folder",
       "active": false,

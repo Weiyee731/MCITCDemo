@@ -513,7 +513,7 @@ class AccountPageProfile extends Component {
                   </div>
                 ))}
             </div>
-            <div className="col-4 border-line">
+            <div className="col-4 border-line-left">
               <div onClick={() => this.modalOpen()} className="imagecontainer">
                 <img
                   className="profilePic"

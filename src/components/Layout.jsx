@@ -93,6 +93,7 @@ import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDe
 import ViewMerchantsComponent from "../pages/viewMerchant/viewMerchants.component";
 // import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
 import AddProductAllInOne from "../pages/addProduct/addProductAllInOne.component";
+import EditShopProfile from "../pages/editShopProfile/editShopProfile.component";
 
 const productLayouts = [
   ["/shop/product-standard", { layout: "standard" }],
@@ -306,8 +307,10 @@ const Access = () => {
               <Route path="/supplierResponse" component={supplierResponse} />
 
               <Route path="/addProductsAllIn" component={AddProductAllInOne} />
+              <Route path="/editShopProfile" component={EditShopProfile} />
               {/* <Route path="/viewUserMail" component={viewUserMail} /> */}
               {/* <Route path="/sendUserMail" component={sendUserMail} /> */}
+            
             </Switch>
           </div>
         </div>
