@@ -20,6 +20,7 @@ import AccountPageChangeEmail from "./AccountPageChangeEmail";
 import AccountPageProfile from "./AccountPageProfile";
 import AccountPageAddAddress from "./AccountPageAddAddress";
 import AccountPageCompanyProfile from "./AccountPageCompanyProfile";
+import merchantpage from "../merchant/merchantpage";
 import AccountPageCreditCard from "./AccountPageCreditCard/AccountPageCreditCard";
 import AccountPageAddCreditCard from "./AccountPageCreditCard/AccountPageAddCreditCard";
 import Cookies from "universal-cookie";
@@ -30,6 +31,7 @@ import CreditCardOutlinedIcon from "@material-ui/icons/CreditCardOutlined";
 import HistoryOutlinedIcon from "@material-ui/icons/HistoryOutlined";
 import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
 import PasswordIcon from '@mui/icons-material/Password';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import icons from "../../pages/dashboard/variables/icons";
 import "./AccountLayout.css";
 import { url } from "../../services/utils";
@@ -46,7 +48,7 @@ export default function AccountLayout(props) {
   const links = [
     // { title: "Dashboard", url: "dashboard" },
     { title: "My Profile", url: "profile", icons: <AccountCircleOutlinedIcon className="titleicon" /> },
-    // { title: "Company Profile", url: "companyprofile", icons: <BusinessOutlinedIcon className="titleicon" /> },
+    { title: "My Shop", url: "companyprofile", icons: <StorefrontOutlinedIcon className="titleicon" /> },
     { title: "My Address", url: "addresses", icons: <LocationOnOutlinedIcon className="titleicon" /> },
     { title: "My Credit Cards", url: "creditcard", icons: <CreditCardOutlinedIcon className="titleicon" /> },
     { title: "Order History", url: "orders", icons: <HistoryOutlinedIcon className="titleicon" /> },
@@ -65,7 +67,7 @@ export default function AccountLayout(props) {
           <li
             key={link.url}
             className={classes}
-            // onClick={localStorage.setItem("management", true)}
+          // onClick={localStorage.setItem("management", true)}
           >
             <Link to={"/dashboard"}>{link.title}</Link>
           </li>
@@ -125,12 +127,12 @@ export default function AccountLayout(props) {
                   exact
                   path={`${match.path}/profile`}
                   component={AccountPageProfile}
-                ></Route>
-                {/* <Route
+                />
+                <Route
                   exact
                   path={`${match.path}/companyprofile`}
-                  component={AccountPageCompanyProfile}
-                /> */}
+                  component={merchantpage}
+                />
                 <Route
                   exact
                   path={`${match.path}/orders`}

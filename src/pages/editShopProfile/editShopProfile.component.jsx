@@ -238,6 +238,10 @@ class EditShopProfile extends Component {
     this.setState({ file: e });
   }
 
+  opennewtab(url) {
+    window.open(url, '_blank');
+  }
+
   render() {
     console.log(this.props.currentUser)
     let userid = localStorage.getItem("id");
@@ -260,10 +264,14 @@ class EditShopProfile extends Component {
     ].map((link) => {
       return (
         <div key={link.title} className="info-row">
-          <Link to={link.url}>{link.icons}{link.title}</Link>
-          <Link to={link.url}>
+          <a href={link.url} target="_blank">{link.icons}{link.title}</a>
+          {/* <Link to={link.url}>{link.icons}{link.title}</Link> */}
+          {/* <Link to={link.url}>
             <div className="info-row-right">{link.data}</div>
-          </Link>
+          </Link> */}
+          <a href={link.url} target="_blank">
+            <div className="info-row-right">{link.data}</div>
+          </a>
         </div>
       );
     })
