@@ -94,8 +94,6 @@ const rootEpic = combineEpics(
   gitEpic.viewProductReviewByProductID,
   gitEpic.viewProductReview,
   gitEpic.addProductReview,
-  //==================REPORT==========================//
-  gitEpic.viewOverallSummary,
   //==================DELIVERY==========================//
   gitEpic.getDeliverableList,
   //==================NOTIFICATION==========================//

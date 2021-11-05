@@ -159,9 +159,7 @@ function MerchantPage(props) {
     // let productPerPage = 4
 
     const loopWithSlice = () => {
-        if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0].ReturnVal !== undefined) {
-            toast.warning("There is no more product for the shop")
-        } else {
+        if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0].ReturnVal === undefined) {
             tempArray = [...postsToShow, ...JSON.parse(props.productsListing)];
 
             const filterList = tempArray.filter((val, id, array) => {
@@ -194,7 +192,7 @@ function MerchantPage(props) {
     const breadcrumb = [
         { title: "Home", url: url.home() },
         { title: merchantDetails.ShopName, url: "" },
-      ];
+    ];
 
     return (
         <React.Fragment>

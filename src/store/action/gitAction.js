@@ -678,19 +678,6 @@ export class GitAction {
     };
   }
 
-  //=================REPORTING=============================//
-
-  // Summary
-  static GetOverallSummary = "GET-OVERALLSUMMARY";
-  static GotOverallSummary = "GOT-OVERALLSUMMARY";
-
-  static CallOverallSummary(suppData) {
-    return {
-      type: GitAction.GetOverallSummary,
-      payload: suppData,
-    };
-  }
-
   //=================DELIVERY=============================//
 
   // Summary

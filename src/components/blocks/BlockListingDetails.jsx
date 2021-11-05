@@ -23,6 +23,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
+import { Link } from "react-router-dom";
 import moment from 'moment';
 
 // styles
@@ -437,7 +438,7 @@ class BlockListingDetails extends Component {
                 <div className="row">
                     <div className="col-lg-2 col-md-2 col-sm-2">
                         <div className="category-segment">
-                            <div
+                            {/* <div
                                 style={{ cursor: "pointer", fontWeight: 600 }}
                                 onMouseDown={(e) => {
                                     if (e.button === 1) {
@@ -449,7 +450,10 @@ class BlockListingDetails extends Component {
                                 }}
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
-                            </div>
+                            </div> */}
+                            <Link to="/shop/AllProductCategory/">
+                                <FormatListBulletedIcon /> All Categories
+                            </Link>
                             {
                                 this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
                                 <div style={{ fontSize: '15px', fontWeight: "bold", paddingTop: "10px" }}>

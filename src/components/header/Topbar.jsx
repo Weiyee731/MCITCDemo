@@ -43,23 +43,6 @@ function Topbar() {
     },
   ];
 
-  const accountLinks = [
-    { title: "Dashboard", url: "/account/dashboard" },
-    { title: "Edit Profile", url: "/account/profile" },
-    { title: "Order History", url: "/account/orders" },
-    { title: "Addresses", url: "/account/addresses" },
-    { title: "Password", url: "/account/password" },
-    { title: "Logout", url: "/login" },
-  ];
-
-  const linksList = links.map((item, index) => (
-    <div key={index} className="topbar__item topbar__item--link">
-      <Link className="topbar-link" to={item.url}>
-        {item.title}
-      </Link>
-    </div>
-  ));
-
   return (
     <div className="site-header__topbar topbar">
       <div className="topbar__container container">
