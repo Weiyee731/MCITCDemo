@@ -1,0 +1,533 @@
+// react
+import React, { Component } from "react";
+
+// third-party
+import { Modal, ModalBody } from "reactstrap";
+
+// data stubs
+import { DropzoneArea } from 'material-ui-dropzone'
+import Dropzone from "react-dropzone";
+import { connect } from "react-redux";
+import { GitAction } from "../../store/action/gitAction";
+import { Link, matchPath, Redirect, Switch, Route } from "react-router-dom";
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+
+import {
+  Card,
+  Divider,
+} from "@material-ui/core";
+import CardContent from "@material-ui/core/CardContent";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import axios from "axios";
+import moment from 'moment';
+import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
+import { browserHistory } from "react-router";
+import './editShopProfile.scss';
+import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
+import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import Logo from "../../assets/Emporia.png";
+
+function mapStateToProps(state) {
+  return {
+    currentUser: state.counterReducer["currentUser"],
+    countrylist: state.counterReducer["countries"],
+    merchant: state.counterReducer["merchant"],
+    shopUpdated: state.counterReducer["merchant"],
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    CallUserProfile: (propsData) =>
+      dispatch(GitAction.CallUserProfile(propsData)),
+
+    CallUpdateUserProfile: (propsData) =>
+      dispatch(GitAction.CallUpdateUserProfile(propsData)),
+
+    CallCountry: () => dispatch(GitAction.CallCountry()),
+
+    CallUpdateProfileImage: (propsData) =>
+      dispatch(GitAction.CallUpdateProfileImage(propsData)),
+
+    CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
+    CallUpdateShopDetail: (propData) => dispatch(GitAction.CallUpdateShopDetail(propData)),
+  };
+}
+
+class EditShopProfile extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      USERID: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
+      USERFIRSTNAME: "",
+      USERLASTNAME: "",
+      USERCONTACTNO: "",
+      USERDATEBIRTH: "",
+      USEREMAIL: "",
+      USERGENDER: "",
+      open: false,
+      open1: false,
+      showBoxForImage: false,
+      fileAdded: false,
+      file: "",
+      fileInfo: "",
+      url: "",
+      imageFile: null,
+      imageName: null,
+      preview: null,
+
+      editContact: false,
+      editEmail: false,
+      validfirstName: false,
+      validlastName: false,
+      validDOB: false,
+      validGender: false,
+      validContact: false,
+      validEmail: false,
+
+      TYPE: "UserProfile",
+      TYPEVALUE: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
+      USERROLEID: "0",
+      LISTPERPAGE: "999",
+      PAGE: "1",
+
+      type: "UserProfile",
+      typeValue: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
+      userRoleID: "0",
+      // LISTPERPAGE: "999",
+      PAGE: "1",
+      productPage: "999"
+    };
+
+    this.uploadHandler = this.uploadHandler.bind(this);
+  }
+  /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
+
+
+  componentDidMount() {
+
+    if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.TYPEVALUE !== undefined) {
+      this.props.CallUserProfile(this.state);
+      this.props.CallMerchants(this.state);
+      this.props.CallCountry();
+      if (this.props.currentUser !== null) {
+        let userDetails = this.props.currentUser[0];
+        if (userDetails !== undefined) {
+          this.setState({
+            USERFIRSTNAME: userDetails.FirstName !== undefined ? userDetails.FirstName : "-",
+            USERLASTNAME: userDetails.LastName !== undefined ? userDetails.LastName : "-",
+            USERCONTACTNO: userDetails.UserContactNo !== undefined ? userDetails.UserContactNo : "-",
+            USERDATEBIRTH: userDetails.UserDOB !== undefined ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
+            USEREMAIL: userDetails.UserEmailAddress !== undefined ? userDetails.UserEmailAddress : "-",
+            USERGENDER: userDetails.UserGender !== undefined ? userDetails.UserGender : "-",
+            validfirstName: userDetails.FirstName !== undefined ? true : false,
+            validlastName: userDetails.LastName !== undefined ? true : false,
+            validDOB: userDetails.UserDOB !== undefined ? true : false,
+            validGender: userDetails.UserGender !== undefined ? true : false,
+            validContact: userDetails.UserContactNo !== undefined ? true : false,
+            validEmail: userDetails.UserEmailAddress !== undefined ? true : false,
+          })
+        }
+      }
+    } else {
+      browserHistory.push("Emporia/login");
+      window.location.reload(false);
+    }
+
+  }
+  onFileUpload = () => {
+    const formData = new FormData();
+
+    let imageName = new Date().valueOf();
+    let fileExt = this.state.imageFile.map((imagedetails) =>
+      imagedetails.name.split('.').pop());
+
+    let FullImageName = JSON.stringify(imageName) + "." + fileExt;
+    formData.append("imageFile", this.state.imageFile[0]);
+    formData.append("imageName", imageName);
+
+    let file = {
+      USERID: window.localStorage.getItem("id"),
+      USERPROFILEIMAGE: FullImageName,
+      TYPE: "PROFILEIMAGE",
+    };
+    axios
+      .post(
+        "http://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php",
+        formData,
+        {}
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          this.props.CallUpdateProfileImage(file);
+          this.props.CallUserProfile(this.state);
+        }
+      });
+  };
+  ///////////////////////////DELETE PHOTO SELECTED////////////////////////////////
+  removeFile() {
+    this.setState({
+      fileAdded: false,
+    });
+    const index = this.state.imageFile.indexOf(0);
+    const files = this.state.imageFile.slice(0);
+    files.splice(index, 1);
+  }
+  /////////////////////HANDLE OPEN OR CLOSE TABLE//////////////////////////////////////////
+  setOpenTable(status) {
+    if (status == false) {
+      this.setState({ open: false });
+    } else {
+      this.setState({ open: true });
+    }
+  }
+
+  ////////////////////////HANDLE OPEN OR CLOSE DROPZONE////////////////////////////////////////////
+  modalOpen() {
+    this.setState({ showBoxForImage: true });
+  }
+  modalClose() {
+    this.setState({ showBoxForImage: false });
+  }
+
+  //////////////////////GET INPUT FROM USER///////////////////////////////////////////////////////////
+
+  handleChangeforFirstName = (e) => {
+    const { value } = e.target;
+    if (value !== null) {
+      this.setState({
+        USERFIRSTNAME: value,
+        validfirstName: true,
+      });
+    } else {
+      this.setState({
+        validfirstName: false,
+      });
+    }
+  };
+
+  handleChangeforLastName = (e) => {
+    const { value } = e.target;
+
+    if (value !== null) {
+      this.setState({
+        USERLASTNAME: value,
+        validlastName: true,
+      });
+    } else {
+      this.setState({
+        validlastName: false,
+      });
+    }
+  };
+
+  addProfile() {
+    this.props.CallUpdateShopDetail(this.state);
+  }
+
+  uploadHandler(e) {
+    this.setState({ file: e });
+  }
+
+  render() {
+    console.log(this.props.currentUser)
+    let userid = localStorage.getItem("id");
+    const merchantDetails = this.props.merchant.length > 0 &&
+      this.props.merchant[0].ReturnVal === undefined && this.props.merchant[0];
+
+    console.log(merchantDetails)
+    const imgurl = "http://tourism.denoo.my/emporiaimage/userprofile/"
+    const links = [
+      { title: "My Shop Page", url: "merchant/" + userid, data: "view >", icons: <StorefrontOutlinedIcon className="titleicon" /> },
+      { title: "Products", url: "addresses", data: merchantDetails.MerchantTotalProduct ? merchantDetails.MerchantTotalProduct : [0], icons: <ListAltOutlinedIcon className="titleicon" /> },
+      { title: "Response Rate", url: "", data: "37%", icons: <SmsOutlinedIcon className="titleicon" /> },
+      { title: "Response Time", url: "", data: "Within Hour", icons: <AccessTimeOutlinedIcon className="titleicon" /> },
+      {
+        title: "Shop Rating",
+        url: "",
+        data: merchantDetails.ShopReviewCount && merchantDetails.ShopRating ? merchantDetails.ShopReviewCount + (merchantDetails.ShopRating) : [0],
+        icons: <GradeOutlinedIcon className="titleicon" />
+      },
+    ].map((link) => {
+      return (
+        <div key={link.title} className="info-row">
+          <Link to={link.url}>{link.icons}{link.title}</Link>
+          <Link to={link.url}>
+            <div className="info-row-right">{link.data}</div>
+          </Link>
+        </div>
+      );
+    })
+
+    const getUploadParams = () => {
+      return { url: "http://pmappapi.com/Memo/uploads/uploads/" };
+    };
+
+    const handleChangeStatus = ({ meta }, status) => {
+      console.log(status, meta);
+    };
+
+    const handleSubmit = (files, allFiles) => {
+      console.log(files.map((f) => f.meta));
+      allFiles.forEach((f) => f.remove());
+    };
+
+    return (
+      <div className="MainContainer">
+        <Card>
+          <CardContent>
+            <div className="row">
+              <div className="col-6">
+                <div
+                  style={{
+                    textAlign: "left",
+                    fontWeight: 800
+                  }}
+                >
+                  My Profile
+                </div>
+
+                <div className="font font-subtitle">
+                  Manage your personal information
+                </div>
+              </div>
+              <div className="col-6" style={{ textAlign: "right" }}>
+                <button
+                  variant="contained"
+                  className="btn btn-primary"
+                  onClick={() => this.addProfile()}
+                >
+                  <DoneIcon className="saveicon" />
+                  Save
+                </button>
+              </div>
+            </div>
+            <Divider variant="fullWidth" className="dividerbottom" />
+
+            <div className="row">
+              <div className="col-4 border-line-right">
+                <div className="row">
+                  <div onClick={() => this.modalOpen()} className="imagecontainer">
+                    <img
+                      className="profilePic"
+                      src={merchantDetails.ShopImage && merchantDetails.ShopImage.length ? Logo + merchantDetails.ShopImage : Logo}
+                      alt="Profile"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg";
+                      }}
+                    />
+                    <div className="overlay">Edit</div>
+                  </div>
+                </div>
+                <div className="description row d-flex justify-content-center"><br /> Click on the image above to edit profile picture</div>
+                {links}
+              </div>
+
+              <div className="container col-8">
+                {this.props.currentUser && this.props.currentUser.length > 0 && this.props.currentUser !== null &&
+                  this.props.currentUser.map((row) => (
+                    <div className="container">
+                      <div className="row" >
+                        <div className="col-3 rowStyle vertical-align">Shop Name</div>
+                        <div className="col-8 ">
+                          <TextField
+                            className="font"
+                            variant="outlined"
+                            size="small"
+                            id="userfirstname"
+                            defaultValue={row.ShopName}
+                            onChange={this.handleChangeforFirstName.bind(this)}
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-3 rowStyle vertical-align">
+                          Shop Image and Video
+                          <div className="tooltip_1 d-flex align-items-center">
+                            <HelpOutlineIcon />
+                            <div className="tooltiptext ">
+                              This image and video will be shown in your shop
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="col-8 mb-3">
+                          <DropzoneArea
+                            acceptedFiles={["image/*,video/*"]}
+                            maxSize={2000000}
+                            dropzoneText={"Drag & Drop Image or Click To Browse"}
+                            filesLimit={3}
+                            multiple={false}
+                            onChange={this.uploadHandler}
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-3 rowStyle vertical-align">Shop Description</div>
+                        <div className="col-8">
+                          <TextField
+                            className="font"
+                            variant="outlined"
+                            multiline
+                            maxRows={5}
+                            size="small"
+                            id="userlastname"
+                            defaultValue={row.ShopDescription}
+                            onChange={this.handleChangeforLastName.bind(this)}
+                          />
+                        </div>
+                      </div>
+
+                    </div>
+                  ))}
+              </div>
+
+            </div>
+          </CardContent>
+
+          <div
+            style={{
+              textAlign: "center",
+              padding: "inherit",
+            }}
+          >
+            <Modal
+              className="modal-dialog-centered"
+              isOpen={this.state.showBoxForImage}
+              toggle={() => this.modalClose()}
+            >
+              <ModalBody>
+                <CloseIcon
+                  className="closeIcon"
+                  onClick={() => this.modalClose()}
+                  data-dismiss="modal" />
+                <div
+                  align="center"
+                  className="form-content p-2"
+                >
+                  <div>
+                    <Dropzone
+                      style={{ width: "100vw", height: "60vh" }}
+                      onDrop={(acceptedFiles) => {
+                        if (acceptedFiles.length > 0) {
+                          this.setState({
+                            preview: acceptedFiles.map(file => URL.createObjectURL(file)),
+                            imageName: acceptedFiles[0].name,
+                            fileAdded: true,
+                            imageFile: acceptedFiles,
+                          });
+                          return;
+                        } else {
+                          this.setState({
+                            imageName: "",
+                            fileAdded: false,
+                            fileUpload: [],
+                          });
+                        }
+                      }}
+                      accept="image/*"
+                      maxFiles={1}
+                      multiple={false}
+                      getUploadParams={getUploadParams}
+                      onChangeStatus={handleChangeStatus}
+                      onSubmit={handleSubmit}
+                    >
+                      {({
+                        getRootProps,
+                        getInputProps,
+                        isDragActive,
+                        isDragAccept,
+                        isDragReject,
+                      }) => (
+                        <section>
+                          <div
+                            {...getRootProps({
+                              className: "dropzone",
+                            })}
+                            className="preview-container"
+                            style={{
+                              borderColor: isDragActive
+                                ? isDragReject
+                                  ? "#fc5447"
+                                  : "#a0d100"
+                                : "#b8b8b8",
+                              color: isDragActive
+                                ? isDragReject
+                                  ? "#a31702"
+                                  : "#507500"
+                                : "#828282",
+                            }}
+                          >
+                            <input {...getInputProps()} />
+                            {this.state.fileAdded ? (
+                              <div className="droppedFileImage">
+                                <img className="profilePic" src={this.state.preview} alt={this.state.imageName} />
+                              </div>
+                            ) : (
+                              <div className="preview-word">
+                                {!isDragActive && "Drop a file"}
+                                {isDragActive &&
+                                  !isDragReject &&
+                                  "Drop the file here ..."}
+                              </div>
+                            )}
+                          </div>
+                        </section>
+                      )}
+                    </Dropzone>
+                  </div>
+                  <div className="row justify-content-center">
+                    <div className="col-6">
+                      {this.state.fileAdded && (
+                        <div >
+                          <button
+                            className="button-font mb-2 mr-1 btn btn-primary"
+                            size="sm"
+                            theme="light"
+                            onClick={() => {
+                              this.removeFile();
+                            }}
+                          >
+                            <CloseIcon />
+                            Remove file
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {this.state.fileAdded ? (
+                      <div className="col-6">
+                        <button style={{ float: "left" }}
+                          className="btn btn-primary button-font"
+                          onClick={this.onFileUpload}
+                        >
+                          Upload Image
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="justify-content-center contactrowStyle"><div>Click on the box to add or edit the photo</div></div>
+                    )}
+
+                  </div>
+                </div>
+              </ModalBody>
+            </Modal>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditShopProfile);

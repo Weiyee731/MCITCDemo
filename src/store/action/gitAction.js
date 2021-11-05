@@ -54,6 +54,9 @@ export class GitAction {
 
   static UpdateEmail = "UPDATE-EMAIL";
   static UpdatedEmail = "UPDATED-EMAIL";
+  
+  static UpdateShopDetail = "UPDATE-SHOP-DETAIL";
+  static UpdatedShopDetail = "UPDATED-SHOP-DETAIL";
 
   static CallCheckUserExists(credentials) {
     return {
@@ -116,13 +119,13 @@ export class GitAction {
       payload: propsData,
     };
   }
-
-  // static CallUpdateProfileSpecificField(propsData) {
-  //   return {
-  //     type: GitAction.UpdateProfileSpecificField,
-  //     payload: propsData,
-  //   };
-  // }
+  
+  static CallUpdateShopDetail(propsData) {
+    return {
+      type: GitAction.UpdateShopDetail,
+      payload: propsData,
+    };
+  }
 
   static CallUpdateProfileImage(propsData) {
     return {

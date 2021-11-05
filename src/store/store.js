@@ -47,6 +47,7 @@ const rootEpic = combineEpics(
   gitEpic.updateUserProfile,
   gitEpic.updateProfileImage,
   // gitEpic.UpdateProfileSpecificField,
+  gitEpic.UpdateShopDetail,
   gitEpic.verifyPassword,
   gitEpic.sentOTPVerification,
   gitEpic.updateContact,

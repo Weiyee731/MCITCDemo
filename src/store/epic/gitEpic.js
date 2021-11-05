@@ -369,7 +369,7 @@ export class GitEpic {
       try {
         const response = await fetch(
           url +
-          "User_EditProfile?USERID=" +
+          "User_UpdateProfile?USERID=" +
           payload.USERID +
           "&FIRSTNAME=" +
           payload.USERFIRSTNAME +
@@ -417,47 +417,43 @@ export class GitEpic {
       }
     });
 
-  // UpdateProfileSpecificField = (action$) =>
-  //   action$.ofType(GitAction.UpdateProfileSpecificField).switchMap(async ({ payload }) => {
-  //     try {
-  //       console.log(url +
-  //         "User_UpdateProfileSpecificField?USERID=" +
-  //         payload.USERID +
-  //         "&TYPE=" +
-  //         payload.UPDATETYPE +
-  //         "&VALIDATIONFIELD=" +
-  //         payload.otp +
-  //         "&UPDATEDFIELD=" +
-  //         payload.USERCONTACTNO)
-  //       const response = await fetch(
-  //         url +
-  //         "User_UpdateProfileSpecificField?USERID=" +
-  //         payload.USERID +
-  //         "&TYPE=" +
-  //         payload.UPDATETYPE +
-  //         "&VALIDATIONFIELD=" +
-  //         payload.otp +
-  //         "&UPDATEDFIELD=" +
-  //         payload.USERCONTACTNO
-  //       );
-  //       let json = await response.json();
-  //       json = JSON.parse(json);
-  //       console.log(json)
-  //       if (json.map((val) => val.ReturnVal === 1 && val.ReturnMsg === "The OTP was Wrong")) {
-  //         toast.warn("The OTP was not input correctly. Please kindly try again");
-  //       } else { toast.success("The new contact number was submitted"); }
-  //       return {
-  //         type: GitAction.UpdatedProfileSpecificField,
-  //         payload: json,
-  //       };
-  //     } catch (error) {
-  //       alert('User_UpdateProfileSpecificField: ' + error);
-  //       return {
-  //         type: GitAction.UpdatedProfileSpecificField,
-  //         payload: [],
-  //       };
-  //     }
-  //   });
+  UpdateShopDetail = (action$) =>
+    action$.ofType(GitAction.UpdateShopDetail).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "User_UpdateShopDetail?USERID=" +
+          payload.USERID +
+          "&SHOPNAME=" +
+          payload.SHOPNAME +
+          "&SHOPDESC=" +
+          payload.SHOPDESC +
+          "&SHOPPOSCODE=" +
+          payload.SHOPPOSCODE +
+          "&SHOPCITY=" +
+          payload.SHOPCITY +
+          "&SHOPSTATE=" +
+          payload.SHOPSTATE +
+          "&SHOPCOUNTRYID=" +
+          payload.SHOPCOUNTRYID
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        if (json.map((val) => val.ReturnVal === 1)) {
+          toast.success("Upload Successful");
+        }
+        return {
+          type: GitAction.UpdatedShopDetail,
+          payload: json,
+        };
+      } catch (error) {
+        alert('UpdatedShopDetail: ' + error);
+        return {
+          type: GitAction.UpdatedShopDetail,
+          payload: [],
+        };
+      }
+    });
 
   updateProfileImage = (action$) =>
     action$.ofType(GitAction.UpdateProfileImage).switchMap(async ({ payload }) => {
@@ -641,11 +637,6 @@ export class GitEpic {
   deleteAddress = (action$) =>
     action$.ofType(GitAction.DeleteAddress).switchMap(async ({ payload }) => {
       try {
-
-
-        console.log(url +
-          "User_DeleteAddressBook?USERADDRESSBOOKID=" +
-          payload.AddressBookNo)
         const response = await fetch(
           url +
           "User_DeleteAddressBook?USERADDRESSBOOKID=" +
@@ -653,8 +644,6 @@ export class GitEpic {
         );
         const json = await response.json();
         json = JSON.parse(json);
-
-        console.log("json", json)
         if (json[0].ReturnVal === 1) {
           toast.success("Address successfully deleted");
         }
@@ -746,9 +735,6 @@ export class GitEpic {
         json = JSON.parse(json);
         if (json[0].ReturnVal !== 1) {
           toast.error("Product " + payload.productName + " is NOT updated! Please try again.");
-        }
-        else {
-          toast.success("Product " + payload.productName + " is updated quantity in cart!");
         }
         try {
           const response_1 = await fetch(
@@ -1890,11 +1876,6 @@ export class GitEpic {
 
   getAllSupplierByUserStatus = (action$) =>
     action$.ofType(GitAction.GetSupplierByUserStatus).switchMap(async ({ payload }) => {
-
-      console.log(url +
-        "User_ProfileListByUserStatus?UserStatus=" +
-        payload +
-        "&UserRoleID=15")
       try {
         const response = await fetch(
           url +
@@ -2152,11 +2133,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
-        console.log("json", json)
-        // if (json[0].ReturnVal === 1) {
-        if (json !== "fail") {
-          toast.success("Order is successfully created ");
-          // toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
+        if (json[0].ReturnVal === 1) {
+          toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
         }
         try {
           const response_1 = await fetch(
@@ -2645,13 +2623,6 @@ export class GitEpic {
 
   getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
-
-      console.log(url + "User_ProfileListByType?TYPE=" + payload.type +
-        "&TYPEVALUE=" + payload.typeValue +
-        "&USERID=" + payload.userID +
-        "&UserRoleID=" + payload.userRoleID +
-        "&LISTPERPAGE=" + payload.productPage +
-        "&PAGE=" + payload.page)
       try {
         const response = await fetch(
           url + "User_ProfileListByType?TYPE=" + payload.type +
@@ -2683,12 +2654,6 @@ export class GitEpic {
 
   getAllMerchantOrders = (action$) =>
     action$.ofType(GitAction.GetMerchantOrders).switchMap(async ({ payload }) => {
-
-      console.log(url +
-        "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
-        payload.trackingStatus +
-        "&USERID=" +
-        payload.UserID)
       try {
         const response = await fetch(
           url +

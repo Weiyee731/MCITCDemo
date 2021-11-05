@@ -10,8 +10,12 @@
 /* .modal-dialog-centered{
   float: right;
 } */
-.border-line {
+.border-line-left {
   border-left: .0625rem solid #efefef;
+}
+
+.border-line-right {
+  border-right: .0625rem solid #efefef;
 }
 
 .image {

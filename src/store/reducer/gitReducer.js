@@ -56,6 +56,7 @@ const INITIAL_STATE = {
   verifyOTP: [],
   contactUpdated: [],
   emailUpdated: [],
+  shopUpdated: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -175,6 +176,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         emailUpdated: action.payload,
+      });
+
+    case GitAction.UpdateShopDetail:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdateDShopDetail:
+      return Object.assign({}, state, {
+        loading: false,
+        shopUpdated: action.payload,
       });
     //=======================COUNTRY========================//
 
