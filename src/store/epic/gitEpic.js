@@ -1980,40 +1980,6 @@ export class GitEpic {
       }
     });
 
-  // REPORT
-
-  viewOverallSummary = (action$) =>
-    action$.ofType(GitAction.GetOverallSummary).switchMap(async ({ payload }) => {
-
-      console.log(url +
-        "Report_OverallSummary?STARTDATETIME112=" +
-        payload.StartDateTime +
-        "&ENDDATETIME112=" +
-        payload.StartDateTime)
-      try {
-        const response = await fetch(
-          url +
-          "Report_OverallSummary?STARTDATETIME112=" +
-          payload.StartDateTime +
-          "&ENDDATETIME112=" +
-          payload.StartDateTime
-        );
-        let json = await response.json();
-        console.log("json", json)
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotOverallSummary,
-          payload: json,
-        };
-      } catch (error) {
-        alert('viewOverallSummary: ' + error);
-        return {
-          type: GitAction.GotOverallSummary,
-          payload: [],
-        };
-      }
-    });
-
   // REVIEW
 
   viewProductReviewByProductID = (action$) =>

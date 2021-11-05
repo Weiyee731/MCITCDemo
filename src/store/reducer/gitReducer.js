@@ -5,7 +5,6 @@ const INITIAL_STATE = {
   loading: true,
   currentUser: {},
   supplier: [],
-  statistic: [],
   products: [],
   productsListing: [],
   productsByID: [],
@@ -673,17 +672,6 @@ export function counterReducer(state = INITIAL_STATE, action) {
       });
     case GitAction.Failure:
       return Object.assign({}, state, { loading: true });
-
-    //=======================REPORTING========================//
-
-    //GET PRODUCT CATEGORY
-    case GitAction.GetOverallSummary:
-      return Object.assign({}, state, { loading: true });
-    case GitAction.GotOverallSummary:
-      return Object.assign({}, state, {
-        loading: false,
-        statistic: action.payload,
-      });
 
     //=======================Color========================//
     case GitAction.GetColor:

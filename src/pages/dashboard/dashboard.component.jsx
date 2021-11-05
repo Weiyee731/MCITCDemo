@@ -24,14 +24,11 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 
 function mapStateToProps(state) {
   return {
-    statistic: state.counterReducer["statistic"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallOverallSummary: (propData) =>
-      dispatch(GitAction.CallOverallSummary(propData)),
   };
 }
 
@@ -63,8 +60,6 @@ class Dashboard extends Component {
         Volume: "4,118",
       }]
     };
-
-    this.props.CallOverallSummary(this.state);
   }
 
   render() {
@@ -72,17 +67,6 @@ class Dashboard extends Component {
     let Amount = [];
     let Label = [];
     let Data = [];
-    if (this.props.statistic[0]) {
-      JSON.parse(this.props.statistic[0].Transaction).map((row) => {
-        Date.push(row.TransactionDate);
-        Amount.push(row.TransactionCount);
-      });
-
-      JSON.parse(this.props.statistic[0].TopCategory).map((row) => {
-        Label.push(row.ProductCategory);
-        Data.push(row.ProductCount);
-      });
-    }
 
     const data = {
       labels: Date,
@@ -124,43 +108,29 @@ class Dashboard extends Component {
       ],
     };
 
-    this.props.statistic.map((row) => {
-      if (Array.isArray(this.state.RevenueAndProfit) && this.state.RevenueAndProfit.length === 0)
-        this.setState({ RevenueAndProfit: JSON.parse(row.RevenueAndProfit), })
+    // this.props.statistic.map((row) => {
+    //   if (Array.isArray(this.state.RevenueAndProfit) && this.state.RevenueAndProfit.length === 0)
+    //     this.setState({ RevenueAndProfit: JSON.parse(row.RevenueAndProfit), })
 
-      if (Array.isArray(this.state.TopProduct) && this.state.TopProduct.length === 0) {
-        let topProduct = JSON.parse(row.TopProduct)
-        topProduct.map((d, i) => {
-          d.ProductImage = (
-            <div>
-              <img height={50} width={50} src={d.ProductImage} alt="" />
-            </div>
-          );
+    //   if (Array.isArray(this.state.TopProduct) && this.state.TopProduct.length === 0) {
+    //     let topProduct = JSON.parse(row.TopProduct)
+    //     topProduct.map((d, i) => {
+    //       d.ProductImage = (
+    //         <div>
+    //           <img height={50} width={50} src={d.ProductImage} alt="" />
+    //         </div>
+    //       );
 
-          d.ProductRating = parseFloat(d.ProductRating).toFixed(2)
-        })
-        this.setState({ TopProduct: topProduct, })
-      }
+    //       d.ProductRating = parseFloat(d.ProductRating).toFixed(2)
+    //     })
+    //     this.setState({ TopProduct: topProduct, })
+    //   }
 
-      if (Array.isArray(this.state.TopCategory) && this.state.TopCategory.length === 0)
-        this.setState({ TopCategory: JSON.parse(row.TopCategory), })
+    //   if (Array.isArray(this.state.TopCategory) && this.state.TopCategory.length === 0)
+    //     this.setState({ TopCategory: JSON.parse(row.TopCategory), })
 
-      if (Array.isArray(this.state.Transaction) && this.state.Transaction.length === 0)
-        this.setState({ Transaction: JSON.parse(row.Transaction), })
-      // this.state.RevenueAndProfit = JSON.parse(row.RevenueAndProfit);
-      // this.state.TopProduct = JSON.parse(row.TopProduct);
-      // this.state.TopCategory = JSON.parse(row.TopCategory);
-      // this.state.Transaction = JSON.parse(row.Transaction);
-    });
-
-    // this.state.TopProduct.map((d, i) => {
-    //   d.ProductImage = (
-    //     <div>
-    //       <img height={50} src={d.ProductImage} />
-    //     </div>
-    //   );
-
-    //   d.ProductRating = parseFloat(d.ProductRating).toFixed(2)
+    //   if (Array.isArray(this.state.Transaction) && this.state.Transaction.length === 0)
+    //     this.setState({ Transaction: JSON.parse(row.Transaction), })
     // });
 
     return (
@@ -179,7 +149,6 @@ class Dashboard extends Component {
                       RM 3,495.03
                     </CardTitle>
                     <p className="" style={{ color: "white", }}>
-                      {/* {RevenueData.OverallRevenueTitle} */}
                       <HouseIcon fontSize={'large'} /> <span style={{ fontSize: "14pt" }}>Total Revennue</span>
                     </p>
                   </div>
