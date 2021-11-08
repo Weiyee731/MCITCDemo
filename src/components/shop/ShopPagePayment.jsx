@@ -3,85 +3,60 @@ import React, { Component } from "react";
 import { Card, CardContent } from "@material-ui/core";
 // third-party
 import { connect } from "react-redux";
-import { Helmet } from "react-helmet-async";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { Button } from "@material-ui/core";
 // application
-import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
-import PageHeader from "../shared/PageHeader";
-import { Check9x7Svg } from "../../svg";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import SwipeableViews from "react-swipeable-views";
 // data stubs
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
-import queryString from "query-string";
-import PageCheckoutQr from "./ShopPageCheckoutQr";
-import QRCode from "qrcode.react";
-import shopApi from "../../api/shop";
-import { browserHistory } from "react-router";
 
 import { GitAction } from "../../store/action/gitAction";
 import Cards from "react-credit-cards";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/Add";
-import EditIcon from "@material-ui/icons/Edit";
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-
-// Credit Card
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import { toast } from "react-toastify";
 import Logo from "../../assets/Emporia.png";
 
 import {
   formatCreditCardNumber,
   formatExpirationDate,
-  formatFormData,
   formatCVC,
 } from "../account/AccountPageCreditCard/utils";
+import AddCreditCard from '../shared/AddCreditCard'
 
-
+const initialState = {
+  paymentMethods: "",
+  paymentMethodsID: "",
+  cart: [],
+  cardList: [],
+  subtotal: 0,
+  total: 0,
+  shipping: 25,
+  tax: 0,
+  tabvalue: 0,
+  cvcVisible: false,
+  cvc: "",
+  isAddNewCard: false,
+  newexpiry: "",
+  focus: "",
+  newname: "",
+  newnumber: "",
+  cardtype: ""
+}
 class PagePayment extends Component {
   payments = payments;
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      payment: "bank",
-      paymentMethods: "",
-      paymentMethodsID: "",
-
-      cart: [],
-      cardList: [],
-      subtotal: 0,
-      total: 6,
-      shipping: 25,
-      tax: 0,
-
-      tabvalue: 0,
-      cvcVisible: false,
-      cvc: "",
-
-
-      isAddNewCard: false,
-      newexpiry: "",
-      focus: "",
-      newname: "",
-      newnumber: "",
-      cardtype: ""
-    };
+    this.state = initialState
     this.setDetails = this.setDetails.bind(this)
     this.handleInputFocus = this.handleInputFocus.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -94,7 +69,6 @@ class PagePayment extends Component {
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.props.CallAllPaymentMethod();
   }
-
 
   setDetails(productcart) {
     this.setState({
@@ -127,10 +101,8 @@ class PagePayment extends Component {
   }
 
   handleChangeCardType = (e) => {
-    const { value } = e.target;
-
     this.setState({
-      cardtype: value,
+      cardtype: e.target.value,
     });
   };
 
@@ -138,28 +110,31 @@ class PagePayment extends Component {
     this.setState({ focus: e.target.name });
   };
 
-  handleInputChange = ({ target }) => {
-    if (target.name === "newnumber") {
-      if (target.value.length > 1) {
-        target.value = formatCreditCardNumber(target.value)[1].replace(
-          /\s+/g,
-          ""
-        );
-      }
-      if (formatCreditCardNumber(target.value)[0] !== undefined) {
-        this.setState({ issuer: formatCreditCardNumber(target.value)[0] });
-      } else {
-        toast.error("Card Number's format is incorrect");
-      }
-    } else if (target.name === "newexpiry") {
-      target.value = formatExpirationDate(target.value);
-    } else if (target.name === "cvc") {
-      target.value = formatCVC(target.value);
+  handleInputChange = (e) => {
+    switch (e.target.name) {
+      case "newnumber":
+        e.target.value = formatCreditCardNumber(e.target.value)[1].replace(/\s+/g, "");
+        if (formatCreditCardNumber(e.target.value)[0] !== undefined) {
+          this.setState({ issuer: formatCreditCardNumber(e.target.value)[0] });
+        } else {
+          toast.error("Card Number's format is incorrect");
+        }
+        break;
+
+      case "newexpiry":
+        e.target.value = formatExpirationDate(e.target.value);
+        break;
+
+      case "cvc":
+        e.target.value = formatCVC(e.target.value);
+        break;
+
+      default:
+        this.setState({ [e.target.name]: e.target.value })
     }
 
-    this.setState({ [target.name]: target.value });
-    // this.props.handleGetPaymentId(this.state.tabvalue, this.state.paymentMethods)
-    this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
+    this.setState({ [e.target.name]: e.target.value });
+    // this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
   };
 
   handlePaymentChange = (value, typeid, typevalue) => {
@@ -168,23 +143,22 @@ class PagePayment extends Component {
   };
 
   handleAddNewCard = () => {
-    this.setState({ isAddNewCard: true })
+    this.setState({ isAddNewCard: !this.state.isAddNewCard })
   }
 
   handleCardClick = (cards, value) => {
     if (value === true) {
       this.setState({ cvcVisible: true, paymentMethodsID: cards.UserPaymentMethodID, cvc: "" })
       this.state.cardList.push(cards)
-    }else{
+    } else {
       this.setState({ cvcVisible: false, paymentMethodsID: cards.UserPaymentMethodID, cvc: "" })
       this.state.cardList.splice(0, this.state.cardList.length)
     }
-    // this.setState({ cvcVisible: false, paymentMethodsID: cards.UserPaymentMethodID, cvc: "" })
   }
 
-
   handleAddCreditCard = () => {
-    if (this.state.newname.length && this.state.newnumber.length && this.state.newexpiry.length && this.state.cardtype.length && this.state.cardtype.length) {
+    const { newname, newnumber, newexpiry, cardtype } = this.state
+    if (newname !== "" && newnumber !== "" && newexpiry !== "" && cardtype !== "") {
       this.props.CallAddCreditCard({
         USERID: localStorage.getItem("id"),
         name: this.state.newname,
@@ -193,12 +167,11 @@ class PagePayment extends Component {
         cardtype: this.state.cardtype
       });
       this.setState({ isAddNewCard: false })
+      this.handleAddNewCard()
     } else {
       toast.error("Please fill in all required card data");
     }
   }
-
-
 
   renderTotals() {
     return (
@@ -260,7 +233,6 @@ class PagePayment extends Component {
   }
 
   renderPaymentsList() {
-    const { payment: currentPayment } = this.state;
     const payments = this.props.paymentmethod !== undefined && this.props.paymentmethod.length > 0 &&
       this.props.paymentmethod.map((payment) => {
         return <Tab label={payment.PaymentMethodType} />;
@@ -284,7 +256,7 @@ class PagePayment extends Component {
     };
 
     return (
-      <div className="checkout block">
+      <div className="checkout">
         <div className="container">
           <Tabs
             value={this.state.tabvalue}
@@ -296,278 +268,135 @@ class PagePayment extends Component {
             {payments}
           </Tabs>
 
-
-
           <SwipeableViews
             enableMouseEvents
             axis={theme.direction === "rtl" ? "x-reverse" : "x"}
             index={this.state.tabvalue}
             onChangeIndex={handleChangeIndex}
           >
-            <div style={Object.assign({})}>
-              <Card style={cardStyle}>
-                <CardContent>
-                  <h4>Credit Card</h4>
-                  <div style={{ textAlign: "right", position: "absolute" }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => this.handleAddNewCard()}
-                    >Add New Card </Button>
-                  </div>
-                  <br />
-                  <div style={{ float: "right", marginBottom: "10px" }}>
-                    <img width="50" src="images/creditcard/visa.png"></img>
-                    &nbsp;
-                    <img
-                      width="50"
-                      src="images/creditcard/mastercard.png"
-                    ></img>
-                  </div>
-                  <br />
-                  <br />
+            {/* Credit Card */}
+            <div className="mt-3 mx-2">
+              <Button
+                variant="contained"
+                color="primary"
+                style={{
+                  float: 'right'
+                }}
+                onClick={() => this.handleAddNewCard()}
+              >
+                Add New Card
+              </Button>
+              {/* <div style={{ float: "right", marginBottom: "10px" }}>
+                <img width="50" src="images/creditcard/visa.png" />
+                &nbsp;
+                <img
+                  width="50"
+                  src="images/creditcard/mastercard.png"
+                />
+              </div> */}
 
-                  <div>
-                    <Grid
-                      container
-                      style={{
-                        margin: "auto",
-                        justifyContent: "Space-between",
-                      }}
-                    >
-                      {
-                        this.props.creditcard.length > 0 && this.props.creditcard[0].ReturnVal !== "0" && this.props.creditcard[0].ReturnVal === undefined ?
-                          // this.props.creditcard.length > 0 ?
-                          this.props.creditcard.map((cards) => {
-                            return (
-                              <Grid item style={{ margin: "2vw", marginTop: "1vw", marginBottom: "1vw", }} >
-                                <div>
-                                  {
-                                    this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethodsID ?
-                                      <>
-                                        <Tooltip title="Edit" style={{ right: "-230px" }}  >
-                                          <IconButton aria-label="Edit">
-                                            <RadioButtonCheckedIcon
-                                              fontSize="small"
-                                              onClick={() => this.handleCardClick(cards, false)} />
-                                          </IconButton>
-                                        </Tooltip>
-                                        <Cards
-                                          cvc={this.state.cvc}
-                                          expiry={cards.UserCardExpireDate}
-                                          focused={this.state.focus}
-                                          name={cards.UserCardName}
-                                          number={cards.UserCardNo}
-                                          preview={true}
-                                        />
-                                        <br />
-                                        <div>
-                                          <input
-                                            type="tel"
-                                            name="cvc"
-                                            className="form-control"
-                                            placeholder="CVC"
-                                            pattern="\d{3,4}"
-                                            required
-                                            value={this.state.cvc}
-                                            onChange={this.handleInputChange}
-                                            onFocus={this.handleInputFocus}
-                                          />
-                                        </div>
-                                      </>
-                                      :
-                                      <>
-                                        <Tooltip title="Edit" style={{ right: "-230px" }}   >
-                                          <IconButton aria-label="Edit">
-                                            <RadioButtonUncheckedIcon
-                                              fontSize="small"
-                                              // onClick={() => this.setState({ cvcVisible: true, paymentMethodsID: cards.UserPaymentMethodID, cvc: "", cardList:[] })} />
-                                              onClick={() => this.handleCardClick(cards, true)} />
-                                          </IconButton>
-                                        </Tooltip>
-                                        <Cards
-                                          expiry={cards.UserCardExpireDate}
-                                          name={cards.UserCardName}
-                                          number={cards.UserCardNo}
-                                          preview={true}
-                                        />
-                                      </>
-                                  }
-
-                                </div>
-                              </Grid>
-                            )
-                          })
-                          : ""
-                      }
-                      {
-                        this.state.isAddNewCard === true ?
-                          <div className="row">
-                            <div className="col-6" style={{ marginTop: "20px" }}>
-                              <Cards
-                                cvc={this.state.cvc}
-                                expiry={this.state.newexpiry}
-                                focused={this.state.focus}
-                                name={this.state.newname}
-                                number={this.state.newnumber}
-                                preview={true}
-                              />
-                              <div style={{ textAlign: "center", marginTop: "10px", position: "absolute" }}>
-                                <button
-                                  onClick={() => this.handleAddCreditCard()}
-                                  className="btn btn-primary btn-block"
-                                  type="button"
-                                >
-                                  Add this Credit Card
-                                </button>
-                              </div>
-                            </div>
-                            <div className="col-6" style={{ marginTop: "20px" }}>
-                              <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
-                                <div style={{ marginTop: "10px" }}>
-                                  <TextField
-                                    variant="outlined"
-                                    style={{ width: '100%' }}
-                                    size="small"
-                                    label="Card Number"
-                                    type="tel"
-                                    name="newnumber"
-                                    className="form-control"
-                                    placeholder="Card Number"
-                                    pattern="[\d| ]{16,22}"
-                                    maxLength="16"
-                                    required
-                                    onChange={this.handleInputChange}
-                                    onFocus={this.handleInputFocus}
+              <Grid container>
+                {
+                  this.props.creditcard.length > 0 && this.props.creditcard[0].ReturnVal !== "0" && this.props.creditcard[0].ReturnVal === undefined ?
+                    this.props.creditcard.map((cards) => {
+                      return (
+                        <Grid item>
+                          {
+                            this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethodsID ?
+                              <>
+                                <div className="d-flex">
+                                  <Tooltip title="Edit">
+                                    <IconButton aria-label="Edit">
+                                      <RadioButtonCheckedIcon
+                                        fontSize="small"
+                                        onClick={() => this.handleCardClick(cards, false)} />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Cards
+                                    cvc={this.state.cvc}
+                                    expiry={cards.UserCardExpireDate}
+                                    focused={this.state.focus}
+                                    name={cards.UserCardName}
+                                    number={cards.UserCardNo}
+                                    preview={true}
                                   />
                                 </div>
-                                <div style={{ marginTop: "10px" }}>
-                                  <TextField
-                                    variant="outlined"
-                                    style={{ width: '100%' }}
-                                    size="small"
-                                    label="Card Name"
-                                    type="text"
-                                    name="newname"
-                                    className="form-control"
-                                    placeholder="Name"
-                                    required
-                                    onChange={this.handleInputChange}
-                                    onFocus={this.handleInputFocus}
-                                  />
-                                </div>
-
-                                <div style={{ marginTop: "10px" }}>
-                                  <TextField
-                                    variant="outlined"
-                                    style={{ width: '100%' }}
-                                    size="small"
-                                    label="Valid Thru"
-                                    type="tel"
-                                    name="newexpiry"
-                                    className="form-control"
-                                    placeholder="Valid Thru"
-                                    pattern="\d\d/\d\d"
-                                    required
-                                    onChange={this.handleInputChange}
-                                    onFocus={this.handleInputFocus}
-                                  />
-                                </div>
-                                <div style={{ marginTop: "10px" }}>
-                                  <TextField
-                                    variant="outlined"
-                                    style={{ width: '100%' }}
+                                <div className="mt-3">
+                                  <input
                                     type="tel"
                                     name="cvc"
-                                    size="small"
                                     className="form-control"
                                     placeholder="CVC"
-                                    value={this.state.cvc}
                                     pattern="\d{3,4}"
                                     required
+                                    value={this.state.cvc}
                                     onChange={this.handleInputChange}
                                     onFocus={this.handleInputFocus}
                                   />
                                 </div>
-                                <div>
-                                  <FormControl component="fieldset">
-                                    <RadioGroup
-                                      row aria-label="cardtype"
-                                      name="cardtype"
-                                      value={this.state.cardtype}
-                                      onChange={this.handleChangeCardType}
-                                    >
-                                      <div className="row">
-                                        <FormControlLabel
-                                          value="MasterCard"
-                                          control={<Radio />}
-                                          label="Master Card"
-                                        />
-                                        <FormControlLabel
-                                          value="VisaCard"
-                                          control={<Radio />}
-                                          label="Visa Card"
-                                        />
-                                      </div>
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>
-                                <div>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                          : ""
-                      }
-
-                    </Grid>
-                  </div>
-
-                </CardContent>
-              </Card>
+                              </>
+                              :
+                              <div className="d-flex">
+                                <Tooltip title="Edit">
+                                  <IconButton aria-label="Edit">
+                                    <RadioButtonUncheckedIcon
+                                      fontSize="small"
+                                      onClick={() => this.handleCardClick(cards, true)} />
+                                  </IconButton>
+                                </Tooltip>
+                                <Cards
+                                  expiry={cards.UserCardExpireDate}
+                                  name={cards.UserCardName}
+                                  number={cards.UserCardNo}
+                                  preview={true}
+                                />
+                              </div>
+                          }
+                        </Grid>
+                      )
+                    })
+                    : <div>No cards saved. Please add a new card</div>
+                }
+                <AddCreditCard
+                  isOpen={this.state.isAddNewCard}
+                  handleOpen={this.handleAddNewCard}
+                  handleAddCreditCard={this.handleAddCreditCard}
+                  handleOnChange={this.handleInputChange}
+                  handleInputFocus={this.handleInputFocus}
+                  state={this.state}
+                  handleChangeCardType={this.handleChangeCardType}
+                />
+              </Grid>
             </div>
+
             {
               this.props.paymentmethod !== undefined && this.props.paymentmethod.length !== 0 &&
               this.props.paymentmethod.map((payment) => {
                 return (
                   <>
-                    <div style={Object.assign({})}>
-                      <Card style={cardStyle}>
-                        <CardContent>
-                          {
-                            this.props.paymentmethod.filter(x => x.PaymentMethodTypeID === (parseInt(this.state.tabvalue) + 1)).map((method) => {
-                              return (
-                                <>
-                                  <div style={Object.assign({})}>
-                                    <Card style={cardStyle}>
-                                      <CardContent>
-                                        <h4>{method.PaymentMethodType !== undefined && method.PaymentMethodType !== null ? method.PaymentMethodType : ""}</h4>
-                                        {/* <h5>Selected : {isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()}</h5> */}
-                                        <h5>Selected : {method.PaymentMethodTypeID !== 6 ?
-                                          isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()
-                                          : method.PaymentMethodType.toUpperCase()}</h5>
-                                        <br />
-                                        {
-                                          method.PaymentMethod !== null && method.PaymentMethod !== undefined && method.PaymentMethod.length > 0 && JSON.parse(method.PaymentMethod).map((paymentList) => {
-                                            return (
-                                              <Button onClick={() => this.handlePaymentChange(paymentList, method.PaymentMethodTypeID, method.PaymentMethodType)}>
-                                                <img width="250" src={paymentList.PaymentMethodImage !== null ? paymentList.PaymentMethodImage : Logo}
-                                                  alt={paymentList.PaymentMethod !== null ? paymentList.PaymentMethod : "Emporia"} onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
-                                              </Button>
-                                            )
+                    {
+                      this.props.paymentmethod.filter(x => x.PaymentMethodTypeID === (parseInt(this.state.tabvalue) + 1)).map((method) => {
+                        return (
+                          <div className="mt-3">
+                            <div className="text-left h6 mb-3">Selected : {method.PaymentMethodTypeID !== 6 ?
+                              isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()
+                              : method.PaymentMethodType.toUpperCase()}
+                            </div>
+                            {
+                              method.PaymentMethod !== null && method.PaymentMethod !== undefined && method.PaymentMethod.length > 0 && JSON.parse(method.PaymentMethod).map((paymentList) => {
+                                return (
+                                  <Button onClick={() => this.handlePaymentChange(paymentList, method.PaymentMethodTypeID, method.PaymentMethodType)}>
+                                    <img width="250" src={paymentList.PaymentMethodImage !== null ? paymentList.PaymentMethodImage : Logo}
+                                      alt={paymentList.PaymentMethod !== null ? paymentList.PaymentMethod : "Emporia"} onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                                  </Button>
+                                )
 
-                                          })
-                                        }
-                                      </CardContent>
-                                    </Card>
-                                  </div>
-                                </>
-                              )
-                            })
-                          }
-                        </CardContent>
-                      </Card>
-                    </div>
+                              })
+                            }
+                          </div>
+                        )
+                      })
+                    }
                   </>
                 )
               })
@@ -579,25 +408,16 @@ class PagePayment extends Component {
   }
 
   render() {
-
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
 
-    const breadcrumb = [
-      { title: "Home", url: "" },
-      // { title: "Shopping Cart", url: "/shop/cart" },
-      // { title: "Checkout", url: "/shop/checkout" },
-      { title: "OnlinePayment", url: "" },
-    ];
-
     return (
       <React.Fragment>
-        <div className="cart block container_" style={{ width: "100%" }}>
+        <div className="cart">
           <div className="container">
-            <div className="card mb-0">
+            <div className="card mt-3">
               <div className="card-body">
-                <h3 className="card-title">Your Order</h3>
                 {this.renderCart()}
                 {this.renderPaymentsList()}
               </div>

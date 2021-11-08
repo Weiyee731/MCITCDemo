@@ -1,4 +1,5 @@
 import Payment from "payment";
+import { toast } from "react-toastify";
 
 function clearNumber(value = "") {
   return value.replace(/\D+/g, "");
@@ -8,31 +9,33 @@ export function formatCreditCardNumber(value) {
   if (!value) {
     return value;
   }
-  console.log("value", value)
   const issuer = Payment.fns.cardType(value);
-  console.log("issuer", issuer)
   const clearValue = clearNumber(value);
   let nextValue;
 
-  switch (issuer) {
-    case "amex":
-      nextValue = `${clearValue.slice(0, 4)} ${clearValue.slice(
-        4,
-        10
-      )} ${clearValue.slice(10, 15)}`;
-      break;
-    case "dinersclub":
-      nextValue = `${clearValue.slice(0, 4)} ${clearValue.slice(
-        4,
-        10
-      )} ${clearValue.slice(10, 14)}`;
-      break;
-    default:
-      nextValue = `${clearValue.slice(0, 4)} ${clearValue.slice(
-        4,
-        8
-      )} ${clearValue.slice(8, 12)} ${clearValue.slice(12, 19)}`;
-      break;
+  if (issuer !== undefined || issuer !== null) {
+    switch (issuer) {
+      case "amex":
+        nextValue = `${clearValue.slice(0, 4)} ${clearValue.slice(
+          4,
+          10
+        )} ${clearValue.slice(10, 15)}`;
+        break;
+      case "dinersclub":
+        nextValue = `${clearValue.slice(0, 4)} ${clearValue.slice(
+          4,
+          10
+        )} ${clearValue.slice(10, 14)}`;
+        break;
+      default:
+        nextValue = `${clearValue.slice(0, 4)} ${clearValue.slice(
+          4,
+          8
+        )} ${clearValue.slice(8, 12)} ${clearValue.slice(12, 19)}`;
+        break;
+    }
+  } else {
+    toast.error("Invalid card detail")
   }
 
   return [issuer, nextValue.trim()];
@@ -50,7 +53,7 @@ export function formatCVC(value, prevValue, allValues = {}) {
   }
 
   return clearValue.slice(0, maxLength);
-  
+
 }
 
 export function formatExpirationDate(value) {
