@@ -180,7 +180,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
 
     case GitAction.UpdateShopDetail:
       return Object.assign({}, state, { loading: true });
-    case GitAction.UpdateDShopDetail:
+    case GitAction.UpdatedShopDetail:
       return Object.assign({}, state, {
         loading: false,
         shopUpdated: action.payload,

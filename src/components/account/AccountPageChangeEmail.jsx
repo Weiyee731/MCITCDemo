@@ -212,7 +212,6 @@ class PageChangeEmail extends Component {
     // const { value } = e.target;
     var EmailPattern =
       /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/im;
-    console.log(e.target.value);
     if (e !== null) {
       this.setState({
         UpdatedValue: e.target.value,
@@ -297,7 +296,6 @@ class PageChangeEmail extends Component {
 
   getNewOTP = (e) => {
     this.props.CallSendOTP(this.state); //send otp
-    console.log(this.props.verifyOTP);
     if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
       this.stopTimer(60);
       this.setState({
@@ -317,7 +315,6 @@ class PageChangeEmail extends Component {
       this.setState({ startCountDown: false });
       this.stopTimer(60);
     }
-    console.log(this.props.profileUpdate[0].ReturnMsg);
     if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
       browserHistory.push("account/profile");
       window.location.reload(false);
@@ -327,7 +324,6 @@ class PageChangeEmail extends Component {
   };
 
   runTimer() {
-    // console.log(this.timerId)
     // if (!this.timerId) {
     this.setState({ validEmail: false });
     this.timerId =

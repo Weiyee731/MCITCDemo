@@ -88,9 +88,7 @@ class AccountPageAddCreditCard extends Component {
 
   handleAddCreditCard() {
 
-    console.log("HERE")
     if (this.state.name.length && this.state.number.length && this.state.expiry.length && this.state.cardtype.length) {
-      console.log("handleAddCreditCard")
       this.props.CallAddCreditCard(this.state);
       // this.props.parentCallback("false");
     } else {

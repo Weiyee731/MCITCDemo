@@ -48,8 +48,6 @@ const shopApi = {
 
   getProductByID: (productID) => {
     let userID = localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id")
-    console.log(url + "Product_ItemDetailByProductID?ProductID=" + productID +
-    "&USERID=" + userID)
     
     return fetch(url + "Product_ItemDetailByProductID?ProductID=" + productID +
       "&USERID=" + userID)

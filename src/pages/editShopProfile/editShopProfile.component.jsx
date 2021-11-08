@@ -1,6 +1,6 @@
 // react
 import React, { Component } from "react";
-
+import { toast } from "react-toastify";
 // third-party
 import { Modal, ModalBody } from "reactstrap";
 
@@ -10,45 +10,41 @@ import Dropzone from "react-dropzone";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 import { Link, matchPath, Redirect, Switch, Route } from "react-router-dom";
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 
 import {
   Card,
   Divider,
 } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
 import axios from "axios";
 import moment from 'moment';
+
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
-import { browserHistory } from "react-router";
-import './editShopProfile.scss';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import Logo from "../../assets/Emporia.png";
+
+import './editShopProfile.scss';
+
 
 function mapStateToProps(state) {
   return {
-    currentUser: state.counterReducer["currentUser"],
     countrylist: state.counterReducer["countries"],
     merchant: state.counterReducer["merchant"],
-    shopUpdated: state.counterReducer["merchant"],
+    shopUpdated: state.counterReducer["shopUpdated"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallUserProfile: (propsData) =>
-      dispatch(GitAction.CallUserProfile(propsData)),
-
     CallUpdateUserProfile: (propsData) =>
       dispatch(GitAction.CallUpdateUserProfile(propsData)),
 
@@ -58,92 +54,105 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallUpdateProfileImage(propsData)),
 
     CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
+
     CallUpdateShopDetail: (propData) => dispatch(GitAction.CallUpdateShopDetail(propData)),
   };
 }
 
+const group={
+
+  USERID: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
+  USERFIRSTNAME: "",
+  USERLASTNAME: "",
+  USERCONTACTNO: "",
+  USERDATEBIRTH: "",
+  USEREMAIL: "",
+  USERGENDER: "",
+  open: false,
+  open1: false,
+  showBoxForImage: false,
+  fileAdded: false,
+  file: "",
+  fileInfo: "",
+  url: "",
+  imageFile: null,
+  imageName: null,
+  preview: null,
+
+  editContact: false,
+  editEmail: false,
+  validfirstName: false,
+  validlastName: false,
+  validDOB: false,
+  validGender: false,
+  validContact: false,
+  validEmail: false,
+
+  type: "MerchantProfile",
+  typeValue: localStorage.getItem("id") !== null && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+  userRoleID: localStorage.getItem("isLogin") ? localStorage.getItem("roleid") : 0,
+  productPage: 999,
+  page: 1,
+
+  SHOPNAME: "",
+  SHOPDESC: "",
+  SHOPCOUNTRYID: "",
+  SHOPPOSCODE: "",
+  SHOPSTATE: "",
+  SHOPCITY: "",
+}
 class EditShopProfile extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      USERID: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
-      USERFIRSTNAME: "",
-      USERLASTNAME: "",
-      USERCONTACTNO: "",
-      USERDATEBIRTH: "",
-      USEREMAIL: "",
-      USERGENDER: "",
-      open: false,
-      open1: false,
-      showBoxForImage: false,
-      fileAdded: false,
-      file: "",
-      fileInfo: "",
-      url: "",
-      imageFile: null,
-      imageName: null,
-      preview: null,
-
-      editContact: false,
-      editEmail: false,
-      validfirstName: false,
-      validlastName: false,
-      validDOB: false,
-      validGender: false,
-      validContact: false,
-      validEmail: false,
-
-      TYPE: "UserProfile",
-      TYPEVALUE: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
-      USERROLEID: "0",
-      LISTPERPAGE: "999",
-      PAGE: "1",
-
-      type: "UserProfile",
-      typeValue: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
-      userRoleID: "0",
-      // LISTPERPAGE: "999",
-      PAGE: "1",
-      productPage: "999"
-    };
-
+    this.state = group;
+    this.handleChange = this.handleChange.bind(this);
     this.uploadHandler = this.uploadHandler.bind(this);
   }
-  /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
 
 
   componentDidMount() {
-
-    if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.TYPEVALUE !== undefined) {
-      this.props.CallUserProfile(this.state);
+    if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.typeValue !== undefined) {
       this.props.CallMerchants(this.state);
       this.props.CallCountry();
-      if (this.props.currentUser !== null) {
-        let userDetails = this.props.currentUser[0];
-        if (userDetails !== undefined) {
+      if (this.props.merchant !== null) {
+        console.log(this.props.merchant[0])
+        let shopDetails = this.props.merchant[0];
+        if (shopDetails !== undefined) {
           this.setState({
-            USERFIRSTNAME: userDetails.FirstName !== undefined ? userDetails.FirstName : "-",
-            USERLASTNAME: userDetails.LastName !== undefined ? userDetails.LastName : "-",
-            USERCONTACTNO: userDetails.UserContactNo !== undefined ? userDetails.UserContactNo : "-",
-            USERDATEBIRTH: userDetails.UserDOB !== undefined ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
-            USEREMAIL: userDetails.UserEmailAddress !== undefined ? userDetails.UserEmailAddress : "-",
-            USERGENDER: userDetails.UserGender !== undefined ? userDetails.UserGender : "-",
-            validfirstName: userDetails.FirstName !== undefined ? true : false,
-            validlastName: userDetails.LastName !== undefined ? true : false,
-            validDOB: userDetails.UserDOB !== undefined ? true : false,
-            validGender: userDetails.UserGender !== undefined ? true : false,
-            validContact: userDetails.UserContactNo !== undefined ? true : false,
-            validEmail: userDetails.UserEmailAddress !== undefined ? true : false,
+            SHOPNAME: shopDetails.ShopName !== undefined ? shopDetails.ShopName : "",
+            SHOPDESC: shopDetails.ShopDescription !== undefined ? shopDetails.ShopDescription : "",
+            SHOPCOUNTRYID: shopDetails.ShopCountryID !== undefined ? shopDetails.ShopCountryID : "",
+            SHOPPOSCODE: shopDetails.ShopPoscode !== undefined ? shopDetails.ShopPoscode : "",
+            SHOPSTATE: shopDetails.ShopState !== undefined ? shopDetails.ShopState : "",
+            SHOPCITY: shopDetails.ShopCity !== undefined ? shopDetails.ShopCity : "",
           })
         }
+
       }
     } else {
-      browserHistory.push("Emporia/login");
-      window.location.reload(false);
+      // browserHistory.push("/login");
+      // window.location.reload(false);
     }
-
   }
+
+componentDidUpdate(prevProps){
+
+  if (prevProps.shopUpdated !== this.props.shopUpdated) {
+    // browserHistory.push("/Emporia");
+    // delete this.state;
+    this.setState(group);
+    clearImmediate( this.props.merchant);
+    // window.location.reload(false);
+  }
+}
+  // componentWillUnmount(){ 
+  //   this.setState(group); 
+  //   window.location.reload(false);
+  // }
+  
+
+  /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
   onFileUpload = () => {
     const formData = new FormData();
 
@@ -169,10 +178,11 @@ class EditShopProfile extends Component {
       .then((res) => {
         if (res.status === 200) {
           this.props.CallUpdateProfileImage(file);
-          this.props.CallUserProfile(this.state);
+          // this.props.CallUserProfile(this.state);
         }
       });
   };
+
   ///////////////////////////DELETE PHOTO SELECTED////////////////////////////////
   removeFile() {
     this.setState({
@@ -182,6 +192,7 @@ class EditShopProfile extends Component {
     const files = this.state.imageFile.slice(0);
     files.splice(index, 1);
   }
+
   /////////////////////HANDLE OPEN OR CLOSE TABLE//////////////////////////////////////////
   setOpenTable(status) {
     if (status == false) {
@@ -200,38 +211,67 @@ class EditShopProfile extends Component {
   }
 
   //////////////////////GET INPUT FROM USER///////////////////////////////////////////////////////////
-
-  handleChangeforFirstName = (e) => {
-    const { value } = e.target;
+  handleChangeforShopName = (e) => {
+    var { value } = e.target;
+    var chars = { ' ': '%20', '\n': 'C285' };
+    // value = value.replace(/ /g , "%20","C285");
+    value = value.replace(/[ ]/g, m => chars[m]);
     if (value !== null) {
+      value = value.replace(/ /g, "%20");
       this.setState({
-        USERFIRSTNAME: value,
-        validfirstName: true,
+        SHOPNAME: value,
       });
     } else {
-      this.setState({
-        validfirstName: false,
-      });
     }
   };
 
-  handleChangeforLastName = (e) => {
-    const { value } = e.target;
-
+  handleChangeforSHOPDESC = (e) => {
+    var { value } = e.target;
+    var chars = { ' ': '%20', '\n': 'C285' };
+    // value = value.replace(/ /g , "%20","C285");
+    value = value.replace(/[ ]/g, m => chars[m]);
     if (value !== null) {
       this.setState({
-        USERLASTNAME: value,
-        validlastName: true,
+        SHOPDESC: value
       });
     } else {
-      this.setState({
-        validlastName: false,
-      });
     }
-  };
+  };  
 
-  addProfile() {
-    this.props.CallUpdateShopDetail(this.state);
+  handleChange(data, e) {
+    // var { value } = e.target;
+    // value = value.replace(/ /g,"%20");
+    if (data === "SHOPPOSCODE") {
+      this.setState({
+        SHOPPOSCODE: e.target.value,
+      });
+    } else if (data === "SHOPSTATE") {
+      this.setState({
+        SHOPSTATE: e.target.value,
+      });
+    } else if (data === "SHOPCOUNTRYID") {
+      this.setState({
+        SHOPCOUNTRYID: e.target.value,
+      });
+    } else if (data === "SHOPCITY") {
+      this.setState({
+        SHOPCITY: e.target.value,
+      });
+    } else {
+    }
+  }
+
+  updateShop() {
+    // if (
+    //   this.state.SHOPPOSCODE.length !== 0 &&
+    //   this.state.SHOPSTATE.length !== 0 &&
+    //   this.state.SHOPCITY.length !== 0 &&
+    //   this.state.SHOPCOUNTRYID.length !== 0
+    // ) {
+      this.props.CallUpdateShopDetail(this.state);
+    // } else {
+    //   toast.error("Please fill in all required data");
+    // }
   }
 
   uploadHandler(e) {
@@ -243,32 +283,28 @@ class EditShopProfile extends Component {
   }
 
   render() {
-    console.log(this.props.currentUser)
+console.log(this.props.merchant)
     let userid = localStorage.getItem("id");
-    const merchantDetails = this.props.merchant.length > 0 &&
-      this.props.merchant[0].ReturnVal === undefined && this.props.merchant[0];
-
-    console.log(merchantDetails)
+    const merchantDetails = this.props.merchant.length > 0 && this.props.merchant[0].ReturnVal &&
+      this.props.merchant[0].ReturnVal !== undefined ? this.props.merchant[0] : "";
+    console.log(this.props.merchant.length > 0)
     const imgurl = "http://tourism.denoo.my/emporiaimage/userprofile/"
+    { console.log(merchantDetails) }
     const links = [
-      { title: "My Shop Page", url: "merchant/" + userid, data: "view >", icons: <StorefrontOutlinedIcon className="titleicon" /> },
-      { title: "Products", url: "addresses", data: merchantDetails.MerchantTotalProduct ? merchantDetails.MerchantTotalProduct : [0], icons: <ListAltOutlinedIcon className="titleicon" /> },
-      { title: "Response Rate", url: "", data: "37%", icons: <SmsOutlinedIcon className="titleicon" /> },
-      { title: "Response Time", url: "", data: "Within Hour", icons: <AccessTimeOutlinedIcon className="titleicon" /> },
+      // { title: "My Shop Page", url: "merchant/" + userid, data: "view >", icons: <StorefrontOutlinedIcon className="titleicon" /> },
+      { title: "Products", url: "viewProduct", data: merchantDetails ? merchantDetails.MerchantTotalProduct : [0], icons: <ListAltOutlinedIcon className="titleicon" /> },
+      // { title: "Response Rate", url: "", data: "37%", icons: <SmsOutlinedIcon className="titleicon" /> },
+      // { title: "Response Time", url: "", data: "Within Hour", icons: <AccessTimeOutlinedIcon className="titleicon" /> },
       {
         title: "Shop Rating",
-        url: "",
-        data: merchantDetails.ShopReviewCount && merchantDetails.ShopRating ? merchantDetails.ShopReviewCount + (merchantDetails.ShopRating) : [0],
+        url: "viewReviews",
+        data: merchantDetails.ShopRating ? merchantDetails.ShopReviewCount + (merchantDetails.ShopRating) : [0],
         icons: <GradeOutlinedIcon className="titleicon" />
       },
     ].map((link) => {
       return (
         <div key={link.title} className="info-row">
           <a href={link.url} target="_blank">{link.icons}{link.title}</a>
-          {/* <Link to={link.url}>{link.icons}{link.title}</Link> */}
-          {/* <Link to={link.url}>
-            <div className="info-row-right">{link.data}</div>
-          </Link> */}
           <a href={link.url} target="_blank">
             <div className="info-row-right">{link.data}</div>
           </a>
@@ -288,13 +324,12 @@ class EditShopProfile extends Component {
       console.log(files.map((f) => f.meta));
       allFiles.forEach((f) => f.remove());
     };
-
     return (
       <div className="MainContainer">
         <Card>
           <CardContent>
             <div className="row">
-              <div className="col-6">
+              <div className="col-6 ">
                 <div
                   style={{
                     textAlign: "left",
@@ -305,14 +340,14 @@ class EditShopProfile extends Component {
                 </div>
 
                 <div className="font font-subtitle">
-                  Manage your personal information
+                  Manage your shop information
                 </div>
               </div>
-              <div className="col-6" style={{ textAlign: "right" }}>
+              <div className="col-6 " style={{ textAlign: "right" }}>
                 <button
                   variant="contained"
                   className="btn btn-primary"
-                  onClick={() => this.addProfile()}
+                  onClick={() => this.updateShop()}
                 >
                   <DoneIcon className="saveicon" />
                   Save
@@ -322,7 +357,7 @@ class EditShopProfile extends Component {
             <Divider variant="fullWidth" className="dividerbottom" />
 
             <div className="row">
-              <div className="col-4 border-line-right">
+              <div className="col-12 col-md-12 col-lg-4 border-line-right">
                 <div className="row">
                   <div onClick={() => this.modalOpen()} className="imagecontainer">
                     <img
@@ -338,28 +373,56 @@ class EditShopProfile extends Component {
                     <div className="overlay">Edit</div>
                   </div>
                 </div>
-                <div className="description row d-flex justify-content-center"><br /> Click on the image above to edit profile picture</div>
+                <div className="description row d-flex justify-content-center ml-2 mr-2"><br /> Click on the image above to edit profile picture</div>
+
+                <div className="description row">
+                  <div className="col">
+                    <div className=" display-button">
+                      <SmsOutlinedIcon className="titleicon" />Response Rate: 37% </div>
+                  </div>
+                  <div className="col">
+                    <div className=" display-button">
+                      <AccessTimeOutlinedIcon className="titleicon" />Response Time: Within Hour </div>
+                  </div>
+                </div>
                 {links}
+
               </div>
 
-              <div className="container col-8">
-                {this.props.currentUser && this.props.currentUser.length > 0 && this.props.currentUser !== null &&
-                  this.props.currentUser.map((row) => (
-                    <div className="container">
+              <div className="container col-12 col-md-12 col-lg-8">
+                {this.props.merchant && this.props.merchant.length > 0 && this.props.merchant[0] !== null &&
+                  this.props.merchant.map((row) => (
+                    <div className="container" key={row.ShopName}>
                       <div className="row" >
-                        <div className="col-3 rowStyle vertical-align">Shop Name</div>
-                        <div className="col-8 ">
+                        <div className="col-2 rowStyle vertical-align">Shop Name</div>
+                        <div className="col-9 ">
                           <TextField
                             className="font"
                             variant="outlined"
                             size="small"
                             id="userfirstname"
                             defaultValue={row.ShopName}
-                            onChange={this.handleChangeforFirstName.bind(this)}
+                            onChange={this.handleChangeforShopName.bind(this)}
                           />
                         </div>
                       </div>
                       <div className="row">
+                        <div className="col-2 rowStyle vertical-align">Description</div>
+                        <div className="col-9">
+                          <TextField
+                            className="font"
+                            variant="outlined"
+                            multiline
+                            maxRows={5}
+                            size="small"
+                            id="userlastname"
+                            defaultValue={row.ShopDescription}
+                            onChange={this.handleChangeforSHOPDESC.bind(this)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* <div className="row">
                         <div className="col-3 rowStyle vertical-align">
                           Shop Image and Video
                           <div className="tooltip_1 d-flex align-items-center">
@@ -380,22 +443,80 @@ class EditShopProfile extends Component {
                             onChange={this.uploadHandler}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="row">
-                        <div className="col-3 rowStyle vertical-align">Shop Description</div>
-                        <div className="col-8">
+                        <div className="col-2 rowStyle vertical-align">Country</div>
+                        <div className="col-9">
+                          <FormControl
+                            variant="filled"
+                            size="small"
+                            style={{ width: "100%" }}
+                          >
+                            <Select
+                              id="Country"
+                              variant="outlined"
+                              defaultValue={row.ShopCountryID ? row.ShopCountryID : 0}
+                              // {this.state.SHOPCOUNTRYID}
+                              size="small"
+                              onChange={this.handleChange.bind(this, "SHOPCOUNTRYID")}
+                              className="font"
+                            >
+                              <option value={0}
+                                  key={0}>
+                                {"Please select a country"}
+                              </option>
+                              {this.props.countrylist.map((country) => (
+                                <option
+                                  value={country.CountryId}
+                                  key={country.CountryId}
+                                >
+                                  {country.CountryName}
+                                </option>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+                      </div>
+                      <div className="row" >
+                        <div className="col-2 rowStyle vertical-align">State</div>
+                        <div className="col-9 ">
                           <TextField
                             className="font"
                             variant="outlined"
-                            multiline
-                            maxRows={5}
                             size="small"
-                            id="userlastname"
-                            defaultValue={row.ShopDescription}
-                            onChange={this.handleChangeforLastName.bind(this)}
+                            id="userfirstname"
+                            defaultValue={row.ShopState}
+                            onChange={this.handleChange.bind(this, "SHOPSTATE")}
                           />
                         </div>
                       </div>
+                      <div className="row" >
+                        <div className="col-2 rowStyle vertical-align">City</div>
+                        <div className="col-9 ">
+                          <TextField
+                            className="font"
+                            variant="outlined"
+                            size="small"
+                            id="userfirstname"
+                            defaultValue={row.ShopCity}
+                            onChange={this.handleChange.bind(this, "SHOPCITY")}
+                          />
+                        </div>
+                      </div>
+                      <div className="row" >
+                        <div className="col-2 rowStyle vertical-align">Poscode</div>
+                        <div className="col-9 ">
+                          <TextField
+                            className="font"
+                            variant="outlined"
+                            size="small"
+                            id="userfirstname"
+                            defaultValue={row.ShopPoscode}
+                            onChange={this.handleChange.bind(this, "SHOPPOSCODE")}
+                          />
+                        </div>
+                      </div>
+
 
                     </div>
                   ))}

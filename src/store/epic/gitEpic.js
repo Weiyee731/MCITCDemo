@@ -420,6 +420,21 @@ export class GitEpic {
   UpdateShopDetail = (action$) =>
     action$.ofType(GitAction.UpdateShopDetail).switchMap(async ({ payload }) => {
       try {
+        console.log( url +
+          "User_UpdateShopDetail?USERID=" +
+          payload.USERID +
+          "&SHOPNAME=" +
+          payload.SHOPNAME +
+          "&SHOPDESC=" +
+          payload.SHOPDESC +
+          "&SHOPPOSCODE=" +
+          payload.SHOPPOSCODE +
+          "&SHOPCITY=" +
+          payload.SHOPCITY +
+          "&SHOPSTATE=" +
+          payload.SHOPSTATE +
+          "&SHOPCOUNTRYID=" +
+          payload.SHOPCOUNTRYID)
         const response = await fetch(
           url +
           "User_UpdateShopDetail?USERID=" +
@@ -2624,10 +2639,16 @@ export class GitEpic {
   getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
       try {
+        console.log( url + "User_ProfileListByType?TYPE=" + payload.type +
+        "&TYPEVALUE=" + payload.typeValue +
+        "&USERID=" + payload.USERID +
+        "&UserRoleID=" + payload.userRoleID +
+        "&LISTPERPAGE=" + payload.productPage +
+        "&PAGE=" + payload.page)
         const response = await fetch(
           url + "User_ProfileListByType?TYPE=" + payload.type +
           "&TYPEVALUE=" + payload.typeValue +
-          "&USERID=" + payload.userID +
+          "&USERID=" + payload.USERID +
           "&UserRoleID=" + payload.userRoleID +
           "&LISTPERPAGE=" + payload.productPage +
           "&PAGE=" + payload.page

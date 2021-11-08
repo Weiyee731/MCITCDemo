@@ -208,7 +208,6 @@ class AccountPageEditAddress extends Component {
                   />
                 </div>
               </div>
-              {/* {console.log(this.props.selectedAddressData)} */}
               <div className="form-row">
                 <div className="form-group col-md-6">
                   <TextField

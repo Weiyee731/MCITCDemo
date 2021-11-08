@@ -169,8 +169,6 @@ function ProductCard(props) {
         )
     );
 
-  console.log(product)
-
   return (
     <div className={containerClasses}>
       {badges}

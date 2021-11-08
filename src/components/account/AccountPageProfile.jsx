@@ -318,7 +318,6 @@ class AccountPageProfile extends Component {
 
 
   render() {
-    console.log(this.state)
     const imgurl = "http://tourism.denoo.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {

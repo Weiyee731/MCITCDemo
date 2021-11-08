@@ -1,0 +1,12 @@
+/*
+// .merchantpage
+*/
+@import '../variables';
+@import '../functions';
+@import '../mixins/card';
+@import '../mixins/direction';
+
+.border-line-button-right {
+    border-right: .0625rem solid #791111;
+    text-align: end;
+  }

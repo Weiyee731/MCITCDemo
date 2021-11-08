@@ -237,7 +237,6 @@ class PageChangeContact extends Component {
   handleChangeforContact(e) {
     // const { value } = e.target;
     var phoneno = /^[\+]?[(]?[0-9]{4}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-    console.log(e);
     if (e !== null) {
       this.setState({
         UpdatedValue: e,
@@ -258,7 +257,6 @@ class PageChangeContact extends Component {
     if (otp !== null) {
       this.setState({ otp });
     }
-    // console.log(otp);
     if (otp.length === 6) {
       this.props.CallUpdateContact(this.state, otp); //submit otp
       this.setState({ startCountDown: false });
@@ -298,7 +296,6 @@ class PageChangeContact extends Component {
 
   getNewOTP = (e) => {
     if (this.state.UpdatedValue.length > 0) { this.props.CallSendOTP(this.state); }
-    console.log(this.props.verifyOTP);
     if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
       this.stopTimer(60);
       this.setState({
@@ -318,7 +315,6 @@ class PageChangeContact extends Component {
       this.setState({ startCountDown: false });
       this.stopTimer(60);
     }
-    console.log(this.props.profileUpdate[0].ReturnMsg);
     if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
       browserHistory.push("account/profile");
       window.location.reload(false);
@@ -328,7 +324,6 @@ class PageChangeContact extends Component {
   };
 
   runTimer() {
-    // console.log(this.timerId)
     // if (!this.timerId) {
     this.setState({ validContact: false });
     this.timerId =

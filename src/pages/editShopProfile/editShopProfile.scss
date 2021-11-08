@@ -42,3 +42,19 @@
     -ms-flex-align: center;
     align-items: center;
 }
+
+.rowStyle {
+    font-size: 14px !important;
+    /* width: 16vw; */
+    color: rgba(85, 85, 85, .8);
+    margin-bottom: 0.875rem;
+    text-align: left !important;
+    padding-left: 2rem !important;
+  }
+
+  .display-button{
+      background-color: #e5e5e5;
+      fill: #2b535e;
+      border-radius: 5px;
+      padding: 10px 5px 10px 5px;
+  }

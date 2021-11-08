@@ -35,6 +35,7 @@ import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import icons from "../../pages/dashboard/variables/icons";
 import "./AccountLayout.css";
 import { url } from "../../services/utils";
+// import EditShopProfile from "./editShopProfile/editShopProfile.component";
 
 const cookies = new Cookies();
 export default function AccountLayout(props) {
@@ -48,11 +49,11 @@ export default function AccountLayout(props) {
   const links = [
     // { title: "Dashboard", url: "dashboard" },
     { title: "My Profile", url: "profile", icons: <AccountCircleOutlinedIcon className="titleicon" /> },
-    { title: "My Shop", url: "companyprofile", icons: <StorefrontOutlinedIcon className="titleicon" /> },
     { title: "My Address", url: "addresses", icons: <LocationOnOutlinedIcon className="titleicon" /> },
     { title: "My Credit Cards", url: "creditcard", icons: <CreditCardOutlinedIcon className="titleicon" /> },
     { title: "Order History", url: "orders", icons: <HistoryOutlinedIcon className="titleicon" /> },
     { title: "Change Password", url: "password", icons: <PasswordIcon className="titleicon" /> },
+    // { title: "My Shop", url: "editShopProfile", icons: <StorefrontOutlinedIcon className="titleicon" /> },
     // { title: "Logout", url: "login", icons: <ExitToAppOutlinedIcon className="titleicon" /> },
   ].map((link) => {
     const url = `${match.url}/${link.url}`;
@@ -60,7 +61,29 @@ export default function AccountLayout(props) {
     const classes = classNames("account-nav__item", {
       "account-nav__item--active": isActive,
     });
-
+    // if (localStorage.getItem("roleid") !== "16") {
+    //   if (link.title === "My Shop")
+    //    { return "" }
+    //   else {
+    //     return (
+    //       <li
+    //         key={link.url}
+    //         className={classes}
+    //       >
+    //         <Link to={link.url}>{link.title}</Link>
+    //       </li>
+    //     )
+    //   }
+    // } else {
+    //   return (
+    //     <li
+    //       key={link.url}
+    //       className={classes}
+    //     >
+    //       <Link to={link.url}>{link.title}</Link>
+    //     </li>
+    //   )
+    // }
     if (localStorage.getItem("roleid") <= 15) {
       if (link.title === "Dashboard") {
         return (
@@ -91,7 +114,6 @@ export default function AccountLayout(props) {
   return (
     <React.Fragment>
       <PageHeader header="My Account" breadcrumb={breadcrumb} />
-
       <div className="block container">
         <div className="space-limiter">
           <div className="row">
@@ -183,6 +205,9 @@ export default function AccountLayout(props) {
                   path={`${match.path}/password`}
                   component={AccountPagePassword}
                 />
+                {/* <Route
+                  path={`${match.path}/editShopProfile`}
+                  component={EditShopProfile} /> */}
               </Switch>
             </div>
           </div>

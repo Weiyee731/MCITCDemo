@@ -111,6 +111,7 @@ function MerchantPage(props) {
                 <div className="row">
                     <div className="col-lg-4 col-md-4 col-sm-12">
                         <div className={containerClasses}>
+                            {console.log(merchantDetails)}
                             {
                                 merchantDetails.ShopCoverImage !== null &&
                                 <img

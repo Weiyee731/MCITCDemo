@@ -218,7 +218,6 @@ class AccountPagePassword extends Component {
     //       - at least 8 characters
     // - must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
     // - Can contain special characters
-    console.log(e.target.value);
     if (e !== null) {
       this.setState({
         UpdatedValue: e.target.value,
@@ -245,7 +244,6 @@ class AccountPagePassword extends Component {
     if (otp !== null) {
       this.setState({ otp });
     }
-    // console.log(otp);
     if (otp.length === 6) {
       this.props.CallUpdatePassword(this.state, otp);
       this.setState({ startCountDown: false });
@@ -255,7 +253,6 @@ class AccountPagePassword extends Component {
         this.props.updatePassword[0] !== null &&
         this.props.updatePassword[0].ReturnVal === 1
       ) {
-        console.log(this.props.updatePassword[0].ReturnMsg);
         toast.success("2_!", this.props.updatePassword);
       }
     }
@@ -301,7 +298,6 @@ class AccountPagePassword extends Component {
 
   getNewOTP = (e) => {
     this.props.CallSendOTP(this.state); //send otp
-    console.log(this.props.verifyOTP);
     if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
       this.stopTimer(60);
       this.setState({
@@ -321,7 +317,6 @@ class AccountPagePassword extends Component {
       this.setState({ startCountDown: false });
       this.stopTimer(60);
     }
-    console.log(this.props.profileUpdate[0].ReturnMsg);
     if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
       browserHistory.push("account/profile");
       window.location.reload(false);
@@ -331,7 +326,6 @@ class AccountPagePassword extends Component {
   };
 
   runTimer() {
-    // console.log(this.timerId)
     // if (!this.timerId) {
     this.setState({ validPassword: false });
     this.timerId =
@@ -425,7 +419,7 @@ class AccountPagePassword extends Component {
                       <div className="col-6 font">Confirm Password</div>
                       <div className="col-6 ">
                         <TextField
-                          id="password"
+                          id="confirmpassword"
                           size="small"
                           className="font"
                           variant="outlined"
@@ -491,7 +485,7 @@ class AccountPagePassword extends Component {
                     <div className="col-12 font">New Password</div>
                     <div className="col-6 ">
                       <TextField
-                        id="password"
+                        id="newpassword"
                         size="small"
                         className="font"
                         variant="outlined"
