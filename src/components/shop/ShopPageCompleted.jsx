@@ -44,7 +44,7 @@ class PageCompleted extends Component {
     })
     this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
     this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
-    
+
     this.props.handleGetTotal(this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping)
   }
 
@@ -149,31 +149,31 @@ class PageCompleted extends Component {
 
     return (
       <React.Fragment>
-        <div className="cart block container_" style={{ width: "100%" }}>
+        <div className="cart">
           <div className="container">
-            <div className="card mb-0">
+            <div className="card mt-3">
               <div className="card-body">
-                <h3 className="card-title">Emporia</h3>
+                <h5 className="card-title">Emporia</h5>
                 {
                   this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.address !== 0 ?
                     this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
                       x.UserAddressBookID === this.props.addresss.state.address).map((address) => {
                         return (
-                          <h5 >
+                          <h6>
                             Deivery Address: {address.UserAddressLine1 + " " + address.UserAddressLine2} <br />
                             Tel No. : (60) {address.UserContactNo}
-                          </h5>
+                          </h6>
                         )
                       })
                     :
-                    <h5 >
+                    <h6>
                       User Self Pick Up
-                    </h5>
+                    </h6>
                 }
                 {
                   this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.PaymentMethodID !== 0 ?
-                    <h5 > Payment Method: {this.props.addresss.state.PaymentMethodType} - {this.props.addresss.state.PaymentMethod}  </h5> :
-                    <h5 > Payment Method: No Payment Method Selected  </h5>
+                    <h6>Payment Method: {this.props.addresss.state.PaymentMethodType} - {this.props.addresss.state.PaymentMethod}</h6> :
+                    <h6>Payment Method: No Payment Method Selected</h6>
                 }
                 {this.renderCart()}
               </div>

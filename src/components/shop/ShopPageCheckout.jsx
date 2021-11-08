@@ -4,26 +4,17 @@ import React, { Component } from "react";
 // third-party
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet-async";
-import { Link, Redirect } from "react-router-dom";
 import { browserHistory } from "react-router";
 
 // application
-import Collapse from "../shared/Collapse";
-import Currency from "../shared/Currency";
 import PageHeader from "../shared/PageHeader";
-import { Check9x7Svg } from "../../svg";
 
 // data stubs
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
 import PageCheckOrder from "./ShopPageCheckOrder";
 import PagePayment from "./ShopPagePayment";
-import PageCheckoutQr from "./ShopPageCheckoutQr";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import SwipeableViews from "react-swipeable-views";
 import { GitAction } from "../../store/action/gitAction";
-import queryString from "query-string";
 import StepProgressBar from "react-step-progress";
 import "react-step-progress/dist/index.css";
 import PageCart from "./ShopPageCart";
@@ -82,13 +73,11 @@ class PageCheckout extends Component {
       toast.error("Please fill in correct payment method info to continue")
     }
     else {
-
       this.props.data.map((x) => {
         this.state.ProductID.push(x.product.ProductID)
         this.state.UserCartID.push(x.product.UserCartID)
         this.state.ProductQuantity.push(x.product.ProductQuantity)
         this.state.ProductVariationDetailID.push(x.product.ProductVariationDetailID)
-        // this.state.TrackingStatusID.push(0)
       })
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
@@ -118,17 +107,8 @@ class PageCheckout extends Component {
   render() {
     const breadcrumb = [
       { title: "Home", url: "" },
-      // { title: "Shopping Cart", url: "/shop/cart" },
       { title: "Checkout", url: "" },
     ];
-
-    const handleChangeIndex = (index) => {
-      this.setState({ tabvalue: index });
-    };
-
-    const handleChange = (event, newValue) => {
-      this.setState({ tabvalue: newValue });
-    };
 
     const handleGetAddressId = (value) => {
       if (value.length !== 0)
@@ -136,16 +116,14 @@ class PageCheckout extends Component {
     }
 
     const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
-
       if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0) {
-        if (payment.UserPaymentMethodID !== undefined)
+        if (payment.UserPaymentMethodID !== undefined) {
           this.setState({ PaymentMethodID: payment.UserPaymentMethodID, PaymentMethod: payment.UserCardType })
-        else
+        } else {
           this.setState({ PaymentMethodID: payment.PaymentMethodID, PaymentMethod: payment.PaymentMethod })
-
+        }
         this.setState({ PaymentMethodTypeID: paymentmethodtypeId, PaymentMethodType: paymentmethodtype })
       }
-
     }
 
     const handleGetTotal = (total) => {
@@ -154,24 +132,19 @@ class PageCheckout extends Component {
     }
 
     const step1Content = (
-      <div style={{ width: "100%" }}>
-        <PageCart data={this.props.data} />
-      </div>
+      <PageCart data={this.props.data} />
     );
+
     const step2Content = (
-      <div style={{ width: "100%" }}>
-        <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} />
-      </div>
+      <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} />
     );
+
     const step3Content = (
-      <div style={{ width: "100%" }}>
-        <PagePayment />
-      </div>
+      <PagePayment handleGetPaymentId={handleGetPaymentId} data={this.props.data} />
     );
+
     const step4Content = (
-      <div style={{ width: "100%" }}>
-        <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} />
-      </div>
+      <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} />
     );
     return (
       <React.Fragment>
@@ -179,13 +152,12 @@ class PageCheckout extends Component {
           <title>{`Checkout — ${theme.name}`}</title>
         </Helmet>
         <PageHeader header="Checkout" breadcrumb={breadcrumb} />
-        <div className="checkout block" style={{ width: "100%" }}>
-          <div className="container" style={{ width: "100%" }}>
+        <div className="checkout block">
+          <div className="container">
             <StepProgressBar
               startingStep={0}
-              className="row"
               primaryBtnClass="btn-lg"
-              secondaryBtnClass="btn-link"
+              secondaryBtnClass="btn-lg"
               onSubmit={() => this.onFormSubmit()}
               steps={[
                 {
@@ -202,7 +174,7 @@ class PageCheckout extends Component {
                 {
                   label: "Payment",
                   name: "step 3",
-                  content: <PagePayment handleGetPaymentId={handleGetPaymentId} data={this.props.data} />,
+                  content: step3Content,
                   // validator: step3Validator
                 },
                 {

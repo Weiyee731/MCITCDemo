@@ -1,6 +1,5 @@
 // react
 import React, { Component } from "react";
-import { Card, CardContent } from "@material-ui/core";
 import { browserHistory } from "react-router";
 // third-party
 import { connect } from "react-redux";
@@ -8,21 +7,11 @@ import { Helmet } from "react-helmet-async";
 import { Link, Redirect } from "react-router-dom";
 import { Button } from "@material-ui/core";
 // application
-import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
-import PageHeader from "../shared/PageHeader";
-import { Check9x7Svg } from "../../svg";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import SwipeableViews from "react-swipeable-views";
 // data stubs
-import dataAddresses from "../../data/accountAddresses";
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
-import queryString from "query-string";
-import PageCheckoutQr from "./ShopPageCheckoutQr";
 import { GitAction } from "../../store/action/gitAction";
-import AccountPageAddressesFunction from "../../components/account/AccountPageAddressesFunction";
 class PageCheckOrder extends Component {
   payments = payments;
 
@@ -57,13 +46,13 @@ class PageCheckOrder extends Component {
   }
 
   componentDidMount() {
+    this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
     if (this.props.data !== undefined && this.props.data.length > 0) {
       this.setDetails(this.props.data)
     }
   }
 
   renderTotals() {
-
     return (
       <React.Fragment>
         <tbody className="checkout__totals-subtotals">
@@ -118,15 +107,13 @@ class PageCheckOrder extends Component {
   };
 
   renderAddress() {
-    this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
-
     const selfCollect = {
       CountryID: 1,
       UserAddressBookID: 0,
       UserCity: 'Self Collect'
     }
-    const addresses = this.props.addresses !== undefined && this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0" && this.props.addresses.map((address) => (
 
+    const addresses = this.props.addresses !== undefined && this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0" && this.props.addresses.map((address) => (
       <React.Fragment key={address.UserAddressBookID}>
         <div className="addresses-list__item card address-card">
           {address.UserAddressBookID ==
@@ -159,8 +146,8 @@ class PageCheckOrder extends Component {
             </div>
             <div className="address-card__footer">
               <Button
+                color='primary'
                 to="/account/addresses"
-                // to="/account/addresses/5"
                 onClick={(e) => this.goEdit(e, address.UserAddressBookID)}
               >
                 Edit
@@ -181,7 +168,7 @@ class PageCheckOrder extends Component {
     ));
 
     return (
-      <div className="addresses-list">
+      <div className="addresses-list mt-3">
         <Helmet>
           <title>{`Address List — ${theme.name}`}</title>
         </Helmet>
@@ -212,8 +199,6 @@ class PageCheckOrder extends Component {
   }
 
   renderCart() {
-    const { cart } = this.props;
-
     const items = this.state.cart.map((item) => (
       <tr key={item.id}>
         <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
@@ -224,7 +209,7 @@ class PageCheckOrder extends Component {
     ));
 
     return (
-      <table className="checkout__totals">
+      <table className="checkout__totals mt-4">
         <thead className="checkout__totals-header">
           <tr>
             <th>Product</th>
@@ -245,90 +230,20 @@ class PageCheckOrder extends Component {
     );
   }
 
-  renderUserDeliveryAddress() {
-    const { payment: currentPayment } = this.state;
-    const payments = this.payments.map((payment) => {
-      // const renderPayment = ({ setItemRef, setContentRef }) => (
-      return <Tab label={payment.title} />;
-    });
-
-    const handleChangeIndex = (index) => {
-      this.setState({ tabvalue: index });
-    };
-
-    const handleChange = (event, newValue) => {
-      this.setState({ tabvalue: newValue });
-    };
-
-    const cardStyle = {
-      width: "99%",
-      margin: "1% auto",
-      textAlign: "left",
-      fontSize: "16px",
-    };
-
-    return (
-      <div className="checkout block">
-        <div className="container"></div>
-      </div>
-      // </div>
-    );
-  }
-
-  renderPaymentsMethod() {
-    const { payment: currentPayment } = this.state;
-    const payments = this.payments.map((payment) => {
-      // const renderPayment = ({ setItemRef, setContentRef }) => (
-      return <Tab label={payment.title} />;
-    });
-
-    const handleChangeIndex = (index) => {
-      this.setState({ tabvalue: index });
-    };
-
-    const handleChange = (event, newValue) => {
-      this.setState({ tabvalue: newValue });
-    };
-
-    const cardStyle = {
-      width: "99%",
-      margin: "1% auto",
-      textAlign: "left",
-      fontSize: "16px",
-    };
-
-    return (
-      <div className="checkout block">
-        <div className="container"></div>
-      </div>
-    );
-  }
-
   render() {
-
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
 
-    const breadcrumb = [
-      { title: "Home", url: "" },
-      { title: "Shopping Cart", url: "/shop/cart" },
-      { title: "Checkout", url: "/shop/checkout" },
-      { title: "OnlinePayment", url: "" },
-    ];
-
     return (
       <React.Fragment>
-        <div className="cart block container_" style={{ width: "100%" }}>
+        <div className="cart">
           <div className="container">
-            <div className="card mb-0">
+            <div className="card mt-3">
               <div className="card-body">
-                <h3 className="card-title">Your Order</h3>
-
-                {this.renderCart()}
-                <h3> Please Select your desired Shipping Address</h3>
-                <br />
+                <h5>Please select your desired shipping address</h5>
                 {this.renderAddress()}
+                {this.renderCart()}
               </div>
             </div>
           </div>
