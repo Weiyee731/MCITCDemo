@@ -82,7 +82,9 @@ class PagePayment extends Component {
     if (this.props.data !== undefined && this.props.data.length > 0) {
       this.setDetails(this.props.data)
     }
+    this.props.handleGetPaymentId(null, 0, 0)
   }
+
 
   resetData() {
     this.setState({
@@ -132,8 +134,6 @@ class PagePayment extends Component {
         if (formatCVC(e.target.value).length === 4) {
           // console.log("this.state.cardList[0]", this.state.cardList[0])
           this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
-        }else{
-          this.props.handleGetPaymentId(null, 0, 0)
         }
 
         break;
@@ -313,7 +313,7 @@ class PagePayment extends Component {
                           {
                             this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethodsID ?
                               <>
-                                <div className="d-flex">
+                                <div className="d-flex mt-3">
                                   <Tooltip title="Edit">
                                     <IconButton aria-label="Edit">
                                       <RadioButtonCheckedIcon

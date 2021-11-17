@@ -73,7 +73,9 @@ function ShopPageWishlist(props) {
     // }
 
     let content;
-    if (props.wishlist !== undefined && props.wishlist.length) {
+
+    console.log("props.wishlist ", props.wishlist)
+    if (props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0') {
         const itemsList = wishlist.map((item) => {
             let image;
 
@@ -107,6 +109,7 @@ function ShopPageWishlist(props) {
                             <div className="wishlist__product-rating-legend">{`${item.ProductRating} Reviews`}</div>
                         </div>
                     </td>
+                    {console.log("itemlist", item)}
                     <td className="wishlist__column wishlist__column--stock">
                         <div className="badge badge-success">In Stock</div>
                     </td>
@@ -148,7 +151,7 @@ function ShopPageWishlist(props) {
             <div className="block block-empty">
                 <div className="container">
                     <div className="block-empty__body">
-                        <div className="block-empty__message">Your wish list is empty!</div>
+                        <div className="block-empty__message">Your wishlist is empty!</div>
                         <div className="block-empty__actions">
                             <Link to="/" className="btn btn-primary btn-sm">Continue</Link>
                         </div>

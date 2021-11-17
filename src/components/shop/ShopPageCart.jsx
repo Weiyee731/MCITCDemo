@@ -45,6 +45,8 @@ class ShopPageCart extends Component {
             setDetails: false,
             selectedIndex: "",
 
+            MerchantShopName: "",
+
             selectedList: [],
             selectedProductDetailList: [],
             isDataAccepted: false,
@@ -414,7 +416,22 @@ class ShopPageCart extends Component {
                     />
                 )
             } else {
-                if (this.props.productcart.length !== 0) {
+
+                // console.log("this.props.productcart", this.props.productcart.MerchantShopName)
+
+                const filterList = this.props.productcart.filter((ele, ind) => ind === this.props.productcart.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
+
+                filterList.map((x) => {
+                    console.log(x.MerchantShopName)
+                })
+                console.log("filterList", filterList)
+                // this.props.productcart.map((x) => {
+
+
+
+                //     console.log(x.MerchantShopName)
+                // })
+                if (this.props.productcart.length > 0 && this.props.productcart[0].ReturnVal !== '0') {
                     content = this.renderCart();
                 } else {
                     content = continueshopping;

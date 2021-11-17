@@ -116,6 +116,7 @@ class PageCheckout extends Component {
     }
 
     const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
+
       if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0) {
         if (payment.UserPaymentMethodID !== undefined) {
           this.setState({ PaymentMethodID: payment.UserPaymentMethodID, PaymentMethod: payment.UserCardType })
@@ -123,6 +124,9 @@ class PageCheckout extends Component {
           this.setState({ PaymentMethodID: payment.PaymentMethodID, PaymentMethod: payment.PaymentMethod })
         }
         this.setState({ PaymentMethodTypeID: paymentmethodtypeId, PaymentMethodType: paymentmethodtype })
+      }
+      else {
+        this.setState({ PaymentMethodID: 0 })
       }
     }
 

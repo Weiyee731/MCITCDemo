@@ -147,10 +147,11 @@ function ProductCard(props) {
       </ul>
     );
   }
+
+  console.log("props.wishlist", props.wishlist)
   wishlistView =
     (
-
-      typeof props.wishlist !== "undefined" && props.wishlist.length > 0 ?
+      props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
         props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
           props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
             return (
@@ -217,7 +218,7 @@ function ProductCard(props) {
           }}
         >
           <label style={{ fontSize: "20px" }}>{price}</label>
-          {/* {wishlistView} */}
+          {wishlistView}
         </div>
         {
           product.ShopState !== null &&

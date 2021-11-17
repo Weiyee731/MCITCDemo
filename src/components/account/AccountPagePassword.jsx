@@ -397,7 +397,7 @@ class AccountPagePassword extends Component {
                     className="container block"
                   >
                     <div className="row contactrowStyle">
-                      <div className="col-6 font">Password</div>
+                      <div className="col-6 font">Current Password</div>
                       <div className="col-6 ">
                         <TextField
                           id="password"

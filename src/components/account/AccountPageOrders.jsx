@@ -131,6 +131,7 @@ class AccountPageOrders extends Component {
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleChangeTabIndex = this.handleChangeTabIndex.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this.searchFilter = this.searchFilter.bind(this);
   }
 
   //Change Tab

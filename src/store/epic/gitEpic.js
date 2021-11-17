@@ -139,6 +139,7 @@ export class GitEpic {
           payload.VerifyType +
           "&VALIDATIONFIELD=" +
           payload.password)
+          
         const response = await fetch(
           url +
           "User_ValidationByType?USERID=" +
