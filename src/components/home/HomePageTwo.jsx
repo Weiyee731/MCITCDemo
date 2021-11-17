@@ -1,34 +1,24 @@
 // react
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // third-party
 import { Helmet } from 'react-helmet-async';
 
 // application
-import { useDeferredData, useProductColumns, useProductTabs } from '../../services/hooks';
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 
 // blocks
-import BlockBanner from '../blocks/BlockBanner';
-import BlockBrands from '../blocks/BlockBrands';
-import BlockCategories from '../blocks/BlockCategories';
 import BlockFeatures from '../blocks/BlockFeatures';
 import BlockMerchant from '../blocks/BlockMerchant';
-import BlockPosts from '../blocks/BlockPosts';
-import BlockProductColumns from '../blocks/BlockProductColumns';
 import BlockProducts from '../blocks/BlockProducts';
-import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import BlockSlideShow from '../blocks/BlockSlideShow';
 import BlockMainCategories from '../blocks/BlockMainCategories';
 import BlockMoreButton from '../blocks/BlockMoreButton';
 
 // data stubs
-import categories from '../../data/shopBlockCategories';
-import posts from '../../data/blogPosts';
 import theme from '../../data/theme';
 
-import { toast } from "react-toastify";
 
 function mapStateToProps(state) {
   return {
