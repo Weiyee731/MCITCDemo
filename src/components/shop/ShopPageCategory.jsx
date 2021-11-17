@@ -13,7 +13,7 @@ import CategorySidebar from "./CategorySidebar";
 import CategorySidebarItem from "./CategorySidebarItem";
 import PageHeader from "../shared/PageHeader";
 import ProductsView from "./ProductsView";
-import shopApi from "../../api/shop";
+// import shopApi from "../../api/shop";
 import WidgetFilters from "../widgets/WidgetFilters";
 import WidgetProducts from "../widgets/WidgetProducts";
 import { sidebarClose } from "../../store/sidebar";
@@ -197,11 +197,11 @@ function ShopPageCategory(props) {
 
     dispatch({ type: "RESET", categorySlug });
 
-    if (categorySlug) {
-      request = shopApi.getCategoryBySlug(categorySlug);
-    } else {
-      request = shopApi.getCategoryBySlug("-");
-    }
+    // if (categorySlug) {
+    //   request = shopApi.getCategoryBySlug(categorySlug);
+    // } else {
+    //   request = shopApi.getCategoryBySlug("-");
+    // }
     request.then((category) => {
       requestJson = JSON.parse(category);
       productCategoryID = requestJson[0].ProductCategoryID;
@@ -211,15 +211,15 @@ function ShopPageCategory(props) {
 
       dispatch({ type: "FETCH_PRODUCTS_LIST" });
 
-      shopApi
-        .getProductsListByCategory(productCategoryID)
-        .then((productsList) => {
-          if (canceled) {
-            return;
-          }
+      // shopApi
+      //   .getProductsListByCategory(productCategoryID)
+      //   .then((productsList) => {
+      //     if (canceled) {
+      //       return;
+      //     }
 
-          dispatch({ type: "FETCH_PRODUCTS_LIST_SUCCESS", productsList });
-        });
+      //     dispatch({ type: "FETCH_PRODUCTS_LIST_SUCCESS", productsList });
+      //   });
 
       dispatch({ type: "FETCH_CATEGORY_SUCCESS", category });
     });
@@ -260,18 +260,18 @@ function ShopPageCategory(props) {
     if (offcanvas === "always") {
       setLatestProducts([]);
     } else {
-      shopApi
-        .getLatestProducts({
-          ProductCategorySlug: categorySlug,
-          ProductPerPage: 5,
-        })
-        .then((result) => {
-          if (canceled) {
-            return;
-          }
+      // shopApi
+      //   .getLatestProducts({
+      //     ProductCategorySlug: categorySlug,
+      //     ProductPerPage: 5,
+      //   })
+      //   .then((result) => {
+      //     if (canceled) {
+      //       return;
+      //     }
 
-          setLatestProducts(result);
-        });
+      //     setLatestProducts(result);
+      //   });
     }
 
     return () => {

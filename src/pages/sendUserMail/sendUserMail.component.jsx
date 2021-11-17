@@ -70,23 +70,9 @@ class sendUserMail extends Component {
     state = {
         editorState: EditorState.createEmpty(),
       };
-    
-      // onEditorStateChange = (editorState) => {
-      //   this.setState({
-      //     editorState,
-      //   });
-      // };
-
-      // exportHtml = () => {
-      //   this.editor.exportHtml(data => {
-      //     const { design, html } = data
-      //     console.log('exportHtml', html)
-      //   })
-      // }
 
       saveDesign = () => {
         this.editor.saveDesign(design => {
-          console.log('saveDesign', design)
           alert('Design Saved Successfully');
         })
       }
@@ -98,7 +84,6 @@ class sendUserMail extends Component {
     
       render() {
         const { editorState } = this.state;
-        console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
         return (
             <div >
             <div className="App" style={{ width: "100%", alignContent: "center" }}>

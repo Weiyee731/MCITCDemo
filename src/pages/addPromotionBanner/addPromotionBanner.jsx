@@ -465,7 +465,6 @@ class AddPromotionBannerComponent extends Component {
             "" +
             ((e.getDate() < 10 ? "0" : "") + e.getDate());
 
-          console.log(StartDate);
           this.setState({
             PromotionStartDate: e,
             promoStart: StartDate,
@@ -481,9 +480,7 @@ class AddPromotionBannerComponent extends Component {
           promoStart: "",
         });
       }
-      console.log(
-        this.state.PromotionStartDate + " + " + this.state.promoStart
-      );
+      
       setTimeout(
         function () {
           this.checkStartDate();
@@ -691,11 +688,6 @@ class AddPromotionBannerComponent extends Component {
   };
 
   checkProductsAreChosen = () => {
-    console.log(
-      this.state.fullChosenProductsBackup.length +
-      " + " +
-      this.state.fullChosenProducts.length
-    );
     if (this.state.fullChosenProductsBackup.length > 0) {
       this.setState({
         productsAreNotChosen: false,
@@ -719,7 +711,6 @@ class AddPromotionBannerComponent extends Component {
 
     setTimeout(
       function () {
-        console.log("promoInfo");
         this.submitValues();
       }.bind(this),
       1000
@@ -754,18 +745,6 @@ class AddPromotionBannerComponent extends Component {
         ((this.state.PromotionEndDate.getDate() < 10 ? "0" : "") +
           this.state.PromotionEndDate.getDate());
 
-      console.log("hahahahah" + this.state.PromotionStartDate.getMonth() + 1);
-      console.log(
-        "hahahahah" + parseInt(+(this.state.PromotionStartDate.getMonth() + 1))
-      );
-
-      // var StartDate =
-      //   this.state.PromotionStartDate.getFullYear() +
-      //   "" +
-      //    parseInt(((this.state.PromotionStartDate.getMonth() + 1) < 10 ? '0' : '') + (this.state.PromotionStartDate.getMonth() + 1)) +
-      //   "" +
-      //   ((this.state.PromotionStartDate.getDate() < 10 ? '0' : '') + this.state.PromotionStartDate.getDate());
-
       var StartDate =
         this.state.PromotionStartDate.getFullYear() +
         "" +
@@ -775,8 +754,6 @@ class AddPromotionBannerComponent extends Component {
         ((this.state.PromotionStartDate.getDate() < 10 ? "0" : "") +
           this.state.PromotionStartDate.getDate());
 
-      // ((this.state.PromotionStartDate.getDate() < 10 ? '0' : '') + this.state.PromotionStartDate.getDate());
-      console.log("hohohoho" + StartDate);
       const promoInfo = {
         ProductID: ProductIDOnly,
         PromotionDesc: this.state.PromotionDesc,
@@ -786,38 +763,19 @@ class AddPromotionBannerComponent extends Component {
       };
       setTimeout(
         function () {
-          console.log(promoInfo);
           this.props.CallAddPromotion(promoInfo);
-        }.bind(this),
-        500
-      );
-      setTimeout(
-        function () {
-          // this.props.history.push("/viewProductPromotion");
-          // window.location.reload(false);
         }.bind(this),
         500
       );
     }
   };
 
-  // ------------------------------------------------------ Send Data Method 2 --------------------------------------------------------------
-  // addPromotionForm = () => {
-  //   this.props.CallAddPromotion(this.state);
-  // };
-
-  // ------------------------------------------------------------------------------------------------------------------------------------------
   render() {
     let allProductsData = this.props.allproducts
       ? Object.keys(this.props.allproducts).map((key) => {
         return this.props.allproducts[key];
       })
       : {};
-
-    // const addPromotionForm = () => {
-    //   alert(JSON.stringify(this.state.PromotionStartDate))
-    //   alert(JSON.stringify(this.state.PromotionEndDate))
-    // }
 
     const Search = (type) => {
       var newList = [];

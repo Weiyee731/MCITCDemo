@@ -267,7 +267,6 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteProduct = () => {
-    console.log(props.selectedData);
     props.ProductProps.CallDeletePromoCode(props.selectedData);
     setTimeout(
       function () {
@@ -354,7 +353,6 @@ function DeletableTable(props) {
     if (event.target.checked) {
       const newSelecteds = props.Data.map((n) => n.OrderID);
       setSelected(newSelecteds);
-      console.log(newSelecteds);
       return;
     }
     setSelected([]);
@@ -376,7 +374,6 @@ function DeletableTable(props) {
         selected.slice(selectedIndex + 1)
       );
     }
-    console.log(newSelected);
     setSelected(newSelected);
   };
 
@@ -532,18 +529,15 @@ class DisplayTable extends Component {
       address: row.UserAddressLine1,
       detailsShown: false,
     });
-    console.log(this.props.Data[index]);
 
     if (this.state.detailsShown) {
       this.setState({
         detailsShown: false,
       });
-      //   this.props.setTabsHidden(false);
     } else {
       this.setState({
         detailsShown: true,
       });
-      //   this.props.setTabsHidden(true);
     }
   };
 

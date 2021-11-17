@@ -80,12 +80,10 @@ class AddManualStockInComponent extends Component {
   };
 
   updateProduct = () => {
-    // console.log(this.state);
     this.props.CallUpdateProductStock(this.state);
   };
 
   render() {
-    // console.log(this.props.allstocks);
     let allStocksData = this.props.allstocks
       ? Object.keys(this.props.allstocks).map((key) => {
           return this.props.allstocks[key];

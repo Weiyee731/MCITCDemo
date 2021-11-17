@@ -87,7 +87,6 @@ class AccountPageAddCreditCard extends Component {
   };
 
   handleAddCreditCard() {
-
     if (this.state.name.length && this.state.number.length && this.state.expiry.length && this.state.cardtype.length) {
       this.props.CallAddCreditCard(this.state);
       // this.props.parentCallback("false");
@@ -118,8 +117,6 @@ class AccountPageAddCreditCard extends Component {
   }
 
   render() {
-
-    console.log("this is a credit cards", this.props.creditcards)
     return (
       <div id="PaymentForm">
         <Cards

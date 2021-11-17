@@ -11,7 +11,6 @@ import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
 
 // application
-import shopApi from '../../api/shop';
 import Suggestions from './Suggestions';
 import { Cross20Svg, Search20Svg } from '../../svg';
 import { connect } from "react-redux";
@@ -45,14 +44,6 @@ function useCategories() {
         [],
       )
     );
-
-    shopApi.getCategories({ depth: 1 }).then((categories) => {
-      if (canceled) {
-        return;
-      }
-
-      setCategories(treeToList(categories));
-    });
 
     return () => {
       canceled = true;
@@ -131,25 +122,12 @@ function Search(props) {
           options.category = category;
         }
 
-        //   shopApi.getSuggestions(query, options).then((products) => {
-        //     if (canceled) {
-        //       return;
-        //     }
-
-        //     setSuggestedProducts(products);
-        //     setHasSuggestions(products.length > 0);
-        //     setSuggestionsOpen(true);
-        //   });
-        // }, 100);
-
         let filteredProduct = []
 
         JSON.parse(props.products).filter(el => el.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_').toLowerCase().trim().includes(query.toLowerCase().trim()))
           .map((x) => {
             filteredProduct.push(x)
-            // console.log("xxxx", x.ProductName)
           })
-        console.log("filteredProduct", filteredProduct)
         setSuggestedProducts(JSON.parse(filteredProduct).slice(0, 5));
         setHasSuggestions(JSON.parse(filteredProduct).length > 0);
         setSuggestionsOpen(true);
@@ -215,8 +193,6 @@ function Search(props) {
           
           <button className="search__button search__button--type--submit" type="submit"
             onClick={(e) => {
-              console.log("e.onClick", e)
-              console.log("e.onClick", e.button)
               window.location.href = "/Emporia/shop/ProductListing/type:Keyword&typevalue:" + searchquery
             }}>
             <Search20Svg />

@@ -284,7 +284,6 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteProduct = () => {
-    // console.log("props.selectedData", props.selectedData)
     props.ProductProps.CallDeleteProduct(props.selectedData);
   };
 
@@ -391,7 +390,6 @@ function DeletableTable(props) {
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log(newPage)
     setPage(newPage);
   };
 
@@ -610,7 +608,6 @@ class DisplayTable extends Component {
   }
 
   handleChangePage = (event, newPage) => {
-    console.log(newPage)
     this.setState({ page: newPage });
   };
 
@@ -647,9 +644,7 @@ class DisplayTable extends Component {
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
 
-    // console.log(this.props.Data);
     typeof this.props.Data !== "undefined" && this.props.Data.map((d, i) => {
-      // console.log(d)
       d.Picture = (
         <div>
           <img
@@ -657,7 +652,6 @@ class DisplayTable extends Component {
             alt={'product_image_' + i}
             src={
               d.ProductImage
-                // ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
                 ? d.ProductImage
                 : ""
             }

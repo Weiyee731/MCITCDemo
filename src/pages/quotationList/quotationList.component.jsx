@@ -273,7 +273,6 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteGridStorage = () => {
-    console.log(props);
     props.ProductProps.CallDeletePurchaseOrder(props.selectedData);
     setTimeout(
       function () {
@@ -536,8 +535,6 @@ class DisplayTable extends Component {
       CompanyCountryID: row.CompanyCountryID,
       ProductPurchaseOrderDetail: row.ProductQuotationDetail,
     });
-
-    console.log(row.ProductPurchaseOrderDetail);
 
     if (this.state.detailsShown) {
       this.setState({
@@ -854,19 +851,16 @@ class QuotationListComponent extends Component {
 
     let allQuotationData = this.props.quotations
       ? Object.keys(this.props.quotations).map((key) => {
-        console.log(this.props.quotations);
         return this.props.quotations[key];
       })
       : {};
 
     if (allQuotationData.length > 0) {
-      console.log(allQuotationData);
       var generateTabs = allQuotationData.map((status, i) => {
         return (
           <Tab
             label={status.TrackingStatus}
             {...a11yProps(i)}
-          // onClick={changeData.bind(this, status.TrackingStatus)}
           />
         );
       });
@@ -878,7 +872,6 @@ class QuotationListComponent extends Component {
               items.ProductQuotationStatus ==
               this.state.ProductPurchaseOrderStatus[i]
           );
-          // console.log(allPurchaseOrdersList);
           return (
             <TabPanel value={this.state.value} index={i}>
               <DisplayTable

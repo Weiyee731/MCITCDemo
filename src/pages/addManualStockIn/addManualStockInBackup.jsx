@@ -166,12 +166,10 @@ class AddManualStockInComponent extends Component {
   };
 
   updateProduct = () => {
-    // console.log(this.state);
     this.props.CallUpdateProductStock(this.state);
   };
 
   render() {
-    console.log(this.props.allstocks);
     this.props.allstocks.map((d, i) => {
       d.ProductImage = (
         <div>

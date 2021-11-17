@@ -326,7 +326,6 @@ class AccountPagePassword extends Component {
   };
 
   runTimer() {
-    // if (!this.timerId) {
     this.setState({ validPassword: false });
     this.timerId =
       this.state.counter > 0 &&
@@ -337,7 +336,6 @@ class AccountPagePassword extends Component {
           this.stopTimer(60);
         }
       }, 1000);
-    // }
   }
 
   clickedBack = (e) => {

@@ -5,7 +5,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 // application
-import shopApi from '../../api/shop';
 import { useDeferredData, useProductColumns, useProductTabs } from '../../services/hooks';
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
@@ -55,16 +54,12 @@ function HomePageTwo(props) {
   let tempArray = []
 
   const loopWithSlice = () => {
-
-    console.log("props.products", props.products)
-    console.log("props.postsToShow", postsToShow)
     tempArray = [...postsToShow, ...props.products];
     setPostsToShow(tempArray)
   };
 
   const handleShowMorePosts = () => {
     setPage(page + 1)
-    // props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
   };
 
   useEffect(() => {
@@ -117,17 +112,6 @@ function HomePageTwo(props) {
         <BlockSlideShow />
 
         <BlockMainCategories />
-        {/* {useMemo(() => (
-          props.merchant !== undefined && props.merchant.length > 0 && props.merchant[0].ReturnVal === undefined &&
-          <BlockMerchant
-            title="Top Merchants this week"
-            layout="grid-4"
-            rows={1}
-            merchants={props.merchant}
-          // onGroupClick={testing}
-          />
-        )
-          , [props.loading, props.merchants])} */}
 
         <BlockMerchant
           title="Top Merchants this week"

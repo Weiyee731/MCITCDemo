@@ -92,37 +92,6 @@ class ShoplotDetailComponent extends Component {
     }
   };
 
-  // onLoad = (data, e) => {
-  //   if (data == "512x512") {
-  //     var heigth = e.target.height;
-  //     var width = e.target.width;
-  //     if (heigth != 512 || width != 512) {
-  //       console.log(
-  //         "wrong dimensions" +
-  //           heigth +
-  //           " x " +
-  //           width +
-  //           " id: " +
-  //           e.target.attributes.getNamedItem("data-key").value
-  //       );
-  //       this.removeFile(
-  //         "512x512",
-  //         e.target.attributes.getNamedItem("data-key").value
-  //       );
-  //       alert("Images have to be 500 x 500");
-  //     } else {
-  //       console.log(
-  //         "correct dimensions" +
-  //           heigth +
-  //           " x " +
-  //           width +
-  //           " id: " +
-  //           e.target.attributes.getNamedItem("data-key").value
-  //       );
-  //     }
-  //   }
-  // };
-
   onDelete = (index, data) => {
    
     var newList2 = this.state.file;

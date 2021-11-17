@@ -74,7 +74,6 @@ class App extends Component {
 
   render() {
     const { locale } = this.props;
-    console.log(locale);
     const { messages, direction } = languages[locale];
     return (
       <ThemeProvider theme={lightTheme}>

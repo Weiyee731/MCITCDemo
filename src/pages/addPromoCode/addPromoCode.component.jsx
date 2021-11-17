@@ -532,11 +532,6 @@ class AddProductVoucherComponent extends Component {
   };
 
   checkProductsAreChosen = () => {
-    console.log(
-      this.state.fullChosenProductsBackup.length +
-        " + " +
-        this.state.fullChosenProducts.length
-    );
     if (this.state.fullChosenProductsBackup.length > 0) {
       this.setState({
         productsAreNotChosen: false,
@@ -611,8 +606,6 @@ class AddProductVoucherComponent extends Component {
       if (this.state.promoCode == "") {
         this.makeid();
       }
-      console.log("this.state", this.state);
-      console.log("this.state.promoCode", this.state.promoCode);
       const promoInfo = {
         productID: ProductIDOnly,
         promo: this.state.promo,

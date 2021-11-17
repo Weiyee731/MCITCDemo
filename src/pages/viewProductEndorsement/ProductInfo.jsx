@@ -117,7 +117,6 @@ class ProductEndorsementInfo extends Component {
 
     bindProductInfoToState = () => {
         const ProductInfo = this.props.productInfo[0]
-        console.log('ProductInfo', ProductInfo)
 
         let medias = [];
         let specifications = [];
@@ -135,11 +134,6 @@ class ProductEndorsementInfo extends Component {
 
         if (ProductInfo.MerchantDetail !== null || ProductInfo.MerchantDetail != null)
             merchantDetail = JSON.parse(ProductInfo.MerchantDetail)
-
-        console.log('medias', medias)
-        console.log('specifications', specifications)
-        console.log('variations', variations)
-        console.log('merchantDetail', merchantDetail)
 
         this.setState({
             isProductIntoBind: true,
@@ -162,7 +156,6 @@ class ProductEndorsementInfo extends Component {
 
         if (ProductMedias.length > 0 && typeof index === "string") {
             let newIndex = Number(currentProductIndex)
-            console.log('current Index', ProductMedias[newIndex])
 
             if (index === 'prev') {
                 if ((newIndex - 1) < 0) {
@@ -181,7 +174,6 @@ class ProductEndorsementInfo extends Component {
                 }
             }
             else if (index === 'next') {
-                console.log(index)
                 if ((newIndex + 1) > totalMedias - 1) {
                     newIndex = totalMedias - 1
                     this.setState({
@@ -198,10 +190,8 @@ class ProductEndorsementInfo extends Component {
                     })
                 }
             }
-            console.log('new Index', ProductMedias[newIndex])
         }
         else if (ProductMedias.length > 0) {
-            console.log('new Index', ProductMedias[index])
             this.setState({ currentProductIndex: Number(index), currentImage: ProductMedias[index] })
         }
     }

@@ -674,11 +674,11 @@ class MerchantDetailsComponent extends Component {
       });
     }
 
-    console.log(this.state)
-    console.log(this.props)
     return (
       <div>
-        {this.state.showTerminatebutton ? (<div>  <h2>Merchant Details</h2>
+        {this.state.showTerminatebutton ? (
+        <div>  
+          <h2>Merchant Details</h2>
           <Button onClick={back}>
             <i className="fas fa-chevron-left"></i>Back
           </Button>

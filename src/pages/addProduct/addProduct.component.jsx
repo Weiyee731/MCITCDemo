@@ -876,49 +876,26 @@ class AddProductComponent extends Component {
   };
 
   uploadFile = (productID) => {
-    // console.log(productID);
-    // console.log(this.state);
-    // console.log(this.state.file2.length);
-    // if (this.state.file.length < 1 || this.state.file2.length < 1) {
-    //   toast.error("There has to be at least 1 images for each size");
-    // } else {
-    //   this.setState({
-    //     index: 1,
-    //   });
-
     for (var i = 0; i < this.state.file.length; i++) {
-      // this.setState({
-      //   productID: productID,
-      //   width: "512",
-      //   height: "512",
-      // });
       const formData1 = new FormData();
       formData1.append(i + "image512x512", this.state.file[i]);
       formData1.append("imageName", productID + "_image512x512_" + (i + 1));
       formData1.append("ProductID", productID);
       let url = "http://tourism.denoo.my/emporiaimage/upload.php";
       axios.post(url, formData1, {}).then((res) => {
-        console.log("Warning: " + JSON.stringify(res));
       });
       this.props.callAddProductMedia(this.state);
     }
     for (var i = 0; i < this.state.file2.length; i++) {
-      // this.setState({
-      //   productID: productID,
-      //   width: "1600",
-      //   height: "900",
-      // });
       const formData2 = new FormData();
       formData2.append(i + "image1600x900", this.state.file2[i]);
       formData2.append("imageName", productID + "_image1600x900_" + (i + 1));
       formData2.append("ProductID", productID);
       let url = "http://tourism.denoo.my/emporiaimage/upload.php";
       axios.post(url, formData2, {}).then((res) => {
-        console.log("Warning: " + res);
       });
       this.props.callAddProductMedia(this.state);
     }
-    // }
   };
 
   handleChange(data, e) {

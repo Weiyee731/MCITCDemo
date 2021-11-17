@@ -224,18 +224,15 @@ class DisplayTable extends Component {
       address: row.UserAddressLine1,
       detailsShown: false,
     });
-    console.log("Data: " + this.props.Data[index]);
 
     if (this.state.detailsShown) {
       this.setState({
         detailsShown: false,
       });
-      //   this.props.setTabsHidden(false);
     } else {
       this.setState({
         detailsShown: true,
       });
-      //   this.props.setTabsHidden(true);
     }
   };
 
@@ -256,8 +253,6 @@ class DisplayTable extends Component {
 
   onDelivery = (row) => {
     this.props.propsData.CallUpdateOrderProductStatus(row);
-    // OrderProductDetailID;
-    // console.log(row);
   };
 
   render() {
@@ -441,9 +436,7 @@ class DeliverableTransactionDetails extends Component {
 
   render() {
     const back = () => {
-      //   window.location.reload(false);
       this.props.setDetailsShown(false);
-      //   console.log(this.props);
     };
     return (
       <div>

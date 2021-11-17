@@ -262,7 +262,6 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteProduct = () => {
-    console.log(props.selectedData);
     props.ProductProps.CallDeletePromoCode(props.selectedData);
     setTimeout(
       function () {
@@ -349,7 +348,6 @@ function DeletableTable(props) {
     if (event.target.checked) {
       const newSelecteds = props.Data.map((n) => n.PromoCodeID);
       setSelected(newSelecteds);
-      console.log(newSelecteds);
       return;
     }
     setSelected([]);
@@ -371,7 +369,6 @@ function DeletableTable(props) {
         selected.slice(selectedIndex + 1)
       );
     }
-    console.log(newSelected);
     setSelected(newSelected);
   };
 

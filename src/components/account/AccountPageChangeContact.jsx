@@ -235,7 +235,6 @@ class PageChangeContact extends Component {
   }
 
   handleChangeforContact(e) {
-    // const { value } = e.target;
     var phoneno = /^[\+]?[(]?[0-9]{4}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
     if (e !== null) {
       this.setState({
@@ -320,11 +319,9 @@ class PageChangeContact extends Component {
       window.location.reload(false);
     } else {
     }
-    // toast.error// remain in page
   };
 
   runTimer() {
-    // if (!this.timerId) {
     this.setState({ validContact: false });
     this.timerId =
       this.state.counter > 0 &&
@@ -335,7 +332,6 @@ class PageChangeContact extends Component {
           this.stopTimer(60);
         }
       }, 1000);
-    // }
   }
 
   clickedBack = (e) => {

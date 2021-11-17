@@ -637,7 +637,6 @@ class DisplayTable extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.props);
     const emptyRows =
       this.state.rowsPerPage -
       Math.min(
@@ -789,7 +788,6 @@ class DisplayTable extends Component {
                           );
                           const labelId = `enhanced-table-checkbox-${index}`;
                           const product = row.PromotionDetail;
-                          // console.log("lalalaa " + product);
 
                           return (
                             <TableRow
@@ -893,7 +891,6 @@ class ViewProductPromotionComponent extends Component {
   render() {
     return (
       <div style={{ width: "100%" }}>
-        {console.log(this.props.allpromo)}
 
         <DisplayTable
           // Data={this.props.allpromo}

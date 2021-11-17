@@ -92,7 +92,7 @@ export default function AccountLayout(props) {
             className={classes}
           // onClick={localStorage.setItem("management", true)}
           >
-            <Link to={"/dashboard"}>{link.title}</Link>
+            <Link to={"/Emporia/dashboard"}>{link.title}</Link>
           </li>
         );
       } else {
@@ -135,16 +135,6 @@ export default function AccountLayout(props) {
                   from={match.path}
                   to={`${match.path}/profile`}
                 />
-                {/* <Redirect
-                  exact
-                  from={match.path}
-                  to={`${match.path}/dashboard`}
-                /> */}
-                {/* <Route
-                  exact
-                  path={`${match.path}/dashboard`}
-                  component={AccountPageDashboard}
-                /> */}
                 <Route
                   exact
                   path={`${match.path}/profile`}

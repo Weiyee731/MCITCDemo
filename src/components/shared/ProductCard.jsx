@@ -217,7 +217,7 @@ function ProductCard(props) {
           }}
         >
           <label style={{ fontSize: "20px" }}>{price}</label>
-          {wishlistView}
+          {/* {wishlistView} */}
         </div>
         {
           product.ShopState !== null &&

@@ -130,30 +130,6 @@ const SignUp = (props) => {
         setSubmitRegisterForm(true);
     };
 
-    // const verifyEmail = () => {
-    //     props.CallCheckUserExists(userDetail.Email)
-    //     // console.log(userDetail.Email)
-    //     // console.log(props.exist)
-    //     // if (props.exist > 0) {
-    //     //     console.log("SAME DATA EXIST")
-    //     // }
-    //     // else
-    //     //     console.log("NOT SAME DATA")
-    // }
-
-    // const checkReturn = () => {
-    //     // props.CallCheckUserExists(userDetail.Email)
-    //     console.log(userDetail.Email)
-    //     console.log(props.exist)
-    //     if (props.exist.length > 0) {
-    //         console.log("SAME DATA EXIST")
-    //         setEmailDuplicate(true)
-    //     }
-    //     else
-    //         console.log("NOT SAME DATA")
-    // }
-
-
     const verifyPass = () => {
         if (pass === confirmPass) {
             setPassErrorMatch(false);
@@ -357,8 +333,6 @@ const SignUp = (props) => {
                     className="mx-auto"
                 ></img>
             </div>
-            {console.log(props)}
-            {console.log(props.exist)}
             <div className="container" style={{ width: "100%" }}>
                 <div className="text-center">
                     <h4>Create a new Emporia's account</h4>
