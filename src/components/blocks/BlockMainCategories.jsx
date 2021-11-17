@@ -59,8 +59,6 @@ class BlockMainCategories extends Component {
                   window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
                 }}
                 onClick={(e) => {
-                  // console.log("e.onClick", e)
-                  // console.log("e.onClick", e.button)
                   window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
                 }}
               >

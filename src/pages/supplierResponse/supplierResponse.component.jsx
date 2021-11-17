@@ -106,7 +106,6 @@ class SupplierResponseComponent extends Component {
       };
       this.props.CallSendSalesOrder(dataToSend);
     }
-    console.log(this.state.file[0]);
   };
 
   render() {

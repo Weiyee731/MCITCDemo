@@ -96,20 +96,8 @@ class Indicator extends Component {
       <span className="indicator__area">
         {icon}
         {value}
-        {/* {url === "/shop/wishlist" ?
-          (value !== undefined ? (value.props.children) : value)
-          : value} */}
       </span>
     );
-
-    // if (value !== undefined ) {
-    //   console.log("value.props.children", value.props.children)
-    // }
-
-
-    // if (value !== undefined) {
-    //   console.log("this.state", value.props.children)
-    // }
 
     if (url) {
       button = (

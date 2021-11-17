@@ -283,11 +283,10 @@ componentDidUpdate(prevProps){
   }
 
   render() {
-console.log(this.props.merchant)
     let userid = localStorage.getItem("id");
-    const merchantDetails = this.props.merchant.length > 0 && this.props.merchant[0].ReturnVal &&
-      this.props.merchant[0].ReturnVal !== undefined ? this.props.merchant[0] : "";
-    console.log(this.props.merchant.length > 0)
+    const merchantDetails = this.props.merchant.length > 0 &&
+      this.props.merchant[0].ReturnVal === undefined && this.props.merchant[0];
+
     const imgurl = "http://tourism.denoo.my/emporiaimage/userprofile/"
     { console.log(merchantDetails) }
     const links = [
@@ -321,7 +320,6 @@ console.log(this.props.merchant)
     };
 
     const handleSubmit = (files, allFiles) => {
-      console.log(files.map((f) => f.meta));
       allFiles.forEach((f) => f.remove());
     };
     return (

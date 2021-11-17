@@ -323,7 +323,6 @@ class DisplayTable extends Component {
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
     if (this.props.Data) {
-      console.log(this.props.Data);
       this.props.Data.map((d, i) => {
         d.Picture = (
           <div>

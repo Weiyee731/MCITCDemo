@@ -20,7 +20,6 @@ import { url } from '../../services/utils';
 import Logo from "../../assets/Emporia.png";
 import PageCheckout from "./ShopPageCheckout";
 import { Button } from "@material-ui/core";
-import shopApi from "../../api/shop";
 
 import Checkbox from "@material-ui/core/Checkbox";
 

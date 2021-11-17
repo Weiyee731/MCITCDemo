@@ -227,8 +227,6 @@ function TransferList(props) {
 
         {items.map((value, i) => {
           const labelId = `transfer-list-all-item-${value}-label`;
-          console.log("value: ", value)
-          console.log("i: ", i)
 
           return (
             <ListItem
@@ -1109,19 +1107,6 @@ class PromotionDetailsComponent extends Component {
         500
       );
     }
-    // {
-    //   this.props.CallUpdatePromotion(this.state);
-    //   this.setState({
-    //     toBeEdited: false,
-    //   });
-    // } else {
-    //   console.log("still empty");
-    // }
-  };
-
-  // ------------------------------------------------------------------------------------------------------------------------------------------
-  isSelected = (name) => {
-    // this.state.selected.indexOf(name) !== -1;
   };
 
   render() {
@@ -1382,8 +1367,6 @@ class PromotionDetailsComponent extends Component {
         );
       }
     };
-
-    console.log("HERE")
 
     return (
       <div>

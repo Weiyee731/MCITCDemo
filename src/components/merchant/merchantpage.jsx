@@ -10,7 +10,6 @@ import PageHeader from "../shared/PageHeader";
 import { url } from "../../services/utils";
 
 // application
-import shopApi from '../../api/shop';
 import { useDeferredData, useProductColumns, useProductTabs } from '../../services/hooks';
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";

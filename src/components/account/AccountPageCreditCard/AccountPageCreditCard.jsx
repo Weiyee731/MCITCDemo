@@ -234,7 +234,6 @@ class AccountPageCreditCard extends Component {
                     </div>
                   ) : (
                     <div>
-                      {console.log("NO")}
                       Seems like you doesnt have credit card saved in this system.
                       Click on + button to add more.
                     </div>

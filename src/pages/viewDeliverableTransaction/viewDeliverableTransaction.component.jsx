@@ -229,18 +229,15 @@ class DisplayTable extends Component {
       address: row.UserAddressLine1,
       detailsShown: false,
     });
-    console.log(this.props.Data[index]);
 
     if (this.state.detailsShown) {
       this.setState({
         detailsShown: false,
       });
-      //   this.props.setTabsHidden(false);
     } else {
       this.setState({
         detailsShown: true,
       });
-      //   this.props.setTabsHidden(true);
     }
   };
 
@@ -472,7 +469,6 @@ class ViewDeliverableTransactionComponent extends Component {
   }
 
   render() {
-    console.log(this.props.allDeliverableList);
     return (
       <div style={{ width: "100%" }}>
         <h1 style={{ margin: "20px" }}>Deliver List</h1>

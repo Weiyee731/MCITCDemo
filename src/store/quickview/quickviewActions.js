@@ -1,4 +1,3 @@
-import shopApi from "../../api/shop";
 import { QUICKVIEW_CLOSE, QUICKVIEW_OPEN } from "./quickviewActionTypes";
 
 let cancelPreviousRequest = () => {};

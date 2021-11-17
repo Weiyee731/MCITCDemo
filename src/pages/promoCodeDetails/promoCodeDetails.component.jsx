@@ -89,7 +89,6 @@ function union(a, b) {
 }
 
 function TransferList(props) {
-  console.log(props.allProducts[0]);
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState(
@@ -461,18 +460,15 @@ class DisplayTable extends Component {
       address: row.UserAddressLine1,
       detailsShown: false,
     });
-    console.log(this.props.Data[index]);
 
     if (this.state.detailsShown) {
       this.setState({
         detailsShown: false,
       });
-      //   this.props.setTabsHidden(false);
     } else {
       this.setState({
         detailsShown: true,
       });
-      //   this.props.setTabsHidden(true);
     }
   };
 
@@ -916,7 +912,6 @@ class PromoCodeDetailsComponent extends Component {
   };
 
   submitValues = () => {
-    console.log(this.props.data);
     if (
       !(
         this.state.productsAreNotChosen ||
@@ -931,12 +926,6 @@ class PromoCodeDetailsComponent extends Component {
       this.state.fullChosenProductsBackup.map((product) => {
         ProductIDOnly.push(product.ProductID);
       });
-      // var endDate =
-      //   this.state.endDateForTextView.getFullYear() +
-      //   "" +
-      //   parseInt(this.state.endDateForTextView.getMonth() + 1) +
-      //   "" +
-      //   this.state.endDateForTextView.getDate();
 
       var endDate =
         this.state.PromotionEndDate.getFullYear() +
@@ -946,12 +935,6 @@ class PromoCodeDetailsComponent extends Component {
         "" +
         ((this.state.PromotionEndDate.getDate() < 10 ? "0" : "") +
           this.state.PromotionEndDate.getDate());
-      // var startDate =
-      //   this.state.startDateForTextView.getFullYear() +
-      //   "" +
-      //   parseInt(this.state.startDateForTextView.getMonth() + 1) +
-      //   "" +
-      //   this.state.startDateForTextView.getDate();
 
       var startDate =
         this.state.PromotionStartDate.getFullYear() +
@@ -970,13 +953,14 @@ class PromoCodeDetailsComponent extends Component {
         promoCode: this.state.promoCode,
         promoCodeId: this.props.data.promoCodeID,
       };
-      console.log(promoInfo);
+
       setTimeout(
         function () {
           this.props.CallUpdatePromoCode(promoInfo);
         }.bind(this),
         500
       );
+      
       setTimeout(
         function () {
           this.props.history.push("/viewPromoCodes");

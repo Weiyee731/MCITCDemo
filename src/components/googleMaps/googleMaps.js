@@ -55,7 +55,6 @@ export class GoogleMaps extends Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <Map
         google={this.props.google}

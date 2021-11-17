@@ -229,18 +229,15 @@ class DisplayTable extends Component {
       address: row.UserAddressLine1,
       detailsShown: false,
     });
-    console.log("Data: " + this.props.Data[index]);
 
     if (this.state.detailsShown) {
       this.setState({
         detailsShown: false,
       });
-      //   this.props.setTabsHidden(false);
     } else {
       this.setState({
         detailsShown: true,
       });
-      //   this.props.setTabsHidden(true);
     }
   };
 
@@ -441,39 +438,10 @@ class TransactionDetailsComponent extends Component {
   handleChange = () => { };
 
   render() {
-
     const back = () => {
-      //   window.location.reload(false);
       this.props.setDetailsShown(false);
-      //   console.log(this.props);
     };
-    console.log(this.props)
-
-    // if (this.props.alltransactions.length > 0) {
-    //   this.setState({
-    //     transactionName: this.props.alltransactions.name,
-    //     username: this.props.alltransactions.username,
-    //     userFullName: this.props.alltransactions.fullName,
-    //     userContactNo: this.props.alltransactions.phoneNumber,
-    //     userEmailAddress: this.props.alltransactions.email,
-    //     userAddressLine1: this.props.alltransactions.address,
-    //     paymentMethod: this.props.alltransactions.PaymentMethod,
-    //     trackingStatus: this.props.alltransactions.TrackingStatus,
-    //     orderProductDetail: this.props.alltransactions.orderProductDetail
-    //   })
-    // } else {
-    //   this.setState({
-    //     transactionName: "",
-    //     username: "",
-    //     userFullName: "",
-    //     userContactNo: "",
-    //     userEmailAddress: "",
-    //     userAddressLine1: "",
-    //     paymentMethod: "",
-    //     trackingStatus: "",
-    //     orderProductDetail: "",
-    //   })
-    // }
+    
     return (
       <div>
 
@@ -576,9 +544,6 @@ class TransactionDetailsComponent extends Component {
               </div>
             ) : null}
             <h5 style={{ marginTop: "10px" }}>Products Ordered</h5>
-            {/* {console.log("JSON.parse(this.state.orderProductDetail)", JSON.parse(this.state.orderProductDetail))} */}
-            {console.log("this.state.orderProductDetail", this.state.orderProductDetail)}
-            {/* <DisplayTable Data={JSON.parse(this.state.orderProductDetail)} /> */}
           </CardContent>
         </Card>
       </div>

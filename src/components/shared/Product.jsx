@@ -167,13 +167,7 @@ class Product extends Component {
     const { quantity } = this.state;
     let prices;
 
-    console.log("merchanr", product)
-
-    console.log("this.satte", this.props)
-
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
-
-
 
     let merchant = JSON.parse(product.MerchantDetail)[0]
     let variation = JSON.parse(product.ProductVariation)[0]
