@@ -106,7 +106,7 @@ export default function AccountPageOrderDetails(props) {
   const creditcard = props.location.creditcards;
 
   const subtotal = orderDetail.OrderProductDetail !== null ? JSON.parse(orderDetail.OrderProductDetail).map(
-    (orders) => orders.ProductSellingPrice * orders.ProductQuantity
+    (orders) => orders.ProductVariationPrice * orders.ProductQuantity
   ) : "";
   var subtotalPrice = 0;
   var totalOverall = 0;
@@ -241,9 +241,9 @@ export default function AccountPageOrderDetails(props) {
                         />
                       </td>
                       <td>{orders.ProductName}</td>
-                      <td>RM{orders.ProductSellingPrice}</td>
+                      <td>RM{orders.ProductVariationPrice}</td>
                       <td>{orders.ProductQuantity}</td>
-                      <td>RM{orders.ProductSellingPrice * orders.ProductQuantity}</td>
+                      <td>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
                     </tr>
                   </tbody>
                 )) : ""}

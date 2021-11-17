@@ -59,29 +59,13 @@ function HomePageTwo(props) {
     console.log("props.products", props.products)
     console.log("props.postsToShow", postsToShow)
     tempArray = [...postsToShow, ...props.products];
-
     setPostsToShow(tempArray)
-    // if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal !== "1") { toast.warning("There is no more product") }
-    // else {
-
-    //   props.CallViewMoreEmpty()
-    // }
   };
 
   const handleShowMorePosts = () => {
     setPage(page + 1)
     // props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
   };
-
-  // useEffect(() => {
-  //   if (page <= 1) {
-  //     setPage(page + 1)
-  //     props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
-  //   }
-  //   if (props.viewMoreProducts.length > 0) {
-  //     loopWithSlice()
-  //   }
-  // }, [props.viewMoreProducts])
 
   useEffect(() => {
     let didCancel = false
@@ -123,8 +107,6 @@ function HomePageTwo(props) {
       page: 1,
     })
   }, [])
-
-  console.log("HOMEPAGE", localStorage)
 
   return (
     <React.Fragment>

@@ -1262,6 +1262,7 @@ export class GitEpic {
         );
         const json = await response.json();
         // json = JSON.parse(json);
+        console.log("json",json)
         return {
           type: GitAction.GotProductListing,
           payload: json,

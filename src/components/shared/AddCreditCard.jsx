@@ -31,7 +31,7 @@ const AddCreditCard = (props) => {
       </ModalHeader>
       <ModalBody>
         <Cards
-          cvc={state.cvc}
+          // cvc={state.cvc}
           expiry={state.newexpiry}
           focused={state.focus}
           name={state.newname}
@@ -100,7 +100,7 @@ const AddCreditCard = (props) => {
           onChange={(e) => handleOnChange(e)}
           onFocus={(e) => handleInputFocus(e)}
         />
-
+{/* 
         <TextField
           variant="outlined"
           type="tel"
@@ -113,7 +113,7 @@ const AddCreditCard = (props) => {
           required
           onChange={(e) => handleOnChange(e)}
           onFocus={(e) => handleInputFocus(e)}
-        />
+        /> */}
 
         <button
           onClick={() => handleAddCreditCard()}

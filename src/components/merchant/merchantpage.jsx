@@ -56,23 +56,12 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
-        CallGetMoreProductEmpty: () => dispatch(GitAction.CallGetMoreProductEmpty()),
+        // CallGetMoreProductEmpty: () => dispatch(GitAction.CallGetMoreProductEmpty()),
         CallAllProductsListing: (propsData) => dispatch(GitAction.CallAllProductsListing(propsData)),
     };
 }
 
 function MerchantPage(props) {
-    useEffect(() => {
-        window.scrollTo(0, 0)
-        props.CallMerchants({
-            type: "MerchantProfile",
-            typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
-            userID: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
-            userRoleID: localStorage.getItem("isLogin") === true ? localStorage.getItem("roleid") : 0,
-            productPage: 999,
-            page: 1,
-        })
-    }, [])
 
     let profileimage;
 
@@ -157,19 +146,46 @@ function MerchantPage(props) {
     const [postsToShow, setPostsToShow] = useState([]);
     let tempArray = []
     const [page, setPage] = useState(1);
-    // let productPerPage = 4
+
+    console.log("productsListing", props.productsListing)
+    console.log("page in merchant", page)
 
     const loopWithSlice = () => {
-        if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0].ReturnVal === undefined) {
+
+        // console.log("JSON.parse(props.productsListing).ReturnVal", JSON.parse(props.productsListing))
+        if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0] !== undefined && JSON.parse(props.productsListing)[0].ReturnVal === undefined) {
             tempArray = [...postsToShow, ...JSON.parse(props.productsListing)];
 
-            const filterList = tempArray.filter((val, id, array) => {
-                return array.indexOf(val) == id;
-            });
+            const filterList = tempArray.filter( (ele, ind) => ind === tempArray.findIndex( elem => elem.ProductID === ele.ProductID))
 
             setPostsToShow(filterList)
+            // tempArray = [...postsToShow, ...JSON.parse(props.productsListing)];
+            // setPostsToShow(tempArray)
         }
+
     };
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+        props.CallMerchants({
+            type: "MerchantProfile",
+            typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
+            userID: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+            userRoleID: localStorage.getItem("isLogin") === true ? localStorage.getItem("roleid") : 0,
+            productPage: 999,
+            page: 1,
+        })
+    }, [])
+
+    useEffect(() => {
+        props.CallAllProductsListing({
+            type: "Merchant",
+            typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
+            userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+            productPage: 15,
+            page: page,
+        })
+    }, [])
 
     useEffect(() => {
         let didCancel = false
@@ -177,13 +193,11 @@ function MerchantPage(props) {
             type: "Merchant",
             typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
             userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
-            productPage: 999,
+            productPage: 15,
             page: page,
         })
         loopWithSlice()
-        return () => {
-            didCancel = true;
-        }
+        return () => { didCancel = true; }
     }, [page])
 
     const handleShowMorePosts = () => {
@@ -228,12 +242,17 @@ function MerchantPage(props) {
                                 rows={2}
                             />
                             {
-                                postsToShow.length > 0 &&
-                                (
-                                    <div className="my-4">
-                                        <BlockMoreButton viewMore={handleShowMorePosts} />
-                                    </div>
-                                )
+                                postsToShow.length > 0 ?
+                                    (
+                                        <div className="my-4">
+                                            <BlockMoreButton viewMore={handleShowMorePosts} />
+                                        </div>
+                                    ) :
+                                    (
+                                        <div className="my-4" style={{ textAlign: "center", fontWeight: "BOLD" }}>
+                                            Merchant does not have any products
+                                        </div>
+                                    )
                             }
                         </>
                         : <LoadingPanel />

@@ -54,7 +54,7 @@ export class GitAction {
 
   static UpdateEmail = "UPDATE-EMAIL";
   static UpdatedEmail = "UPDATED-EMAIL";
-  
+
   static UpdateShopDetail = "UPDATE-SHOP-DETAIL";
   static UpdatedShopDetail = "UPDATED-SHOP-DETAIL";
 
@@ -119,7 +119,7 @@ export class GitAction {
       payload: propsData,
     };
   }
-  
+
   static CallUpdateShopDetail(propsData) {
     return {
       type: GitAction.UpdateShopDetail,
@@ -293,6 +293,7 @@ export class GitAction {
   }
 
   static CallGetMoreProductEmpty() {
+    console.log("CallGetMoreProductEmpty")
     return {
       type: GitAction.ClearProduct
     };
