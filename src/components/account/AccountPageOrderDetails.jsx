@@ -34,24 +34,24 @@ import Box from '@mui/material/Box';
 //stepper content
 const steps = [
   {
-    
+
     date: '1/12/2021',
-    time:'12:00',
+    time: '12:00',
     description: 'Sender is preparing to ship your parcel'
   },
   {
     date: '2/12/2021',
-    time:'10:20',
-    description:'Parcel has been picked up by courier',
+    time: '10:20',
+    description: 'Parcel has been picked up by courier',
   },
   {
     date: '3/12/2021',
-    time:'08:35',
+    time: '08:35',
     description: 'Parcel has arrived at Station J&T SWKAIR GATEWAY',
   },
   {
     date: '4/12/2021',
-    time:'12:45',
+    time: '12:45',
     description: 'Parcel has been delivered to Ali Abu',
     receipt: "https://www.mhoopay.com/assets/images/faq-my/packaging/poslaju06.png"
   },
@@ -69,6 +69,8 @@ export default function AccountPageOrderDetails(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+
 
   //Stepper
   // const [activeStep, setActiveStep] = React.useState(0);
@@ -102,6 +104,19 @@ export default function AccountPageOrderDetails(props) {
     window.location.reload(false);
   }
 
+  let filteredMerchant = [];
+
+  console.log("props.location.orderdetails.OrderProductDetail", orderDetail)
+  console.log("props.location.orderdetails.OrderProductDetail", orderDetail.OrderProductDetail)
+
+  if (orderDetail !== undefined && orderDetail.OrderProductDetail !== undefined) {
+    console.log("props.location.orderdetails.OrderProductDetail 111")
+    filteredMerchant = JSON.parse(orderDetail.OrderProductDetail).filter((ele, ind) => ind
+      === JSON.parse(orderDetail.OrderProductDetail).findIndex(elem => elem.MerchantID === ele.MerchantID))
+    console.log("props.location.orderdetails.OrderProductDetail", filteredMerchant)
+  }
+
+
   const address = props.location.address;
   const creditcard = props.location.creditcards;
 
@@ -121,6 +136,70 @@ export default function AccountPageOrderDetails(props) {
   }
 
   totalOverall = subtotalPrice + parseInt(shipping + tax - storecredit)
+
+  let trackingDetail = (index) => (
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Order {index}</Typography>
+      <Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Tracking No: AA987654321BB</Typography>
+      <IconButton aria-label="View" style={{ marginLeft: 'auto' }} onClick={handleClickOpen}> <VisibilityIcon /></IconButton>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <Typography variants="body1" style={{ marginLeft: '10%', marginTop: '7%' }}>
+          {"Tracking No:  AA987654321BB"}
+        </Typography>
+        <DialogContent>
+          {/* Stepper Content */}
+          <Box sx={{ maxWidth: 400 }}>
+            <Stepper orientation="vertical" >
+              {steps.map((step, index) => (
+                <Step key={step.date} expanded="true">
+                  <StepLabel
+                  // optional={
+                  //   index === 3 ? (
+                  //     <div>
+                  //     <Button variant="text" color="secondary" size="small" onClick={handleOpenImg} >View Delivery Proof</Button>
+                  //     { display &&
+                  //     <div>
+                  //     <img src={step.receipt} alt="" style={{width:'90%'}} /> 
+                  //      <Button variant="text" color="primary" size="small" onClick={handleCloseImg} >Close</Button> </div>}</div>
+                  //   ) : null
+                  // }
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <Typography variant="caption"> {step.date} </Typography>
+                      <Typography variant="caption" style={{ marginLeft: "auto" }}> {step.time} </Typography>
+                    </div>
+                  </StepLabel>
+                  <StepContent>
+                    <Typography variant="caption">{step.description}</Typography>
+                  </StepContent>
+                </Step>
+              ))}
+            </Stepper>
+            {/* {activeStep === steps.length && (
+            <Paper square elevation={0} sx={{ p: 3 }}>
+              <Typography>All steps completed - you&apos;re finished</Typography>
+              <Button onClick={handleOpenImg} sx={{ mt: 1, mr: 1 }}>
+                Delivery Proof
+              </Button>
+            </Paper>
+          )} */}
+          </Box>
+          {/* ---------------------------------------------------------------------- */}
+        </DialogContent>
+        <DialogActions>
+
+          <Button onClick={handleClose} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  )
 
   return (
     <React.Fragment>
@@ -148,138 +227,94 @@ export default function AccountPageOrderDetails(props) {
           </div>
         </div>
         <div className="card-divider" />
-        <div style={{backgroundColor:'#F9D295'}}>
-        <Divider light/>  
-        <div style={{display:'flex', flexDirection:'row'}}>
-        <Typography style={{marginLeft:'4%', marginTop:'1%'}}>Order 1</Typography>
-        <Typography style={{marginLeft:'4%', marginTop:'1%'}}>Tracking No: AA987654321BB</Typography>
-        <IconButton aria-label="View" style={{marginLeft:'auto'}} onClick={handleClickOpen}> <VisibilityIcon/></IconButton>
-            <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            >
-           <Typography variants = "body1" style={{marginLeft:'10%', marginTop:'7%'}}>
-              {"Tracking No:  AA987654321BB"}
-            </Typography>
-            <DialogContent>
-                {/* Stepper Content */}
-                <Box sx={{ maxWidth: 400 }}>
-                  <Stepper orientation="vertical" >
-                    {steps.map((step, index) => (
-                      <Step key={step.date} expanded="true">
-                        <StepLabel
-                          // optional={
-                          //   index === 3 ? (
-                          //     <div>
-                          //     <Button variant="text" color="secondary" size="small" onClick={handleOpenImg} >View Delivery Proof</Button>
-                          //     { display &&
-                          //     <div>
-                          //     <img src={step.receipt} alt="" style={{width:'90%'}} /> 
-                          //      <Button variant="text" color="primary" size="small" onClick={handleCloseImg} >Close</Button> </div>}</div>
-                          //   ) : null
-                          // }
-                        >
-                          <div style={{display:'flex', flexDirection:'row'}}>
-                         <Typography variant="caption"> {step.date} </Typography>
-                         <Typography variant="caption" style={{marginLeft:"auto"}}> {step.time} </Typography>
-                         </div>
-                        </StepLabel>
-                        <StepContent>
-                          <Typography variant="caption">{step.description}</Typography>
-                        </StepContent>
-                      </Step>
-                    ))}
-                  </Stepper>
-                  {/* {activeStep === steps.length && (
-                    <Paper square elevation={0} sx={{ p: 3 }}>
-                      <Typography>All steps completed - you&apos;re finished</Typography>
-                      <Button onClick={handleOpenImg} sx={{ mt: 1, mr: 1 }}>
-                        Delivery Proof
-                      </Button>
-                     
-                    </Paper>
-                  )} */}
-                </Box>
-    {/* ---------------------------------------------------------------------- */}
-            </DialogContent>
-            <DialogActions>
-            
-              <Button onClick={handleClose} autoFocus>
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-        </div>
         <div className="card-table">
           <div className="table-responsive-sm">
             {orderDetail.OrderProductDetail !== null ?
-              <table>
-                <thead>
-                  <tr>
-                    <th>Preview</th>
-                    <th>Product</th>
-                    <th>Unit Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                {orderDetail.OrderProductDetail !== null ? JSON.parse(orderDetail.OrderProductDetail).map((orders) => (
-                  <tbody className="card-table__body card-table__body--merge-rows">
-                    <tr>
-                      <td>
-                        <img
-                          className="product-image dropcart__product-image"
-                          src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
-                          alt=""
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = Logo;
-                          }}
-                        />
-                      </td>
-                      <td>{orders.ProductName}</td>
-                      <td>RM{orders.ProductVariationPrice}</td>
-                      <td>{orders.ProductQuantity}</td>
-                      <td>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
-                    </tr>
-                  </tbody>
-                )) : ""}
+              <>
+                {filteredMerchant.length > 0 && filteredMerchant.map((MerchantList, i) => {
+                  return (
+                    <>
+                      <div>
+                        <th>
+                          ABC MERCHANT SDN BHD
+                        </th>
+                      </div>
+                      <div style={{ backgroundColor: '#F9D295' }}>
+                        <Divider light />
+                        {trackingDetail(i + 1)}
+                      </div>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Preview</th>
+                            <th>Product</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        {/* <tr style={{ backgroundColor: '#F9D295' }}>
+                          <th><Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Order {i + 1}</Typography></th>
+                          <th></th>
+                          <th></th>
+                          <th><Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Tracking No: AA987654321BB</Typography></th>
+                          <th><IconButton aria-label="View" style={{ marginLeft: 'auto' }} onClick={handleClickOpen}> <VisibilityIcon /></IconButton></th>
+                          {trackingDetail()}
+                        </tr> */}
+                        {/* <tr>
+                          <th>
+                            ABC MERCHANT SDN BHD
+                          </th>
+                        </tr> */}
+                        {
+                          orderDetail.OrderProductDetail !== null && JSON.parse(orderDetail.OrderProductDetail).filter((x) => x.MerchantID === MerchantList.MerchantID)
+                            .map((orders) => {
+                              return (
+                                <tbody className="card-table__body card-table__body--merge-rows">
+                                  <tr>
+                                    <td>
+                                      <img
+                                        className="product-image dropcart__product-image"
+                                        src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
+                                        alt=""
+                                        onError={(e) => {
+                                          e.target.onerror = null;
+                                          e.target.src = Logo;
+                                        }}
+                                      />
+                                    </td>
+                                    <td>{orders.ProductName}</td>
+                                    <td>RM{orders.ProductVariationPrice}</td>
+                                    <td>{orders.ProductQuantity}</td>
+                                    <td>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
+                                  </tr>
+                                </tbody>
 
-                <tbody className="card-table__body card-table__body--merge-rows">
-                  <tr>
-                    <th>Subtotal</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>RM{subtotalPrice}</td>
-                  </tr>
-                  {/* <tr>
-                  <th>Store Credit</th>
-                  <td></td>
-                  <td>$-20.00</td>
-                </tr> */}
-                  <tr>
-                    <th>Shipping</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>RM{shipping}</td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th>Total</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>RM{totalOverall}</td>
-                  </tr>
-                </tfoot>
-
-              </table>
+                              )
+                            })}
+                      </table>
+                    </>
+                  )
+                })}
+                <Divider light />
+                <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
+                  <div className="row">
+                    <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Subtotal </div>
+                    <div className="col-2" >RM{subtotalPrice}</div>
+                  </div>
+                  <div className="row" >
+                    <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Shipping </div>
+                    <div className="col-2" >RM{shipping}</div>
+                  </div>
+                </div>
+                <Divider light />
+                <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
+                  <div className="row">
+                    <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Total </div>
+                    <div className="col-2" >RM{totalOverall}</div>
+                  </div>
+                </div>
+              </>
               :
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                 <div style={{ marginBottom: "20px" }}>

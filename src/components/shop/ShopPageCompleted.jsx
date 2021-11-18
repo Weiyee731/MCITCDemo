@@ -54,6 +54,22 @@ class PageCompleted extends Component {
     }
   }
 
+  getItemList(FilteredList) {
+    return (
+      <>
+        {FilteredList.map((item) => (
+          <tr key={item.id}>
+            <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
+            <td>
+              <Currency value={item.total} />
+            </td>
+          </tr>
+        ))}
+      </>
+    )
+  }
+
+
   handlePaymentChange = (event) => {
     if (event.target.checked) {
       this.setState({ payment: event.target.value });
@@ -61,20 +77,6 @@ class PageCompleted extends Component {
   };
 
   renderTotals() {
-    // const { cart } = this.props;
-
-    // if (cart.extraLines.length <= 0) {
-    //   return null;
-    // }
-
-    // const extraLines = cart.extraLines.map((extraLine, index) => (
-    //   <tr key={index}>
-    //     <th style={{ textAlign: "right" }}>{extraLine.title}</th>
-    //     <td>
-    //       <Currency value={extraLine.price} />
-    //     </td>
-    //   </tr>
-    // ));
     return (
       <React.Fragment>
         <tbody className="checkout__totals-subtotals">
@@ -102,16 +104,6 @@ class PageCompleted extends Component {
   }
 
   renderCart() {
-
-    const items = this.state.cart.map((item) => (
-      <tr key={item.id}>
-        <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
-        <td>
-          <Currency value={item.total} />
-        </td>
-      </tr>
-    ));
-
     return (
       <table className="checkout__totals">
         <thead className="checkout__totals-header">
@@ -120,7 +112,16 @@ class PageCompleted extends Component {
             <th>Total</th>
           </tr>
         </thead>
-        <tbody className="checkout__totals-products">{items}</tbody>
+        {
+          this.props.merchant.map((shop, i) => {
+            return (
+              <>
+                <div style={{ textAlign: "left", fontSize: "13px" }}>{"Order " + parseInt(i + 1) + " : " + shop.MerchantShopName}</div>
+                <tbody className="checkout__totals-products">{this.getItemList(this.state.cart.filter((x) => x.MerchantShopName === shop.MerchantShopName))}</tbody>
+              </>
+            )
+          })
+        }
         {this.renderTotals()}
         <tfoot className="checkout__totals-footer">
           <tr>

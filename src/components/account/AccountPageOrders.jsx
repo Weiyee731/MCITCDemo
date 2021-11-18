@@ -102,8 +102,6 @@ function a11yProps(index) {
   };
 }
 
-// const [selectedDate, setSelectedDate] = useState(new Date());
-
 class AccountPageOrders extends Component {
   constructor(props) {
     super(props);
@@ -202,8 +200,8 @@ class AccountPageOrders extends Component {
     this.state.filteredList.splice(0, this.state.filteredList.length)
     this.props.allmerchantorders.filter(searchedItem =>
       format.test(value) === false
-      && searchedItem.trackingNumber.toLowerCase().trim().includes(value)
-      && moment(searchedItem.CreatedDate).format("YYYYDDMM").includes(moment(date).format("YYYYMMDD"))
+      // && searchedItem.trackingNumber.toLowerCase().trim().includes(value)
+      && moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
     )
       .map(filteredItem => {
         this.state.filteredList.push(filteredItem);
@@ -276,46 +274,31 @@ class AccountPageOrders extends Component {
                   totalOverall = subtotalPrice + parseInt(this.state.shipping + this.state.tax)
                 }
 
+                const pageItem = {
+                  pathname: "/account/orders/" + order.OrderID,
+                  orderdetails: order,
+                  orderprice: totalPrice,
+                  address: this.props.addresses,
+                  creditcards: this.props.creditcard,
+                }
+                let TrackingList = (
+                  <tr key={order.OrderID} >
+                    <td>  <Link to={pageItem} >{`#${order.OrderID}`}</Link> </td>
+                    <td><Link to={pageItem} >{order.CreatedDate}</Link> </td>
+                    <td><Link to={pageItem} >{order.TrackingStatus}</Link> </td>
+                    <td><Link to={pageItem} >{totalQuantity + " items ," + " RM " + totalOverall}</Link> </td>
+                  </tr>
+                )
+
                 return (
                   <>
-                    {this.state.TrackingStatus !== "-" ?
-                      order.TrackingStatus === this.state.TrackingStatus ?
-                        <tr key={order.OrderID}>
-                          <td>
-                            <Link
-                              to={{
-                                pathname: "/account/orders/" + order.OrderID,
-                                orderdetails: order,
-                                orderprice: totalPrice,
-                                address: this.props.addresses,
-                                creditcards: this.props.creditcard,
-                              }}
-                            >{`#${order.OrderID}`}</Link>
-                          </td>
-
-                          <td>{order.CreatedDate}</td>
-                          <td>{order.TrackingStatus}</td>
-                          <td>{totalQuantity + " items ," + " RM " + totalOverall}</td>
-                        </tr>
-                        : null
-                      :
-                      <tr key={order.OrderID}>
-                        <td>
-                          <Link
-                            to={{
-                              pathname: "/account/orders/" + order.OrderID,
-                              orderdetails: order,
-                              orderprice: totalPrice,
-                              address: this.props.addresses,
-                              creditcards: this.props.creditcard,
-                            }}
-                          >{`#${order.OrderID}`}</Link>
-                        </td>
-
-                        <td>{order.CreatedDate}</td>
-                        <td>{order.TrackingStatus}</td>
-                        <td>{totalQuantity + " items ," + " RM " + totalOverall}</td>
-                      </tr>
+                    {
+                      this.state.TrackingStatus !== "-" ?
+                        order.TrackingStatus === this.state.TrackingStatus ?
+                          <>{TrackingList}</>
+                          : null
+                        :
+                        <>{TrackingList}</>
                     }
                   </>
                 );
@@ -339,8 +322,6 @@ class AccountPageOrders extends Component {
                   <th>Total</th>
                 </tr>
               </thead>
-
-              {orders.length > 0 && console.log("this is orders", orders)}
               <tbody>
                 {this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
                   this.state.isFiltered === false ?

@@ -134,21 +134,22 @@ class PageCheckout extends Component {
       if (total !== 0)
         this.setState({ OrderTotalAmount: total })
     }
+    console.log("this.props.merchant", this.props)
 
     const step1Content = (
-      <PageCart data={this.props.data} />
+      <PageCart data={this.props.data} merchant={this.props.merchant} />
     );
 
     const step2Content = (
-      <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} />
+      <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} merchant={this.props.merchant} />
     );
 
     const step3Content = (
-      <PagePayment handleGetPaymentId={handleGetPaymentId} data={this.props.data} />
+      <PagePayment handleGetPaymentId={handleGetPaymentId} data={this.props.data} merchant={this.props.merchant} />
     );
 
     const step4Content = (
-      <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} />
+      <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} merchant={this.props.merchant} />
     );
     return (
       <React.Fragment>

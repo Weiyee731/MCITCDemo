@@ -52,6 +52,21 @@ class PageCheckOrder extends Component {
     }
   }
 
+  getItemList(FilteredList) {
+    return (
+      <>
+        {FilteredList.map((item) => (
+          <tr key={item.id}>
+            <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
+            <td>
+              <Currency value={item.total} />
+            </td>
+          </tr>
+        ))}
+      </>
+    )
+  }
+
   renderTotals() {
     return (
       <React.Fragment>
@@ -112,6 +127,9 @@ class PageCheckOrder extends Component {
       UserAddressBookID: 0,
       UserCity: 'Self Collect'
     }
+
+
+
 
     const addresses = this.props.addresses !== undefined && this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0" && this.props.addresses.map((address) => (
       <React.Fragment key={address.UserAddressBookID}>
@@ -199,15 +217,6 @@ class PageCheckOrder extends Component {
   }
 
   renderCart() {
-    const items = this.state.cart.map((item) => (
-      <tr key={item.id}>
-        <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
-        <td>
-          <Currency value={item.total} />
-        </td>
-      </tr>
-    ));
-
     return (
       <table className="checkout__totals mt-4">
         <thead className="checkout__totals-header">
@@ -216,7 +225,17 @@ class PageCheckOrder extends Component {
             <th>Total</th>
           </tr>
         </thead>
-        <tbody className="checkout__totals-products">{items}</tbody>
+        {
+          this.props.merchant.map((shop, i) => {
+            return (
+              <>
+                <div style={{ textAlign: "left", fontSize: "13px" }}>{"Order " + parseInt(i + 1) + " : " + shop.MerchantShopName}</div>
+                <tbody className="checkout__totals-products">{this.getItemList(this.state.cart.filter((x) => x.MerchantShopName === shop.MerchantShopName))}</tbody>
+              </>
+            )
+          })
+        }
+
         {this.renderTotals()}
         <tfoot className="checkout__totals-footer">
           <tr>
