@@ -105,15 +105,9 @@ export default function AccountPageOrderDetails(props) {
   }
 
   let filteredMerchant = [];
-
-  console.log("props.location.orderdetails.OrderProductDetail", orderDetail)
-  console.log("props.location.orderdetails.OrderProductDetail", orderDetail.OrderProductDetail)
-
   if (orderDetail !== undefined && orderDetail.OrderProductDetail !== undefined) {
-    console.log("props.location.orderdetails.OrderProductDetail 111")
     filteredMerchant = JSON.parse(orderDetail.OrderProductDetail).filter((ele, ind) => ind
       === JSON.parse(orderDetail.OrderProductDetail).findIndex(elem => elem.MerchantID === ele.MerchantID))
-    console.log("props.location.orderdetails.OrderProductDetail", filteredMerchant)
   }
 
 

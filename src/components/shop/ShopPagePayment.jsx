@@ -144,11 +144,8 @@ class PagePayment extends Component {
         break;
 
       case "cvc":
-        // console.log("e.target.value", e.target.value)
-        // console.log("formatCVC(e.target.value)", formatCVC(e.target.value))
         e.target.value = formatCVC(e.target.value);
         if (formatCVC(e.target.value).length === 4) {
-          // console.log("this.state.cardList[0]", this.state.cardList[0])
           this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
         }
 

@@ -390,8 +390,6 @@ class ShopPageCart extends Component {
 
     render() {
 
-
-        console.log("MASUK this.state.selectedProductDetailList", this.state.selectedProductDetailList)
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },

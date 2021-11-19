@@ -74,7 +74,6 @@ function ShopPageWishlist(props) {
 
     let content;
 
-    console.log("props.wishlist ", props.wishlist)
     if (props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0') {
         const itemsList = wishlist.map((item) => {
             let image;
@@ -109,7 +108,6 @@ function ShopPageWishlist(props) {
                             <div className="wishlist__product-rating-legend">{`${item.ProductRating} Reviews`}</div>
                         </div>
                     </td>
-                    {console.log("itemlist", item)}
                     <td className="wishlist__column wishlist__column--stock">
                         <div className="badge badge-success">In Stock</div>
                     </td>

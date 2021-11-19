@@ -32,7 +32,8 @@ class Product extends Component {
       productPrice: "",
       productQuantity: 0,
       productVariationDetailID: "",
-      selectedVariation: ""
+      selectedVariation: "",
+      isVariationSet: false
     };
     this.addCart = this.addCart.bind(this)
     this.handleWishlist = this.handleWishlist.bind(this)
@@ -166,11 +167,11 @@ class Product extends Component {
     } = this.props;
     const { quantity } = this.state;
     let prices;
-    
+
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
 
-    let merchant = JSON.parse(product.MerchantDetail)[0]
-    let variation = JSON.parse(product.ProductVariation)[0]
+    let merchant = product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
+    let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
 
     return (
       <div className="block" >
@@ -218,11 +219,21 @@ class Product extends Component {
               <ul className="product__meta">
                 <li className="product__meta-availability">
                   Availability: {" "}
-                  <span className="text-success">
+                  {/* <span className="text-success">
                     {product.ProductStockAmount !== null && product.ProductStockAmount > 0 ? "In Stock" : "Out of Stock"}
-                  </span>
+                  </span> */}
+                  {
+                    this.state.isVariationSet === true ?
+                      this.state.productQuantity > 0 ?
+                        <span className="text-success">In Stock</span> :
+                        <span className="text-danger">Out of Stock</span>
+                      :
+                      product.ProductStockAmount !== null && product.ProductStockAmount > 0 ?
+                        <span className="text-success">In Stock</span> :
+                        <span className="text-danger">Out of Stock</span>
+                  }
                   &nbsp;
-                  ({this.state.productQuantity})
+                  ({this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0})
                 </li>
                 <li>
                   Brand:{" "}
@@ -231,7 +242,7 @@ class Product extends Component {
                 <li>SKU:{" "}{product.SKU}</li>
                 <li className="product__seller">
                   Seller:{" "}
-                  {merchant.ShopName}
+                  {merchant.length > 0 && merchant.ShopName}
                   <span className="product__seller-info">
                     <div className="row">
                       <div className="col-4">
@@ -246,23 +257,23 @@ class Product extends Component {
                       </div>
                       <div className="col-4">
                         Seller:{" "}
-                        {merchant.ShopName}
+                        {merchant.length > 0 && merchant.ShopName}
                         <br />
                         State:{" "}
-                        {merchant.ShopState}
+                        {merchant.length > 0 && merchant.ShopState}
                         <br />
                         Shop Rating:{" "}
                         <div className="product__rating-stars">
-                          <Rating value={merchant.ShopRating !== null ? merchant.ShopRating : 0} />
-                          {merchant.ShopRating}
+                          <Rating value={merchant.length > 0 && merchant.ShopRating !== null ? merchant.ShopRating : 0} />
+                          {merchant.length > 0 && merchant.ShopRating}
                         </div>
                       </div>
                       <div className="col-4">
                         Products:{" "}
-                        {merchant.MerchantTotalProduct}
+                        {merchant.length > 0 && merchant.MerchantTotalProduct}
                         <br />
                         Last Joined:{" "}
-                        {merchant.LastJoined}
+                        {merchant.length > 0 && merchant.LastJoined}
                       </div>
                     </div>
                   </span>
@@ -273,7 +284,7 @@ class Product extends Component {
             <div className="product__sidebar">
               <div className="product__prices">{prices}</div>
               {
-                variation !== null && variation.ProductVariation !== "None" &&
+                variation !== null && variation !== "" && variation.ProductVariation !== "None" &&
                 (
                   <div className="product__option">
                     <label
@@ -281,6 +292,7 @@ class Product extends Component {
                     >
                       {variation.ProductVariation}
                     </label>
+
                     <div className="product__variation">
                       {
                         variation !== null &&
@@ -299,7 +311,8 @@ class Product extends Component {
                                 productQuantity: variation.ProductStockAmount,
                                 productPrice: variation.ProductVariationPrice,
                                 productVariationDetailID: variation.ProductVariationDetailID,
-                                selectedVariation: variation
+                                selectedVariation: variation,
+                                isVariationSet: true
                               })}
                             >
                               {variation.ProductVariationValue}
@@ -340,7 +353,7 @@ class Product extends Component {
                     <div className="product__actions-item product__actions-item--addtocart mx-1">
                       <button
                         type="button"
-                        disabled={product.ProductStockAmount > 0 ? false : true}
+                        disabled={this.state.isVariationSet === true ? this.state.productQuantity > 0 ? false : true : product.ProductStockAmount > 0 ? false : true}
                         onClick={() => window.localStorage.getItem("id") ? this.checkCart(product, quantity) : this.login()}
                         className="btn btn-primary product-card__addtocart"
                       >

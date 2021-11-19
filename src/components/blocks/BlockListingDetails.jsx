@@ -75,10 +75,10 @@ const initialState = {
     ParentCategory: [],
     categoryName: "",
 
-     breadcrumb :[
+    breadcrumb: [
         { title: "Home", url: "" },
         { title: "Main Category", url: "/shop/AllProductCategory/" },
-      ]
+    ]
 }
 
 // const [shippedFrom_checkbox, setShipCheckBox] = useState([false, false, false, false]);
@@ -114,14 +114,19 @@ class BlockListingDetails extends Component {
             productPage: 999,
             page: 1
         })
-        
+
         this.handleFilterOption = this.handleFilterOption.bind(this)
+        this.processUrl = this.processUrl.bind(this)
         this.handleShipFilter = this.handleShipFilter.bind(this)
         this.resetFilter = this.resetFilter.bind(this)
         this.setListing = this.setListing.bind(this)
         this.checkFilterStatus = this.checkFilterStatus.bind(this)
         this.handleSorting = this.handleSorting.bind(this)
         this.handleShippingList = this.handleShippingList.bind(this)
+    }
+
+    processUrl(ProductCategoryID) {
+        return ("/shop/ProductListing/type:Category&typevalue:" + ProductCategoryID)
     }
 
 
@@ -131,21 +136,23 @@ class BlockListingDetails extends Component {
             this.state.productList.push(JSON.parse(this.props.productsListing))
 
         let tempCategoryHierachy = 0
-let breadcrumb=this.state.breadcrumb
+        let breadcrumb = this.state.breadcrumb
         if (this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == "Category" && this.state.categoryHierachy === 0) {
-console.log("start")
-console.log(this.state.breadcrumb)
+
             this.props.productCategories.map((category) => {
                 if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
-                    this.setState({ categoryHierachy: 1,breadcrumb :[...breadcrumb,  ...{ title: "wahah", url: "" }], })
+                    this.setState({
+                        categoryHierachy: 1,
+                        breadcrumb: [...breadcrumb, ...[
+                            { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID) },
+                        ]]
+                    })
                     tempCategoryHierachy = 1
                 }
             })
-            console.log("end")
             if (tempCategoryHierachy === 1) {
                 this.state.CategoryHierachyListing.push(this.props.productCategories)
             }
-
 
             if (tempCategoryHierachy === 0 && tempCategoryHierachy !== 1) {
                 this.props.productCategories.map((categoryList) => {
@@ -153,16 +160,20 @@ console.log(this.state.breadcrumb)
                         JSON.parse(categoryList.HierarchyItem).map((category) => {
                             if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
                                 this.setState({ categoryHierachy: 2 })
-                                this.setState({ categoryName: category.ProductCategory })
+                                this.setState({
+                                    categoryName: category.ProductCategory,
+                                    breadcrumb: [...breadcrumb, ...[
+                                        { title: [categoryList.ProductCategory], url: this.processUrl(categoryList.ProductCategoryID) },
+                                        { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID) },
+                                    ]]
+                                })
                                 tempCategoryHierachy = 2
                                 this.state.ParentCategory.push(categoryList)
                             }
                         })
                     if (tempCategoryHierachy === 2) {
                         this.state.CategoryHierachyListing.push(JSON.parse(categoryList.HierarchyItem))
-
                     }
-
                 })
             }
 
@@ -174,7 +185,14 @@ console.log(this.state.breadcrumb)
                                 JSON.parse(categoryList.HierarchyItem).map((category) => {
                                     if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
                                         this.setState({ categoryHierachy: 3 })
-                                        this.setState({ categoryName: category.ProductCategory })
+                                        this.setState({
+                                            categoryName: category.ProductCategory,
+                                            breadcrumb: [...breadcrumb, ...[
+                                                { title: [categoryListing.ProductCategory], url: this.processUrl(categoryListing.ProductCategoryID) },
+                                                { title: [categoryList.ProductCategory], url: this.processUrl(categoryList.ProductCategoryID) },
+                                                { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID) },
+                                            ]]
+                                        })
                                         tempCategoryHierachy = 3
                                         this.state.ParentCategory.push(categoryList)
                                     }
@@ -200,6 +218,11 @@ console.log(this.state.breadcrumb)
                 this.state.productList.push(JSON.parse(this.props.productsListing))
             }
         }
+
+        if (prevProps.location.pathname !== this.props.location.pathname)
+            window.location.href = this.props.location.pathname
+
+
     }
 
     handleFilterOption(e) {
@@ -441,21 +464,21 @@ console.log(this.state.breadcrumb)
         this.setListing(filterList)
     }
 
-    
+
     render() {
-       
+
         return (
             <React.Fragment>
-            <Helmet>
-                <title>{`Category — ${theme.name}`}</title>
-            </Helmet>
+                <Helmet>
+                    <title>{`Category — ${theme.name}`}</title>
+                </Helmet>
 
-            <PageHeader header="Category" breadcrumb={this.state.breadcrumb} />
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-3 col-md-3 ">
-                        <div className="category-segment ">
-                            {/* <div
+                <PageHeader header="Category" breadcrumb={this.state.breadcrumb} />
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-3 col-md-3 ">
+                            <div className="category-segment ">
+                                {/* <div
                                 style={{ cursor: "pointer", fontWeight: 600 }}
                                 onMouseDown={(e) => {
                                     if (e.button === 1) {
@@ -468,245 +491,245 @@ console.log(this.state.breadcrumb)
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div> */}
-                            <div className="sub-title">
-                            <Link to="/shop/AllProductCategory/" >
-                                <FormatListBulletedIcon/> All Categories
-                            </Link>
-                            </div>
-                            {
-                                this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
-                                <div>
-                                    <label onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
-                                        {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
-                                    </label>
+                                <div className="sub-title">
+                                    <Link to="/shop/AllProductCategory/" >
+                                        <FormatListBulletedIcon /> All Categories
+                                    </Link>
                                 </div>
-                            }
-                            <div>
-                                {this.state.CategoryHierachyListing.length > 0 && this.state.CategoryHierachyListing[0] !== null &&
-                                    this.state.CategoryHierachyListing[0].map((category) => {
-                                        return (
-                                            <div key={category.ProductCategory} className="sub-category-items">
-                                                {
-                                                    this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
-                                                        this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == category.ProductCategoryID ?
-                                                        <>
-                                                            <div key={category.ProductCategory} className="sub-category-items active">
-                                                                <DoubleArrowIcon fontSize='sm' /> {category.ProductCategory}
-                                                            </div>
-                                                            {
-                                                                category.HierarchyItem !== null && JSON.parse(category.HierarchyItem).map((items) => {
-                                                                    return (
-                                                                        <>
-                                                                            {
-                                                                                this.state.categoryHierachy === 1 || this.state.categoryHierachy === 2 ?
-                                                                                    <div key={items.ProductCategory} className="sub-category-items " style={{fontsize:"14px" ,fontWeight:"200" ,paddingLeft: "30px" }}>
-                                                                                        <FiberManualRecordOutlinedIcon 
-                                                                                            onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
-                                                                                        />
-                                                                                        <label  className="sub-label"onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
-                                                                                        >{items.ProductCategory}</label>
-                                                                                    </div>
-                                                                                    : ""
-                                                                            }
-                                                                        </>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </> :
-                                                        <>
-                                                            <FiberManualRecordOutlinedIcon 
-                                                                onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
-                                                            />
-                                                            <label  className="sub-label" onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
-                                                            >{category.ProductCategory}</label>
-                                                        </>
-                                                }
-                                            </div>
-                                        )
-                                    })}
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="filtering-segment mt-3">
-                            <div className="location-segment">
-                                <div className="filter-options-label"><LocalShippingOutlinedIcon /> SHIPPED FROM</div>
-                                <div>
-                                    <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("WM")} name="WM" />}
-                                        label="West Malaysia"
-                                        className="location-segment-checkboxes"
-                                    />
-                                    <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("EM")} name="EM" />}
-                                        label="East Malaysia"
-                                        className="location-segment-checkboxes"
-                                    />
-                                    <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("Local")} name="Local" />}
-                                        label="Local"
-                                        className="location-segment-checkboxes"
-                                    />
-                                    <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("Overseas")} name="Overseas" />}
-                                        label="Overseas"
-                                        className="location-segment-checkboxes"
-                                    />
-                                </div>
-                            </div>
-
-                            <hr />
-
-                            <div className="prices-segment mt-3">
-                                <div className="filter-options-label"><MonetizationOnOutlinedIcon /> PRICE</div>
-
-                                <div className="d-flex w-75 mt-1">
-                                    <TextField id="min-price" className="mr-auto" label="MIN" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
-                                    <span className="mx-2 my-auto"> - </span>
-                                    <TextField id="max-price" className="ml-auto" label="MAX" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
-
-                                </div>
-                                <Button id="filter-price-button" variant="contained" color="primary" disableElevation className="w-75 mt-1" style={{ backgroundColor: '#2b535d' }} onClick={() => this.handleFilterPriceButton()}>
-                                    Filter Price
-                                </Button>
-                            </div>
-
-                            <hr />
-
-                            <div className="promotion-segment mt-3">
-                                <div className="filter-options-label"><LocalOfferOutlinedIcon /> PROMOTION</div>
-                                <div>
-                                    <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} name="Mega Sales" />}
-                                        label="Mega Sales 40% Off"
-                                        className="location-segment-checkboxes"
-                                    />
-                                    <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} name="20% Off" />}
-                                        label="RM15 Free Shipping"
-                                        className="location-segment-checkboxes"
-                                    />
-                                    <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} name="20% Off" />}
-                                        label="Wholesale Price"
-                                        className="location-segment-checkboxes"
-                                    />
-                                </div>
-                            </div>
-
-                            <hr />
-
-                            <div className="rating-segment mt-3">
-                                <div className="filter-options-label"><StarBorderOutlinedIcon /> RATINGS</div>
-                                <div>
-                                    <div id="fllter-5-stars" className="d-flex mb-2 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
-                                        <Rating name="read-only" value={5} readOnly size="small" />
-                                    </div>
-                                    <div id="fllter-4-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
-                                        <Rating name="read-only" value={4} readOnly size="small" />
-                                        <Typography component="legend"> & above</Typography>
-                                    </div>
-                                    <div id="fllter-3-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
-                                        <Rating name="read-only" value={3} readOnly size="small" />
-                                        <Typography component="legend"> & above</Typography>
-                                    </div>
-                                    <div id="fllter-2-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)} >
-                                        <Rating name="read-only" value={2} readOnly size="small" />
-                                        <Typography component="legend"> & above</Typography>
-                                    </div>
-                                    <div id="fllter-1-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
-                                        <Rating name="read-only" value={1} readOnly size="small" />
-                                        <Typography component="legend"> & above</Typography>
-                                    </div>
-                                    <div id="fllter-no-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
-                                        <Rating name="read-only" value={0} readOnly size="small" />
-                                        <Typography component="legend"> - No Ratings</Typography>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr />
-                        <div className="d-flex">
-                            <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: '#2b535d', width: "100%" }} onClick={() => this.resetFilter()}> Reset Fitlers</Button>
-                        </div>
-                    </div>
-                    <div className="col-lg-9 col-md-9 ">
-                        <div className="d-flex sorting-options-panel align-middle px-3 mb-2 ">
-                            <div className="flex-grow-1 d-flex my-auto">
                                 {
-                                    this.state.categoryHierachy === 1 && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
-
-                                    this.props.productCategories.filter((x) => x.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''))
-                                        .map((category) => {
+                                    this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
+                                    <div>
+                                        <label onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
+                                            {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
+                                        </label>
+                                    </div>
+                                }
+                                <div>
+                                    {this.state.CategoryHierachyListing.length > 0 && this.state.CategoryHierachyListing[0] !== null &&
+                                        this.state.CategoryHierachyListing[0].map((category) => {
                                             return (
-                                                <div className="sorting-option-label">
-                                                    Category - {category.ProductCategory}
+                                                <div key={category.ProductCategory} className="sub-category-items">
+                                                    {
+                                                        this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
+                                                            this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == category.ProductCategoryID ?
+                                                            <>
+                                                                <div key={category.ProductCategory} className="sub-category-items active">
+                                                                    <DoubleArrowIcon fontSize='sm' /> {category.ProductCategory}
+                                                                </div>
+                                                                {
+                                                                    category.HierarchyItem !== null && JSON.parse(category.HierarchyItem).map((items) => {
+                                                                        return (
+                                                                            <>
+                                                                                {
+                                                                                    this.state.categoryHierachy === 1 || this.state.categoryHierachy === 2 ?
+                                                                                        <div key={items.ProductCategory} className="sub-category-items " style={{ fontsize: "14px", fontWeight: "200", paddingLeft: "30px" }}>
+                                                                                            <FiberManualRecordOutlinedIcon
+                                                                                                onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                            />
+                                                                                            <label className="sub-label" onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                            >{items.ProductCategory}</label>
+                                                                                        </div>
+                                                                                        : ""
+                                                                                }
+                                                                            </>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </> :
+                                                            <>
+                                                                <FiberManualRecordOutlinedIcon
+                                                                    onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                                />
+                                                                <label className="sub-label" onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                                >{category.ProductCategory}</label>
+                                                            </>
+                                                    }
                                                 </div>
                                             )
-                                        })
-                                }
-                                {
-                                    this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 ?
-                                        <div className="sorting-option-label">
-                                            Category - {this.state.categoryName}
-                                            {/* {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}  */}
-                                        </div>
-                                        : ""
-                                }
-                                {
-                                    this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Keyword" &&
-                                    <div className="sorting-option-label">
-                                        Keyword Search - {this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')}
-                                    </div>
-                                }
+                                        })}
+                                </div>
                             </div>
-                            <div>
-                                <FormControl variant="outlined" style={{ width: 200, height: 40 }} size="small" >
-                                    <InputLabel id="demo-simple-select-outlined-label">Sort By</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-outlined-label"
-                                        id="demo-simple-select-outlined"
-                                        // value={value}
-                                        onChange={(x) => this.handleSorting(x)}
-                                        label="Sort By"
-                                        color="primary"
-                                    >
-                                        {
-                                            sortingOption.map((options) => {
-                                                return (
-                                                    <MenuItem value={options.value}>{options.label}</MenuItem>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-                                </FormControl>
+                            <hr />
+                            <div className="filtering-segment mt-3">
+                                <div className="location-segment">
+                                    <div className="filter-options-label"><LocalShippingOutlinedIcon /> SHIPPED FROM</div>
+                                    <div>
+                                        <FormControlLabel
+                                            control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("WM")} name="WM" />}
+                                            label="West Malaysia"
+                                            className="location-segment-checkboxes"
+                                        />
+                                        <FormControlLabel
+                                            control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("EM")} name="EM" />}
+                                            label="East Malaysia"
+                                            className="location-segment-checkboxes"
+                                        />
+                                        <FormControlLabel
+                                            control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("Local")} name="Local" />}
+                                            label="Local"
+                                            className="location-segment-checkboxes"
+                                        />
+                                        <FormControlLabel
+                                            control={<GreenCheckbox checked={this.state.checked} onChange={(e) => this.handleShipFilter("Overseas")} name="Overseas" />}
+                                            label="Overseas"
+                                            className="location-segment-checkboxes"
+                                        />
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div className="prices-segment mt-3">
+                                    <div className="filter-options-label"><MonetizationOnOutlinedIcon /> PRICE</div>
+
+                                    <div className="d-flex w-75 mt-1">
+                                        <TextField id="min-price" className="mr-auto" label="MIN" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
+                                        <span className="mx-2 my-auto"> - </span>
+                                        <TextField id="max-price" className="ml-auto" label="MAX" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
+
+                                    </div>
+                                    <Button id="filter-price-button" variant="contained" color="primary" disableElevation className="w-75 mt-1" style={{ backgroundColor: '#2b535d' }} onClick={() => this.handleFilterPriceButton()}>
+                                        Filter Price
+                                    </Button>
+                                </div>
+
+                                <hr />
+
+                                <div className="promotion-segment mt-3">
+                                    <div className="filter-options-label"><LocalOfferOutlinedIcon /> PROMOTION</div>
+                                    <div>
+                                        <FormControlLabel
+                                            control={<GreenCheckbox checked={this.state.checked} name="Mega Sales" />}
+                                            label="Mega Sales 40% Off"
+                                            className="location-segment-checkboxes"
+                                        />
+                                        <FormControlLabel
+                                            control={<GreenCheckbox checked={this.state.checked} name="20% Off" />}
+                                            label="RM15 Free Shipping"
+                                            className="location-segment-checkboxes"
+                                        />
+                                        <FormControlLabel
+                                            control={<GreenCheckbox checked={this.state.checked} name="20% Off" />}
+                                            label="Wholesale Price"
+                                            className="location-segment-checkboxes"
+                                        />
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div className="rating-segment mt-3">
+                                    <div className="filter-options-label"><StarBorderOutlinedIcon /> RATINGS</div>
+                                    <div>
+                                        <div id="fllter-5-stars" className="d-flex mb-2 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                            <Rating name="read-only" value={5} readOnly size="small" />
+                                        </div>
+                                        <div id="fllter-4-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                            <Rating name="read-only" value={4} readOnly size="small" />
+                                            <Typography component="legend"> & above</Typography>
+                                        </div>
+                                        <div id="fllter-3-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                            <Rating name="read-only" value={3} readOnly size="small" />
+                                            <Typography component="legend"> & above</Typography>
+                                        </div>
+                                        <div id="fllter-2-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)} >
+                                            <Rating name="read-only" value={2} readOnly size="small" />
+                                            <Typography component="legend"> & above</Typography>
+                                        </div>
+                                        <div id="fllter-1-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                            <Rating name="read-only" value={1} readOnly size="small" />
+                                            <Typography component="legend"> & above</Typography>
+                                        </div>
+                                        <div id="fllter-no-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                            <Rating name="read-only" value={0} readOnly size="small" />
+                                            <Typography component="legend"> - No Ratings</Typography>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+                            <div className="d-flex">
+                                <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: '#2b535d', width: "100%" }} onClick={() => this.resetFilter()}> Reset Fitlers</Button>
                             </div>
                         </div>
+                        <div className="col-lg-9 col-md-9 ">
+                            <div className="d-flex sorting-options-panel align-middle px-3 mb-2 ">
+                                <div className="flex-grow-1 d-flex my-auto">
+                                    {
+                                        this.state.categoryHierachy === 1 && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
 
-                        <div className="product-list container-fluid">
-                            <div className="row pl-2">
-                                {
-                                    this.state.productList.length > 0 ?
-                                        this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?
-                                            this.state.productList[0].map((products) => {
-
+                                        this.props.productCategories.filter((x) => x.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''))
+                                            .map((category) => {
                                                 return (
-                                                    <div className="products__list-item">
-                                                        <ProductCard product={products}></ProductCard>
+                                                    <div className="sorting-option-label">
+                                                        Category - {category.ProductCategory}
                                                     </div>
                                                 )
                                             })
+                                    }
+                                    {
+                                        this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 ?
+                                            <div className="sorting-option-label">
+                                                Category - {this.state.categoryName}
+                                                {/* {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}  */}
+                                            </div>
+                                            : ""
+                                    }
+                                    {
+                                        this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Keyword" &&
+                                        <div className="sorting-option-label">
+                                            Keyword Search - {this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')}
+                                        </div>
+                                    }
+                                </div>
+                                <div>
+                                    <FormControl variant="outlined" style={{ width: 200, height: 40 }} size="small" >
+                                        <InputLabel id="demo-simple-select-outlined-label">Sort By</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-outlined-label"
+                                            id="demo-simple-select-outlined"
+                                            // value={value}
+                                            onChange={(x) => this.handleSorting(x)}
+                                            label="Sort By"
+                                            color="primary"
+                                        >
+                                            {
+                                                sortingOption.map((options) => {
+                                                    return (
+                                                        <MenuItem value={options.value}>{options.label}</MenuItem>
+                                                    )
+                                                })
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                            </div>
+
+                            <div className="product-list container-fluid">
+                                <div className="row pl-2">
+                                    {
+                                        this.state.productList.length > 0 ?
+                                            this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?
+                                                this.state.productList[0].map((products) => {
+
+                                                    return (
+                                                        <div className="products__list-item">
+                                                            <ProductCard product={products}></ProductCard>
+                                                        </div>
+                                                    )
+                                                })
+                                                :
+                                                <div className="ml-2"><i>No products for this section</i></div>
                                             :
                                             <div className="ml-2"><i>No products for this section</i></div>
-                                        :
-                                        <div className="ml-2"><i>No products for this section</i></div>
-                                }
-                                <div></div>
+                                    }
+                                    <div></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div >
+                </div >
             </React.Fragment>
         )
     }

@@ -147,8 +147,7 @@ function ProductCard(props) {
       </ul>
     );
   }
-
-  console.log("props.wishlist", props.wishlist)
+  
   wishlistView =
     (
       props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?

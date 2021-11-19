@@ -294,7 +294,7 @@ class ProductGallery extends Component {
                     */}
           <img
             className="product-image__img"
-            src={image.ProductMediaUrl}
+            src={image.ProductMediaUrl !== undefined ? image.ProductMediaUrl : image}
             alt=""
             ref={(element) => {
               this.imagesRefs[index] = element;
@@ -328,7 +328,7 @@ class ProductGallery extends Component {
           <div className="product-image__body">
             <img
               className="product-image__img product-gallery__carousel-image"
-              src={image.ProductMediaUrl}
+              src={image.ProductMediaUrl !== undefined ? image.ProductMediaUrl : image}
               alt=""
               onError={(e) => {
                 e.target.onerror = null;
@@ -390,9 +390,9 @@ const mapStateToProps = (state) => ({
 });
 
 
-const mapDispatchToProps = (dispatch) =>{
+const mapDispatchToProps = (dispatch) => {
   return {
- };
+  };
 }
 
 

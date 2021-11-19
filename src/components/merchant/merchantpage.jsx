@@ -55,7 +55,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
-        // CallGetMoreProductEmpty: () => dispatch(GitAction.CallGetMoreProductEmpty()),
+        CallGetMoreProductEmpty: () => dispatch(GitAction.CallGetMoreProductEmpty()),
         CallAllProductsListing: (propsData) => dispatch(GitAction.CallAllProductsListing(propsData)),
     };
 }
@@ -99,7 +99,6 @@ function MerchantPage(props) {
                 <div className="row">
                     <div className="col-lg-4 col-md-4 col-sm-12">
                         <div className={containerClasses}>
-                            {console.log(merchantDetails)}
                             {
                                 merchantDetails.ShopCoverImage !== null &&
                                 <img
@@ -146,20 +145,11 @@ function MerchantPage(props) {
     let tempArray = []
     const [page, setPage] = useState(1);
 
-    console.log("productsListing", props.productsListing)
-    console.log("page in merchant", page)
-
     const loopWithSlice = () => {
-
-        // console.log("JSON.parse(props.productsListing).ReturnVal", JSON.parse(props.productsListing))
-        if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0] !== undefined && JSON.parse(props.productsListing)[0].ReturnVal === undefined) {
+        if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0] !== undefined && JSON.parse(props.productsListing)[0].ReturnVal !== '0') {
             tempArray = [...postsToShow, ...JSON.parse(props.productsListing)];
-
-            const filterList = tempArray.filter( (ele, ind) => ind === tempArray.findIndex( elem => elem.ProductID === ele.ProductID))
-
+            const filterList = tempArray.filter((ele, ind) => ind === tempArray.findIndex(elem => elem.ProductID === ele.ProductID))
             setPostsToShow(filterList)
-            // tempArray = [...postsToShow, ...JSON.parse(props.productsListing)];
-            // setPostsToShow(tempArray)
         }
 
     };
@@ -169,25 +159,15 @@ function MerchantPage(props) {
         props.CallMerchants({
             type: "MerchantProfile",
             typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
-            userID: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+            USERID: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
             userRoleID: localStorage.getItem("isLogin") === true ? localStorage.getItem("roleid") : 0,
             productPage: 999,
             page: 1,
         })
     }, [])
 
-    useEffect(() => {
-        props.CallAllProductsListing({
-            type: "Merchant",
-            typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
-            userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
-            productPage: 15,
-            page: page,
-        })
-    }, [])
 
     useEffect(() => {
-        let didCancel = false
         props.CallAllProductsListing({
             type: "Merchant",
             typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
@@ -196,8 +176,18 @@ function MerchantPage(props) {
             page: page,
         })
         loopWithSlice()
-        return () => { didCancel = true; }
-    }, [page])
+    }, [])
+
+    useEffect(() => {
+        props.CallAllProductsListing({
+            type: "Merchant",
+            typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
+            userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+            productPage: 15,
+            page: page,
+        })
+        loopWithSlice()
+    }, [props.productsListing, page])
 
     const handleShowMorePosts = () => {
         setPage(page + 1)
@@ -248,9 +238,14 @@ function MerchantPage(props) {
                                         </div>
                                     ) :
                                     (
-                                        <div className="my-4" style={{ textAlign: "center", fontWeight: "BOLD" }}>
-                                            Merchant does not have any products
-                                        </div>
+                                        <>
+                                            <div className="my-4" style={{ textAlign: "center", fontWeight: "BOLD" }}>
+                                                Merchant does not have any products
+                                            </div>
+                                            <div className="my-4">
+                                                <BlockMoreButton viewMore={handleShowMorePosts} />
+                                            </div>
+                                        </>
                                     )
                             }
                         </>
