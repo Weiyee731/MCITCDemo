@@ -28,9 +28,12 @@ function mapDispatchToProps(dispatch) {
 class BlockMainCategories extends Component {
   constructor(props) {
     super(props)
-    this.props.CallAllProductCategoryListing();
+
   }
 
+  componentDidMount() {
+    this.props.CallAllProductCategoryListing();
+  }
   render() {
     /**
      * Styles
@@ -50,7 +53,16 @@ class BlockMainCategories extends Component {
 
     return (
       <div className="container">
-        <h3 className="block-header__title mb-3">Categories</h3>
+        <BlockHeader
+          title="Categories"
+          showAll={"shop/AllProductCategory"}
+        // groups={groups}
+        // arrows
+        // onNext={this.handleNextClick}
+        // onPrev={this.handlePrevClick}
+        // onGroupClick={onGroupClick}
+        />
+        {/* <h3 className="block-header__title mb-3">Categories</h3> */}
         <div style={categoryStyle} className="row mb-4">
           {this.props.productCategories.map((data, index) => {
             return (
@@ -59,8 +71,6 @@ class BlockMainCategories extends Component {
                   window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
                 }}
                 onClick={(e) => {
-                  // console.log("e.onClick", e)
-                  // console.log("e.onClick", e.button)
                   window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
                 }}
               >

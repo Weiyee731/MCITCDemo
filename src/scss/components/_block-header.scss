@@ -111,6 +111,51 @@
         }
     }
 }
+
+.block-header__showAll {
+    width: 72px;
+    height: 29px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    fill: $block-header-arrow-default-color;
+    border-radius: 1.5px;
+    background: $block-header-arrow-default-bg;
+    transition: all .15s;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:focus,
+    &:hover {
+        background: $block-header-arrow-hover-bg;
+        fill: $block-header-arrow-hover-color;
+    }
+
+    &:active {
+        transition-duration: 0s;
+        background: $block-header-arrow-active-bg;
+        fill: $block-header-arrow-active-color;
+    }
+
+    & + & {
+        @include direction {
+            #{$margin-inline-start}: 3px;
+        }
+    }
+
+    svg {
+        @include direction {
+            transform: scaleX(1 * $transform-direction);
+        }
+    }
+}
+
 .block-header__arrow--left svg {
     position: relative;
 

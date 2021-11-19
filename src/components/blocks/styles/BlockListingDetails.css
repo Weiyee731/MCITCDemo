@@ -36,6 +36,24 @@
 }
 
 .filter-options-label{
-    color: "#3d464d";
+    color: #2b535d;
     font-weight: 600;
+    padding-bottom: 1rem;
+}
+
+.rating-background:hover{
+    /* color: #56626b; */
+    /* background-color:#3d464d ; */
+    background-color: #cecece;
+	transition: all 0.5s ;
+}
+
+.sub-title{
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.sub-label{font-size: 14px;
+    font-weight: 400;
 }

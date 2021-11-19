@@ -25,11 +25,14 @@ import Select from '@material-ui/core/Select';
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 import { Link } from "react-router-dom";
 import moment from 'moment';
-
+import theme from '../../data/theme';
+import PageHeader from '../shared/PageHeader';
+import { Helmet } from 'react-helmet-async';
 // styles
 import './styles/BlockListingDetails.css'
 import ProductCard from "../shared/ProductCard";
 import { toast } from "react-toastify";
+import { gridColumnsTotalWidthSelector } from "@material-ui/data-grid";
 
 function mapStateToProps(state) {
     return {
@@ -45,7 +48,6 @@ function mapDispatchToProps(dispatch) {
         CallAllProductsListing: (propsData) => dispatch(GitAction.CallAllProductsListing(propsData)),
         CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
         CallAllProducts: (propsData) => dispatch(GitAction.CallAllProducts(propsData)),
-
     };
 }
 
@@ -71,7 +73,12 @@ const initialState = {
     categoryHierachy: 0,
     CategoryHierachyListing: [],
     ParentCategory: [],
-    categoryName: ""
+    categoryName: "",
+
+     breadcrumb :[
+        { title: "Home", url: "" },
+        { title: "Main Category", url: "/shop/AllProductCategory/" },
+      ]
 }
 
 // const [shippedFrom_checkbox, setShipCheckBox] = useState([false, false, false, false]);
@@ -107,7 +114,7 @@ class BlockListingDetails extends Component {
             productPage: 999,
             page: 1
         })
-        this.props.CallAllProductCategoryListing();
+        
         this.handleFilterOption = this.handleFilterOption.bind(this)
         this.handleShipFilter = this.handleShipFilter.bind(this)
         this.resetFilter = this.resetFilter.bind(this)
@@ -119,19 +126,22 @@ class BlockListingDetails extends Component {
 
 
     componentDidMount() {
+        this.props.CallAllProductCategoryListing();
         this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined &&
             this.state.productList.push(JSON.parse(this.props.productsListing))
 
         let tempCategoryHierachy = 0
-
+let breadcrumb=this.state.breadcrumb
         if (this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == "Category" && this.state.categoryHierachy === 0) {
-
+console.log("start")
+console.log(this.state.breadcrumb)
             this.props.productCategories.map((category) => {
                 if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
-                    this.setState({ categoryHierachy: 1 })
+                    this.setState({ categoryHierachy: 1,breadcrumb :[...breadcrumb,  ...{ title: "wahah", url: "" }], })
                     tempCategoryHierachy = 1
                 }
             })
+            console.log("end")
             if (tempCategoryHierachy === 1) {
                 this.state.CategoryHierachyListing.push(this.props.productCategories)
             }
@@ -431,13 +441,20 @@ class BlockListingDetails extends Component {
         this.setListing(filterList)
     }
 
+    
     render() {
-
+       
         return (
-            <div className="container block mt-5">
+            <React.Fragment>
+            <Helmet>
+                <title>{`Category — ${theme.name}`}</title>
+            </Helmet>
+
+            <PageHeader header="Category" breadcrumb={this.state.breadcrumb} />
+            <div className="container">
                 <div className="row">
-                    <div className="col-lg-2 col-md-2 col-sm-2">
-                        <div className="category-segment">
+                    <div className="col-lg-3 col-md-3 ">
+                        <div className="category-segment ">
                             {/* <div
                                 style={{ cursor: "pointer", fontWeight: 600 }}
                                 onMouseDown={(e) => {
@@ -451,12 +468,14 @@ class BlockListingDetails extends Component {
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div> */}
-                            <Link to="/shop/AllProductCategory/">
-                                <FormatListBulletedIcon /> All Categories
+                            <div className="sub-title">
+                            <Link to="/shop/AllProductCategory/" >
+                                <FormatListBulletedIcon/> All Categories
                             </Link>
+                            </div>
                             {
                                 this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
-                                <div style={{ fontSize: '15px', fontWeight: "bold", paddingTop: "10px" }}>
+                                <div>
                                     <label onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
                                         {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
                                     </label>
@@ -480,11 +499,11 @@ class BlockListingDetails extends Component {
                                                                         <>
                                                                             {
                                                                                 this.state.categoryHierachy === 1 || this.state.categoryHierachy === 2 ?
-                                                                                    <div key={items.ProductCategory} className="sub-category-items" style={{ paddingLeft: "30px" }}>
-                                                                                        <FiberManualRecordOutlinedIcon fontSize='sm'
+                                                                                    <div key={items.ProductCategory} className="sub-category-items " style={{fontsize:"14px" ,fontWeight:"200" ,paddingLeft: "30px" }}>
+                                                                                        <FiberManualRecordOutlinedIcon 
                                                                                             onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
                                                                                         />
-                                                                                        <label onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                        <label  className="sub-label"onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
                                                                                         >{items.ProductCategory}</label>
                                                                                     </div>
                                                                                     : ""
@@ -495,10 +514,10 @@ class BlockListingDetails extends Component {
                                                             }
                                                         </> :
                                                         <>
-                                                            <FiberManualRecordOutlinedIcon fontSize='sm'
+                                                            <FiberManualRecordOutlinedIcon 
                                                                 onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
                                                             />
-                                                            <label onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                            <label  className="sub-label" onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
                                                             >{category.ProductCategory}</label>
                                                         </>
                                                 }
@@ -579,26 +598,26 @@ class BlockListingDetails extends Component {
                             <div className="rating-segment mt-3">
                                 <div className="filter-options-label"><StarBorderOutlinedIcon /> RATINGS</div>
                                 <div>
-                                    <div id="fllter-5-stars" className="d-flex mb-2 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                    <div id="fllter-5-stars" className="d-flex mb-2 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={5} readOnly size="small" />
                                     </div>
-                                    <div id="fllter-4-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                    <div id="fllter-4-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={4} readOnly size="small" />
                                         <Typography component="legend"> & above</Typography>
                                     </div>
-                                    <div id="fllter-3-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                    <div id="fllter-3-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={3} readOnly size="small" />
                                         <Typography component="legend"> & above</Typography>
                                     </div>
-                                    <div id="fllter-2-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)} >
+                                    <div id="fllter-2-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)} >
                                         <Rating name="read-only" value={2} readOnly size="small" />
                                         <Typography component="legend"> & above</Typography>
                                     </div>
-                                    <div id="fllter-1-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                    <div id="fllter-1-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={1} readOnly size="small" />
                                         <Typography component="legend"> & above</Typography>
                                     </div>
-                                    <div id="fllter-no-stars" className="d-flex mb-1 " style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
+                                    <div id="fllter-no-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                         <Rating name="read-only" value={0} readOnly size="small" />
                                         <Typography component="legend"> - No Ratings</Typography>
                                     </div>
@@ -611,7 +630,7 @@ class BlockListingDetails extends Component {
                             <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: '#2b535d', width: "100%" }} onClick={() => this.resetFilter()}> Reset Fitlers</Button>
                         </div>
                     </div>
-                    <div className="col-lg-10 col-md-10 col-sm-10">
+                    <div className="col-lg-9 col-md-9 ">
                         <div className="d-flex sorting-options-panel align-middle px-3 mb-2 ">
                             <div className="flex-grow-1 d-flex my-auto">
                                 {
@@ -688,6 +707,7 @@ class BlockListingDetails extends Component {
                     </div>
                 </div>
             </div >
+            </React.Fragment>
         )
     }
 }

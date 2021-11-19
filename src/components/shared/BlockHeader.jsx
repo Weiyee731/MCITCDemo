@@ -1,6 +1,9 @@
 // react
 import React from 'react';
-
+import {
+    Link,
+    BrowserRouter as Router,
+} from "react-router-dom";
 // third-party
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -26,6 +29,19 @@ function BlockHeader(props) {
                 </button>
                 <button className="block-header__arrow block-header__arrow--right" type="button" onClick={onNext}>
                     <ArrowRoundedRight7x11Svg />
+                </button>
+            </div>
+        );
+    }
+
+    let { showAll } = props;
+    if (showAll) {
+        showAll = (
+            <div className="block-header__arrows-list">
+                <button className="block-header__showAll" >
+                    <Link to={showAll}>
+                    Show All   
+                    </Link>
                 </button>
             </div>
         );
@@ -61,6 +77,7 @@ function BlockHeader(props) {
             <div className="block-header__divider" />
             {groupsList}
             {arrows}
+            {showAll}
         </div>
     );
 }
@@ -75,7 +92,7 @@ BlockHeader.propTypes = {
 };
 BlockHeader.defaultProps = {
     groups: [],
-    onGroupClick: () => {},
+    onGroupClick: () => { },
 };
 
 export default BlockHeader;
