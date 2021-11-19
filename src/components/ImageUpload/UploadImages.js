@@ -93,35 +93,7 @@ class UploadImages extends Component {
     acceptedFiles.map((file) => {
       var reader = new FileReader();
       reader.readAsDataURL(file);
-      // var image = new Image();
-      // image.src = url;
-
-      // var heigth = image.height;
-      // var width = image.width;
-      // if (heigth != 512 || width != 512) {
-      //   console.log("wrong dimensions" + heigth + " x " + width);
-
-      // } else {
-      //   console.log("correct dimensions" + heigth + " x " + width);
-      // }
-      // reader.onload = function (e) {
-      //   var image = new Image();
-
-      //   image.src = e.target.result;
-      //   image.onload = function () {
-      //     var heigth = this.height;
-      //     var width = this.width;
-      //     if (heigth != 512 || width != 512) {
-      //       console.log("wrong dimensions" + heigth + " x " + width);
-      //     } else {
-      //       console.log("correct dimensions" + heigth + " x " + width);
-      //     }
-      //   };
-      // };
     });
-
-    console.log(acceptedFiles.map((file) => file));
-    console.log(this.state.file.map((fileName) => fileName));
   };
 
   onLoad = (data, e) => {
@@ -129,81 +101,34 @@ class UploadImages extends Component {
       var heigth = e.target.height;
       var width = e.target.width;
       if (heigth != 512 || width != 512) {
-        console.log(
-          "wrong dimensions" +
-            heigth +
-            " x " +
-            width +
-            " id: " +
-            e.target.attributes.getNamedItem("data-key").value
-        );
         this.removeFile(
           "512x512",
           e.target.attributes.getNamedItem("data-key").value
         );
         alert("Images have to be 500 x 500");
       } else {
-        console.log(
-          "correct dimensions" +
-            heigth +
-            " x " +
-            width +
-            " id: " +
-            e.target.attributes.getNamedItem("data-key").value
-        );
         // this.removeFile(e.target.attributes.getNamedItem("data-key").value);
       }
     } else if (data == "1600x900") {
       var heigth = e.target.height;
       var width = e.target.width;
       if (heigth != 900 || width != 1600) {
-        console.log(
-          "wrong dimensions" +
-            heigth +
-            " x " +
-            width +
-            " id: " +
-            e.target.attributes.getNamedItem("data-key").value
-        );
         this.removeFile(
           "1600x900",
           e.target.attributes.getNamedItem("data-key").value
         );
         alert("Images have to be 1600 x 900");
       } else {
-        console.log(
-          "correct dimensions" +
-            heigth +
-            " x " +
-            width +
-            " id: " +
-            e.target.attributes.getNamedItem("data-key").value
-        );
         // this.removeFile(e.target.attributes.getNamedItem("data-key").value);
       }
     }
   };
 
   onDelete = (index, data) => {
-    console.log("i: " + index + "data: " + data);
     if (data == "512x512") {
-      // this.setState({
-      //   file: this.state.file.filter((fileName) => fileName.name !== index),
-      //   fileInfo: this.state.fileInfo.filter((fileName) => fileName !== index),
-      // });
-
-      // console.log(
-      //   "url'generated : \n " +
-      //     this.state.file.map((list) => URL.createObjectURL(list)) +
-      //     " urls: \n " +
-      //     this.state.url.map((list) => list)
-      // );
       var newList2 = this.state.file;
       this.state.file.map((file, i) => {
         var valueToBeUsed2 = parseInt(index);
-        console.log(
-          "index: " + parseInt(i) + " i: " + parseInt(valueToBeUsed2)
-        );
         if (i == valueToBeUsed2) {
           newList2 = newList2.filter((file2) => file !== file2);
           this.setState({
@@ -216,21 +141,10 @@ class UploadImages extends Component {
         fileInfo: newList2.map((file3) => file3.name),
         url: newList2.map((file3) => URL.createObjectURL(file3)),
       });
-      console.log(
-        "newfile2: " +
-          newList2.map((file) => file.name) +
-          "orignalList2: " +
-          this.state.file.map((files) => files.name) +
-          "counter2: " +
-          this.state.counter2
-      );
     } else if (data == "1600x900") {
       var newList3 = this.state.file2;
       this.state.file2.map((file, i) => {
         var valueToBeUsed2 = parseInt(index);
-        console.log(
-          "index: " + parseInt(i) + " i: " + parseInt(valueToBeUsed2)
-        );
         if (i == valueToBeUsed2) {
           newList3 = newList3.filter((file2) => file !== file2);
           this.setState({
@@ -243,14 +157,6 @@ class UploadImages extends Component {
         fileInfo2: newList3.map((file3) => file3.name),
         url2: newList3.map((file3) => URL.createObjectURL(file3)),
       });
-      console.log(
-        "newfile2: " +
-          newList3.map((file) => file.name) +
-          "orignalList2: " +
-          this.state.file2.map((files) => files.name) +
-          "counter2: " +
-          this.state.counter2
-      );
     }
   };
 
@@ -259,7 +165,6 @@ class UploadImages extends Component {
       var newList = this.state.file;
       this.state.file.map((file, i) => {
         var valueToBeUsed = parseInt(index);
-        console.log("index: " + parseInt(i) + " i: " + parseInt(valueToBeUsed));
         if (i == valueToBeUsed) {
           newList = newList.filter((file2) => file !== file2);
           this.setState({
@@ -272,19 +177,10 @@ class UploadImages extends Component {
         fileInfo: newList.map((file3) => file3.name),
         url: newList.map((file3) => URL.createObjectURL(file3)),
       });
-      console.log(
-        "newfile: " +
-          newList.map((file) => file.name) +
-          "orignalList: " +
-          this.state.file.map((files) => files.name) +
-          "counter: " +
-          this.state.counter
-      );
     } else if (data == "1600x900") {
       var newList4 = this.state.file2;
       this.state.file2.map((file, i) => {
         var valueToBeUsed = parseInt(index);
-        console.log("index: " + parseInt(i) + " i: " + parseInt(valueToBeUsed));
         if (i == valueToBeUsed) {
           newList4 = newList4.filter((file2) => file !== file2);
           this.setState({
@@ -297,14 +193,6 @@ class UploadImages extends Component {
         fileInfo2: newList4.map((file3) => file3.name),
         url2: newList4.map((file3) => URL.createObjectURL(file3)),
       });
-      console.log(
-        "newfile: " +
-          newList4.map((file) => file.name) +
-          "orignalList: " +
-          this.state.file2.map((files) => files.name) +
-          "counter: " +
-          this.state.counter
-      );
     }
   };
 

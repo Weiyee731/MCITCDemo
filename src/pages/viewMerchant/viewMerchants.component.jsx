@@ -365,7 +365,6 @@ class DisplayTable extends Component {
   };
 
   render() {
-    console.log(this.props)
     const emptyRows =
       this.state.rowsPerPage -
       Math.min(

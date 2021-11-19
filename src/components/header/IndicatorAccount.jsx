@@ -177,7 +177,7 @@ class IndicatorAccount extends Component {
             <ul className="account-menu__links">
               {localStorage.getItem("roleid") <= 15 && (
                 <li onClick={() => backtoinventory("Dashboard")}>
-                  <a href="/emporia/dashboard" onClick={() => window.location.reload()}>Inventory</a>
+                  <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a>
                 </li>
               )}
               <li>

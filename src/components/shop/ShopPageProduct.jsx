@@ -11,7 +11,6 @@ import PageHeader from "../shared/PageHeader";
 import Product from "../shared/Product";
 import ProductTabs from "./ProductTabs";
 import SitePageNotFound from "../site/SitePageNotFound";
-import shopApi from "../../api/shop";
 import { url } from "../../services/utils";
 import { GitAction } from "../../store/action/gitAction";
 
@@ -49,7 +48,6 @@ function ShopPageProduct(props) {
 
   // Load product.
   useEffect(() => {
-    console.log("loading...")
     let canceled = false;
 
     props.CallProductDetail({ productId: productId, userId: 1 })
@@ -64,14 +62,6 @@ function ShopPageProduct(props) {
   useEffect(() => {
     let canceled = false;
 
-    shopApi.getRelatedProducts(productId, { limit: 8 }).then((products) => {
-      if (canceled) {
-        return;
-      }
-
-      setRelatedProducts(products);
-    });
-
     return () => {
       canceled = true;
     };
@@ -83,14 +73,6 @@ function ShopPageProduct(props) {
 
     if (layout !== "sidebar") {
       setLatestProducts([]);
-    } else {
-      shopApi.getLatestProducts({ limit: 5 }).then((result) => {
-        if (canceled) {
-          return;
-        }
-
-        setLatestProducts(result);
-      });
     }
 
     return () => {

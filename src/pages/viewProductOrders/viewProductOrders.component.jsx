@@ -265,7 +265,6 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteProduct = () => {
-    console.log(props.selectedData);
     props.ProductProps.CallDeletePromoCode(props.selectedData);
     setTimeout(
       function () {
@@ -353,17 +352,10 @@ function DeletableTable(props) {
   const [productsSelected, setProductsSelected] = React.useState([]);
 
   const submitValues = () => {
-    console.log(selected);
-
-    // selected.map((ID) => {
-    //   filterProducts(ID);
-    // });
     var allSuppliers = [];
     var allProductsAdded = "";
     var allQuantities = "";
-    // alert(JSON.stringify(suppliersSelected));
     suppliersSelected.map((dataToBeSent, index) => {
-      // allSuppliers.push(dataToBeSent.SupplierID);
 
       if (index == 0 && suppliersSelected.length > 1) {
         allSuppliers = allSuppliers + dataToBeSent.SupplierID + ",";
@@ -374,7 +366,7 @@ function DeletableTable(props) {
       } else {
         allSuppliers = allSuppliers + dataToBeSent.SupplierID + ",";
       }
-      console.log("Suppliers: " + allSuppliers);
+
       dataToBeSent.Products.map((ID, i) => {
         if (dataToBeSent.Products.length == 1) {
           allProductsAdded = allProductsAdded + "{" + ID + "}";
@@ -385,8 +377,6 @@ function DeletableTable(props) {
         } else {
           allProductsAdded = allProductsAdded + ID + ",";
         }
-
-        console.log(allProductsAdded);
       });
       if (index != suppliersSelected.length - 1) {
         allProductsAdded = allProductsAdded + "%";
@@ -403,7 +393,6 @@ function DeletableTable(props) {
           allQuantities = allQuantities + quantity + ",";
         }
 
-        console.log(allQuantities);
       });
       if (index != suppliersSelected.length - 1) {
         allQuantities = allQuantities + "%";
@@ -416,21 +405,12 @@ function DeletableTable(props) {
       ProductQuantities: allQuantities,
     };
 
-    console.log(dataSent);
-
     setTimeout(
       function () {
         props.ProductProps.CallAddPurchaseOrder(dataSent);
       }.bind(this),
       500
     );
-    // setTimeout(
-    //   function () {
-    //     // props.history.push("/viewProductOrders");
-    //     window.location.reload(false);
-    //   }.bind(this),
-    //   500
-    // );
   };
 
   const handleRequestSort = (event, property) => {
@@ -442,7 +422,6 @@ function DeletableTable(props) {
     if (event.target.checked) {
       const newSelecteds = props.Data.map((n) => n.ProductID);
       setSelected(newSelecteds);
-      console.log(newSelecteds);
       return;
     }
     setSelected([]);
@@ -458,19 +437,15 @@ function DeletableTable(props) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
-      // removeUnchecked();
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1)
       );
     }
-    console.log(newSelected);
 
-    // newSelected.map((ID) => {
     filterProducts(name);
     checkForRemoved(newSelected);
-    // });
 
     setSelected(newSelected);
   };
@@ -489,12 +464,10 @@ function DeletableTable(props) {
         var counter = 0;
         selectedID.map((ID) => {
           if (product == ID) {
-            // console.log(product.ProductID + " ..... " + ID);
             counter++;
           }
         });
         if (counter == 0) {
-          console.log(i + "  : " + product.ProductID);
           removeItem(i, product, parentIndex);
         }
       });
@@ -502,10 +475,6 @@ function DeletableTable(props) {
   };
 
   const removeItem = (index, itemToBeRemoved, parentIndex) => {
-    // suppliersSelected[parentIndex].Products = [
-    //   ...suppliersSelected[parentIndex].Products,
-    //   selectedItem,
-    // ];
     suppliersSelected[parentIndex].Products = suppliersSelected[
       parentIndex
     ].Products.filter((product) => product != itemToBeRemoved);
@@ -523,7 +492,6 @@ function DeletableTable(props) {
 
       setSuppliersSelected(supplierList);
     }
-    console.log(suppliersSelected);
   };
 
   const checkSupplierID = (selectedItem) => {
@@ -549,7 +517,6 @@ function DeletableTable(props) {
         setSuppliersSelected([...suppliersSelected, SupplierProductsSelected]);
       }
     } else {
-      console.log(selectedItem);
       const SupplierProductsSelected = {
         SupplierID: selectedItem.SupplierID,
         Products: [selectedItem.ProductID],
@@ -558,7 +525,6 @@ function DeletableTable(props) {
         ],
       };
       setSuppliersSelected([...suppliersSelected, SupplierProductsSelected]);
-      console.log(SupplierProductsSelected);
     }
   };
 

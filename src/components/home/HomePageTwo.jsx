@@ -1,35 +1,24 @@
 // react
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // third-party
 import { Helmet } from 'react-helmet-async';
 
 // application
-import shopApi from '../../api/shop';
-import { useDeferredData, useProductColumns, useProductTabs } from '../../services/hooks';
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 
 // blocks
-import BlockBanner from '../blocks/BlockBanner';
-import BlockBrands from '../blocks/BlockBrands';
-import BlockCategories from '../blocks/BlockCategories';
 import BlockFeatures from '../blocks/BlockFeatures';
 import BlockMerchant from '../blocks/BlockMerchant';
-import BlockPosts from '../blocks/BlockPosts';
-import BlockProductColumns from '../blocks/BlockProductColumns';
 import BlockProducts from '../blocks/BlockProducts';
-import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import BlockSlideShow from '../blocks/BlockSlideShow';
 import BlockMainCategories from '../blocks/BlockMainCategories';
 import BlockMoreButton from '../blocks/BlockMoreButton';
 
 // data stubs
-import categories from '../../data/shopBlockCategories';
-import posts from '../../data/blogPosts';
 import theme from '../../data/theme';
 
-import { toast } from "react-toastify";
 
 function mapStateToProps(state) {
   return {
@@ -55,33 +44,13 @@ function HomePageTwo(props) {
   let tempArray = []
 
   const loopWithSlice = () => {
-
-    console.log("props.products", props.products)
-    console.log("props.postsToShow", postsToShow)
     tempArray = [...postsToShow, ...props.products];
-
     setPostsToShow(tempArray)
-    // if (props.viewMoreProducts.length > 0 && props.viewMoreProducts[0].ReturnVal !== undefined && props.viewMoreProducts[0].ReturnVal !== "1") { toast.warning("There is no more product") }
-    // else {
-
-    //   props.CallViewMoreEmpty()
-    // }
   };
 
   const handleShowMorePosts = () => {
     setPage(page + 1)
-    // props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
   };
-
-  // useEffect(() => {
-  //   if (page <= 1) {
-  //     setPage(page + 1)
-  //     props.CallViewMoreFunctionProduct({ type: "Merchant", typeValue: 0, userID: 0, productPerPage: productPerPage, page: page })
-  //   }
-  //   if (props.viewMoreProducts.length > 0) {
-  //     loopWithSlice()
-  //   }
-  // }, [props.viewMoreProducts])
 
   useEffect(() => {
     let didCancel = false
@@ -124,8 +93,6 @@ function HomePageTwo(props) {
     })
   }, [])
 
-  console.log("HOMEPAGE", localStorage)
-
   return (
     <React.Fragment>
       <div className="block--margin-top">
@@ -135,17 +102,6 @@ function HomePageTwo(props) {
         <BlockSlideShow />
 
         <BlockMainCategories />
-        {/* {useMemo(() => (
-          props.merchant !== undefined && props.merchant.length > 0 && props.merchant[0].ReturnVal === undefined &&
-          <BlockMerchant
-            title="Top Merchants this week"
-            layout="grid-4"
-            rows={1}
-            merchants={props.merchant}
-          // onGroupClick={testing}
-          />
-        )
-          , [props.loading, props.merchants])} */}
 
         <BlockMerchant
           title="Top Merchants this week"

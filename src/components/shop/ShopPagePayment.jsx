@@ -82,7 +82,25 @@ class PagePayment extends Component {
     if (this.props.data !== undefined && this.props.data.length > 0) {
       this.setDetails(this.props.data)
     }
+    this.props.handleGetPaymentId(null, 0, 0)
   }
+
+
+  getItemList(FilteredList) {
+    return (
+      <>
+        {FilteredList.map((item) => (
+          <tr key={item.id}>
+            <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
+            <td>
+              <Currency value={item.total} />
+            </td>
+          </tr>
+        ))}
+      </>
+    )
+  }
+
 
   resetData() {
     this.setState({
@@ -126,7 +144,14 @@ class PagePayment extends Component {
         break;
 
       case "cvc":
+        // console.log("e.target.value", e.target.value)
+        // console.log("formatCVC(e.target.value)", formatCVC(e.target.value))
         e.target.value = formatCVC(e.target.value);
+        if (formatCVC(e.target.value).length === 4) {
+          // console.log("this.state.cardList[0]", this.state.cardList[0])
+          this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
+        }
+
         break;
 
       default:
@@ -201,15 +226,6 @@ class PagePayment extends Component {
   }
 
   renderCart() {
-    const items = this.state.cart.map((item) => (
-      <tr key={item.id}>
-        <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
-        <td>
-          <Currency value={item.total} />
-        </td>
-      </tr>
-    ));
-
     return (
       <table className="checkout__totals">
         <thead className="checkout__totals-header">
@@ -218,7 +234,16 @@ class PagePayment extends Component {
             <th>Total</th>
           </tr>
         </thead>
-        <tbody className="checkout__totals-products">{items}</tbody>
+        {
+          this.props.merchant.map((shop, i) => {
+            return (
+              <>
+                <div style={{ textAlign: "left", fontSize: "13px" }}>{"Order " + parseInt(i + 1) + " : " + shop.MerchantShopName}</div>
+                <tbody className="checkout__totals-products">{this.getItemList(this.state.cart.filter((x) => x.MerchantShopName === shop.MerchantShopName))}</tbody>
+              </>
+            )
+          })
+        }
         {this.renderTotals()}
         <tfoot className="checkout__totals-footer">
           <tr>
@@ -286,14 +311,6 @@ class PagePayment extends Component {
               >
                 Add New Card
               </Button>
-              {/* <div style={{ float: "right", marginBottom: "10px" }}>
-                <img width="50" src="images/creditcard/visa.png" />
-                &nbsp;
-                <img
-                  width="50"
-                  src="images/creditcard/mastercard.png"
-                />
-              </div> */}
 
               <Grid container>
                 {
@@ -304,7 +321,7 @@ class PagePayment extends Component {
                           {
                             this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethodsID ?
                               <>
-                                <div className="d-flex">
+                                <div className="d-flex mt-3">
                                   <Tooltip title="Edit">
                                     <IconButton aria-label="Edit">
                                       <RadioButtonCheckedIcon

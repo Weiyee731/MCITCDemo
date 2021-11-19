@@ -428,11 +428,6 @@ class AddSuppliersComponent extends Component {
               file3Added: true,
             });
           }
-          console.log(
-            this.state.file2Added +
-            " file Length: " +
-            this.state.fileInfo.length
-          );
           toast.success(this.state.file2Added +
             " file Length: " +
             this.state.fileInfo.length);
@@ -550,7 +545,6 @@ class AddSuppliersComponent extends Component {
           file3Added: true,
         });
       }
-      // console.log("length: " + this.state.fileInfo.length);
     } else if (data === "1600x900") {
       var newList3 = this.state.file2;
       this.state.file2.map((file, i) => {
@@ -875,7 +869,6 @@ class AddSuppliersComponent extends Component {
       onImage: false,
       currentlyHovered: id,
     });
-    // console.log("mouseOut: " + this.state.onImage);
     toast.success("mouseOut: " + this.state.onImage);
   };
 
@@ -884,7 +877,6 @@ class AddSuppliersComponent extends Component {
       onImage: true,
       currentlyHovered: id,
     });
-    // console.log("mouseIn " + this.state.onImage);
     toast.success("mouseIn " + this.state.onImage);
   };
 
@@ -984,10 +976,8 @@ class AddSuppliersComponent extends Component {
     }
 
     const query = queryString.parse(this.props.location.search);
-    // console.log(query);
     toast.success(query);
     const barcode = query.barcode;
-    // console.log("barcode", barcode);
     toast.success("barcode", barcode);
     const previewStyle = {
       display: "inline",

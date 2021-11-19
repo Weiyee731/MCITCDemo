@@ -133,11 +133,25 @@ class BlockSlideShow extends Component {
 
       return (
         <div key={index} className="block-slideshow__slide">
-          <div
+          {/* <div
             className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
             style={{
               backgroundImage: `url(${image})`,
             }}
+          /> */}
+          <img
+            className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
+            // style={{
+            //   width: '100vw',
+            //   position: 'relative',
+            //   left: '50%',
+            //   right: '50%',
+            //   marginLeft: '-50vw',
+            //   marginRight: '-50vw'
+            // }}
+            src={image}
+            width={"100%"}
+            height={"auto"}
           />
           <div
             className="block-slideshow__slide-image block-slideshow__slide-image--mobile"
@@ -166,24 +180,24 @@ class BlockSlideShow extends Component {
 
     return (
       <div className={blockClasses}>
-        <div className="container">
-          <div className="row">
-            {/* col for the side-panel */}
-            {withDepartments && (
-              <div
-                className="col-3 d-lg-block d-none"
-                ref={this.setDepartmentsAreaRef}
-              />
-            )}
+        {/* <div className="container">
+          <div className="row"> */}
+        {/* col for the side-panel */}
+        {withDepartments && (
+          <div
+            className="col-3 d-lg-block d-none"
+            ref={this.setDepartmentsAreaRef}
+          />
+        )}
 
-            <div className={layoutClasses}>
-              <div className="block-slideshow__body">
-                <StroykaSlick {...slickSettings}>{slides}</StroykaSlick>
-              </div>
-            </div>
+        <div className={layoutClasses}>
+          <div className="block-slideshow__body">
+            <StroykaSlick {...slickSettings}>{slides}</StroykaSlick>
           </div>
         </div>
       </div>
+      //   </div>
+      // </div>
     );
   }
 }

@@ -116,6 +116,7 @@ class PageCheckout extends Component {
     }
 
     const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
+
       if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0) {
         if (payment.UserPaymentMethodID !== undefined) {
           this.setState({ PaymentMethodID: payment.UserPaymentMethodID, PaymentMethod: payment.UserCardType })
@@ -124,27 +125,31 @@ class PageCheckout extends Component {
         }
         this.setState({ PaymentMethodTypeID: paymentmethodtypeId, PaymentMethodType: paymentmethodtype })
       }
+      else {
+        this.setState({ PaymentMethodID: 0 })
+      }
     }
 
     const handleGetTotal = (total) => {
       if (total !== 0)
         this.setState({ OrderTotalAmount: total })
     }
+    console.log("this.props.merchant", this.props)
 
     const step1Content = (
-      <PageCart data={this.props.data} />
+      <PageCart data={this.props.data} merchant={this.props.merchant} />
     );
 
     const step2Content = (
-      <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} />
+      <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} merchant={this.props.merchant} />
     );
 
     const step3Content = (
-      <PagePayment handleGetPaymentId={handleGetPaymentId} data={this.props.data} />
+      <PagePayment handleGetPaymentId={handleGetPaymentId} data={this.props.data} merchant={this.props.merchant} />
     );
 
     const step4Content = (
-      <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} />
+      <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} merchant={this.props.merchant} />
     );
     return (
       <React.Fragment>

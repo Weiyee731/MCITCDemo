@@ -21,7 +21,6 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 function Menu(props) {
   const { layout, withIcons, items, onClick } = props;
-  // console.log(items)
   const renderLink = (item, content) => {
     let link;
 
@@ -51,15 +50,6 @@ function Menu(props) {
       localStorage.setItem("management", true);
     }
   };
-
-  // const redirectToCat = (e) => {
-  //   console.log(e);
-  //   if (e != null) {
-  //     return <Redirect to="/shop/category-grid-3-columns-sidebar" />;
-  //   } else {
-  //     console.log("nothing to redirect");
-  //   }
-  // };
 
   const itemsList = items.map((item, index) => {
     let arrow;

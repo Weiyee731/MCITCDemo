@@ -147,22 +147,28 @@ function ProductCard(props) {
       </ul>
     );
   }
-  // console.log("test login", window.localStorage.getItem("id"))
-  // console.log("test login", window.localStorage.getItem("isLogin"))
+
+  console.log("props.wishlist", props.wishlist)
   wishlistView =
     (
-      props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-        props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-          return (
-            <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
-              className={classNames('btn btn-light btn-sm btn-svg-icon')}
-            ><Wishlist16Svg fill="red" />
+      props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
+        props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+            return (
+              <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
+                className={classNames('btn btn-light btn-sm btn-svg-icon')}
+              ><Wishlist16Svg fill="red" />
+              </button>
+            )
+          }) :
+          (
+            <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
+              className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
+            ><Wishlist16Svg />
             </button>
-          )
-        }) :
+          ) :
         (
-          <button type="button" onClick={() => localStorage.getItem("id") ? handleWishlist(product) : login()}
-            // <button type="button" onClick={() => console.log("PRESS")}
+          <button type="button" onClick={() => window.localStorage.getItem("id") ? handleWishlist(product) : login()}
             className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
           ><Wishlist16Svg />
           </button>

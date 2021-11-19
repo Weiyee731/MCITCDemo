@@ -46,13 +46,10 @@ function FormDialog(props) {
     if (quantity.length != 0) {
       quantity.map((value, i) => {
         if (ID == value.productVariantID) {
-          console.log(ID + " " + event.target.value);
           dataToBeModified[i].quantity = event.target.value;
         }
       });
     }
-
-    console.log(dataToBeModified);
 
     setQuantity(dataToBeModified);
   };
@@ -68,14 +65,8 @@ function FormDialog(props) {
         }
       });
     }
-    console.log(listOfIDs);
-    console.log(listOfQuantities);
 
     var datatoBeSent = {
-      // SelectedProductID: props.Data.ProductID,
-      // SelectedProductStock: quantity,
-      // ProductStatus: "Endorsed",`Zjnm`,./
-      // UserID: localStorage.getItem("id"),
       productsKids: listOfIDs,
       productsStock: listOfQuantities,
     };
@@ -93,7 +84,6 @@ function FormDialog(props) {
     window.location.reload();
   };
 
-  console.log(this.props)
   return (
     <div>
       <Button
@@ -310,7 +300,6 @@ function Row(props) {
     setOpen(!open);
     var dataToBeModified = [];
 
-    console.log(row.ProductStock)
     // for (var i = 0; i < JSON.parse(row.ProductStock).length; i++) {
     //   var dataSample = {
     //     productVariantID: JSON.parse(row.ProductStock)[i].ProductStockID,

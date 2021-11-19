@@ -163,12 +163,10 @@ class LoginComponent extends Component {
   }
 
   responseFacebook = (response) => {
-    console.log("facebook");
     console.log(response);
   }
 
   responseGoogle = (response) => {
-    console.log("google");
     console.log(response);
   }
 
@@ -178,7 +176,6 @@ class LoginComponent extends Component {
     if (this.state.resetEmail !== "" && this.state.resetEmail.includes("@")) {
       emailjs.sendForm('service_ph326fk', 'template_pwxl4tf', e.target, 'user_c793YoEph6xtuh3ctKtsY')
         .then(res => {
-          console.log(res)
           toast.success("Reset password message has been successfully sent to " + this.state.resetEmail)
           this.setState({ resetEmail: "", isForgetPassword: false })
         }).catch(err => console.log(err));

@@ -51,7 +51,6 @@ const SideBarMenu = ({
   let initialMenuItems = [];
   pages.forEach((menu, index) => {
     let active = menu.active === "true" ? true : false;
-    // console.log(active);
     initialMenuItems.push({
       active: active,
     });
@@ -61,7 +60,6 @@ const SideBarMenu = ({
   const [menuItems, setMenuItems] = useState(initialMenuItems);
   const handleMenuDropDownClick = (e, index) => {
     let newArray = menuItems.map((item, idx) => {
-      // console.log(index === idx);
       index === idx ? (item.active = !item.active) : (item.active = false);
       return item;
     });
@@ -69,8 +67,6 @@ const SideBarMenu = ({
   };
 
   const renderSideBarMenuItem = () => {
-    // alert(pages.length === 0);
-    // alert(JSON.stringify(pages));
     return pages.length === 0
       ? ""
       : pages.map((menu, index) => {
@@ -82,7 +78,6 @@ const SideBarMenu = ({
             </li>
           );
         } else if (menu.type === "dropdown") {
-          // console.log(menuItems);
           liElementList = (
             <DropdownMenu
               menu={menu}

@@ -20,7 +20,6 @@ import { url } from '../../services/utils';
 import Logo from "../../assets/Emporia.png";
 import PageCheckout from "./ShopPageCheckout";
 import { Button } from "@material-ui/core";
-import shopApi from "../../api/shop";
 
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -46,7 +45,9 @@ class ShopPageCart extends Component {
             setDetails: false,
             selectedIndex: "",
 
-            selectedList: [],
+            MerchantShopName: [],
+
+            // selectedList: [],
             selectedProductDetailList: [],
             isDataAccepted: false,
             isCheckOutSubmit: false
@@ -73,7 +74,8 @@ class ShopPageCart extends Component {
                     options: [],
                     price: x.ProductPrice,
                     total: x.ProductQuantity * x.ProductPrice,
-                    quantity: x.ProductQuantity
+                    quantity: x.ProductQuantity,
+                    MerchantShopName: x.MerchantShopName
                 }
             )
         })
@@ -82,8 +84,8 @@ class ShopPageCart extends Component {
         if (this.state.selectedProductDetailList !== [] && this.state.selectedProductDetailList.length > 0) {
             let temp = [...this.state.selectedProductDetailList]
             this.state.selectedProductDetailList.splice(0, this.state.selectedProductDetailList.length)
-            temp.map((selectedProduct) => {
 
+            temp.map((selectedProduct) => {
                 this.state.cart.filter((x) => x.product.UserCartID === selectedProduct.product.UserCartID).map((updatedList, index) => {
                     this.state.selectedProductDetailList.push(updatedList)
                 })
@@ -96,6 +98,17 @@ class ShopPageCart extends Component {
         if (this.props.productcart !== undefined && this.props.productcart[0] !== undefined && this.props.productcart[0].ReturnVal === undefined) {
             this.setDetails(this.props.productcart)
         }
+
+        let filterList = []
+        if (this.props.history !== undefined)
+            filterList = this.props.productcart.filter((ele, ind) => ind === this.props.productcart.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
+        if (this.props.history === undefined)
+            filterList = this.props.data.filter((ele, ind) => ind === this.props.data.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
+
+        filterList.map((x) => {
+            this.state.MerchantShopName.push(x.MerchantShopName)
+        })
+
     }
 
     componentDidUpdate(prevProps) {
@@ -160,24 +173,11 @@ class ShopPageCart extends Component {
             });
 
 
-            if (overProductStockAmountlimit !== true && this.state.selectedList.length > 0) {
-
+            if (overProductStockAmountlimit !== true && this.state.selectedProductDetailList.length > 0) {
                 this.setState({ isDataAccepted: true })
-                // shopApi
-                //     .addOrder({
-                //         UserID: localStorage.getItem("id"),
-                //         Products: ProductIDs,
-                //         ProductQuantity: ProductQuantity,
-                //     })
-                //     .then((json) => {
-                //         browserHistory.push("/Emporia/shop/checkout?order=" + json[0].OrderID);
-                //         window.location.reload(false);
-                //     });
-                // browserHistory.push("/Emporia/shop/checkout");
-                // window.location.reload(false);
             }
 
-            if (this.state.selectedList.length === 0) {
+            if (this.state.selectedProductDetailList.length === 0) {
                 toast.error("Please select at least 1 product to proceed")
             }
             if (overProductStockAmountlimit === true) {
@@ -195,44 +195,38 @@ class ShopPageCart extends Component {
     // ---------------------------------------------------- Check Selected ------------------------------------
 
     handleSelectedProduct(item, index) {
-        if (this.state.selectedList.length > 0) {
+        if (this.state.selectedProductDetailList.length > 0) {
             let found = false
             this.state.selectedProductDetailList.map((x, i) => {
                 if (x.id === item.id) {
-                    this.state.selectedList.splice(i, 1)
                     this.state.selectedProductDetailList.splice(i, 1)
                     found = true
                 }
             })
             if (found === false) {
-                this.state.selectedList.push(index)
                 this.state.selectedProductDetailList.push(item)
             }
         }
         else {
-            this.state.selectedList.push(index)
             this.state.selectedProductDetailList.push(item)
         }
         this.setState({ subtotal: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
-        // this.setState({ total: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
     }
 
-    handleAllProductSellect() {
+    handleAllProductSellect(shopName, selectedProductListing) {
+        const { cart, selectedProductDetailList } = this.state
 
-        if (this.state.selectedList.length === 0 && this.state.selectedList.length !== this.state.cart.length) {
-            this.state.selectedList.splice(0, this.state.selectedList.length)
-            this.state.selectedProductDetailList.splice(0, this.state.selectedProductDetailList.length)
-            this.state.cart.map((product, i) => {
-                this.state.selectedProductDetailList.push(product)
-                this.state.selectedList.push(i)
-            })
+        let itemsWithShopname = selectedProductDetailList.filter(x => x.MerchantShopName === shopName)
+        let tempList = []
+
+        if (itemsWithShopname.length > 0) {
+            tempList = selectedProductDetailList.filter(x => x.MerchantShopName !== shopName)
         }
         else {
-            this.state.selectedList.splice(0, this.state.selectedList.length)
-            this.state.selectedProductDetailList.splice(0, this.state.selectedProductDetailList.length)
+            itemsWithShopname = cart.filter(x => x.MerchantShopName === shopName)
+            tempList = [...selectedProductDetailList, ...itemsWithShopname]
         }
-        this.setState({ subtotal: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
-        // this.setState({ total: this.state.selectedProductDetailList.reduce((subtotal, item) => subtotal + item.total, 0) })
+        this.setState({ selectedProductDetailList: tempList, subtotal: tempList.reduce((subtotal, item) => subtotal + item.total, 0) })
     }
 
     renderItems(displayCart) {
@@ -254,8 +248,8 @@ class ShopPageCart extends Component {
                             this.props.history !== undefined &&
                             <Checkbox
                                 checked={
-                                    this.state.selectedList.length > 0 ?
-                                        this.state.selectedList.filter(x => x === i).length > 0 ?
+                                    this.state.selectedProductDetailList.length > 0 ?
+                                        this.state.selectedProductDetailList.filter(x => x.id === item.id).length > 0 ?
                                             true : false
                                         : false
                                 }
@@ -330,31 +324,37 @@ class ShopPageCart extends Component {
                         <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
                 }
                 <div className="container">
-                    <table className="cart__table cart-table">
-                        <thead className="cart-table__head">
-                            <tr className="cart-table__row">
-                                <th className="cart-table__column cart-table__column--checkbox">
-                                    {this.props.history !== undefined ?
-                                        <Checkbox
-                                            checked={this.state.selectedList.length === 0 ? false :
-                                                this.state.cart.length === this.state.selectedList.length ? true : false}
-                                            onClick={() => this.handleAllProductSellect()}
-                                        /> : ""
-                                    }
-
-                                </th>
-                                <th className="cart-table__column cart-table__column--image">Image</th>
-                                <th className="cart-table__column cart-table__column--product">Product</th>
-                                <th className="cart-table__column cart-table__column--price">Price</th>
-                                <th className="cart-table__column cart-table__column--quantity">Quantity</th>
-                                <th className="cart-table__column cart-table__column--total">Total</th>
-                                <th className="cart-table__column cart-table__column--remove" aria-label="Remove" />
-                            </tr>
-                        </thead>
-                        <tbody className="cart-table__body">
-                            {this.props.history !== undefined ? this.renderItems(this.state.cart) : this.renderItems(this.props.data)}
-                        </tbody>
-                    </table>
+                    {this.state.MerchantShopName.map((shopName) => {
+                        return (
+                            <>
+                                <td><th>{shopName}</th></td>
+                                <table className="cart__table cart-table">
+                                    <thead className="cart-table__head">
+                                        <tr className="cart-table__row">
+                                            <th className="cart-table__column cart-table__column--checkbox">
+                                                {this.props.history !== undefined ?
+                                                    <Checkbox
+                                                        checked={this.state.selectedProductDetailList.length === 0 ? false :
+                                                            this.state.cart.filter((x) => x.MerchantShopName === shopName).length === this.state.selectedProductDetailList.filter((x) => x.MerchantShopName === shopName).length ? true : false}
+                                                        onClick={() => this.handleAllProductSellect(shopName, this.state.selectedProductDetailList)}
+                                                    /> : ""
+                                                }
+                                            </th>
+                                            <th className="cart-table__column cart-table__column--image">Image</th>
+                                            <th className="cart-table__column cart-table__column--product">Product</th>
+                                            <th className="cart-table__column cart-table__column--price">Price</th>
+                                            <th className="cart-table__column cart-table__column--quantity">Quantity</th>
+                                            <th className="cart-table__column cart-table__column--total">Total</th>
+                                            <th className="cart-table__column cart-table__column--remove" aria-label="Remove" />
+                                        </tr>
+                                    </thead>
+                                    <tbody className="cart-table__body">
+                                        {this.props.history !== undefined ? this.renderItems(this.state.cart.filter((X) => X.MerchantShopName === shopName)) : this.renderItems(this.props.data.filter((X) => X.MerchantShopName === shopName))}
+                                    </tbody>
+                                </table>
+                            </>
+                        )
+                    })}
                     {
                         this.props.history !== undefined &&
                         <div style={{ textAlign: "right", padding: "30px 30px", backgroundColor: "white" }}>
@@ -389,6 +389,9 @@ class ShopPageCart extends Component {
     }
 
     render() {
+
+
+        console.log("MASUK this.state.selectedProductDetailList", this.state.selectedProductDetailList)
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },
@@ -412,10 +415,11 @@ class ShopPageCart extends Component {
                 return (
                     <PageCheckout
                         data={this.state.selectedProductDetailList}
+                        merchant={ this.state.selectedProductDetailList.filter((ele, ind) => ind === this.state.selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))}
                     />
                 )
             } else {
-                if (this.props.productcart.length !== 0) {
+                if (this.props.productcart.length > 0 && this.props.productcart[0].ReturnVal !== '0') {
                     content = this.renderCart();
                 } else {
                     content = continueshopping;

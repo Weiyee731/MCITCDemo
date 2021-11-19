@@ -44,6 +44,7 @@ function MobileMenu(props) {
             }
         }
         if (item.type === 'link') {
+            window.location.href = item.url
             closeMobileMenu();
         }
     };
@@ -52,7 +53,7 @@ function MobileMenu(props) {
         {
             type: 'link',
             label: 'Home',
-            url: '/',
+            url: '/Emporia',
         },
 
         {
@@ -164,7 +165,7 @@ function MobileMenu(props) {
             url: '',
             children: [
                 localStorage.getItem('isLogin') === 'false' && { type: 'link', label: 'Login', url: '/login' },
-                localStorage.getItem('roleid') <= 15 && { type: 'link', label: 'Inventory', url: '/dashboard' },
+                localStorage.getItem('roleid') <= 15 && { type: 'link', label: 'Inventory', url: '/Emporia/dashboard' },
                 { type: 'link', label: 'Edit Profile', url: '/account' },
                 { type: 'link', label: 'Order History', url: '/account/orders' },
                 { type: 'link', label: 'Order Details', url: '/account/orders/5' },

@@ -1431,12 +1431,7 @@ class AddProductComponent extends Component {
 
     } else {
       if (data === "512x512") {
-        console.log(data)
-        console.log(acceptedFiles)
         if (this.state.fileInfo.length + acceptedFiles.length > 3) {
-          this.setState({
-
-          })
           toast.error("Only 3 images are allowed.");
         } else {
           this.setState((state) => {
@@ -1453,9 +1448,6 @@ class AddProductComponent extends Component {
               url,
             };
           });
-          // this.setState({
-          //   file1Added: true,
-          // });
           if (this.state.fileInfo.length === 1) {
             this.setState({
               file1Added: true,
@@ -2030,11 +2022,9 @@ class AddProductComponent extends Component {
           this.props.callAddProductMedia(object)
         }
         else {
-          console.log(res)
           toast.error("There is something wrong with uploading images. Please try again.")
         }
       }).catch(e => {
-        console.log(e)
         toast.error("There is something wrong with uploading images. Please try again.")
       })
     }
@@ -3098,14 +3088,8 @@ class AddProductComponent extends Component {
   };
 
   saveDesign = () => {
-    // this.editor.saveDesign((design) => {
-    //   console.log("saveDesign", design);
-    //   alert("Design Saved Successfully");
-    // });
-
     setTimeout(
       function () {
-        console.log(this.state.description);
       }.bind(this),
       500
     );
@@ -3131,11 +3115,9 @@ class AddProductComponent extends Component {
     this.props.callAddProduct(object)
 
     this.setState({ isSubmit: true })
-    // console.log(this.state.file)
   }
 
   bindProductInfoToState = () =>{
-    console.log(this.props.productInfo)
     //do something here yomna, and then bind the values to the state at the function below
 
     this.setState({

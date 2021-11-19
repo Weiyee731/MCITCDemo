@@ -50,7 +50,7 @@ class AccountPageCompanyProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      USERID: window.localStorage.getItem("id"),
+      USERID: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
       supplierName: "",
       supplierContact: "",
       supplierWebsite: "",

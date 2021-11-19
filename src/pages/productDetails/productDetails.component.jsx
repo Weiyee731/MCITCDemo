@@ -790,17 +790,6 @@ class ProductDetailsComponent extends Component {
             FilledValues = FilledValues + 1;
           }
         });
-        // if (
-        //   this.state.variation1.name == "" ||
-        //   this.state.variation1.name == null
-        // ) {
-        //   TotalValue = TotalValue + 1;
-        // } else {
-        //   TotalValue = TotalValue + 1;
-        //   FilledValues = FilledValues + 1;
-        // }
-        console.log(FilledValues)
-        console.log(TotalValue)
         var Variant1Filled = FilledValues / TotalValue;
 
         if (this.state.wholeSaleOn) {
@@ -1480,10 +1469,6 @@ class ProductDetailsComponent extends Component {
               url,
             };
           });
-          console.log(acceptedFiles)
-          // this.setState({
-          //   file1Added: true,
-          // });
           if (this.state.fileInfo.length === 1) {
             this.setState({
               file1Added: true,
@@ -1791,7 +1776,6 @@ class ProductDetailsComponent extends Component {
   };
 
   onDeleteVariant = (index, data) => {
-    console.log(data);
     if (data === "variant1") {
       if (this.state.variation2On) {
         var newVariant = [];
@@ -2059,11 +2043,9 @@ class ProductDetailsComponent extends Component {
           this.props.callAddProductMedia(object)
         }
         else {
-          console.log(res)
           toast.error("There is something wrong with uploading images. Please try again.")
         }
       }).catch(e => {
-        console.log(e)
         toast.error("There is something wrong with uploading images. Please try again.")
       })
     }
@@ -3158,20 +3140,6 @@ class ProductDetailsComponent extends Component {
     );
   };
 
-  saveDesign = () => {
-    // this.editor.saveDesign((design) => {
-    //   console.log("saveDesign", design);
-    //   alert("Design Saved Successfully");
-    // });
-
-    setTimeout(
-      function () {
-        console.log(this.state.description);
-      }.bind(this),
-      500
-    );
-  };
-
   OnSubmit = () => {
     this.checkEverything();
 
@@ -3192,12 +3160,9 @@ class ProductDetailsComponent extends Component {
     this.props.CallUpdateProduct(object)
 
     this.setState({ isSubmit: true })
-    // console.log(this.state.file)
   }
 
   bindProductInfoToState = () =>{
-    console.log(this.props.productInfo);
-  
     //set tags
     var tagList = "";
     JSON.parse(this.props.productInfo[0].ProductTag.replace(/\\/g , "")).map((tag) => {
@@ -3275,7 +3240,6 @@ class ProductDetailsComponent extends Component {
     //set Images
     //check url sent from database since it says 404 not found
     var productImages = JSON.parse(this.props.productInfo[0].ProductImages);
-    console.log(productImages)
     var fileInfo = [];
     var url = [];
     var file1Added = false;
@@ -3383,7 +3347,6 @@ class ProductDetailsComponent extends Component {
     if(this.props.productInfo){
       if(this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind){
         this.bindProductInfoToState()
-        console.log("Data Binded")
       }
     }
 
@@ -3539,16 +3502,7 @@ class ProductDetailsComponent extends Component {
   }
 
   MakeEditable = () => {
-    
-      this.setState({toBeEdited: !this.state.toBeEdited})
-      console.log("supposed to be false" + this.state.toBeEdited)
-    
-    setTimeout(
-      function () {
-        console.log(this.state.toBeEdited);
-      }.bind(this),
-      500
-    );
+    this.setState({toBeEdited: !this.state.toBeEdited})
   }
 
   render() {
@@ -4428,7 +4382,6 @@ class ProductDetailsComponent extends Component {
                   disabled={!this.state.toBeEdited}
                   onReady={(editor) => {
                     // You can store the "editor" and use when it is needed.
-                    // console.log("Editor is ready to use!", editor);
                   }}
                   onChange={(event, editor) => {
                     const data = editor.getData();
@@ -4440,13 +4393,6 @@ class ProductDetailsComponent extends Component {
                   }}
                   
                 />
-                {/* <Button
-                  onClick={this.saveDesign}
-                  variant="outlined"
-                  className="AddButton"
-                >
-                  Save Design
-                </Button> */}
                 {this.state.productDesciptionEmpty && this.state.toBeEdited && (
                   <p className="error">Product description cannot be empty.</p>
                 )}

@@ -576,17 +576,17 @@ console.log(this.state.breadcrumb)
                                 <div className="filter-options-label"><LocalOfferOutlinedIcon /> PROMOTION</div>
                                 <div>
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="Mega Sales" />}
+                                        control={<GreenCheckbox checked={this.state.checked} name="Mega Sales" />}
                                         label="Mega Sales 40% Off"
                                         className="location-segment-checkboxes"
                                     />
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="20% Off" />}
+                                        control={<GreenCheckbox checked={this.state.checked} name="20% Off" />}
                                         label="RM15 Free Shipping"
                                         className="location-segment-checkboxes"
                                     />
                                     <FormControlLabel
-                                        control={<GreenCheckbox checked={this.state.checked} onChange={(e) => console.log()} name="20% Off" />}
+                                        control={<GreenCheckbox checked={this.state.checked} name="20% Off" />}
                                         label="Wholesale Price"
                                         className="location-segment-checkboxes"
                                     />

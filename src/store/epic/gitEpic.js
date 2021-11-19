@@ -139,6 +139,7 @@ export class GitEpic {
           payload.VerifyType +
           "&VALIDATIONFIELD=" +
           payload.password)
+
         const response = await fetch(
           url +
           "User_ValidationByType?USERID=" +
@@ -420,7 +421,7 @@ export class GitEpic {
   UpdateShopDetail = (action$) =>
     action$.ofType(GitAction.UpdateShopDetail).switchMap(async ({ payload }) => {
       try {
-        console.log( url +
+        console.log(url +
           "User_UpdateShopDetail?USERID=" +
           payload.USERID +
           "&SHOPNAME=" +
@@ -1262,6 +1263,7 @@ export class GitEpic {
         );
         const json = await response.json();
         // json = JSON.parse(json);
+        console.log("json", json)
         return {
           type: GitAction.GotProductListing,
           payload: json,
@@ -2639,12 +2641,12 @@ export class GitEpic {
   getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
       try {
-        console.log( url + "User_ProfileListByType?TYPE=" + payload.type +
-        "&TYPEVALUE=" + payload.typeValue +
-        "&USERID=" + payload.USERID +
-        "&UserRoleID=" + payload.userRoleID +
-        "&LISTPERPAGE=" + payload.productPage +
-        "&PAGE=" + payload.page)
+        console.log(url + "User_ProfileListByType?TYPE=" + payload.type +
+          "&TYPEVALUE=" + payload.typeValue +
+          "&USERID=" + payload.USERID +
+          "&UserRoleID=" + payload.userRoleID +
+          "&LISTPERPAGE=" + payload.productPage +
+          "&PAGE=" + payload.page)
         const response = await fetch(
           url + "User_ProfileListByType?TYPE=" + payload.type +
           "&TYPEVALUE=" + payload.typeValue +
@@ -2675,6 +2677,12 @@ export class GitEpic {
 
   getAllMerchantOrders = (action$) =>
     action$.ofType(GitAction.GetMerchantOrders).switchMap(async ({ payload }) => {
+
+      console.log(url +
+        "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
+        payload.trackingStatus +
+        "&USERID=" +
+        payload.UserID)
       try {
         const response = await fetch(
           url +

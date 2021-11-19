@@ -1,5 +1,5 @@
 // react
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 
 // third-party
 import { Link } from "react-router-dom";
@@ -27,12 +27,20 @@ import TextField from '@mui/material/TextField';
 
 
 //DatePicker
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+// import {
+//   MuiPickersUtilsProvider,
+//   KeyboardDatePicker,
+// } from "@material-ui/pickers";
 
-import DateFnsUtils from "@date-io/date-fns";
+//Filtering
+import DatePicker from 'react-date-picker'
+import moment from 'moment';
+import IconButton from '@mui/material/IconButton';
+import Button from "@material-ui/core/Button";
+import SearchIcon from '@mui/icons-material/Search';
+import { ThirteenMp } from "@mui/icons-material";
+
+// import DateFnsUtils from "@date-io/date-fns";
 
 function mapStateToProps(state) {
   return {
@@ -94,7 +102,6 @@ function a11yProps(index) {
   };
 }
 
-
 class AccountPageOrders extends Component {
   constructor(props) {
     super(props);
@@ -113,11 +120,16 @@ class AccountPageOrders extends Component {
       tax: 0,
       value: 0,
       TrackingStatus: '-',
-      selectedDate: null,
+      isFiltered: false,
+      filteredList: [],
+
+      trackingNumber: "",
+      selectedDate: new Date(),
     };
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleChangeTabIndex = this.handleChangeTabIndex.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this.searchFilter = this.searchFilter.bind(this);
   }
 
   //Change Tab
@@ -168,17 +180,45 @@ class AccountPageOrders extends Component {
     this.setState({ value: index })
   };
 
-  // Date
-  handleDateChange = (selectedDate) => {
-    this.setState({ selectedDate: new Date() })
+  handleDateChange = (date) => {
+    this.setState({ selectedDate: date })
+    this.searchFilter(this.state.trackingNumber, date)
+  }
+
+  handleTrackingNoChange = (value) => {
+    this.setState({ trackingNumber: value })
+    this.searchFilter(value, this.state.selectedDate)
   }
 
   handlePageChange = (page) => {
     this.setState(() => ({ page }));
   };
 
-  render() {
+  searchFilter = (value, date) => {
+    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
+    this.state.filteredList.splice(0, this.state.filteredList.length)
+    this.props.allmerchantorders.filter(searchedItem =>
+      format.test(value) === false
+      // && searchedItem.trackingNumber.toLowerCase().trim().includes(value)
+      && moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
+    )
+      .map(filteredItem => {
+        this.state.filteredList.push(filteredItem);
+      });
+
+    this.setState({ isFiltered: true })
+  }
+
+  clearFilter = () => {
+    this.setState({
+      isFiltered: false,
+      selectedDate: new Date(),
+      trackingNumber: ""
+    })
+  }
+
+  render() {
     const { page } = this.state;
     let ordersList;
 
@@ -186,9 +226,9 @@ class AccountPageOrders extends Component {
       <>
         {
           listing.length > 0 ?
-            ordersList = 
+            ordersList =
             listing
-            // .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
+              // .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
               .map((order) => {
                 const quantity = order.OrderProductDetail !== null ? JSON.parse(order.OrderProductDetail).map(
                   (orders) => orders.ProductQuantity
@@ -234,46 +274,31 @@ class AccountPageOrders extends Component {
                   totalOverall = subtotalPrice + parseInt(this.state.shipping + this.state.tax)
                 }
 
+                const pageItem = {
+                  pathname: "/account/orders/" + order.OrderID,
+                  orderdetails: order,
+                  orderprice: totalPrice,
+                  address: this.props.addresses,
+                  creditcards: this.props.creditcard,
+                }
+                let TrackingList = (
+                  <tr key={order.OrderID} >
+                    <td>  <Link to={pageItem} >{`#${order.OrderID}`}</Link> </td>
+                    <td><Link to={pageItem} >{order.CreatedDate}</Link> </td>
+                    <td><Link to={pageItem} >{order.TrackingStatus}</Link> </td>
+                    <td><Link to={pageItem} >{totalQuantity + " items ," + " RM " + totalOverall}</Link> </td>
+                  </tr>
+                )
+
                 return (
                   <>
-                    {this.state.TrackingStatus !== "-" ?
-                      order.TrackingStatus === this.state.TrackingStatus ?
-                        <tr key={order.OrderID}>
-                          <td>
-                            <Link
-                              to={{
-                                pathname: "/account/orders/" + order.OrderID,
-                                orderdetails: order,
-                                orderprice: totalPrice,
-                                address: this.props.addresses,
-                                creditcards: this.props.creditcard,
-                              }}
-                            >{`#${order.OrderID}`}</Link>
-                          </td>
-
-                          <td>{order.CreatedDate}</td>
-                          <td>{order.TrackingStatus}</td>
-                          <td>{totalQuantity + " items ," + " RM " + totalOverall}</td>
-                        </tr>
-                        : null
-                      :
-                      <tr key={order.OrderID}>
-                        <td>
-                          <Link
-                            to={{
-                              pathname: "/account/orders/" + order.OrderID,
-                              orderdetails: order,
-                              orderprice: totalPrice,
-                              address: this.props.addresses,
-                              creditcards: this.props.creditcard,
-                            }}
-                          >{`#${order.OrderID}`}</Link>
-                        </td>
-
-                        <td>{order.CreatedDate}</td>
-                        <td>{order.TrackingStatus}</td>
-                        <td>{totalQuantity + " items ," + " RM " + overallPrice}</td>
-                      </tr>
+                    {
+                      this.state.TrackingStatus !== "-" ?
+                        order.TrackingStatus === this.state.TrackingStatus ?
+                          <>{TrackingList}</>
+                          : null
+                        :
+                        <>{TrackingList}</>
                     }
                   </>
                 );
@@ -283,32 +308,38 @@ class AccountPageOrders extends Component {
       </>
     )
 
-
     let orders = []
     let orderListing = (index) => (
-      <div id={index} >
-        <div id={"cardTable" + index} className="card-table" style={{ width: '85%', margin: 'auto' }}>
+      <div id={index}>
+        <div id={"cardTable" + index} className="card-table">
           <div id={"table" + index} className="table-responsive-sm">
             <table>
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'center' }}>Order</th>
-                  <th style={{ textAlign: 'center' }}>Date</th>
-                  <th style={{ textAlign: 'center' }}>Status</th>
-                  <th style={{ textAlign: 'center' }}>Total</th>
+                  <th>Order</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Total</th>
                 </tr>
               </thead>
               <tbody>
                 {this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
-                  this.props.allmerchantorders.filter((x) => x.TrackingStatus === this.state.TrackingStatus).map((a) => {
-                    orders.push(a)
-                  })
+                  this.state.isFiltered === false ?
+                    this.props.allmerchantorders.filter((x) => x.TrackingStatus === this.state.TrackingStatus).map((a) => {
+                      orders.push(a)
+                    })
+                    : this.state.filteredList.filter((x) => x.TrackingStatus === this.state.TrackingStatus).map((a) => {
+                      orders.push(a)
+                    })
                   : ""
                 }
                 {
                   this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
                     this.state.TrackingStatus === "-" ?
-                      orderDetailListing(this.props.allmerchantorders) : orderDetailListing(orders) : ""
+                      this.state.isFiltered === false ?
+                        orderDetailListing(this.props.allmerchantorders)
+                        : orderDetailListing(this.state.filteredList)
+                      : orderDetailListing(orders) : ""
                 }
               </tbody>
             </table>
@@ -326,7 +357,8 @@ class AccountPageOrders extends Component {
                     : 1
                 }
                 onPageChange={this.handlePageChange}
-              /> :
+              />
+              :
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                 <div style={{ marginBottom: "20px" }}>
                   Seem like you haven purchase anything yet
@@ -339,46 +371,41 @@ class AccountPageOrders extends Component {
     );
 
     return (
-      <div className="card" >
+      <div className="card p-3">
         <Helmet>
           <title>{`Order History — ${theme.name}`}</title>
         </Helmet>
-        <div className="row">
-          <div className="card-header col-6">
-            <h5>Order History</h5>
+        <h5>Order History</h5>
+        <div className="row text-center">
+          <div className="col-lg-5 col-md-5 col-sm-12 mb-2">
+            <TextField
+              id="standard-helperText"
+              label="Tracking Number"
+              variant="standard"
+              onChange={(x) => this.handleTrackingNoChange(x.target.value)}
+              style={{
+                width: '100%'
+              }}
+            />
           </div>
-          <div className="card-header col-6">
-            <div style={{ marginBottom: '2%', display: 'flex', flexDirection: 'row' }}>
-              <div className="col-6">
-                <TextField
-                  id="standard-helperText"
-                  label="Tracking Number"
-                  variant="standard"
-                />
-              </div>
-              <div className="col-6">
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <div style={{ marginBottom: '2%' }}>
-                    <KeyboardDatePicker
-                      disableToolbar
-                      variant="inline"
-                      format="dd/MM/yyyy"
-                      id="date-picker-inline"
-                      label="Select Date"
-                      value={this.state.selectedDate}
-                      onChange={this.handleDateChange.bind(this, "selectedDate")}
-                      KeyboardButtonProps={{
-                        "aria-label": "change date",
-                      }}
-                    // style={{ width: "60%" }}
-                    />
-                  </div>
-                </MuiPickersUtilsProvider>
-              </div>
-            </div>
+          <div className="col-lg-5 col-md-5 col-sm-12 mb-2">
+            <DatePicker
+              size="small"
+              placeholderText="Select Date"
+              onChange={(e) => this.handleDateChange(e)}
+              value={this.state.selectedDate}
+              className={`w-100`}
+            />
+          </div>
+          <div className="col-lg-1 col-md-1 col-sm-12 mb-2">
+            <Button
+              onClick={() => this.clearFilter()}
+            >
+              Clear
+            </Button>
           </div>
         </div>
-        <div style={{ margin: 'auto',  width: "100%" }}>
+        <div>
           <Box sx={{ bgcolor: 'background.paper', width: "100%" }}>
             <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
               <Tabs
@@ -402,26 +429,26 @@ class AccountPageOrders extends Component {
             >
               {/* ---------------------------------------------------- All ----------------------------------------------------- */}
               <TabPanel value={this.state.value} index={0} dir={theme.direction}>
-                {orderListing(0)}
+                {this.state.value === 0 && orderListing(0)}
               </TabPanel>
               {/* ---------------------------------------------------- In Cart ----------------------------------------------------- */}
               <TabPanel value={this.state.value} index={1} dir={theme.direction}>
-                {orderListing(1)}
+                {this.state.value === 1 && orderListing(1)}
               </TabPanel>
 
               {/* ----------------------------------------- In Purchasing ----------------------------------------------------------- */}
               <TabPanel value={this.state.value} index={2} dir={theme.direction}>
-                {orderListing(2)}
+                {this.state.value === 2 && orderListing(2)}
               </TabPanel>
 
               {/* -------------------------------------------- In Shipping -------------------------------------------------------- */}
               <TabPanel value={this.state.value} index={3} dir={theme.direction}>
-                {orderListing(3)}
+                {this.state.value === 3 && orderListing(3)}
               </TabPanel>
             </SwipeableViews>
           </Box>
         </div>
-      </div>
+      </div >
     )
   }
 }

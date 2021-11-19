@@ -232,7 +232,6 @@ class PageChangeEmail extends Component {
     if (otp !== null) {
       this.setState({ otp });
     }
-    // console.log(otp);
 
     if (otp.length === 6) {
       this.props.CallUpdateEmail(this.state, otp);
@@ -320,11 +319,9 @@ class PageChangeEmail extends Component {
       window.location.reload(false);
     } else {
     }
-    // toast.error// remain in page
   };
 
   runTimer() {
-    // if (!this.timerId) {
     this.setState({ validEmail: false });
     this.timerId =
       this.state.counter > 0 &&
@@ -335,7 +332,6 @@ class PageChangeEmail extends Component {
           this.stopTimer(60);
         }
       }, 1000);
-    // }
   }
 
   clickedBack = (e) => {

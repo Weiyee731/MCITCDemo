@@ -6,16 +6,16 @@ import { Link } from "react-router-dom";
 import "./styles/AllProductCategory.css"
 
 function mapStateToProps(state) {
-    return {
-        productCategories: state.counterReducer["productCategories"], // with sub hierarchy item
-        loading: state.counterReducer["loading"],
-    };
+  return {
+    productCategories: state.counterReducer["productCategories"], // with sub hierarchy item
+    loading: state.counterReducer["loading"],
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-        CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
-    };
+  return {
+    CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
+  };
 }
 
 const initial_state = {
@@ -23,14 +23,14 @@ const initial_state = {
 }
 
 class BlockAllProductCategory extends Component {
-    constructor(props) {
-        super(props)
-        this.state = initial_state;
-    }
+  constructor(props) {
+    super(props)
+    this.state = initial_state;
+  }
 
-    componentDidMount() {
-        this.props.CallAllProductCategoryListing();
-    }
+  componentDidMount() {
+    this.props.CallAllProductCategoryListing();
+  }
 
     render() {
         return (
