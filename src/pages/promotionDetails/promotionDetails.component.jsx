@@ -1449,7 +1449,7 @@ class PromotionDetailsComponent extends Component {
                       ) : null}
                     </div>
                     <div style={{ margin: "5px", width: "100%" }}>
-                      <KeyboardDatePicker
+                      {/* <KeyboardDatePicker
                         disableToolbar
                         variant="inline"
                         margin="normal"
@@ -1468,7 +1468,7 @@ class PromotionDetailsComponent extends Component {
                         error={
                           this.state.endDateNotSet || this.state.endDateInvalid
                         }
-                      />
+                      /> */}
                       {this.state.endDateNotSet || this.state.endDateInvalid ? (
                         <FormHelperText style={{ color: "red" }}>
                           Please enter a valid end date.
@@ -1620,7 +1620,7 @@ class PromotionDetailsComponent extends Component {
                     </FormHelperText>
                     <div style={{ margin: "5px", width: "100%" }}>
 
-                      <KeyboardDatePicker
+                      {/* <KeyboardDatePicker
                         style={{ width: "100%" }}
                         disableToolbar
                         variant="inline"
@@ -1634,7 +1634,7 @@ class PromotionDetailsComponent extends Component {
                           "PromotionStartDate"
                         )}
                         readOnly
-                      />
+                      /> */}
                       {/* <TextField
                         id="text-field-controlled"
                         helperText="Start Date"
@@ -1644,8 +1644,11 @@ class PromotionDetailsComponent extends Component {
                         inputProps={{ readOnly: "true" }}
                       /> */}
                     </div>
+                    {
+                      console.log(this.state.PromotionEndDate)
+                    }
                     <div style={{ margin: "5px", width: "100%" }}>
-                      <KeyboardDatePicker
+                      {/* <KeyboardDatePicker
                         style={{ width: "100%" }}
                         disableToolbar
                         variant="inline"
@@ -1659,7 +1662,7 @@ class PromotionDetailsComponent extends Component {
                           "PromotionEndDate"
                         )}
                         readOnly
-                      />
+                      /> */}
                       {/* <TextField
                         id="text-field-controlled"
                         helperText="End Date"
