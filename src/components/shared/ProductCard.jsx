@@ -147,7 +147,7 @@ function ProductCard(props) {
       </ul>
     );
   }
-  
+
   wishlistView =
     (
       props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
@@ -184,10 +184,7 @@ function ProductCard(props) {
         </div>
         <div className="product-card__rating">
           <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
-          {
-            product.ProductSold !== "0" && product.ProductSold !== null &&
-            <div className="product-card__rating-legend">{product.ProductRating}</div>
-          }
+          <div className="product-card__rating-legend">{product.ProductRating !== null ? parseFloat(product.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
         </div>
         {
           product.ProductSold !== "0" && product.ProductSold !== null &&

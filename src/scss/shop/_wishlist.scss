@@ -106,8 +106,9 @@
         width: 170px;
 
         @include direction {
-            text-align: $inline-end;
-            #{$padding-inline-start}: 90px;
+            // text-align: $inline-end;
+            text-align: center;
+            #{$padding-inline-start}: 30px;
         }
     }
     .wishlist__column--tocart {
@@ -115,7 +116,7 @@
         width: 1px;
 
         @include direction {
-            #{$padding-inline-start}: 90px;
+            #{$padding-inline-start}: 30px;
             #{$padding-inline-end}: 0;
         }
     }

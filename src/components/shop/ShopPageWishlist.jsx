@@ -74,6 +74,8 @@ function ShopPageWishlist(props) {
 
     let content;
 
+    console.log("wishlist", props.wishlist)
+
     if (props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0') {
         const itemsList = wishlist.map((item) => {
             let image;
@@ -105,11 +107,12 @@ function ShopPageWishlist(props) {
                         <Link to={url.product(item)} className="wishlist__product-name">{item.ProductName}</Link>
                         <div className="wishlist__product-rating">
                             <Rating value={item.ProductRating} />
-                            <div className="wishlist__product-rating-legend">{`${item.ProductRating} Reviews`}</div>
+
+                            <div className="wishlist__product-rating-legend">{item.ProductRating !== null ? parseFloat(item.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
                         </div>
                     </td>
                     <td className="wishlist__column wishlist__column--stock">
-                        <div className="badge badge-success">In Stock</div>
+                        <div className="badge badge-success">Samajaya Sdn Bdh</div>
                     </td>
                     <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? item.ProductPrice : 0} currency={"RM"} /></td>
                     <td className="wishlist__column wishlist__column--tocart">
@@ -131,7 +134,7 @@ function ShopPageWishlist(props) {
                             <tr className="wishlist__row">
                                 <th className="wishlist__column wishlist__column--image">Image</th>
                                 <th className="wishlist__column wishlist__column--product">Product</th>
-                                <th className="wishlist__column wishlist__column--stock">Stock Status</th>
+                                <th className="wishlist__column wishlist__column--stock">Shop Name</th>
                                 <th className="wishlist__column wishlist__column--price">Price</th>
                                 <th className="wishlist__column wishlist__column--tocart" aria-label="Add to cart" />
                                 <th className="wishlist__column wishlist__column--remove" aria-label="Remove" />
