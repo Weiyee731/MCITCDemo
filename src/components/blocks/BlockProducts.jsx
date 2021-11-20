@@ -45,7 +45,7 @@ export default function BlockProducts(props) {
           :
           (
             <div className="container">
-              <BlockHeader title={title} />
+              <BlockHeader title={title} showAll={"/Emporia/shop/ProductListing/type:Merchant&typevalue:" + 0} />
               <div>
                 {layout === "large-first" && large}
                 {smalls}

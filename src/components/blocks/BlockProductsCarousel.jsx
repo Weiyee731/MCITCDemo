@@ -235,9 +235,10 @@ export default class BlockProductsCarousel extends Component {
                   onNext={this.handleNextClick}
                   onPrev={this.handlePrevClick}
                   onGroupClick={onGroupClick}
+                  showAll={"/Emporia/shop/ProductListing/type:Merchant&typevalue:" + 0}
                 />
 
-                <div style={{ textAlign: "right", marginBottom: '5px' }}>
+                {/* <div style={{ textAlign: "right", marginBottom: '5px' }}>
                   <Button
                     onClick={(e) => {
                       window.location.href = "/Emporia/shop/ProductListing/type:Merchant&typevalue:" + 0
@@ -245,7 +246,7 @@ export default class BlockProductsCarousel extends Component {
                   >
                     View All
                   </Button>
-                </div>
+                </div> */}
 
                 <div className="block-products-carousel__slider">
                   <div className="block-products-carousel__preloader" />

@@ -263,7 +263,7 @@ class PageChangeContact extends Component {
 
       if (this.props.contactUpdated &&this.props.contactUpdated[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your contact number has been updated");
-        browserHistory.push("account/profile");
+        browserHistory.push("/Emporia/account/profile");
         window.location.reload(false);
       } else {
        toast.success("The OTP key are incorrect. Please try again");
@@ -315,7 +315,7 @@ class PageChangeContact extends Component {
       this.stopTimer(60);
     }
     if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-      browserHistory.push("account/profile");
+      browserHistory.push("/Emporia/account/profile");
       window.location.reload(false);
     } else {
     }

@@ -40,7 +40,7 @@ function BlockHeader(props) {
             <div className="block-header__arrows-list">
                 <button className="block-header__showAll" >
                     <Link to={showAll}>
-                    Show All   
+                        Show All
                     </Link>
                 </button>
             </div>

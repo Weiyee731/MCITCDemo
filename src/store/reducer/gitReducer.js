@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   productsByMerchantID: [],
   viewMoreProducts: [],
   reviews: [],
+  reviewReturn: [],
   categories: [],
   productCategories: [],
   gridstorages: [],
@@ -739,6 +740,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         reviews: action.payload,
+        reviewReturn: action.payload2
+      });
+
+    case GitAction.GetProductReviewEmpty:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotProductReviewEmpty:
+      return Object.assign({}, state, {
+        loading: false,
+        reviewReturn: [],
       });
 
     //===============QUOTATION==============//

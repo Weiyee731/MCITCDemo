@@ -1952,6 +1952,11 @@ export class GitEpic {
   viewProductReviewByProductID = (action$) =>
     action$.ofType(GitAction.GetProductReviewByProductID).switchMap(async ({ payload }) => {
       try {
+        console.log("test", url +
+          "Product_ViewReviewByProductID?PRODUCTID=" +
+          payload.ProductID +
+          "&PARENTPRODUCTREVIEWID=" +
+          payload.ParentProductReviewID)
         const response = await fetch(
           url +
           "Product_ViewReviewByProductID?PRODUCTID=" +
@@ -1960,7 +1965,8 @@ export class GitEpic {
           payload.ParentProductReviewID
         );
         let json = await response.json();
-        json = JSON.parse(json);
+        console.log("test", json)
+
         return {
           type: GitAction.GotProductReviewByProductID,
           payload: json,
@@ -2022,27 +2028,26 @@ export class GitEpic {
           const response_1 = await fetch(
             url +
             "Product_ViewReviewByProductID?PRODUCTID=" +
-            payload.ProductID +
-            "&PARENTPRODUCTREVIEWID=" +
-            payload.ParentProductReviewID
+            payload.productID +
+            "&PARENTPRODUCTREVIEWID=0"
           );
           let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
           return {
-            type: GitAction.GotProductReviewByProductID,
+            type: GitAction.addedProductReview,
             payload: json_1,
+            payload2: json,
           };
         } catch (error) {
           alert('viewProductReviewByProductID: ' + error);
           return {
-            type: GitAction.GotProductReviewByProductID,
+            type: GitAction.addedProductReview,
             payload: [],
           };
         }
       } catch (error) {
         alert('addProductReview: ' + error);
         return {
-          type: GitAction.GotProductReviewByProductID,
+          type: GitAction.addedProductReview,
           payload: [],
         };
       }

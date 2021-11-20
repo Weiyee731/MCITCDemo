@@ -177,30 +177,30 @@ class IndicatorAccount extends Component {
             <ul className="account-menu__links">
               {localStorage.getItem("roleid") <= 15 && (
                 <li onClick={() => backtoinventory("Dashboard")}>
-                  <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a>
+                  <a href="/Emporia/dashboard" onClick={() => window.location.reload()}>Inventory</a>
                 </li>
               )}
               <li>
-                <Link to="/account/profile">My Profile</Link>
+                <Link to="/Emporia/account/profile">My Profile</Link>
               </li>
               {/* <li>
                 <Link to="/account/companyprofile">Company Profile</Link>
               </li> */}
               <li>
-                <Link to="/account/addresses">My Addresses</Link>
+                <Link to="/Emporia/account/addresses">My Addresses</Link>
               </li>
               <li>
-                <Link to="/account/creditcard">My Credit Cards</Link>
+                <Link to="/Emporia/account/creditcard">My Credit Cards</Link>
               </li>
 
               <li>
-                <Link to="/account/orders">Order History</Link>
+                <Link to="/Emporia/account/orders">Order History</Link>
               </li>
               {/* <li>
                 <Link to="/account/addresses">Addresses</Link>
               </li> */}
               <li>
-                <Link to="/account/password">Password</Link>
+                <Link to="/Emporia/account/password">Password</Link>
               </li>
             </ul>
             <div className="account-menu__divider" />

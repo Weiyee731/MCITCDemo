@@ -716,6 +716,9 @@ export class GitAction {
   static addProductReview = "ADD-PRODUCTREVIEW";
   static addedProductReview = "ADDED-PRODUCTREVIEW";
 
+  static GetProductReviewEmpty = "GET-PRODUCTREVIEW-EMPTY";
+  static GotProductReviewEmpty = "GOT-PRODUCTREVIEW-EMPTY";
+
   static CallProductReview(suppData) {
     return {
       type: GitAction.GetProductReview,
@@ -734,6 +737,12 @@ export class GitAction {
     return {
       type: GitAction.addProductReview,
       payload: suppData,
+    };
+  }
+
+  static CallEmptyProductReview() {
+    return {
+      type: GitAction.GetProductReviewEmpty
     };
   }
 

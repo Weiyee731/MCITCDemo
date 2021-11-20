@@ -15,10 +15,12 @@ import { GitAction } from "../../store/action/gitAction";
 import reviews from "../../data/shopProductReviews";
 import ReviewRating from "@material-ui/lab/Rating";
 import LoadingPanel from "../shared/loadingPanel";
+import { browserHistory } from "react-router";
 
 function mapStateToProps(state) {
   return {
     reviews: state.counterReducer["reviews"],
+    reviewReturn: state.counterReducer["reviewReturn"],
     loading: state.counterReducer["loading"],
   };
 }
@@ -26,19 +28,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     CallAddProductReview: (PropsData) => dispatch(GitAction.CallAddProductReview(PropsData)),
-    // CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
+    CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
+    CallEmptyProductReview: () => dispatch(GitAction.CallEmptyProductReview())
   };
 }
-
-// const [currentPage, setCurrentPage] = useState(0);
-// const [data, setData] = useState([]);
-
-// const PER_PAGE = 10;
-// const offset = currentPage * PER_PAGE;
-// const currentPageData = data
-//   .slice(offset, offset + PER_PAGE)
-//   .map(({ thumburl }) => <img src={thumburl} />);
-// const pageCount = Math.ceil(data.length / PER_PAGE);
 
 class ProductTabReviews extends Component {
 
@@ -55,19 +48,35 @@ class ProductTabReviews extends Component {
       replyid: "",
       page: 1,
       rowsPerPage: 5,
-      edited: false,
+      isEdited: false,
+
+
     }
     // this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
     this.onSubmitReview = this.onSubmitReview.bind(this);
+    this.login = this.login.bind(this);
     this.onSubmitReviewReply = this.onSubmitReviewReply.bind(this);
+    this.reviewsList = this.reviewsList.bind(this);
   }
 
+  login() {
+    browserHistory.push("/Emporia/login");
+    window.location.reload(false);
+  }
+
+  componentDidMount() {
+    if (this.props.reviews.length > 0 && JSON.parse(this.props.reviews).filter((x) => x.ProductID === this.props.product.ProductID).length > 0) {
+      if (this.props.reviews !== this.props.product.ProductReview) {
+        this.setState({ isEdited: true })
+      }
+    }
+  }
 
   onSubmitReviewReply() {
     this.props.CallAddProductReview({
       parentProductReviewID: this.state.replyid,
       productID: this.props.product.ProductID,
-      UserID: "1",
+      UserID: localStorage.getItem("id"),
       productReviewRating: "0",
       productReviewComment: this.state.productReplyReviewComment
     })
@@ -79,7 +88,7 @@ class ProductTabReviews extends Component {
     this.props.CallAddProductReview({
       parentProductReviewID: this.state.parentProductReviewID,
       productID: this.props.product.ProductID,
-      UserID: "1",
+      UserID: localStorage.getItem("id"),
       productReviewRating: this.state.productReviewRating,
       productReviewComment: this.state.productReviewComment
     })
@@ -91,85 +100,91 @@ class ProductTabReviews extends Component {
     this.setState(() => ({ page }));
   };
 
-  render() {
-    const { page } = this.state;
-    if (this.props.product.ProductReview !== null) {
-      var reviewsList = JSON.parse(this.props.product.ProductReview)
-        .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
-        .map(
-          (review, index) => (
-            <li key={index} className="reviews-list__item">
-              <div id="review" className="review">
-                <div id="review_avatar" className="review__avatar">
-                  <img src={review.avatar ? review.avatar : USER} alt={review.avatar} onError={(e) => (e.target.src = USER)} />
-                </div>
-                <div
-                  id="review_content"
-                  className=" review__content"
-                  style={{
-                    width: "100%",
-                  }}
-                >
-                  <div id="review_author" className=" review__author">{review.Name}</div>
-                  <div id="review_rating" className=" review__rating">
-                    <Rating value={review.ProductReviewRating} />
+
+  reviewsList = (reviewData, page) => {
+
+    if (reviewData !== null) {
+      return (
+        reviewData.length > 0 && JSON.parse(reviewData)
+          .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
+          .filter((x) => x.ParentProductReviewID === 0)
+          .map(
+            (review, index) => (
+              <li key={index} className="reviews-list__item">
+                <div id="review" className="review">
+                  <div id="review_avatar" className="review__avatar">
+                    <img src={review.avatar ? review.avatar : USER} alt={review.avatar} onError={(e) => (e.target.src = USER)} />
                   </div>
-                  <div id="review_text" className=" review__text">{review.ProductReviewComment}</div>
-                  <div id="review_daterow" className=" review__date" style={{ display: "flex", width: "100%", justifyContent: "space-between" }} >
-                    {/* <div>{review.ProductReviewDuration}</div> */}
-                    <div id="review_dat">{review.CreatedDate}</div>
-                    <div id="comment" className="comment-reply">
-                      <a className="comment-btn" onClick={() => this.setState({ reply: true, replyid: review.ProductReviewID })} >
-                        <i className="fas fa-reply" />{" "}
-                        Reply
-                      </a>
+                  <div
+                    id="review_content"
+                    className=" review__content"
+                    style={{
+                      width: "100%",
+                    }}
+                  >
+                    <div id="review_author" className=" review__author">{review.Name}</div>
+                    <div id="review_rating" className=" review__rating">
+                      <Rating value={review.ProductReviewRating} />
                     </div>
-                  </div>
-                  {
-                    review.ProductReviewDetail != null ?
-                      JSON.parse(review.ProductReviewDetail).map(
-                        (reviewReply, index) => (
-                          <div id="review_reply" className="review" style={{ paddingTop: "15pt" }}>
-                            <div id="review_reply_avatar" className="review__avatar">
-                              <img src={reviewReply.avatar ? reviewReply.avatar : USER} alt={reviewReply.avatar} onError={(e) => (e.target.src = USER)} />
-                            </div>
-                            <div
-                              id="review_reply_content"
-                              className=" review__content"
-                              style={{
-                                width: "100%",
-                              }}
-                            >
-                              <div id="review_reply_author" className=" review__author">{reviewReply.Name}</div>
-                              <div id="review_reply_text" className=" review__text">{reviewReply.ProductReviewComment}</div>
-                              <div id="review_reply_date" className=" review__date" style={{ display: "flex", width: "100%", justifyContent: "space-between" }}>
-                                <div>{reviewReply.CreatedDate}</div>
+                    <div id="review_text" className=" review__text">{review.ProductReviewComment}</div>
+                    <div id="review_daterow" className=" review__date" style={{ display: "flex", width: "100%", justifyContent: "space-between" }} >
+                      <div id="review_dat">{review.CreatedDate}</div>
+                      <div id="comment" className="comment-reply">
+                        <a className="comment-btn" onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.setState({ reply: true, replyid: review.ProductReviewID })} >
+                          <i className="fas fa-reply" />{" "}
+                          Reply
+                        </a>
+                      </div>
+                    </div>
+                    {
+                      review.ProductReviewDetail != null ?
+                        JSON.parse(review.ProductReviewDetail).map(
+                          (reviewReply, index) => (
+                            <div id="review_reply" className="review" style={{ paddingTop: "15pt" }}>
+                              <div id="review_reply_avatar" className="review__avatar">
+                                <img src={reviewReply.avatar ? reviewReply.avatar : USER} alt={reviewReply.avatar} onError={(e) => (e.target.src = USER)} />
+                              </div>
+                              <div
+                                id="review_reply_content"
+                                className=" review__content"
+                                style={{
+                                  width: "100%",
+                                }}
+                              >
+                                <div id="review_reply_author" className=" review__author">{reviewReply.Name}</div>
+                                <div id="review_reply_text" className=" review__text">{reviewReply.ProductReviewComment}</div>
+                                <div id="review_reply_date" className=" review__date" style={{ display: "flex", width: "100%", justifyContent: "space-between" }}>
+                                  <div>{reviewReply.CreatedDate}</div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )) : ""
-                  }
-                  {
-                    this.state.reply == true && review.ProductReviewID == this.state.replyid &&
+                          )) : ""
+                    }
+                    {
+                      this.state.reply == true && review.ProductReviewID == this.state.replyid &&
 
-                    <div id="reply_content" className="pt-3">
-                      <div id="reply_msg" className="pt-3">
-                        <textarea className="form-control" placeholder="Tell us more about your comment on this review" id="review-reply-text" rows="6" value={this.state.productReplyReviewComment} onChange={({ target }) => { this.setState({ productReplyReviewComment: target.value, productReviewRating: 0 }); }} required />
+                      <div id="reply_content" className="pt-3">
+                        <div id="reply_msg" className="pt-3">
+                          <textarea className="form-control" placeholder="Tell us more about your comment on this review" id="review-reply-text" rows="6"
+                            value={this.state.productReplyReviewComment}
+                            onChange={({ target }) => { this.setState({ productReplyReviewComment: target.value, productReviewRating: 0 }); }} required />
+                        </div>
+                        <div id="reply_btn" className="pt-3" style={{ textAlign: "center" }} onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.onSubmitReviewReply()} >
+                          <button className="btn btn-primary btn-lg">
+                            Post Your Reply
+                          </button>
+                        </div>
                       </div>
-                      <div id="reply_btn" className="pt-3" style={{ textAlign: "center" }} onClick={() => this.onSubmitReviewReply()} >
-                        <button className="btn btn-primary btn-lg">
-                          Post Your Reply
-                        </button>
-                      </div>
-                    </div>
-                  }
+                    }
+                  </div>
                 </div>
-              </div>
-            </li >
+              </li >
+            )
           )
-        );
-    } else {
-      var reviewsList = (
+      )
+    }
+    else {
+      return (
         <div
           className=" review__content"
           style={{
@@ -181,16 +196,20 @@ class ProductTabReviews extends Component {
         >
           No Reviews Yet
         </div>
-      );
+      )
     }
+  }
 
+
+  render() {
+    const { page } = this.state;
     return (
       this.props.loading === false ?
         <div div className="reviews-view" id="reviews" >
           <div className="reviews-view__list">
             <div className="reviews-view__header">Customer Reviews</div>
             <div className="reviews-list">
-              <ol className="reviews-list__content">{reviewsList}</ol>
+              <ol className="reviews-list__content">{this.reviewsList((this.state.isEdited === true ? this.props.reviews : this.props.product.ProductReview), page)}</ol>
               <div className="reviews-list__pagination">
                 <Pagination
                   current={page}
@@ -227,7 +246,7 @@ class ProductTabReviews extends Component {
               <textarea className="form-control" placeholder="Tell us more about your review on this product" id="review-text" rows="6" value={this.state.productReviewComment} onChange={({ target }) => { this.setState({ productReviewComment: target.value, }); }} required />
             </div>
             <div className="form-group mb-0">
-              <button className="btn btn-primary btn-lg" onClick={() => this.onSubmitReview()} >
+              <button className="btn btn-primary btn-lg" onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.onSubmitReview()} >
                 Post Your Review
               </button>
             </div>
