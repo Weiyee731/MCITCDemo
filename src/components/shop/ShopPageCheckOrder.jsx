@@ -279,7 +279,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   CallAllAddress: (prodData) => dispatch(GitAction.CallAllAddress(prodData)),
-  CallAddAddress: (prodData) => dispatch(GitAction.CallAddAddress(prodData)),
   CallDeleteAddress: (prodData) => dispatch(GitAction.CallDeleteAddress(prodData)),
 });
 

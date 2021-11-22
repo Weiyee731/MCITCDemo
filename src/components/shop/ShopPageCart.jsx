@@ -2,19 +2,15 @@
 import React, { Component } from 'react';
 
 // third-party
-import classNames from 'classnames';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { browserHistory } from "react-router";
 import { GitAction } from "../../store/action/gitAction";
 
 // application
-import AsyncAction from '../shared/AsyncAction';
 import Currency from '../shared/Currency';
 import InputNumber from '../shared/InputNumber';
 import PageHeader from '../shared/PageHeader';
-import { cartRemoveItem, cartUpdateQuantities, cartAddItem } from '../../store/cart';
 import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
 import Logo from "../../assets/Emporia.png";
@@ -25,7 +21,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 
 // data stubs
-import theme from '../../data/theme';
 import { toast } from 'react-toastify';
 
 class ShopPageCart extends Component {
@@ -53,6 +48,7 @@ class ShopPageCart extends Component {
             isCheckOutSubmit: false
         };
         this.setDetails = this.setDetails.bind(this)
+        this.filterShop = this.filterShop.bind(this)
         this.removeItem = this.removeItem.bind(this)
         this.handleSelectedProduct = this.handleSelectedProduct.bind(this)
         this.handleAllProductSellect = this.handleAllProductSellect.bind(this)
@@ -94,29 +90,37 @@ class ShopPageCart extends Component {
         }
     }
 
+    filterShop(data) {
+        let filterList = []
+        let filterShopName = []
+        filterList = data.filter((ele, ind) => ind === data.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
+
+        filterList.map((x) => {
+            filterShopName.push(x.MerchantShopName)
+        })
+
+        this.setState({ MerchantShopName: filterShopName })
+    }
+
     componentDidMount() {
         if (this.props.productcart !== undefined && this.props.productcart[0] !== undefined && this.props.productcart[0].ReturnVal === undefined) {
             this.setDetails(this.props.productcart)
         }
 
-        let filterList = []
         if (this.props.history !== undefined)
-            filterList = this.props.productcart.filter((ele, ind) => ind === this.props.productcart.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
+            this.filterShop(this.props.productcart)
         if (this.props.history === undefined)
-            filterList = this.props.data.filter((ele, ind) => ind === this.props.data.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
-
-        filterList.map((x) => {
-            this.state.MerchantShopName.push(x.MerchantShopName)
-        })
-
+            this.filterShop(this.props.data)
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.productcart !== this.props.productcart) {
+
             if (this.props.productcart.length > 0) {
                 this.state.cart.map((x, index) => {
                     this.state.cart.splice(0, this.state.cart.length)
                 })
+                this.filterShop(this.props.productcart)
                 this.setDetails(this.props.productcart)
             }
 
@@ -402,7 +406,7 @@ class ShopPageCart extends Component {
                     <div className="block-empty__body">
                         <div className="block-empty__message">Your shopping cart is empty!</div>
                         <div className="block-empty__actions">
-                            <Link to="/" className="btn btn-primary btn-sm">Continue</Link>
+                            <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                         </div>
                     </div>
                 </div>
@@ -413,7 +417,7 @@ class ShopPageCart extends Component {
                 return (
                     <PageCheckout
                         data={this.state.selectedProductDetailList}
-                        merchant={ this.state.selectedProductDetailList.filter((ele, ind) => ind === this.state.selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))}
+                        merchant={this.state.selectedProductDetailList.filter((ele, ind) => ind === this.state.selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))}
                     />
                 )
             } else {

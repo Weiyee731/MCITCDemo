@@ -79,6 +79,9 @@ class PageCheckout extends Component {
         this.state.ProductQuantity.push(x.product.ProductQuantity)
         this.state.ProductVariationDetailID.push(x.product.ProductVariationDetailID)
       })
+
+
+      console.log("this.state", this.state)
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
         ProductID: this.state.ProductID,
@@ -98,8 +101,8 @@ class PageCheckout extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.order !== this.props.order) {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
-        browserHistory.push("/Emporia");
-        window.location.reload(false);
+        // browserHistory.push("/Emporia");
+        // window.location.reload(false);
       }
     }
   }

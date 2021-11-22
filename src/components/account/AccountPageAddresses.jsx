@@ -60,11 +60,6 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAllAddress: (prodData) => dispatch(GitAction.CallAllAddress(prodData)),
 
-    CallAddAddress: (prodData) => dispatch(GitAction.CallAddAddress(prodData)),
-
-    CallUpdateAddress: (prodData) =>
-      dispatch(GitAction.CallUpdateAddress(prodData)),
-
     CallDeleteAddress: (prodData) =>
       dispatch(GitAction.CallDeleteAddress(prodData)), //the backend of deletion is require
   };

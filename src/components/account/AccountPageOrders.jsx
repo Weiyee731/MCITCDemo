@@ -115,7 +115,7 @@ class AccountPageOrders extends Component {
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.state = {
       page: 1,
-      rowsPerPage: 15,
+      rowsPerPage: 5,
       shipping: 25,
       tax: 0,
       value: 0,
@@ -228,7 +228,7 @@ class AccountPageOrders extends Component {
           listing.length > 0 ?
             ordersList =
             listing
-              // .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
+              .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
               .map((order) => {
                 const quantity = order.OrderProductDetail !== null ? JSON.parse(order.OrderProductDetail).map(
                   (orders) => orders.ProductQuantity
@@ -333,6 +333,7 @@ class AccountPageOrders extends Component {
                     })
                   : ""
                 }
+                {console.log("THIS IS ORDER11", orders)}
                 {
                   this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
                     this.state.TrackingStatus === "-" ?
@@ -347,24 +348,27 @@ class AccountPageOrders extends Component {
         </div>
         <div id={"footer" + index} className="card-footer">
           {
-            ordersList !== undefined && ordersList.length > 0 ?
+            this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
+
               <Pagination
                 current={page}
                 total={
-                  // ordersList.length
-                  ordersList != null
-                    ? Math.ceil(ordersList.length / this.state.rowsPerPage)
-                    : 1
+                  this.state.TrackingStatus === "-" ?
+                    this.state.isFiltered === false ?
+                      Math.ceil(this.props.allmerchantorders.length / this.state.rowsPerPage)
+                      : Math.ceil(this.state.filteredList.length / this.state.rowsPerPage)
+                    :
+                    Math.ceil(orders.length / this.state.rowsPerPage)
                 }
                 onPageChange={this.handlePageChange}
               />
               :
-              <div style={{ textAlign: "center", marginBottom: "20px" }}>
+              <div style={{ textAlign: "center", marginBottom: "20px" }} >
                 <div style={{ marginBottom: "20px" }}>
                   Seem like you haven purchase anything yet
                 </div>
                 <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
-              </div>
+              </div >
           }
         </div>
       </div>

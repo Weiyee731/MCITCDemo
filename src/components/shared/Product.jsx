@@ -6,6 +6,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { url } from "../../services/utils";
 
 // application
 import Currency from "./Currency";
@@ -219,9 +220,6 @@ class Product extends Component {
               <ul className="product__meta">
                 <li className="product__meta-availability">
                   Availability: {" "}
-                  {/* <span className="text-success">
-                    {product.ProductStockAmount !== null && product.ProductStockAmount > 0 ? "In Stock" : "Out of Stock"}
-                  </span> */}
                   {
                     this.state.isVariationSet === true ?
                       this.state.productQuantity > 0 ?
@@ -242,41 +240,50 @@ class Product extends Component {
                 <li>SKU:{" "}{product.SKU}</li>
                 <li className="product__seller">
                   Seller:{" "}
-                  {merchant.length > 0 && merchant.ShopName}
-                  <span className="product__seller-info">
-                    <div className="row">
-                      <div className="col-4">
-                        <img
-                          className="product__seller-info-image"
-                          src={product.merchantImg !== undefined ? product.merchantImg : Logo}
-                          alt="Emporia"
-                          onError={(e) => {
-                            e.target.onerror = null; e.target.src = Logo
-                          }}
-                        />
-                      </div>
-                      <div className="col-4">
-                        Seller:{" "}
-                        {merchant.length > 0 && merchant.ShopName}
-                        <br />
-                        State:{" "}
-                        {merchant.length > 0 && merchant.ShopState}
-                        <br />
-                        Shop Rating:{" "}
-                        <div className="product__rating-stars">
-                          <Rating value={merchant.length > 0 && merchant.ShopRating !== null ? merchant.ShopRating : 0} />
-                          {merchant.length > 0 && merchant.ShopRating}
-                        </div>
-                      </div>
-                      <div className="col-4">
-                        Products:{" "}
-                        {merchant.length > 0 && merchant.MerchantTotalProduct}
-                        <br />
-                        Last Joined:{" "}
-                        {merchant.length > 0 && merchant.LastJoined}
-                      </div>
-                    </div>
-                  </span>
+                  {
+                    product.MerchantDetail !== null && JSON.parse(product.MerchantDetail).map((merchantDetails) => {
+                      return (
+                        <>
+                          <Link to={{ pathname: url.merchant(merchantDetails), state: { id: merchantDetails.UserID, merchantDetails: merchantDetails } }}>
+                            {merchantDetails.ShopName !== null && merchantDetails.ShopName}</Link>
+                          <span className="product__seller-info">
+                            <div className="row">
+                              <div className="col-4">
+                                <img
+                                  className="product__seller-info-image"
+                                  src={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo}
+                                  alt="Emporia"
+                                  onError={(e) => {
+                                    e.target.onerror = null; e.target.src = Logo
+                                  }}
+                                />
+                              </div>
+                              <div className="col-4">
+                                Seller:{" "}
+                                {merchantDetails.ShopName !== null && merchantDetails.ShopName}
+                                <br />
+                                State:{" "}
+                                {merchantDetails.ShopState !== null && merchantDetails.ShopState}
+                                <br />
+                                Shop Rating:{" "}
+                                <div className="product__rating-stars">
+                                  <Rating value={merchantDetails.length > 0 && merchantDetails.ShopRating !== null ? merchantDetails.ShopRating : 0} />
+                                  {merchantDetails.length > 0 && merchantDetails.ShopRating}
+                                </div>
+                              </div>
+                              <div className="col-4">
+                                Products:{" "}
+                                {merchantDetails.MerchantTotalProduct !== null && merchantDetails.MerchantTotalProduct}
+                                <br />
+                                Last Joined:{" "}
+                                {merchantDetails.LastJoined !== null && merchantDetails.LastJoined}
+                              </div>
+                            </div>
+                          </span>
+                        </>
+                      )
+                    })
+                  }
                 </li>
               </ul>
             </div>
@@ -370,19 +377,21 @@ class Product extends Component {
           </div>
         </div>
 
-        {this.props.version === "1" ? (
-          <ProductTabs
-            withSidebar
-            currentTab={this.state}
-            setCurrentTab={this.changeCurrentTab}
-          />
-        ) : (
-          <ProductTabs
-            product={product}
-            currentTab={this.state}
-            setCurrentTab={this.changeCurrentTab}
-          />
-        )}
+        {
+          this.props.version === "1" ? (
+            <ProductTabs
+              withSidebar
+              currentTab={this.state}
+              setCurrentTab={this.changeCurrentTab}
+            />
+          ) : (
+            <ProductTabs
+              product={product}
+              currentTab={this.state}
+              setCurrentTab={this.changeCurrentTab}
+            />
+          )
+        }
 
         <BlockProductsCarousel
           title="Recommended Product"
@@ -409,8 +418,7 @@ Product.defaultProps = {
 
 const mapStateToProps = (state) => ({
   wishlist: state.counterReducer.wishlist,
-  productcart: state.counterReducer.productcart,
-  productsByMerchantID: state.counterReducer.productsByMerchantID,
+  productcart: state.counterReducer.productcart
 });
 
 

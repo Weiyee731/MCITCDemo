@@ -131,7 +131,13 @@ class PagePayment extends Component {
   handleInputChange = (e) => {
     switch (e.target.name) {
       case "newnumber":
-        e.target.value = formatCreditCardNumber(e.target.value)[1].replace(/\s+/g, "");
+
+        if (e.target.value.length > 1) {
+          e.target.value = formatCreditCardNumber(e.target.value)[1].replace(
+            /\s+/g,
+            ""
+          );
+        }
         if (formatCreditCardNumber(e.target.value)[0] !== undefined) {
           this.setState({ issuer: formatCreditCardNumber(e.target.value)[0] });
         } else {

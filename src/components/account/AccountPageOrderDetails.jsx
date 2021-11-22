@@ -105,7 +105,9 @@ export default function AccountPageOrderDetails(props) {
   }
 
   let filteredMerchant = [];
-  if (orderDetail !== undefined && orderDetail.OrderProductDetail !== undefined) {
+
+
+  if (orderDetail !== undefined && orderDetail.OrderProductDetail !== null) {
     filteredMerchant = JSON.parse(orderDetail.OrderProductDetail).filter((ele, ind) => ind
       === JSON.parse(orderDetail.OrderProductDetail).findIndex(elem => elem.MerchantID === ele.MerchantID))
   }

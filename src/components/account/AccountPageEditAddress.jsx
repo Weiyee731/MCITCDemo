@@ -14,13 +14,9 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import FormControl from "@material-ui/core/FormControl";
-import "../../app/App.scss";
-import {
-  CountryDropdown,
-  RegionDropdown,
-  CountryRegionData,
-} from "react-country-region-selector";
+import { toast } from "react-toastify";
 
 function mapStateToProps(state) {
   return {
@@ -42,7 +38,7 @@ class AccountPageEditAddress extends Component {
 
     let addressdetails = this.props.selectedAddressData;
     this.state = {
-      Address: addressdetails.UserAddressName,
+      Name: addressdetails.UserAddressName,
       USERID: JSON.parse(window.localStorage.getItem("id")),
       ContactNo: addressdetails.UserContactNo,
       email: addressdetails.UserEmail,
@@ -50,8 +46,8 @@ class AccountPageEditAddress extends Component {
       USERADDRESSLINE2: addressdetails.UserAddressLine1,
       USERPOSCODE: addressdetails.UserPoscode,
       USERSTATE: addressdetails.UserState,
-      USERCITY:addressdetails.UserCity,
-      COUNTRYID:addressdetails.CountryID,
+      USERCITY: addressdetails.UserCity,
+      COUNTRYID: addressdetails.CountryID,
       AddressBookNo: this.props.selectedAddressData.UserAddressBookID,
     };
     this.editAddress = this.editAddress.bind(this);
@@ -61,9 +57,9 @@ class AccountPageEditAddress extends Component {
   }
 
   handleChange(data, e) {
-    if (data === "Address") {
+    if (data === "Name") {
       this.setState({
-        Address: e.target.value,
+        Name: e.target.value,
       });
     } else if (data === "ContactNo") {
       this.setState({
@@ -102,8 +98,23 @@ class AccountPageEditAddress extends Component {
   };
 
   editAddress() {
-    this.props.CallUpdateAddress(this.state);
-    this.props.parentCallback(false);
+    if (!isStringNullOrEmpty(this.state.Name) &&
+      isContactValid(this.state.ContactNo) &&
+      isEmailValid(this.state.email) &&
+      !isStringNullOrEmpty(this.state.USERADDRESSLINE1) &&
+      !isStringNullOrEmpty(this.state.USERADDRESSLINE2) &&
+      !isStringNullOrEmpty(this.state.USERPOSCODE) &&
+      !isNaN(this.state.USERPOSCODE) &&
+      !isStringNullOrEmpty(this.state.USERSTATE) &&
+      !isStringNullOrEmpty(this.state.USERCITY) &&
+      !isStringNullOrEmpty(this.state.COUNTRYID)) {
+
+      this.props.CallUpdateAddress(this.state);
+      this.props.parentCallback(false);
+    } else {
+      toast.error("Please fill in all required data");
+    }
+
   }
 
   render() {
@@ -130,8 +141,11 @@ class AccountPageEditAddress extends Component {
                   defaultValue={addressInfo.UserAddressName}
                   style={{ width: "100%" }}
                   size="small"
-                  onChange={this.handleChange.bind(this, "Address")}
+                  onChange={this.handleChange.bind(this, "Name")}
                 />
+                {isStringNullOrEmpty(this.state.Name) && this.state.Name.length > 0 && (
+                  <FormHelperText style={{ color: "red" }}>   Invalid Recipient Name </FormHelperText>
+                )}
               </div>
 
               <div className="form-row">
@@ -145,6 +159,9 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "email")}
                   />
+                  {!isEmailValid(this.state.email) && this.state.email.length > 0 && (
+                    <FormHelperText style={{ color: "red" }}>   Invalid Email </FormHelperText>
+                  )}
                 </div>
 
                 <div className="form-group col-md-6">
@@ -157,6 +174,9 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "ContactNo")}
                   />
+                  {!isContactValid(this.state.ContactNo) && this.state.ContactNo.length > 0 && (
+                    <FormHelperText style={{ color: "red" }}>   Invalid Contact Number </FormHelperText>
+                  )}
                 </div>
               </div>
 
@@ -170,6 +190,9 @@ class AccountPageEditAddress extends Component {
                   size="small"
                   onChange={this.handleChange.bind(this, "USERADDRESSLINE1")}
                 />
+                {isStringNullOrEmpty(this.state.USERADDRESSLINE1) && this.state.USERADDRESSLINE1.length > 0 && (
+                  <FormHelperText style={{ color: "red" }}>   Invalid Address </FormHelperText>
+                )}
               </div>
               <div className="form-group">
                 <TextField
@@ -181,6 +204,9 @@ class AccountPageEditAddress extends Component {
                   size="small"
                   onChange={this.handleChange.bind(this, "USERADDRESSLINE2")}
                 />
+                {isStringNullOrEmpty(this.state.USERADDRESSLINE2) && this.state.USERADDRESSLINE2.length > 0 && (
+                  <FormHelperText style={{ color: "red" }}>   Invalid Address </FormHelperText>
+                )}
               </div>
 
               <div className="form-row">
@@ -194,6 +220,9 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "USERPOSCODE")}
                   />
+                  {isNaN(this.state.USERPOSCODE) && this.state.USERPOSCODE.length > 0 && (
+                    <FormHelperText FormHelperText style={{ color: "red" }}>   Invalid Poscode </FormHelperText>
+                  )}
                 </div>
 
                 <div className="form-group col-md-6">
@@ -206,6 +235,9 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "USERCITY")}
                   />
+                  {isStringNullOrEmpty(this.state.USERCITY) && this.state.USERCITY.length > 0 && (
+                    <FormHelperText style={{ color: "red" }}>   Invalid City </FormHelperText>
+                  )}
                 </div>
               </div>
               <div className="form-row">
@@ -219,6 +251,9 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "USERSTATE")}
                   />
+                  {isStringNullOrEmpty(this.state.USERSTATE) && this.state.USERSTATE.length > 0 && (
+                    <FormHelperText style={{ color: "red" }}>   Invalid State </FormHelperText>
+                  )}
                 </div>
                 <div className="form-group col-md-6">
                   <FormControl

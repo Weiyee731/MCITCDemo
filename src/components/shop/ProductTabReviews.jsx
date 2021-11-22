@@ -214,9 +214,11 @@ class ProductTabReviews extends Component {
                 <Pagination
                   current={page}
                   total={
-                    this.props.product.ProductReview !== null && this.props.product.ProductReview !== 0
-                      ? Math.ceil(parseInt(this.props.product.ProductReview.length) / this.state.rowsPerPage)
-                      : 0
+                    this.state.isEdited === true ?
+                      this.props.reviews.length / this.state.rowsPerPage :
+                      this.props.product.ProductReview !== null && this.props.product.ProductReview !== 0
+                        ? Math.ceil(this.props.product.ProductReview.length) / this.state.rowsPerPage
+                        : 0
                   }
                   onPageChange={this.handlePageChange}
                 />

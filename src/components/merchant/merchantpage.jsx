@@ -1,8 +1,7 @@
 // react
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // third-party
-import { Helmet } from 'react-helmet-async';
 import classNames from "classnames";
 
 // shared
@@ -10,37 +9,21 @@ import PageHeader from "../shared/PageHeader";
 import { url } from "../../services/utils";
 
 // application
-import { useDeferredData, useProductColumns, useProductTabs } from '../../services/hooks';
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
-import { toast } from "react-toastify";
+import { Link } from 'react-router-dom';
 
 // blocks
-import BlockBanner from '../blocks/BlockBanner';
-import BlockBrands from '../blocks/BlockBrands';
-import BlockCategories from '../blocks/BlockCategories';
-import BlockFeatures from '../blocks/BlockFeatures';
-import BlockPosts from '../blocks/BlockPosts';
-import BlockProductColumns from '../blocks/BlockProductColumns';
 import BlockProducts from '../blocks/BlockProducts';
-import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
-import BlockMerchant from '../blocks/BlockMerchant';
 import BlockSlideShow from '../blocks/BlockSlideShow';
-import BlockMainCategories from '../blocks/BlockMainCategories';
 import BlockMoreButton from '../blocks/BlockMoreButton';
 import LoadingPanel from "../shared/loadingPanel";
 
 // data stubs
-import categories from '../../data/shopBlockCategories';
-import posts from '../../data/blogPosts';
-import theme from '../../data/theme';
 import Logo from "../../assets/Emporia.png";
 import {
     Card,
     CardMedia,
-    TableHead,
-    Typography,
-    Divider,
     CardContent,
 } from "@material-ui/core";
 
@@ -147,7 +130,9 @@ function MerchantPage(props) {
 
     const loopWithSlice = () => {
         if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0] !== undefined && JSON.parse(props.productsListing)[0].ReturnVal !== '0') {
-            tempArray = [...postsToShow, ...JSON.parse(props.productsListing)];
+
+            let listingArray = JSON.parse(props.productsListing).filter((x) => x.MerchantID === parseInt(props.merchantID))
+            tempArray = [...postsToShow, ...listingArray];
             const filterList = tempArray.filter((ele, ind) => ind === tempArray.findIndex(elem => elem.ProductID === ele.ProductID))
             setPostsToShow(filterList)
         }
@@ -172,7 +157,7 @@ function MerchantPage(props) {
             type: "Merchant",
             typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
             userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
-            productPage: 15,
+            productPage: 10,
             page: page,
         })
         loopWithSlice()
@@ -183,7 +168,7 @@ function MerchantPage(props) {
             type: "Merchant",
             typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
             userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
-            productPage: 15,
+            productPage: 10,
             page: page,
         })
         loopWithSlice()
@@ -242,8 +227,8 @@ function MerchantPage(props) {
                                             <div className="my-4" style={{ textAlign: "center", fontWeight: "BOLD" }}>
                                                 Merchant does not have any products
                                             </div>
-                                            <div className="my-4">
-                                                <BlockMoreButton viewMore={handleShowMorePosts} />
+                                            <div className="my-4" style={{textAlign: "center"}}>
+                                                <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                                             </div>
                                         </>
                                     )

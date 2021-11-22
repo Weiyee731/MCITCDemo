@@ -8,21 +8,13 @@ import { connect } from "react-redux";
 import "react-step-progress/dist/index.css";
 import { GitAction } from "../../store/action/gitAction";
 import theme from "../../data/theme";
-import { Card, CardContent } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import "../../app/App.scss";
-import {
-  CountryDropdown,
-  RegionDropdown,
-  CountryRegionData,
-} from "react-country-region-selector";
 
 import { toast } from "react-toastify";
 
@@ -44,7 +36,7 @@ class AccountPageAddAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      Address: "",
+      Name: "",
       USERID: JSON.parse(window.localStorage.getItem("id")),
       ContactNo: "",
       email: "",
@@ -63,9 +55,10 @@ class AccountPageAddAddress extends Component {
   }
 
   handleChange(data, e) {
-    if (data === "Address") {
+
+    if (data === "Name") {
       this.setState({
-        Address: e.target.value,
+        Name: e.target.value,
       });
     } else if (data === "ContactNo") {
       this.setState({
@@ -103,53 +96,6 @@ class AccountPageAddAddress extends Component {
     }
   }
 
-  handleChangeforAddressLine1 = (e) => {
-    const { value } = e.target;
-
-    this.setState({
-      USERADDRESSLINE1: value,
-    });
-  };
-
-  handleChangeforAddressLine2 = (e) => {
-    const { value } = e.target;
-
-    this.setState({
-      USERADDRESSLINE2: value,
-    });
-  };
-
-  handleChangeforPoscode = (e) => {
-    const { value } = e.target;
-
-    this.setState({
-      USERPOSCODE: value,
-    });
-  };
-
-  handleChangeforCity = (e) => {
-    const { value } = e.target;
-
-    this.setState({
-      USERCITY: value,
-    });
-  };
-
-  handleChangeforState = (e) => {
-    const { value } = e.target;
-
-    this.setState({
-      USERSTATE: value,
-    });
-  };
-
-  handleChangeforCountry = (e) => {
-    const { value } = e.target;
-
-    this.setState({
-      USERCOUNTRYID: value,
-    });
-  };
 
   selectCountry(val) {
     this.setState({ COUNTRYID: val });
@@ -157,19 +103,16 @@ class AccountPageAddAddress extends Component {
 
   addAddress() {
     if (
-      this.state.ContactNo.length !== 0 &&
-      this.state.email.length !== 0 &&
-      this.state.USERADDRESSLINE1.length !== 0 &&
-      this.state.USERADDRESSLINE2.length !== 0 &&
-      this.state.USERPOSCODE.length !== 0 &&
-      this.state.USERSTATE.length !== 0 &&
-      this.state.USERCITY.length !== 0 &&
-      this.state.USERCOUNTRYID.length !== 0
+      !isStringNullOrEmpty(this.state.Name) &&
+      isContactValid(this.state.ContactNo) &&
+      isEmailValid(this.state.email) &&
+      !isStringNullOrEmpty(this.state.USERADDRESSLINE1) &&
+      !isStringNullOrEmpty(this.state.USERADDRESSLINE2) &&
+      !isStringNullOrEmpty(this.state.USERSTATE) &&
+      !isStringNullOrEmpty(this.state.USERCITY) &&
+      !isStringNullOrEmpty(this.state.USERCOUNTRYID)
     ) {
-      this.props.CallAddAddress(
-        this.state,
-        (this.state.USERID = JSON.parse(window.localStorage.getItem("id")))
-      );
+      this.props.CallAddAddress(this.state);
       this.props.parentCallback(false);
     } else {
       toast.error("Please fill in all required data");
@@ -197,9 +140,12 @@ class AccountPageAddAddress extends Component {
                   variant="outlined"
                   style={{ width: "100%" }}
                   size="small"
-                  onChange={this.handleChange.bind(this, "Address")}
+                  onChange={this.handleChange.bind(this, "Name")}
                   required
                 />
+                {isStringNullOrEmpty(this.state.Name) && this.state.Name.length > 0 && (
+                  <FormHelperText style={{ color: "red" }}>   Invalid Recipient Name </FormHelperText>
+                )}
               </div>
 
               <div className="form-row">
@@ -213,6 +159,9 @@ class AccountPageAddAddress extends Component {
                     onChange={this.handleChange.bind(this, "email")}
                     required
                   />
+                  {!isEmailValid(this.state.email) && this.state.email.length > 0 && (
+                    <FormHelperText style={{ color: "red" }}>   Invalid Email </FormHelperText>
+                  )}
                 </div>
 
                 <div className="form-group col-md-6">
@@ -225,6 +174,9 @@ class AccountPageAddAddress extends Component {
                     onChange={this.handleChange.bind(this, "ContactNo")}
                     required
                   />
+                  {!isContactValid(this.state.ContactNo) && this.state.ContactNo.length > 0 && (
+                    <FormHelperText style={{ color: "red" }}>   Invalid Contact Number </FormHelperText>
+                  )}
                 </div>
               </div>
 
@@ -238,6 +190,9 @@ class AccountPageAddAddress extends Component {
                   onChange={this.handleChange.bind(this, "USERADDRESSLINE1")}
                   required
                 />
+                {isStringNullOrEmpty(this.state.USERADDRESSLINE1) && this.state.USERADDRESSLINE1.length > 0 && (
+                  <FormHelperText style={{ color: "red" }}>   Invalid Address </FormHelperText>
+                )}
               </div>
               <div className="form-group">
                 <TextField
@@ -249,6 +204,9 @@ class AccountPageAddAddress extends Component {
                   onChange={this.handleChange.bind(this, "USERADDRESSLINE2")}
                   required
                 />
+                {isStringNullOrEmpty(this.state.USERADDRESSLINE2) && this.state.USERADDRESSLINE2.length > 0 && (
+                  <FormHelperText style={{ color: "red" }}>   Invalid Address </FormHelperText>
+                )}
               </div>
 
               <div className="form-row">
@@ -262,6 +220,9 @@ class AccountPageAddAddress extends Component {
                     onChange={this.handleChange.bind(this, "USERPOSCODE")}
                     required
                   />
+                  {isNaN(this.state.USERPOSCODE) && this.state.USERPOSCODE.length > 0 && (
+                    <FormHelperText FormHelperText style={{ color: "red" }}>   Invalid Poscode </FormHelperText>
+                  )}
                 </div>
 
                 <div className="form-group col-md-6">
@@ -274,6 +235,9 @@ class AccountPageAddAddress extends Component {
                     onChange={this.handleChange.bind(this, "USERCITY")}
                     required
                   />
+                  {isStringNullOrEmpty(this.state.USERCITY) && this.state.USERCITY.length > 0 && (
+                    <FormHelperText style={{ color: "red" }}>   Invalid City </FormHelperText>
+                  )}
                 </div>
               </div>
 
@@ -288,6 +252,9 @@ class AccountPageAddAddress extends Component {
                     onChange={this.handleChange.bind(this, "USERSTATE")}
                     required
                   />
+                  {isStringNullOrEmpty(this.state.USERSTATE) && this.state.USERSTATE.length > 0 && (
+                    <FormHelperText style={{ color: "red" }}>   Invalid State </FormHelperText>
+                  )}
                 </div>
 
                 <div className="form-group col-md-6">
@@ -333,7 +300,7 @@ class AccountPageAddAddress extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     );
   }
 }

@@ -371,8 +371,9 @@ export class GitEpic {
           payload.USERGENDER
         );
         let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
+        // json = JSON.parse(json);
+        console.log("JSON", json)
+        if (JSON.parse(json)[0].ReturnVal === 1) {
           toast.success("User Profile is updated successfully");
         }
         try {
@@ -502,7 +503,7 @@ export class GitEpic {
         const response = await fetch(
           url +
           "User_AddAddressBook?USERADDRESSNAME=" +
-          payload.Address +
+          payload.Name +
           "&USERID=" +
           payload.USERID +
           "&USERCONTACTNO=" +
@@ -560,12 +561,39 @@ export class GitEpic {
   updateAddress = (action$) =>
     action$.ofType(GitAction.UpdateAddress).switchMap(async ({ payload }) => {
       try {
+
+        console.log(
+          url +
+          "User_UpdateAddressBook?USERADDRESSBOOKID=" +
+          payload.AddressBookNo +
+          "&USERADDRESSNAME=" +
+          payload.Name +
+          "&USERID=" +
+          payload.USERID +
+          "&USERCONTACTNO=" +
+          payload.ContactNo +
+          "&USEREMAIL=" +
+          payload.email +
+          "&USERADDRESSLINE1=" +
+          payload.USERADDRESSLINE1 +
+          "&USERADDRESSLINE2=" +
+          payload.USERADDRESSLINE2 +
+          "&USERPOSCODE=" +
+          payload.USERPOSCODE +
+          "&USERSTATE=" +
+          payload.USERSTATE +
+          "&USERCITY=" +
+          payload.USERCITY +
+          "&COUNTRYID=" +
+          payload.COUNTRYID
+
+        )
         const response = await fetch(
           url +
           "User_UpdateAddressBook?USERADDRESSBOOKID=" +
           payload.AddressBookNo +
           "&USERADDRESSNAME=" +
-          payload.Address +
+          payload.Name +
           "&USERID=" +
           payload.USERID +
           "&USERCONTACTNO=" +
@@ -586,8 +614,8 @@ export class GitEpic {
           payload.COUNTRYID
         );
         const json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
+
+        if (JSON.parse(json)[0].ReturnVal == 1) {
           toast.success("Address successfully updated");
         }
         try {
@@ -629,8 +657,7 @@ export class GitEpic {
           payload.AddressBookNo
         );
         const json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
+        if (JSON.parse(json)[0].ReturnVal == 1) {
           toast.success("Address successfully deleted");
         }
         try {
@@ -2059,6 +2086,29 @@ export class GitEpic {
     action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
 
       try {
+
+        console.log(url +
+          "Order_AddOrder?USERID=" +
+          payload.UserID +
+          "&USERADDRESSID=" +
+          payload.UserAddressID +
+          "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" +
+          payload.PaymentMethodID +
+          "&USERPAYMENTMETHODID=" +
+          payload.UserPaymentMethodID +
+          "&ORDERTOTALAMOUNT=" +
+          payload.OrderTotalAmount +
+          "&ORDERPAIDAMOUNT=" +
+          payload.OrderPaidAmount +
+          "&PRODUCTID=" +
+          payload.ProductID +
+          "&PRODUCTQUANTITY=" +
+          payload.ProductQuantity +
+          "&PRODUCTVARIATIONDETAILID=" +
+          payload.ProductVariationDetailID +
+          "&TRACKINGSTATUSID=" +
+          payload.TrackingStatusID)
+
         const response = await fetch(
           url +
           "Order_AddOrder?USERID=" +
