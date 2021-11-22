@@ -313,7 +313,20 @@ class AccountPageProfile extends Component {
 
   /////////////////CALL API TO UPDATE PROFILE INFO///////////////////////////////////////////
   addProfile() {
-    this.props.CallUpdateUserProfile(this.state);
+    this.props.CallUpdateUserProfile({
+      USERID: this.state.USERID,
+      USERFIRSTNAME: this.state.USERFIRSTNAME,
+      USERLASTNAME: this.state.USERLASTNAME,
+      USERCONTACTNO: this.state.USERLUSERCONTACTNOASTNAME,
+      USERDATEBIRTH: moment(this.state.USERDATEBIRTH).format('YYYYMMDD'),
+      USEREMAIL: this.state.USEREMAIL,
+      USERGENDER: this.state.USERGENDER,
+      TYPE: "UserProfile",
+      TYPEVALUE: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
+      USERROLEID: "0",
+      LISTPERPAGE: "999",
+      PAGE: "1"
+    });
   }
 
 
@@ -411,6 +424,7 @@ class AccountPageProfile extends Component {
                         />
                       </div>
                     </div>
+
                     <div className="row">
                       <div className=" col-3 rowStyle vertical-align">Date of Birth</div>
                       <div className="col-8">

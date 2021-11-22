@@ -235,7 +235,7 @@ export default class BlockProductsCarousel extends Component {
                   onNext={this.handleNextClick}
                   onPrev={this.handlePrevClick}
                   onGroupClick={onGroupClick}
-                  showAll={"/Emporia/shop/ProductListing/type:Merchant&typevalue:" + 0}
+                  showAll={"/shop/ProductListing/type:Merchant&typevalue:" + 0}
                 />
 
                 {/* <div style={{ textAlign: "right", marginBottom: '5px' }}>
