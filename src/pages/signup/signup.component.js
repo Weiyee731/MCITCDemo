@@ -27,6 +27,7 @@ function mapStateToProps(state) {
         currentUser: state.counterReducer["currentUser"],
         exist: state.counterReducer["exists"],
         loading: state.counterReducer["loading"],
+        emailVerification: state.counterReducer["emailVerification"]
     };
 }
 
@@ -56,9 +57,7 @@ const SignUp = (props) => {
 
     const [passwordHidden, setPasswordHidden] = useState(true);
     const [confirmPasswordHidden, setConfirmPasswordHidden] = useState(true);
-    const [FirstNameEmpty, setFirstNameEmpty] = useState(false);
-    const [LastNameEmpty, setLastNameEmpty] = useState(false);
-    const [UsernameEmpty, setUsernameEmpty] = useState(false);
+    const [verifyEmail, setEmailVefication] = useState(false);
     const [EmailEmpty, setEmailEmpty] = useState(false);
     // const [EmailDuplicate, setEmailDuplicate] = useState(false);
     const [PasswordEmpty, setPasswordEmpty] = useState(false);
@@ -84,21 +83,19 @@ const SignUp = (props) => {
         // verifyEmail();
         // checkReturn();
         if (
-            FirstNameEmpty ||
-            LastNameEmpty ||
-            UsernameEmpty ||
             EmailEmpty ||
             PasswordEmpty ||
             ConfirmPasswordEmpty ||
             passErrorWrongFormat ||
             emailErrorWrongFormat ||
             passErrorMatch
-            // EmailDuplicate
         ) {
             toast.error("Please complete the form with correct information.");
         } else {
-            toast.success("Form Submitted!");
-            submitForm();
+
+            props.CallCheckUserExists(userDetail.Email)
+            setEmailVefication(true)
+
         }
     };
 
@@ -144,48 +141,6 @@ const SignUp = (props) => {
             setPassWrongFormat(false);
         } else {
             setPassWrongFormat(true);
-        }
-    };
-
-    useEffect(() => {
-        const timeOutId = setTimeout(() => checkFirstName(), 1000);
-        return () => clearTimeout(timeOutId);
-    }, [userDetail.FirstName]);
-
-    const checkFirstName = () => {
-        if (
-            userDetail.FirstName === "" ||
-            userDetail.FirstName === null
-        ) {
-            setFirstNameEmpty(true);
-        } else {
-            setFirstNameEmpty(false);
-        }
-    };
-
-    useEffect(() => {
-        const timeOutId = setTimeout(() => checkLastName(), 1000);
-        return () => clearTimeout(timeOutId);
-    }, [userDetail.LastName]);
-
-    const checkLastName = () => {
-        if (userDetail.LastName === "") {
-            setLastNameEmpty(true);
-        } else {
-            setLastNameEmpty(false);
-        }
-    };
-
-    useEffect(() => {
-        const timeOutId = setTimeout(() => checkUsername(), 1000);
-        return () => clearTimeout(timeOutId);
-    }, [userDetail.Username]);
-
-    const checkUsername = () => {
-        if (userDetail.Username === "") {
-            setUsernameEmpty(true);
-        } else {
-            setUsernameEmpty(false);
         }
     };
 
@@ -247,25 +202,7 @@ const SignUp = (props) => {
     }, [userDetail.Password]);
 
     const handleChangeData = (data, e) => {
-        if (data === "fName") {
-            setUserDetail({
-                ...userDetail,
-                FirstName: e.target.value,
-                isFirstNameFill: true
-            });
-        } else if (data === "lName") {
-            setUserDetail({
-                ...userDetail,
-                LastName: e.target.value,
-                isLastNameFill: true
-            });
-        } else if (data === "userName") {
-            setUserDetail({
-                ...userDetail,
-                Username: e.target.value,
-                isUsernameFill: true
-            });
-        } else if (data === "email") {
+        if (data === "email") {
             setUserDetail({
                 ...userDetail,
                 Email: e.target.value,
@@ -315,12 +252,37 @@ const SignUp = (props) => {
         });
     }
 
+
+
     useEffect(() => {
-        if (props.currentUser.length > 0 && submitRegisterForm === true) {
-            browserHistory.push("/Emporia/login");
+        if (props.currentUser.length > 0 && submitRegisterForm === true && props.currentUser[0].ReturnVal !== "0") {
+
+            localStorage.setItem("isLogin", true);
+            localStorage.setItem("role", props.currentUser[0].UserType);
+            localStorage.setItem("roleid", props.currentUser[0].UserTypeID);
+            localStorage.setItem("userName", props.currentUser[0].Username);
+            localStorage.setItem(
+                "productEndorsementBadge",
+                props.currentUser[0].productEndorsementBadge
+            );
+            localStorage.setItem(
+                "productBadge",
+                props.currentUser[0].productBadge
+            );
+            localStorage.setItem("id", props.currentUser[0].UserID);
+
+            browserHistory.push("/Emporia");
             window.location.reload(false);
         }
     }, [props.currentUser], setSubmitRegisterForm);
+
+    useEffect(() => {
+
+        console.log("props.emailVerification", props.emailVerification)
+        if (props.emailVerification.length > 0 && verifyEmail === true && props.emailVerification[0].ReturnVal === "0") {
+            submitForm();
+        }
+    }, [props.emailVerification], setEmailVefication);
 
     return (
         <div className="block block--margin-top" style={{ width: "100%" }}>
@@ -337,35 +299,8 @@ const SignUp = (props) => {
                 <div className="text-center">
                     <h4>Create a new Emporia's account</h4>
                 </div>
-                <div className="row">
-                    <div className="col-6 mt-3">
-                        <TextField id="FirstName" label="First Name" variant="outlined" className="w-100 my-2" value={userDetail.FirstName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "fName")} />
-                        {FirstNameEmpty && userDetail.isFirstNameFill === true && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
-                                This is required
-                            </p>
-                        )}
-                    </div>
-                    <div className="col-6 mt-3">
-                        <TextField id="LastName" label="Last Name" variant="outlined" className="w-100 my-2" value={userDetail.LastName} ref={register({ required: true })} onChange={handleChangeData.bind(this, "lName")} />
-
-                        {LastNameEmpty && userDetail.isLastNameFill === true && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
-                                This is required
-                            </p>
-                        )}
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-6 mt-3">
-                        <TextField id="Username" label="Username" variant="outlined" className="w-100 my-2" value={userDetail.Username} ref={register({ required: true })} onChange={handleChangeData.bind(this, "userName")} />
-                        {UsernameEmpty && userDetail.isUsernameFill === true && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}   >
-                                This is required
-                            </p>
-                        )}
-                    </div>
-                    <div className="col-6 mt-3">
+                <div className="justify-content-center" style={{ width: "50%", display: "block", marginLeft: "auto", marginRight: "auto", }}>
+                    <div className="row mt-3" >
                         <TextField id="Email" label="Email" variant="outlined" className="w-100 my-2" type="email" value={userDetail.Email} ref={register({ required: true })} onChange={handleChangeData.bind(this, "email")} />
                         {checkDuplicate && userDetail.Email}
                         {EmailEmpty && userDetail.isEmailFill === true && (
@@ -379,34 +314,7 @@ const SignUp = (props) => {
                             </p>
                         )}
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-6 mt-4">
-                        {/* 
-                        <TextField id="Password"
-                            label="Password"
-                            variant="outlined"
-                            className="w-100 my-2"
-                            value={userDetail.Password}
-                            type={passwordHidden ? 'password' : 'text'}
-                            ref={register({ required: true })}
-                            onChange={handleChangeData.bind(this, "password")}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={toggleShow}
-                                    >
-                                        {passwordHidden ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-
-                        >  <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={toggleShow}
-                        > */}
-
+                    <div className="row mt-3" >
                         <FormControl fullWidth variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
@@ -446,7 +354,7 @@ const SignUp = (props) => {
                             </p>
                         )}
                     </div>
-                    <div className="col-6 mt-4">
+                    <div className="row mt-3" >
                         <FormControl fullWidth variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password">Confirm Password</InputLabel>
                             <OutlinedInput
@@ -477,21 +385,21 @@ const SignUp = (props) => {
                         )}
                     </div>
                 </div>
-            </div>
 
-            <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
-                <div className="SignUpForm-Submit mb-2">
-                    Already have an account? <a href="/login"><b>Login</b></a>
+                <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
+                    <div className="SignUpForm-Submit mb-2">
+                        Already have an account? <a href="/login"><b>Login</b></a>
+                    </div>
+                    <button
+                        type="submit"
+                        style={{ borderRadius: "5px" }}
+                        variant="contained"
+                        className="btn btn-primary"
+                        onClick={checkFormIsFilled}
+                    >
+                        Submit
+                    </button>
                 </div>
-                <button
-                    type="submit"
-                    style={{ borderRadius: "5px" }}
-                    variant="contained"
-                    className="btn btn-primary"
-                    onClick={checkFormIsFilled}
-                >
-                    Submit
-                </button>
             </div>
         </div>
     );

@@ -62,8 +62,8 @@ export class GitEpic {
         payload.UserID)
         .then(response => response.json())
         .then(json => {
-          if (json !== "fail") {
-            json = JSON.parse(json)
+          if (JSON.parse(json)[0].LoginAuditID !== "undefined") {
+            json = json
           } else {
             json = [];
           }
@@ -75,25 +75,25 @@ export class GitEpic {
         .catch(error => toast.error("Error code: 8001"));
     });
 
-
   RegisterUser = (action$) =>
     action$.ofType(GitAction.Register).switchMap(async ({ payload }) => {
       try {
+
         const response = await fetch(
           url +
-          "User_Register?username=" +
-          payload.Username +
+          "User_RegisterSimplified?userEmail=" +
+          payload.Email +
           "&password=" +
-          payload.Password +
-          "&userFirstName=" +
-          payload.FirstName +
-          "&userLastName=" +
-          payload.LastName +
-          "&userEmail=" +
-          payload.Email
+          payload.Password
         );
+
         let json = await response.json();
         json = JSON.parse(json);
+
+        if (json[0].ReturnVal !== '0') {
+          toast.error("Successfully Registered")
+        }
+
         return {
           type: GitAction.UserRegistered,
           payload: json,
@@ -107,9 +107,11 @@ export class GitEpic {
       }
     });
 
+
   checkUser = (action$) =>
     action$.ofType(GitAction.CheckUser).switchMap(async ({ payload }) => {
       try {
+
         const response = await fetch(
           url +
           "User_CheckDuplicate?email=" +
@@ -117,6 +119,11 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+
+        if (json[0].ReturnVal !== '0') {
+          toast.error("This email has been register before. Please try another email.")
+        }
+
         return {
           type: GitAction.CheckedUser,
           payload: json,
@@ -162,6 +169,14 @@ export class GitEpic {
   sentOTPVerification = (action$) =>
     action$.ofType(GitAction.SendOTPVerification).switchMap(async ({ payload }) => {
       try {
+
+        console.log(url +
+          "User_SentOTPVerification?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.GETOTPTYPE +
+          "&VALIDATIONFIELD=" +
+          payload.UpdatedValue)
         const response = await fetch(
           url +
           "User_SentOTPVerification?USERID=" +
@@ -189,6 +204,17 @@ export class GitEpic {
   updateContact = (action$) =>
     action$.ofType(GitAction.UpdateContact).switchMap(async ({ payload }) => {
       try {
+
+        console.log(url +
+          "User_UpdateProfileSpecificField?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.UPDATETYPE +
+          "&OTP=" +
+          payload.otp +
+          "&UPDATEDFIELD=" +
+          payload.UpdatedValue)
+
         const response = await fetch(
           url +
           "User_UpdateProfileSpecificField?USERID=" +
@@ -202,7 +228,10 @@ export class GitEpic {
 
         );
         let json = await response.json();
+
         json = JSON.parse(json);
+
+        console.log("json", json)
         return {
           type: GitAction.UpdatedContact,
           payload: json,
@@ -581,7 +610,7 @@ export class GitEpic {
     action$.ofType(GitAction.UpdateAddress).switchMap(async ({ payload }) => {
       try {
 
-       
+
         const response = await fetch(
           url +
           "User_UpdateAddressBook?USERADDRESSBOOKID=" +
@@ -836,7 +865,7 @@ export class GitEpic {
           payload: json,
         };
       } catch (error) {
-        alert("viewProductCartList: " + error)
+        alert("viewProductCartList123: " + error)
         return {
           type: GitAction.ViewedProductCart,
           payload: [],
@@ -1212,7 +1241,7 @@ export class GitEpic {
   getProductsListing = (action$) =>
     action$.ofType(GitAction.GetProductListing).switchMap(async ({ payload }) => {
       try {
-   
+
 
         const response = await fetch(
           url +

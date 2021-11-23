@@ -71,7 +71,8 @@ class ShopPageCart extends Component {
                     price: x.ProductPrice,
                     total: x.ProductQuantity * x.ProductPrice,
                     quantity: x.ProductQuantity,
-                    MerchantShopName: x.MerchantShopName
+                    MerchantShopName: x.MerchantShopName,
+                    MerchantID: x.MerchantID
                 }
             )
         })
@@ -331,8 +332,10 @@ class ShopPageCart extends Component {
                     {this.state.MerchantShopName.map((shopName) => {
                         return (
                             <>
-                                <td><th>{shopName}</th></td>
-                                <table className="cart__table cart-table">
+                                <td><th>
+                                    <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName}</Link>
+                                </th></td>
+                                <table className="cart__table cart-table" size="small">
                                     <thead className="cart-table__head">
                                         <tr className="cart-table__row">
                                             <th className="cart-table__column cart-table__column--checkbox">

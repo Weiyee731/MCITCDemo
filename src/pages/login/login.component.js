@@ -34,16 +34,12 @@ import { toast } from "react-toastify";
 function mapStateToProps(state) {
   return {
     currentUser: state.counterReducer["currentUser"],
-    productcart: state.counterReducer["productcart"],
-    wishlist: state.counterReducer["wishlist"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     loginUser: (credentials) => dispatch(GitAction.CallLogin(credentials)),
-    // CallViewProductCart: (propsData) => dispatch(GitAction.CallViewProductCart(propsData)),
-    // CallViewProductWishlist: (propsData) => dispatch(GitAction.CallViewProductWishlist(propsData)),
   };
 }
 
@@ -82,10 +78,6 @@ class LoginComponent extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.currentUser !== this.props.currentUser) {
       if (this.props.currentUser[0].ReturnVal !== "0") {
-
-
-        // this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
-        // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
 
         localStorage.setItem("isLogin", true);
         localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
@@ -275,7 +267,7 @@ class LoginComponent extends Component {
                 />
                 <hr />
                 <div>
-                  New to Emporia? <a href="/signup"><b>Sign Up</b></a>
+                  New to Emporia? <a href="/Emporia/signup"><b>Sign Up</b></a>
                 </div>
               </div>
             </Col>

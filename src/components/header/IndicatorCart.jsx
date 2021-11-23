@@ -29,7 +29,7 @@ class IndicatorCart extends React.Component {
   }
 
   componentDidMount() {
-    if (localStorage.getItem("id")) {
+    if (localStorage.getItem("isLogin") === true) {
       this.props.CallViewProductCart({ userID: localStorage.getItem("id") })
       this.props.CallViewProductWishlist({ userID: localStorage.getItem("id") })
     }

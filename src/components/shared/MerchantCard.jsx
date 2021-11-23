@@ -83,7 +83,7 @@ function MerchantCard(props) {
             <div className="product-card__info">
                 <div className="product-card__name">
                     <Link to={{ pathname: url.merchant(merchant), state: { id: merchant.UserID, merchantDetails: merchant } }}>
-                        {merchant.FirstName} {merchant.LastName}
+                        {merchant.ShopName}
                     </Link>
                 </div>
                 <div className="product-card__rating">

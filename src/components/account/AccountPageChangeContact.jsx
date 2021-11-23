@@ -61,6 +61,7 @@ function mapDispatchToProps(dispatch) {
     CallUpdateContact: (credentials) =>
       dispatch(GitAction.CallUpdateContact(credentials)),
     CallSendOTP: (credentials) => dispatch(GitAction.CallSendOTP(credentials)),
+    CallEmptyVerifyPassword: () => dispatch(GitAction.CallEmptyVerifyPassword()),
   };
 }
 class PageChangeContact extends Component {
@@ -127,7 +128,6 @@ class PageChangeContact extends Component {
       otp: "", //OTP
       // UPDATEDFIELD: '',
     };
-    this.onFormSubmit = this.onFormSubmit.bind(this);
     this.handleChangeForPassword = this.handleChangeForPassword.bind(this);
     this.handleChangeforContact = this.handleChangeforContact.bind(this);
     this.submitpassword = this.submitpassword.bind(this);
@@ -159,36 +159,15 @@ class PageChangeContact extends Component {
     }
   }
 
-  onFormSubmit() {
-    if (this.state.PaymentID === 0) {
-      toast.error("Please fill in correct payment method info to continue");
-    } else {
-      this.props.data.map((x) => {
-        this.state.ProductID.push(x.product.ProductID);
-        this.state.UserCartID.push(x.product.UserCartID);
-        this.state.ProductQuantity.push(x.product.ProductQuantity);
-        this.state.ProductVariationDetailID.push(
-          x.product.ProductVariationDetailID
-        );
-      });
-      this.props.CallAddOrder({
-        UserID: window.localStorage.getItem("id"),
-        ProductID: this.state.ProductID,
-        ProductQuantity: this.state.ProductQuantity,
-        UserCartID: this.state.UserCartID,
-        UserAddressID: this.state.address,
-        PaymentMethodID: this.state.PaymentMethodID,
-        ProductVariationDetailID: this.state.ProductVariationDetailID,
-        PAYMENTID: this.state.PaymentID,
-      });
-    }
-  }
-
   componentDidUpdate(prevProps) {
-    if (prevProps.order !== this.props.order) {
-      browserHistory.push("/Emporia");
-      window.location.reload(false);
-    }
+    // if (prevProps.order !== this.props.order) {
+    //   browserHistory.push("/Emporia");
+    //   window.location.reload(false);
+    // }
+
+    if (prevProps.verifyPassword !== this.props.verifyPassword)
+      this.checkPassword()
+
   }
 
   componentWillUnmount(prevProps) {
@@ -231,7 +210,10 @@ class PageChangeContact extends Component {
   }
 
   OnSubmitChangeContact(e) {
-    e.preventDefault();
+
+    console.log("CHANGE CONTACT", e.target.value)
+    console.log("CHANGE CONTACT", e)
+    // e.preventDefault();
   }
 
   handleChangeforContact(e) {
@@ -261,12 +243,12 @@ class PageChangeContact extends Component {
       this.setState({ startCountDown: false });
       this.stopTimer(60);
 
-      if (this.props.contactUpdated &&this.props.contactUpdated[0].ReturnMsg !== "The OTP was Wrong") {
+      if (this.props.contactUpdated && this.props.contactUpdated[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your contact number has been updated");
         browserHistory.push("/Emporia/account/profile");
         window.location.reload(false);
       } else {
-       toast.success("The OTP key are incorrect. Please try again");
+        toast.warn("The OTP key are incorrect. Please try again");
       }
     }
   };
@@ -274,9 +256,13 @@ class PageChangeContact extends Component {
   handleCounter = (counter) => this.setState({ counter });
 
   submitpassword = (e) => {
+
+
+    console.log("this.state", this.state)
     if (this.state.password.length > 0) {
       this.props.CallVerifyPassword(this.state);
-      this.checkPassword();
+
+      // this.checkPassword();
     }
   };
 
@@ -345,6 +331,8 @@ class PageChangeContact extends Component {
   }
 
   render() {
+
+    console.log("THIS.PROPS", this.props)
     const breadcrumb = [
       { title: "Home", url: "" },
       // { title: "Shopping Cart", url: "/shop/cart" },
@@ -384,66 +372,66 @@ class PageChangeContact extends Component {
                     Please key in the password for account verification purpose.
                   </div>
                   <Divider variant="fullWidth" className="dividerbottom" />
-                  <form
+                  {/* <form
                     onSubmit={this.OnSubmitChangeContact}
                     className="container block"
-                  >
-                    <div className="row contactrowStyle">
-                      <div className="col-6 font">Password</div>
-                      <div className="col-6 ">
-                        <TextField
-                          id="password"
-                          size="small"
-                          className="font"
-                          variant="outlined"
-                          error={this.state.passwordErr}
-                          type={this.state.hidden ? "password" : "text"}
-                          value={this.state.password}
-                          onChange={({ target }) => {
-                            this.setState({ password: target.value });
-                          }}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton
-                                  aria-label="toggle password visibility"
-                                  onClick={this.toggleShow}
-                                >
-                                  {this.state.hidden ? (
-                                    <VisibilityOff />
-                                  ) : (
-                                    <Visibility />
-                                  )}
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                        {this.state.passwordErr && (
-                          <FormHelperText style={{ color: "red" }}>
-                            Invalid password
-                          </FormHelperText>
-                        )}
-                      </div>
-                      <div className="tooltip_1 d-flex align-items-center">
-                        <HelpOutlineIcon />
-                        <div className="tooltiptext ">
-                          Password is required to verify you are the owner of
-                          this account
-                        </div>
+                  > */}
+                  <div className="row contactrowStyle">
+                    <div className="col-6 font">Password</div>
+                    <div className="col-6 ">
+                      <TextField
+                        id="password"
+                        size="small"
+                        className="font"
+                        variant="outlined"
+                        error={this.state.passwordErr}
+                        type={this.state.hidden ? "password" : "text"}
+                        value={this.state.password}
+                        onChange={({ target }) => {
+                          this.setState({ password: target.value });
+                        }}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={this.toggleShow}
+                              >
+                                {this.state.hidden ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      {this.state.passwordErr && (
+                        <FormHelperText style={{ color: "red" }}>
+                          Invalid password
+                        </FormHelperText>
+                      )}
+                    </div>
+                    <div className="tooltip_1 d-flex align-items-center">
+                      <HelpOutlineIcon />
+                      <div className="tooltiptext ">
+                        Password is required to verify you are the owner of
+                        this account
                       </div>
                     </div>
-                    <div style={{ textAlign: "left" }}>
-                      <button
-                        variant="contained"
-                        className="btn btn-primary "
-                        onClick={() => this.submitpassword()}
-                      >
-                        <DoneIcon className="saveicon" />
-                        Next
-                      </button>
-                    </div>
-                  </form>
+                  </div>
+                  <div style={{ textAlign: "left" }}>
+                    <button
+                      variant="contained"
+                      className="btn btn-primary "
+                      onClick={() => this.submitpassword()}
+                    >
+                      <DoneIcon className="saveicon" />
+                      Next
+                    </button>
+                  </div>
+                  {/* </form> */}
                 </div>
               </div>
             ) : (
@@ -453,7 +441,8 @@ class PageChangeContact extends Component {
                     <div className=" font">
                       Your Current Contact Number is{" "}
                       {this.props.currentUser[0] !== undefined &&
-                        this.props.currentUser[0].UserContactNo !== undefined
+                        this.props.currentUser[0].UserContactNo !== undefined &&
+                        this.props.currentUser[0].UserContactNo !== null
                         ? this.censorContact(
                           this.props.currentUser[0].UserContactNo
                         )
@@ -494,9 +483,8 @@ class PageChangeContact extends Component {
                           <p className=" font">
                             Enter the code we sent to your email{" "}
                             {this.props.currentUser.length > 0 &&
-                              this.props.currentUser[0].UserEmailAddress !==
-                              undefined &&
-                              this.props.currentUser[0].UserEmailAddress
+                              this.props.currentUser[0].UserEmailAddress !== undefined &&
+                              this.props.currentUser[0].UserEmailAddress !== null 
                               ? this.censorEmail(
                                 this.props.currentUser[0].UserEmailAddress
                               )

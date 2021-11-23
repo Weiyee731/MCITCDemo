@@ -46,6 +46,9 @@ export class GitAction {
   static VerifyPassword = "VERIFY-PASSWORD";
   static VerifiedPassword = "VERIFIED-PASSWORD";
 
+  static ClearPassword = "CLEAR-PASSWORD";
+  static ClearedPassword = "CLEARED-PASSWORD";
+
   static SendOTPVerification = "SEND-OTP-VERIFICATION";
   static SentOTPVerification = "SENT-OTP-VERIFICATION";
 
@@ -138,6 +141,12 @@ export class GitAction {
     return {
       type: GitAction.VerifyPassword,
       payload: propsData,
+    };
+  }
+
+  static CallEmptyVerifyPassword() {
+    return {
+      type: GitAction.ClearPassword,
     };
   }
 

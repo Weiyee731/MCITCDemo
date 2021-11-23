@@ -9,6 +9,8 @@ export const url = {
  
   merchant: (merchant) => merchant.UserID !== null ? `/merchant/${merchant.UserID}` : `/merchant`,
 
+  cartMerchant: (merchantID) => merchantID !== null ? `/merchant/${merchantID}` : `/merchant`,
+
   product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` :  `/shop/products/`,
   // product: (product) => `/shop/products/${product.slug}`,
 

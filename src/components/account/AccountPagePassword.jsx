@@ -187,7 +187,7 @@ class AccountPagePassword extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.order !== this.props.order) {
       browserHistory.push("/Emporia");
-      window.location.reload(false);
+      // window.location.reload(false);
     }
   }
 

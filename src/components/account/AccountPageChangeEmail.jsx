@@ -124,7 +124,6 @@ class PageChangeEmail extends Component {
       UPDATETYPE: "EMAIL",
       otp: "", //OTP
     };
-    this.onFormSubmit = this.onFormSubmit.bind(this);
     this.handleChangeForPassword = this.handleChangeForPassword.bind(this);
     this.handleChangeforEmail = this.handleChangeforEmail.bind(this);
     this.submitpassword = this.submitpassword.bind(this);
@@ -156,36 +155,14 @@ class PageChangeEmail extends Component {
     }
   }
 
-  onFormSubmit() {
-    if (this.state.PaymentID === 0) {
-      toast.error("Please fill in correct payment method info to continue");
-    } else {
-      this.props.data.map((x) => {
-        this.state.ProductID.push(x.product.ProductID);
-        this.state.UserCartID.push(x.product.UserCartID);
-        this.state.ProductQuantity.push(x.product.ProductQuantity);
-        this.state.ProductVariationDetailID.push(
-          x.product.ProductVariationDetailID
-        );
-      });
-      this.props.CallAddOrder({
-        UserID: window.localStorage.getItem("id"),
-        ProductID: this.state.ProductID,
-        ProductQuantity: this.state.ProductQuantity,
-        UserCartID: this.state.UserCartID,
-        UserAddressID: this.state.address,
-        PaymentMethodID: this.state.PaymentMethodID,
-        ProductVariationDetailID: this.state.ProductVariationDetailID,
-        PAYMENTID: this.state.PaymentID,
-      });
-    }
-  }
-
   componentDidUpdate(prevProps) {
-    if (prevProps.order !== this.props.order) {
-      browserHistory.push("/Emporia");
-      window.location.reload(false);
-    }
+    // if (prevProps.order !== this.props.order) {
+    //   // browserHistory.push("/Emporia");
+    //   // window.location.reload(false);
+    // }
+
+    if (prevProps.verifyPassword !== this.props.verifyPassword)
+      this.checkPassword()
   }
 
   componentWillUnmount(prevProps) {
@@ -243,7 +220,7 @@ class PageChangeEmail extends Component {
         window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
-        
+
       }
     }
   };
@@ -276,7 +253,7 @@ class PageChangeEmail extends Component {
   submitpassword = (e) => {
     if (this.state.password.length > 0) {
       this.props.CallVerifyPassword(this.state);
-      this.checkPassword();
+      // this.checkPassword();
     }
   };
 
@@ -446,7 +423,8 @@ class PageChangeEmail extends Component {
                     <div className=" font">
                       Your Current Email Address is{" "}
                       {this.props.currentUser[0] !== undefined &&
-                        this.props.currentUser[0].UserEmailAddress !== undefined
+                        this.props.currentUser[0].UserEmailAddress !== undefined &&
+                        this.props.currentUser[0].UserEmailAddress !== null
                         ? this.censorEmail(
                           this.props.currentUser[0].UserEmailAddress
                         )
