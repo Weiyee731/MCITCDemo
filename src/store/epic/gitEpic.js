@@ -91,7 +91,7 @@ export class GitEpic {
         json = JSON.parse(json);
 
         if (json[0].ReturnVal !== '0') {
-          toast.error("Successfully Registered")
+          toast.success("Successfully Registered")
         }
 
         return {
@@ -111,18 +111,18 @@ export class GitEpic {
   checkUser = (action$) =>
     action$.ofType(GitAction.CheckUser).switchMap(async ({ payload }) => {
       try {
-
         const response = await fetch(
           url +
           "User_CheckDuplicate?email=" +
-          payload
+          payload.Email
         );
         let json = await response.json();
         json = JSON.parse(json);
 
-        if (json[0].ReturnVal !== '0') {
+        if (json[0].ReturnVal !== '0' && payload.Value !== "forgetPassword") {
           toast.error("This email has been register before. Please try another email.")
         }
+
 
         return {
           type: GitAction.CheckedUser,
@@ -169,14 +169,7 @@ export class GitEpic {
   sentOTPVerification = (action$) =>
     action$.ofType(GitAction.SendOTPVerification).switchMap(async ({ payload }) => {
       try {
-
-        console.log(url +
-          "User_SentOTPVerification?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.GETOTPTYPE +
-          "&VALIDATIONFIELD=" +
-          payload.UpdatedValue)
+          
         const response = await fetch(
           url +
           "User_SentOTPVerification?USERID=" +
@@ -205,16 +198,6 @@ export class GitEpic {
     action$.ofType(GitAction.UpdateContact).switchMap(async ({ payload }) => {
       try {
 
-        console.log(url +
-          "User_UpdateProfileSpecificField?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.UPDATETYPE +
-          "&OTP=" +
-          payload.otp +
-          "&UPDATEDFIELD=" +
-          payload.UpdatedValue)
-
         const response = await fetch(
           url +
           "User_UpdateProfileSpecificField?USERID=" +
@@ -230,8 +213,6 @@ export class GitEpic {
         let json = await response.json();
 
         json = JSON.parse(json);
-
-        console.log("json", json)
         return {
           type: GitAction.UpdatedContact,
           payload: json,
@@ -382,22 +363,6 @@ export class GitEpic {
   updateUserProfile = (action$) =>
     action$.ofType(GitAction.EditUserProfile).switchMap(async ({ payload }) => {
       try {
-
-        console.log(url +
-          "User_UpdateProfile?USERID=" +
-          payload.USERID +
-          "&FIRSTNAME=" +
-          payload.USERFIRSTNAME +
-          "&LASTNAME=" +
-          payload.USERLASTNAME +
-          "&USERCONTACTNO=" +
-          payload.USERCONTACTNO +
-          "&USERDOB=" +
-          payload.USERDATEBIRTH +
-          "&USEREMAIL=" +
-          payload.USEREMAIL +
-          "&USERGENDER=" +
-          payload.USERGENDER)
 
         const response = await fetch(
           url +

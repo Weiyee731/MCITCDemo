@@ -93,7 +93,7 @@ const SignUp = (props) => {
             toast.error("Please complete the form with correct information.");
         } else {
 
-            props.CallCheckUserExists(userDetail.Email)
+            props.CallCheckUserExists({Email:userDetail.Email, Value:"signup"})
             setEmailVefication(true)
 
         }
@@ -253,7 +253,6 @@ const SignUp = (props) => {
     }
 
 
-
     useEffect(() => {
         if (props.currentUser.length > 0 && submitRegisterForm === true && props.currentUser[0].ReturnVal !== "0") {
 
@@ -279,7 +278,8 @@ const SignUp = (props) => {
     useEffect(() => {
 
         console.log("props.emailVerification", props.emailVerification)
-        if (props.emailVerification.length > 0 && verifyEmail === true && props.emailVerification[0].ReturnVal === "0") {
+        // if (props.emailVerification.length > 0 && verifyEmail === true && props.emailVerification[0].ReturnVal === "0") {
+        if (props.emailVerification.length > 0 && verifyEmail === true) {
             submitForm();
         }
     }, [props.emailVerification], setEmailVefication);

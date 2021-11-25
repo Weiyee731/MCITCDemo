@@ -185,9 +185,18 @@ class AccountPagePassword extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.order !== this.props.order) {
-      browserHistory.push("/Emporia");
-      // window.location.reload(false);
+
+    if (prevProps.verifyPassword !== this.props.verifyPassword)
+      this.checkPassword()
+
+    if (prevProps.updatePassword !== this.props.updatePassword) {
+      if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
+        toast.success("Your password has been updated");
+        browserHistory.push("/Emporia/account/profile");
+        window.location.reload(false);
+      } else {
+        toast.warn("The OTP key are incorrect. Please try again");
+      }
     }
   }
 
@@ -245,16 +254,14 @@ class AccountPagePassword extends Component {
       this.setState({ otp });
     }
     if (otp.length === 6) {
-      this.props.CallUpdatePassword(this.state, otp);
+      this.props.CallUpdatePassword({
+        USERID: this.state.USERID,
+        UPDATETYPE: this.state.UPDATETYPE,
+        otp: otp,
+        UpdatedValue: this.state.UpdatedValue
+      });
       this.setState({ startCountDown: false });
       this.stopTimer(60);
-      if (
-        this.props.updatePassword[0] !== undefined &&
-        this.props.updatePassword[0] !== null &&
-        this.props.updatePassword[0].ReturnVal === 1
-      ) {
-        toast.success("2_!", this.props.updatePassword);
-      }
     }
   };
 
@@ -284,17 +291,24 @@ class AccountPagePassword extends Component {
   }
 
   submitpassword = (e) => {
-    this.props.CallVerifyPassword(this.state);
+
+    if (this.state.password.length > 0) {
+      this.props.CallVerifyPassword(this.state);
+    }
+  };
+
+  checkPassword = (e) => {
     if (
+      this.props.verifyPassword !== undefined &&
       this.props.verifyPassword[0].ValidationInd !== undefined &&
       this.props.verifyPassword[0].ValidationInd !== 0 &&
       this.props.verifyPassword.length > 0
     ) {
       this.setState({ confirmPasswordPage: false });
     } else {
-      toast.warning("The password is incorrect! Please try again");
+      toast.warn("The password is incorrect! Please try again");
     }
-  };
+  }
 
   getNewOTP = (e) => {
     this.props.CallSendOTP(this.state); //send otp
@@ -317,11 +331,11 @@ class AccountPagePassword extends Component {
       this.setState({ startCountDown: false });
       this.stopTimer(60);
     }
-    if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-      browserHistory.push("account/profile");
-      window.location.reload(false);
-    } else {
-    }
+    // if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
+    //   browserHistory.push("account/profile");
+    //   window.location.reload(false);
+    // } else {
+    // }
     // toast.error// remain in page
   };
 
@@ -511,21 +525,21 @@ class AccountPagePassword extends Component {
                           ),
                         }}
                       />
-                      {this.state.passwordErr && (
+                      {this.state.validPassword === false && this.state.UpdatedValue !== "" && (
                         <FormHelperText style={{ color: "red" }}>
                           Invalid password
                         </FormHelperText>
                       )}
                     </div>
                     <div className="tooltip_1 d-flex align-items-center">
-                        <HelpOutlineIcon />
-                        <div className="tooltiptext1 ">
-                          Password must fullfll following requirement
-                          - at least 8 characters
-                          - must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
-                          - Can contain special characters
-                        </div>
+                      <HelpOutlineIcon />
+                      <div className="tooltiptext1 ">
+                        Password must fullfll following requirement
+                        - at least 8 characters
+                        - must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
+                        - Can contain special characters
                       </div>
+                    </div>
                     <div className="font col-4 link-button  change-contact-mail d-flex align-items-center pl-2">
                       {this.state.startCountDown === true ? (
                         <div className="link-button" disabled>

@@ -30,6 +30,8 @@ import PageChangeContact from "./AccountPageChangeContact.jsx";
 import LoginComponent from "../../pages/login/login.component";
 import { browserHistory } from "react-router";
 
+import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
+
 function mapStateToProps(state) {
   return {
     currentUser: state.counterReducer["currentUser"],
@@ -270,49 +272,22 @@ class AccountPageProfile extends Component {
     }
   };
 
-
-  // handleChangeforEmail =(e) => {
-  //   const { value } = e.target;
-
-  //   this.setState({
-  //     USEREMAIL: value,
-  //   });
-  // };
-
-  // handleChangeforContact =(e) => {
-  //   const { value } = e.target;
-
-  //   this.setState({
-  //     USERCONTACTNO: value,
-  //   });
-  // };
-
-  // handleChangeforUserNotification =(e) => {
-  //   const { value } = e.target;
-
-  //   this.setState({
-  //     USERNOTIFICATIONIND: value,
-  //   });
-  // };
-
-  // handleChangeforLanguage =(e) => {
-  //   const { value } = e.target;
-
-  //   this.setState({
-  //     USERLANGCODE: value,
-  //   });
-  // };
-
-  // handleChangeforDarkMode =(e) => {
-  //   const { value } = e.target;
-
-  //   this.setState({
-  //     USERAPPDARKMODE: value,
-  //   });
-  // };
-
   /////////////////CALL API TO UPDATE PROFILE INFO///////////////////////////////////////////
-  addProfile() {
+  updateProfile() {
+
+
+
+    // if (
+    // //   !isStringNullOrEmpty(this.state.Name) &&
+    // //   isContactValid(this.state.ContactNo) &&
+    // //   isEmailValid(this.state.email) &&
+    // //   !isStringNullOrEmpty(this.state.USERADDRESSLINE1) &&
+    // //   !isStringNullOrEmpty(this.state.USERADDRESSLINE2) &&
+    // //   !isStringNullOrEmpty(this.state.USERSTATE) &&
+    // //   !isStringNullOrEmpty(this.state.USERCITY) &&
+    // //   !isStringNullOrEmpty(this.state.USERCOUNTRYID)
+    // // )
+
     this.props.CallUpdateUserProfile({
       USERID: this.state.USERID,
       USERFIRSTNAME: this.state.USERFIRSTNAME,
@@ -384,7 +359,7 @@ class AccountPageProfile extends Component {
               <button
                 variant="contained"
                 className="btn btn-primary"
-                onClick={() => this.addProfile()}
+                onClick={() => this.updateProfile()}
               >
                 <DoneIcon className="saveicon" />
                 Save
