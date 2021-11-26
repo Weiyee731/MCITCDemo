@@ -45,7 +45,7 @@ class AccountPageAddAddress extends Component {
       USERPOSCODE: "",
       USERSTATE: "",
       USERCITY: "",
-      USERCOUNTRYID: 148,
+      COUNTRYID: 148,
       // COUNTRYID: "1",
     };
     this.addAddress = this.addAddress.bind(this);
@@ -86,7 +86,7 @@ class AccountPageAddAddress extends Component {
       });
     } else if (data === "USERCOUNTRYID") {
       this.setState({
-        USERCOUNTRYID: e.target.value,
+        COUNTRYID: e.target.value,
       });
     } else if (data === "USERCITY") {
       this.setState({
@@ -110,7 +110,7 @@ class AccountPageAddAddress extends Component {
       !isStringNullOrEmpty(this.state.USERADDRESSLINE2) &&
       !isStringNullOrEmpty(this.state.USERSTATE) &&
       !isStringNullOrEmpty(this.state.USERCITY) &&
-      !isStringNullOrEmpty(this.state.USERCOUNTRYID)
+      !isStringNullOrEmpty(this.state.COUNTRYID)
     ) {
       this.props.CallAddAddress(this.state);
       this.props.parentCallback(false);
@@ -268,7 +268,7 @@ class AccountPageAddAddress extends Component {
                       // label="Country"
                       variant="outlined"
                       defaultValue={1}
-                      value={this.state.USERCOUNTRYID}
+                      value={this.state.COUNTRYID}
                       size="small"
                       onChange={this.handleChange.bind(this, "USERCOUNTRYID")}
                       style={{

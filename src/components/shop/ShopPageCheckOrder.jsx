@@ -12,6 +12,12 @@ import Currency from "../shared/Currency";
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
 import { GitAction } from "../../store/action/gitAction";
+import { Modal, ModalBody, ModalHeader } from "reactstrap"
+import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
+import { toast } from "react-toastify";
+import EditExistingAddress from '../shared/EditExistingAddress'
+import AddAddress from '../shared/AddAddress'
+
 class PageCheckOrder extends Component {
   payments = payments;
 
@@ -27,8 +33,28 @@ class PageCheckOrder extends Component {
       total: 0,
       shipping: 25,
       tax: 0,
+      isHandleAddress: false,
+      selectedAddresstoEdit: [],
+
+      Name: "",
+      ContactNo: "",
+      email: "",
+      AddressBookNo: "",
+      USERID: localStorage.getItem("id"),
+      USERADDRESSLINE1: "",
+      USERADDRESSLINE2: "",
+      USERPOSCODE: "",
+      USERSTATE: "",
+      USERCITY: "",
+      COUNTRYID: "148",
+      isHandleAddressSubmitted: false,
+      isAddAddress: false,
     };
     this.setDetails = this.setDetails.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleAddress = this.handleAddress.bind(this)
+    this.selectCountry = this.selectCountry.bind(this)
+    this.revertState = this.revertState.bind(this)
   }
 
   handlePaymentChange = (event) => {
@@ -36,6 +62,95 @@ class PageCheckOrder extends Component {
       this.setState({ payment: event.target.value });
     }
   };
+
+  revertState() {
+    this.setState({
+      selectedAddresstoEdit: [],
+      Name: "",
+      ContactNo: "",
+      email: "",
+      AddressBookNo: "",
+      USERADDRESSLINE1: "",
+      USERADDRESSLINE2: "",
+      USERPOSCODE: "",
+      USERSTATE: "",
+      USERCITY: "",
+      COUNTRYID: "148",
+    })
+  }
+
+  handleAddress() {
+    if (!isStringNullOrEmpty(this.state.Name) &&
+      isContactValid(this.state.ContactNo) &&
+      isEmailValid(this.state.email) &&
+      !isStringNullOrEmpty(this.state.USERADDRESSLINE1) &&
+      !isStringNullOrEmpty(this.state.USERADDRESSLINE2) &&
+      !isStringNullOrEmpty(this.state.USERPOSCODE) &&
+      !isNaN(this.state.USERPOSCODE) &&
+      !isStringNullOrEmpty(this.state.USERSTATE) &&
+      !isStringNullOrEmpty(this.state.USERCITY) &&
+      !isStringNullOrEmpty(this.state.COUNTRYID)) {
+
+      if (this.state.isAddAddress === false) {
+        this.props.CallUpdateAddress(this.state);
+        this.setState({ isHandleAddressSubmitted: true })
+        this.revertState()
+      }
+      else {
+        this.props.CallAddAddress(this.state);
+        this.setState({ isHandleAddressSubmitted: true })
+        this.revertState()
+      }
+    } else {
+      toast.error("Please fill in all required data with correct information");
+    }
+  }
+
+  handleInputChange(e) {
+    e.preventDefault()
+
+    switch (e.target.name) {
+      case "Name":
+        this.setState({ Name: e.target.value });
+        break;
+
+      case "ContactNo":
+        this.setState({ ContactNo: e.target.value });
+        break;
+
+      case "email":
+        this.setState({ email: e.target.value });
+        break;
+
+      case "USERADDRESSLINE1":
+        this.setState({ USERADDRESSLINE1: e.target.value });
+        break;
+
+      case "USERADDRESSLINE2":
+        this.setState({ USERADDRESSLINE2: e.target.value });
+        break;
+
+      case "USERPOSCODE":
+        this.setState({ USERPOSCODE: e.target.value });
+        break;
+
+      case "USERSTATE":
+        this.setState({ USERSTATE: e.target.value });
+        break;
+
+      case "USERCITY":
+        this.setState({ USERCITY: e.target.value });
+        break;
+
+      default:
+    }
+  }
+
+
+  selectCountry = (e) => {
+    this.setState({ COUNTRYID: e.target.value });
+  };
+
 
   setDetails(productcart) {
     this.setState({
@@ -49,6 +164,14 @@ class PageCheckOrder extends Component {
     this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
     if (this.props.data !== undefined && this.props.data.length > 0) {
       this.setDetails(this.props.data)
+    }
+
+    this.props.CallCountry();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.addresses !== this.props.addresses && this.state.isHandleAddressSubmitted === true) {
+      this.setState({ isHandleAddress: false, isHandleAddressSubmitted: false, selectedAddresstoEdit: [], isAddAddress: false })
     }
   }
 
@@ -115,11 +238,26 @@ class PageCheckOrder extends Component {
 
   };
 
-  goEdit = (e, AddressBookNo) => {
-    window.localStorage.setItem("addressNo", AddressBookNo);
-    browserHistory.push("../account/addresses");
-    window.location.reload(false)
+  goEditAddress = (e, address) => {
+    this.setState({ isHandleAddress: true, selectedAddresstoEdit: address })
+    this.setState({
+      Name: address.UserAddressName,
+      ContactNo: address.UserContactNo,
+      email: address.UserEmail,
+      USERADDRESSLINE1: address.UserAddressLine1,
+      USERADDRESSLINE2: address.UserAddressLine2,
+      USERPOSCODE: address.UserPoscode,
+      USERSTATE: address.UserState,
+      USERCITY: address.UserCity,
+      COUNTRYID: address.CountryID,
+      AddressBookNo: address.UserAddressBookID,
+    })
+
   };
+
+  goAddAddress = () => {
+    this.setState({ isHandleAddress: true, isAddAddress: true })
+  }
 
   renderAddress() {
     const selfCollect = {
@@ -128,62 +266,60 @@ class PageCheckOrder extends Component {
       UserCity: 'Self Collect'
     }
 
-
-
-
-    const addresses = this.props.addresses !== undefined && this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0" && this.props.addresses.map((address) => (
-      <React.Fragment key={address.UserAddressBookID}>
-        <div className="addresses-list__item card address-card">
-          {address.UserAddressBookID ==
-            this.state.defaultAddress.UserAddressBookID && (
-              <div className="address-card__badge">Selected</div>
-            )}
-          <div
-            className="address-card__body"
-            onClick={(e) => this.handleClick(e, address)}
-          >
-            <div className="address-card__name">{`${address.UserAddressName}`}</div>
-            <div className="address-card__row">
-              {address.CountryID}
-              <br />
-              {address.UserPoscode},{address.UserCity}
-              <br />
-              {address.UserAddressLine1} {address.UserAddressLine2}
-            </div>
-            <div className="address-card__row">
-              <div className="address-card__row-title">Phone Number</div>
-              <div className="address-card__row-content">
-                {address.UserContactNo}
+    const addresses = this.props.addresses !== undefined && this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0"
+      && this.props.addresses.Message === undefined && this.props.addresses.map((address) => (
+        <React.Fragment key={address.UserAddressBookID}>
+          <div className="addresses-list__item card address-card">
+            {address.UserAddressBookID ==
+              this.state.defaultAddress.UserAddressBookID && (
+                <div className="address-card__badge">Selected</div>
+              )}
+            <div
+              className="address-card__body"
+              onClick={(e) => this.handleClick(e, address)}
+            >
+              <div className="address-card__name">{`${address.UserAddressName}`}</div>
+              <div className="address-card__row">
+                {address.CountryID}
+                <br />
+                {address.UserPoscode},{address.UserCity}
+                <br />
+                {address.UserAddressLine1} {address.UserAddressLine2}
               </div>
-            </div>
-            <div className="address-card__row">
-              <div className="address-card__row-title">Email Address</div>
-              <div className="address-card__row-content">
-                {address.UserEmail}
+              <div className="address-card__row">
+                <div className="address-card__row-title">Phone Number</div>
+                <div className="address-card__row-content">
+                  {address.UserContactNo}
+                </div>
               </div>
-            </div>
-            <div className="address-card__footer">
-              <Button
-                color='primary'
-                to="/account/addresses"
-                onClick={(e) => this.goEdit(e, address.UserAddressBookID)}
-              >
-                Edit
-              </Button>
-              &nbsp;&nbsp;
-              <Button
-                onClick={(e) =>
-                  this.handleRemoveClick(e, address.UserAddressBookID)
-                }
-              >
-                Remove
-              </Button>
+              <div className="address-card__row">
+                <div className="address-card__row-title">Email Address</div>
+                <div className="address-card__row-content">
+                  {address.UserEmail}
+                </div>
+              </div>
+              <div className="address-card__footer">
+                <Button
+                  color='primary'
+                  // to="/account/addresses"
+                  onClick={(e) => this.goEditAddress(e, address)}
+                >
+                  Edit
+                </Button>
+                &nbsp;&nbsp;
+                <Button
+                  onClick={(e) =>
+                    this.handleRemoveClick(e, address.UserAddressBookID)
+                  }
+                >
+                  Remove
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="addresses-list__divider" />
-      </React.Fragment>
-    ));
+          <div className="addresses-list__divider" />
+        </React.Fragment>
+      ));
 
     return (
       <div className="addresses-list mt-3">
@@ -204,17 +340,16 @@ class PageCheckOrder extends Component {
 
         {addresses}
 
-        <Link
-          to="/account/addresses"
-          className="addresses-list__item addresses-list__item--new"
-        >
-          <div className="addresses-list__plus" />
-          <div className="btn btn-secondary btn-sm">Add New</div>
-        </Link>
+
+        <Button className="addresses-list__item addresses-list__item--new" onClick={() => this.goAddAddress()} >
+          <div className="addresses-list__plus"></div>
+          {/* <div className="btn btn-secondary btn-sm">Add New</div> */}
+        </Button>
         <div className="addresses-list__divider" />
-      </div>
+      </div >
     );
   }
+
 
   renderCart() {
     return (
@@ -263,6 +398,17 @@ class PageCheckOrder extends Component {
                 <h5>Please select your desired shipping address</h5>
                 {this.renderAddress()}
                 {this.renderCart()}
+                <EditExistingAddress
+                  isOpen={this.state.isHandleAddress}
+                  // handleOpen={this.handleAddNewCard}
+                  // handleAddCreditCard={this.handleAddCreditCard}
+                  handleSaveAddress={this.handleAddress}
+                  handleChange={this.handleInputChange}
+                  handleCountryChange={this.selectCountry}
+                  addressState={this.state}
+                  countryList={this.props.countries}
+                  address={this.state.isAddAddress === false ? this.state.selectedAddresstoEdit : []}
+                />
               </div>
             </div>
           </div>
@@ -274,12 +420,16 @@ class PageCheckOrder extends Component {
 
 const mapStateToProps = (state) => ({
   addresses: state.counterReducer["addresses"],
+  countries: state.counterReducer["countries"],
   // productcart: state.counterReducer.productcart
 });
 
 const mapDispatchToProps = (dispatch) => ({
   CallAllAddress: (prodData) => dispatch(GitAction.CallAllAddress(prodData)),
   CallDeleteAddress: (prodData) => dispatch(GitAction.CallDeleteAddress(prodData)),
+  CallCountry: () => dispatch(GitAction.CallCountry()),
+  CallUpdateAddress: (prodData) => dispatch(GitAction.CallUpdateAddress(prodData)),
+  CallAddAddress: (prodData) => dispatch(GitAction.CallAddAddress(prodData)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageCheckOrder);

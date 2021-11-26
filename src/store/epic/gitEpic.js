@@ -169,7 +169,7 @@ export class GitEpic {
   sentOTPVerification = (action$) =>
     action$.ofType(GitAction.SendOTPVerification).switchMap(async ({ payload }) => {
       try {
-          
+
         const response = await fetch(
           url +
           "User_SentOTPVerification?USERID=" +
@@ -458,6 +458,14 @@ export class GitEpic {
   updateProfileImage = (action$) =>
     action$.ofType(GitAction.UpdateProfileImage).switchMap(async ({ payload }) => {
       try {
+
+        console.log(url +
+          "User_UserUpdatePhoto?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.TYPE +
+          "&USERPROFILEIMAGE=" +
+          payload.USERPROFILEIMAGE)
         const response = await fetch(
           url +
           "User_UserUpdatePhoto?USERID=" +
@@ -469,6 +477,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+
+        console.log("JSON", json)
         if (json.map((val) => val.ReturnVal === 1)) {
           toast.success("Upload Successful");
         }
@@ -513,6 +523,28 @@ export class GitEpic {
   addAddress = (action$) =>
     action$.ofType(GitAction.AddAddress).switchMap(async ({ payload }) => {
       try {
+
+        console.log(url +
+          "User_AddAddressBook?USERADDRESSNAME=" +
+          payload.Name +
+          "&USERID=" +
+          payload.USERID +
+          "&USERCONTACTNO=" +
+          payload.ContactNo +
+          "&USEREMAIL=" +
+          payload.email +
+          "&USERADDRESSLINE1=" +
+          payload.USERADDRESSLINE1 +
+          "&USERADDRESSLINE2=" +
+          payload.USERADDRESSLINE2 +
+          "&USERPOSCODE=" +
+          payload.USERPOSCODE +
+          "&USERSTATE=" +
+          payload.USERSTATE +
+          "&USERCITY=" +
+          payload.USERCITY +
+          "&COUNTRYID=" +
+          payload.COUNTRYID)
         const response = await fetch(
           url +
           "User_AddAddressBook?USERADDRESSNAME=" +
@@ -534,7 +566,7 @@ export class GitEpic {
           "&USERCITY=" +
           payload.USERCITY +
           "&COUNTRYID=" +
-          payload.USERCOUNTRYID
+          payload.COUNTRYID
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -549,6 +581,9 @@ export class GitEpic {
           );
           let json_1 = await response_1.json();
           json_1 = JSON.parse(json_1);
+
+          console.log("json", json)
+          console.log("json_1", json_1)
           return {
             type: GitAction.AddedAddress,
             payloadCondition: json,
@@ -818,6 +853,9 @@ export class GitEpic {
   viewProductCartList = (action$) =>
     action$.ofType(GitAction.ViewProductCart).switchMap(async ({ payload }) => {
       try {
+        console.log(url +
+          "Product_ItemListInCartByUserID?USERID=" +
+          payload.userID)
         const response = await fetch(
           url +
           "Product_ItemListInCartByUserID?USERID=" +
@@ -825,6 +863,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+
+        console.log("JSON", json)
         return {
           type: GitAction.ViewedProductCart,
           payload: json,
@@ -842,7 +882,15 @@ export class GitEpic {
 
   viewProductWishlist = (action$) =>
     action$.ofType(GitAction.ViewProductWishlist).switchMap(async ({ payload }) => {
+
+
+      console.log(url +
+        "Product_ItemListInWishlistByUserID?USERID=" +
+        payload.userID)
+
       try {
+
+
         const response = await fetch(
           url +
           "Product_ItemListInWishlistByUserID?USERID=" +
@@ -850,6 +898,8 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+
+        console.log("JSON", json)
         return {
           type: GitAction.ViewedProductWishlist,
           payload: json,

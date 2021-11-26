@@ -55,7 +55,7 @@ $local-open-transition-duration: .2s;
 }
 
 .indicator__dropdown {
-    top: 75px;
+    top: 55px;
     position: fixed;
     visibility: hidden;
     transform-origin: top;
@@ -90,7 +90,7 @@ $local-open-transition-duration: .2s;
         opacity: 1;
         visibility: visible;
         transform: rotateX(0deg);
-        right: 6%;
+        right:7.5%;
     }
 }
 

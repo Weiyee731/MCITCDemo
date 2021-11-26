@@ -97,7 +97,7 @@ class LoginComponent extends Component {
 
       GETOTPTYPE: "EMAIL",
       UPDATETYPE: "PASSWORD",
-      otp: "", 
+      otp: "",
     };
     this.toggleShow = this.toggleShow.bind(this);
     this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
@@ -163,6 +163,13 @@ class LoginComponent extends Component {
           localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
           cookies.set("role", this.props.currentUser[0].UserType, options);
         }
+
+
+        // if (localStorage.getItem("isLogin") === true) {
+          // this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
+          // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
+        // }
+
         browserHistory.push("/Emporia");
         window.location.reload(false);
       } else {

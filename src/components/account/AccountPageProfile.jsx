@@ -125,6 +125,14 @@ class AccountPageProfile extends Component {
     }
 
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentUser !== this.props.currentUser) {
+      if (this.props.currentUser.length > 0 && this.props.currentUser[0].ReturnMsg === "Image had uploaded" && this.state.showBoxForImage === true)
+        this.modalClose()
+    }
+  }
+
   onFileUpload = () => {
     const formData = new FormData();
 

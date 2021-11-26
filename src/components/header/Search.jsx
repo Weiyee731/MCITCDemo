@@ -9,6 +9,7 @@ import React, {
 // third-party
 import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
+import { browserHistory } from "react-router";
 
 // application
 import Suggestions from './Suggestions';
@@ -156,8 +157,15 @@ function Search(props) {
   // Close suggestions when the Escape key has been pressed.
   const handleKeyDown = (event) => {
     // Escape.
+
+    console.log("event", event.key)
     if (event.which === 27) {
       close();
+    }
+
+    if (event.key === "Enter") {
+      browserHistory.push("/Emporia/shop/ProductListing/type:Keyword&typevalue:" + searchquery);
+      window.location.reload(false);
     }
   };
 
@@ -172,10 +180,12 @@ function Search(props) {
     </button>
   );
 
-  let searchquery =  query.toLowerCase().length > 0 ? query.toLowerCase() : 0
+
+  let searchquery = query.toLowerCase().length > 0 ? query.toLowerCase() : 0
   return (
     <div className={rootClasses} ref={wrapper} onBlur={handleBlur}>
       <div className="search__body">
+
         <div className="search__form" action="">
           <input
             ref={inputRef}
@@ -190,7 +200,7 @@ function Search(props) {
             type="text"
             autoComplete="off"
           />
-          
+
           <button className="search__button search__button--type--submit" type="submit"
             onClick={(e) => {
               window.location.href = "/Emporia/shop/ProductListing/type:Keyword&typevalue:" + searchquery
@@ -202,7 +212,7 @@ function Search(props) {
         </div>
         <Suggestions className="search__suggestions" context={context} products={suggestedProducts} />
       </div>
-    </div>
+    </div >
   );
 }
 

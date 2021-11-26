@@ -276,10 +276,8 @@ const SignUp = (props) => {
     }, [props.currentUser], setSubmitRegisterForm);
 
     useEffect(() => {
-
-        console.log("props.emailVerification", props.emailVerification)
-        // if (props.emailVerification.length > 0 && verifyEmail === true && props.emailVerification[0].ReturnVal === "0") {
-        if (props.emailVerification.length > 0 && verifyEmail === true) {
+        if (props.emailVerification.length > 0 && verifyEmail === true && props.emailVerification[0].ReturnVal === "0") {
+        // if (props.emailVerification.length > 0 && verifyEmail === true) {
             submitForm();
         }
     }, [props.emailVerification], setEmailVefication);
