@@ -6,7 +6,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 
-const EditExistingAddress = (props) => {
+const HandleAddress = (props) => {
     const {
         isOpen,
         // handleOpen,
@@ -15,6 +15,7 @@ const EditExistingAddress = (props) => {
         handleCountryChange,
         handleSaveAddress,
         // handleInputFocus,
+        handleClose,
         address,
         countryList,
         addressState,
@@ -27,6 +28,7 @@ const EditExistingAddress = (props) => {
         <Modal
             className="modal-dialog-centered"
             isOpen={isOpen}
+            handleClose={handleClose}
         >
             <ModalHeader>
                 Edit Address Details
@@ -236,4 +238,4 @@ const EditExistingAddress = (props) => {
     )
 }
 
-export default EditExistingAddress
+export default HandleAddress

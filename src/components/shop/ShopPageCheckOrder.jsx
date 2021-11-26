@@ -15,8 +15,7 @@ import { GitAction } from "../../store/action/gitAction";
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import { toast } from "react-toastify";
-import EditExistingAddress from '../shared/EditExistingAddress'
-import AddAddress from '../shared/AddAddress'
+import HandleAddress from '../shared/HandleAddress'
 
 class PageCheckOrder extends Component {
   payments = payments;
@@ -76,6 +75,7 @@ class PageCheckOrder extends Component {
       USERSTATE: "",
       USERCITY: "",
       COUNTRYID: "148",
+      isHandleAddress: false
     })
   }
 
@@ -398,10 +398,11 @@ class PageCheckOrder extends Component {
                 <h5>Please select your desired shipping address</h5>
                 {this.renderAddress()}
                 {this.renderCart()}
-                <EditExistingAddress
+                <HandleAddress
                   isOpen={this.state.isHandleAddress}
                   // handleOpen={this.handleAddNewCard}
                   // handleAddCreditCard={this.handleAddCreditCard}
+                  handleClose={this.revertState}
                   handleSaveAddress={this.handleAddress}
                   handleChange={this.handleInputChange}
                   handleCountryChange={this.selectCountry}

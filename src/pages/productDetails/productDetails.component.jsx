@@ -79,6 +79,7 @@ function mapStateToProps(state) {
     addProductVariationResult: state.counterReducer["addProductVariationResult"],
     productSpecsDetail: state.counterReducer["productSpecsDetail"],
     productInfo: state.counterReducer["productsByID"],
+    returnUpdateProduct: state.counterReducer["returnUpdateProduct"],
   };
 }
 const editorConfiguration = {
@@ -447,6 +448,7 @@ const INITIAL_STATE = {
   activeStep: 0,
   price: null,
   stock: null,
+  ProductID: "",
   variation1: [],
   priceTierList: [],
   variantImagesTotal: 0.0,
@@ -3069,6 +3071,10 @@ class ProductDetailsComponent extends Component {
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll, true);
+    console.log("CALL ")
+    console.log("CALL THIS IS THE PRODUCT ", this.props.productInfo)
+    console.log("CALL THIS IS THE PRODUCT ID", this.props.ProductID)
+
 
     // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
     let userId = window.localStorage.getItem("id")
@@ -3084,6 +3090,8 @@ class ProductDetailsComponent extends Component {
         userId: window.localStorage.getItem("id"),
       })
     }
+
+    this.bindProductInfoToState()
   }
 
   componentWillUnmount() {
@@ -3144,10 +3152,12 @@ class ProductDetailsComponent extends Component {
     this.checkEverything();
 
     let object = {
+      ProductID: this.state.ProductID,
+      productSupplier: this.state.productSupplier,
       name: this.state.name,
       description: this.state.description,
       productCategory: this.state.productCategory,
-      productSupplier: this.state.productSupplier,
+      // productSupplier: this.state.productSupplier,
       height: this.state.height,
       width: this.state.width,
       depth: this.state.depth,
@@ -3182,51 +3192,52 @@ class ProductDetailsComponent extends Component {
       console.log(e)
     }
 
-
+    console.log("this.props.productInfo", this.props.productInfo)
     //set Variations
-    if (this.props.productInfo[0].ProductCategoryID) {
+    if (this.props.productInfo.length > 0 && this.props.productInfo[0].ProductCategoryID) {
       this.props.CallAllProductVariationByCategoryID(this.props.productInfo[0].ProductCategoryID);
     }
 
 
-    const VariationValues = this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation) : []
+    const VariationValues = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation) : []
     let variationIsOn = (VariationValues.length > 0) ? true : false
     const variationObject = {
       name: "",
       options: [],
     };
+    if (VariationValues !== []) {
+      for (var x = 0; x < VariationValues.length; x++) {
+        var option = {
+          optionName: VariationValues[x].ProductVariationValue,
+          price: VariationValues[x].ProductVariationPrice,
+          stock: VariationValues[x].ProductStockAmount,
+          //missing the sku for option
+          sku: this.props.productInfo[0].SKU,
+          picture: "",
+          pictureURL: "",
+          errorOption: false,
+          errorSKU: false,
+          errorPrice: false,
+          errorStock: false,
+          variation2Options: {
+            name: "",
+            options: [
+              {
+                optionName: "",
+                price: "",
+                stock: "",
+                sku: "",
+                errorOption: false,
+                errorSKU: false,
+                errorPrice: false,
+                errorStock: false,
+              },
+            ],
+          },
+        };
 
-    for (var x = 0; x < VariationValues.length; x++) {
-      var option = {
-        optionName: VariationValues[x].ProductVariationValue,
-        price: VariationValues[x].ProductVariationPrice,
-        stock: VariationValues[x].ProductStockAmount,
-        //missing the sku for option
-        sku: this.props.productInfo[0].SKU,
-        picture: "",
-        pictureURL: "",
-        errorOption: false,
-        errorSKU: false,
-        errorPrice: false,
-        errorStock: false,
-        variation2Options: {
-          name: "",
-          options: [
-            {
-              optionName: "",
-              price: "",
-              stock: "",
-              sku: "",
-              errorOption: false,
-              errorSKU: false,
-              errorPrice: false,
-              errorStock: false,
-            },
-          ],
-        },
-      };
-
-      variationObject.options = [...variationObject.options, option];
+        variationObject.options = [...variationObject.options, option];
+      }
     }
 
     //set Specifications
@@ -3234,7 +3245,7 @@ class ProductDetailsComponent extends Component {
     //doesn't match the ones listed in the list of variations fetched
     var specificationArray = [];
 
-    var productSpecs = this.props.productInfo[0].ProductSpecification !== null ? JSON.parse(this.props.productInfo[0].ProductSpecification) : [];
+    var productSpecs = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductSpecification !== null ? JSON.parse(this.props.productInfo[0].ProductSpecification) : [];
     for (var y = 0; y < productSpecs.length; y++) {
       var object = { categoryId: productSpecs[y].ProductVariationID, value: productSpecs[y].ProductSpecificationValue, error: false }
       specificationArray = [...specificationArray, object]
@@ -3242,7 +3253,7 @@ class ProductDetailsComponent extends Component {
 
     //set Images
     //check url sent from database since it says 404 not found
-    var productImages = JSON.parse(this.props.productInfo[0].ProductImages);
+    var productImages = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductImages !== null ? JSON.parse(this.props.productInfo[0].ProductImages) : "";
     var fileInfo = [];
     var url = [];
     var file1Added = false;
@@ -3250,55 +3261,62 @@ class ProductDetailsComponent extends Component {
     var file3Added = false;
     var file1Added3 = false;
 
-    for (var z = 0; z < productImages.length; z++) {
-      fileInfo = [...fileInfo, productImages[z].ProductMediaTitle];
-      url = [...url, productImages[z].ProductMediaUrl];
+    console.log("PRODUCT IMAGE", productImages)
+    console.log("PRODUCT IMAGE", this.props.productInfo[0])
 
-      if (z == 0 && productImages[z].ProductMediaType == "image") {
-        file1Added = true;
-      } else if (z == 0 && productImages[z].ProductMediaType == "video") {
-        file1Added3 = true;
-      }
-      if (z == 1 && productImages[z].ProductMediaType == "image") {
-        file2Added = true;
-      } else if (z == 1 && productImages[z].ProductMediaType == "video") {
-        file1Added3 = true;
-      }
+    if (productImages !== "") {
+      for (var z = 0; z < productImages.length; z++) {
+        fileInfo = [...fileInfo, productImages[z].ProductMediaTitle];
+        url = [...url, productImages[z].ProductMediaUrl];
 
-      if (z == 2 && productImages[z].ProductMediaType == "image") {
-        file3Added = true;
-      } else if (z == 2 && productImages[z].ProductMediaType == "video") {
-        file1Added3 = true;
-      }
+        if (z == 0 && productImages[z].ProductMediaType == "image") {
+          file1Added = true;
+        } else if (z == 0 && productImages[z].ProductMediaType == "video") {
+          file1Added3 = true;
+        }
+        if (z == 1 && productImages[z].ProductMediaType == "image") {
+          file2Added = true;
+        } else if (z == 1 && productImages[z].ProductMediaType == "video") {
+          file1Added3 = true;
+        }
 
-      if (z == 3 && productImages[z].ProductMediaType == "video") {
-        file1Added3 = true;
-      }
+        if (z == 2 && productImages[z].ProductMediaType == "image") {
+          file3Added = true;
+        } else if (z == 2 && productImages[z].ProductMediaType == "video") {
+          file1Added3 = true;
+        }
 
+        if (z == 3 && productImages[z].ProductMediaType == "video") {
+          file1Added3 = true;
+        }
+      }
     }
+
+    console.log("PRODUCT INFO", this.props.productInfo)
 
     this.setState({
       isProductIntoBind: true, // to stop the looping of calling this function from componentdidupdate
-      name: this.props.productInfo[0].ProductName,
-      description: this.props.productInfo[0].ProductDescription,
-      height: this.props.productInfo[0].ProductDimensionHeight,
-      width: this.props.productInfo[0].ProductDimensionWidth,
-      depth: this.props.productInfo[0].ProductDimensionDeep,
-      weight: this.props.productInfo[0].ProductWeight,
-      brand: this.props.productInfo[0].Brand,
+      name: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductName : "",
+      description: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductDescription : "",
+      height: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductDimensionHeight : "",
+      width: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductDimensionWidth : "",
+      depth: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductDimensionDeep : "",
+      weight: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductWeight : "",
+      brand: this.props.productInfo.length > 0 ? this.props.productInfo[0].Brand : "",
       tags: tagList,
-      model: this.props.productInfo[0].Model,
-      sku: this.props.productInfo[0].SKU,
-      productCategory: this.props.productInfo[0].ProductCategoryID,
-      stock: this.props.productInfo[0].ProductStockAmount,
-      selectedVariationID: JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariationID,
-      selectedVariationName: JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariation,
+      model: this.props.productInfo.length > 0 ? this.props.productInfo[0].Model : "",
+      sku: this.props.productInfo.length > 0 ? this.props.productInfo[0].SKU : "",
+      ProductID: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductID : "",
+      productCategory: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductCategoryID : "",
+      stock: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductStockAmount : "",
+      selectedVariationID: this.props.productInfo.length > 0 && this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariationID : "",
+      selectedVariationName: this.props.productInfo.length > 0 && this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariation : "",
       variation1On: variationIsOn,
       variation1: variationObject,
-      variation1Options: JSON.parse(this.props.productInfo[0].ProductVariation).length,
-      productSpecification: this.props.productInfo[0].ProductSpecification,
+      variation1Options: this.props.productInfo.length > 0 && this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation).length : 0,
+      productSpecification: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductSpecification : "",
       productSpecificationOptions: specificationArray,
-      file: this.props.productInfo[0].ProductImages,
+      file: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductImages : "",
       fileInfo: fileInfo,
       url: url,
       file1Added: file1Added,
@@ -3327,6 +3345,7 @@ class ProductDetailsComponent extends Component {
       variation1NameFilled: 1,
     })
 
+    console.log("CALLING")
   }
 
   setCategory = () => {
@@ -3348,6 +3367,15 @@ class ProductDetailsComponent extends Component {
     if (this.props.productInfo) {
       if (this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind) {
         this.bindProductInfoToState()
+      }
+    }
+
+    if (prevProps.returnUpdateProduct !== this.props.returnUpdateProduct) {
+      if (this.props.returnUpdateProduct.length > 0 && this.props.returnUpdateProduct[0].ReturnVal === 1) {
+        setTimeout(() => {
+          browserHistory.push("/Emporia/viewProduct");
+          window.location.reload(false);
+        }, 3000);
       }
     }
 
@@ -3393,13 +3421,13 @@ class ProductDetailsComponent extends Component {
 
     if (isProductSpecReset && isProductVariantReset && this.state.isSubmit === true) {
       if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal == 1) {
-        toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
+        // toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
         this.props.CallResetProductMediaResult()
         this.setState({ isSubmit: false })
       }
       else {
         if (this.state.isSubmit === true) {
-          toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
+          // toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
           this.setState({ isSubmit: false })
         }
       }
@@ -6123,10 +6151,11 @@ class ProductDetailsComponent extends Component {
                         />
                       </StepContent>
                     </Step>
+
                     <Step key="productDetails">
                       <StepLabel>
                         <HashLink
-                          to="/addProductsAllIn#productDetails"
+                          to="/productDetails#productDetails"
                           className="FontType4"
                         >
                           Product Details
@@ -6141,7 +6170,7 @@ class ProductDetailsComponent extends Component {
                     <Step key="descriptionCard">
                       <StepLabel>
                         <HashLink
-                          to="/addProductsAllIn#descriptionCard"
+                          to="/productDetails#descriptionCard"
                           className="FontType4"
                         >
                           Product Description
@@ -6156,7 +6185,7 @@ class ProductDetailsComponent extends Component {
                     <Step key="specification">
                       <StepLabel>
                         <HashLink
-                          to="/addProductsAllIn#specification"
+                          to="/productDetails#specification"
                           className="FontType4"
                         >
                           Product Specification
@@ -6171,7 +6200,7 @@ class ProductDetailsComponent extends Component {
                     <Step key="productVariations">
                       <StepLabel>
                         <HashLink
-                          to="/addProductsAllIn#productVariation"
+                          to="/productDetails#productVariation"
                           className="FontType4"
                         >
                           Product Variations
@@ -6186,7 +6215,7 @@ class ProductDetailsComponent extends Component {
                     <Step key="productMedia">
                       <StepLabel>
                         <HashLink
-                          to="/addProductsAllIn#productMedia"
+                          to="/productDetails#productMedia"
                           className="FontType4"
                         >
                           Product Media
@@ -6201,7 +6230,7 @@ class ProductDetailsComponent extends Component {
                     <Step key="shippingInfo">
                       <StepLabel>
                         <HashLink
-                          to="/addProductsAllIn#shippingInfo"
+                          to="/productDetails#shippingInfo"
                           className="FontType4"
                         >
                           Shipping Information
