@@ -112,7 +112,7 @@ const SideBarMenu = ({
 
   const logout = () => {
     propsData.callLogout({ UserID: localStorage.getItem("id") });
-    browserHistory.push("/Emporia/");
+    browserHistory.push("/");
     localStorage.clear();
     cookies.set("isLogin", false);
     window.location.reload(false);

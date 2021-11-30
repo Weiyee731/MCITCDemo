@@ -696,7 +696,7 @@ class AddSuppliersComponent extends Component {
         formData1.append(i + "image512x512", this.state.file[i]);
         formData1.append("imageName", productID + "_image512x512_" + (i + 1));
         formData1.append("ProductID", productID);
-        let url = "http://tourism.denoo.my/emporiaimage/upload.php";
+        let url = "https://tourism.denoo.my/emporiaimage/upload.php";
         axios.post(url, formData1, {}).then((res) => {
           console.warn(res);
         });
@@ -712,7 +712,7 @@ class AddSuppliersComponent extends Component {
         formData2.append(i + "image1600x900", this.state.file2[i]);
         formData2.append("imageName", productID + "_image1600x900_" + (i + 1));
         formData2.append("ProductID", productID);
-        let url = "http://tourism.denoo.my/emporiaimage/upload.php";
+        let url = "https://tourism.denoo.my/emporiaimage/upload.php";
         axios.post(url, formData2, {}).then((res) => {
           console.warn(res);
         });
@@ -767,7 +767,7 @@ class AddSuppliersComponent extends Component {
   };
 
   onNavigationProductStockIn() {
-    browserHistory.push("/Emporia/productStocksIn");
+    browserHistory.push("/productStocksIn");
   }
 
   checkEverything = () => {

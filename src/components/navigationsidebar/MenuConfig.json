@@ -7,7 +7,7 @@
     {
       "title": "Dashboard",
       "icon": "fa fa-tachometer-alt",
-      "page": "/Emporia/dashboard",
+      "page": "/dashboard",
       "active": false,
       "type": "simple"
     },
@@ -23,7 +23,7 @@
       "submenus": [
         {
           "title": "Products Endorsement",
-          "page": "/Emporia/viewProductEndorsement",
+          "page": "/viewProductEndorsement",
           "badge": {
             "text": "3",
             "class": "badge-danger"
@@ -31,7 +31,7 @@
         },
         {
           "title": "Products",
-          "page": "/Emporia/viewProduct",
+          "page": "/viewProduct",
           "badge": {
             "text": "3",
             "class": "badge-secondary"
@@ -39,19 +39,19 @@
         },
         {
           "title": "Purchase Order List",
-          "page": "/Emporia/viewPurchaseOrderList"
+          "page": "/viewPurchaseOrderList"
         },
 
         {
           "title": "Product Promotion",
-          "page": "/Emporia/viewproductpromotion"
+          "page": "/viewproductpromotion"
         }
       ]
     },
     {
       "title": "Stocks",
       "icon": "fa fa-check-square",
-      "page": "/Emporia/productStocksIn",
+      "page": "/productStocksIn",
       "active": false,
       "type": "simple"
     },
@@ -63,7 +63,7 @@
       "submenus": [
         {
           "title": "Suppliers Endorsement",
-          "page": "/Emporia/viewSupplierEndorsement",
+          "page": "/viewSupplierEndorsement",
           "badge": {
             "text": "3",
             "class": "badge-danger"
@@ -71,7 +71,7 @@
         },
         {
           "title": "Suppliers",
-          "page": "/Emporia/viewSupplier",
+          "page": "/viewSupplier",
           "badge": {
             "text": "3",
             "class": "badge-danger"
@@ -87,15 +87,15 @@
       "submenus": [
         {
           "title": "Products Quotation",
-          "page": "/Emporia/viewProductQuotation"
+          "page": "/viewProductQuotation"
         },
         {
           "title": "Quotation List",
-          "page": "/Emporia/quotationList"
+          "page": "/quotationList"
         },
         {
           "title": "Products Purchase Order",
-          "page": "/Emporia/viewProductPurchaseOrder"
+          "page": "/viewProductPurchaseOrder"
         }
       ]
     },
@@ -107,27 +107,27 @@
       "submenus": [
         {
           "title": "Sale by Product",
-          "page": "/Emporia/viewSaleByProduct"
+          "page": "/viewSaleByProduct"
         },
         {
           "title": "Target Customer",
-          "page": "/Emporia/viewTargetCustomer"
+          "page": "/viewTargetCustomer"
         },
         {
           "title": "Price Analysis",
-          "page": "/Emporia/viewPriceAnalysis"
+          "page": "/viewPriceAnalysis"
         },
         {
           "title": "Product Analysis",
-          "page": "/Emporia/viewProductAnalysis"
+          "page": "/viewProductAnalysis"
         },
         {
           "title": "Orders",
-          "page": "/Emporia/viewOrder"
+          "page": "/viewOrder"
         },
         {
           "title": "Transaction",
-          "page": "/Emporia/viewTransaction"
+          "page": "/viewTransaction"
         }
       ]
     },
@@ -139,7 +139,7 @@
       "submenus": [
         {
           "title": "Shop Profile",
-          "page": "/Emporia/editShopProfile"
+          "page": "/editShopProfile"
         }
       ]
     },
@@ -151,15 +151,15 @@
       "submenus": [
         {
           "title": "Sales By Category",
-          "page": "/Emporia/viewSalesByCategory"
+          "page": "/viewSalesByCategory"
         },
         {
           "title": "Sales",
-          "page": "/Emporia/viewSales"
+          "page": "/viewSales"
         },
         {
           "title": "Items wishlisted",
-          "page": "/Emporia/viewWishlist"
+          "page": "/viewWishlist"
         }
       ]
     },
@@ -167,7 +167,7 @@
       "title": "Customer Reviews",
       "icon": "fa fa-star",
       "active": false,
-      "page": "/Emporia/viewReviews",
+      "page": "/viewReviews",
       "type": "simple"
     },
     {
@@ -178,27 +178,27 @@
       "submenus": [
         {
           "title": "Product Categories",
-          "page": "/Emporia/viewProductCategories"
+          "page": "/viewProductCategories"
         },
         {
           "title": "Product Variations",
-          "page": "/Emporia/viewProductVariation"
+          "page": "/viewProductVariation"
         },
         {
           "title": "Shoplots",
-          "page": "/Emporia/viewShoplots"
+          "page": "/viewShoplots"
         },
         {
           "title": "Gridstorages",
-          "page": "/Emporia/viewGridStorages"
+          "page": "/viewGridStorages"
         },
         {
           "title": "Colors",
-          "page": "/Emporia/viewColor"
+          "page": "/viewColor"
         },
         {
           "title": "Promotion Banner",
-          "page": "/Emporia/addPromotionBanner"
+          "page": "/addPromotionBanner"
         }
         
       ]
@@ -207,13 +207,13 @@
       "title": "Settings",
       "icon": "fa fa-wrench",
       "active": false,
-      "page": "/Emporia/viewSettings",
+      "page": "/viewSettings",
       "type": "simple"
     },
     {
       "title": "Back to Ecommerce",
       "icon": "fa fa-shopping-bag",
-      "page": "/Emporia/",
+      "page": "/",
       "active": false,
       "type": "simple"
     }

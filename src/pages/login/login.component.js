@@ -170,7 +170,7 @@ class LoginComponent extends Component {
           // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
         // }
 
-        browserHistory.push("/Emporia");
+        browserHistory.push("/");
         window.location.reload(false);
       } else {
         toast.error("The username and password does not match.")
@@ -184,7 +184,7 @@ class LoginComponent extends Component {
       if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
         toast.success("Your password has been updated, try to login with new password");
         setTimeout(() => {
-          browserHistory.push("/Emporia/login");
+          browserHistory.push("/login");
           window.location.reload(false);
         }, 3000)
 
@@ -431,7 +431,7 @@ class LoginComponent extends Component {
                 />
                 <hr />
                 <div>
-                  New to Emporia? <a href="/Emporia/signup"><b>Sign Up</b></a>
+                  New to Emporia? <a href="/signup"><b>Sign Up</b></a>
                 </div>
               </div>
             </Col>

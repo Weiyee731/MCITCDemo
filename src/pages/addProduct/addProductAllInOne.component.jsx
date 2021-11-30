@@ -2017,7 +2017,7 @@ class AddProductComponent extends Component {
         imageHeight: imageHeight,
       }
 
-      axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
+      axios.post("https://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
         }

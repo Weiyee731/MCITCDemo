@@ -1101,7 +1101,7 @@ class PromotionDetailsComponent extends Component {
       setTimeout(
         function () {
           // this.props.history.push("/viewProductPromotion");
-          browserHistory.push("/Emporia/viewProductPromotion");
+          browserHistory.push("/viewProductPromotion");
           window.location.reload(false);
         }.bind(this),
         500

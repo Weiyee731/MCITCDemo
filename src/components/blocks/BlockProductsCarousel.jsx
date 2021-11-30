@@ -241,7 +241,7 @@ export default class BlockProductsCarousel extends Component {
                 {/* <div style={{ textAlign: "right", marginBottom: '5px' }}>
                   <Button
                     onClick={(e) => {
-                      window.location.href = "/Emporia/shop/ProductListing/type:Merchant&typevalue:" + 0
+                      window.location.href = "/shop/ProductListing/type:Merchant&typevalue:" + 0
                     }}
                   >
                     View All

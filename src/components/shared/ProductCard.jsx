@@ -46,7 +46,7 @@ function ProductCard(props) {
   let wishlistView;
 
   const login = () => {
-    browserHistory.push("/Emporia/login");
+    browserHistory.push("/login");
     window.location.reload(false);
   }
 

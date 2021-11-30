@@ -798,7 +798,7 @@ class AddPromotionBannerComponent extends Component {
 
       formData.append("imageFile", this.state.file[0]);
       formData.append("imageName", BannerImage);
-      let url = "http://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php";
+      let url = "https://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php";
       axios.post(url, formData, {}).then(res => {
         if (res.status === 200) {
           if (res.data === 1) {

@@ -32,7 +32,7 @@ function ShopPageWishlist(props) {
     ];
 
     const login = () => {
-        browserHistory.push("/Emporia/login");
+        browserHistory.push("/login");
         window.location.reload(false);
     }
 

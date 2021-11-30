@@ -2040,7 +2040,7 @@ class ProductDetailsComponent extends Component {
         imageHeight: imageHeight,
       }
 
-      axios.post("http://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
+      axios.post("https://tourism.denoo.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
         }
@@ -3373,7 +3373,7 @@ class ProductDetailsComponent extends Component {
     if (prevProps.returnUpdateProduct !== this.props.returnUpdateProduct) {
       if (this.props.returnUpdateProduct.length > 0 && this.props.returnUpdateProduct[0].ReturnVal === 1) {
         setTimeout(() => {
-          browserHistory.push("/Emporia/viewProduct");
+          browserHistory.push("/viewProduct");
           window.location.reload(false);
         }, 3000);
       }

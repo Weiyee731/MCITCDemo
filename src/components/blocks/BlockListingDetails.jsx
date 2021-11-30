@@ -499,7 +499,7 @@ class BlockListingDetails extends Component {
                                 {
                                     this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
                                     <div>
-                                        <label onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
+                                        <label onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
                                             {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
                                         </label>
                                     </div>
@@ -524,9 +524,9 @@ class BlockListingDetails extends Component {
                                                                                     this.state.categoryHierachy === 1 || this.state.categoryHierachy === 2 ?
                                                                                         <div key={items.ProductCategory} className="sub-category-items " style={{ fontsize: "14px", fontWeight: "200", paddingLeft: "30px" }}>
                                                                                             <FiberManualRecordOutlinedIcon
-                                                                                                onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                                onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
                                                                                             />
-                                                                                            <label className="sub-label" onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                            <label className="sub-label" onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
                                                                                             >{items.ProductCategory}</label>
                                                                                         </div>
                                                                                         : ""
@@ -538,9 +538,9 @@ class BlockListingDetails extends Component {
                                                             </> :
                                                             <>
                                                                 <FiberManualRecordOutlinedIcon
-                                                                    onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                                    onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
                                                                 />
-                                                                <label className="sub-label" onClick={() => window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                                <label className="sub-label" onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
                                                                 >{category.ProductCategory}</label>
                                                             </>
                                                     }

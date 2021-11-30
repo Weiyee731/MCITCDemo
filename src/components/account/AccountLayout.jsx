@@ -92,7 +92,7 @@ export default function AccountLayout(props) {
             className={classes}
           // onClick={localStorage.setItem("management", true)}
           >
-            <Link to={"/Emporia/dashboard"}>{link.title}</Link>
+            <Link to={"/dashboard"}>{link.title}</Link>
           </li>
         );
       } else {

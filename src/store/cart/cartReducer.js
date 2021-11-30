@@ -12,8 +12,8 @@ import {
  * @return {number}
  */
 
- const url = "http://tourism.denoo.my/emporiaApi/api/emporia/"
-//  const url = "localhost/emporia/api/emporia/"
+ const url = "https://tourism.denoo.my/emporiaApi/api/"
+//  const url = "localhost/api/"
   
  function retrieveItem(state, userId) {
    console.log("statet in reducer upup", state)

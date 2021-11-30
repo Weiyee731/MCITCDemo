@@ -164,7 +164,7 @@ function Search(props) {
     }
 
     if (event.key === "Enter") {
-      browserHistory.push("/Emporia/shop/ProductListing/type:Keyword&typevalue:" + searchquery);
+      browserHistory.push("/shop/ProductListing/type:Keyword&typevalue:" + searchquery);
       window.location.reload(false);
     }
   };
@@ -203,7 +203,7 @@ function Search(props) {
 
           <button className="search__button search__button--type--submit" type="submit"
             onClick={(e) => {
-              window.location.href = "/Emporia/shop/ProductListing/type:Keyword&typevalue:" + searchquery
+              window.location.href = "/shop/ProductListing/type:Keyword&typevalue:" + searchquery
             }}>
             <Search20Svg />
           </button>

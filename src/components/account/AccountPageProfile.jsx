@@ -120,7 +120,7 @@ class AccountPageProfile extends Component {
         }
       }
     } else {
-      browserHistory.push("Emporia/login");
+      browserHistory.push("login");
       window.location.reload(false);
     }
 
@@ -151,7 +151,7 @@ class AccountPageProfile extends Component {
     };
     axios
       .post(
-        "http://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php",
+        "https://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php",
         formData,
         {}
       )
@@ -314,7 +314,7 @@ class AccountPageProfile extends Component {
 
 
   render() {
-    const imgurl = "http://tourism.denoo.my/emporiaimage/userprofile/"
+    const imgurl = "https://tourism.denoo.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {
       return { url: "http://pmappapi.com/Memo/uploads/uploads/" };

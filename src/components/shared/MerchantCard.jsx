@@ -41,7 +41,7 @@ function MerchantCard(props) {
         "product-card--layout--horizontal": layout === "horizontal",
     });
 
-    const picUrl = "http://tourism.denoo.my/UnimasMarketplaceImage/userprofile/";
+    const picUrl = "https://tourism.denoo.my/UnimasMarketplaceImage/userprofile/";
     let badges = [];
     let image;
     let price;

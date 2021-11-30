@@ -171,7 +171,7 @@ componentDidUpdate(prevProps){
     };
     axios
       .post(
-        "http://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php",
+        "https://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php",
         formData,
         {}
       )
@@ -287,7 +287,7 @@ componentDidUpdate(prevProps){
     const merchantDetails = this.props.merchant.length > 0 &&
       this.props.merchant[0].ReturnVal === undefined && this.props.merchant[0];
 
-    const imgurl = "http://tourism.denoo.my/emporiaimage/userprofile/"
+    const imgurl = "https://tourism.denoo.my/emporiaimage/userprofile/"
     { console.log(merchantDetails) }
     const links = [
       // { title: "My Shop Page", url: "merchant/" + userid, data: "view >", icons: <StorefrontOutlinedIcon className="titleicon" /> },

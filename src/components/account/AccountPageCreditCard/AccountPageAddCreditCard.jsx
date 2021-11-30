@@ -111,7 +111,7 @@ class AccountPageAddCreditCard extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.creditcards !== this.props.creditcards && this.props.creditcards[0].ReturnVal === undefined) {
-      browserHistory.push("/Emporia/account/creditcard");
+      browserHistory.push("/account/creditcard");
       window.location.reload();
     }
   }

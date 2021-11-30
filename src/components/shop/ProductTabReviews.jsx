@@ -60,7 +60,7 @@ class ProductTabReviews extends Component {
   }
 
   login() {
-    browserHistory.push("/Emporia/login");
+    browserHistory.push("/login");
     window.location.reload(false);
   }
 
