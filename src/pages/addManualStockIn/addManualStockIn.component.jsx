@@ -19,7 +19,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallUpdateProductStockIn: (prodData) => dispatch(GitAction.CallUpdateProductStockIn(prodData)),
+    // CallUpdateProductStockIn: (prodData) => dispatch(GitAction.CallUpdateProductStockIn(prodData)),
     CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
 
   };
@@ -86,7 +86,7 @@ class AddManualStockInComponent extends Component {
   };
 
   updateProduct = () => {
-    this.props.CallUpdateProductStockIn(this.state);
+    // this.props.CallUpdateProductStockIn(this.state);
   };
 
   render() {
@@ -125,7 +125,7 @@ class AddManualStockInComponent extends Component {
         <Card className="MainCard">
           <CardContent className="MainContent">
             <MainTable
-              CallUpdateProductStock={this.props.CallUpdateProductStockIn}
+              CallUpdateProductStock={() => {}}
               ListedAttributes={ListedAttributes}
               Data={allStocksData}
               filterList={FilterList}

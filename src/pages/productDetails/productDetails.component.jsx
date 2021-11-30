@@ -3242,7 +3242,7 @@ class ProductDetailsComponent extends Component {
 
     //set Images
     //check url sent from database since it says 404 not found
-    var productImages = JSON.parse(this.props.productInfo[0].ProductImages);
+    var productImages = (this.props.productInfo[0].ProductImages === null) ? [] : JSON.parse(this.props.productInfo[0].ProductImages);
     var fileInfo = [];
     var url = [];
     var file1Added = false;
@@ -3291,11 +3291,11 @@ class ProductDetailsComponent extends Component {
       sku: this.props.productInfo[0].SKU,
       productCategory: this.props.productInfo[0].ProductCategoryID,
       stock: this.props.productInfo[0].ProductStockAmount,
-      selectedVariationID: JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariationID,
-      selectedVariationName: JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariation,
+      selectedVariationID: this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariationID : "",
+      selectedVariationName: this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation)[0].ProductVariation : "",
       variation1On: variationIsOn,
       variation1: variationObject,
-      variation1Options: JSON.parse(this.props.productInfo[0].ProductVariation).length,
+      variation1Options: this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation).length : 0,
       productSpecification: this.props.productInfo[0].ProductSpecification,
       productSpecificationOptions: specificationArray,
       file: this.props.productInfo[0].ProductImages,
@@ -4412,6 +4412,15 @@ class ProductDetailsComponent extends Component {
                 >
                   Add Product Specification
                 </Button> : this.state.productSpecification ? null : <div style={{ width: "100%", textAlign: "center" }}><p>This product has no specifications</p></div>}
+                {
+                  console.log(this.state.productSpecificationOptions)
+                }
+                {
+                  console.log(this.state.productSpecificationOptions)
+                }
+                {
+                  console.log(this.props.variations)
+                }
                 {
                   this.state.productSpecificationOptions.length > 0 && this.state.productSpecificationOptions.map((el, idx) => {
                     return (
