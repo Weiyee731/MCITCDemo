@@ -32,11 +32,13 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { toast } from "react-toastify";
+import { connectableObservableDescriptor } from "rxjs/observable/ConnectableObservable";
 
 function mapStateToProps(state) {
   return {
     allstocks: state.counterReducer["products"],
     productMgmtResult: state.counterReducer["productMgmtResult"],
+    productInfo: state.counterReducer["productsByID"],
   };
 }
 
@@ -46,6 +48,8 @@ function mapDispatchToProps(dispatch) {
     CallResetProductMgmtReturnVal: () => dispatch(GitAction.CallResetProductMgmtReturnVal()),
     CallDeleteProduct: (prodData) =>
       dispatch(GitAction.CallDeleteProduct(prodData)),
+    CallResetProductDetails: () =>
+      dispatch(GitAction.CallResetProductDetails()),
   };
 }
 
@@ -544,6 +548,7 @@ class DisplayTable extends Component {
     this.handleChangeDense = this.handleChangeDense.bind(this);
     this.isSelected = this.isSelected.bind(this);
     this.handleSetDetailShown = this.handleSetDetailShown.bind(this);
+    this.props.ProductProps.CallResetProductDetails();
   }
 
   handleRequestSort = (event, property) => {
@@ -585,6 +590,7 @@ class DisplayTable extends Component {
       });
     }
   };
+
 
   componentDidUpdate(prevProps) {
 
@@ -644,7 +650,7 @@ class DisplayTable extends Component {
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
 
-    typeof this.props.Data !== "undefined" && this.props.Data.map((d, i) => {
+    typeof this.props.Data !== "undefined" && this.props.Data.length > 0 && this.props.Data.map((d, i) => {
       d.Picture = (
         <div>
           <img
@@ -691,7 +697,6 @@ class DisplayTable extends Component {
       width: 1,
     };
 
-    console.log("THIS.PROPS", this.props)
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (

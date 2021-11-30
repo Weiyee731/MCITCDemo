@@ -1,3 +1,4 @@
+import { act } from "react-dom/test-utils";
 import { GitAction } from "../action/gitAction";
 
 const INITIAL_STATE = {
@@ -326,6 +327,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         productsByID: action.payload,
       });
 
+    case GitAction.ResetProductDetails:
+      return Object.assign({}, state, { productsByID: [] });
+
     case GitAction.GetProductByMerchantID:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotProductByMerchantID:
@@ -534,6 +538,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         addProductVariationResult: action.payload,
+        deleteProductVariation: action.payload2
       });
 
     case GitAction.DeleteProductVariationDetail:

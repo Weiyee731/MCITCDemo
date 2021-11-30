@@ -286,6 +286,7 @@ export class GitAction {
   static ResetProductReturnVal = "RESET-PRODUCT-RETURN-VALUE";
   static ResetProductMediaReturnVal = "RESET-PRODUCT-MEDIA-RETURN-VALUE";
   static ResetProductManagementValue = "RESET-PRODUCT-MANAGEMENT-RETURN-VALUE";
+  static ResetProductDetails = "RESET-PRODUCT-DETAILS-RETURN-VALUE";
 
   static CallAllProducts(propData) {
     return {
@@ -313,6 +314,12 @@ export class GitAction {
       type: GitAction.GetProductDetail,
       payload: propData
     };
+  }
+
+  static CallResetProductDetails() {
+    return {
+      type: GitAction.ResetProductDetails
+    }
   }
 
   static CallViewMoreFunctionProduct(prodData) {
