@@ -3201,7 +3201,7 @@ class ProductDetailsComponent extends Component {
       model: this.state.model,
       tags: this.state.tags,
     }
-    // this.props.CallUpdateProduct(object)
+    this.props.CallUpdateProduct(object)
 
 
     this.setState({ isSubmit: true })
