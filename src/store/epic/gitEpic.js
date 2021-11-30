@@ -1342,6 +1342,37 @@ export class GitEpic {
 
   updateProduct = (action$) =>
     action$.ofType(GitAction.UpdateProduct).switchMap(async ({ payload }) => {
+      console.log(
+        url +
+          "Product_UpdateProduct?PRODUCTID=" +
+          payload.ProductID +
+          "&name=" +
+          payload.name +
+          "&manufacturer=1" +
+          payload.manufacturer +
+          "&description=" +
+          payload.description +
+          "&productCategory=" +
+          payload.productCategory +
+          "&productSupplier=1" +
+          payload.productSupplier +
+          "&productShoplot=1&productGrid=1&height=" +
+          payload.height +
+          "&width=" +
+          payload.width +
+          "&depth=" +
+          payload.depth +
+          "&weight=" +
+          payload.weight +
+          "&sku=" +
+          payload.sku +
+          "&brand=" +
+          payload.brand +
+          "&model=" +
+          payload.model +
+          "&tags=" +
+          payload.tags
+      )
       try {
 
         console.log("hahaha" + url +
