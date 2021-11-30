@@ -139,7 +139,7 @@ class ShoplotDetailComponent extends Component {
       formData1.append("ShoplotID", this.state.ShoplotID);
       formData1.append(i + "image", this.state.file[i]);
       formData1.append("imageName", this.props.data.name + "_image_" + (i + 1));
-      let url = "https://tourism.denoo.my/emporiaimage/uploadshoplot.php";
+      let url = "https://myemporia.my/emporiaimage/uploadshoplot.php";
       axios.post(url, formData1, {}).then((res) => {
         toast.warning( "Warning: " + res);
       });

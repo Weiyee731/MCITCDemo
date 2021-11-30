@@ -221,7 +221,7 @@ class UploadImages extends Component {
           "imageName",
           this.props.data.name + "_image500x500_" + (i + 1)
         );
-        let url = "https://tourism.denoo.my/emporiaimage/upload.php";
+        let url = "https://myemporia.my/emporiaimage/upload.php";
         axios
           .post(url, formData1, {
             // receive two parameter endpoint url ,form data
@@ -237,7 +237,7 @@ class UploadImages extends Component {
           "imageName",
           this.props.data.name + "_image1600x900_" + (i + 1)
         );
-        let url = "https://tourism.denoo.my/emporiaimage/upload.php";
+        let url = "https://myemporia.my/emporiaimage/upload.php";
         axios.post(url, formData2, {}).then((res) => {
           console.warn(res);
         });

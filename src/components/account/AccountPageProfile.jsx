@@ -151,7 +151,7 @@ class AccountPageProfile extends Component {
     };
     axios
       .post(
-        "https://tourism.denoo.my/emporiaimage/uploaduserprofilepicture.php",
+        "https://myemporia.my/emporiaimage/uploaduserprofilepicture.php",
         formData,
         {}
       )
@@ -314,7 +314,7 @@ class AccountPageProfile extends Component {
 
 
   render() {
-    const imgurl = "https://tourism.denoo.my/emporiaimage/userprofile/"
+    const imgurl = "https://myemporia.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {
       return { url: "http://pmappapi.com/Memo/uploads/uploads/" };

@@ -12,7 +12,7 @@ import {
  * @return {number}
  */
 
- const url = "https://tourism.denoo.my/emporiaApi/api/"
+ const url = "https://myemporia.my/emporiaApi/api/"
 //  const url = "localhost/api/"
   
  function retrieveItem(state, userId) {
