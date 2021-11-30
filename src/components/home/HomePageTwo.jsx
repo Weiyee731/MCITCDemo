@@ -60,9 +60,8 @@ function HomePageTwo(props) {
   };
 
 
-
   useEffect(() => {
-    if (localStorage.getItem("isLogin") === "true") {
+    if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined) {
       props.CallViewProductCart({
         userID: localStorage.getItem("id")
       })

@@ -458,14 +458,6 @@ export class GitEpic {
   updateProfileImage = (action$) =>
     action$.ofType(GitAction.UpdateProfileImage).switchMap(async ({ payload }) => {
       try {
-
-        console.log(url +
-          "User_UserUpdatePhoto?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.TYPE +
-          "&USERPROFILEIMAGE=" +
-          payload.USERPROFILEIMAGE)
         const response = await fetch(
           url +
           "User_UserUpdatePhoto?USERID=" +
@@ -478,7 +470,6 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
 
-        console.log("JSON", json)
         if (json.map((val) => val.ReturnVal === 1)) {
           toast.success("Upload Successful");
         }
@@ -524,27 +515,6 @@ export class GitEpic {
     action$.ofType(GitAction.AddAddress).switchMap(async ({ payload }) => {
       try {
 
-        console.log(url +
-          "User_AddAddressBook?USERADDRESSNAME=" +
-          payload.Name +
-          "&USERID=" +
-          payload.USERID +
-          "&USERCONTACTNO=" +
-          payload.ContactNo +
-          "&USEREMAIL=" +
-          payload.email +
-          "&USERADDRESSLINE1=" +
-          payload.USERADDRESSLINE1 +
-          "&USERADDRESSLINE2=" +
-          payload.USERADDRESSLINE2 +
-          "&USERPOSCODE=" +
-          payload.USERPOSCODE +
-          "&USERSTATE=" +
-          payload.USERSTATE +
-          "&USERCITY=" +
-          payload.USERCITY +
-          "&COUNTRYID=" +
-          payload.COUNTRYID)
         const response = await fetch(
           url +
           "User_AddAddressBook?USERADDRESSNAME=" +
@@ -582,8 +552,7 @@ export class GitEpic {
           let json_1 = await response_1.json();
           json_1 = JSON.parse(json_1);
 
-          console.log("json", json)
-          console.log("json_1", json_1)
+      
           return {
             type: GitAction.AddedAddress,
             payloadCondition: json,
@@ -853,9 +822,7 @@ export class GitEpic {
   viewProductCartList = (action$) =>
     action$.ofType(GitAction.ViewProductCart).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
-          "Product_ItemListInCartByUserID?USERID=" +
-          payload.userID)
+  
         const response = await fetch(
           url +
           "Product_ItemListInCartByUserID?USERID=" +
@@ -864,7 +831,6 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
 
-        console.log("JSON", json)
         return {
           type: GitAction.ViewedProductCart,
           payload: json,
@@ -883,14 +849,7 @@ export class GitEpic {
   viewProductWishlist = (action$) =>
     action$.ofType(GitAction.ViewProductWishlist).switchMap(async ({ payload }) => {
 
-
-      console.log(url +
-        "Product_ItemListInWishlistByUserID?USERID=" +
-        payload.userID)
-
       try {
-
-
         const response = await fetch(
           url +
           "Product_ItemListInWishlistByUserID?USERID=" +
@@ -899,7 +858,6 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
 
-        console.log("JSON", json)
         return {
           type: GitAction.ViewedProductWishlist,
           payload: json,
@@ -1288,12 +1246,6 @@ export class GitEpic {
   getProductDetail = (action$) =>
     action$.ofType(GitAction.GetProductDetail).switchMap(async ({ payload }) => {
 
-      console.log(url +
-        "Product_ItemDetailByProductID?ProductID=" +
-        payload.productId +
-        "&USERID=" +
-        payload.userId)
-
       try {
         const response = await fetch(
           url +
@@ -1423,7 +1375,7 @@ export class GitEpic {
       )
       try {
 
-        console.log(url +
+        console.log("hahaha" + url +
           "Product_UpdateProduct?PRODUCTID=" +
           payload.ProductID +
           "&name=" +
@@ -1487,7 +1439,6 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
 
-        console.log("json", json)
         if (json[0].ReturnVal === 1) {
           toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
         } else {
@@ -1621,6 +1572,7 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+
         return {
           type: GitAction.AddedProductVariationDetail,
           payload: json,
@@ -1629,6 +1581,28 @@ export class GitEpic {
         alert('addProductVariationDetail: ' + error);
         return {
           type: GitAction.AddedProductVariationDetail,
+          payload: [],
+        };
+      }
+    });
+
+  deleteProductVariationDetail = (action$) =>
+    action$.ofType(GitAction.DeleteProductVariationDetail).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "Product_DeleteProductVariationDetail?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.DeletedProductVariationDetail,
+          payload: json,
+        };
+      } catch (error) {
+        alert('deleteProductVariationDetail: ' + error);
+        return {
+          type: GitAction.DeletedProductVariationDetail,
           payload: [],
         };
       }
@@ -1648,6 +1622,7 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+        
         return {
           type: GitAction.AddedProductSpecsDetail,
           payload: json,
