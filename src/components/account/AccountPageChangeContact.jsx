@@ -21,7 +21,7 @@ import {
   IconButton,
   TextField,
 } from "@material-ui/core";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { ConstructionOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import FormControl from "@mui/material/FormControl";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
@@ -132,7 +132,7 @@ class PageChangeContact extends Component {
     this.handleChangeforContact = this.handleChangeforContact.bind(this);
     this.submitpassword = this.submitpassword.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
-    this.OnSubmitChangeContact = this.OnSubmitChangeContact.bind(this);
+    // this.OnSubmitChangeContact = this.OnSubmitChangeContact.bind(this);
     this.runTimer = this.runTimer.bind(this);
     this.clickedBack = this.clickedBack.bind(this);
   }
@@ -160,14 +160,19 @@ class PageChangeContact extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // if (prevProps.order !== this.props.order) {
-    //   browserHistory.push("/Emporia");
-    //   window.location.reload(false);
-    // }
 
     if (prevProps.verifyPassword !== this.props.verifyPassword)
       this.checkPassword()
 
+    if (prevProps.contactUpdated !== this.props.contactUpdated) {
+      if (this.props.contactUpdated && this.props.contactUpdated[0].ReturnMsg !== "The OTP was Wrong") {
+        toast.success("Your contact number has been updated");
+        browserHistory.push("/Emporia/account/profile");
+        window.location.reload(false);
+      } else {
+        toast.warn("The OTP key are incorrect. Please try again");
+      }
+    }
   }
 
   componentWillUnmount(prevProps) {
@@ -209,13 +214,6 @@ class PageChangeContact extends Component {
     this.setState({ hidden: !this.state.hidden });
   }
 
-  OnSubmitChangeContact(e) {
-
-    console.log("CHANGE CONTACT", e.target.value)
-    console.log("CHANGE CONTACT", e)
-    // e.preventDefault();
-  }
-
   handleChangeforContact(e) {
     var phoneno = /^[\+]?[(]?[0-9]{4}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
     if (e !== null) {
@@ -239,17 +237,15 @@ class PageChangeContact extends Component {
       this.setState({ otp });
     }
     if (otp.length === 6) {
-      this.props.CallUpdateContact(this.state, otp); //submit otp
+
+      this.props.CallUpdateContact({
+        USERID: this.state.USERID,
+        UPDATETYPE: this.state.UPDATETYPE,
+        otp: otp,
+        UpdatedValue: this.state.UpdatedValue,
+      }); //submit otp
       this.setState({ startCountDown: false });
       this.stopTimer(60);
-
-      if (this.props.contactUpdated && this.props.contactUpdated[0].ReturnMsg !== "The OTP was Wrong") {
-        toast.success("Your contact number has been updated");
-        browserHistory.push("/Emporia/account/profile");
-        window.location.reload(false);
-      } else {
-        toast.warn("The OTP key are incorrect. Please try again");
-      }
     }
   };
 
@@ -257,11 +253,8 @@ class PageChangeContact extends Component {
 
   submitpassword = (e) => {
 
-
-    console.log("this.state", this.state)
     if (this.state.password.length > 0) {
       this.props.CallVerifyPassword(this.state);
-
       // this.checkPassword();
     }
   };
@@ -300,11 +293,11 @@ class PageChangeContact extends Component {
       this.setState({ startCountDown: false });
       this.stopTimer(60);
     }
-    if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-      browserHistory.push("/Emporia/account/profile");
-      window.location.reload(false);
-    } else {
-    }
+    // if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
+    //   browserHistory.push("/Emporia/account/profile");
+    //   window.location.reload(false);
+    // } else {
+    // }
   };
 
   runTimer() {
@@ -331,8 +324,6 @@ class PageChangeContact extends Component {
   }
 
   render() {
-
-    console.log("THIS.PROPS", this.props)
     const breadcrumb = [
       { title: "Home", url: "" },
       // { title: "Shopping Cart", url: "/shop/cart" },
@@ -484,7 +475,7 @@ class PageChangeContact extends Component {
                             Enter the code we sent to your email{" "}
                             {this.props.currentUser.length > 0 &&
                               this.props.currentUser[0].UserEmailAddress !== undefined &&
-                              this.props.currentUser[0].UserEmailAddress !== null 
+                              this.props.currentUser[0].UserEmailAddress !== null
                               ? this.censorEmail(
                                 this.props.currentUser[0].UserEmailAddress
                               )

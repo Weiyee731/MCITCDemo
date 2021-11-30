@@ -127,10 +127,10 @@ class IndicatorAccount extends Component {
   logout = () => {
 
     this.props.callLogout({ UserID: localStorage.getItem("id") });
-    browserHistory.push("/Emporia");
     localStorage.clear();
     cookies.set("isLogin", false);
     localStorage.setItem("isLogin", false);
+    browserHistory.push("/Emporia");
     window.location.reload(false);
   };
 

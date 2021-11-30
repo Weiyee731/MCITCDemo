@@ -375,7 +375,8 @@ class PagePayment extends Component {
                         </Grid>
                       )
                     })
-                    : <div>No cards saved. Please add a new card</div>
+                    :
+                    <div className="block-empty__message" style={{ textAlign: "center" }}> No cards saved. Please add a new card</div>
                 }
                 <AddCreditCard
                   isOpen={this.state.isAddNewCard}

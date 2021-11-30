@@ -44,6 +44,7 @@ function mapStateToProps(state) {
     emailUpdated: state.counterReducer["emailUpdated"],
     verifyPassword: state.counterReducer["verifyPassword"],
     verifyOTP: state.counterReducer["verifyOTP"],
+    emailVerification: state.counterReducer["emailVerification"],
   };
 }
 
@@ -57,6 +58,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallUpdateProfileSpecificField(propsData)),
     CallVerifyPassword: (credentials) =>
       dispatch(GitAction.CallVerifyPassword(credentials)),
+    CallCheckUserExists: (credentials) =>
+      dispatch(GitAction.CallCheckUserExists(credentials)),
     CallUpdateEmail: (credentials) =>
       dispatch(GitAction.CallUpdateEmail(credentials)),
     CallSendOTP: (credentials) => dispatch(GitAction.CallSendOTP(credentials)),
@@ -81,6 +84,7 @@ class PageChangeEmail extends Component {
       showpassword: false,
       validpassword: false,
       validEmail: false,
+      isEmailSet: false,
 
       startCountDown: false,
       hidden: true,
@@ -156,13 +160,24 @@ class PageChangeEmail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // if (prevProps.order !== this.props.order) {
-    //   // browserHistory.push("/Emporia");
-    //   // window.location.reload(false);
-    // }
-
     if (prevProps.verifyPassword !== this.props.verifyPassword)
       this.checkPassword()
+
+    if (prevProps.emailUpdated !== this.props.emailUpdated) {
+      if (this.props.emailUpdated && this.props.emailUpdated[0].ReturnMsg !== "The OTP was Wrong") {
+        toast.success("Your email  has been updated");
+        browserHistory.push("/Emporia/account/profile");
+        window.location.reload(false);
+      } else {
+        toast.warn("The OTP key are incorrect. Please try again");
+      }
+    }
+
+    if (prevProps.emailVerification !== this.props.emailVerification)
+      if (this.props.emailVerification.length > 0 && this.state.isEmailSet === true && this.props.emailVerification[0].ReturnVal === "0") {
+        this.getNewOTP();
+        this.setState({ isEmailSet: false })
+      }
   }
 
   componentWillUnmount(prevProps) {
@@ -212,16 +227,18 @@ class PageChangeEmail extends Component {
 
     if (otp.length === 6) {
       this.props.CallUpdateEmail(this.state, otp);
+
+      this.props.CallUpdateEmail({
+        USERID: this.state.USERID,
+        UPDATETYPE: this.state.UPDATETYPE,
+        otp: otp,
+        UpdatedValue: this.state.UpdatedValue,
+      });
+
+
       this.setState({ startCountDown: false });
       this.stopTimer(60);
-      if (this.props.emailUpdated && this.props.emailUpdated[0].ReturnMsg !== "The OTP was Wrong") {
-        toast.success("Your email contact has been updated");
-        browserHistory.push("/Emporia/account/profile");
-        window.location.reload(false);
-      } else {
-        toast.warn("The OTP key are incorrect. Please try again");
 
-      }
     }
   };
 
@@ -283,7 +300,16 @@ class PageChangeEmail extends Component {
     } else {
       toast.warning("Request failed! Please try again");
     }
-  };
+  }
+
+
+  verifyEmail = (e) => {
+
+    // this.props.CallCheckUserExists(this.state.UpdatedValue)
+    this.props.CallCheckUserExists({Email:this.state.UpdatedValue, Value:"checkEmail"})
+    this.setState({ isEmailSet: true })
+    // setEmailVefication(true)
+  }
 
   submitOTP = (e) => {
     this.props.CallUpdateProfileSpecificField(this.state);
@@ -453,7 +479,7 @@ class PageChangeEmail extends Component {
                         <button
                           className="font link-button change-contact-mail d-flex align-items-center pl-2"
                           disabled={this.state.validEmail ? false : true}
-                          onClick={() => this.getNewOTP()}
+                          onClick={() => this.verifyEmail()}
                         >
                           {" "}
                           Send OTP to my email

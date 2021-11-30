@@ -25,6 +25,9 @@ function mapStateToProps(state) {
     loading: state.counterReducer["loading"],
     products: state.counterReducer["products"],
     merchant: state.counterReducer["merchant"],
+    productcart: state.counterReducer["productcart"],
+    wishlist: state.counterReducer["wishlist"],
+    currentUser: state.counterReducer["currentUser"]
     // viewMoreProducts: state.counterReducer["viewMoreProducts"],
   };
 }
@@ -33,6 +36,8 @@ function mapDispatchToProps(dispatch) {
   return {
     CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
+    CallViewProductCart: (credentials) => dispatch(GitAction.CallViewProductCart(credentials)),
+    CallViewProductWishlist: (credentials) => dispatch(GitAction.CallViewProductWishlist(credentials)),
     // CallViewMoreFunctionProduct: (propData) => dispatch(GitAction.CallViewMoreFunctionProduct(propData)),
   };
 }
@@ -44,6 +49,8 @@ function HomePageTwo(props) {
   let tempArray = []
 
   const loopWithSlice = () => {
+    console.log("props.products", props.products)
+    console.log("postsToShow", postsToShow)
     tempArray = [...postsToShow, ...props.products];
     setPostsToShow(tempArray)
   };
@@ -51,6 +58,20 @@ function HomePageTwo(props) {
   const handleShowMorePosts = () => {
     setPage(page + 1)
   };
+
+
+
+  useEffect(() => {
+    if (localStorage.getItem("isLogin") === "true") {
+      props.CallViewProductCart({
+        userID: localStorage.getItem("id")
+      })
+      props.CallViewProductWishlist({
+        userID: localStorage.getItem("id")
+      })
+    }
+  }, [])
+
 
   useEffect(() => {
     let didCancel = false
@@ -80,6 +101,17 @@ function HomePageTwo(props) {
     return () => {
       didCancel = true;
     }
+  }, [])
+
+  useEffect(() => {
+    props.CallMerchants({
+      type: "Status",
+      typeValue: "Endorsed",
+      userID: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("isLogin") === true ? localStorage.getItem("roleid") : 0,
+      productPage: 999,
+      page: 1,
+    })
   }, [])
 
   useEffect(() => {

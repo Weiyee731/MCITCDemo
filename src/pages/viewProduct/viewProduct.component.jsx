@@ -693,6 +693,7 @@ class DisplayTable extends Component {
       width: 1,
     };
 
+    console.log("THIS.PROPS", this.props)
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (

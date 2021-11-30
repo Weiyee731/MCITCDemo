@@ -143,7 +143,7 @@ class AccountPageEditAddress extends Component {
                   size="small"
                   onChange={this.handleChange.bind(this, "Name")}
                 />
-                {isStringNullOrEmpty(this.state.Name) && this.state.Name.length > 0 && (
+                {isStringNullOrEmpty(this.state.Name) && (
                   <FormHelperText style={{ color: "red" }}>   Invalid Recipient Name </FormHelperText>
                 )}
               </div>
@@ -159,7 +159,7 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "email")}
                   />
-                  {!isEmailValid(this.state.email) && this.state.email.length > 0 && (
+                  {!isEmailValid(this.state.email)&& (
                     <FormHelperText style={{ color: "red" }}>   Invalid Email </FormHelperText>
                   )}
                 </div>
@@ -174,7 +174,7 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "ContactNo")}
                   />
-                  {!isContactValid(this.state.ContactNo) && this.state.ContactNo.length > 0 && (
+                  {!isContactValid(this.state.ContactNo) && (
                     <FormHelperText style={{ color: "red" }}>   Invalid Contact Number </FormHelperText>
                   )}
                 </div>
@@ -190,7 +190,7 @@ class AccountPageEditAddress extends Component {
                   size="small"
                   onChange={this.handleChange.bind(this, "USERADDRESSLINE1")}
                 />
-                {isStringNullOrEmpty(this.state.USERADDRESSLINE1) && this.state.USERADDRESSLINE1.length > 0 && (
+                {isStringNullOrEmpty(this.state.USERADDRESSLINE1) && (
                   <FormHelperText style={{ color: "red" }}>   Invalid Address </FormHelperText>
                 )}
               </div>
@@ -204,7 +204,7 @@ class AccountPageEditAddress extends Component {
                   size="small"
                   onChange={this.handleChange.bind(this, "USERADDRESSLINE2")}
                 />
-                {isStringNullOrEmpty(this.state.USERADDRESSLINE2) && this.state.USERADDRESSLINE2.length > 0 && (
+                {isStringNullOrEmpty(this.state.USERADDRESSLINE2)&& (
                   <FormHelperText style={{ color: "red" }}>   Invalid Address </FormHelperText>
                 )}
               </div>
@@ -220,7 +220,7 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "USERPOSCODE")}
                   />
-                  {isNaN(this.state.USERPOSCODE) && this.state.USERPOSCODE.length > 0 && (
+                  {isNaN(this.state.USERPOSCODE) && (
                     <FormHelperText FormHelperText style={{ color: "red" }}>   Invalid Poscode </FormHelperText>
                   )}
                 </div>
@@ -235,7 +235,7 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "USERCITY")}
                   />
-                  {isStringNullOrEmpty(this.state.USERCITY) && this.state.USERCITY.length > 0 && (
+                  {isStringNullOrEmpty(this.state.USERCITY) && (
                     <FormHelperText style={{ color: "red" }}>   Invalid City </FormHelperText>
                   )}
                 </div>
@@ -251,7 +251,7 @@ class AccountPageEditAddress extends Component {
                     size="small"
                     onChange={this.handleChange.bind(this, "USERSTATE")}
                   />
-                  {isStringNullOrEmpty(this.state.USERSTATE) && this.state.USERSTATE.length > 0 && (
+                  {isStringNullOrEmpty(this.state.USERSTATE) && (
                     <FormHelperText style={{ color: "red" }}>   Invalid State </FormHelperText>
                   )}
                 </div>

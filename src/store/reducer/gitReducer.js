@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   productSpecsDetail: [],
   productsByMerchantID: [],
   viewMoreProducts: [],
+  returnUpdateProduct: [],
   reviews: [],
   reviewReturn: [],
   categories: [],
@@ -58,7 +59,7 @@ const INITIAL_STATE = {
   contactUpdated: [],
   emailUpdated: [],
   shopUpdated: [],
-  emailVerification:[]
+  emailVerification: []
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -390,8 +391,11 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.UpdateProduct:
       return Object.assign({}, state, { loading: true });
     case GitAction.UpdatedProduct:
-      newProdObj = Object.assign({}, state);
-      newProdObj.loading = false;
+      newProdObj = Object.assign({}, state, {
+        returnUpdateProduct: action.payload,
+        loading: false
+      });
+      // newProdObj.loading = false;
       return newProdObj;
 
     case GitAction.AddProductMedia:
