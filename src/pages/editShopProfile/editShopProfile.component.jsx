@@ -139,7 +139,7 @@ class EditShopProfile extends Component {
 componentDidUpdate(prevProps){
 
   if (prevProps.shopUpdated !== this.props.shopUpdated) {
-    // browserHistory.push("/Emporia");
+    // browserHistory.push("/");
     // delete this.state;
     this.setState(group);
     clearImmediate( this.props.merchant);

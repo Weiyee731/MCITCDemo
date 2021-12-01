@@ -130,7 +130,7 @@ class IndicatorAccount extends Component {
     localStorage.clear();
     cookies.set("isLogin", false);
     localStorage.setItem("isLogin", false);
-    browserHistory.push("/Emporia");
+    browserHistory.push("/");
     window.location.reload(false);
   };
 

@@ -61,6 +61,7 @@ import ProductDetailsComponent from "../pages/productDetails/productDetails.comp
 import AddProductComponent from "../pages/addProduct/addProduct.component";
 import AddSuppliersComponent from "../pages/addSuppliers/addSuppliers.component";
 import ViewProductComponent from "../pages/viewProduct/viewProduct.component";
+import ViewProductGeneralInfo from "../pages/viewProduct/viewProductGeneralInfo.component";
 import ViewSupplierComponent from "../pages/viewSupplier/viewSupplier.component";
 import DashboardComponent from "../pages/dashboard/dashboard.component";
 import viewProductEndorsementComponent from "../pages/viewProductEndorsement/viewProductEndorsement.component";
@@ -192,11 +193,29 @@ const Access = () => {
             }}
           >
             <Switch>
-              <Route path="/productDetails" component={ProductDetailsComponent} />
+              {/* <Route path="/productDetails" component={ProductDetailsComponent} /> */}
               <Route path="/dashboard" component={DashboardComponent} />
               <Route path="/viewTrend" component={DashboardComponent} />
               <Route path="/ColorPicker" component={ColorPickerComponent} />
               <Route path="/viewProduct" component={ViewProductComponent} />
+
+
+
+              {/* <Route
+                exact
+                path="/shop/ProductListing/type:selectedtype&typevalue:selectedtypevalue"
+                render={(props) => (
+                  <>
+                    <BlockListingDetails
+                      {...props}
+                      layout="standard"
+                      selectedtype={props.match.params.type}
+                      selectedtypevalue={props.match.params.typevalue}
+                    />
+                  </>
+                )}
+              /> */}
+
               <Route path="/viewOrder" component={ViewProductComponent} />
               <Route
                 path="/viewTransactioDetails"
@@ -310,7 +329,39 @@ const Access = () => {
               <Route path="/editShopProfile" component={EditShopProfile} />
               {/* <Route path="/viewUserMail" component={viewUserMail} /> */}
               {/* <Route path="/sendUserMail" component={sendUserMail} /> */}
-            
+
+              <Route
+                exact
+                path="/viewProductDetail/:productId"
+                render={(props) => (
+                  <>
+                    {console.log("HERE PROPS", props)}
+                    {console.log("HERE PROPS", props.match.params)}
+                    <ViewProductGeneralInfo
+                      {...props}
+                      layout="standard"
+                      productId={props.match.params.productId}
+                    />
+                  </>
+                )}
+              />
+
+              <Route
+                exact
+                path="/viewProductDetailList/:productId"
+                render={(props) => (
+                  <>
+                    {console.log("HERE PROPS", props)}
+                    {console.log("HERE PROPS", props.match.params)}
+                    <ProductDetailsComponent
+                      {...props}
+                      layout="standard"
+                      productId={props.match.params.productId}
+                    />
+                  </>
+                )}
+              />
+
             </Switch>
           </div>
         </div>
@@ -367,6 +418,21 @@ function Layout(props) {
                       sidebarPosition="start"
                       categorySlug={props.match.params.categorySlug}
                     />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/viewProductDetail/:productId"
+                  render={(props) => (
+                    <>
+                      {console.log("HERE PROPS", props)}
+                      {console.log("HERE PROPS", props.match.params)}
+                      <ViewProductGeneralInfo
+                        {...props}
+                        layout="standard"
+                        productId={props.match.params.productId}
+                      />
+                    </>
                   )}
                 />
                 <Route

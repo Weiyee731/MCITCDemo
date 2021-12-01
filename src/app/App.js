@@ -79,7 +79,7 @@ class App extends Component {
       <ThemeProvider theme={lightTheme}>
         <GlobalStyles />
         <IntlProvider locale={locale} messages={messages}>
-          <BrowserRouter basename="/Emporia">
+          <BrowserRouter basename="/">
             <HelmetProvider>
               <Helmet htmlAttributes={{ lang: locale, dir: direction }} />
               <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}>

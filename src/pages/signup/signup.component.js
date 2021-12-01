@@ -270,7 +270,7 @@ const SignUp = (props) => {
             );
             localStorage.setItem("id", props.currentUser[0].UserID);
 
-            browserHistory.push("/Emporia");
+            browserHistory.push("/");
             window.location.reload(false);
         }
     }, [props.currentUser], setSubmitRegisterForm);

@@ -53,7 +53,7 @@ function MobileMenu(props) {
         {
             type: 'link',
             label: 'Home',
-            url: '/Emporia',
+            url: '/',
         },
 
         {

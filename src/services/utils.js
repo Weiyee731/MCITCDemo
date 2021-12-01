@@ -6,12 +6,16 @@ export const url = {
   category: (category) => category.ProductName !== null ? `/shop/catalog/${category.ProductName}` : `/shop/catalog`,
 
   // product: (product) => product.ProductName !== null ? `/shop/products/${product.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')}` :  `/shop/products/`,
- 
+
   merchant: (merchant) => merchant.UserID !== null ? `/merchant/${merchant.UserID}` : `/merchant`,
 
   cartMerchant: (merchantID) => merchantID !== null ? `/merchant/${merchantID}` : `/merchant`,
 
-  product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` :  `/shop/products/`,
+  inventoryProduct: (ProductID) => ProductID !== null ? `/viewProductDetail/${ProductID}` : `/viewProductDetail/`,
+
+  inventoryProductDetails: (ProductID) => ProductID !== null ? `/viewProductDetailList/${ProductID}` : `/viewProductDetailList/`,
+
+  product: (product) => product.ProductID !== null ? `/shop/products/${product.ProductID}` : `/shop/products/`,
   // product: (product) => `/shop/products/${product.slug}`,
 
   productcateogory: (category) => category.ProductName !== null ? `/shop/ProductCategory/${category.ProductName}` : `/shop/ProductCategory/`,

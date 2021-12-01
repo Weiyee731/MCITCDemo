@@ -102,23 +102,29 @@ function HomePageTwo(props) {
     }
   }, [])
 
+
+
   useEffect(() => {
+
+
     props.CallMerchants({
       type: "Status",
       typeValue: "Endorsed",
-      userID: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
-      userRoleID: localStorage.getItem("isLogin") === true ? localStorage.getItem("roleid") : 0,
+      USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
       productPage: 999,
       page: 1,
     })
   }, [])
 
+  localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? console.log("LOGIN") : console.log("LOGOUT")
+
   useEffect(() => {
     props.CallMerchants({
       type: "Status",
       typeValue: "Endorsed",
-      userID: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
-      userRoleID: localStorage.getItem("isLogin") === true ? localStorage.getItem("roleid") : 0,
+      USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
       productPage: 999,
       page: 1,
     })

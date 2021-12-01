@@ -67,6 +67,7 @@ import Editor from "ckeditor5-custom-build/build/ckeditor";
 import { convertDateTimeToString, getFileExtension, getFileTypeByExtension, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import { Thermostat } from "@mui/icons-material";
 import LoadingPanel from "../../components/shared/loadingPanel";
+import { url } from '../../services/utils';
 
 function mapStateToProps(state) {
   return {
@@ -120,7 +121,7 @@ function mapDispatchToProps(dispatch) {
     CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
     CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData)),
     CallUpdateProduct: (prodData) => dispatch(GitAction.CallUpdateProduct(prodData)),
-    CallResetProductDetails: () => dispatch(GitAction.CallResetProductDetails()),
+    // CallResetProductDetails: () => dispatch(GitAction.CallResetProductDetails()),
 
   };
 }
@@ -3097,7 +3098,6 @@ class ProductDetailsComponent extends Component {
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll, true);
 
-
     // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
     let userId = window.localStorage.getItem("id")
     if (!isStringNullOrEmpty(userId) && !isStringNullOrEmpty(this.props.ProductID)) {
@@ -3402,11 +3402,11 @@ class ProductDetailsComponent extends Component {
       }
     }
 
-    
+
     // if (prevProps.returnUpdateProduct !== this.props.returnUpdateProduct) {
     //   if (this.props.returnUpdateProduct.length > 0 && this.props.returnUpdateProduct[0].ReturnVal === 1) {
     //     setTimeout(() => {
-    //       browserHistory.push("/Emporia/viewProduct");
+    //       browserHistory.push("/viewProduct");
     //       window.location.reload(false);
     //     }, 3000);
     //   }
@@ -3572,8 +3572,9 @@ class ProductDetailsComponent extends Component {
   }
 
   handleBack() {
-    this.props.CallResetProductDetails()
+    // this.props.CallResetProductDetails()
     this.props.backToList()
+    browserHistory.push("/")
   }
 
   render() {
@@ -4001,13 +4002,14 @@ class ProductDetailsComponent extends Component {
 
               {/* {
               this.props.isOnViewState ? */}
+              {console.log(this.props.match.params)}
 
               <div style={{ display: "flex" }}>
-                <Button onClick={() => typeof this.props.backToList === "function" && this.handleBack()}>
+                <Button onClick={() => window.location = url.inventoryProduct(this.props.match.params.productId)}>
                   <i className="fas fa-chevron-left"></i>
-                  <Link className="nav-link" to={"/viewProduct"}>
+                  {/* <Link className="nav-link" to={"/viewProduct"}> */}
                     Back
-                  </Link>
+                  {/* </Link> */}
                 </Button>
 
                 <Button style={{ marginLeft: "80%" }}

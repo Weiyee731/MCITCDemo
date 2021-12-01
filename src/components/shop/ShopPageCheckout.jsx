@@ -101,7 +101,7 @@ class PageCheckout extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.order !== this.props.order) {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
-        // browserHistory.push("/Emporia");
+        // browserHistory.push("/");
         // window.location.reload(false);
       }
     }

@@ -92,6 +92,9 @@ class ShopPageCart extends Component {
     }
 
     filterShop(data) {
+
+
+        console.log("data", data)
         let filterList = []
         let filterShopName = []
         filterList = data.filter((ele, ind) => ind === data.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))

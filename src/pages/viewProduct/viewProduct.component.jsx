@@ -33,6 +33,8 @@ import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { toast } from "react-toastify";
 import { connectableObservableDescriptor } from "rxjs/observable/ConnectableObservable";
+import { url } from "../../services/utils";
+import { browserHistory } from "react-router";
 
 function mapStateToProps(state) {
   return {
@@ -589,6 +591,8 @@ class DisplayTable extends Component {
         detailsShown: true,
       });
     }
+
+
   };
 
 
@@ -818,15 +822,19 @@ class DisplayTable extends Component {
                           return (
                             <TableRow
                               hover
-                              onClick={(event) => this.onRowClick(event, row, index)}
+                              // onClick={(event) => this.onRowClick(event, row, index)}
+                              onClick={() => window.location = url.inventoryProduct(row.ProductID)}
                               role="checkbox"
                               aria-checked={isItemSelected}
                               tabIndex={-1}
                               key={row.ProductName}
                               selected={isItemSelected}
                             >
-                              <TableCell align="center"> {row.Picture} </TableCell>
+
+                              <TableCell align="center">{row.Picture} </TableCell>
+
                               <TableCell align="left"> {row.ProductName} </TableCell>
+
                               {/* <TableCell align="left"> {row.ProductDescription} </TableCell>
                               <TableCell align="left">{row.Brand}</TableCell>
                               <TableCell align="right"> {row.ProductWeight} </TableCell>
@@ -838,7 +846,9 @@ class DisplayTable extends Component {
                                   row.ProductDimensionHeight}
                               </TableCell>
                               <TableCell align="right"> {row.ProductStockAmountInital}</TableCell> */}
-                              <TableCell align="left"> {row.ProductPrice} </TableCell>
+
+                              <TableCell align="left">{row.ProductPrice}</TableCell>
+
                             </TableRow>
                           );
                         })}

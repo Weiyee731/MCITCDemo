@@ -209,7 +209,7 @@ class ProductTabReviews extends Component {
           <div className="reviews-view__list">
             <div className="reviews-view__header">Customer Reviews</div>
             <div className="reviews-list">
-              <ol className="reviews-list__content">{this.reviewsList((this.state.isEdited === true ? this.props.reviews : this.props.product.ProductReview), page)}</ol>
+              <ol className="reviews-list__content">{this.reviewsList((this.state.isEdited === true ? JSON.parse(this.props.reviews).filter((x) => x.ProductID === this.props.product.ProductID) : this.props.product.ProductReview), page)}</ol>
               <div className="reviews-list__pagination">
                 <Pagination
                   current={page}
