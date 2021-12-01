@@ -65,7 +65,10 @@ class ProductTabReviews extends Component {
   }
 
   componentDidMount() {
-    if (this.props.reviews.length > 0 && JSON.parse(this.props.reviews).filter((x) => x.ProductID === this.props.product.ProductID).length > 0) {
+
+    console.log("this.props", this.props.reviews)
+    console.log("this.props", this.props.reviews.filter((x) => x.ProductID === this.props.product.ProductID))
+    if (this.props.reviews.length > 0 && this.props.reviews.filter((x) => x.ProductID === this.props.product.ProductID).length > 0) {
       if (this.props.reviews !== this.props.product.ProductReview) {
         this.setState({ isEdited: true })
       }

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import { GitAction } from "../../store/action/gitAction";
 import { Card, CardText, CardBody } from 'reactstrap'
-import { Accordion, AccordionItem } from 'react-bootstrap-accordion'
+import { Accordion } from 'react-bootstrap-accordion'
 import 'react-bootstrap-accordion/dist/index.css'
 import "../../app/App.scss";
 import "react-table/react-table.css";
@@ -19,20 +19,6 @@ import USER from "../../assets/user.jpg";
 import Logo from "../../assets/Emporia.png";
 import LoadingPanel from "../../components/shared/loadingPanel";
 
-
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField,
-} from "@material-ui/core";
-
-// data stubs
-
-import { filter } from "rxjs/operator/filter";
 
 function mapStateToProps(state) {
   return {
@@ -478,23 +464,27 @@ class ViewProductGeneralInfo extends Component {
                           </div>
                         }
 
-                        {this.ratingList(this.state.setRating === 0 ? this.state.productReview : this.state.productReview.filter((x) => x.ProductReviewRating === this.state.setRating))}
                         {this.state.productReview !== undefined && this.state.productReview.length > 0 ?
-                          <div style={{ marginTop: "15px" }}>
-                            <Pagination
-                              current={this.state.page}
+                          <>
+                            {this.ratingList(this.state.setRating === 0 ? this.state.productReview : this.state.productReview.filter((x) => x.ProductReviewRating === this.state.setRating))}
+                            <div style={{ marginTop: "15px" }}>
+                              <Pagination
+                                current={this.state.page}
 
-                              total={this.state.setRating === 0 ?
-                                Math.ceil(this.state.productReview.length / this.state.rowsPerPage)
-                                :
-                                Math.ceil(this.filterRating(this.state.setRating) / this.state.rowsPerPage)
-                              }
-                              onPageChange={this.handlePageChange}
-                            />
-                          </div>
+                                total={this.state.setRating === 0 ?
+                                  Math.ceil(this.state.productReview.length / this.state.rowsPerPage)
+                                  :
+                                  Math.ceil(this.filterRating(this.state.setRating) / this.state.rowsPerPage)
+                                }
+                                onPageChange={this.handlePageChange}
+                              />
+                            </div>
+                          </>
                           :
                           <div>
-                            Temporarily there is no review for this product
+                            <label>
+                              Temporarily there is no review for this product
+                            </label>
                           </div>
                         }
                       </CardText>

@@ -71,6 +71,7 @@ const rootEpic = combineEpics(
   gitEpic.deleteProduct,
   gitEpic.endorseProduct,
   gitEpic.addProductSpecsDetail,
+  gitEpic.deleteProductSpecsDetail,
   gitEpic.addProductVariationDetail,
   gitEpic.getAllProductVariation,
   gitEpic.addProductVariation,

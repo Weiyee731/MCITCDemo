@@ -1388,36 +1388,6 @@ export class GitEpic {
       )
       try {
 
-        console.log("hahaha" + url +
-          "Product_UpdateProduct?PRODUCTID=" +
-          payload.ProductID +
-          "&name=" +
-          payload.name +
-          "&manufacturer=1" +
-          // payload.manufacturer +
-          "&description=" +
-          payload.description +
-          "&productCategory=" +
-          payload.productCategory +
-          "&productSupplier=" +
-          payload.productSupplier +
-          "&productShoplot=1&productGrid=1&height=" +
-          payload.height +
-          "&width=" +
-          payload.width +
-          "&depth=" +
-          payload.depth +
-          "&weight=" +
-          payload.weight +
-          "&sku=" +
-          payload.sku +
-          "&brand=" +
-          payload.brand +
-          "&model=" +
-          payload.model +
-          "&tags=" +
-          payload.tags)
-
         const response = await fetch(
           url +
           "Product_UpdateProduct?PRODUCTID=" +
@@ -1649,6 +1619,33 @@ export class GitEpic {
       }
     });
 
+  deleteProductSpecsDetail = (action$) =>
+    action$.ofType(GitAction.DeleteProductSpecsDetail).switchMap(async ({ payload }) => {
+      try {
+        console.log(url +
+          "Product_DeleteProductSpecificationDetail?PRODUCTSPECIFICATIONDETAILID=" +
+          payload)
+        const response = await fetch(
+          url +
+          "Product_DeleteProductSpecificationDetail?PRODUCTSPECIFICATIONDETAILID=" +
+          payload
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+
+        return {
+          type: GitAction.DeletedProductSpecsDetail,
+          payload: json,
+        };
+      } catch (error) {
+        alert('DeleteProductSpecsDetail: ' + error);
+        return {
+          type: GitAction.DeletedProductSpecsDetail,
+          payload: [],
+        };
+      }
+    });
+
   // PRODUCT VARIATION
 
   getAllProductVariation = (action$) =>
@@ -1809,9 +1806,6 @@ export class GitEpic {
   getAllCategories = (action$) =>
     action$.ofType(GitAction.GetProductCategory).switchMap(async () => {
       try {
-
-        console.log("epic CallAllProductCategory")
-        console.log(url + "Product_CategoryListByAll")
         const response = await fetch(url +
           "Product_CategoryListByAll"
         );
@@ -1832,9 +1826,7 @@ export class GitEpic {
 
   getAllCategoriesListing = (action$) =>
     action$.ofType(GitAction.GetProductCategoryListing).switchMap(async () => {
-      console.log("epic CallAllProductCategoryListing")
-      console.log(url +
-        "Product_CategoryListing")
+
       try {
         const response = await fetch(
           url +

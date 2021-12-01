@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   productsListing: [],
   productsByID: [],
   productSpecsDetail: [],
+  deleteproductSpecsDetail: [],
   productsByMerchantID: [],
   viewMoreProducts: [],
   returnUpdateProduct: [],
@@ -431,6 +432,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         productSpecsDetail: action.payload,
+      });
+
+    case GitAction.DeleteProductSpecsDetail:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.DeletedProductSpecsDetail:
+      return Object.assign({}, state, {
+        loading: false,
+        deleteproductSpecsDetail: action.payload,
       });
 
     case GitAction.ResetProductSpecsDetailResult:

@@ -471,11 +471,20 @@ export class GitAction {
 
   static AddProductSpecsDetail = "ADD-PRODUCT-SPECS-DETAILS";
   static AddedProductSpecsDetail = "ADDED-PRODUCT-SPECS-DETAILS";
+  static DeleteProductSpecsDetail = "DELETE-PRODUCT-SPECS-DETAILS";
+  static DeletedProductSpecsDetail = "DELETED-PRODUCT-SPECS-DETAILS";
   static ResetProductSpecsDetailResult = "RESET-PRODUCT-SPECS-DETAILS";
 
   static CallAddProductSpecsDetail(prodData) {
     return {
       type: GitAction.AddProductSpecsDetail,
+      payload: prodData
+    };
+  }
+
+  static CallDeleteProductSpecsDetail(prodData) {
+    return {
+      type: GitAction.DeleteProductSpecsDetail,
       payload: prodData
     };
   }

@@ -82,6 +82,7 @@ function mapStateToProps(state) {
     productSpecsDetail: state.counterReducer["productSpecsDetail"],
     productInfo: state.counterReducer["productsByID"],
     returnUpdateProduct: state.counterReducer["returnUpdateProduct"],
+    deleteproductSpecsDetail: state.counterReducer["deleteproductSpecsDetail"],
   };
 }
 const editorConfiguration = {
@@ -121,7 +122,7 @@ function mapDispatchToProps(dispatch) {
     CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
     CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData)),
     CallUpdateProduct: (prodData) => dispatch(GitAction.CallUpdateProduct(prodData)),
-    // CallResetProductDetails: () => dispatch(GitAction.CallResetProductDetails()),
+    CallDeleteProductSpecsDetail: (prodData) => dispatch(GitAction.CallDeleteProductSpecsDetail(prodData)),
 
   };
 }
@@ -3285,7 +3286,7 @@ class ProductDetailsComponent extends Component {
 
     var productSpecs = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductSpecification !== null ? JSON.parse(this.props.productInfo[0].ProductSpecification) : [];
     for (var y = 0; y < productSpecs.length; y++) {
-      var object = { categoryId: productSpecs[y].ProductVariationID, value: productSpecs[y].ProductSpecificationValue, error: false }
+      var object = { categoryId: productSpecs[y].ProductVariationID, value: productSpecs[y].ProductSpecificationValue, specificationId: productSpecs[y].ProductSpecificationDetailID, error: false }
       specificationArray = [...specificationArray, object]
     }
 
@@ -3402,6 +3403,20 @@ class ProductDetailsComponent extends Component {
       }
     }
 
+    if (prevProps.productInfo !== this.props.productInfo) {
+      this.bindProductInfoToState()
+    }
+
+    console.log(this.props.deleteproductSpecsDetail)
+    console.log(prevProps.deleteproductSpecsDetail)
+    if (prevProps.deleteproductSpecsDetail !== this.props.deleteproductSpecsDetail) {
+      console.log("prevProps.deleteproductSpecsDetail !== this.props.deleteproductSpecsDetail")
+      this.props.CallProductDetail({
+        productId: this.props.match.params.productId,
+        userId: window.localStorage.getItem("id"),
+      })
+    }
+
 
     // if (prevProps.returnUpdateProduct !== this.props.returnUpdateProduct) {
     //   if (this.props.returnUpdateProduct.length > 0 && this.props.returnUpdateProduct[0].ReturnVal === 1) {
@@ -3471,7 +3486,9 @@ class ProductDetailsComponent extends Component {
     }
   }
 
-  handleAddProductSpecification = (addOrRemove, index) => {
+  handleAddProductSpecification = (addOrRemove, index, specificationData) => {
+    console.log("specificationId", specificationData)
+    console.log("specificationId index", index)
     if (addOrRemove === "add") {
       let object = { categoryId: 0, value: "", error: false }
       let specificationArray = [...this.state.productSpecificationOptions, object]
@@ -3479,6 +3496,10 @@ class ProductDetailsComponent extends Component {
     }
     else {
       if (typeof index !== 'undefined' && index !== null) {
+        if (specificationData.specificationId !== undefined) {
+          console.log("specificationId", specificationData.specificationId)
+          this.props.CallDeleteProductSpecsDetail(specificationData.specificationId)
+        }
         try {
           let list = this.state.productSpecificationOptions
           list.splice(Number(index), 1)
@@ -3568,7 +3589,12 @@ class ProductDetailsComponent extends Component {
   }
 
   MakeEditable = () => {
-    this.setState({ toBeEdited: !this.state.toBeEdited })
+
+    if (this.state.toBeEdited === true)
+      this.setState(INITIAL_STATE)
+    else
+      this.setState({ toBeEdited: !this.state.toBeEdited })
+
   }
 
   handleBack() {
@@ -4008,7 +4034,7 @@ class ProductDetailsComponent extends Component {
                 <Button onClick={() => window.location = url.inventoryProduct(this.props.match.params.productId)}>
                   <i className="fas fa-chevron-left"></i>
                   {/* <Link className="nav-link" to={"/viewProduct"}> */}
-                    Back
+                  Back
                   {/* </Link> */}
                 </Button>
 
@@ -4482,13 +4508,19 @@ class ProductDetailsComponent extends Component {
                 </CardContent>
               </Card>
               <br />
+              {
+                console.log("HERE SPECIFICATION", this.state.productSpecification)
+              }
+              {
+                console.log("HERE SPECIFICATION OPTION", this.state.productSpecificationOptions)
+              }
               <Card id="specification" className="SubContainer">
                 <CardContent>
                   <p className="Heading">Product Specification</p>
                   {this.state.toBeEdited ? <Button
                     variant="outlined"
                     className="AddButton"
-                    onClick={this.handleAddProductSpecification.bind(this, "add", '')}
+                    onClick={this.handleAddProductSpecification.bind(this, "add", '', '')}
                   >
                     Add Product Specification
                   </Button> : this.state.productSpecification ? null : <div style={{ width: "100%", textAlign: "center" }}><p>This product has no specifications</p></div>}
@@ -4497,13 +4529,15 @@ class ProductDetailsComponent extends Component {
                       return (
                         <div>
                           <div className="d-flex align-items-center" >
-                            {this.toBeEdited ?
+                            {this.state.toBeEdited ?
                               <RemoveCircleOutlineIcon
                                 className="DeleteOptionButton mr-2"
                                 style={{ cursor: 'pointer' }}
                                 color="secondary"
-                                onClick={this.handleAddProductSpecification.bind(this, "remove", idx)}
-                              /> : null}
+                                onClick={this.handleAddProductSpecification.bind(this, "remove", idx, el)}
+                              /> : null
+
+                            }
                             <FormControl variant="outlined" className="mr-2 w-50" size="small">
                               <InputLabel id="specifications-dropdown">Specifications</InputLabel>
                               <Select
