@@ -34,6 +34,7 @@ const INITIAL_STATE = {
   transactionStatus: [],
   promotions: [],
   addresses: [],
+  defaultaddress: [],
   merchant: [],
   merchantOrders: [],
   productstock: [],
@@ -1014,7 +1015,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         addresses: action.payloadValue,
-        addAddress: action.payloadCondition
+        defaultaddress: action.payloadCondition
+      });
+
+
+    case GitAction.UpdateDefaultAddress:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedDefaultAddress:
+      return Object.assign({}, state, {
+        loading: false,
+        addresses: action.payloadValue,
+        defaultAddress: action.payloadCondition
       });
 
     case GitAction.DeleteAddress:

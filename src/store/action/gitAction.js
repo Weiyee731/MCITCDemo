@@ -303,7 +303,6 @@ export class GitAction {
   }
 
   static CallGetMoreProductEmpty() {
-    console.log("CallGetMoreProductEmpty")
     return {
       type: GitAction.ClearProduct
     };
@@ -1081,6 +1080,9 @@ export class GitAction {
   static UpdateAddress = "UPDATE-ADDRESS";
   static UpdatedAddress = "UPDATED-ADDRESS";
 
+  static UpdateDefaultAddress = "UPDATE-DEFAULT-ADDRESS";
+  static UpdatedDefaultAddress = "UPDATED-DEFAULT-ADDRESS";
+
   static DeleteAddress = "DELETE-ADDRESS";
   static DeletedAddress = "DELETED-ADDRESS";
 
@@ -1101,6 +1103,13 @@ export class GitAction {
   static CallUpdateAddress(prodData) {
     return {
       type: GitAction.UpdateAddress,
+      payload: prodData,
+    };
+  }
+
+  static CallUpdateDefaultAddress(prodData) {
+    return {
+      type: GitAction.UpdateDefaultAddress,
       payload: prodData,
     };
   }

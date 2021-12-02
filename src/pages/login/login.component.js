@@ -166,8 +166,8 @@ class LoginComponent extends Component {
 
 
         // if (localStorage.getItem("isLogin") === true) {
-          // this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
-          // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
+        // this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
+        // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
         // }
 
         browserHistory.push("/");
@@ -405,12 +405,22 @@ class LoginComponent extends Component {
                   Sign In
                 </button>
               </div>
-              <p className="forgot-password text-right">
-                <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
-              </p>
+              <div className="row">
+                <div className="col-6">
+                  <p className=" text-left" style={{ fontSize: "13px", paddingTop: "10px" }}>
+                    New to Emporia? <a href="/signup"><b>Sign Up</b></a>
+                  </p>
+                </div>
+                <div className="col-6">
+                  <p className="forgot-password text-right">
+                    <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
+                  </p>
+                </div>
+              </div>
+
             </Col>
-            <Divider orientation="vertical" flexItem />
-            <Col lg="5" md="5">
+            {/* <Divider orientation="vertical" flexItem /> */}
+            {/* <Col lg="5" md="5">
               <h4>Login with</h4>
               <div className="justify-content-center text-center">
                 <FacebookLogin
@@ -434,7 +444,7 @@ class LoginComponent extends Component {
                   New to Emporia? <a href="/signup"><b>Sign Up</b></a>
                 </div>
               </div>
-            </Col>
+            </Col> */}
           </Row>
         </form>
 

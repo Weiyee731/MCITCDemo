@@ -171,6 +171,14 @@ export class GitEpic {
     action$.ofType(GitAction.SendOTPVerification).switchMap(async ({ payload }) => {
       try {
 
+        console.log(url +
+          "User_SentOTPVerification?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.GETOTPTYPE +
+          "&VALIDATIONFIELD=" +
+          payload.UpdatedValue)
+
         const response = await fetch(
           url +
           "User_SentOTPVerification?USERID=" +
@@ -182,6 +190,7 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+        console.log("json", json)
         return {
           type: GitAction.SentOTPVerification,
           payload: json,
@@ -579,8 +588,6 @@ export class GitEpic {
   updateAddress = (action$) =>
     action$.ofType(GitAction.UpdateAddress).switchMap(async ({ payload }) => {
       try {
-
-
         const response = await fetch(
           url +
           "User_UpdateAddressBook?USERADDRESSBOOKID=" +
@@ -635,6 +642,52 @@ export class GitEpic {
         alert('Err code 1903: ' + error);
         return {
           type: GitAction.UpdatedAddress,
+          payloadCondition: [],
+          payloadValue: [],
+        };
+      }
+    });
+
+  updateDefaultAddress = (action$) =>
+    action$.ofType(GitAction.UpdateDefaultAddress).switchMap(async ({ payload }) => {
+      try {
+
+        const response = await fetch(
+          url +
+          "User_UpdateDefaultAddress?USERADDRESSBOOKID=" +
+          payload.AddressBookNo +
+          "&USEROLDADDRESSBOOKID=" +
+          payload.OldAddressBookNo
+        );
+        const json = await response.json();
+
+        if (JSON.parse(json)[0].ReturnVal == 1) {
+          toast.success("Default Address successfully updated");
+        }
+        try {
+          const response_1 = await fetch(
+            url +
+            "User_ViewAddressBook?USERID=" +
+            payload.USERID
+          );
+          let json_1 = await response_1.json();
+          json_1 = JSON.parse(json_1);
+          return {
+            type: GitAction.UpdatedAddress,
+            payloadCondition: json,
+            payloadValue: json_1,
+          };
+        } catch (error) {
+          alert('Err code 1901: ' + error);
+          return {
+            type: GitAction.GotAddress,
+            payload: [],
+          };
+        }
+      } catch (error) {
+        alert('Err code 1903: ' + error);
+        return {
+          type: GitAction.UpdatedDefaultAddress,
           payloadCondition: [],
           payloadValue: [],
         };

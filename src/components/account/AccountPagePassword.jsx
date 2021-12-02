@@ -129,7 +129,7 @@ class AccountPagePassword extends Component {
     };
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.handleChangeForPassword = this.handleChangeForPassword.bind(this);
-    this.handleChangeforPassword = this.handleChangeforPassword.bind(this);
+    // this.handleChangeforPassword = this.handleChangeforPassword.bind(this);
     this.submitpassword = this.submitpassword.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
     this.OnSubmitChangeContact = this.OnSubmitChangeContact.bind(this);

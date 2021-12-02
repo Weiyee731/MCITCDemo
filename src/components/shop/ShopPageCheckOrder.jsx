@@ -12,10 +12,10 @@ import Currency from "../shared/Currency";
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
 import { GitAction } from "../../store/action/gitAction";
-import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import { toast } from "react-toastify";
 import HandleAddress from '../shared/HandleAddress'
+import Typography from "@material-ui/core/Typography";
 
 class PageCheckOrder extends Component {
   payments = payments;
@@ -167,12 +167,26 @@ class PageCheckOrder extends Component {
     }
 
     this.props.CallCountry();
+
+    if (this.props.addresses.length > 0 && this.props.addresses[0].ReturnVal !== "0") {
+      if (this.props.addresses.filter((x) => x.isDefaultAddress === 1).length > 0) {
+        this.props.addresses.filter((x) => x.isDefaultAddress === 1).map((address) => {
+          this.handleClick(this, address)
+        })
+      }
+    }
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.addresses !== this.props.addresses && this.state.isHandleAddressSubmitted === true) {
+      if (this.props.addresses.filter((x) => x.isDefaultAddress === 1).length > 0) {
+        this.props.addresses.filter((x) => x.isDefaultAddress === 1).map((address) => {
+          this.handleClick(this, address)
+        })
+      }
       this.setState({ isHandleAddress: false, isHandleAddressSubmitted: false, selectedAddresstoEdit: [], isAddAddress: false })
     }
+
   }
 
   getItemList(FilteredList) {
@@ -274,6 +288,25 @@ class PageCheckOrder extends Component {
               this.state.defaultAddress.UserAddressBookID && (
                 <div className="address-card__badge">Selected</div>
               )}
+            {address.isDefaultAddress === 1 && (
+              // <div style={{ textAlign: "left" }}>
+              <Typography
+                color="primary"
+                style={{
+                  fontSize: "16px",
+                  // paddingLeft: "10px",
+                  // marginBottom: ".5rem",
+                  paddingTop: "15px",
+                  paddingLeft: "15px",
+                  fontWeight: "bold",
+                  textAlign: "left"
+                }}
+              >
+                Default Address
+              </Typography>
+              // </div>
+
+            )}
             <div
               className="address-card__body"
               onClick={(e) => this.handleClick(e, address)}

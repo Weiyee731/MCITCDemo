@@ -14,6 +14,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import clsx from 'clsx';
+import { Row, Col } from "react-bootstrap"
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 
@@ -93,7 +94,7 @@ const SignUp = (props) => {
             toast.error("Please complete the form with correct information.");
         } else {
 
-            props.CallCheckUserExists({Email:userDetail.Email, Value:"signup"})
+            props.CallCheckUserExists({ Email: userDetail.Email, Value: "signup" })
             setEmailVefication(true)
 
         }
@@ -277,7 +278,7 @@ const SignUp = (props) => {
 
     useEffect(() => {
         if (props.emailVerification.length > 0 && verifyEmail === true && props.emailVerification[0].ReturnVal === "0") {
-        // if (props.emailVerification.length > 0 && verifyEmail === true) {
+            // if (props.emailVerification.length > 0 && verifyEmail === true) {
             submitForm();
         }
     }, [props.emailVerification], setEmailVefication);
@@ -297,107 +298,112 @@ const SignUp = (props) => {
                 <div className="text-center">
                     <h4>Create a new Emporia's account</h4>
                 </div>
-                <div className="justify-content-center" style={{ width: "50%", display: "block", marginLeft: "auto", marginRight: "auto", }}>
-                    <div className="row mt-3" >
-                        <TextField id="Email" label="Email" variant="outlined" className="w-100 my-2" type="email" value={userDetail.Email} ref={register({ required: true })} onChange={handleChangeData.bind(this, "email")} />
-                        {checkDuplicate && userDetail.Email}
-                        {EmailEmpty && userDetail.isEmailFill === true && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}  >
-                                This is required
-                            </p>
-                        )}
-                        {emailErrorWrongFormat && !EmailEmpty && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
-                                Please key in a valid email
-                            </p>
-                        )}
-                    </div>
-                    <div className="row mt-3" >
-                        <FormControl fullWidth variant="outlined">
-                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                            <OutlinedInput
-                                id="Password"
-                                label="Password"
-                                value={userDetail.Password}
-                                type={passwordHidden ? 'password' : 'text'}
-                                ref={register({ required: true })}
-                                onChange={handleChangeData.bind(this, "password")}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={() => toggleShow("password")}
-                                            edge="end"
-                                        >
-                                            {passwordHidden ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                            />
-                        </FormControl>
-                        {passErrorMatch && confirmPass && !PasswordEmpty && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }} >
-                                Passwords do not match.
-                            </p>
-                        )}
-                        {passErrorWrongFormat && pass && !PasswordEmpty && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
-                                Password needs to contain at least 1 capital letter, 1 non-capital letter, 1 number and
-                                be at least 8 characters long.
-                            </p>
-                        )}
-                        {PasswordEmpty && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}  >
-                                This is required
-                            </p>
-                        )}
-                    </div>
-                    <div className="row mt-3" >
-                        <FormControl fullWidth variant="outlined">
-                            <InputLabel htmlFor="outlined-adornment-password">Confirm Password</InputLabel>
-                            <OutlinedInput
-                                id="ConfirmPassword"
-                                label="Password"
-                                value={userDetail.ConfirmPassword}
-                                type={confirmPasswordHidden ? 'password' : 'text'}
-                                ref={register({ required: true })}
-                                onChange={handleChangeData.bind(this, "confirmPassword")}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={() => toggleShow("confirmpassword")}
-                                            edge="end"
-                                        >
-                                            {confirmPasswordHidden ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                            />
-                        </FormControl>
+                <Row className="justify-content-center">
+                    <Col lg="5" md="5">
+                        <div className="mt-3" >
+                            <TextField id="Email" label="Email" variant="outlined" className="w-100" type="email" value={userDetail.Email} ref={register({ required: true })} onChange={handleChangeData.bind(this, "email")} />
+                            {checkDuplicate && userDetail.Email}
+                            {EmailEmpty && userDetail.isEmailFill === true && (
+                                <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}  >
+                                    This is required
+                                </p>
+                            )}
+                            {emailErrorWrongFormat && !EmailEmpty && (
+                                <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
+                                    Please key in a valid email
+                                </p>
+                            )}
+                        </div>
+                        <div className=" mt-3" >
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                                <OutlinedInput
+                                    id="Password"
+                                    label="Password"
+                                    value={userDetail.Password}
+                                    type={passwordHidden ? 'password' : 'text'}
+                                    ref={register({ required: true })}
+                                    onChange={handleChangeData.bind(this, "password")}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={() => toggleShow("password")}
+                                                edge="end"
+                                            >
+                                                {passwordHidden ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
+                                />
+                            </FormControl>
+                            {passErrorMatch && confirmPass && !PasswordEmpty && (
+                                <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }} >
+                                    Passwords do not match.
+                                </p>
+                            )}
+                            {passErrorWrongFormat && pass && !PasswordEmpty && (
+                                <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
+                                    Password needs to contain at least 1 capital letter, 1 non-capital letter, 1 number and
+                                    be at least 8 characters long.
+                                </p>
+                            )}
+                            {PasswordEmpty && (
+                                <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}  >
+                                    This is required
+                                </p>
+                            )}
+                        </div>
+                        <div className=" mt-3" >
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel htmlFor="outlined-adornment-password">Confirm Password</InputLabel>
+                                <OutlinedInput
+                                    id="ConfirmPassword"
+                                    label="Password"
+                                    value={userDetail.ConfirmPassword}
+                                    type={confirmPasswordHidden ? 'password' : 'text'}
+                                    ref={register({ required: true })}
+                                    onChange={handleChangeData.bind(this, "confirmPassword")}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={() => toggleShow("confirmpassword")}
+                                                edge="end"
+                                            >
+                                                {confirmPasswordHidden ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
+                                />
+                            </FormControl>
 
-                        {ConfirmPasswordEmpty && userDetail.isConfirmPasswordFill === true && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
-                                This is required
-                            </p>
-                        )}
-                    </div>
-                </div>
+                            {ConfirmPasswordEmpty && userDetail.isConfirmPasswordFill === true && (
+                                <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }} >
+                                    This is required
+                                </p>
+                            )}
+                        </div>
 
-                <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
-                    <div className="SignUpForm-Submit mb-2">
-                        Already have an account? <a href="/login"><b>Login</b></a>
-                    </div>
-                    <button
-                        type="submit"
-                        style={{ borderRadius: "5px" }}
-                        variant="contained"
-                        className="btn btn-primary"
-                        onClick={checkFormIsFilled}
-                    >
-                        Submit
-                    </button>
-                </div>
+                        <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
+                            <button
+                                type="submit"
+                                style={{ borderRadius: "5px" }}
+                                variant="contained"
+                                className="btn btn-primary w-100"
+                                onClick={checkFormIsFilled}
+                                disabled={userDetail.Email !== '' && userDetail.Password !== '' && userDetail.ConfirmPassword !== '' ? false : true}
+                            >
+                                Sign Up
+                            </button>
+
+                            <div className="SignUpForm-Submit mt-3">
+                                Already have an account? <a href="/login"><b>Login</b></a>
+                            </div>
+
+                        </div>
+                    </Col>
+                </Row>
             </div>
         </div>
     );

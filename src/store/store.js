@@ -42,6 +42,7 @@ const rootEpic = combineEpics(
   gitEpic.checkUser,
   gitEpic.updatePassword,
   gitEpic.updateAddress,
+  gitEpic.updateDefaultAddress,
   gitEpic.deleteAddress,
   gitEpic.getUserProfile,
   gitEpic.updateUserProfile,

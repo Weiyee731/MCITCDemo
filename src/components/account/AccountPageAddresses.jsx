@@ -53,12 +53,15 @@ import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 function mapStateToProps(state) {
   return {
     addresses: state.counterReducer["addresses"],
+    defaultAddress: state.counterReducer["defaultAddress"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     CallAllAddress: (prodData) => dispatch(GitAction.CallAllAddress(prodData)),
+
+    CallUpdateDefaultAddress: (prodData) => dispatch(GitAction.CallUpdateDefaultAddress(prodData)),
 
     CallDeleteAddress: (prodData) =>
       dispatch(GitAction.CallDeleteAddress(prodData)), //the backend of deletion is require
@@ -72,15 +75,21 @@ class AccountPageAddresses extends Component {
       onAdd: false,
       onEdit: null,
       onDefault: false,
-      defaultAddress: "",
+
       addressIdClicked: " ",
     };
-    this.props.CallAllAddress({USERID: window.localStorage.getItem("id")});
+    this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
     this.handleCallbackfromAdd = this.handleCallbackfromAdd.bind(this);
     this.handleCallbackfromEdit = this.handleCallbackfromEdit.bind(this);
     this.onAddClick = this.onAddClick.bind(this);
     this.onEditClick = this.onEditClick.bind(this);
     this.onChangeDefault = this.onChangeDefault.bind(this);
+  }
+
+  componentDidMount() {
+  }
+
+  componentDidUpdate(prevProps) {
   }
 
   onAddClick = () => {
@@ -91,8 +100,33 @@ class AccountPageAddresses extends Component {
     this.setState({ onEdit: true, addressIdClicked: data });
   };
 
+
   onChangeDefault = (data) => {
-    this.setState({ onDefault: true, defaultAddress: data });
+
+    let defaultID = "";
+    let gotDefault = false;
+
+    this.props.addresses.filter((x) => x.isDefaultAddress === 1).map((address) => {
+      defaultID = address.UserAddressBookID
+      gotDefault = true
+    })
+
+    if (gotDefault === true) {
+      if (defaultID !== data) {
+        this.props.CallUpdateDefaultAddress({
+          AddressBookNo: data,
+          OldAddressBookNo: defaultID,
+          USERID: window.localStorage.getItem("id")
+        })
+      }
+    }
+    else {
+      this.props.CallUpdateDefaultAddress({
+        AddressBookNo: data,
+        OldAddressBookNo: 0,
+        USERID: window.localStorage.getItem("id")
+      })
+    }
   };
 
   handleCallbackfromAdd = (childData) => {
@@ -120,7 +154,7 @@ class AccountPageAddresses extends Component {
         ) : (
           <div>
             <CardContent>
-              <div className="row" style={{margin: "10px"}}>
+              <div className="row" style={{ margin: "10px" }}>
                 <div className="col-9 col-lg-9 col-xl-9">
                   <h5
                     style={{
@@ -129,7 +163,7 @@ class AccountPageAddresses extends Component {
                       // paddingLeft: "30px",
                     }}
                   >
-                  My Address
+                    My Address
                   </h5>
                   <Typography
                     style={{
@@ -145,55 +179,67 @@ class AccountPageAddresses extends Component {
                 <div className="col-3 col-lg-3 col-xl-3">
                   <Tooltip title="Add" style={{ float: "right" }}>
                     <IconButton aria-label="Add" onClick={this.onAddClick}>
-                      <AddIcon  fontSize="large"/>
+                      <AddIcon fontSize="large" />
                     </IconButton>
                   </Tooltip>
                 </div>
               </div>
               <Divider variant="fullWidth" />
-
               <div>
-                {this.props.addresses !== undefined &&  this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0" &&
-                this.props.addresses.map((address) => (
-                  <div key={address.UserAddressBookID}>
-                    <Card
-                      style={{
-                        width: "100%",
-                        // marginTop: "2vh",
-                        border: "none",
-                        boxShadow: "none",
-                      }}
-                    >
-                      {this.state.onEdit == true &&
-                      this.state.addressIdClicked ===
-                        address.UserAddressBookID ? (
-                        <AccountPageEditAddress
-                          selectedAddressData={address}
-                          parentCallback={this.handleCallbackfromEdit}
-                        />
-                      ) : (
-                        <div className="row" style={{ margin: "1vh" }}>
-                          <div className="col-9 col-lg-9 col-xl-9">
-                            <CardActionArea
-                              onClick={() =>
-                                this.onChangeDefault(address.UserAddressBookID)
-                              }
-                            >
-                              <CardContent>
-                                <div>
-                                  <div className="row">
-                                    <h6
-                                      style={{
-                                        paddingLeft: "15px",
-                                        fontWeight: "400",
-                                      }}
-                                    >
-                                      < PermIdentityIcon color="disabled" style={{marginRight:"0.30rem"}}/> {address.UserAddressName}
-                                    </h6>
+                {this.props.addresses !== undefined && this.props.addresses[0] !== undefined && this.props.addresses[0].ReturnVal !== "0" &&
+                  this.props.addresses.map((address) => (
+                    <div key={address.UserAddressBookID}>
+                      <Card
+                        style={{
+                          width: "100%",
+                          // marginTop: "2vh",
+                          border: "none",
+                          boxShadow: "none",
+                        }}
+                      >
+                        {this.state.onEdit == true &&
+                          this.state.addressIdClicked ===
+                          address.UserAddressBookID ? (
+                          <AccountPageEditAddress
+                            selectedAddressData={address}
+                            parentCallback={this.handleCallbackfromEdit}
+                          />
+                        ) : (
+                          <div className="row" style={{ margin: "1vh" }}>
+                            <div className="col-9 col-lg-9 col-xl-9">
+                              <CardActionArea
+                                onClick={() =>
+                                  this.onChangeDefault(address.UserAddressBookID)
+                                }
+                              >
+                                <CardContent>
+                                  <div>
+                                    <div className="row">
+                                      <h6
+                                        style={{
+                                          paddingLeft: "15px",
+                                          fontWeight: "400",
+                                        }}
+                                      >
+                                        < PermIdentityIcon color="disabled" style={{ marginRight: "0.30rem" }} /> {address.UserAddressName}
+                                      </h6>
 
-                                    {this.state.onDefault &&
-                                      address.UserAddressBookID ==
+                                      {/* {this.state.onDefault &&
+                                        address.UserAddressBookID ==
                                         this.state.defaultAddress && (
+                                          <Typography
+                                            color="secondary"
+                                            style={{
+                                              fontSize: "16px",
+                                              paddingLeft: "10px",
+                                              marginBottom: ".5rem",
+                                              fontWeight: "400",
+                                            }}
+                                          >
+                                            ( Default Address )
+                                          </Typography>
+                                        )} */}
+                                      {address.isDefaultAddress === 1 && (
                                         <Typography
                                           color="secondary"
                                           style={{
@@ -206,81 +252,81 @@ class AccountPageAddresses extends Component {
                                           ( Default Address )
                                         </Typography>
                                       )}
+                                    </div>
+                                    <h6
+                                      style={{
+                                        fontWeight: "200",
+                                        fontSize: "15px",
+                                      }}
+                                    >
+                                      <LocationOnOutlinedIcon color="disabled" style={{ marginRight: "0.4rem" }} />
+
+                                      {address.UserAddressLine1}
+                                      {address.UserAddressLine2}
+                                      {address.UserPoscode},{address.UserCity}
+                                      {address.CountryID}
+                                    </h6>
+                                    <h6
+                                      style={{
+                                        fontWeight: "200",
+                                        fontSize: "15px",
+                                      }}
+                                    >
+                                      <PhoneOutlinedIcon color="disabled" style={{ marginRight: "0.4rem" }} />
+                                      {address.UserContactNo}
+                                    </h6>
+
+                                    <h6
+                                      style={{
+                                        fontWeight: "200",
+                                        fontSize: "15px",
+                                      }}
+                                    >
+                                      <EmailOutlinedIcon color="disabled" style={{ marginRight: "0.4rem" }} />
+                                      {address.UserEmail}
+                                    </h6>
                                   </div>
-                                  <h6
-                                    style={{
-                                      fontWeight: "200",
-                                      fontSize: "15px",
-                                    }}
-                                  >
-                                    <LocationOnOutlinedIcon color="disabled" style={{marginRight:"0.4rem"}}/>
 
-                                    {address.UserAddressLine1}
-                                    {address.UserAddressLine2}
-                                    {address.UserPoscode},{address.UserCity}
-                                    {address.CountryID}
-                                  </h6>
-                                  <h6
-                                    style={{
-                                      fontWeight: "200",
-                                      fontSize: "15px",
-                                    }}
-                                  >
-                                    <PhoneOutlinedIcon color="disabled" style={{marginRight:"0.4rem"}}/>
-                                    {address.UserContactNo}
-                                  </h6>
+                                  <div className="addresses-list__divider" />
+                                </CardContent>
+                              </CardActionArea>
+                            </div>
 
-                                  <h6
-                                    style={{
-                                      fontWeight: "200",
-                                      fontSize: "15px",
-                                    }}
-                                  >
-                                    <EmailOutlinedIcon color="disabled" style={{marginRight:"0.4rem"}}/>
-                                    {address.UserEmail}
-                                  </h6>
-                                </div>
-
-                                <div className="addresses-list__divider" />
-                              </CardContent>
-                            </CardActionArea>
+                            <div
+                              className="col-3 col-lg-3 col-xl-3"
+                              style={{ float: "right" }}
+                            >
+                              <CardActions style={{ float: "right" }}>
+                                <IconButton
+                                  aria-label="Edit"
+                                  style={{
+                                    float: "right",
+                                  }}
+                                  onClick={() =>
+                                    this.onEditClick(address.UserAddressBookID)
+                                  }
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                                <IconButton
+                                  aria-label="Delete"
+                                  style={{
+                                    float: "right",
+                                  }}
+                                  onClick={() =>
+                                    this.onDeleteClick(address.UserAddressBookID)
+                                  }
+                                >
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </CardActions>
+                            </div>
                           </div>
-
-                          <div
-                            className="col-3 col-lg-3 col-xl-3"
-                            style={{ float: "right" }}
-                          >
-                            <CardActions style={{ float: "right" }}>
-                              <IconButton
-                                aria-label="Edit"
-                                style={{
-                                  float: "right",
-                                }}
-                                onClick={() =>
-                                  this.onEditClick(address.UserAddressBookID)
-                                }
-                              >
-                                <EditIcon fontSize="small"/>
-                              </IconButton>
-                              <IconButton
-                                aria-label="Delete"
-                                style={{
-                                  float: "right",
-                                }}
-                                onClick={() =>
-                                  this.onDeleteClick(address.UserAddressBookID)
-                                }
-                              >
-                                <DeleteIcon fontSize="small"/>
-                              </IconButton>
-                            </CardActions>
-                          </div>
-                        </div>
-                      )}
-                    </Card>
-                    <Divider variant="middle" />
-                  </div>
-                ))}
+                        )}
+                      </Card>
+                      <Divider variant="middle" />
+                    </div>
+                  ))}
               </div>
             </CardContent>
           </div>
