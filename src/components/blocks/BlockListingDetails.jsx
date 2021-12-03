@@ -32,6 +32,7 @@ import './styles/BlockListingDetails.css'
 import ProductCard from "../shared/ProductCard";
 import { toast } from "react-toastify";
 import classNames from "classnames";
+import { findAllByDisplayValue } from "@testing-library/dom";
 
 function mapStateToProps(state) {
     return {
@@ -309,10 +310,34 @@ class BlockListingDetails extends Component {
         let maxPrice = this.state.filterOptions.maxPrice
         if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
             let list = JSON.parse(this.props.productsListing)
+            let isStringExist = false
+            let listToCheck = []
+            let tempArray = []
+
+            list.map((x) => {
+                if (x.ProductPrice.includes("-")) {
+                    listToCheck.push(x)
+                    isStringExist = true
+                }
+            })
 
             if (!isNaN(minPrice) && !isNaN(maxPrice)) {
                 if (minPrice > maxPrice) {
                     list = list.filter(el => el.ProductSellingPrice > minPrice)
+
+                    if (isStringExist === true) {
+                        listToCheck.map((x) => {
+                            let isValid = false
+
+                            if (x.ProductPrice.split("-").filter(el => el > minPrice))
+                                isValid = true
+
+                            if (isValid === true)
+                                tempArray.push(x)
+                        })
+                        list = [...list, ...tempArray]
+                    }
+
                     this.setListing(list)
                 }
                 else if (minPrice < 0 && maxPrice < 0) {
@@ -320,6 +345,19 @@ class BlockListingDetails extends Component {
                 }
                 else {
                     list = list.filter(el => el.ProductPrice >= minPrice && el.ProductPrice <= maxPrice)
+
+                    if (isStringExist === true) {
+                        listToCheck.map((x) => {
+                            let isValid = false
+
+                            if (x.ProductPrice.split("-").filter(el => el >= minPrice && el <= maxPrice).length > 0)
+                                isValid = true
+
+                            if (isValid === true)
+                                tempArray.push(x)
+                        })
+                        list = [...list, ...tempArray]
+                    }
                     this.setListing(list)
                 }
             }
@@ -340,6 +378,8 @@ class BlockListingDetails extends Component {
     handleSorting(options) {
         if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
             let list = JSON.parse(this.props.productsListing)
+            // let list = JSON.parse(this.props.productsListing).filter((x) => !x.ProductPrice.includes("-"))
+            // let tempList = JSON.parse(this.props.productsListing).filter((x) => x.ProductPrice.includes("-"))
 
             switch (options.target.value) {
                 case "latest":
@@ -351,7 +391,14 @@ class BlockListingDetails extends Component {
                     this.setListing(list)
                     break;
                 case "low-to-high":
+
                     list.sort((a, b) => (a.ProductPrice - b.ProductPrice))
+           
+                    // if (tempList.length > 0) {
+                    //     tempList.map((x) => {
+                    //         console.log(x.ProductPrice.split("-")[0])
+                    //     })
+                    // }
                     this.setListing(list)
                     break;
                 case "high-to-low":
@@ -467,18 +514,11 @@ class BlockListingDetails extends Component {
         this.setListing(filterList)
     }
 
-
     render() {
-
         const { loading } = this.props;
-
         const blockClasses = classNames("block-products__list-item", {
             "block-products-carousel--loading": loading,
         });
-
-        console.log("promp", this.props)
-
-        // const blockClasses = classNames("block-products__list-item");
 
         return (
             <React.Fragment>
