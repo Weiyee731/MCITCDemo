@@ -28,7 +28,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     CallAddProductReview: (PropsData) => dispatch(GitAction.CallAddProductReview(PropsData)),
-    CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
     CallEmptyProductReview: () => dispatch(GitAction.CallEmptyProductReview())
   };
 }
@@ -48,11 +47,10 @@ class ProductTabReviews extends Component {
       replyid: "",
       page: 1,
       rowsPerPage: 5,
-      isEdited: false,
-
-
+      setReview: false,
+      isReviewSet: true,
     }
-    // this.props.CallProductReviewByProductID({ ProductID: this.props.product.ProductID, ParentProductReviewID: 0 })
+
     this.onSubmitReview = this.onSubmitReview.bind(this);
     this.login = this.login.bind(this);
     this.onSubmitReviewReply = this.onSubmitReviewReply.bind(this);
@@ -64,17 +62,6 @@ class ProductTabReviews extends Component {
     window.location.reload(false);
   }
 
-  componentDidMount() {
-
-    console.log("this.props", this.props.reviews)
-    console.log("this.props", this.props.reviews.filter((x) => x.ProductID === this.props.product.ProductID))
-    if (this.props.reviews.length > 0 && this.props.reviews.filter((x) => x.ProductID === this.props.product.ProductID).length > 0) {
-      if (this.props.reviews !== this.props.product.ProductReview) {
-        this.setState({ isEdited: true })
-      }
-    }
-  }
-
   onSubmitReviewReply() {
     this.props.CallAddProductReview({
       parentProductReviewID: this.state.replyid,
@@ -84,7 +71,7 @@ class ProductTabReviews extends Component {
       productReviewComment: this.state.productReplyReviewComment
     })
 
-    this.setState({ reply: false })
+    this.setState({ reply: false, isReviewSet: false })
   }
 
   onSubmitReview() {
@@ -96,7 +83,7 @@ class ProductTabReviews extends Component {
       productReviewComment: this.state.productReviewComment
     })
 
-    this.setState({ productReviewComment: "", productReviewRating: 0 })
+    this.setState({ productReviewComment: "", productReviewRating: 0, isReviewSet: false })
   }
 
   handlePageChange = (page) => {
@@ -108,7 +95,7 @@ class ProductTabReviews extends Component {
 
     if (reviewData !== null) {
       return (
-        reviewData.length > 0 && JSON.parse(reviewData)
+        reviewData.length > 0 && reviewData
           .slice((page - 1) * this.state.rowsPerPage, (page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
           .filter((x) => x.ParentProductReviewID === 0)
           .map(
@@ -125,13 +112,13 @@ class ProductTabReviews extends Component {
                       width: "100%",
                     }}
                   >
-                    <div id="review_author" className=" review__author">{review.Name}</div>
+                    <div id="review_author" className=" review__author" style={{ fontSize: "12px", fontWeight: "bold" }}>{review.Name}</div>
+                    <div id="review_reply_date" className=" review__date" style={{ fontSize: "10px" }}>{review.CreatedDate}</div>
                     <div id="review_rating" className=" review__rating">
                       <Rating value={review.ProductReviewRating} />
                     </div>
-                    <div id="review_text" className=" review__text">{review.ProductReviewComment}</div>
-                    <div id="review_daterow" className=" review__date" style={{ display: "flex", width: "100%", justifyContent: "space-between" }} >
-                      <div id="review_dat">{review.CreatedDate}</div>
+                    <div id="review_text" className=" review__text" style={{ display: "flex", width: "100%", justifyContent: "space-between", fontSize: "13px" }}>
+                      <div id="review_comment">{review.ProductReviewComment}</div>
                       <div id="comment" className="comment-reply">
                         <a className="comment-btn" onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.setState({ reply: true, replyid: review.ProductReviewID })} >
                           <i className="fas fa-reply" />{" "}
@@ -154,10 +141,11 @@ class ProductTabReviews extends Component {
                                   width: "100%",
                                 }}
                               >
-                                <div id="review_reply_author" className=" review__author">{reviewReply.Name}</div>
-                                <div id="review_reply_text" className=" review__text">{reviewReply.ProductReviewComment}</div>
-                                <div id="review_reply_date" className=" review__date" style={{ display: "flex", width: "100%", justifyContent: "space-between" }}>
-                                  <div>{reviewReply.CreatedDate}</div>
+                                <div id="review_author" className=" review__author" style={{ fontSize: "12px", fontWeight: "bold" }}>{reviewReply.Name}</div>
+                                <div id="review_reply_date" className=" review__date" style={{ fontSize: "10px" }}>{reviewReply.CreatedDate}</div>
+                                <div id="review_text" className=" review__text" style={{ display: "flex", width: "100%", justifyContent: "space-between", fontSize: "13px" }}>
+                                  <div id="review_comment">{reviewReply.ProductReviewComment}</div>
+
                                 </div>
                               </div>
                             </div>
@@ -168,7 +156,7 @@ class ProductTabReviews extends Component {
 
                       <div id="reply_content" className="pt-3">
                         <div id="reply_msg" className="pt-3">
-                          <textarea className="form-control" placeholder="Tell us more about your comment on this review" id="review-reply-text" rows="6"
+                          <textarea className="form-control" placeholder="Tell us more about your comment on this review" id="review-text" rows="6"
                             value={this.state.productReplyReviewComment}
                             onChange={({ target }) => { this.setState({ productReplyReviewComment: target.value, productReviewRating: 0 }); }} required />
                         </div>
@@ -192,7 +180,8 @@ class ProductTabReviews extends Component {
           className=" review__content"
           style={{
             width: "100%",
-            font: "40px",
+            font: "14px",
+            color: "gray",
             fontWeight: "bold",
             textAlign: "center",
           }}
@@ -205,23 +194,24 @@ class ProductTabReviews extends Component {
 
 
   render() {
+
     const { page } = this.state;
     return (
-      this.props.loading === false ?
+      this.props.loading === false && this.state.isReviewSet === true ?
         <div div className="reviews-view" id="reviews" >
           <div className="reviews-view__list">
             <div className="reviews-view__header">Customer Reviews</div>
             <div className="reviews-list">
-              <ol className="reviews-list__content">{this.reviewsList((this.state.isEdited === true ? JSON.parse(this.props.reviews).filter((x) => x.ProductID === this.props.product.ProductID) : this.props.product.ProductReview), page)}</ol>
+              <ol className="reviews-list__content">{this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined
+                && this.reviewsList(JSON.parse(this.props.reviews), page)}</ol>
               <div className="reviews-list__pagination">
+
                 <Pagination
                   current={page}
                   total={
-                    this.state.isEdited === true ?
-                      this.props.reviews.length / this.state.rowsPerPage :
-                      this.props.product.ProductReview !== null && this.props.product.ProductReview !== 0
-                        ? Math.ceil(this.props.product.ProductReview.length) / this.state.rowsPerPage
-                        : 0
+                    this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined ?
+                      Math.ceil(Math.ceil(JSON.parse(this.props.reviews).length) / this.state.rowsPerPage)
+                      : 0
                   }
                   onPageChange={this.handlePageChange}
                 />
@@ -256,7 +246,7 @@ class ProductTabReviews extends Component {
               </button>
             </div>
           </div>
-        </div > : <LoadingPanel></LoadingPanel>
+        </div> : <LoadingPanel></LoadingPanel>
 
     );
   }

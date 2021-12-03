@@ -10,7 +10,7 @@
 }
 
 .spec__header {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     padding-bottom: 15px;
 }
@@ -23,7 +23,7 @@
 
 .spec__section-title {
     font-weight: $font-weight-medium;
-    font-size: 18px;
+    font-size: 16px;
     letter-spacing: -.03em;
     line-height: 20px;
     margin: 0 0 12px;
@@ -40,11 +40,16 @@
 
 .spec__name {
     width: 230px;
+    font-size: 14px;
     flex-shrink: 0;
     color: $card-font-muted-color;
     @include direction {
         #{$padding-inline-end}: 30px;
     }
+}
+
+.spec__value{
+    font-size: 14px;
 }
 
 .spec__disclaimer {

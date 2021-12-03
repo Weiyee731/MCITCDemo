@@ -41,10 +41,14 @@ class Product extends Component {
     this.wishlisting = this.wishlisting.bind(this)
     this.login = this.login.bind(this)
     this.checkCart = this.checkCart.bind(this)
+
   }
 
   componentDidMount() {
     const { product } = this.props
+    // this.props.CallProductReviewByProductID({ ProductID: product.ProductID, ParentProductReviewID: 0 })
+
+    console.log("AHHAHAHA", this.props)
 
     window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
 
@@ -162,6 +166,8 @@ class Product extends Component {
   }
 
   render() {
+
+    console.log("PRODUCT tab product")
     const {
       product,
       layout,
@@ -428,7 +434,8 @@ const mapDispatchToProps = (dispatch) => {
     CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
-    // CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
+    CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
+    // CallAllProducts: (prodData) => dispatch(GitAction.CallProductReviewByProductID(prodData)),
   }
 };
 

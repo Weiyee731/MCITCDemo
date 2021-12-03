@@ -452,11 +452,14 @@ function Layout(props) {
                   exact
                   path="/shop/products/:productId"
                   render={(props) => (
-                    <ShopPageProduct
-                      {...props}
-                      layout="standard"
-                      productId={props.match.params.productId}
-                    />
+                    <>
+                      {console.log("props1234", props)}
+                      <ShopPageProduct
+                        {...props}
+                        layout="standard"
+                        productId={props.match.params.productId}
+                      />
+                    </>
                   )}
                 />
                 {productLayouts}

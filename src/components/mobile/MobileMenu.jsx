@@ -28,6 +28,8 @@ function MobileMenu(props) {
         'mobilemenu--open': mobileMenuState.open,
     });
 
+
+
     const handleItemClick = (item) => {
         if (item.data) {
             if (item.data.type === 'language') {
@@ -59,18 +61,36 @@ function MobileMenu(props) {
         {
             type: 'link',
             label: 'Categories',
-            url: '',
-            children: [
-                productCategories.map((item, index) => {
-                    return (
-                        {
-                            type: 'link',
-                            label: item.ProductCategory,
-                            url: '',
-                        }
-                    )
-                }),
-            ],
+            url: "/shop/AllProductCategory/",
+            // children: [
+            //     productCategories.map((item, index) => {
+            //         console.log("item",item)
+            //         return (
+            //             {
+            //                 type: 'link',
+            //                 label: item.ProductCategory,
+            //                 url: "/shop/ProductListing/type:Category&typevalue:" + item.ProductCategoryID
+
+            //             }
+            //         )
+            //     }),
+            // ]
+
+
+            //    {productCategories.map((item, index) => {
+            //         // console.log(item)
+            //         //ProductCategory
+            //         return (
+            //             {
+            //                 type: 'link',
+            //                 label: item.ProductCategory,
+            //                 url: "/shop/ProductListing/type:Category&typevalue:" + item.ProductCategoryID
+
+            //             }
+            //         )
+
+
+            //     })}
         },
 
         // {
@@ -168,9 +188,9 @@ function MobileMenu(props) {
                 localStorage.getItem('roleid') <= 15 && { type: 'link', label: 'Inventory', url: '/dashboard' },
                 { type: 'link', label: 'Edit Profile', url: '/account' },
                 { type: 'link', label: 'Order History', url: '/account/orders' },
-                { type: 'link', label: 'Order Details', url: '/account/orders/5' },
+                // { type: 'link', label: 'Order Details', url: '/account/orders/' },
                 { type: 'link', label: 'Address Book', url: '/account/addresses' },
-                { type: 'link', label: 'Edit Address', url: '/account/addresses/5' },
+                // { type: 'link', label: 'Edit Address', url: '/account/addresses' },
                 { type: 'link', label: 'Change Password', url: '/account/password' },
                 localStorage.getItem('isLogin') === 'true' && { type: 'link', label: 'Logout', url: '/' },
             ],

@@ -180,24 +180,24 @@ class BlockSlideShow extends Component {
 
     return (
       <div className={blockClasses}>
-        {/* <div className="container">
-          <div className="row"> */}
-        {/* col for the side-panel */}
-        {withDepartments && (
-          <div
-            className="col-3 d-lg-block d-none"
-            ref={this.setDepartmentsAreaRef}
-          />
-        )}
+        <div className="container">
+          <div className="row">
+            {/* col for the side-panel */}
+            {withDepartments && (
+              <div
+                className="col-3 d-lg-block d-none"
+                ref={this.setDepartmentsAreaRef}
+              />
+            )}
 
-        <div className={layoutClasses}>
-          <div className="block-slideshow__body">
-            <StroykaSlick {...slickSettings}>{slides}</StroykaSlick>
+            <div className={layoutClasses}>
+              <div className="block-slideshow__body">
+                <StroykaSlick {...slickSettings}>{slides}</StroykaSlick>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      //   </div>
-      // </div>
     );
   }
 }

@@ -81,7 +81,7 @@ class PageCheckout extends Component {
       })
 
 
-      console.log("this.state", this.state)
+      
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
         ProductID: this.state.ProductID,
@@ -101,8 +101,8 @@ class PageCheckout extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.order !== this.props.order) {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
-        // browserHistory.push("/");
-        // window.location.reload(false);
+        browserHistory.push("/");
+        window.location.reload(false);
       }
     }
   }

@@ -21,6 +21,8 @@ class ProductTabs extends Component {
   };
 
   render() {
+
+    console.log("PRODUCT TAB")
     const { withSidebar } = this.props;
     let { product } = this.props;
 
@@ -46,6 +48,7 @@ class ProductTabs extends Component {
         content: <ProductTabReviews product={product} />,
       },
     ];
+    
 
     const tabsButtons = tabs.map((tab) => {
       const classes = classNames("product-tabs__item", {

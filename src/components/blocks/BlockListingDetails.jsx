@@ -22,7 +22,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 import { Link } from "react-router-dom";
 import moment from 'moment';
 import theme from '../../data/theme';
@@ -32,7 +31,7 @@ import { Helmet } from 'react-helmet-async';
 import './styles/BlockListingDetails.css'
 import ProductCard from "../shared/ProductCard";
 import { toast } from "react-toastify";
-import { gridColumnsTotalWidthSelector } from "@material-ui/data-grid";
+import classNames from "classnames";
 
 function mapStateToProps(state) {
     return {
@@ -50,6 +49,7 @@ function mapDispatchToProps(dispatch) {
         CallAllProducts: (propsData) => dispatch(GitAction.CallAllProducts(propsData)),
     };
 }
+
 
 const initialState = {
     products: [],
@@ -100,6 +100,9 @@ const sortingOption = [
     { value: 'low-to-high', label: 'Price Low to High' },
     { value: 'high-to-low', label: 'Price High to Low' }
 ]
+
+
+
 
 class BlockListingDetails extends Component {
     constructor(props) {
@@ -467,6 +470,16 @@ class BlockListingDetails extends Component {
 
     render() {
 
+        const { loading } = this.props;
+
+        const blockClasses = classNames("block-products__list-item", {
+            "block-products-carousel--loading": loading,
+        });
+
+        console.log("promp", this.props)
+
+        // const blockClasses = classNames("block-products__list-item");
+
         return (
             <React.Fragment>
                 <Helmet>
@@ -491,8 +504,8 @@ class BlockListingDetails extends Component {
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div> */}
-                                <div className="sub-title">
-                                    <Link to="/shop/AllProductCategory/" >
+                                <div className="sub-title" >
+                                    <Link to="/shop/AllProductCategory/">
                                         <FormatListBulletedIcon /> All Categories
                                     </Link>
                                 </div>
@@ -514,7 +527,7 @@ class BlockListingDetails extends Component {
                                                             this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == category.ProductCategoryID ?
                                                             <>
                                                                 <div key={category.ProductCategory} className="sub-category-items active">
-                                                                    <DoubleArrowIcon fontSize='sm' /> {category.ProductCategory}
+                                                                    <DoubleArrowIcon fontSize='sm' /> <label className="sub-label-active" >{category.ProductCategory}</label>
                                                                 </div>
                                                                 {
                                                                     category.HierarchyItem !== null && JSON.parse(category.HierarchyItem).map((items) => {
@@ -522,7 +535,7 @@ class BlockListingDetails extends Component {
                                                                             <>
                                                                                 {
                                                                                     this.state.categoryHierachy === 1 || this.state.categoryHierachy === 2 ?
-                                                                                        <div key={items.ProductCategory} className="sub-category-items " style={{ fontsize: "14px", fontWeight: "200", paddingLeft: "30px" }}>
+                                                                                        <div key={items.ProductCategory} className="sub-category-items " style={{ fontWeight: "200", paddingLeft: "30px" }}>
                                                                                             <FiberManualRecordOutlinedIcon
                                                                                                 onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
                                                                                             />
@@ -582,18 +595,20 @@ class BlockListingDetails extends Component {
                                 <div className="prices-segment mt-3">
                                     <div className="filter-options-label"><MonetizationOnOutlinedIcon /> PRICE</div>
 
-                                    <div className="d-flex w-75 mt-1">
+                                    <div className="d-flex">
                                         <TextField id="min-price" className="mr-auto" label="MIN" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
                                         <span className="mx-2 my-auto"> - </span>
                                         <TextField id="max-price" className="ml-auto" label="MAX" variant="outlined" size="small" style={{ width: 100, height: 40, fontSize: '8pt' }} onChange={e => this.handleFilterOption(e)} ></TextField>
-
                                     </div>
-                                    <Button id="filter-price-button" variant="contained" color="primary" disableElevation className="w-75 mt-1" style={{ backgroundColor: '#2b535d' }} onClick={() => this.handleFilterPriceButton()}>
+                                    {/* <Button id="filter-price-button" variant="contained" color="primary" width="100%" disableElevation className="mt-1" style={{ backgroundColor: '#2b535d' }} onClick={() => this.handleFilterPriceButton()}>
                                         Filter Price
-                                    </Button>
+                                    </Button> */}
+                                    <div className="d-flex" style={{ paddingTop: "15px" }}>
+                                        <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: '#2b535d', width: "100%" }} onClick={() => this.handleFilterPriceButton()}> Filter Price</Button>
+                                    </div>
                                 </div>
 
-                                <hr />
+                                {/* <hr />
 
                                 <div className="promotion-segment mt-3">
                                     <div className="filter-options-label"><LocalOfferOutlinedIcon /> PROMOTION</div>
@@ -614,7 +629,7 @@ class BlockListingDetails extends Component {
                                             className="location-segment-checkboxes"
                                         />
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <hr />
 
@@ -706,17 +721,22 @@ class BlockListingDetails extends Component {
                                 </div>
                             </div>
 
-                            <div className="product-list container-fluid">
-                                <div className="row pl-2">
+                            {/* <div className="product-list container-fluid">
+                                <div className="row pl-2"> */}
+
+
+                            <div className="container">
+                                <div className="row">
                                     {
                                         this.state.productList.length > 0 ?
                                             this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?
-                                                this.state.productList[0].map((products) => {
+                                                this.state.productList[0].map((products, index) => {
 
                                                     return (
-                                                        <div className="products__list-item">
+                                                        <div key={index} className="block-products__list-item">
                                                             <ProductCard product={products}></ProductCard>
                                                         </div>
+
                                                     )
                                                 })
                                                 :
@@ -724,7 +744,7 @@ class BlockListingDetails extends Component {
                                             :
                                             <div className="ml-2"><i>No products for this section</i></div>
                                     }
-                                    <div></div>
+
                                 </div>
                             </div>
                         </div>
@@ -734,5 +754,7 @@ class BlockListingDetails extends Component {
         )
     }
 }
+
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlockListingDetails);

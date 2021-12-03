@@ -106,6 +106,8 @@
     display: flex;
 }
 
+
+
 .product-card__rating-legend {
     font-size: 13px;
     line-height: 1;
@@ -242,4 +244,11 @@
 
 .product-card--layout--list {
     @include product-card-list();
+}
+
+@media (min-width:320px) and (max-width: 991px) {
+    .product-card__rating {
+        margin-top: 6px !important;
+        display: block;
+    }
 }

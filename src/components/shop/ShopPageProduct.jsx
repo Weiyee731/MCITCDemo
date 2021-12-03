@@ -31,6 +31,7 @@ function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
     product: state.counterReducer["productsByID"],
+    reviews: state.counterReducer["reviews"],
   };
 }
 
@@ -38,6 +39,7 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
     CallProductDetail: (propData) => dispatch(GitAction.CallProductDetail(propData)),
+    CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData))
   };
 }
 
@@ -50,7 +52,8 @@ function ShopPageProduct(props) {
   useEffect(() => {
     let canceled = false;
 
-    props.CallProductDetail({ productId: productId, userId: 1 })
+    props.CallProductDetail({ productId: productId, userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id") })
+    console.log("HAHAHA 111")
 
     return () => {
       canceled = true;
@@ -58,27 +61,42 @@ function ShopPageProduct(props) {
 
   }, [productId]);
 
+  // Load review.
+  useEffect(() => {
+    let canceled = false;
+    props.CallProductReviewByProductID({ ProductID: productId, ParentProductReviewID: 0 })
+
+    // props.CallProductDetail({ productId: productId, userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id") })
+    console.log("HAHAHA REVIEW")
+    return () => {
+      canceled = true;
+    };
+
+  }, [productId], [props.reviews]);
+
   // Load related products.
-  useEffect(() => {
-    let canceled = false;
+  // useEffect(() => {
+  //   let canceled = false;
+  //   console.log("HAHAHA 222")
 
-    return () => {
-      canceled = true;
-    };
-  }, [productId, setRelatedProducts]);
+  //   return () => {
+  //     canceled = true;
+  //   };
+  // }, [productId, setRelatedProducts]);
 
-  // Load latest products.
-  useEffect(() => {
-    let canceled = false;
+  // // Load latest products.
+  // useEffect(() => {
+  //   let canceled = false;
+  //   console.log("HAHAHA 333")
 
-    if (layout !== "sidebar") {
-      setLatestProducts([]);
-    }
+  //   if (layout !== "sidebar") {
+  //     setLatestProducts([]);
+  //   }
 
-    return () => {
-      canceled = true;
-    };
-  }, [layout]);
+  //   return () => {
+  //     canceled = true;
+  //   };
+  // }, [layout]);
 
   let content;
   let breadcrumb;

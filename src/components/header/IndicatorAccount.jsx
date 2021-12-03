@@ -151,7 +151,7 @@ class IndicatorAccount extends Component {
     }
 
     const dropdown = (
-      <div className="account-menu">
+      <div className="account-menu" style={{zIndex:"10"}}>
         {localStorage.getItem("isLogin") !== "false" && (
           <div>
             <div className="account-menu__divider" />

@@ -17,7 +17,9 @@ export default function BlockProducts(props) {
 
   if (featuredProduct) {
     large = (
+      
       <div className="block-products__featured">
+        {console.log("HAHAHAHA")}
         <div className="block-products__featured-item">
           <ProductCard product={featuredProduct} />
         </div>
@@ -28,13 +30,14 @@ export default function BlockProducts(props) {
     const blockClasses = classNames("block-products__list-item", {
       "block-products-carousel--loading": loading,
     });
+    {console.log("HAHAHAHA222")}
     const productsList = products.map((product, index) => (
       <div key={index} className={blockClasses}>
         <ProductCard product={product} />
       </div>
     ));
 
-    smalls = <div className="block-products__list">{productsList}</div>;
+    smalls = <div className="block-products__list">{console.log("HAHAHAHA333")}{productsList}</div>;
   }
 
   return (

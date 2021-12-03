@@ -73,7 +73,7 @@ $local-product-margin: 5px;
         @media (min-width: 480px) {
             @include product-card-grid-sm();
         }
-        @media (max-width: 479px) {
+        @media (max-width: 480px) {
             @include product-card-grid-nl();
         }
     }

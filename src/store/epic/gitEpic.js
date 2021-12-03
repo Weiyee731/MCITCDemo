@@ -1312,6 +1312,8 @@ export class GitEpic {
   getProductDetail = (action$) =>
     action$.ofType(GitAction.GetProductDetail).switchMap(async ({ payload }) => {
 
+      console.log("HERE TO CALL")
+
       try {
         const response = await fetch(
           url +
@@ -2180,10 +2182,19 @@ export class GitEpic {
           payload.productReviewComment
         );
         let json = await response.json();
+
+        console.log("JSON", json)
         json = JSON.parse(json);
+        console.log("json add review", json)
         if (json[0].ReturnVal === 1) {
           toast.success("Sucessfully added a product review");
         }
+
+        // return {
+        //   type: GitAction.addedProductReview,
+        //   // payload: json_1,
+        //   payload2: json,
+        // };
         try {
           const response_1 = await fetch(
             url +
@@ -2192,6 +2203,9 @@ export class GitEpic {
             "&PARENTPRODUCTREVIEWID=0"
           );
           let json_1 = await response_1.json();
+          // json_1 = json_1)
+
+          console.log("json add review view", json_1)
           return {
             type: GitAction.addedProductReview,
             payload: json_1,

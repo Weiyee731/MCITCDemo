@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { url } from "../../services/utils";
 
+
 // application
 import BlockHeader from "../shared/BlockHeader";
 import tester from "../../assets/user.jpg";
@@ -41,11 +42,12 @@ class BlockMainCategories extends Component {
     const categoryStyle = {
       backgroundColor: "#fff",
       display: "flex",
-      justifyContent: 'center'
+      justifyContent: 'center',
+      padding: "5px"
     }
 
     const categoryGrid = {
-      padding: "16px",
+      paddingTop: "10px",
       textAlign: "center",
       cursor: "pointer"
     }
@@ -63,10 +65,12 @@ class BlockMainCategories extends Component {
         // onGroupClick={onGroupClick}
         />
         {/* <h3 className="block-header__title mb-3">Categories</h3> */}
-        <div style={categoryStyle} className="row mb-4">
+        {/* <div style={categoryStyle} className="row mb-4"> */}
+        <div style={categoryStyle}>
           {this.props.productCategories.map((data, index) => {
             return (
-              <div key={index} style={categoryGrid} className="col-lg-2 col-md-2 col-sm-2 p-3"
+              // <div key={index} style={categoryGrid} className="col-lg-2 col-md-2 col-sm-2 p-3"
+              <div key={index} style={categoryGrid}
                 onMouseDown={(e) => {
                   window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
                 }}
@@ -75,9 +79,9 @@ class BlockMainCategories extends Component {
                 }}
               >
                 <div>
-                  <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="100%" height="auto" />
+                  <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="50%" height="50%" />
                   <br />
-                  {data.ProductCategory}
+                  <label style={{ fontSize: "13px" }}>{data.ProductCategory}</label>
                 </div>
               </div>
             )

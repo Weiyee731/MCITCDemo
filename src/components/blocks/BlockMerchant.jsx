@@ -255,7 +255,7 @@ export default class BlockMerchant extends Component {
             container: !withSidebar,
         });
         return (
-            <div className={blockClasses} data-layout={layout}>
+            <div className={blockClasses} data-layout={layout} style={{ marginTop:"10px" }} >
                 {
                     this.props.merchants.length === 0 ?
                         (
@@ -289,7 +289,7 @@ export default class BlockMerchant extends Component {
                         )
                 }
 
-            </div>
+            </ div>
         );
     }
 }

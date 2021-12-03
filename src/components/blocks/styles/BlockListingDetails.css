@@ -6,6 +6,7 @@
 .sub-category-items.active {
     font-weight: 600;
     color: #2b535d;
+    font-size: "14px";
 }
 
 .sub-category-items:hover {
@@ -56,4 +57,7 @@
 
 .sub-label{font-size: 14px;
     font-weight: 400;
+}
+
+.sub-label-active{font-size: 14px;
 }
