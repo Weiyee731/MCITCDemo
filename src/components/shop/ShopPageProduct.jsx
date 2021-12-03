@@ -53,8 +53,6 @@ function ShopPageProduct(props) {
     let canceled = false;
 
     props.CallProductDetail({ productId: productId, userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id") })
-    console.log("HAHAHA 111")
-
     return () => {
       canceled = true;
     };

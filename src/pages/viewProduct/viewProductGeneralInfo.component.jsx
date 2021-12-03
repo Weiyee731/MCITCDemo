@@ -34,7 +34,7 @@ function mapDispatchToProps(dispatch) {
     CallResetProductDetails: () => dispatch(GitAction.CallResetProductDetails()),
 
     CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
-    CallProductReview: (propsData) => dispatch(GitAction.CallProductReview(propsData)),
+    CallProductReviewByProductID: (propsData) => dispatch(GitAction.CallProductReviewByProductID(propsData)),
   };
 }
 
@@ -79,9 +79,15 @@ class ViewProductGeneralInfo extends Component {
         userId: window.localStorage.getItem("id"),
       })
       this.props.CallAllProductCategoryListing()
-      this.props.CallProductReview({
-        UserID: window.localStorage.getItem("id"),
-      });
+      // this.props.CallProductReview({
+
+      //   UserID: window.localStorage.getItem("id"),
+      // });
+
+      this.props.CallProductReviewByProductID({
+        ProductID: this.props.match.params.productId,
+        ParentProductReviewID: 0
+      })
     }
   }
 
@@ -90,8 +96,9 @@ class ViewProductGeneralInfo extends Component {
       this.getCategoryListing(this.props.productInfo[0], this.props.productCategories)
       this.getVariationList(this.props.productInfo[0])
     }
-    if (this.props.reviews.length > 0 && this.props.reviews.ReturnVal === undefined) {
-      this.getReviewList(this.props.reviews)
+    if (this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined) {
+      console.log("PRODUCT DETAIL", this.props.reviews)
+      this.getReviewList(JSON.parse(this.props.reviews))
     }
   }
 
@@ -196,19 +203,14 @@ class ViewProductGeneralInfo extends Component {
 
   }
 
-  getReviewList(reviewsData) {
-    let reviewList = []
+  getReviewList(reviewsList) {
+
     let reviewData = []
     if (this.state.isReviewSet === false) {
-      reviewList = reviewsData.filter((x) => x.ProductID === parseInt(this.props.match.params.productId))
-
-      if (reviewList.length > 0 && reviewList[0].ProductReviewDetail !== null) {
-        JSON.parse(reviewList[0].ProductReviewDetail).filter((x) => x.ParentProductReviewID === 0).map((x) => {
-          reviewData.push(x)
-        })
-
-        this.setState({ productRating: reviewList[0].ProductAverageRating, productReview: reviewData, isReviewSet: true })
-      }
+      reviewsList.filter((x) => x.ParentProductReviewID === 0).map((x) => {
+        reviewData.push(x)
+      })
+      this.setState({ productRating: reviewData[0].ProductAverageRating, productReview: reviewData, isReviewSet: true })
     }
   }
 
