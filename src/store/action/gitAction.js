@@ -470,13 +470,25 @@ export class GitAction {
 
   static AddProductSpecsDetail = "ADD-PRODUCT-SPECS-DETAILS";
   static AddedProductSpecsDetail = "ADDED-PRODUCT-SPECS-DETAILS";
+
+  static UpdateProductSpecsDetail = "UPDATE-PRODUCT-SPECS-DETAILS";
+  static UpdatedProductSpecsDetail = "UPDATED-PRODUCT-SPECS-DETAILS";
+
   static DeleteProductSpecsDetail = "DELETE-PRODUCT-SPECS-DETAILS";
   static DeletedProductSpecsDetail = "DELETED-PRODUCT-SPECS-DETAILS";
+
   static ResetProductSpecsDetailResult = "RESET-PRODUCT-SPECS-DETAILS";
 
   static CallAddProductSpecsDetail(prodData) {
     return {
       type: GitAction.AddProductSpecsDetail,
+      payload: prodData
+    };
+  }
+
+  static CallUpdateProductSpecsDetail(prodData) {
+    return {
+      type: GitAction.UpdateProductSpecsDetail,
       payload: prodData
     };
   }
@@ -552,6 +564,10 @@ export class GitAction {
 
   static DeleteProductVariationDetail = "DELETE-PRODUCTVARIATIONDETAIL";
   static DeletedProductVariationDetail = "DELETED-PRODUCTVARIATIONDETAIL";
+  
+  static UpdateProductVariationDetail = "UPDATE-PRODUCTVARIATIONDETAIL";
+  static UpdatedProductVariationDetail = "UPDATED-PRODUCTVARIATIONDETAIL";
+
   static ResetProductVariationDetailResult = "RESET-PRODUCTVARIATIONDETAIL";
 
   static CallAllProductVariationDetail(prodData) {
@@ -564,6 +580,13 @@ export class GitAction {
   static CallAddProductVariationDetail(prodData) {
     return {
       type: GitAction.AddProductVariationDetail,
+      payload: prodData,
+    };
+  }
+
+  static CallUpdateProductVariationDetail(prodData) {
+    return {
+      type: GitAction.UpdateProductVariationDetail,
       payload: prodData,
     };
   }

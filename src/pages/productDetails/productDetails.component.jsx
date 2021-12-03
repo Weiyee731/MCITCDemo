@@ -116,14 +116,18 @@ function mapDispatchToProps(dispatch) {
     CallAllProductsCategories: () => dispatch(GitAction.CallAllProductCategory()),
     CallResetProductReturnVal: () => dispatch(GitAction.CallResetProductReturnVal()),
     CallResetProductMediaResult: () => dispatch(GitAction.CallResetProductMediaResult()),
-    CallAddProductVariationDetail: (prodData) => dispatch(GitAction.CallAddProductVariationDetail(prodData)),
     CallResetProductVariationDetailResult: () => dispatch(GitAction.CallResetProductVariationDetailResult()),
-    CallAddProductSpecsDetail: (prodData) => dispatch(GitAction.CallAddProductSpecsDetail(prodData)),
     CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
     CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData)),
     CallUpdateProduct: (prodData) => dispatch(GitAction.CallUpdateProduct(prodData)),
-    CallDeleteProductSpecsDetail: (prodData) => dispatch(GitAction.CallDeleteProductSpecsDetail(prodData)),
 
+    CallDeleteProductSpecsDetail: (prodData) => dispatch(GitAction.CallDeleteProductSpecsDetail(prodData)),
+    CallUpdateProductSpecsDetail: (prodData) => dispatch(GitAction.CallUpdateProductSpecsDetail(prodData)),
+    CallAddProductSpecsDetail: (prodData) => dispatch(GitAction.CallAddProductSpecsDetail(prodData)),
+
+    CallDeleteProductVariationDetail: (prodData) => dispatch(GitAction.CallDeleteProductVariationDetail(prodData)),
+    CallUpdateProductVariationDetail: (prodData) => dispatch(GitAction.CallUpdateProductVariationDetail(prodData)),
+    CallAddProductVariationDetail: (prodData) => dispatch(GitAction.CallAddProductVariationDetail(prodData)),
   };
 }
 
@@ -1783,9 +1787,10 @@ class ProductDetailsComponent extends Component {
     );
   };
 
-  onDeleteVariant = (index, data, ii) => {
+  onDeleteVariant = (index, data, id, ii) => {
 
     if (data === "variant1") {
+      console.log("CHECK OPTION variant1")
       if (this.state.variation2On) {
         var newVariant = [];
         this.state.variation1.options[0].variation2Options.options.map((info, i) => {
@@ -1829,6 +1834,21 @@ class ProductDetailsComponent extends Component {
       }
     }
     else if (data === "variant1Option") {
+
+      console.log("CHECK OPTION variant1Option")
+
+      // if (specificationData.specificationId !== undefined) {
+      //   this.props.CallDeleteProductSpecsDetail(specificationData.specificationId)
+      // }
+
+      console.log("TO PRINT index", index)
+      console.log("TO PRINT ii", ii)
+      console.log("TO PRINT id", id)
+
+      if (id !== undefined) {
+        this.props.CallDeleteProductVariationDetail({ ProductVariationDetailID: id })
+      }
+
       if (this.state.variation1Options > 1) {
         var newVariant = this.state.variation1.options;
         newVariant = newVariant.filter((file2, i) => i !== index);
@@ -2062,84 +2082,102 @@ class ProductDetailsComponent extends Component {
 
   onSubmitProductVariation = (ProductID) => {
     const { selectedVariationID, variation1 } = this.state
-    let Customizable = ""
-    let Value = ""
-    let stock = ""
-    let price = ""
-    let sku = ""
-    let variationID = []
-    let selectedOptionID = []
+    let CustomizableWithID = []
+    let CustomizableWithoutID = []
+    let ValueWithID = []
+    let ValueWithoutID = []
+    let stockWithID = []
+    let stockWithoutID = []
+    let priceWithID = []
+    let priceWithoutID = []
+    let skuWithID = []
+    let skuWithoutID = []
+    let optionID = []
 
-    if (variation1.options.length > 0) {
 
-      this.props.productInfo.map((info) => {
-        JSON.parse(info.ProductVariation).map((variation) => {
-          selectedOptionID.push(variation.ProductVariationDetailID)
-        })
+    let filterListWithID = variation1.options.filter((x) => x.optionID !== "-")
+    let filterListWithoutID = variation1.options.filter((x) => x.optionID === "-")
+
+    filterListWithID.length > 0 && filterListWithID.filter((y) => y.isEdit === true).map((x) => {
+      CustomizableWithID.push(0)
+      ValueWithID.push(x.optionName)
+      stockWithID.push(x.stock)
+      priceWithID.push(x.price)
+      skuWithID.push(x.sku)
+      optionID.push(x.optionID)
+    })
+
+    filterListWithoutID.length > 0 && filterListWithoutID.filter((y) => y.optionName !== "").map((x) => {
+      CustomizableWithoutID.push(0)
+      ValueWithoutID.push(x.optionName)
+      stockWithoutID.push(x.stock)
+      priceWithoutID.push(x.price)
+      skuWithoutID.push(x.sku)
+    })
+
+
+    if (ValueWithID.length > 0) {
+      this.props.CallUpdateProductVariationDetail({
+        ProductVariationDetailID: optionID,
+        Customizable: CustomizableWithID,
+        Value: ValueWithID,
+        stock: stockWithID,
+        sku: skuWithID,
+        price: priceWithID,
       })
-
-      for (let i = 0; i < variation1.options.length; i++) {
-        Customizable += '0'
-        Value += variation1.options[i].optionName
-        stock += variation1.options[i].stock
-        price += variation1.options[i].price
-        sku += variation1.options[i].sku
-
-        if (i !== (variation1.options.length - 1)) {
-          Customizable += ","
-          Value += ","
-          stock += ","
-          price += ","
-          sku += ","
-        }
-      }
     }
-    let object = {
-      ProductVariation: selectedVariationID,
-      ProductID: ProductID,
-      Customizable: Customizable,
-      Value: Value,
-      stock: stock,
-      price: price,
-      sku: sku,
-      ProductVariationDetailID: selectedOptionID
-    }
-    // this.props.CallAddProductVariationDetail(object)
 
+    if (ValueWithoutID.length > 0) {
+      this.props.CallAddProductVariationDetail({
+        ProductVariation: selectedVariationID,
+        ProductID: ProductID,
+        Customizable: CustomizableWithoutID,
+        Value: ValueWithoutID,
+        stock: stockWithoutID,
+        sku: skuWithoutID,
+        price: priceWithoutID,
+      })
+    }
   }
 
   onSubmitProductSpecification = (ProductID) => {
     const { productSpecificationOptions } = this.state
-    let ProductVariation = ""
-    let values = ""
-    let selectionSpecification = []
+    let variationWithID = []
+    let variationWithoutID = []
+    let valuesWithID = []
+    let valuesWithoutID = []
+    let specificationId = []
 
-    // this.props.productInfo.map((info) => {
-    //   JSON.parse(info.ProductSpecification).map((specification) => {
-    //     console.log("hahahah", specification)
-    //     selectionSpecification.push(specification.ProductSpecificationDetailID)
-    //   })
-    // })
+    let filterListWithID = productSpecificationOptions.filter((x) => x.specificationId !== "")
+    let filterListWithoutID = productSpecificationOptions.filter((x) => x.specificationId === "")
 
-    for (let i = 0; i < productSpecificationOptions.length; i++) {
+    filterListWithID.length > 0 && filterListWithID.filter((y) => y.isEdit === true).map((x) => {
+      variationWithID.push(x.categoryId)
+      valuesWithID.push(x.value)
+      specificationId.push(x.specificationId)
+    })
 
-      ProductVariation += productSpecificationOptions[i].categoryId
-      values += productSpecificationOptions[i].value
+    filterListWithoutID.length > 0 && filterListWithoutID.filter((y) => y.value !== "").map((x) => {
+      variationWithoutID.push(x.categoryId)
+      valuesWithoutID.push(x.value)
+    })
 
-      if (i !== (productSpecificationOptions.length - 1)) {
-        ProductVariation += ","
-        values += ","
-      }
+    if (variationWithID.length > 0) {
+      this.props.CallUpdateProductSpecsDetail({
+        ProductVariation: variationWithID,
+        ProductID: ProductID,
+        value: valuesWithID,
+        specificationDetailID: specificationId
+      })
     }
 
-    let object = {
-      ProductVariation: ProductVariation,
-      ProductID: ProductID,
-      value: values,
-      ProductSpecificationDetailID: selectionSpecification
+    if (variationWithoutID.length > 0) {
+      this.props.CallAddProductSpecsDetail({
+        ProductVariation: variationWithoutID,
+        ProductID: ProductID,
+        value: valuesWithoutID
+      })
     }
-    // console.log("hahaha onSubmitProductSpecification", object)
-    // this.props.CallAddProductSpecsDetail(object)
   }
 
   handleChange(data, e) {
@@ -2389,11 +2427,15 @@ class ProductDetailsComponent extends Component {
 
   handleChangeOptions = (data, index, e) => {
     if (data === "variant1Options") {
+
+      console.log("testing", this.state.variation1.options[index])
       const optionData = {
+        isEdit: true,
         optionName: e.target.value,
         price: this.state.variation1.options[index].price,
         stock: this.state.variation1.options[index].stock,
         sku: this.state.variation1.options[index].sku,
+        optionID: this.state.variation1.options[index].optionID,
         picture: this.state.variation1.options[index].picture,
         pictureURL: this.state.variation1.options[index].pictureURL,
         errorOption: e.target.value == "",
@@ -2419,10 +2461,12 @@ class ProductDetailsComponent extends Component {
       const optionData = {
         optionName: this.state.variation1.options[index].optionName,
         price: e.target.value,
+        isEdit: true,
         stock: this.state.variation1.options[index].stock,
         sku: this.state.variation1.options[index].sku,
         picture: this.state.variation1.options[index].picture,
         pictureURL: this.state.variation1.options[index].pictureURL,
+        optionID: this.state.variation1.options[index].optionID,
         errorOption: this.state.variation1.options[index].errorOption,
         errorPrice: e.target.value == "" || e.target.value < 0,
         errorSKU: this.state.variation1.options[index].errorSKU,
@@ -2447,11 +2491,13 @@ class ProductDetailsComponent extends Component {
       );
     } else if (data === "variation1Stock") {
       const optionData = {
+        isEdit: true,
         optionName: this.state.variation1.options[index].optionName,
         price: this.state.variation1.options[index].price,
         stock: e.target.value,
         sku: this.state.variation1.options[index].sku,
         picture: this.state.variation1.options[index].picture,
+        optionID: this.state.variation1.options[index].optionID,
         pictureURL: this.state.variation1.options[index].pictureURL,
         errorOption: this.state.variation1.options[index].errorOption,
         errorPrice: this.state.variation1.options[index].errorPrice,
@@ -2476,11 +2522,13 @@ class ProductDetailsComponent extends Component {
       );
     } else if (data === "variation1SKU") {
       const optionData = {
+        isEdit: true,
         optionName: this.state.variation1.options[index].optionName,
         price: this.state.variation1.options[index].price,
         stock: this.state.variation1.options[index].stock,
         sku: e.target.value,
         picture: this.state.variation1.options[index].picture,
+        optionID: this.state.variation1.options[index].optionID,
         pictureURL: this.state.variation1.options[index].pictureURL,
         errorOption: this.state.variation1.options[index].errorOption,
         errorPrice: this.state.variation1.options[index].errorPrice,
@@ -2506,6 +2554,7 @@ class ProductDetailsComponent extends Component {
       );
     } else if (data === "wholeSaleMax") {
       const optionData = {
+        isEdit: true,
         max: e.target.value,
         min: this.state.priceTierList[index].min,
         price: this.state.priceTierList[index].price,
@@ -2525,6 +2574,7 @@ class ProductDetailsComponent extends Component {
       });
     } else if (data === "wholeSaleMin") {
       const optionData = {
+        isEdit: true,
         max: this.state.priceTierList[index].max,
         min: e.target.value,
         price: this.state.priceTierList[index].price,
@@ -2542,6 +2592,7 @@ class ProductDetailsComponent extends Component {
       });
     } else if (data === "wholeSalePrice") {
       const optionData = {
+        isEdit: true,
         max: this.state.priceTierList[index].max,
         min: this.state.priceTierList[index].min,
         price: e.target.value,
@@ -2871,6 +2922,7 @@ class ProductDetailsComponent extends Component {
               stock: "",
               sku: "",
               picture: "",
+              optionID: "-",
               pictureURL: "",
               errorOption: false,
               errorSKU: false,
@@ -2888,6 +2940,7 @@ class ProductDetailsComponent extends Component {
             {
               optionName: "",
               price: "",
+              optionID: "-",
               stock: "",
               sku: "",
               picture: "",
@@ -3132,12 +3185,17 @@ class ProductDetailsComponent extends Component {
   }
 
   addOptions = (variantNum, e) => {
+
+    console.log("THIS IS ADD OPTION")
     if (variantNum == 1) {
+
+      console.log("HERE")
       var option = {
         optionName: "",
         price: "",
         stock: "",
         sku: "",
+        optionID: "-",
         picture: "",
         pictureURL: "",
         errorOption: false,
@@ -3149,6 +3207,8 @@ class ProductDetailsComponent extends Component {
       var variations = this.state.variation1;
       variations.options = [...variations.options, option];
 
+      console.log("HERE", variations)
+
       this.setState({
         variation1Options: this.state.variation1Options + 1,
         variation1: variations,
@@ -3159,6 +3219,7 @@ class ProductDetailsComponent extends Component {
       const priceTier = {
         min: 0,
         max: 0,
+        optionID: "-",
         price: 0.0,
         errorMin: false,
         errorMax: false,
@@ -3184,8 +3245,7 @@ class ProductDetailsComponent extends Component {
   OnSubmit = () => {
     this.checkEverything();
 
-    this.onSubmitProductVariation(this.state.ProductID)
-    this.onSubmitProductSpecification(this.state.ProductID)
+
     let object = {
       ProductID: this.state.ProductID,
       productSupplier: this.state.productSupplier,
@@ -3202,10 +3262,13 @@ class ProductDetailsComponent extends Component {
       model: this.state.model,
       tags: this.state.tags,
     }
-    this.props.CallUpdateProduct(object)
+    // this.props.CallUpdateProduct(object)
+
+    // this.onSubmitProductVariation(this.state.ProductID)
+    // this.onSubmitProductSpecification(this.state.ProductID)
 
 
-    this.setState({ isSubmit: true })
+    // this.setState({ isSubmit: true })
   }
 
   // replace(/\\/g, "")
@@ -3214,7 +3277,6 @@ class ProductDetailsComponent extends Component {
     var tagList = "";
     try {
       let ProductTag = this.props.productInfo[0].ProductTag !== null ? JSON.parse(this.props.productInfo[0].ProductTag.replace(/\\/g, "")) : []
-      console.log(ProductTag)
       ProductTag.map((tag) => {
         if (tagList == "") {
           tagList = tag.tag;
@@ -3228,12 +3290,10 @@ class ProductDetailsComponent extends Component {
       console.log(e)
     }
 
-    // console.log("this.props.productInfo", this.props.productInfo)
     //set Variations
     if (this.props.productInfo.length > 0 && this.props.productInfo[0].ProductCategoryID) {
       this.props.CallAllProductVariationByCategoryID(this.props.productInfo[0].ProductCategoryID);
     }
-
 
     const VariationValues = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation) : []
     let variationIsOn = (VariationValues.length > 0) ? true : false
@@ -3258,6 +3318,7 @@ class ProductDetailsComponent extends Component {
           errorSKU: false,
           errorPrice: false,
           errorStock: false,
+          isEdit: false,
           variation2Options: {
             name: "",
             options: [
@@ -3279,6 +3340,8 @@ class ProductDetailsComponent extends Component {
       }
     }
 
+    console.log("this is variation obj", variationObject)
+
     //set Specifications
     //Check the ID sent when adding the specifiction since the id in the productInfo
     //doesn't match the ones listed in the list of variations fetched
@@ -3286,7 +3349,7 @@ class ProductDetailsComponent extends Component {
 
     var productSpecs = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductSpecification !== null ? JSON.parse(this.props.productInfo[0].ProductSpecification) : [];
     for (var y = 0; y < productSpecs.length; y++) {
-      var object = { categoryId: productSpecs[y].ProductVariationID, value: productSpecs[y].ProductSpecificationValue, specificationId: productSpecs[y].ProductSpecificationDetailID, error: false }
+      var object = { categoryId: productSpecs[y].ProductVariationID, value: productSpecs[y].ProductSpecificationValue, specificationId: productSpecs[y].ProductSpecificationDetailID, error: false, isEdit: false }
       specificationArray = [...specificationArray, object]
     }
 
@@ -3407,10 +3470,7 @@ class ProductDetailsComponent extends Component {
       this.bindProductInfoToState()
     }
 
-    console.log(this.props.deleteproductSpecsDetail)
-    console.log(prevProps.deleteproductSpecsDetail)
     if (prevProps.deleteproductSpecsDetail !== this.props.deleteproductSpecsDetail) {
-      console.log("prevProps.deleteproductSpecsDetail !== this.props.deleteproductSpecsDetail")
       this.props.CallProductDetail({
         productId: this.props.match.params.productId,
         userId: window.localStorage.getItem("id"),
@@ -3487,17 +3547,14 @@ class ProductDetailsComponent extends Component {
   }
 
   handleAddProductSpecification = (addOrRemove, index, specificationData) => {
-    console.log("specificationId", specificationData)
-    console.log("specificationId index", index)
     if (addOrRemove === "add") {
-      let object = { categoryId: 0, value: "", error: false }
+      let object = { categoryId: 0, value: "", error: false, specificationId: "", isEdit: false }
       let specificationArray = [...this.state.productSpecificationOptions, object]
       this.setState({ productSpecificationOptions: specificationArray })
     }
     else {
       if (typeof index !== 'undefined' && index !== null) {
         if (specificationData.specificationId !== undefined) {
-          console.log("specificationId", specificationData.specificationId)
           this.props.CallDeleteProductSpecsDetail(specificationData.specificationId)
         }
         try {
@@ -3519,13 +3576,16 @@ class ProductDetailsComponent extends Component {
       specificationObject[idx].value = e.target.value
       if (e.target.value == "") {
         specificationObject[idx].error = true;
+        specificationObject[idx].isEdit = false;
       }
       else {
         specificationObject[idx].error = false;
+        specificationObject[idx].isEdit = true;
       }
     }
     else {
       specificationObject[idx].categoryId = e.target.value
+      specificationObject[idx].isEdit = true;
     }
 
     setTimeout(
@@ -4028,20 +4088,21 @@ class ProductDetailsComponent extends Component {
 
               {/* {
               this.props.isOnViewState ? */}
-              {console.log(this.props.match.params)}
-
-              <div style={{ display: "flex" }}>
-                <Button onClick={() => window.location = url.inventoryProduct(this.props.match.params.productId)}>
-                  <i className="fas fa-chevron-left"></i>
-                  {/* <Link className="nav-link" to={"/viewProduct"}> */}
-                  Back
-                  {/* </Link> */}
-                </Button>
-
-                <Button style={{ marginLeft: "80%" }}
-                  onClick={this.MakeEditable.bind(this)}>
-                  {this.state.toBeEdited ? "Cancel" : "Edit"}
-                </Button>
+              <div className="row" style={{ display: "flex" }}>
+                <div className="col-6">
+                  <Button onClick={() => window.location = url.inventoryProduct(this.props.match.params.productId)}>
+                    <i className="fas fa-chevron-left"></i>
+                    {/* <Link className="nav-link" to={"/viewProduct"}> */}
+                    Back
+                    {/* </Link> */}
+                  </Button>
+                </div>
+                <div className="col-6" style={{ textAlign: "right" }}>
+                  <Button
+                    onClick={this.MakeEditable.bind(this)}>
+                    {this.state.toBeEdited ? "Cancel" : "Edit"}
+                  </Button>
+                </div>
               </div>
 
               {/* : */}
@@ -4508,12 +4569,7 @@ class ProductDetailsComponent extends Component {
                 </CardContent>
               </Card>
               <br />
-              {
-                console.log("HERE SPECIFICATION", this.state.productSpecification)
-              }
-              {
-                console.log("HERE SPECIFICATION OPTION", this.state.productSpecificationOptions)
-              }
+
               <Card id="specification" className="SubContainer">
                 <CardContent>
                   <p className="Heading">Product Specification</p>
@@ -4702,13 +4758,17 @@ class ProductDetailsComponent extends Component {
                           </p>
                         )}
 
+
+                        {console.log("TOPRINT", this.state.variation1Options)}
+                        {console.log("TOPRINT", this.state.variation1)}
+
                         {[...Array(this.state.variation1Options)].map((e, i) => (
                           <div>
                             <div className="VariantOption align-items-center">
                               {this.state.toBeEdited ? <RemoveCircleOutlineIcon
                                 className="DeleteOptionButton"
                                 color="secondary"
-                                onClick={this.onDeleteVariant.bind(this, i, "variant1Option")}
+                                onClick={this.onDeleteVariant.bind(this, i, "variant1Option", this.state.variation1.options[i].optionID)}
                               /> : null}
                               {/* {this.state.variation1.options[i].optionName ? */}
                               <TextField
@@ -4753,8 +4813,8 @@ class ProductDetailsComponent extends Component {
                         <CloseIcon
                           className="DeleteVariantButton"
                           color="secondary"
-                          onClick={this.onDeleteVariant.bind(this, -1, "variant1")}
-                        />
+                          onClick={this.onDeleteVariant.bind(this, -1, "variant1", "")}
+                        ></CloseIcon>
                         : null}
                     </div>
                   )}
@@ -6225,7 +6285,7 @@ class ProductDetailsComponent extends Component {
                       <Step key="basicInfo">
                         <StepLabel>
                           <HashLink
-                            to="/productDetails#basicInfo"
+                            to={`/viewProductDetailList/${this.props.match.params.productId}#basicInfo`}
                             className="FontType4"
                           >
                             Basic Information
@@ -6241,7 +6301,7 @@ class ProductDetailsComponent extends Component {
                       <Step key="productDetails">
                         <StepLabel>
                           <HashLink
-                            to="/productDetails#productDetails"
+                            to={`/viewProductDetailList/${this.props.match.params.productId}#productDetails`}
                             className="FontType4"
                           >
                             Product Details
@@ -6253,10 +6313,11 @@ class ProductDetailsComponent extends Component {
                           />
                         </StepContent>
                       </Step>
+
                       <Step key="descriptionCard">
                         <StepLabel>
                           <HashLink
-                            to="/productDetails#descriptionCard"
+                            to={`/viewProductDetailList/${this.props.match.params.productId}#descriptionCard`}
                             className="FontType4"
                           >
                             Product Description
@@ -6271,7 +6332,7 @@ class ProductDetailsComponent extends Component {
                       <Step key="specification">
                         <StepLabel>
                           <HashLink
-                            to="/productDetails#specification"
+                            to={`/viewProductDetailList/${this.props.match.params.productId}#specification`}
                             className="FontType4"
                           >
                             Product Specification
@@ -6286,7 +6347,7 @@ class ProductDetailsComponent extends Component {
                       <Step key="productVariations">
                         <StepLabel>
                           <HashLink
-                            to="/productDetails#productVariation"
+                            to={`/viewProductDetailList/${this.props.match.params.productId}#productVariation`}
                             className="FontType4"
                           >
                             Product Variations
@@ -6301,7 +6362,7 @@ class ProductDetailsComponent extends Component {
                       <Step key="productMedia">
                         <StepLabel>
                           <HashLink
-                            to="/productDetails#productMedia"
+                            to={`/viewProductDetailList/${this.props.match.params.productId}#productMedia`}
                             className="FontType4"
                           >
                             Product Media
@@ -6316,7 +6377,7 @@ class ProductDetailsComponent extends Component {
                       <Step key="shippingInfo">
                         <StepLabel>
                           <HashLink
-                            to="/productDetails#shippingInfo"
+                            to={`/viewProductDetailList/${this.props.match.params.productId}#shippingInfo`}
                             className="FontType4"
                           >
                             Shipping Information

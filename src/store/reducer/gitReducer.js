@@ -55,6 +55,7 @@ const INITIAL_STATE = {
   updatedProducts: [],
   productMgmtResult: [],
   addProductVariationResult: [],
+  variationResult: [],
   updatePassword: [],
   profileUpdate: [],
   verifyPassword: [],
@@ -435,6 +436,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
         productSpecsDetail: action.payload,
       });
 
+    case GitAction.UpdateProductSpecsDetail:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedProductSpecsDetail:
+      return Object.assign({}, state, {
+        loading: false,
+        productSpecsDetail: action.payload,
+      });
+
     case GitAction.DeleteProductSpecsDetail:
       return Object.assign({}, state, { loading: true });
     case GitAction.DeletedProductSpecsDetail:
@@ -548,7 +557,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         addProductVariationResult: action.payload,
-        deleteProductVariation: action.payload2
+        // deleteProductVariation: action.payload2
+      });
+
+
+    case GitAction.UpdateProductVariationDetail:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedProductVariationDetail:
+      return Object.assign({}, state, {
+        loading: false,
+        variationResult: action.payload,
+        // deleteProductVariation: action.payload2
       });
 
     case GitAction.DeleteProductVariationDetail:
@@ -556,7 +575,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.DeletedProductVariationDetail:
       return Object.assign({}, state, {
         loading: false,
-        addProductVariationResult: action.payload,
+        variationResult: action.payload,
       });
 
     case GitAction.ResetProductVariationDetailResult:

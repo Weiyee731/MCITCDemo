@@ -18,6 +18,7 @@ import { url } from '../../services/utils';
 import USER from "../../assets/user.jpg";
 import Logo from "../../assets/Emporia.png";
 import LoadingPanel from "../../components/shared/loadingPanel";
+import { minHeight } from "@mui/system";
 
 
 function mapStateToProps(state) {
@@ -56,7 +57,9 @@ class ViewProductGeneralInfo extends Component {
       productRating: "",
 
       page: 1,
+      variationPage: 1,
       rowsPerPage: 3,
+      variationRowsPerPage: 5,
       setRating: 0,
     };
     this.handleBack = this.handleBack.bind(this)
@@ -218,6 +221,11 @@ class ViewProductGeneralInfo extends Component {
     this.setState(() => ({ page }));
   };
 
+  handleVariationPageChange = (page) => {
+    this.setState({ variationPage: page })
+    // this.setState(() => ({ variationPage }));
+  };
+
   filterRating(value) {
     let ratingNum = 0
     ratingNum = this.state.productReview.filter((x) => x.ProductReviewRating === value)
@@ -282,11 +290,11 @@ class ViewProductGeneralInfo extends Component {
     return (
       this.props.productInfo.length > 0 ?
         <div style={{ width: "100%" }}>
-          <div style={{ margin: "1%" }}>
-            <div>
+          <div >
+            <div style={{ margin: "1%" }}>
               <h3>{typeof this.props.productInfo !== "undefined" ? this.props.productInfo[0].ProductName : "Product Information"}</h3>
             </div>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", marginLeft: "1%" }}>
               <Button onClick={() => typeof this.props.backToList === "function" && this.handleBack()}>
                 <i className="fas fa-chevron-left"></i>
                 <Link className="nav-link" to={"/viewProduct"}>
@@ -295,7 +303,7 @@ class ViewProductGeneralInfo extends Component {
               </Button>
             </div>
 
-            <div style={{ margin: "2%" }}>
+            <div style={{ marginLeft: "2%", marginRight: "2%", marginBottom: "2%" }}>
               <Card style={{ width: '100%' }}>
                 <CardBody>
                   <CardText>
@@ -379,7 +387,7 @@ class ViewProductGeneralInfo extends Component {
             <div style={{ margin: "2%" }}>
               <div className="row">
                 <div className="col-4">
-                  <Card style={{ width: '100%' }}>
+                  <Card style={{ width: '100%', minHeight: "495px" }}>
                     <CardBody>
                       <CardText>
 
@@ -399,27 +407,45 @@ class ViewProductGeneralInfo extends Component {
                         {
                           this.state.variationTypeList.length > 0 ? this.state.variationTypeList.map((variation, index) => {
                             return (
-                              <Accordion title={variation}>
-                                {this.props.productInfo[0].ProductVariation !== null && JSON.parse(this.props.productInfo[0].ProductVariation).filter((x) => x.ProductVariationID ===
-                                  this.state.variationTypeListID[index]).map((details) => {
-                                    return (
-                                      <Card style={{ width: '100%' }}>
-                                        <CardBody style={{ padding: "0.5rem" }}>
-                                          <CardText>
-                                            <div className="row">
-                                              <div className="col-6" style={{ textAlign: "left" }}>
-                                                <label>{details.ProductVariationValue} </label>
-                                              </div>
-                                              <div className="col-6">
-                                                <label >{details.ProductStockAmount}</label>
-                                              </div>
-                                            </div>
-                                          </CardText>
-                                        </CardBody>
-                                      </Card>
-                                    )
-                                  })}
-                              </Accordion>
+                              <>
+                                <div style={{ minHeight: "332px" }}>
+                                  <Accordion title={variation}>
+                                    {this.props.productInfo[0].ProductVariation !== null &&
+                                      JSON.parse(this.props.productInfo[0].ProductVariation).filter((x) => x.ProductVariationID ===
+                                        this.state.variationTypeListID[index])
+                                        .slice((this.state.variationPage - 1) * this.state.variationRowsPerPage, (this.state.variationPage - 1) * this.state.variationRowsPerPage + this.state.variationRowsPerPage)
+                                        .map((details) => {
+                                          return (
+                                            <Card style={{ width: '100%' }}>
+                                              <CardBody style={{ padding: "0.5rem" }}>
+                                                <CardText>
+                                                  <div className="row">
+                                                    <div className="col-6" style={{ textAlign: "left" }}>
+                                                      <label>{details.ProductVariationValue} </label>
+                                                    </div>
+                                                    <div className="col-6">
+                                                      <label >{details.ProductStockAmount}</label>
+                                                    </div>
+                                                  </div>
+                                                </CardText>
+                                              </CardBody>
+                                            </Card>
+                                          )
+                                        })}
+                                  </Accordion>
+                                </div>
+                                <div style={{ marginTop: "15px" }}>
+                                  <Pagination
+                                    current={this.state.variationPage}
+                                    total={
+                                      this.state.variationTypeList.length > 0 ?
+                                        Math.ceil(this.state.variationTypeList.length / this.state.variationRowsPerPage)
+                                        : 0
+                                    }
+                                    onPageChange={this.handleVariationPageChange}
+                                  />
+                                </div>
+                              </>
                             )
                           })
                             :
@@ -435,7 +461,7 @@ class ViewProductGeneralInfo extends Component {
                 {/* ---------------------------------------------------------------- PRODUCT REVIEW ----------------------------------------------------------------------- */}
 
                 <div className="col-8">
-                  <Card style={{ width: '100%' }}>
+                  <Card style={{ width: '100%', minHeight: "495px" }}>
                     <CardBody>
                       <CardText>
 
@@ -451,7 +477,6 @@ class ViewProductGeneralInfo extends Component {
                             </Button>
                           </div>
                         </div>
-
                         {
                           this.state.productReview.length > 0 &&
                           <div className="row" style={{ textAlign: "left", paddingBottom: "15px" }}>
@@ -468,7 +493,9 @@ class ViewProductGeneralInfo extends Component {
 
                         {this.state.productReview !== undefined && this.state.productReview.length > 0 ?
                           <>
-                            {this.ratingList(this.state.setRating === 0 ? this.state.productReview : this.state.productReview.filter((x) => x.ProductReviewRating === this.state.setRating))}
+                            <div style={{ minHeight: "290px" }}>
+                              {this.ratingList(this.state.setRating === 0 ? this.state.productReview : this.state.productReview.filter((x) => x.ProductReviewRating === this.state.setRating))}
+                            </div>
                             <div style={{ marginTop: "15px" }}>
                               <Pagination
                                 current={this.state.page}
@@ -488,6 +515,7 @@ class ViewProductGeneralInfo extends Component {
                               Temporarily there is no review for this product
                             </label>
                           </div>
+
                         }
                       </CardText>
                     </CardBody>
