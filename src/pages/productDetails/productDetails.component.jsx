@@ -78,11 +78,15 @@ function mapStateToProps(state) {
     variations: state.counterReducer["variations"],
     productCategories: state.counterReducer["productCategories"],
     productCategoriesFullList: state.counterReducer["categories"],
-    addProductVariationResult: state.counterReducer["addProductVariationResult"],
-    productSpecsDetail: state.counterReducer["productSpecsDetail"],
     productInfo: state.counterReducer["productsByID"],
+
     returnUpdateProduct: state.counterReducer["returnUpdateProduct"],
-    deleteproductSpecsDetail: state.counterReducer["deleteproductSpecsDetail"],
+
+    productSpecsDetail: state.counterReducer["productSpecsDetail"],
+    SpecsDetail: state.counterReducer["SpecsDetail"],
+
+    addProductVariationResult: state.counterReducer["addProductVariationResult"],
+    variationResult: state.counterReducer["variationResult"],
   };
 }
 const editorConfiguration = {
@@ -116,18 +120,23 @@ function mapDispatchToProps(dispatch) {
     CallAllProductsCategories: () => dispatch(GitAction.CallAllProductCategory()),
     CallResetProductReturnVal: () => dispatch(GitAction.CallResetProductReturnVal()),
     CallResetProductMediaResult: () => dispatch(GitAction.CallResetProductMediaResult()),
-    CallResetProductVariationDetailResult: () => dispatch(GitAction.CallResetProductVariationDetailResult()),
-    CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
     CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData)),
+
     CallUpdateProduct: (prodData) => dispatch(GitAction.CallUpdateProduct(prodData)),
+    CallResetUpdateProduct: (prodData) => dispatch(GitAction.CallResetUpdateProduct(prodData)),
 
     CallDeleteProductSpecsDetail: (prodData) => dispatch(GitAction.CallDeleteProductSpecsDetail(prodData)),
     CallUpdateProductSpecsDetail: (prodData) => dispatch(GitAction.CallUpdateProductSpecsDetail(prodData)),
     CallAddProductSpecsDetail: (prodData) => dispatch(GitAction.CallAddProductSpecsDetail(prodData)),
+    CallResetUpdateProductSpecsDetail: () => dispatch(GitAction.CallResetUpdateProductSpecsDetail()),
+    CallResetProductSpecsDetailResults: () => dispatch(GitAction.CallResetProductSpecsDetailResults()),
 
     CallDeleteProductVariationDetail: (prodData) => dispatch(GitAction.CallDeleteProductVariationDetail(prodData)),
     CallUpdateProductVariationDetail: (prodData) => dispatch(GitAction.CallUpdateProductVariationDetail(prodData)),
     CallAddProductVariationDetail: (prodData) => dispatch(GitAction.CallAddProductVariationDetail(prodData)),
+    CallResetUpdateProductVariationDetail: () => dispatch(GitAction.CallResetUpdateProductVariationDetail()),
+    CallResetProductVariationDetailResult: () => dispatch(GitAction.CallResetProductVariationDetailResult()),
+
   };
 }
 
@@ -476,6 +485,14 @@ const INITIAL_STATE = {
   isProductIntoBind: false,
 
   toBeEdited: false,
+  isSubmissionVariationChecking: false,
+  isSubmissionSpecChecking: false
+  // isSubmitVariationCheck: false,
+  // isSubmitSpecificationCheck: false,
+  // isSubmitVariationToDB: false,
+  // isSubmitSpecificationToDB: false,
+  // isSpecificationSend: false,
+
 }
 
 class ProductDetailsComponent extends Component {
@@ -2095,10 +2112,15 @@ class ProductDetailsComponent extends Component {
     let optionID = []
 
 
+
     let filterListWithID = variation1.options.filter((x) => x.optionID !== "-")
     let filterListWithoutID = variation1.options.filter((x) => x.optionID === "-")
 
+    console.log("CHECKING 1111", filterListWithID)
+
     filterListWithID.length > 0 && filterListWithID.filter((y) => y.isEdit === true).map((x) => {
+
+
       CustomizableWithID.push(0)
       ValueWithID.push(x.optionName)
       stockWithID.push(x.stock)
@@ -2114,7 +2136,6 @@ class ProductDetailsComponent extends Component {
       priceWithoutID.push(x.price)
       skuWithoutID.push(x.sku)
     })
-
 
     if (ValueWithID.length > 0) {
       this.props.CallUpdateProductVariationDetail({
@@ -2138,6 +2159,14 @@ class ProductDetailsComponent extends Component {
         price: priceWithoutID,
       })
     }
+
+    this.setState({ isSubmissionVariationChecking: true })
+    // this.setState({ isSubmitVariationCheck: true })
+
+    // if (ValueWithID.length > 0 || ValueWithoutID.length > 0)
+    //   this.setState({ isSubmitVariationCheck: true, isSubmitVariationToDB: true })
+    // else
+    //   this.setState({ isSubmitVariationCheck: true })
   }
 
   onSubmitProductSpecification = (ProductID) => {
@@ -2178,6 +2207,11 @@ class ProductDetailsComponent extends Component {
         value: valuesWithoutID
       })
     }
+    this.setState({ isSubmissionSpecChecking: true })
+    // if (variationWithID.length > 0 || variationWithoutID.length > 0)
+    //   this.setState({ isSubmitSpecificationCheck: true, isSubmitSpecificationToDB: true })
+    // else
+    //   this.setState({ isSubmitSpecificationCheck: true })
   }
 
   handleChange(data, e) {
@@ -3151,6 +3185,7 @@ class ProductDetailsComponent extends Component {
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll, true);
+    this.props.CallResetUpdateProduct()
 
     // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
     let userId = window.localStorage.getItem("id")
@@ -3245,12 +3280,11 @@ class ProductDetailsComponent extends Component {
   OnSubmit = () => {
     this.checkEverything();
 
-
     let object = {
       ProductID: this.state.ProductID,
       productSupplier: this.state.productSupplier,
       name: this.state.name,
-      description: this.state.description,
+      description: encodeURIComponent(this.state.description),
       productCategory: this.state.productCategory,
       // productSupplier: this.state.productSupplier,
       height: this.state.height,
@@ -3262,13 +3296,15 @@ class ProductDetailsComponent extends Component {
       model: this.state.model,
       tags: this.state.tags,
     }
-    // this.props.CallUpdateProduct(object)
 
-    // this.onSubmitProductVariation(this.state.ProductID)
-    // this.onSubmitProductSpecification(this.state.ProductID)
+    console.log("CATEGORY LISTING", object)
+    this.props.CallUpdateProduct(object)
+
+    this.onSubmitProductVariation(this.state.ProductID)
+    this.onSubmitProductSpecification(this.state.ProductID)
 
 
-    // this.setState({ isSubmit: true })
+    this.setState({ isSubmit: true })
   }
 
   // replace(/\\/g, "")
@@ -3339,8 +3375,6 @@ class ProductDetailsComponent extends Component {
         variationObject.options = [...variationObject.options, option];
       }
     }
-
-    console.log("this is variation obj", variationObject)
 
     //set Specifications
     //Check the ID sent when adding the specifiction since the id in the productInfo
@@ -3466,15 +3500,37 @@ class ProductDetailsComponent extends Component {
       }
     }
 
-    if (prevProps.productInfo !== this.props.productInfo) {
+    if (prevProps.productInfo !== this.props.productInfo)
       this.bindProductInfoToState()
-    }
 
-    if (prevProps.deleteproductSpecsDetail !== this.props.deleteproductSpecsDetail) {
-      this.props.CallProductDetail({
-        productId: this.props.match.params.productId,
-        userId: window.localStorage.getItem("id"),
-      })
+    if (this.state.isSubmit === true && this.state.isSubmissionSpecChecking === true && this.state.isSubmissionVariationChecking === true) {
+      if (this.props.returnUpdateProduct.length > 0 && this.props.returnUpdateProduct[0].ReturnVal === 1) {
+        this.props.CallResetUpdateProduct()
+      }
+
+      if (this.props.productSpecsDetail.length > 0 && this.props.productSpecsDetail[0].ReturnVal === "1") {
+        this.props.CallResetProductSpecsDetailResults()
+      }
+
+      if (this.props.SpecsDetail.length > 0 && this.props.SpecsDetail[0].ReturnVal === "1") {
+        this.props.CallResetUpdateProductSpecsDetail()
+      }
+
+      if (this.props.addProductVariationResult.length > 0 && this.props.addProductVariationResult[0].ReturnVal === "1") {
+        this.props.CallResetProductVariationDetailResult()
+      }
+
+      if (this.props.variationResult.length > 0 && this.props.variationResult[0].ReturnVal === "1") {
+        this.props.CallResetUpdateProductVariationDetail()
+      }
+
+      if (this.props.returnUpdateProduct.length === 0 && this.props.productSpecsDetail.length === 0 && this.props.SpecsDetail.length === 0 &&
+        this.props.addProductVariationResult.length === 0 && this.props.variationResult.length === 0) {
+        setTimeout(() => {
+          browserHistory.push("/viewProduct");
+          window.location.reload(false);
+        }, 1000);
+      }
     }
 
 
@@ -3488,58 +3544,58 @@ class ProductDetailsComponent extends Component {
     // }
 
     //call the variations for product specifications and product category
-    if (this.props.result) {
-      if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
-        const { variation1, productSpecificationOptions } = this.state
-        let ProductID = this.props.result[0].ProductID
+    // if (this.props.result) {
+    //   if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
+    //     const { variation1, productSpecificationOptions } = this.state
+    //     let ProductID = this.props.result[0].ProductID
 
-        //submit the images and videos 
-        if (this.state.file.length > 0)
-          this.uploadFile(ProductID)
+    //     //submit the images and videos 
+    //     if (this.state.file.length > 0)
+    //       this.uploadFile(ProductID)
 
-        // submit the product variation 
-        if (typeof variation1.options !== "undefined" && variation1.options.length > 0) {
-          this.onSubmitProductVariation(ProductID)
-        }
+    //     // submit the product variation 
+    //     if (typeof variation1.options !== "undefined" && variation1.options.length > 0) {
+    //       this.onSubmitProductVariation(ProductID)
+    //     }
 
-        // submit the product specifications 
-        if (productSpecificationOptions.length > 0)
-          this.onSubmitProductSpecification(ProductID)
+    //     // submit the product specifications 
+    //     if (productSpecificationOptions.length > 0)
+    //       this.onSubmitProductSpecification(ProductID)
 
-        this.props.CallResetProductReturnVal()
-      }
-    }
+    //     this.props.CallResetProductReturnVal()
+    //   }
+    // }
 
 
-    // check if the product specs return value is exists, or/and variation return value is exists, reset those props and reset the media return value if it is exists
-    let isProductSpecReset = false
-    let isProductVariantReset = false
+    // // check if the product specs return value is exists, or/and variation return value is exists, reset those props and reset the media return value if it is exists
+    // let isProductSpecReset = false
+    // let isProductVariantReset = false
 
-    //reset product specs return value if there is
-    if (typeof this.props.productSpecsDetail !== "undefined" && this.props.productSpecsDetail.length > 0 && this.props.productSpecsDetail[0].ReturnVal == 1)
-      this.props.CallResetProductSpecsDetailResults()
-    else
-      isProductSpecReset = true
+    // //reset product specs return value if there is
+    // if (typeof this.props.productSpecsDetail !== "undefined" && this.props.productSpecsDetail.length > 0 && this.props.productSpecsDetail[0].ReturnVal == 1)
+    //   this.props.CallResetProductSpecsDetailResults()
+    // else
+    //   isProductSpecReset = true
 
-    //reset product variation return value if there is
-    if (typeof this.props.addProductVariationResult !== "undefined" && this.props.addProductVariationResult.length > 0 && this.props.addProductVariationResult[0].ReturnVal == 1)
-      this.props.CallResetProductVariationDetailResult()
-    else
-      isProductVariantReset = true
+    // //reset product variation return value if there is
+    // if (typeof this.props.addProductVariationResult !== "undefined" && this.props.addProductVariationResult.length > 0 && this.props.addProductVariationResult[0].ReturnVal == 1)
+    //   this.props.CallResetProductVariationDetailResult()
+    // else
+    //   isProductVariantReset = true
 
-    if (isProductSpecReset && isProductVariantReset && this.state.isSubmit === true) {
-      if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal == 1) {
-        toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
-        this.props.CallResetProductMediaResult()
-        this.setState({ isSubmit: false })
-      }
-      else {
-        if (this.state.isSubmit === true) {
-          // toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
-          this.setState({ isSubmit: false })
-        }
-      }
-    }
+    // if (isProductSpecReset && isProductVariantReset && this.state.isSubmit === true) {
+    //   if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal == 1) {
+    //     toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
+    //     this.props.CallResetProductMediaResult()
+    //     this.setState({ isSubmit: false })
+    //   }
+    //   else {
+    //     if (this.state.isSubmit === true) {
+    //       // toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
+    //       this.setState({ isSubmit: false })
+    //     }
+    //   }
+    // }
 
     if (prevProps.productInfo !== this.props.productInfo) {
       this.bindProductInfoToState()
@@ -4734,7 +4790,6 @@ class ProductDetailsComponent extends Component {
                               : null
                             }
                           </Select>
-
                         </FormControl>
 
                         {!this.state.toBeEdited && <TextField
@@ -4809,19 +4864,18 @@ class ProductDetailsComponent extends Component {
                           </Button> : null}
                       </div>
                       <br />
-                      {this.state.toBeEdited ?
+                      {/* {this.state.toBeEdited ?
                         <CloseIcon
                           className="DeleteVariantButton"
                           color="secondary"
                           onClick={this.onDeleteVariant.bind(this, -1, "variant1", "")}
                         ></CloseIcon>
-                        : null}
+                        : null} */}
                     </div>
                   )}
                   {this.state.variation1On ? <br /> : null}
 
                   <hr />
-
                   {!this.state.variation1On && this.state.toBeEdited && (
                     <div className="ItemContainer">
                       <Button

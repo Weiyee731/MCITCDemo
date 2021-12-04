@@ -95,12 +95,11 @@ class ViewProductGeneralInfo extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.productCategories.length > 0 && this.props.productInfo.length > 0) {
+    if (this.props.productCategories.length > 0 && this.props.productInfo.length > 0 && this.state.categoryHierachy === 0) {
       this.getCategoryListing(this.props.productInfo[0], this.props.productCategories)
       this.getVariationList(this.props.productInfo[0])
     }
     if (this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined) {
-      console.log("PRODUCT DETAIL", this.props.reviews)
       this.getReviewList(JSON.parse(this.props.reviews))
     }
   }
@@ -124,6 +123,7 @@ class ViewProductGeneralInfo extends Component {
     let tempCategoryHierachy = 0
     this.state.CategoryHierachyListing.splice(0, this.state.CategoryHierachyListing.length)
 
+    // Check if category in Heirachy 1
     if (categoryInfo !== null && productInfo.ProductCategoryID !== null && this.state.categoryHierachy === 0) {
       categoryInfo.map((category) => {
         if (category.ProductCategoryID == productInfo.ProductCategoryID) {
@@ -134,6 +134,7 @@ class ViewProductGeneralInfo extends Component {
         }
       })
 
+      // Check if category in Heirachy 2
       if (tempCategoryHierachy === 0 && tempCategoryHierachy !== 1) {
         categoryInfo.map((categoryList) => {
           categoryList.HierarchyItem !== null && categoryList.HierarchyItem !== undefined &&
@@ -148,6 +149,7 @@ class ViewProductGeneralInfo extends Component {
         })
       }
 
+      // Check if category in Heirachy 3
       if (tempCategoryHierachy === 0 && tempCategoryHierachy !== 1 && tempCategoryHierachy !== 2) {
         categoryInfo.map((categoryListing) => {
           categoryListing.HierarchyItem !== null && categoryListing.HierarchyItem !== undefined &&
@@ -165,6 +167,7 @@ class ViewProductGeneralInfo extends Component {
         })
       }
 
+      // Check if category in Heirachy 4
       if (tempCategoryHierachy === 0 && tempCategoryHierachy !== 1 && tempCategoryHierachy !== 2 && tempCategoryHierachy !== 4) {
         categoryInfo.map((mainCategory) => {
           mainCategory.HierarchyItem !== null && mainCategory.HierarchyItem !== undefined &&
@@ -172,10 +175,9 @@ class ViewProductGeneralInfo extends Component {
               categoryListing.HierarchyItem !== null && categoryListing.HierarchyItem !== undefined &&
                 JSON.parse(categoryListing.HierarchyItem).map((categoryList) => {
                   categoryList.HierarchyItem !== null && categoryList.HierarchyItem !== undefined &&
-                    JSON.parse(categoryListing.HierarchyItem).map((category) => {
-                      if (categoryList.ProductCategoryID == productInfo.ProductCategoryID) {
+                    JSON.parse(categoryList.HierarchyItem).map((category) => {
+                      if (category.ProductCategoryID == productInfo.ProductCategoryID) {
                         this.setState({ categoryHierachy: 4 })
-
                         this.state.CategoryHierachyListing.push(mainCategory.ProductCategory, categoryListing.ProductCategory, categoryList.ProductCategory, category.ProductCategory)
                         this.state.CategoryHierachyID.push(mainCategory.ProductCategoryID, categoryListing.ProductCategoryID, categoryList.ProductCategoryID, category.ProductCategoryID)
                         tempCategoryHierachy = 4
@@ -185,7 +187,6 @@ class ViewProductGeneralInfo extends Component {
             })
         })
       }
-
     }
   }
 
@@ -269,7 +270,6 @@ class ViewProductGeneralInfo extends Component {
                         </div>
                       </div>
                     </div>
-
                   </CardText>
                 </CardBody>
               </Card>
@@ -308,12 +308,12 @@ class ViewProductGeneralInfo extends Component {
                 <CardBody>
                   <CardText>
                     <div className="row">
-                      <div className="col-lg-11">
+                      <div className="col-lg-10">
                         <h6 style={{ textAlign: "left" }} >Product Information</h6>
                       </div>
-                      <div className="col-lg-1" style={{ textAlign: "right" }}>
+                      <div className="col-lg-2" style={{ textAlign: "right" }}>
                         <Button variant="primary" ><Link to={url.inventoryProductDetails(this.props.match.params.productId)} className="cart-table__product-name">
-                          Edit </Link></Button>
+                          View Details </Link></Button>
                       </div>
                     </div>
 
@@ -371,8 +371,12 @@ class ViewProductGeneralInfo extends Component {
                             <label style={productInfoLabelStyle}>Product Description :</label>
                           </div>
                           <div className="col-lg-10" >
-                            <label style={{ textAlign: "justify" }}>{this.props.productInfo[0].ProductDescription !== null ?
-                              this.props.productInfo[0].ProductDescription.replace(/<[^>]+>/g, ' ').substring(0, 300) + " ... " : "-"}</label>
+                            {console.log("CATEGORY LISTING", this.props.productInfo[0].ProductVariation)}
+                            <label style={{ textAlign: "justify" }}>{this.props.productInfo[0].ProductDescription !== null && this.props.productInfo[0].ProductDescription.replace(/<[^>]+>/g, ' ') !== " " ?
+                              this.props.productInfo[0].ProductDescription.replace(/<[^>]+>/g, ' ').length > 300 ?
+                                this.props.productInfo[0].ProductDescription.replace(/<[^>]+>/g, ' ').substring(0, 300) + " ... " :
+                                this.props.productInfo[0].ProductDescription.replace(/<[^>]+>/g, ' ')
+                              : "-"}</label>
                           </div>
                         </div>
                       </div>

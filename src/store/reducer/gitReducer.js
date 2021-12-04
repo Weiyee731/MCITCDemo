@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   productsListing: [],
   productsByID: [],
   productSpecsDetail: [],
+  SpecsDetail: [],
   deleteproductSpecsDetail: [],
   productsByMerchantID: [],
   viewMoreProducts: [],
@@ -405,6 +406,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
       // newProdObj.loading = false;
       return newProdObj;
 
+    case GitAction.ResetUpdateProduct:
+      return Object.assign({}, state, { returnUpdateProduct: [] });
+
     case GitAction.AddProductMedia:
       return Object.assign({}, state, { loading: true });
     case GitAction.ProductMediaAdded:
@@ -441,7 +445,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.UpdatedProductSpecsDetail:
       return Object.assign({}, state, {
         loading: false,
-        productSpecsDetail: action.payload,
+        SpecsDetail: action.payload,
       });
 
     case GitAction.DeleteProductSpecsDetail:
@@ -456,6 +460,12 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         productSpecsDetail: [],
+      });
+
+    case GitAction.ResetUpdateProductSpecsDetailResult:
+      return Object.assign({}, state, {
+        loading: false,
+        SpecsDetail: [],
       });
 
     case GitAction.ResetProductReturnVal:
@@ -582,6 +592,13 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         addProductVariationResult: []
+      });
+
+
+    case GitAction.ResetUpdateProductVariationDetailResult:
+      return Object.assign({}, state, {
+        loading: false,
+        variationResult: []
       });
 
     //=======================SUPPLIER========================//

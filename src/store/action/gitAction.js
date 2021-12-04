@@ -287,6 +287,7 @@ export class GitAction {
   static ResetProductMediaReturnVal = "RESET-PRODUCT-MEDIA-RETURN-VALUE";
   static ResetProductManagementValue = "RESET-PRODUCT-MANAGEMENT-RETURN-VALUE";
   static ResetProductDetails = "RESET-PRODUCT-DETAILS-RETURN-VALUE";
+  static ResetUpdateProduct = "RESET-UPDATE-PRODUCT";
 
   static CallAllProducts(propData) {
     return {
@@ -371,6 +372,13 @@ export class GitAction {
     return {
       type: GitAction.UpdateProduct,
       payload: prodData,
+    };
+  }
+
+
+  static CallResetUpdateProduct() {
+    return {
+      type: GitAction.ResetUpdateProduct,
     };
   }
 
@@ -478,6 +486,7 @@ export class GitAction {
   static DeletedProductSpecsDetail = "DELETED-PRODUCT-SPECS-DETAILS";
 
   static ResetProductSpecsDetailResult = "RESET-PRODUCT-SPECS-DETAILS";
+  static ResetUpdateProductSpecsDetailResult = "RESET-UPDATE-PRODUCT-SPECS-DETAILS";
 
   static CallAddProductSpecsDetail(prodData) {
     return {
@@ -503,6 +512,12 @@ export class GitAction {
   static CallResetProductSpecsDetailResults() {
     return {
       type: GitAction.ResetProductSpecsDetailResult,
+    };
+  }
+
+  static CallResetUpdateProductSpecsDetail() {
+    return {
+      type: GitAction.ResetUpdateProductSpecsDetailResult,
     };
   }
 
@@ -564,11 +579,12 @@ export class GitAction {
 
   static DeleteProductVariationDetail = "DELETE-PRODUCTVARIATIONDETAIL";
   static DeletedProductVariationDetail = "DELETED-PRODUCTVARIATIONDETAIL";
-  
+
   static UpdateProductVariationDetail = "UPDATE-PRODUCTVARIATIONDETAIL";
   static UpdatedProductVariationDetail = "UPDATED-PRODUCTVARIATIONDETAIL";
 
   static ResetProductVariationDetailResult = "RESET-PRODUCTVARIATIONDETAIL";
+  static ResetUpdateProductVariationDetailResult = "RESET-UPDATEPRODUCTVARIATIONDETAIL";
 
   static CallAllProductVariationDetail(prodData) {
     return {
@@ -603,6 +619,14 @@ export class GitAction {
       type: GitAction.ResetProductVariationDetailResult,
     };
   }
+
+  static CallResetUpdateProductVariationDetail() {
+    return {
+      type: GitAction.ResetUpdateProductVariationDetailResult,
+    };
+  }
+
+
 
   //=================SUPPLIER=============================//
 
