@@ -1567,6 +1567,17 @@ export class GitEpic {
   AddProductMedia = (action$) =>
     action$.ofType(GitAction.AddProductMedia).switchMap(async ({ payload }) => {
       try {
+
+        console.log(  url +
+          "Product_AddProductMedia?" +
+          "PRODUCTID=" + payload.ProductID +
+          "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
+          "&PRODUCTSLIDEORDER=" + payload.sliderOrder +
+          "&TYPE=" + payload.mediaType +
+          "&WIDTH=" + payload.imageWidth +
+          "&HEIGHT=" + payload.imageHeight +
+          "&IMAGENAME=" + payload.imageName)
+          
         const resposne = await fetch(
           url +
           "Product_AddProductMedia?" +
@@ -1638,14 +1649,6 @@ export class GitEpic {
     action$.ofType(GitAction.UpdateProductVariationDetail).switchMap(async ({ payload }) => {
       try {
 
-        console.log(url +
-          "Product_UpdateProductVariationDetails?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID +
-          "&CUSTOMIZABLE=" + payload.Customizable +
-          "&VALUE=" + payload.Value +
-          "&PRODUCTSTOCK=" + payload.stock +
-          "&PRODUCTVARIATIONSKU=" + payload.sku +
-          "&PRODUCTVARIATIONPRICE=" + payload.price)
-
         const response = await fetch(
           url +
           "Product_UpdateProductVariationDetails?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID +
@@ -1676,9 +1679,6 @@ export class GitEpic {
     action$.ofType(GitAction.DeleteProductVariationDetail).switchMap(async ({ payload }) => {
       try {
 
-        console.log(url +
-          "Product_DeleteProductVariationDetails?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID)
-
         const response = await fetch(
           url +
           "Product_DeleteProductVariationDetails?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID
@@ -1702,13 +1702,6 @@ export class GitEpic {
   addProductSpecsDetail = (action$) =>
     action$.ofType(GitAction.AddProductSpecsDetail).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
-          "Product_AddProductSpecificationDetail?PRODUCTVARIATIONID=" +
-          payload.ProductVariation +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&PRODUCTSPECIFICATIONVALUE=" +
-          payload.value)
 
         const response = await fetch(
           url +

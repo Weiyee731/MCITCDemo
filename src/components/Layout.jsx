@@ -199,8 +199,6 @@ const Access = () => {
               <Route path="/ColorPicker" component={ColorPickerComponent} />
               <Route path="/viewProduct" component={ViewProductComponent} />
 
-
-
               {/* <Route
                 exact
                 path="/shop/ProductListing/type:selectedtype&typevalue:selectedtypevalue"

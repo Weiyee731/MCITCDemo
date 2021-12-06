@@ -774,7 +774,7 @@ class DisplayTable extends Component {
             <SearchBox
               style={divStyle}
               placeholder="Search..."
-              onChange={(e) => this.setState({ searchFilter: e.target.value })}
+              onChange={(e) => this.setState({ searchFilter: e.target.value.toLowerCase() })}
             />
 
             <div>

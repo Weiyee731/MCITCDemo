@@ -312,7 +312,14 @@ class ViewProductGeneralInfo extends Component {
                         <h6 style={{ textAlign: "left" }} >Product Information</h6>
                       </div>
                       <div className="col-lg-2" style={{ textAlign: "right" }}>
-                        <Button variant="primary" ><Link to={url.inventoryProductDetails(this.props.match.params.productId)} className="cart-table__product-name">
+                        <Button variant="primary" ><Link to={{ pathname: url.inventoryProductDetails(this.props.match.params.productId),
+                          query: {
+                            categoryDetails: this.state.CategoryHierachyListing, 
+                            // content: post.content,
+                            // comments: JSON.stringify(post.comments)
+                          } 
+                          // state: { categoryDetails: this.state.CategoryHierachyListing} 
+                          }} className="cart-table__product-name">
                           View Details </Link></Button>
                       </div>
                     </div>
@@ -407,12 +414,12 @@ class ViewProductGeneralInfo extends Component {
                             </Button>
                           </div>
                         </div>
+                        <div style={{ minHeight: "332px" }}>
+                          <div style={{ minHeight: "330px" }}>
 
-                        {
-                          this.state.variationTypeList.length > 0 ? this.state.variationTypeList.map((variation, index) => {
-                            return (
-                              <>
-                                <div style={{ minHeight: "332px" }}>
+                            {
+                              this.state.variationTypeList.length > 0 ? this.state.variationTypeList.map((variation, index) => {
+                                return (
                                   <Accordion title={variation}>
                                     {this.props.productInfo[0].ProductVariation !== null &&
                                       JSON.parse(this.props.productInfo[0].ProductVariation).filter((x) => x.ProductVariationID ===
@@ -437,26 +444,26 @@ class ViewProductGeneralInfo extends Component {
                                           )
                                         })}
                                   </Accordion>
+                                )
+                              })
+                                :
+                                <div>
+                                  Temporarily there is no variation for this product
                                 </div>
-                                <div style={{ marginTop: "15px" }}>
-                                  <Pagination
-                                    current={this.state.variationPage}
-                                    total={
-                                      this.state.variationTypeList.length > 0 ?
-                                        Math.ceil(this.state.variationTypeList.length / this.state.variationRowsPerPage)
-                                        : 0
-                                    }
-                                    onPageChange={this.handleVariationPageChange}
-                                  />
-                                </div>
-                              </>
-                            )
-                          })
-                            :
-                            <div>
-                              Temporarily there is no variation for this product
-                            </div>
-                        }
+                            }
+                          </div>
+                          <div style={{ marginTop: "15px" }}>
+                            <Pagination
+                              current={this.state.variationPage}
+                              total={
+                                this.state.variationTypeList.length > 0 ?
+                                  Math.ceil(this.state.variationTypeList.length / this.state.variationRowsPerPage)
+                                  : 0
+                              }
+                              onPageChange={this.handleVariationPageChange}
+                            />
+                          </div>
+                        </div>
                       </CardText>
                     </CardBody>
                   </Card>
@@ -481,46 +488,48 @@ class ViewProductGeneralInfo extends Component {
                             </Button>
                           </div>
                         </div>
-                        {
-                          this.state.productReview.length > 0 &&
-                          <div className="row" style={{ textAlign: "left", paddingBottom: "15px" }}>
-                            <div className="col-lg-12">
-                              <Button variant="outlinedPrimary" onClick={() => this.setState({ setRating: 0, page: 1 })}>All ({this.state.productReview.length})</Button>
-                              {rating.map((x) => {
-                                return (
-                                  <Button variant="outlinedPrimary" onClick={() => this.setState({ setRating: x, page: 1 })}>{x} Star ({this.filterRating(x)})</Button>
-                                )
-                              })}
-                            </div>
+
+                        <div style={{ minHeight: "332px" }}>
+                          <div style={{ minHeight: "320px" }}>
+                            {
+                              this.state.productReview.length > 0 &&
+                              <div className="row" style={{ textAlign: "left", paddingBottom: "15px" }}>
+                                <div className="col-lg-12">
+                                  <Button variant="outlinedPrimary" onClick={() => this.setState({ setRating: 0, page: 1 })}>All ({this.state.productReview.length})</Button>
+                                  {rating.map((x) => {
+                                    return (
+                                      <Button variant="outlinedPrimary" onClick={() => this.setState({ setRating: x, page: 1 })}>{x} Star ({this.filterRating(x)})</Button>
+                                    )
+                                  })}
+                                </div>
+                              </div>
+                            }
+
+                            {this.state.productReview !== undefined && this.state.productReview.length > 0 ?
+                              <div style={{ minHeight: "290px" }}>
+                                {this.ratingList(this.state.setRating === 0 ? this.state.productReview : this.state.productReview.filter((x) => x.ProductReviewRating === this.state.setRating))}
+                              </div>
+                              :
+                              <div>
+                                <label>
+                                  Temporarily there is no review for this product
+                                </label>
+                              </div>
+                            }
                           </div>
-                        }
+                          <div style={{ marginTop: "15px" }}>
+                            <Pagination
+                              current={this.state.page}
 
-                        {this.state.productReview !== undefined && this.state.productReview.length > 0 ?
-                          <>
-                            <div style={{ minHeight: "290px" }}>
-                              {this.ratingList(this.state.setRating === 0 ? this.state.productReview : this.state.productReview.filter((x) => x.ProductReviewRating === this.state.setRating))}
-                            </div>
-                            <div style={{ marginTop: "15px" }}>
-                              <Pagination
-                                current={this.state.page}
-
-                                total={this.state.setRating === 0 ?
-                                  Math.ceil(this.state.productReview.length / this.state.rowsPerPage)
-                                  :
-                                  Math.ceil(this.filterRating(this.state.setRating) / this.state.rowsPerPage)
-                                }
-                                onPageChange={this.handlePageChange}
-                              />
-                            </div>
-                          </>
-                          :
-                          <div>
-                            <label>
-                              Temporarily there is no review for this product
-                            </label>
+                              total={this.state.setRating === 0 ?
+                                Math.ceil(this.state.productReview.length / this.state.rowsPerPage)
+                                :
+                                Math.ceil(this.filterRating(this.state.setRating) / this.state.rowsPerPage)
+                              }
+                              onPageChange={this.handlePageChange}
+                            />
                           </div>
-
-                        }
+                        </div>
                       </CardText>
                     </CardBody>
                   </Card>

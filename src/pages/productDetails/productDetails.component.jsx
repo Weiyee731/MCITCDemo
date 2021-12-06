@@ -486,13 +486,9 @@ const INITIAL_STATE = {
 
   toBeEdited: false,
   isSubmissionVariationChecking: false,
-  isSubmissionSpecChecking: false
-  // isSubmitVariationCheck: false,
-  // isSubmitSpecificationCheck: false,
-  // isSubmitVariationToDB: false,
-  // isSubmitSpecificationToDB: false,
-  // isSpecificationSend: false,
-
+  isSubmissionSpecChecking: false,
+  isCheckingError: false,
+  isMediaFileSend: false
 }
 
 class ProductDetailsComponent extends Component {
@@ -690,7 +686,8 @@ class ProductDetailsComponent extends Component {
   };
 
   checkProgress = () => {
-    if (!this.state.variation1On) {
+
+    if (this.state.variation1On) {
       this.setState({
         progressDetails:
           ((this.state.supplierFilled +
@@ -715,7 +712,7 @@ class ProductDetailsComponent extends Component {
           100,
         progressDescription: this.state.descriptionFilled * 100,
       });
-    } else if (this.state.variation1On) {
+    } else if (!this.state.variation1On) {
       this.setState({
         progressMedia:
           ((this.state.Total512x512 +
@@ -1023,10 +1020,12 @@ class ProductDetailsComponent extends Component {
     if (this.state.sku.length < 8) {
       this.setState({
         skuNotLongEnough: true,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         skuNotLongEnough: false,
+        isCheckingError: false,
       });
     }
   };
@@ -1089,10 +1088,12 @@ class ProductDetailsComponent extends Component {
     if (this.state.name === "" || this.state.name === null) {
       this.setState({
         productNameEmpty: true,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         productNameEmpty: false,
+        isCheckingError: false,
       });
     }
 
@@ -1105,10 +1106,12 @@ class ProductDetailsComponent extends Component {
     if (this.state.productCategory === "" || this.state.productCategory === null) {
       this.setState({
         productCategoryEmpty: true,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         productCategoryEmpty: false,
+        isCheckingError: false,
       });
     }
   };
@@ -1118,11 +1121,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         productSupplierEmpty: true,
         supplierFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         productSupplierEmpty: false,
         supplierFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1132,11 +1137,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         heightEmpty: true,
         heightFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         heightEmpty: false,
         heightFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1146,11 +1153,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         widthEmpty: true,
         widthFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         widthEmpty: false,
         widthFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1160,11 +1169,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         depthEmpty: true,
         depthFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         depthEmpty: false,
         depthFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1174,11 +1185,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         weightEmpty: true,
         weightFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         weightEmpty: false,
         weightFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1188,11 +1201,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         productDesciptionEmpty: true,
         descriptionFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         productDesciptionEmpty: false,
         descriptionFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1202,11 +1217,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         brandEmpty: true,
         brandFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         brandEmpty: false,
         brandFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1216,11 +1233,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         modelEmpty: true,
         modelFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         modelEmpty: false,
         modelFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1230,11 +1249,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         productTagsEmpty: true,
         tagsFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         productTagsEmpty: false,
         tagsFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1248,11 +1269,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         priceEmpty: true,
         priceFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         priceEmpty: false,
         priceFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1266,11 +1289,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         stockEmpty: true,
         stockFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         stockEmpty: false,
         stockFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1280,11 +1305,13 @@ class ProductDetailsComponent extends Component {
       this.setState({
         skuEmpty: true,
         skuFilled: 0,
+        isCheckingError: true,
       });
     } else {
       this.setState({
         skuEmpty: false,
         skuFilled: 1,
+        isCheckingError: false,
       });
     }
   };
@@ -1477,6 +1504,9 @@ class ProductDetailsComponent extends Component {
     if (acceptedFiles.length > 3) {
 
     } else {
+
+      console.log("CHECK MEDIA", data)
+      console.log("CHECK MEDIA", acceptedFiles)
       if (data === "512x512") {
         if (this.state.fileInfo.length + acceptedFiles.length > 3) {
           this.setState({
@@ -1485,6 +1515,8 @@ class ProductDetailsComponent extends Component {
           toast.error("Only 3 images are allowed.");
         } else {
           this.setState((state) => {
+
+            console.log("CHECK MEDIA STATE", state)
             const file = state.file.concat(acceptedFiles.map((file) => file));
             const fileInfo = state.fileInfo.concat(
               acceptedFiles.map((file) => file.name)
@@ -1807,7 +1839,6 @@ class ProductDetailsComponent extends Component {
   onDeleteVariant = (index, data, id, ii) => {
 
     if (data === "variant1") {
-      console.log("CHECK OPTION variant1")
       if (this.state.variation2On) {
         var newVariant = [];
         this.state.variation1.options[0].variation2Options.options.map((info, i) => {
@@ -1852,17 +1883,7 @@ class ProductDetailsComponent extends Component {
     }
     else if (data === "variant1Option") {
 
-      console.log("CHECK OPTION variant1Option")
-
-      // if (specificationData.specificationId !== undefined) {
-      //   this.props.CallDeleteProductSpecsDetail(specificationData.specificationId)
-      // }
-
-      console.log("TO PRINT index", index)
-      console.log("TO PRINT ii", ii)
-      console.log("TO PRINT id", id)
-
-      if (id !== undefined) {
+      if (id !== undefined && id !== "-") {
         this.props.CallDeleteProductVariationDetail({ ProductVariationDetailID: id })
       }
 
@@ -2087,6 +2108,7 @@ class ProductDetailsComponent extends Component {
       axios.post("https://myemporia.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
+          this.setState({isMediaFileSend: true})
         }
         else {
           toast.error("There is something wrong with uploading images. Please try again.")
@@ -2111,16 +2133,10 @@ class ProductDetailsComponent extends Component {
     let skuWithoutID = []
     let optionID = []
 
-
-
     let filterListWithID = variation1.options.filter((x) => x.optionID !== "-")
     let filterListWithoutID = variation1.options.filter((x) => x.optionID === "-")
 
-    console.log("CHECKING 1111", filterListWithID)
-
     filterListWithID.length > 0 && filterListWithID.filter((y) => y.isEdit === true).map((x) => {
-
-
       CustomizableWithID.push(0)
       ValueWithID.push(x.optionName)
       stockWithID.push(x.stock)
@@ -2161,12 +2177,6 @@ class ProductDetailsComponent extends Component {
     }
 
     this.setState({ isSubmissionVariationChecking: true })
-    // this.setState({ isSubmitVariationCheck: true })
-
-    // if (ValueWithID.length > 0 || ValueWithoutID.length > 0)
-    //   this.setState({ isSubmitVariationCheck: true, isSubmitVariationToDB: true })
-    // else
-    //   this.setState({ isSubmitVariationCheck: true })
   }
 
   onSubmitProductSpecification = (ProductID) => {
@@ -2207,11 +2217,7 @@ class ProductDetailsComponent extends Component {
         value: valuesWithoutID
       })
     }
-    this.setState({ isSubmissionSpecChecking: true })
-    // if (variationWithID.length > 0 || variationWithoutID.length > 0)
-    //   this.setState({ isSubmitSpecificationCheck: true, isSubmitSpecificationToDB: true })
-    // else
-    //   this.setState({ isSubmitSpecificationCheck: true })
+    // this.setState({ isSubmissionSpecChecking: true })
   }
 
   handleChange(data, e) {
@@ -2461,8 +2467,6 @@ class ProductDetailsComponent extends Component {
 
   handleChangeOptions = (data, index, e) => {
     if (data === "variant1Options") {
-
-      console.log("testing", this.state.variation1.options[index])
       const optionData = {
         isEdit: true,
         optionName: e.target.value,
@@ -2555,6 +2559,7 @@ class ProductDetailsComponent extends Component {
         500
       );
     } else if (data === "variation1SKU") {
+
       const optionData = {
         isEdit: true,
         optionName: this.state.variation1.options[index].optionName,
@@ -2654,6 +2659,7 @@ class ProductDetailsComponent extends Component {
 
   handleChangeOptionsVariant2 = (data, index, indexVariant2, e) => {
     if (data === "variant2Options") {
+
       const optionData = {
         optionName: e.target.value,
         price: this.state.variation1.options[index].variation2Options.options[
@@ -2684,6 +2690,7 @@ class ProductDetailsComponent extends Component {
       });
       //   }
     } else if (data === "variation2Price") {
+
       const optionData = {
         optionName: this.state.variation1.options[index].variation2Options
           .options[indexVariant2].optionName,
@@ -2712,6 +2719,7 @@ class ProductDetailsComponent extends Component {
         variation1: variations,
       });
     } else if (data === "variation2Stock") {
+
       const optionData = {
         optionName: this.state.variation1.options[index].variation2Options
           .options[indexVariant2].optionName,
@@ -2741,6 +2749,7 @@ class ProductDetailsComponent extends Component {
         variation1: variations,
       });
     } else if (data === "variation2SKU") {
+
       const optionData = {
         optionName: this.state.variation1.options[index].variation2Options
           .options[indexVariant2].optionName,
@@ -3221,10 +3230,7 @@ class ProductDetailsComponent extends Component {
 
   addOptions = (variantNum, e) => {
 
-    console.log("THIS IS ADD OPTION")
     if (variantNum == 1) {
-
-      console.log("HERE")
       var option = {
         optionName: "",
         price: "",
@@ -3241,8 +3247,6 @@ class ProductDetailsComponent extends Component {
 
       var variations = this.state.variation1;
       variations.options = [...variations.options, option];
-
-      console.log("HERE", variations)
 
       this.setState({
         variation1Options: this.state.variation1Options + 1,
@@ -3277,34 +3281,81 @@ class ProductDetailsComponent extends Component {
     );
   };
 
+  checkSpecError = () => {
+    let checkSpec = this.state.productSpecificationOptions.filter((x) => x.error === true || x.value === "")
+    if (checkSpec.length > 0)
+      return 1
+    else return 0
+  }
+
+  checkVariationError = (variation1) => {
+    let checkOption = variation1.filter((x) => x.errorOption === true || x.optionName === "")
+    let checkPrice = variation1.filter((x) => x.errorPrice === true || x.price === "")
+    let checkSKU = variation1.filter((x) => x.errorSKU === true || x.sku === "")
+    let checkStock = variation1.filter((x) => x.errorStock === true || x.stock === "")
+
+    if (checkOption.length > 0 || checkPrice.length > 0 || checkSKU.length > 0 || checkStock.length > 0)
+      return 1
+    else return 0
+  }
+
+
+  checkGeneral = () => {
+
+    if (this.state.brandEmpty ||
+      this.state.depthNotDecimal ||
+      this.state.depthEmpty ||
+      this.state.productDesciptionEmpty ||
+      this.state.productNameEmpty ||
+      this.state.productNameDublicated ||
+      this.state.productCategoryEmpty ||
+      this.state.productSupplierEmpty ||
+      this.state.heightEmpty ||
+      this.state.heightNotDecimal ||
+      this.state.widthNotDecimal ||
+      this.state.widthEmpty ||
+      this.state.weightNotDecimal ||
+      this.state.weightEmpty ||
+      this.state.modelEmpty ||
+      this.state.skuEmpty ||
+      this.state.skuNotLongEnough ||
+      this.state.productTagsEmpty ||
+      this.state.notEnoughFiles1600x900 ||
+      this.state.notEnoughFiles512x512)
+      return 1
+    else return 0
+  }
+
+
   OnSubmit = () => {
-    this.checkEverything();
-
-    let object = {
-      ProductID: this.state.ProductID,
-      productSupplier: this.state.productSupplier,
-      name: this.state.name,
-      description: encodeURIComponent(this.state.description),
-      productCategory: this.state.productCategory,
-      // productSupplier: this.state.productSupplier,
-      height: this.state.height,
-      width: this.state.width,
-      depth: this.state.depth,
-      weight: this.state.weight,
-      sku: this.state.sku,
-      brand: this.state.brand,
-      model: this.state.model,
-      tags: this.state.tags,
+    // this.checkEverything();
+    if (this.checkVariationError(this.state.variation1.options) === 1 || this.checkSpecError() === 1 || this.checkGeneral() === 1) {
+      toast.error("Please fill in all required information")
     }
+    else {
+      let object = {
+        ProductID: this.state.ProductID,
+        productSupplier: this.state.productSupplier,
+        name: this.state.name,
+        description: encodeURIComponent(this.state.description),
+        productCategory: this.state.productCategory,
+        // productSupplier: this.state.productSupplier,
+        height: this.state.height,
+        width: this.state.width,
+        depth: this.state.depth,
+        weight: this.state.weight,
+        sku: this.state.sku,
+        brand: this.state.brand,
+        model: this.state.model,
+        tags: this.state.tags,
+      }
 
-    console.log("CATEGORY LISTING", object)
-    this.props.CallUpdateProduct(object)
-
-    this.onSubmitProductVariation(this.state.ProductID)
-    this.onSubmitProductSpecification(this.state.ProductID)
-
-
-    this.setState({ isSubmit: true })
+      this.props.CallUpdateProduct(object)
+      this.onSubmitProductVariation(this.state.ProductID)
+      this.onSubmitProductSpecification(this.state.ProductID)
+      this.uploadFile(this.state.ProductID)
+      this.setState({ isSubmit: true })
+    }
   }
 
   // replace(/\\/g, "")
@@ -3347,7 +3398,8 @@ class ProductDetailsComponent extends Component {
           price: VariationValues[x].ProductVariationPrice,
           stock: VariationValues[x].ProductStockAmount,
           //missing the sku for option
-          sku: this.props.productInfo[0].SKU,
+          // sku: this.props.productInfo[0].SKU,
+          sku: VariationValues[x].ProductVariationSKU,
           picture: "",
           pictureURL: "",
           errorOption: false,
@@ -3375,11 +3427,11 @@ class ProductDetailsComponent extends Component {
         variationObject.options = [...variationObject.options, option];
       }
     }
-
     //set Specifications
     //Check the ID sent when adding the specifiction since the id in the productInfo
     //doesn't match the ones listed in the list of variations fetched
     var specificationArray = [];
+
 
     var productSpecs = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductSpecification !== null ? JSON.parse(this.props.productInfo[0].ProductSpecification) : [];
     for (var y = 0; y < productSpecs.length; y++) {
@@ -3447,7 +3499,7 @@ class ProductDetailsComponent extends Component {
       variation1Options: this.props.productInfo.length > 0 && this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation).length : 0,
       productSpecification: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductSpecification : "",
       productSpecificationOptions: specificationArray,
-      file: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductImages : "",
+      file: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductImages !== null ? this.props.productInfo[0].ProductImages : [] : [],
       fileInfo: fileInfo,
       url: url,
       file1Added: file1Added,
@@ -3524,8 +3576,12 @@ class ProductDetailsComponent extends Component {
         this.props.CallResetUpdateProductVariationDetail()
       }
 
+      if (this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal === "1" && this.state.isMediaFileSend === true) {
+        this.props.CallResetProductMediaResult()
+      }
+
       if (this.props.returnUpdateProduct.length === 0 && this.props.productSpecsDetail.length === 0 && this.props.SpecsDetail.length === 0 &&
-        this.props.addProductVariationResult.length === 0 && this.props.variationResult.length === 0) {
+        this.props.addProductVariationResult.length === 0 && this.props.variationResult.length === 0 && this.props.productMediaResult.length === 0) {
         setTimeout(() => {
           browserHistory.push("/viewProduct");
           window.location.reload(false);
@@ -3723,6 +3779,9 @@ class ProductDetailsComponent extends Component {
     const { isOnViewState } = this.props  //this props used to indicate it is on the state of viewing product details or it is adding product
     const { description } = this.state
 
+
+    console.log("CHECK STATE", this.state)
+    console.log("CHECK STATE PROPS", this.props)
     const steps = [
       "Basic Information",
       "Product Details",
@@ -4133,15 +4192,11 @@ class ProductDetailsComponent extends Component {
         <div className="MainContainer" style={{ display: "flex" }}>
           <div className="MainTab">
             <div>
-              <div>
+              <div style={{ margin: "1%" }}>
                 {
-                  // !this.props.isOnViewState ? <h1>Add Product</h1> : 
-                  // <h1>{typeof this.props.ProductName !== "undefined" ? this.props.ProductName : "Product Information"}</h1>
-                  <h1>{typeof this.props.productInfo !== "undefined" ? this.props.productInfo[0].ProductName : "Product Information"}</h1>
-
+                  <h3>{typeof this.props.productInfo !== "undefined" ? this.props.productInfo[0].ProductName : "Product Information"}</h3>
                 }
               </div>
-
               {/* {
               this.props.isOnViewState ? */}
               <div className="row" style={{ display: "flex" }}>
@@ -4197,12 +4252,21 @@ class ProductDetailsComponent extends Component {
                   {this.state.productNameEmpty && this.state.toBeEdited && (
                     <p className="error">Product name cannot be empty.</p>
                   )}
-                  {/* {this.state.name && checkDuplicate} */}
 
                   {this.state.productCategoryEmpty && this.state.toBeEdited && (
                     <p className="error">Product category cannot be empty.</p>
                   )}
-                  {this.state.toBeEdited ? <p className="Label">Product Category</p> : null}
+
+
+                  {this.state.toBeEdited ? <p className="Label">Product Category {
+                    this.props.history.location.query === undefined ?
+                      "" :
+                      this.props.history.location.query.categoryDetails.map((category) => {
+                        return (
+                          (<span>{"  >  " + category}</span>)
+                        )
+                      })
+                  }</p> : null}
                   {this.state.toBeEdited ? <div className="CategorySelector">
                     <Autocomplete
                       id="free-solo-demo"
@@ -4341,7 +4405,11 @@ class ProductDetailsComponent extends Component {
                     id="productCategory"
                     label="Product Category"
                     defaultValue={this.state.productCategory}
-                    value={this.state.productCategory}
+                    value={
+                      this.props.history.location.query === undefined ?
+                        this.state.productCategory :
+                        this.props.history.location.query.categoryDetails
+                    }
                     InputProps={{
                       readOnly: true,
                     }}
@@ -4600,7 +4668,7 @@ class ProductDetailsComponent extends Component {
                           "redo",
                           "link",
                         ],
-                        Height: "500px",
+                        height: "500px",
                         isReadOnly: !this.state.toBeEdited,
                       }}
                       data={this.state.description}
@@ -4610,13 +4678,15 @@ class ProductDetailsComponent extends Component {
                       }}
                       onChange={(event, editor) => {
                         const data = editor.getData();
-                        this.setState({ description: data });
+                        if (data.length === 0)
+                          this.setState({ description: " " });
+                        else
+                          this.setState({ description: data });
                       }}
                       onBlur={(event, editor) => {
                       }}
                       onFocus={(event, editor) => {
                       }}
-
                     />
                   }
                   {this.state.productDesciptionEmpty && this.state.toBeEdited && (
@@ -4650,14 +4720,17 @@ class ProductDetailsComponent extends Component {
                               /> : null
 
                             }
+
                             <FormControl variant="outlined" className="mr-2 w-50" size="small">
                               <InputLabel id="specifications-dropdown">Specifications</InputLabel>
+
                               <Select
                                 labelId="specifications-dropdown"
                                 id="specifications-dropdown-label"
                                 defaultValue={this.state.productSpecificationOptions[idx].categoryId}
                                 value={this.state.productSpecificationOptions[idx].categoryId}
                                 onChange={e => this.handleProductSpecificationInput(idx, "select", e)}
+                                disabled={this.state.toBeEdited ? false : true}
                               >
                                 <MenuItem value="0">
                                   <em>None</em>
@@ -4719,6 +4792,7 @@ class ProductDetailsComponent extends Component {
                           type="number"
                           step=".10"
                           onFocus={this.setHint.bind(this, "ProductPrice")}
+                          disabled={this.state.toBeEdited ? false : true}
                           onBlur={() =>
                             this.setState({
                               FocusOn: false,
@@ -4812,10 +4886,6 @@ class ProductDetailsComponent extends Component {
                             Variation name has to be filled.
                           </p>
                         )}
-
-
-                        {console.log("TOPRINT", this.state.variation1Options)}
-                        {console.log("TOPRINT", this.state.variation1)}
 
                         {[...Array(this.state.variation1Options)].map((e, i) => (
                           <div>
@@ -4915,6 +4985,7 @@ class ProductDetailsComponent extends Component {
                                   FocusOn: false,
                                 })
                               }
+                              disabled={!this.state.toBeEdited}
                             />
                           </InputGroup>
                         </div>
@@ -5048,6 +5119,7 @@ class ProductDetailsComponent extends Component {
                                                   .variation2Options.options[i]
                                                   .errorPrice && this.state.toBeEdited
                                               }
+                                              disabled={!this.state.toBeEdited}
                                             />
                                           </InputGroup>
                                           {this.state.variation1.options[x]
@@ -5212,6 +5284,7 @@ class ProductDetailsComponent extends Component {
                                     invalid={
                                       this.state.variation1.options[x].errorPrice && this.state.toBeEdited
                                     }
+                                    disabled={!this.state.toBeEdited}
                                   />
                                 </InputGroup>
                                 {this.state.variation1.options[x].errorPrice && this.state.toBeEdited ? (
@@ -6136,6 +6209,7 @@ class ProductDetailsComponent extends Component {
                               FocusOn: false,
                             })
                           }
+                          disabled={!this.state.toBeEdited}
                         />
                         <InputGroupAddon type="append">
                           <InputGroupText className="groupText">m</InputGroupText>
@@ -6160,6 +6234,7 @@ class ProductDetailsComponent extends Component {
                               FocusOn: false,
                             })
                           }
+                          disabled={!this.state.toBeEdited}
                         />
                         <InputGroupAddon type="append">
                           <InputGroupText className="groupText">m</InputGroupText>
@@ -6183,6 +6258,7 @@ class ProductDetailsComponent extends Component {
                               FocusOn: false,
                             })
                           }
+                          disabled={!this.state.toBeEdited}
                         />
                         <InputGroupAddon type="append">
                           <InputGroupText className="groupText">m</InputGroupText>
@@ -6233,6 +6309,7 @@ class ProductDetailsComponent extends Component {
                           invalid={
                             this.state.weightEmpty || this.state.weightNotDecimal
                           }
+                          disabled={!this.state.toBeEdited}
                         />
                         <InputGroupAddon type="append">
                           <InputGroupText className="groupText">
