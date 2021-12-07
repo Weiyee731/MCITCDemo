@@ -82,6 +82,7 @@ const rootEpic = combineEpics(
   gitEpic.getAllProductVariationByCategoryID,
   gitEpic.updateProductVariation,
   gitEpic.deleteProductVariation,
+  gitEpic.updateProductVariationStock,
   gitEpic.getAllCategories,
   gitEpic.getAllCategoriesListing,
   gitEpic.addProductCategory,

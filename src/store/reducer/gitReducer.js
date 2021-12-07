@@ -23,6 +23,7 @@ const INITIAL_STATE = {
   shoplots: [],
   colors: [],
   variations: [],
+  variationStock: [],
   exists: [],
   pages: [],
   quotations: [],
@@ -599,6 +600,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         variationResult: []
+      });
+
+    //==============PRODUCTVARIATIONSTOCK===============//
+    case GitAction.UpdateProductVariationStock:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedProductVariationStock:
+      return Object.assign({}, state, {
+        loading: false,
+        variationStock: action.payload,
       });
 
     //=======================SUPPLIER========================//

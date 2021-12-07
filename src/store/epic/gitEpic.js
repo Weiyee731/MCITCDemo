@@ -1481,7 +1481,7 @@ export class GitEpic {
         } else {
           json = [];
         }
-        
+
         return {
           type: GitAction.UpdatedProduct,
           payload: json,
@@ -1568,7 +1568,7 @@ export class GitEpic {
     action$.ofType(GitAction.AddProductMedia).switchMap(async ({ payload }) => {
       try {
 
-        console.log(  url +
+        console.log(url +
           "Product_AddProductMedia?" +
           "PRODUCTID=" + payload.ProductID +
           "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
@@ -1577,7 +1577,7 @@ export class GitEpic {
           "&WIDTH=" + payload.imageWidth +
           "&HEIGHT=" + payload.imageHeight +
           "&IMAGENAME=" + payload.imageName)
-          
+
         const resposne = await fetch(
           url +
           "Product_AddProductMedia?" +
@@ -1698,6 +1698,35 @@ export class GitEpic {
         };
       }
     });
+
+
+  // Product Variation Stock
+  updateProductVariationStock = (action$) =>
+    action$.ofType(GitAction.UpdateProductVariationStock).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "Product_UpdateProductStockVariation?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID +
+          "&PRODUCTSTOCK=" + payload.stock 
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        console.log("json", json)
+
+        return {
+          type: GitAction.UpdatedProductVariationStock,
+          payload: json,
+        };
+      } catch (error) {
+        alert('updateProductVariationStock: ' + error);
+        return {
+          type: GitAction.UpdatedProductVariationStock,
+          payload: [],
+        };
+      }
+    });
+
+  // Product Specification
 
   addProductSpecsDetail = (action$) =>
     action$.ofType(GitAction.AddProductSpecsDetail).switchMap(async ({ payload }) => {

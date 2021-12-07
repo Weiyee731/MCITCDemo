@@ -9,6 +9,7 @@ import { Accordion } from 'react-bootstrap-accordion'
 import 'react-bootstrap-accordion/dist/index.css'
 import "../../app/App.scss";
 import "react-table/react-table.css";
+import TextField from "@material-ui/core/TextField";
 
 
 // Share components
@@ -18,6 +19,7 @@ import { url } from '../../services/utils';
 import USER from "../../assets/user.jpg";
 import Logo from "../../assets/Emporia.png";
 import LoadingPanel from "../../components/shared/loadingPanel";
+import InputNumber from '../../components/shared/InputNumber';
 import { minHeight } from "@mui/system";
 
 
@@ -61,6 +63,12 @@ class ViewProductGeneralInfo extends Component {
       rowsPerPage: 3,
       variationRowsPerPage: 5,
       setRating: 0,
+
+      isStockEdit: false,
+      selectedUpdateQuantity: [],
+      selectedUpdateID: [],
+
+      newArray: []
     };
     this.handleBack = this.handleBack.bind(this)
     this.getTagList = this.getTagList.bind(this)
@@ -68,6 +76,8 @@ class ViewProductGeneralInfo extends Component {
     this.getReviewList = this.getReviewList.bind(this)
     this.filterRating = this.filterRating.bind(this)
     this.ratingList = this.ratingList.bind(this)
+    this.handleStockLevel = this.handleStockLevel.bind(this)
+
   }
 
   handleBack() {
@@ -82,11 +92,6 @@ class ViewProductGeneralInfo extends Component {
         userId: window.localStorage.getItem("id"),
       })
       this.props.CallAllProductCategoryListing()
-      // this.props.CallProductReview({
-
-      //   UserID: window.localStorage.getItem("id"),
-      // });
-
       this.props.CallProductReviewByProductID({
         ProductID: this.props.match.params.productId,
         ParentProductReviewID: 0
@@ -195,8 +200,14 @@ class ViewProductGeneralInfo extends Component {
     let variationType = []
     let variationTypeID = []
 
+    console.log("VARIATIONINFO", productInfo)
+    console.log("VARIATIONINFO", productInfo.ProductVariation)
+    console.log("VARIATIONINFO", JSON.parse(productInfo.ProductVariation))
+
     if (productInfo.ProductVariation !== null && this.state.isVariationSet === false) {
       variationList = JSON.parse(productInfo.ProductVariation).filter((ele, ind) => ind === JSON.parse(productInfo.ProductVariation).findIndex(elem => elem.ProductVariationID === ele.ProductVariationID))
+
+      console.log("VARIATIONLIST", variationList)
       variationList.map((x) => {
         variationType.push(x.ProductVariation)
         variationTypeID.push(x.ProductVariationID)
@@ -204,7 +215,6 @@ class ViewProductGeneralInfo extends Component {
 
       this.setState({ variationTypeList: variationType, variationTypeListID: variationTypeID, isVariationSet: true })
     }
-
   }
 
   getReviewList(reviewsList) {
@@ -231,6 +241,51 @@ class ViewProductGeneralInfo extends Component {
     let ratingNum = 0
     ratingNum = this.state.productReview.filter((x) => x.ProductReviewRating === value)
     return ratingNum.length
+  }
+
+  handleStockLevel(data, index, quantity) {
+    console.log(this.props.productInfo[0])
+
+    let currentQty = this.state.newArray[index]['ProductStockAmount'];
+
+    console.log(this.state.newArray)
+    console.log(currentQty)
+
+    currentQty = quantity.target.value
+
+    // let tempStockID = this.state.selectedUpdateID
+    // let tempStockQuantity = this.state.selectedUpdateQuantity
+
+    // console.log("quantity data", data.ProductVariationDetailID)
+
+    // if (quantity.target.value !== "") {
+    //   if (tempStockID.length > 0) {
+    //     let checkStockID = tempStockID.filter((x) => x === data.ProductVariationDetailID && quantity.target.value !== "")
+
+    //     console.log("check checkstockIS", checkStockID)
+    //     if (checkStockID.length > 0 && quantity.target.value !== "") {
+    //       console.log("check checkstockIS INSIDE")
+    //       tempStockID.map((x, index) => {
+    //         console.log("check checkstockIS MAP")
+    //         tempStockQuantity[index] = quantity.target.value
+    //       })
+    //     }
+    //     else {
+    //       console.log("check checkstockIS outside")
+    //       tempStockID.push(data.ProductVariationDetailID)
+    //       tempStockQuantity.push(quantity.target.value)
+    //     }
+    //   }
+    //   else {
+    //     tempStockID.push(data.ProductVariationDetailID)
+    //     tempStockQuantity.push(quantity.target.value)
+    //   }
+
+    //   console.log("check", tempStockID)
+    //   console.log("check", tempStockQuantity)
+
+    //   this.setState({ selectedUpdateQuantity: tempStockQuantity, selectedUpdateID: tempStockID })
+    // }
   }
 
   ratingList(filterProductReview) {
@@ -287,6 +342,8 @@ class ViewProductGeneralInfo extends Component {
     }
     const rating = [5, 4, 3, 2, 1]
 
+    console.log("VARIATION variationTypeList", this.state.variationTypeList)
+
     return (
       this.props.productInfo.length > 0 ?
         <div style={{ width: "100%" }}>
@@ -312,14 +369,15 @@ class ViewProductGeneralInfo extends Component {
                         <h6 style={{ textAlign: "left" }} >Product Information</h6>
                       </div>
                       <div className="col-lg-2" style={{ textAlign: "right" }}>
-                        <Button variant="primary" ><Link to={{ pathname: url.inventoryProductDetails(this.props.match.params.productId),
+                        <Button variant="primary" ><Link to={{
+                          pathname: url.inventoryProductDetails(this.props.match.params.productId),
                           query: {
-                            categoryDetails: this.state.CategoryHierachyListing, 
+                            categoryDetails: this.state.CategoryHierachyListing,
                             // content: post.content,
                             // comments: JSON.stringify(post.comments)
-                          } 
+                          }
                           // state: { categoryDetails: this.state.CategoryHierachyListing} 
-                          }} className="cart-table__product-name">
+                        }} className="cart-table__product-name">
                           View Details </Link></Button>
                       </div>
                     </div>
@@ -407,11 +465,12 @@ class ViewProductGeneralInfo extends Component {
                             <h6 style={{ textAlign: "left" }} >Product Stock</h6>
                           </div>
                           <div className="col-lg-1" style={{ textAlign: "right" }}>
-                            <Button variant="primary" >
-                              {/* <Link to={url.inventoryProductDetails(this.props.match.params.productId)} className="cart-table__product-name"> */}
-                              Edit
-                              {/* </Link> */}
-                            </Button>
+                            {
+                              this.state.isStockEdit === false ?
+                                <Button variant="primary" onClick={() => this.setState({ isStockEdit: true })}>  Edit</Button> :
+                                <Button variant="primary" onClick={() => this.setState({ isStockEdit: false })}>  Cancel</Button>
+                            }
+
                           </div>
                         </div>
                         <div style={{ minHeight: "332px" }}>
@@ -425,17 +484,46 @@ class ViewProductGeneralInfo extends Component {
                                       JSON.parse(this.props.productInfo[0].ProductVariation).filter((x) => x.ProductVariationID ===
                                         this.state.variationTypeListID[index])
                                         .slice((this.state.variationPage - 1) * this.state.variationRowsPerPage, (this.state.variationPage - 1) * this.state.variationRowsPerPage + this.state.variationRowsPerPage)
-                                        .map((details) => {
+                                        .map((details, index) => {
                                           return (
                                             <Card style={{ width: '100%' }}>
-                                              <CardBody style={{ padding: "0.5rem" }}>
+                                              <CardBody style={{ padding: "0.5rem" }} >
                                                 <CardText>
                                                   <div className="row">
                                                     <div className="col-6" style={{ textAlign: "left" }}>
-                                                      <label>{details.ProductVariationValue} </label>
+                                                      <label>
+                                                        {
+                                                          details.ProductVariationValue.length > 20 ?
+                                                            details.ProductVariationValue.substring(0, 20) + " ... " :
+                                                            details.ProductVariationValue
+                                                        }
+                                                      </label>
                                                     </div>
-                                                    <div className="col-6">
-                                                      <label >{details.ProductStockAmount}</label>
+                                                    <div className="col-4">
+                                                      {console.log(this.state.selectedUpdateID.filter((x) => x === details.ProductVariationDetailID))}
+                                                      {
+                                                        this.state.isStockEdit === false ?
+                                                          <label >{details.ProductStockAmount}</label>
+                                                          :
+                                                          <TextField
+                                                            type="number"
+                                                            value={
+                                                              this.state.selectedUpdateID.filter((x) => x === details.ProductVariationDetailID).length > 0 ?
+                                                                this.state.selectedUpdateID.map((x, i) => {
+                                                                 
+                                                                  if (x === details.ProductVariationDetailID) {
+                                                                    console.log("THIS IS X", x)
+                                                                    console.log("THIS IS i", i)
+                                                                    console.log("THIS IS this.state.selectedUpdateQuantity[i]", this.state.selectedUpdateQuantity[i])
+                                                                    return (this.state.selectedUpdateQuantity[i])
+                                                                  }
+                                                                })
+                                                                : parseInt(details.ProductStockAmount)
+                                                            }
+                                                            onChange={(x) => this.handleStockLevel(details, index, x)}
+                                                          />
+                                                      }
+
                                                     </div>
                                                   </div>
                                                 </CardText>

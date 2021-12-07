@@ -420,7 +420,7 @@ const INITIAL_STATE = {
   progressShipping: 0,
   progressDescription: 0,
   progressSpecification: 0,
-  supplierFilled: 0,
+  supplierFilled: 1,
   skuFilled: 0,
   brandFilled: 0,
   modelFilled: 0,
@@ -657,7 +657,8 @@ class AddProductComponent extends Component {
     if (!this.state.variation1On) {
       this.setState({
         progressDetails:
-          ((this.state.supplierFilled +
+          ((
+            this.state.supplierFilled +
             this.state.skuFilled +
             this.state.brandFilled +
             this.state.modelFilled +
@@ -927,6 +928,24 @@ class AddProductComponent extends Component {
           });
         }
       }
+    }
+
+    if (this.state.productSpecificationOptions.length > 1) {
+      var specFilled = 0;
+
+      this.state.productSpecificationOptions.map((spec) => {
+        if (spec.value !== "" && spec.value !== null) {
+          specFilled = specFilled + 1;
+        }
+      })
+
+      this.setState({
+        progressSpecification: (specFilled / this.state.productSpecificationOptions.length) * 100
+      })
+    } else {
+      this.setState({
+        progressSpecification: 100
+      })
     }
   };
 
@@ -2906,6 +2925,7 @@ class AddProductComponent extends Component {
     var productMedia = document.getElementById("productMedia");
     var shippingInfo = document.getElementById("shippingInfo");
     var descriptionCard = document.getElementById("descriptionCard");
+
     if (this.checkVisible(basicInfo)) {
       this.setState({
         basicInfoVisible: true,
@@ -2943,14 +2963,31 @@ class AddProductComponent extends Component {
     }
 
     if (
-      this.checkVisible(productVariation) &&
+      this.checkVisible(productSpecification) &&
       !this.state.productDetailsVisible &&
       !this.state.basicInfoVisible &&
       !this.state.productDescriptionVisible
     ) {
       this.setState({
-        productsVariationsVisible: true,
+        productSpecificationVisible: true,
         activeStep: 3,
+      });
+    } else {
+      this.setState({
+        productSpecificationVisible: false,
+      });
+    }
+
+    if (
+      this.checkVisible(productVariation) &&
+      !this.state.productDetailsVisible &&
+      !this.state.basicInfoVisible &&
+      !this.state.productDescriptionVisible &&
+      !this.state.productSpecificationVisible
+    ) {
+      this.setState({
+        productsVariationsVisible: true,
+        activeStep: 4,
       });
     } else {
       this.setState({
@@ -2963,11 +3000,12 @@ class AddProductComponent extends Component {
       !this.state.productDetailsVisible &&
       !this.state.basicInfoVisible &&
       !this.state.productsVariationsVisible &&
-      !this.state.productDescriptionVisible
+      !this.state.productDescriptionVisible &&
+      !this.state.productSpecificationVisible
     ) {
       this.setState({
         productMediaVisible: true,
-        activeStep: 4,
+        activeStep: 5,
       });
       this.setHint("ProductImages");
     } else {
@@ -2976,10 +3014,11 @@ class AddProductComponent extends Component {
       });
     }
 
-    if (e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight) {
+    if (
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight) {
       this.setState({
         shippingInfoVisible: true,
-        activeStep: 5,
+        activeStep: 6,
       });
     } else {
       this.setState({
@@ -3019,16 +3058,16 @@ class AddProductComponent extends Component {
 
     // grab the passing ProductID at the front and pull the full information about this product. it will bind all the data at the componentDidUpdate
     let userId = window.localStorage.getItem("id")
-    if( this.props.isOnViewState && !isStringNullOrEmpty(userId) && !isStringNullOrEmpty(this.props.ProductID)){
+    if (this.props.isOnViewState && !isStringNullOrEmpty(userId) && !isStringNullOrEmpty(this.props.ProductID)) {
       this.setState({
         ProductID: this.props.ProductID,
-        userId:  window.localStorage.getItem("id"),
+        userId: window.localStorage.getItem("id"),
         name: this.props.ProductName
       })
 
       this.props.CallProductDetail({
         productId: this.props.ProductID,
-        userId:  window.localStorage.getItem("id"),
+        userId: window.localStorage.getItem("id"),
       })
     }
   }
@@ -3117,7 +3156,7 @@ class AddProductComponent extends Component {
     this.setState({ isSubmit: true })
   }
 
-  bindProductInfoToState = () =>{
+  bindProductInfoToState = () => {
     //do something here yomna, and then bind the values to the state at the function below
 
     this.setState({
@@ -3135,14 +3174,14 @@ class AddProductComponent extends Component {
     // This section will used to bind the product info to the state with a passing function.
     // Since in the React lifecycle it did mentioned the componentdidupdate will be triggered if any updates occur on this page,
     // then we need a state to check the allows to prevent the infinite looping of this function
-    if(this.props.productinfo){
-      if(this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind){
+    if (this.props.productinfo) {
+      if (this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind) {
         this.bindProductInfoToState()
       }
     }
 
     //call the variations for product specifications and product category
-    if(this.props.result){
+    if (this.props.result) {
       if (typeof this.props.result !== "undefined" && this.props.result.length > 0 && this.props.result[0].ReturnVal == 1) {
         const { variation1, productSpecificationOptions } = this.state
         let ProductID = this.props.result[0].ProductID
@@ -3224,6 +3263,12 @@ class AddProductComponent extends Component {
     else
       specificationObject[idx].categoryId = e.target.value
 
+    setTimeout(
+      function () {
+        this.checkProgress();
+      }.bind(this),
+      500
+    );
     this.setState({ productSpecificationOptions: specificationObject })
   }
 
@@ -3696,9 +3741,9 @@ class AddProductComponent extends Component {
 
             {
               this.props.isOnViewState ?
-                <Button onClick={() => typeof this.props.backToList === "function" && this.props.backToList()  }>
+                <Button onClick={() => typeof this.props.backToList === "function" && this.props.backToList()}>
                   <i className="fas fa-chevron-left"></i>
-                    Back
+                  Back
                 </Button>
                 :
                 <Button>
@@ -4079,6 +4124,7 @@ class AddProductComponent extends Component {
                   }}
                   onChange={(event, editor) => {
                     const data = editor.getData();
+                    // this.handleChange.bind(this, "description");
                     this.setState({ description: data });
                   }}
                   onBlur={(event, editor) => {

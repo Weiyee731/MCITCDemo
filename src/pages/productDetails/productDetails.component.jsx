@@ -2217,7 +2217,7 @@ class ProductDetailsComponent extends Component {
         value: valuesWithoutID
       })
     }
-    // this.setState({ isSubmissionSpecChecking: true })
+    this.setState({ isSubmissionSpecChecking: true })
   }
 
   handleChange(data, e) {
@@ -3585,7 +3585,7 @@ class ProductDetailsComponent extends Component {
         setTimeout(() => {
           browserHistory.push("/viewProduct");
           window.location.reload(false);
-        }, 1000);
+        }, 3000);
       }
     }
 

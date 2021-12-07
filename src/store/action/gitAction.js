@@ -583,6 +583,9 @@ export class GitAction {
   static UpdateProductVariationDetail = "UPDATE-PRODUCTVARIATIONDETAIL";
   static UpdatedProductVariationDetail = "UPDATED-PRODUCTVARIATIONDETAIL";
 
+  static UpdateProductVariationStock = "UPDATE-PRODUCTVARIATIONSTOCK";
+  static UpdatedProductVariationStock = "UPDATED-PRODUCTVARIATIONSTOCK";
+
   static ResetProductVariationDetailResult = "RESET-PRODUCTVARIATIONDETAIL";
   static ResetUpdateProductVariationDetailResult = "RESET-UPDATEPRODUCTVARIATIONDETAIL";
 
@@ -623,6 +626,13 @@ export class GitAction {
   static CallResetUpdateProductVariationDetail() {
     return {
       type: GitAction.ResetUpdateProductVariationDetailResult,
+    };
+  }
+
+  static CallUpdateProductVariationStock(prodData) {
+    return {
+      type: GitAction.UpdateProductVariationStock,
+      payload: prodData,
     };
   }
 

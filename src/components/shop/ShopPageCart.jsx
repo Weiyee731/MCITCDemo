@@ -93,7 +93,6 @@ class ShopPageCart extends Component {
 
     filterShop(data) {
 
-
         console.log("data", data)
         let filterList = []
         let filterShopName = []
