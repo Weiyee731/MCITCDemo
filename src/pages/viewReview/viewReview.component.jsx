@@ -81,10 +81,18 @@ class ViewReviewComponent extends Component {
     this.props.CallProductReview({
       UserID: window.localStorage.getItem("id"),
     });
-    console.log(this.props.reviews)
+    // console.log(this.props.reviews)
     // if (this.props.reviews && this.props.reviews !== undefined) {
     //   this.setState({ reviews: this.props.reviews })
     // }
+
+    this.props.reviews.length > 0 &&
+      this.props.reviews.map((x) => {
+        console.log("REVIEWS", x.ProductName)
+        x.ProductReviewDetail !== null && JSON.parse(x.ProductReviewDetail).map((y) => {
+          console.log("REVIEWS", y)
+        })
+      })
   }
 
   componentDidUpdate(prevProps) {
@@ -131,7 +139,6 @@ class ViewReviewComponent extends Component {
   render() {
 
     const filteredProduct = [];
-
     const commentPanel = {
       padding: "2%",
     };
@@ -182,19 +189,21 @@ class ViewReviewComponent extends Component {
     //     );
     //   });
 
-    this.props.reviews &&
-      this.props.reviews.length > 0 &&
-      this.props.reviews !== undefined &&
-      this.props.reviews[0].ReturnVal !== "0" &&
-      this.props.reviews.filter((searchedItem) => typeof searchedItem !== 'undefined' && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
-        .map((filteredItem) => { filteredProduct.push(filteredItem); })
+    // console.log("REVIEWS", this.props.reviews)
+
+
+    // this.props.reviews &&
+    //   this.props.reviews.length > 0 &&
+    //   this.props.reviews !== undefined &&
+    //   this.props.reviews[0].ReturnVal !== "0" &&
+    //   JSON.parse(this.props.reviews).filter((searchedItem) => typeof searchedItem !== 'undefined' && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+    //     .map((filteredItem) => { filteredProduct.push(filteredItem); })
 
     return (
       <div className="App" style={{ padding: "50px 50px 0px" }}>
         <h1>Customer Reviews</h1>
 
         <SearchBox style={divStyle} placeholder="Search..." onChange={(e) => this.setState({ searchFilter: e.target.value })} />
-
         <MaterialTable
           style={divStyle}
           title="Reviews"
@@ -218,7 +227,8 @@ class ViewReviewComponent extends Component {
             this.handleDisplayAllComments(true)
           }}
 
-          data={filteredProduct.length > 0 ? filteredProduct : []}
+          // data={filteredProduct.length > 0 ? filteredProduct : []}
+          data={this.props.reviews.length > 0 ? this.props.reviews : []}
           options={{
             paging: true,
             search: false,

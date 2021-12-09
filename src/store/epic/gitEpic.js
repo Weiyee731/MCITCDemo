@@ -65,6 +65,8 @@ export class GitEpic {
         .then(json => {
           if (JSON.parse(json)[0].LoginAuditID !== "undefined") {
             json = json
+
+            console.log("LOGOUT", json)
           } else {
             json = [];
           }
@@ -467,6 +469,14 @@ export class GitEpic {
 
   updateProfileImage = (action$) =>
     action$.ofType(GitAction.UpdateProfileImage).switchMap(async ({ payload }) => {
+
+      console.log(url +
+        "User_UserUpdatePhoto?USERID=" +
+        payload.USERID +
+        "&TYPE=" +
+        payload.TYPE +
+        "&USERPROFILEIMAGE=" +
+        payload.USERPROFILEIMAGE)
       try {
         const response = await fetch(
           url +
@@ -1311,9 +1321,6 @@ export class GitEpic {
 
   getProductDetail = (action$) =>
     action$.ofType(GitAction.GetProductDetail).switchMap(async ({ payload }) => {
-
-      console.log("HERE TO CALL")
-
       try {
         const response = await fetch(
           url +
@@ -1707,16 +1714,36 @@ export class GitEpic {
         const response = await fetch(
           url +
           "Product_UpdateProductStockVariation?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID +
-          "&PRODUCTSTOCK=" + payload.stock 
+          "&PRODUCTSTOCK=" + payload.stock
         );
         let json = await response.json();
         json = JSON.parse(json);
-        console.log("json", json)
+        if (json[0].ReturnVal === 1)
+          toast.success("Variation stock updated successfully")
 
-        return {
-          type: GitAction.UpdatedProductVariationStock,
-          payload: json,
-        };
+        try {
+          const response = await fetch(
+            url +
+            "Product_ItemDetailByProductID?ProductID=" +
+            payload.productId +
+            "&USERID=" +
+            payload.userId
+          );
+          let json2 = await response.json();
+          json2 = JSON.parse(json2);
+          return {
+            type: GitAction.UpdatedProductVariationStock,
+            payloadProduct: json2,
+            payload: json,
+          };
+        } catch (error) {
+          alert('UpdatedProductVariationStock: ' + error);
+          return {
+            type: GitAction.UpdatedProductVariationStock,
+            payload: [],
+          };
+        }
+
       } catch (error) {
         alert('updateProductVariationStock: ' + error);
         return {
@@ -2329,9 +2356,6 @@ export class GitEpic {
             "&PARENTPRODUCTREVIEWID=0"
           );
           let json_1 = await response_1.json();
-          // json_1 = json_1)
-
-          console.log("json add review view", json_1)
           return {
             type: GitAction.addedProductReview,
             payload: json_1,

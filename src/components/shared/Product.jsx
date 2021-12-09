@@ -144,20 +144,20 @@ class Product extends Component {
         this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
           this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
             return (
-              <button type="button" onClick={() => window.localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
+              <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
               ><Wishlist16Svg fill="red" />
               </button>
             )
           }) :
           (
-            <button type="button" onClick={() => window.localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
+            <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
               className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
             ><Wishlist16Svg />
             </button>
           ) :
         (
-          <button type="button" onClick={() => window.localStorage.getItem("id") ? this.handleWishlist(product) : this.login()}
+          <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
             className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
           ><Wishlist16Svg />
           </button>
@@ -367,7 +367,7 @@ class Product extends Component {
                       <button
                         type="button"
                         disabled={this.state.isVariationSet === true ? this.state.productQuantity > 0 ? false : true : product.ProductStockAmount > 0 ? false : true}
-                        onClick={() => window.localStorage.getItem("id") ? this.checkCart(product, quantity) : this.login()}
+                        onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
                         className="btn btn-primary product-card__addtocart"
                       >
                         Add To Cart

@@ -23,11 +23,21 @@ import InputNumber from '../../components/shared/InputNumber';
 import { minHeight } from "@mui/system";
 
 
+// import CancelIcon from '@mui/icons-material/Cancel';
+import CancelIcon from '@mui/icons-material/HighlightOffTwoTone';
+import CheckCircleIcon from '@mui/icons-material/CheckCircleTwoTone';
+import { toast } from "react-toastify";
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
+
+
+
 function mapStateToProps(state) {
   return {
     productCategories: state.counterReducer["productCategories"],
     productInfo: state.counterReducer["productsByID"],
     reviews: state.counterReducer["reviews"],
+    variationStock: state.counterReducer["reviews"],
   };
 }
 
@@ -38,6 +48,8 @@ function mapDispatchToProps(dispatch) {
 
     CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
     CallProductReviewByProductID: (propsData) => dispatch(GitAction.CallProductReviewByProductID(propsData)),
+
+    CallUpdateProductVariationStock: (propsData) => dispatch(GitAction.CallUpdateProductVariationStock(propsData)),
   };
 }
 
@@ -68,7 +80,8 @@ class ViewProductGeneralInfo extends Component {
       selectedUpdateQuantity: [],
       selectedUpdateID: [],
 
-      newArray: []
+      newArray: [],
+      isWaitingUpdate: false
     };
     this.handleBack = this.handleBack.bind(this)
     this.getTagList = this.getTagList.bind(this)
@@ -77,7 +90,7 @@ class ViewProductGeneralInfo extends Component {
     this.filterRating = this.filterRating.bind(this)
     this.ratingList = this.ratingList.bind(this)
     this.handleStockLevel = this.handleStockLevel.bind(this)
-
+    this.submitStock = this.submitStock.bind(this)
   }
 
   handleBack() {
@@ -86,6 +99,7 @@ class ViewProductGeneralInfo extends Component {
   }
 
   componentDidMount() {
+
     if (window.localStorage.getItem("id") !== undefined && this.props.match.params.productId !== undefined) {
       this.props.CallProductDetail({
         productId: this.props.match.params.productId,
@@ -103,9 +117,23 @@ class ViewProductGeneralInfo extends Component {
     if (this.props.productCategories.length > 0 && this.props.productInfo.length > 0 && this.state.categoryHierachy === 0) {
       this.getCategoryListing(this.props.productInfo[0], this.props.productCategories)
       this.getVariationList(this.props.productInfo[0])
+      this.setState({
+        newArray: JSON.parse(this.props.productInfo[0].ProductVariation)
+      })
     }
     if (this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined) {
       this.getReviewList(JSON.parse(this.props.reviews))
+    }
+
+    if (this.props.variationStock.length > 0) {
+      if (JSON.parse(this.props.variationStock[0].ReturnVal !== 0) && this.state.isWaitingUpdate === true) {
+        if (prevProps.productInfo !== this.props.productInfo)
+          this.setState({
+            newArray: JSON.parse(this.props.productInfo[0].ProductVariation),
+            isWaitingUpdate: false,
+            isStockEdit: false
+          })
+      }
     }
   }
 
@@ -200,14 +228,9 @@ class ViewProductGeneralInfo extends Component {
     let variationType = []
     let variationTypeID = []
 
-    console.log("VARIATIONINFO", productInfo)
-    console.log("VARIATIONINFO", productInfo.ProductVariation)
-    console.log("VARIATIONINFO", JSON.parse(productInfo.ProductVariation))
-
     if (productInfo.ProductVariation !== null && this.state.isVariationSet === false) {
       variationList = JSON.parse(productInfo.ProductVariation).filter((ele, ind) => ind === JSON.parse(productInfo.ProductVariation).findIndex(elem => elem.ProductVariationID === ele.ProductVariationID))
 
-      console.log("VARIATIONLIST", variationList)
       variationList.map((x) => {
         variationType.push(x.ProductVariation)
         variationTypeID.push(x.ProductVariationID)
@@ -234,7 +257,6 @@ class ViewProductGeneralInfo extends Component {
 
   handleVariationPageChange = (page) => {
     this.setState({ variationPage: page })
-    // this.setState(() => ({ variationPage }));
   };
 
   filterRating(value) {
@@ -244,48 +266,49 @@ class ViewProductGeneralInfo extends Component {
   }
 
   handleStockLevel(data, index, quantity) {
-    console.log(this.props.productInfo[0])
+    let tempVariationArray = this.state.newArray
+    tempVariationArray.map((x, index) => {
+      if (x.ProductVariationDetailID === data) {
+        tempVariationArray[index]['ProductStockAmount'] = quantity.target.value
+      }
+    })
 
-    let currentQty = this.state.newArray[index]['ProductStockAmount'];
+    let tempStockID = this.state.selectedUpdateID
+    let tempStockQuantity = this.state.selectedUpdateQuantity
 
-    console.log(this.state.newArray)
-    console.log(currentQty)
+    if (tempStockID.length > 0) {
+      let checkStockID = tempStockID.filter((x) => x === data)
 
-    currentQty = quantity.target.value
+      if (checkStockID.length > 0) {
+        tempStockID.map((x, index) => {
+          if (x === data) {
+            tempStockQuantity[index] = quantity.target.value
+          }
+        })
+      }
+      else {
+        tempStockID.push(data)
+        tempStockQuantity.push(quantity.target.value)
+      }
+    } else {
+      tempStockID.push(data)
+      tempStockQuantity.push(quantity.target.value)
+    }
+    this.setState({ newArray: tempVariationArray, selectedUpdateQuantity: tempStockQuantity, selectedUpdateID: tempStockID })
+  }
 
-    // let tempStockID = this.state.selectedUpdateID
-    // let tempStockQuantity = this.state.selectedUpdateQuantity
-
-    // console.log("quantity data", data.ProductVariationDetailID)
-
-    // if (quantity.target.value !== "") {
-    //   if (tempStockID.length > 0) {
-    //     let checkStockID = tempStockID.filter((x) => x === data.ProductVariationDetailID && quantity.target.value !== "")
-
-    //     console.log("check checkstockIS", checkStockID)
-    //     if (checkStockID.length > 0 && quantity.target.value !== "") {
-    //       console.log("check checkstockIS INSIDE")
-    //       tempStockID.map((x, index) => {
-    //         console.log("check checkstockIS MAP")
-    //         tempStockQuantity[index] = quantity.target.value
-    //       })
-    //     }
-    //     else {
-    //       console.log("check checkstockIS outside")
-    //       tempStockID.push(data.ProductVariationDetailID)
-    //       tempStockQuantity.push(quantity.target.value)
-    //     }
-    //   }
-    //   else {
-    //     tempStockID.push(data.ProductVariationDetailID)
-    //     tempStockQuantity.push(quantity.target.value)
-    //   }
-
-    //   console.log("check", tempStockID)
-    //   console.log("check", tempStockQuantity)
-
-    //   this.setState({ selectedUpdateQuantity: tempStockQuantity, selectedUpdateID: tempStockID })
-    // }
+  submitStock() {
+    if (this.state.selectedUpdateID.length > 0) {
+      this.props.CallUpdateProductVariationStock({
+        ProductVariationDetailID: this.state.selectedUpdateID,
+        stock: this.state.selectedUpdateQuantity,
+        productId: this.props.match.params.productId,
+        userId: window.localStorage.getItem("id"),
+      })
+      this.setState({ isWaitingUpdate: true })
+    } else {
+      toast.error("There is no variation to update")
+    }
   }
 
   ratingList(filterProductReview) {
@@ -342,8 +365,6 @@ class ViewProductGeneralInfo extends Component {
     }
     const rating = [5, 4, 3, 2, 1]
 
-    console.log("VARIATION variationTypeList", this.state.variationTypeList)
-
     return (
       this.props.productInfo.length > 0 ?
         <div style={{ width: "100%" }}>
@@ -373,10 +394,7 @@ class ViewProductGeneralInfo extends Component {
                           pathname: url.inventoryProductDetails(this.props.match.params.productId),
                           query: {
                             categoryDetails: this.state.CategoryHierachyListing,
-                            // content: post.content,
-                            // comments: JSON.stringify(post.comments)
                           }
-                          // state: { categoryDetails: this.state.CategoryHierachyListing} 
                         }} className="cart-table__product-name">
                           View Details </Link></Button>
                       </div>
@@ -436,7 +454,6 @@ class ViewProductGeneralInfo extends Component {
                             <label style={productInfoLabelStyle}>Product Description :</label>
                           </div>
                           <div className="col-lg-10" >
-                            {console.log("CATEGORY LISTING", this.props.productInfo[0].ProductVariation)}
                             <label style={{ textAlign: "justify" }}>{this.props.productInfo[0].ProductDescription !== null && this.props.productInfo[0].ProductDescription.replace(/<[^>]+>/g, ' ') !== " " ?
                               this.props.productInfo[0].ProductDescription.replace(/<[^>]+>/g, ' ').length > 300 ?
                                 this.props.productInfo[0].ProductDescription.replace(/<[^>]+>/g, ' ').substring(0, 300) + " ... " :
@@ -461,27 +478,37 @@ class ViewProductGeneralInfo extends Component {
                       <CardText>
 
                         <div className="row">
-                          <div className="col-lg-10">
+                          <div className="col-lg-9">
                             <h6 style={{ textAlign: "left" }} >Product Stock</h6>
                           </div>
-                          <div className="col-lg-1" style={{ textAlign: "right" }}>
+                          <div className="col-lg-3" style={{ textAlign: "right" }}>
                             {
                               this.state.isStockEdit === false ?
                                 <Button variant="primary" onClick={() => this.setState({ isStockEdit: true })}>  Edit</Button> :
-                                <Button variant="primary" onClick={() => this.setState({ isStockEdit: false })}>  Cancel</Button>
-                            }
 
+                                <div className="row">
+                                  <div className="col-6">
+                                    <Button>
+                                      <CancelIcon onClick={() => this.setState({ isStockEdit: false })} />
+                                    </Button>
+                                  </div>
+                                  <div className="col-6">
+                                    <Button>
+                                      <CheckCircleIcon onClick={() => this.submitStock()} />
+                                    </Button>
+                                  </div>
+                                </div>
+                            }
                           </div>
                         </div>
                         <div style={{ minHeight: "332px" }}>
                           <div style={{ minHeight: "330px" }}>
-
                             {
                               this.state.variationTypeList.length > 0 ? this.state.variationTypeList.map((variation, index) => {
                                 return (
                                   <Accordion title={variation}>
-                                    {this.props.productInfo[0].ProductVariation !== null &&
-                                      JSON.parse(this.props.productInfo[0].ProductVariation).filter((x) => x.ProductVariationID ===
+                                    {this.state.newArray !== null &&
+                                      this.state.newArray.filter((x) => x.ProductVariationID ===
                                         this.state.variationTypeListID[index])
                                         .slice((this.state.variationPage - 1) * this.state.variationRowsPerPage, (this.state.variationPage - 1) * this.state.variationRowsPerPage + this.state.variationRowsPerPage)
                                         .map((details, index) => {
@@ -500,27 +527,14 @@ class ViewProductGeneralInfo extends Component {
                                                       </label>
                                                     </div>
                                                     <div className="col-4">
-                                                      {console.log(this.state.selectedUpdateID.filter((x) => x === details.ProductVariationDetailID))}
                                                       {
                                                         this.state.isStockEdit === false ?
                                                           <label >{details.ProductStockAmount}</label>
                                                           :
                                                           <TextField
                                                             type="number"
-                                                            value={
-                                                              this.state.selectedUpdateID.filter((x) => x === details.ProductVariationDetailID).length > 0 ?
-                                                                this.state.selectedUpdateID.map((x, i) => {
-                                                                 
-                                                                  if (x === details.ProductVariationDetailID) {
-                                                                    console.log("THIS IS X", x)
-                                                                    console.log("THIS IS i", i)
-                                                                    console.log("THIS IS this.state.selectedUpdateQuantity[i]", this.state.selectedUpdateQuantity[i])
-                                                                    return (this.state.selectedUpdateQuantity[i])
-                                                                  }
-                                                                })
-                                                                : parseInt(details.ProductStockAmount)
-                                                            }
-                                                            onChange={(x) => this.handleStockLevel(details, index, x)}
+                                                            value={parseInt(details.ProductStockAmount)}
+                                                            onChange={(x) => this.handleStockLevel(details.ProductVariationDetailID, index, x)}
                                                           />
                                                       }
 

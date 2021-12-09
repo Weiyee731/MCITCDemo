@@ -96,7 +96,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.UserLoggedOut:
       return Object.assign({}, state, {
         loading: false,
-        currentUser: action.payload,
+        currentUser: [],
       });
 
     case GitAction.CheckUser:
@@ -609,6 +609,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         variationStock: action.payload,
+        productsByID: action.payloadProduct
       });
 
     //=======================SUPPLIER========================//

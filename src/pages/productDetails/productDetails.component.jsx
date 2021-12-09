@@ -2106,6 +2106,8 @@ class ProductDetailsComponent extends Component {
       }
 
       axios.post("https://myemporia.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
+
+      console.log("res", res)
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
           this.setState({isMediaFileSend: true})
@@ -3580,13 +3582,13 @@ class ProductDetailsComponent extends Component {
         this.props.CallResetProductMediaResult()
       }
 
-      if (this.props.returnUpdateProduct.length === 0 && this.props.productSpecsDetail.length === 0 && this.props.SpecsDetail.length === 0 &&
-        this.props.addProductVariationResult.length === 0 && this.props.variationResult.length === 0 && this.props.productMediaResult.length === 0) {
-        setTimeout(() => {
-          browserHistory.push("/viewProduct");
-          window.location.reload(false);
-        }, 3000);
-      }
+      // if (this.props.returnUpdateProduct.length === 0 && this.props.productSpecsDetail.length === 0 && this.props.SpecsDetail.length === 0 &&
+      //   this.props.addProductVariationResult.length === 0 && this.props.variationResult.length === 0 && this.props.productMediaResult.length === 0) {
+      //   setTimeout(() => {
+      //     browserHistory.push("/viewProduct");
+      //     window.location.reload(false);
+      //   }, 3000);
+      // }
     }
 
 

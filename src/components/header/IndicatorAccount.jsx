@@ -90,7 +90,9 @@ class IndicatorAccount extends Component {
       passwordErr: false,
       rememberMe: false,
       isToLogin: false,
-      hidden: true
+      hidden: true,
+
+      isLogout: false,
     };
 
     this.handleOnLogin = this.handleOnLogin.bind(this);
@@ -127,12 +129,26 @@ class IndicatorAccount extends Component {
   logout = () => {
 
     this.props.callLogout({ UserID: localStorage.getItem("id") });
-    localStorage.clear();
+    this.setState({ isLogout: true })
+    window.localStorage.clear()
     cookies.set("isLogin", false);
     localStorage.setItem("isLogin", false);
+ 
     browserHistory.push("/");
     window.location.reload(false);
   };
+
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.currentUser !== this.props.currentUser) {
+  //     if (this.state.isLogout === true && this.props.currentUser.length === 0) {
+  //       setTimeout(() => {
+  //         browserHistory.push("/");
+  //         window.location.reload(false);
+  //       }, 1000);
+  //     }
+  //   }
+  // }
 
   toggleShow() {
     this.setState({ hidden: !this.state.hidden });
@@ -151,7 +167,7 @@ class IndicatorAccount extends Component {
     }
 
     const dropdown = (
-      <div className="account-menu" style={{zIndex:"10"}}>
+      <div className="account-menu" style={{ zIndex: "10" }}>
         {localStorage.getItem("isLogin") !== "false" && (
           <div>
             <div className="account-menu__divider" />
