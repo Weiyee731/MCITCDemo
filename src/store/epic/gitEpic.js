@@ -2333,6 +2333,8 @@ export class GitEpic {
           payload.productReviewRating
           + "&PRODUCTREVIEWCOMMENT=" +
           payload.productReviewComment
+          + "&REPLYPARENTID=" +
+          payload.replyParentID
         );
         let json = await response.json();
 
@@ -2340,7 +2342,7 @@ export class GitEpic {
         json = JSON.parse(json);
         console.log("json add review", json)
         if (json[0].ReturnVal === 1) {
-          toast.success("Sucessfully added a product review");
+          toast.success("Sucessfully send a review");
         }
 
         // return {

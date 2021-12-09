@@ -68,7 +68,8 @@ class ProductTabReviews extends Component {
       productID: this.props.product.ProductID,
       UserID: localStorage.getItem("id"),
       productReviewRating: "0",
-      productReviewComment: this.state.productReplyReviewComment
+      productReviewComment: this.state.productReplyReviewComment,
+      replyParentID: 0
     })
 
     this.setState({ reply: false, isReviewSet: false })
@@ -80,7 +81,8 @@ class ProductTabReviews extends Component {
       productID: this.props.product.ProductID,
       UserID: localStorage.getItem("id"),
       productReviewRating: this.state.productReviewRating,
-      productReviewComment: this.state.productReviewComment
+      productReviewComment: this.state.productReviewComment,
+      replyParentID: 0
     })
 
     this.setState({ productReviewComment: "", productReviewRating: 0, isReviewSet: false })

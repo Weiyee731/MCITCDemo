@@ -820,8 +820,6 @@ export function counterReducer(state = INITIAL_STATE, action) {
       });
 
     case GitAction.GetProductReviewEmpty:
-      return Object.assign({}, state, { loading: true });
-    case GitAction.GotProductReviewEmpty:
       return Object.assign({}, state, {
         loading: false,
         reviewReturn: [],

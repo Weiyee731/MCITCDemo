@@ -21,12 +21,14 @@ import Logo from "../../assets/Emporia.png";
 import LoadingPanel from "../../components/shared/loadingPanel";
 import InputNumber from '../../components/shared/InputNumber';
 import { minHeight } from "@mui/system";
+import ViewReviewDetails from '../viewReview/viewReviewDetails'
 
 
 // import CancelIcon from '@mui/icons-material/Cancel';
 import CancelIcon from '@mui/icons-material/HighlightOffTwoTone';
 import CheckCircleIcon from '@mui/icons-material/CheckCircleTwoTone';
 import { toast } from "react-toastify";
+import IconButton from '@material-ui/core/IconButton';
 // import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
@@ -37,7 +39,8 @@ function mapStateToProps(state) {
     productCategories: state.counterReducer["productCategories"],
     productInfo: state.counterReducer["productsByID"],
     reviews: state.counterReducer["reviews"],
-    variationStock: state.counterReducer["reviews"],
+    variationStock: state.counterReducer["variationStock"],
+    reviewReturn: state.counterReducer["reviewReturn"],
   };
 }
 
@@ -48,6 +51,7 @@ function mapDispatchToProps(dispatch) {
 
     CallAllProductCategoryListing: () => dispatch(GitAction.CallAllProductCategoryListing()),
     CallProductReviewByProductID: (propsData) => dispatch(GitAction.CallProductReviewByProductID(propsData)),
+    CallAddProductReview: (propsData) => dispatch(GitAction.CallAddProductReview(propsData)),
 
     CallUpdateProductVariationStock: (propsData) => dispatch(GitAction.CallUpdateProductVariationStock(propsData)),
   };
@@ -81,7 +85,13 @@ class ViewProductGeneralInfo extends Component {
       selectedUpdateID: [],
 
       newArray: [],
-      isWaitingUpdate: false
+      isWaitingUpdate: false,
+      isViewReviewDetails: false,
+      selectedReviews: [],
+      selectedCommentReply: [],
+      replyComment: "",
+      isReplySubmit: false,
+      productName: ""
     };
     this.handleBack = this.handleBack.bind(this)
     this.getTagList = this.getTagList.bind(this)
@@ -91,6 +101,11 @@ class ViewProductGeneralInfo extends Component {
     this.ratingList = this.ratingList.bind(this)
     this.handleStockLevel = this.handleStockLevel.bind(this)
     this.submitStock = this.submitStock.bind(this)
+    this.handleSetReview = this.handleSetReview.bind(this)
+    this.handleReview = this.handleReview.bind(this)
+    this.handleReply = this.handleReply.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleSubmitReview = this.handleSubmitReview.bind(this)
   }
 
   handleBack() {
@@ -125,6 +140,11 @@ class ViewProductGeneralInfo extends Component {
       this.getReviewList(JSON.parse(this.props.reviews))
     }
 
+    if (this.props.reviews !== prevProps.reviews) {
+      this.setState({ isReviewSet: false })
+      this.getReviewList(JSON.parse(this.props.reviews))
+    }
+
     if (this.props.variationStock.length > 0) {
       if (JSON.parse(this.props.variationStock[0].ReturnVal !== 0) && this.state.isWaitingUpdate === true) {
         if (prevProps.productInfo !== this.props.productInfo)
@@ -133,7 +153,22 @@ class ViewProductGeneralInfo extends Component {
             isWaitingUpdate: false,
             isStockEdit: false
           })
+
       }
+    }
+
+    if (this.props.reviewReturn.length > 0 && this.state.isReplySubmit === true) {
+      this.props.CallProductReviewByProductID({
+        ProductID: this.props.match.params.productId,
+        ParentProductReviewID: 0
+      })
+      this.setState({
+        isViewReviewDetails: false,
+        selectedReviews: [],
+        selectedCommentReply: [],
+        replyComment: "",
+        isReplySubmit: false
+      })
     }
   }
 
@@ -247,6 +282,7 @@ class ViewProductGeneralInfo extends Component {
       reviewsList.filter((x) => x.ParentProductReviewID === 0).map((x) => {
         reviewData.push(x)
       })
+
       this.setState({ productRating: reviewData[0].ProductAverageRating, productReview: reviewData, isReviewSet: true })
     }
   }
@@ -297,17 +333,32 @@ class ViewProductGeneralInfo extends Component {
     this.setState({ newArray: tempVariationArray, selectedUpdateQuantity: tempStockQuantity, selectedUpdateID: tempStockID })
   }
 
-  submitStock() {
-    if (this.state.selectedUpdateID.length > 0) {
-      this.props.CallUpdateProductVariationStock({
-        ProductVariationDetailID: this.state.selectedUpdateID,
-        stock: this.state.selectedUpdateQuantity,
-        productId: this.props.match.params.productId,
-        userId: window.localStorage.getItem("id"),
-      })
-      this.setState({ isWaitingUpdate: true })
-    } else {
-      toast.error("There is no variation to update")
+  submitStock(value) {
+
+    switch (value) {
+      case "reset":
+        this.setState({
+          isStockEdit: false,
+          newArray: JSON.parse(this.props.productInfo[0].ProductVariation)
+        })
+        break;
+
+      case "submit":
+        if (this.state.selectedUpdateID.length > 0) {
+          this.props.CallUpdateProductVariationStock({
+            ProductVariationDetailID: this.state.selectedUpdateID,
+            stock: this.state.selectedUpdateQuantity,
+            productId: this.props.match.params.productId,
+            userId: window.localStorage.getItem("id"),
+          })
+          this.setState({ isWaitingUpdate: true })
+        } else {
+          toast.error("There is no variation to update")
+        }
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -319,7 +370,7 @@ class ViewProductGeneralInfo extends Component {
           .slice((this.state.page - 1) * this.state.rowsPerPage, (this.state.page - 1) * this.state.rowsPerPage + this.state.rowsPerPage)
           .map((reviews) => {
             return (
-              <Card style={{ width: '100%' }}>
+              <Card style={{ width: '100%' }} onClick={() => this.handleSetReview(reviews)}>
                 <CardBody style={{ padding: "0.5rem" }} >
                   <CardText>
                     <div className="row">
@@ -339,7 +390,7 @@ class ViewProductGeneralInfo extends Component {
                           <div id="review_text" className=" review__text" style={{ display: "flex", width: "100%", justifyContent: "space-between", fontSize: "12px" }}>
                             <div id="review_comment">{reviews.ProductReviewComment}</div>
                             <div id="comment" className="comment-reply">
-                              <a className="comment-btn" onClick={() => console.log("HI")} >
+                              <a className="comment-btn" onClick={() => this.handleSetReview(reviews)} >
                                 <i className="fas fa-reply" />{" "}
                                 Reply
                               </a>
@@ -356,6 +407,46 @@ class ViewProductGeneralInfo extends Component {
         :
         <div><label>Currently there is no review with this rating</label></div>
     )
+  }
+
+  handleReview() {
+    this.setState({
+      isViewReviewDetails: false,
+    })
+  }
+
+  handleSetReview(reviews) {
+    this.setState({
+      isViewReviewDetails: true,
+      selectedReviews: reviews,
+      productName: this.props.productInfo[0].ProductName
+    })
+  }
+
+  handleReply(reviewItem) {
+
+    this.setState({
+      selectedCommentReply: reviewItem
+    })
+  }
+
+  handleInputChange(e) {
+    if (e.target.value === "")
+      this.setState({ replyComment: e.target.value, replyError: true })
+    else
+      this.setState({ replyComment: e.target.value, replyError: false })
+  }
+
+  handleSubmitReview(review, parentID) {
+    this.props.CallAddProductReview({
+      parentProductReviewID: parentID,
+      productID: review.ProductID,
+      UserID: localStorage.getItem("id"),
+      productReviewRating: 0,
+      productReviewComment: this.state.replyComment,
+      replyParentID: review.ProductReviewID
+    })
+    this.setState({ isReplySubmit: true })
   }
 
   render() {
@@ -470,32 +561,31 @@ class ViewProductGeneralInfo extends Component {
 
             {/* ---------------------------------------------------------------- STOCK LISTING ----------------------------------------------------------------------- */}
 
+            {console.log("this.state", this.state)}
             <div style={{ margin: "2%" }}>
               <div className="row">
                 <div className="col-4">
                   <Card style={{ width: '100%', minHeight: "495px" }}>
                     <CardBody>
                       <CardText>
-
                         <div className="row">
-                          <div className="col-lg-9">
+                          <div className="col-lg-10">
                             <h6 style={{ textAlign: "left" }} >Product Stock</h6>
                           </div>
-                          <div className="col-lg-3" style={{ textAlign: "right" }}>
+                          <div className="col-lg-2" style={{ textAlign: "right" }}>
                             {
                               this.state.isStockEdit === false ?
                                 <Button variant="primary" onClick={() => this.setState({ isStockEdit: true })}>  Edit</Button> :
-
                                 <div className="row">
                                   <div className="col-6">
-                                    <Button>
-                                      <CancelIcon onClick={() => this.setState({ isStockEdit: false })} />
-                                    </Button>
+                                    <IconButton className="icon">
+                                      <CancelIcon onClick={() => this.submitStock("reset")} />
+                                    </IconButton>
                                   </div>
                                   <div className="col-6">
-                                    <Button>
-                                      <CheckCircleIcon onClick={() => this.submitStock()} />
-                                    </Button>
+                                    <IconButton className="icon">
+                                      <CheckCircleIcon onClick={() => this.submitStock("submit")} />
+                                    </IconButton>
                                   </div>
                                 </div>
                             }
@@ -517,7 +607,7 @@ class ViewProductGeneralInfo extends Component {
                                               <CardBody style={{ padding: "0.5rem" }} >
                                                 <CardText>
                                                   <div className="row">
-                                                    <div className="col-6" style={{ textAlign: "left" }}>
+                                                    <div className="col-8" style={{ textAlign: "left" }}>
                                                       <label>
                                                         {
                                                           details.ProductVariationValue.length > 20 ?
@@ -533,6 +623,7 @@ class ViewProductGeneralInfo extends Component {
                                                           :
                                                           <TextField
                                                             type="number"
+                                                            textAlign= "center"
                                                             value={parseInt(details.ProductStockAmount)}
                                                             onChange={(x) => this.handleStockLevel(details.ProductVariationDetailID, index, x)}
                                                           />
@@ -572,7 +663,6 @@ class ViewProductGeneralInfo extends Component {
                 </div>
 
                 {/* ---------------------------------------------------------------- PRODUCT REVIEW ----------------------------------------------------------------------- */}
-
                 <div className="col-8">
                   <Card style={{ width: '100%', minHeight: "495px" }}>
                     <CardBody>
@@ -582,13 +672,13 @@ class ViewProductGeneralInfo extends Component {
                           <div className="col-lg-9">
                             <h6 style={{ textAlign: "left" }} >Product Review</h6>
                           </div>
-                          <div className="col-lg-3" style={{ textAlign: "right" }}>
+                          {/* <div className="col-lg-3" style={{ textAlign: "right" }}>
                             <Button variant="primary" >
-                              {/* <Link to={url.inventoryProductDetails(this.props.match.params.productId)} className="cart-table__product-name"> */}
+                              <Link to={url.inventoryProductDetails(this.props.match.params.productId)} className="cart-table__product-name">
                               View All
-                              {/* </Link> */}
+                              </Link>
                             </Button>
-                          </div>
+                          </div> */}
                         </div>
 
                         <div style={{ minHeight: "332px" }}>
@@ -619,6 +709,16 @@ class ViewProductGeneralInfo extends Component {
                               </div>
                             }
                           </div>
+                          <ViewReviewDetails
+                            isOpen={this.state.isViewReviewDetails}
+                            handleOpen={this.handleReview}
+                            handleComment={this.handleReply}
+                            handleAddReview={this.handleSubmitReview}
+                            handleOnChange={this.handleInputChange}
+
+                            state={this.state.selectedReviews}
+                            data={this.state}
+                          />
                           <div style={{ marginTop: "15px" }}>
                             <Pagination
                               current={this.state.page}

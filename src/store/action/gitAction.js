@@ -798,7 +798,6 @@ export class GitAction {
   static addedProductReview = "ADDED-PRODUCTREVIEW";
 
   static GetProductReviewEmpty = "GET-PRODUCTREVIEW-EMPTY";
-  static GotProductReviewEmpty = "GOT-PRODUCTREVIEW-EMPTY";
 
   static CallProductReview(suppData) {
     return {
