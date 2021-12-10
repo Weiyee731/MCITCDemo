@@ -50,8 +50,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallGetTransaction(transactionData)),
     CallDeletePromoCode: (promoCodeData) =>
       dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    // CallAllProductsByProductStatus: (prodData) =>
+    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
     CallGetTransactionStatus: () =>
       dispatch(GitAction.CallGetTransactionStatus()),
   };

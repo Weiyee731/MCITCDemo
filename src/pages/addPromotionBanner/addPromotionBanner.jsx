@@ -56,8 +56,8 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAddPromotion: (promoData) =>
       dispatch(GitAction.CallAddPromotion(promoData)), // To add data
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)), // To call Product List For Promotion Product
+    // CallAllProductsByProductStatus: (prodData) =>
+    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)), // To call Product List For Promotion Product
   };
 }
 
@@ -401,10 +401,10 @@ class AddPromotionBannerComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.props.CallAllProductsByProductStatus({
-      ProductStatus: "Endorsed",
-      UserID: window.localStorage.getItem("id"),
-    });
+    // this.props.CallAllProductsByProductStatus({
+    //   ProductStatus: "Endorsed",
+    //   UserID: window.localStorage.getItem("id"),
+    // });
   }
 
   state = {

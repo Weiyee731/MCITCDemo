@@ -1344,31 +1344,31 @@ export class GitEpic {
       }
     });
 
-  getAllProductsByStatus = (action$) =>
-    action$.ofType(GitAction.GetProductByProductStatus).switchMap(async ({ payload }) => {
+  // getAllProductsByStatus = (action$) =>
+  //   action$.ofType(GitAction.GetProductByProductStatus).switchMap(async ({ payload }) => {
 
-      try {
-        const response = await fetch(
-          url +
-          "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
-          payload.ProductStatus +
-          "&USERID=" +
-          payload.UserID
-        );
-        let json = await response.json();
-        json = json;
-        return {
-          type: GitAction.GotProductByProductStatus,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllProductsByStatus: ' + error);
-        return {
-          type: GitAction.GotProductByProductStatus,
-          payload: [],
-        };
-      }
-    });
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
+  //         payload.ProductStatus +
+  //         "&USERID=" +
+  //         payload.UserID
+  //       );
+  //       let json = await response.json();
+  //       json = json;
+  //       return {
+  //         type: GitAction.GotProductByProductStatus,
+  //         payload: json,
+  //       };
+  //     } catch (error) {
+  //       alert('getAllProductsByStatus: ' + error);
+  //       return {
+  //         type: GitAction.GotProductByProductStatus,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
 
   addProduct = (action$) =>
     action$.ofType(GitAction.AddProduct).switchMap(async ({ payload }) => {
@@ -2819,27 +2819,35 @@ export class GitEpic {
         )
         let json = await response.json()
         json = JSON.parse(json)
-        try {
-          const response = await fetch(
-            url +
-            "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
-            payload.ProductStatus +
-            "&USERID=" +
-            payload.UserID
-          );
-          let json = await response.json();
-          json = JSON.parse(json);
-          return {
-            type: GitAction.UpdatedInventory,
-            payload: json,
-          };
-        } catch (error) {
-          alert('getAllProductsByStatus: ' + error);
-          return {
-            type: GitAction.GotProductByProductStatus,
-            payload: [],
-          };
-        }
+
+        return {
+          type: GitAction.UpdatedInventory,
+          payload: json,
+        };
+        // try {
+
+
+        //   const response = await fetch(
+        //     url +
+        //     "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
+        //     payload.ProductStatus +
+        //     "&USERID=" +
+        //     payload.UserID
+        //   );
+        //   let json = await response.json();
+        //   json = JSON.parse(json);
+        //   return {
+        //     type: GitAction.UpdatedInventory,
+        //     payload: json,
+        //   };
+        // } 
+        // catch (error) {
+        //   alert('getAllProductsByStatus: ' + error);
+        //   return {
+        //     type: GitAction.GotProductByProductStatus,
+        //     payload: [],
+        //   };
+        // }
       } catch (error) {
         alert('updateProductStock: ' + error);
         return {

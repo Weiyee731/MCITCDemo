@@ -46,8 +46,8 @@ function mapDispatchToProps(dispatch) {
     CallGetPromoCode: () => dispatch(GitAction.CallGetPromoCode()),
     CallDeletePromoCode: (promoCodeData) =>
       dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    // CallAllProductsByProductStatus: (prodData) =>
+    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
     CallMerchants: () => dispatch(GitAction.CallMerchants()),
   };
 }
@@ -668,10 +668,10 @@ class ViewMerchantsComponent extends Component {
     };
 
     this.props.CallGetPromoCode();
-    this.props.CallAllProductsByProductStatus({
-      ProductStatus: this.state.productStatus,
-      UserID: window.localStorage.getItem("id"),
-    });
+    // this.props.CallAllProductsByProductStatus({
+    //   ProductStatus: this.state.productStatus,
+    //   UserID: window.localStorage.getItem("id"),
+    // });
     this.props.CallMerchants();
   }
 

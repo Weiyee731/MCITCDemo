@@ -41,8 +41,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     callGetPromos: () => dispatch(GitAction.CallGetPromo()),
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    // CallAllProductsByProductStatus: (prodData) =>
+    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
     CallAddPromoCode: (promoCodeData) =>
       dispatch(GitAction.CallAddPromoCode(promoCodeData)),
   };
@@ -290,10 +290,10 @@ class AddProductVoucherComponent extends Component {
   constructor(props) {
     super(props);
     this.props.callGetPromos();
-    this.props.CallAllProductsByProductStatus({
-      ProductStatus: "Endorsed",
-      UserID: window.localStorage.getItem("id"),
-    });
+    // this.props.CallAllProductsByProductStatus({
+    //   ProductStatus: "Endorsed",
+    //   UserID: window.localStorage.getItem("id"),
+    // });
   }
 
   state = {

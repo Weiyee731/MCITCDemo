@@ -17,6 +17,11 @@ import ReviewRating from "@material-ui/lab/Rating";
 import LoadingPanel from "../shared/loadingPanel";
 import { browserHistory } from "react-router";
 
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import { Card, CardText, CardBody } from 'reactstrap'
+
+
 function mapStateToProps(state) {
   return {
     reviews: state.counterReducer["reviews"],
@@ -92,6 +97,40 @@ class ProductTabReviews extends Component {
     this.setState(() => ({ page }));
   };
 
+  reviewListing = (reviewData) => {
+    return (
+      <div className="row">
+        <div className="col-2">
+          <div id="review_avatar" className="review__avatar">
+            <img width="50px" height="65px" src={reviewData.avatar ? reviewData.avatar : USER} alt={reviewData.avatar} onError={(e) => (e.target.src = USER)} />
+          </div>
+        </div>
+        <div className="col-10">
+          <div id="review_content" className=" review__content" style={{ width: "100%", textAlign: "left" }}>
+            <div id="review_author" className=" review__author" style={{ fontSize: "12px", fontWeight: "bold" }}>{reviewData.Name}</div>
+            <div id="review_reply_date" className=" review__date" style={{ fontSize: "10px" }}>{reviewData.CreatedDate}</div>
+            <div id="review_comment" style={{ fontSize: "12px" }}>{reviewData.ProductReviewComment}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  ReplyReviewFormat = (reviewItem, index) => {
+    //backgroundColor: "#778899" 
+    return (
+      <ListItem key={index} button style={{ display: "inline-block" }} >
+        <div style={{ width: '80%', display: "block", float: "right" }}>
+          {/* <CardBody style={{ padding: "0.5rem" }}>
+            <CardText> */}
+          {this.reviewListing(reviewItem)}
+          {/* </CardText>
+          </CardBody> */}
+        </div>
+      </ListItem>
+    )
+  }
+
 
   reviewsList = (reviewData, page) => {
 
@@ -128,29 +167,52 @@ class ProductTabReviews extends Component {
                         </a>
                       </div>
                     </div>
+                    {review.ProductReviewDetail !== null && review.ProductReviewDetail !== undefined &&
+                      JSON.parse(review.ProductReviewDetail).map((reviewItem, index) => {
+                        return (
+                          reviewItem.replyParentID === review.ProductReviewID &&
+                          this.ReplyReviewFormat(reviewItem, index)
+                        )
+                      })
+                    }
                     {
                       review.ProductReviewDetail != null ?
                         JSON.parse(review.ProductReviewDetail).map(
                           (reviewReply, index) => (
-                            <div id="review_reply" className="review" style={{ paddingTop: "15pt" }}>
-                              <div id="review_reply_avatar" className="review__avatar">
-                                <img src={reviewReply.avatar ? reviewReply.avatar : USER} alt={reviewReply.avatar} onError={(e) => (e.target.src = USER)} />
-                              </div>
-                              <div
-                                id="review_reply_content"
-                                className=" review__content"
-                                style={{
-                                  width: "100%",
-                                }}
-                              >
-                                <div id="review_author" className=" review__author" style={{ fontSize: "12px", fontWeight: "bold" }}>{reviewReply.Name}</div>
-                                <div id="review_reply_date" className=" review__date" style={{ fontSize: "10px" }}>{reviewReply.CreatedDate}</div>
-                                <div id="review_text" className=" review__text" style={{ display: "flex", width: "100%", justifyContent: "space-between", fontSize: "13px" }}>
-                                  <div id="review_comment">{reviewReply.ProductReviewComment}</div>
+                            <>
+                              {
 
+                                reviewReply.replyParentID === 0 &&
+
+                                <div id="review_reply" className="review" style={{ paddingTop: "15pt" }}>
+                                  <div id="review_reply_avatar" className="review__avatar">
+                                    <img src={reviewReply.avatar ? reviewReply.avatar : USER} alt={reviewReply.avatar} onError={(e) => (e.target.src = USER)} />
+                                  </div>
+                                  <div
+                                    id="review_reply_content"
+                                    className=" review__content"
+                                    style={{
+                                      width: "100%",
+                                    }}
+                                  >
+                                    <div id="review_author" className=" review__author" style={{ fontSize: "12px", fontWeight: "bold" }}>{reviewReply.Name}</div>
+                                    <div id="review_reply_date" className=" review__date" style={{ fontSize: "10px" }}>{reviewReply.CreatedDate}</div>
+                                    <div id="review_text" className=" review__text" style={{ display: "flex", width: "100%", justifyContent: "space-between", fontSize: "13px" }}>
+                                      <div id="review_comment">{reviewReply.ProductReviewComment}</div>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
+                              }
+                              {
+                                JSON.parse(review.ProductReviewDetail).filter((x) => x.replyParentID === reviewReply.ProductReviewID).length > 0 &&
+                                JSON.parse(review.ProductReviewDetail).filter((x) => x.replyParentID === reviewReply.ProductReviewID).map((data) => {
+                                  return (this.ReplyReviewFormat(data, 0))
+                                })
+                              }
+
+                            </>
+
+
                           )) : ""
                     }
                     {

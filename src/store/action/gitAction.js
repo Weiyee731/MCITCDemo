@@ -253,8 +253,8 @@ export class GitAction {
   static GetViewMoreProductEmpty = "GET-VIEWMORE-PRODUCT-EMPTY";
   static GotViewMoreProductEmpty = "GOT-VIEWMORE-PRODUCT-EMPTY";
 
-  static GetProductByProductStatus = "GET-PRODUCT-BYPRODUCTSTATUS";
-  static GotProductByProductStatus = "GOT-PRODUCT-BYPRODUCTSTATUS";
+  // static GetProductByProductStatus = "GET-PRODUCT-BYPRODUCTSTATUS";
+  // static GotProductByProductStatus = "GOT-PRODUCT-BYPRODUCTSTATUS";
 
   static AddProduct = "ADD-PRODUCT";
   static AddedProduct = "ADDED-PRODUCT";
@@ -341,12 +341,12 @@ export class GitAction {
     };
   }
 
-  static CallAllProductsByProductStatus(prodData) {
-    return {
-      type: GitAction.GetProductByProductStatus,
-      payload: prodData,
-    };
-  }
+  // static CallAllProductsByProductStatus(prodData) {
+  //   return {
+  //     type: GitAction.GetProductByProductStatus,
+  //     payload: prodData,
+  //   };
+  // }
 
   static CallAddProduct(prodData) {
     return {

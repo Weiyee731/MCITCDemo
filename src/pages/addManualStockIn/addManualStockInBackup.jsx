@@ -45,8 +45,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    // CallAllProductsByProductStatus: (prodData) =>
+    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
     CallUpdateProductStock: (prodData) =>
       dispatch(GitAction.CallUpdateProductStock(prodData)),
   };
@@ -110,7 +110,7 @@ class AddManualStockInComponent extends Component {
       ProductStatus: "Endorsed",
       UserID: localStorage.getItem("id"),
     };
-    this.props.CallAllProductsByProductStatus(this.state);
+    // this.props.CallAllProductsByProductStatus(this.state);
   }
 
   handleInputChange = (event, index) => {

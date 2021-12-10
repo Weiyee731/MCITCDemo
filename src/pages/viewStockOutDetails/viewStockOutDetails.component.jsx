@@ -34,8 +34,8 @@ function mapDispatchToProps(dispatch) {
     CallGetTransaction: () => dispatch(GitAction.CallGetTransaction()),
     CallUpdateProductStockOut: (prodData) =>
       dispatch(GitAction.CallUpdateProductStockOut(prodData)),
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    // CallAllProductsByProductStatus: (prodData) =>
+    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
   };
 }
 

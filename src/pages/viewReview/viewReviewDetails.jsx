@@ -1,12 +1,6 @@
 import React, { PureComponent } from 'react'
-import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import CloseIcon from '@mui/icons-material/Close';
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Cards from "react-credit-cards";
 
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';

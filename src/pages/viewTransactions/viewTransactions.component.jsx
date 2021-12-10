@@ -59,8 +59,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallGetTransaction(transactionData)),
     CallDeletePromoCode: (promoCodeData) =>
       dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
-    CallAllProductsByProductStatus: (prodData) =>
-      dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    // CallAllProductsByProductStatus: (prodData) =>
+    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
     CallGetTransactionStatus: () =>
       dispatch(GitAction.CallGetTransactionStatus()),
   };
@@ -1000,10 +1000,10 @@ class ViewTransactionsComponent extends Component {
     };
     this.props.CallGetTransactionStatus();
     this.props.CallGetTransaction("Payment Confirm");
-    this.props.CallAllProductsByProductStatus({
-      ProductStatus: this.state.productStatus,
-      UserID: localStorage.getItem("id"),
-    });
+    // this.props.CallAllProductsByProductStatus({
+    //   ProductStatus: this.state.productStatus,
+    //   UserID: localStorage.getItem("id"),
+    // });
   }
 
   setTabsHidden = (value) => {
