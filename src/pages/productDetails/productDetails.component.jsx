@@ -120,6 +120,7 @@ function mapDispatchToProps(dispatch) {
     CallAllProductsCategories: () => dispatch(GitAction.CallAllProductCategory()),
     CallResetProductReturnVal: () => dispatch(GitAction.CallResetProductReturnVal()),
     CallResetProductMediaResult: () => dispatch(GitAction.CallResetProductMediaResult()),
+    CallDeleteProductMedia: (prodData) => dispatch(GitAction.CallDeleteProductMedia(prodData)),
     CallProductDetail: (prodData) => dispatch(GitAction.CallProductDetail(prodData)),
 
     CallUpdateProduct: (prodData) => dispatch(GitAction.CallUpdateProduct(prodData)),
@@ -372,6 +373,7 @@ const INITIAL_STATE = {
   fileInfo3: [],
   url3: [],
   url4: [],
+  ImageId: [],
   counter3: 0,
   skuNotLongEnough: false,
   heightNotDecimal: false,
@@ -1516,14 +1518,18 @@ class ProductDetailsComponent extends Component {
         } else {
           this.setState((state) => {
 
-            console.log("CHECK MEDIA STATE", state)
-            const file = state.file.concat(acceptedFiles.map((file) => file));
+            console.log("CHECK MEDIA STATE", state.file)
+            const file = JSON.parse(state.file).concat(acceptedFiles.map((file) => file));
             const fileInfo = state.fileInfo.concat(
               acceptedFiles.map((file) => file.name)
             );
             const url = state.url.concat(
               acceptedFiles.map((file) => URL.createObjectURL(file))
             );
+
+            console.log("CHECK MEDIA STATE", file)
+            console.log("CHECK MEDIA STATE", fileInfo)
+            console.log("CHECK MEDIA STATE", url)
             return {
               file,
               fileInfo,
@@ -1683,52 +1689,55 @@ class ProductDetailsComponent extends Component {
     }
   };
 
-  onDelete = (index, data) => {
+  onDelete = (index, data, selectedFile) => {
     if (data === "512x512") {
-      var newList2 = this.state.file;
-      this.state.file.map((file, i) => {
-        var valueToBeUsed2 = parseInt(index);
-        if (i === valueToBeUsed2) {
-          newList2 = newList2.filter((file2) => file !== file2);
+
+      if (this.state.file !== undefined) {
+
+        this.props.CallDeleteProductMedia({ imageID: this.state.ImageId[index] })
+
+        var newList2 = this.state.file[0] === "[" ? JSON.parse(this.state.file) : this.state.file
+        var tempURL = this.state.url
+        console.log("THIS IS THE FILE URL", tempURL)
+        console.log("THIS IS THE FILE URL 22", tempURL[index])
+
+
+        this.setState({
+          file: newList2.map((file3) => file3),
+          fileInfo: newList2.map((file3) => file3.name),
+          url: tempURL.filter((x) => x !== tempURL[index])
+          // newList2.map((file3) => window.URL.createObjectURL(file3)),
+        });
+
+        if (this.state.fileInfo.length === 1) {
           this.setState({
-            counter2: this.state.counter2 + 1,
+            file1Added: false,
+            file2Added: false,
+            file3Added: false,
+            Total512x512: 0,
+          });
+        } else if (this.state.fileInfo.length === 2) {
+          this.setState({
+            file1Added: true,
+            file2Added: false,
+            file3Added: false,
+            Total512x512: 1 / 3,
+          });
+        } else if (this.state.fileInfo.length === 3) {
+          this.setState({
+            file1Added: true,
+            file2Added: true,
+            file3Added: false,
+            Total512x512: 2 / 3,
+          });
+        } else if (this.state.fileInfo.length === 4) {
+          this.setState({
+            file1Added: true,
+            file2Added: true,
+            file3Added: true,
+            Total512x512: 3 / 3,
           });
         }
-      });
-      this.setState({
-        file: newList2.map((file3) => file3),
-        fileInfo: newList2.map((file3) => file3.name),
-        url: newList2.map((file3) => URL.createObjectURL(file3)),
-      });
-
-      if (this.state.fileInfo.length === 1) {
-        this.setState({
-          file1Added: false,
-          file2Added: false,
-          file3Added: false,
-          Total512x512: 0,
-        });
-      } else if (this.state.fileInfo.length === 2) {
-        this.setState({
-          file1Added: true,
-          file2Added: false,
-          file3Added: false,
-          Total512x512: 1 / 3,
-        });
-      } else if (this.state.fileInfo.length === 3) {
-        this.setState({
-          file1Added: true,
-          file2Added: true,
-          file3Added: false,
-          Total512x512: 2 / 3,
-        });
-      } else if (this.state.fileInfo.length === 4) {
-        this.setState({
-          file1Added: true,
-          file2Added: true,
-          file3Added: true,
-          Total512x512: 3 / 3,
-        });
       }
     } else if (data === "1600x900") {
       var newList3 = this.state.file2;
@@ -2056,7 +2065,17 @@ class ProductDetailsComponent extends Component {
 
   uploadFile = (productID) => {
     // combine images and video for upload in an array
-    let uploadingMedia = [...this.state.file, ...this.state.file3]
+    console.log("UPLOAD IMAGE")
+    console.log("UPLOAD IMAGE", this.state.file)
+    console.log("UPLOAD IMAGE", this.state.file3[0])
+
+    let uploadingMedia = []
+
+    if (this.state.file[0] === "[")
+      uploadingMedia = [...JSON.parse(this.state.file)]
+    else
+      uploadingMedia = [...this.state.file]
+
     if (typeof productID !== "undefined" && productID !== null && uploadingMedia.length > 0) {
       //basic form setup
       const formData = new FormData()
@@ -2071,10 +2090,13 @@ class ProductDetailsComponent extends Component {
       let imageWidth = ""
       let imageHeight = ""
 
+      console.log("UPLOAD IMAGE", uploadingMedia)
       for (let i = 0; i < uploadingMedia.length; i++) {
         let fileExt = getFileExtension(uploadingMedia[i])
-        let filename = productID + "_" + i + "_" + convertDateTimeToString(new Date())
 
+        console.log("UPLOAD IMAGE fileExt", fileExt)
+        let filename = productID + "_" + i + "_" + convertDateTimeToString(new Date())
+        console.log("UPLOAD IMAGE fileExt", filename)
         filenames += filename + "." + fileExt
         mediaType += getFileTypeByExtension(fileExt)
         variationID += "0"
@@ -2107,10 +2129,10 @@ class ProductDetailsComponent extends Component {
 
       axios.post("https://myemporia.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
 
-      console.log("res", res)
+        console.log("res", res)
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
-          this.setState({isMediaFileSend: true})
+          this.setState({ isMediaFileSend: true })
         }
         else {
           toast.error("There is something wrong with uploading images. Please try again.")
@@ -3446,6 +3468,7 @@ class ProductDetailsComponent extends Component {
     var productImages = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductImages !== null ? JSON.parse(this.props.productInfo[0].ProductImages) : "";
     var fileInfo = [];
     var url = [];
+    var ImageId = [];
     var file1Added = false;
     var file2Added = false;
     var file3Added = false;
@@ -3453,8 +3476,12 @@ class ProductDetailsComponent extends Component {
 
     if (productImages !== "") {
       for (var z = 0; z < productImages.length; z++) {
+
+        console.log("this is the file", productImages[z])
         fileInfo = [...fileInfo, productImages[z].ProductMediaTitle];
         url = [...url, productImages[z].ProductMediaUrl];
+        ImageId = [...ImageId, productImages[z].ProductMediaID];
+
 
         if (z == 0 && productImages[z].ProductMediaType == "image") {
           file1Added = true;
@@ -3504,6 +3531,7 @@ class ProductDetailsComponent extends Component {
       file: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductImages !== null ? this.props.productInfo[0].ProductImages : [] : [],
       fileInfo: fileInfo,
       url: url,
+      ImageId: ImageId,
       file1Added: file1Added,
       file2Added: file2Added,
       file3Added: file3Added,
@@ -3582,13 +3610,13 @@ class ProductDetailsComponent extends Component {
         this.props.CallResetProductMediaResult()
       }
 
-      // if (this.props.returnUpdateProduct.length === 0 && this.props.productSpecsDetail.length === 0 && this.props.SpecsDetail.length === 0 &&
-      //   this.props.addProductVariationResult.length === 0 && this.props.variationResult.length === 0 && this.props.productMediaResult.length === 0) {
-      //   setTimeout(() => {
-      //     browserHistory.push("/viewProduct");
-      //     window.location.reload(false);
-      //   }, 3000);
-      // }
+      if (this.props.returnUpdateProduct.length === 0 && this.props.productSpecsDetail.length === 0 && this.props.SpecsDetail.length === 0 &&
+        this.props.addProductVariationResult.length === 0 && this.props.variationResult.length === 0 && this.props.productMediaResult.length === 0) {
+        setTimeout(() => {
+          browserHistory.push("/viewProduct");
+          window.location.reload(false);
+        }, 3000);
+      }
     }
 
 
@@ -5592,12 +5620,12 @@ class ProductDetailsComponent extends Component {
                           onMouseEnter={this.mouseIn.bind(this, 1)}
                           className="DropZoneImageMain"
                         >
-                          {this.state.onImage &&
+                          {this.state.onImage && this.state.url[0] !== undefined &&
                             this.state.currentlyHovered === 1 && this.state.toBeEdited && (
                               <div className="DropZoneImageDeleteButtonDiv">
                                 <IconButton
                                   className="DropZoneImageDeleteButtonIconLocation"
-                                  onClick={() => this.onDelete(0, "512x512")}
+                                  onClick={() => this.onDelete(0, "512x512", this.state.url[0])}
                                 >
                                   <CloseIcon
                                     className="DropZoneImageDeleteButtonIcon"
@@ -5606,11 +5634,15 @@ class ProductDetailsComponent extends Component {
                                 </IconButton>
                               </div>
                             )}
-                          <img
-                            className="DropZoneImage"
-                            src={this.state.url[0]}
-                            alt=""
-                          />
+                          {
+                            this.state.url[0] !== undefined &&
+                            <img
+                              className="DropZoneImage"
+                              src={this.state.url[0]}
+                              alt=""
+                            />
+                          }
+
                         </div>
                       )}
                       {!this.state.file2Added && (
@@ -5661,12 +5693,12 @@ class ProductDetailsComponent extends Component {
                           onMouseEnter={this.mouseIn.bind(this, 2)}
                           className="DropZoneImageMain"
                         >
-                          {this.state.onImage &&
+                          {this.state.onImage && this.state.url[1] !== undefined &&
                             this.state.currentlyHovered === 2 && this.state.toBeEdited && (
                               <div className="DropZoneImageDeleteButtonDiv">
                                 <IconButton
                                   className="DropZoneImageDeleteButtonIconLocation"
-                                  onClick={() => this.onDelete(1, "512x512")}
+                                  onClick={() => this.onDelete(1, "512x512", this.state.url[1])}
                                 >
                                   <CloseIcon
                                     className="DropZoneImageDeleteButtonIcon"
@@ -5675,11 +5707,15 @@ class ProductDetailsComponent extends Component {
                                 </IconButton>
                               </div>
                             )}
-                          <img
-                            className="DropZoneImage"
-                            src={this.state.url[1]}
-                            alt=""
-                          />
+                          {
+                            this.state.url[1] !== undefined &&
+                            <img
+                              className="DropZoneImage"
+                              src={this.state.url[1]}
+                              alt=""
+                            />
+                          }
+
                         </div>
                       )}
                       {!this.state.file3Added && (
@@ -5729,12 +5765,12 @@ class ProductDetailsComponent extends Component {
                           onMouseEnter={this.mouseIn.bind(this, 3)}
                           className="DropZoneImageMain"
                         >
-                          {this.state.onImage &&
+                          {this.state.onImage && this.state.url[2] !== undefined &&
                             this.state.currentlyHovered === 3 && this.state.toBeEdited && (
                               <div className="DropZoneImageDeleteButtonDiv">
                                 <IconButton
                                   className="DropZoneImageDeleteButtonIconLocation"
-                                  onClick={() => this.onDelete(2, "512x512")}
+                                  onClick={() => this.onDelete(2, "512x512", this.state.url[2])}
                                 >
                                   <CloseIcon
                                     className="DropZoneImageDeleteButtonIcon"
@@ -5743,11 +5779,15 @@ class ProductDetailsComponent extends Component {
                                 </IconButton>
                               </div>
                             )}
-                          <img
-                            className="DropZoneImage"
-                            src={this.state.url[2]}
-                            alt=""
-                          />
+                          {
+                            this.state.url[2] !== undefined &&
+                            <img
+                              className="DropZoneImage"
+                              src={this.state.url[2]}
+                              alt=""
+                            />
+                          }
+
                         </div>
                       )}
                     </div>

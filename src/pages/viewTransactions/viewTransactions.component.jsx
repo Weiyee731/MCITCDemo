@@ -43,6 +43,7 @@ import Collapse from "@material-ui/core/Collapse";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Input from "@material-ui/core/Input";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 function mapStateToProps(state) {
   return {
@@ -371,6 +372,8 @@ function DeletableTable(props) {
   const [open, setOpen] = React.useState(false);
 
 
+
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -521,12 +524,63 @@ const useRowStyles = makeStyles({
     },
   },
 });
+
+
+
+
+
+
 function Row(props) {
   const { row, setData, index } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
+  const [selectedProductID, setSelectedProductID] = React.useState([]);
+  const [selectedProductIndex, setSelectedProductIndex] = React.useState([]);
+
+
+  const handleSelectedProduct = (product, index) => {
+
+    let tempArray = selectedProductID.filter((x) => parseInt(x) === parseInt(product.ProductID))
+
+    console.log("THIS IS INDEX ARRAY", tempArray)
+    console.log("THIS IS INDEX ARRAY", selectedProductID)
+    console.log("THIS IS INDEX ARRAY", product.ProductID)
+
+    if (selectedProductID.length > 0) {
+
+      if (tempArray.length > 0) {
+        selectedProductID.map((X) => {
+
+          if (X === product.ProductID) {
+            let tempIndex = selectedProductIndex
+            let tempID = selectedProductIndex
+
+            tempIndex = selectedProductIndex.filter((x) => selectedProductIndex.indexOf(x) !== selectedProductID.indexOf(X))
+            tempID = selectedProductID.filter((x) => parseInt(x) !== parseInt(product.ProductID))
+
+            setSelectedProductID( [tempID])
+            setSelectedProductIndex( [tempIndex])
+          }
+        })
+      }
+      else {
+        setSelectedProductID(selectedProductID => [...selectedProductID, product.ProductID])
+        setSelectedProductIndex(selectedProductIndex => [...selectedProductIndex, index])
+      }
+    }
+    else {
+      setSelectedProductID(selectedProductID => [...selectedProductID, product.ProductID])
+      setSelectedProductIndex(selectedProductIndex => [...selectedProductIndex, index])
+    }
+
+    console.log("handleSelectedProduct1", product)
+    console.log("handleSelectedProduct2", index)
+
+  }
 
   const [trackingNumber, setTrackingNumber] = React.useState("");
+
+  console.log("THIS IS THE PROPS", props)
 
   console.log("trackingNumber", trackingNumber)
 
@@ -609,7 +663,7 @@ function Row(props) {
               <p className="subHeading">Products Ordered</p>
               {row.OrderProductDetail ? (
                 <Table size="small" aria-label="products">
-                  <TableHead>
+                  {/* <TableHead>
                     <TableRow>
                       <TableCell><Checkbox /></TableCell>
                       <TableCell>Product Image</TableCell>
@@ -620,6 +674,11 @@ function Row(props) {
                       <TableCell>Remark</TableCell>
 
                     </TableRow>
+                  </TableHead> */}
+                  <TableHead>
+                    <TableRow>
+                      <TableCell><Checkbox /></TableCell>
+                    </TableRow>
                   </TableHead>
                   <TableBody>
                     {row.OrderProductDetail
@@ -627,27 +686,32 @@ function Row(props) {
                       <>
                         {JSON.parse(row.OrderProductDetail).map((product, i) => (
                           <TableRow>
-                            <TableCell><Checkbox /></TableCell>
-                            <TableCell>
+                            {console.log("THIS IS PRO", product)}
+                            <TableCell style={{ width: "10%" }}>
+                              <Checkbox
+
+                                onClick={() => handleSelectedProduct(product, i)}
+                              /></TableCell>
+                            <TableCell style={{ width: "10%" }}>
                               <img
-                                height={50}
-                                src={
-                                  JSON.parse(product.ProductImages)
-                                    ? JSON.parse(product.ProductImages)[0]
-                                      .ProductMediaUrl
-                                    : ""
-                                }
+                                height={60}
+                                src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
+                                onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+                                alt={product.ProductName}
                               />
                             </TableCell>
-                            {console.log("price", product)}
-                            <TableCell>{product.ProductName}</TableCell>
-                            <TableCell>{product.ProductQuantity}</TableCell>
-                            <TableCell>{product.ProductVariationPrice}</TableCell>
-                            <TableCell>
-                              {product.ProductQuantity *
-                                product.ProductVariationPrice}
+                            <TableCell style={{ width: "50%" }}>
+                              <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
+                              <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
+                              <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
+                              <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
                             </TableCell>
-                            <TableCell>{product.TrackingStatus}</TableCell>
+                            <TableCell style={{ width: "10%" }}> X {product.ProductQuantity}</TableCell>
+                            {/* <TableCell>{product.ProductVariationPrice}</TableCell> */}
+                            <TableCell style={{ width: "20%" }}>
+                              <div style={{ fontWeight: "bold" }}>   Total : RM {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}</div>
+                            </TableCell>
+                            {/* <TableCell>{product.TrackingStatus}</TableCell> */}
                             {/* <TableCell>
                             <Input
                               id="component-simple"
@@ -1125,7 +1189,6 @@ class ViewTransactionsComponent extends Component {
       <div className="mainContainer">
         {!this.state.tabsHidden ? (
           <div>
-            {console.log("HERE")}
             <p className="heading">Orders List</p>
             <div className="selectContainer">
               <FormControl variant="outlined" size="small">

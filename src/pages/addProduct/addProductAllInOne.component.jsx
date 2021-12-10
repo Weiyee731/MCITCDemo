@@ -3230,6 +3230,11 @@ class AddProductComponent extends Component {
         if (this.state.isSubmit === true) {
           toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
           this.setState({ isSubmit: false })
+          setTimeout(() => {
+            browserHistory.push("/viewProduct");
+            window.location.reload(false);
+          }, 3000);
+
         }
       }
     }

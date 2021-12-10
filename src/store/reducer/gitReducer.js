@@ -65,7 +65,8 @@ const INITIAL_STATE = {
   contactUpdated: [],
   emailUpdated: [],
   shopUpdated: [],
-  emailVerification: []
+  emailVerification: [],
+  endorsedProduct: []
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -332,6 +333,17 @@ export function counterReducer(state = INITIAL_STATE, action) {
         productsByID: action.payload,
       });
 
+    case GitAction.EndorseProduct:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ProductEndorsed:
+      return Object.assign({}, state, {
+        loading: false,
+        endorsedProduct: action.payload,
+      });
+
+    case GitAction.ResetProductEndorse:
+      return Object.assign({}, state, { endorsedProduct: [] });
+
     case GitAction.ResetProductDetails:
       return Object.assign({}, state, { productsByID: [] });
 
@@ -362,7 +374,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         products: [],
       });
-      
+
     // case GitAction.GetProductByProductStatus:
     //   return Object.assign({}, state, { loading: true });
     // case GitAction.GotProductByProductStatus:
@@ -414,6 +426,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.AddProductMedia:
       return Object.assign({}, state, { loading: true });
     case GitAction.ProductMediaAdded:
+      return Object.assign({}, state, {
+        loading: false,
+        productMediaResult: action.payload,
+      });
+
+    case GitAction.deleteProductMedia:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.deletedProductMedia:
       return Object.assign({}, state, {
         loading: false,
         productMediaResult: action.payload,

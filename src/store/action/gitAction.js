@@ -271,11 +271,16 @@ export class GitAction {
   static EndorseProduct = "ENDOSE-PRODUCT";
   static ProductEndorsed = "ENDOSED-PRODUCT";
 
+  static ResetProductEndorse = "RESET-PRODUCT-ENDORSE";
+
   static CheckProduct = "CHECK-PRODUCT";
   static ProductChecked = "CHECKED-PRODUCT";
 
   static AddProductMedia = "ADD-PRODUCTMEDIA";
   static ProductMediaAdded = "ADDED-PRODUCTMEDIA";
+
+  static deleteProductMedia = "DELETE-PRODUCTMEDIA";
+  static deletedProductMedia = "DELETED-PRODUCTMEDIA";
 
   static AddProductPurchaseOrder = "ADD-PRODUCTPURCHASEORDER";
   static AddedProductPurchaseOrder = "ADDED-PRODUCTPURCHASEORDER";
@@ -368,6 +373,13 @@ export class GitAction {
     };
   }
 
+  static CallResetEndorseProduct(prodData) {
+    return {
+      type: GitAction.ResetProductEndorse,
+      payload: prodData,
+    };
+  }
+
   static CallUpdateProduct(prodData) {
     return {
       type: GitAction.UpdateProduct,
@@ -405,6 +417,13 @@ export class GitAction {
   static CallAddProductMedia(prodData) {
     return {
       type: GitAction.AddProductMedia,
+      payload: prodData,
+    };
+  }
+
+  static CallDeleteProductMedia(prodData) {
+    return {
+      type: GitAction.deleteProductMedia,
       payload: prodData,
     };
   }

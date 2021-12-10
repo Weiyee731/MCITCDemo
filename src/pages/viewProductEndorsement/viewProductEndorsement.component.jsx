@@ -28,13 +28,14 @@ import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/Logo.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { toast } from "react-toastify";
 
 function mapStateToProps(state) {
   return {
     allstocks: state.counterReducer["products"],
+    endorsedProduct: state.counterReducer["endorsedProduct"],
   };
 }
 
@@ -42,6 +43,7 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
     CallEndorseProduct: (prodData) => dispatch(GitAction.CallEndorseProduct(prodData)),
+    CallResetEndorseProduct: () => dispatch(GitAction.CallResetEndorseProduct()),
     CallResetEndorseProductReturnValue: (prodData) => dispatch(GitAction.CallResetEndorseProductReturnValue(prodData)),
   };
 }
@@ -283,7 +285,7 @@ const DeletableTableToolbar = (props) => {
     props.ProductProps.CallEndorseProduct({
       ProductID: props.selectedData,
       UserID: window.localStorage.getItem("id")
-    })
+    })    
     // props.callAllGridStorages();
   };
 
@@ -548,8 +550,7 @@ class DisplayTable extends Component {
     this.setState({ orderBy: property });
   };
 
-  componentDidUpdate(prevProps) {
-  }
+
 
   handleDetailShown = (value) => {
     this.setState({ detailsShown: value })
@@ -701,7 +702,7 @@ class DisplayTable extends Component {
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
             {
-              this.props.Data.filter((searchedItem) => 
+              this.props.Data.filter((searchedItem) =>
                 searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
                 .map((filteredItem) => { filteredProduct.push(filteredItem); })
             }
@@ -758,7 +759,7 @@ class DisplayTable extends Component {
                       rowCount={this.props.Data.length}
                     />
                     {
-                      this.props.Data.filter((searchedItem) => typeof  searchedItem.ProductName !== "undefined" && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+                      this.props.Data.filter((searchedItem) => typeof searchedItem.ProductName !== "undefined" && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
                         .map((filteredItem) => { filteredProduct.push(filteredItem); })
                     }
                     <TableBody>
@@ -867,7 +868,22 @@ class ViewProductEndorsementComponent extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.endorsedProduct !== undefined && this.props.endorsedProduct.length > 0 && this.props.endorsedProduct[0].ReturnVal == "1") {
+      this.props.CallResetEndorseProduct()
+      this.props.CallAllProducts({
+        type: 'Status',
+        typeValue: 'Pending',
+        userId: window.localStorage.getItem("id"),
+        productPage: '999',
+        page: '1'
+      });
+    }
+  }
+
   render() {
+
+    console.log("this.props", this.props.endorsedProduct)
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable

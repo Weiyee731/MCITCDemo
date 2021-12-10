@@ -1528,13 +1528,14 @@ export class GitEpic {
   endorseProduct = (action$) =>
     action$.ofType(GitAction.EndorseProduct).switchMap(async ({ payload }) => {
       try {
-        const response = await fetch(url + "Product_EndorseProducts?ProductIDs=" + payload);
+        const response = await fetch(url + "Product_EndorseProducts?ProductIDs=" + payload.ProductID);
         let json = await response.json();
         json = JSON.parse(json);
         return {
           type: GitAction.ProductEndorsed,
           payload: json,
         };
+
       } catch (error) {
         alert('endorseProduct: ' + error);
         return {
@@ -1611,8 +1612,36 @@ export class GitEpic {
       }
     });
 
-  // PRODUCT VARIATION DETAIL
+  DeleteProductMedia = (action$) =>
+    action$.ofType(GitAction.deleteProductMedia).switchMap(async ({ payload }) => {
+      try {
 
+        console.log(url +
+          "Product_DeleteProductMedia?" +
+          "PRODUCTMEDIAID=" + payload.imageID)
+
+        const resposne = await fetch(
+          url +
+          "Product_DeleteProductMedia?" +
+          "PRODUCTMEDIAID=" + payload.imageID);
+
+        let json = await resposne.json();
+        json = JSON.parse(json);
+
+        return {
+          type: GitAction.deletedProductMedia,
+          payload: json,
+        };
+
+      } catch (error) {
+        return {
+          type: GitAction.deletedProductMedia,
+          payload: [],
+        };
+      }
+    });
+
+  // PRODUCT VARIATION DETAIL
   addProductVariationDetail = (action$) =>
     action$.ofType(GitAction.AddProductVariationDetail).switchMap(async ({ payload }) => {
       try {
