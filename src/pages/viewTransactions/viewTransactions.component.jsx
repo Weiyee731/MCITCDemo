@@ -60,12 +60,14 @@ function mapDispatchToProps(dispatch) {
   return {
     CallGetTransaction: (transactionData) =>
       dispatch(GitAction.CallGetTransaction(transactionData)),
-    CallDeletePromoCode: (promoCodeData) =>
-      dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
+    // CallDeletePromoCode: (promoCodeData) =>
+    //   dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
     CallCourierService: () =>
       dispatch(GitAction.CallCourierService()),
     CallGetTransactionStatus: () =>
       dispatch(GitAction.CallGetTransactionStatus()),
+    CallResetOrderTracking: () =>
+      dispatch(GitAction.CallResetOrderTracking()),
     CallUpdateOrderTracking: (propData) =>
       dispatch(GitAction.CallUpdateOrderTracking(propData)),
   };
@@ -177,56 +179,56 @@ const headCells = [
   },
 ];
 
-function DeletableTableHead(props) {
-  const {
-    classes,
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
+// function DeletableTableHead(props) {
+//   const {
+//     classes,
+//     onSelectAllClick,
+//     order,
+//     orderBy,
+//     numSelected,
+//     rowCount,
+//     onRequestSort,
+//   } = props;
+//   const createSortHandler = (property) => (event) => {
+//     onRequestSort(event, property);
+//   };
 
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all order" }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "default"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
+//   return (
+//     <TableHead>
+//       <TableRow>
+//         <TableCell padding="checkbox">
+//           <Checkbox
+//             indeterminate={numSelected > 0 && numSelected < rowCount}
+//             checked={rowCount > 0 && numSelected === rowCount}
+//             onChange={onSelectAllClick}
+//             inputProps={{ "aria-label": "select all order" }}
+//           />
+//         </TableCell>
+//         {headCells.map((headCell) => (
+//           <TableCell
+//             key={headCell.id}
+//             align={headCell.numeric ? "right" : "left"}
+//             padding={headCell.disablePadding ? "none" : "default"}
+//             sortDirection={orderBy === headCell.id ? order : false}
+//           >
+//             <TableSortLabel
+//               active={orderBy === headCell.id}
+//               direction={orderBy === headCell.id ? order : "asc"}
+//               onClick={createSortHandler(headCell.id)}
+//             >
+//               {headCell.label}
+//               {orderBy === headCell.id ? (
+//                 <span className={classes.visuallyHidden}>
+//                   {order === "desc" ? "sorted descending" : "sorted ascending"}
+//                 </span>
+//               ) : null}
+//             </TableSortLabel>
+//           </TableCell>
+//         ))}
+//       </TableRow>
+//     </TableHead>
+//   );
+// }
 
 function DisplayTableHead(props) {
   const {
@@ -270,15 +272,15 @@ function DisplayTableHead(props) {
   );
 }
 
-DeletableTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
+// DeletableTableHead.propTypes = {
+//   classes: PropTypes.object.isRequired,
+//   numSelected: PropTypes.number.isRequired,
+//   onRequestSort: PropTypes.func.isRequired,
+//   onSelectAllClick: PropTypes.func.isRequired,
+//   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+//   orderBy: PropTypes.string.isRequired,
+//   rowCount: PropTypes.number.isRequired,
+// };
 
 DisplayTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -290,65 +292,64 @@ DisplayTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const DeletableTableToolbar = (props) => {
-  const classes = useStyles();
+// const DeletableTableToolbar = (props) => {
+//   const classes = useStyles();
 
-  const { numSelected } = props;
+//   const { numSelected } = props;
 
-  const onDeleteProduct = () => {
-    console.log(props.selectedData);
-    props.ProductProps.CallDeletePromoCode(props.selectedData);
-    setTimeout(
-      function () {
-        window.location.reload(false);
-      }.bind(this),
-      500
-    );
-  };
+//   const onDeleteProduct = () => {
+//     props.ProductProps.CallDeletePromoCode(props.selectedData);
+//     setTimeout(
+//       function () {
+//         window.location.reload(false);
+//       }.bind(this),
+//       500
+//     );
+//   };
 
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          // variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Please select the promo codes that you want to delete.
-        </Typography>
-      )}
+//   return (
+//     <Toolbar
+//       className={clsx(classes.root, {
+//         [classes.highlight]: numSelected > 0,
+//       })}
+//     >
+//       {numSelected > 0 ? (
+//         <Typography
+//           className={classes.title}
+//           color="inherit"
+//           variant="subtitle1"
+//           component="div"
+//         >
+//           {numSelected} selected
+//         </Typography>
+//       ) : (
+//         <Typography
+//           className={classes.title}
+//           // variant="h6"
+//           id="tableTitle"
+//           component="div"
+//         >
+//           Please select the promo codes that you want to delete.
+//         </Typography>
+//       )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton
-            aria-label="delete"
-            onClick={() => {
-              onDeleteProduct();
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        ""
-      )}
-    </Toolbar>
-  );
-};
+//       {numSelected > 0 ? (
+//         <Tooltip title="Delete">
+//           <IconButton
+//             aria-label="delete"
+//             onClick={() => {
+//               onDeleteProduct();
+//             }}
+//           >
+//             <DeleteIcon />
+//           </IconButton>
+//         </Tooltip>
+//       ) : (
+//         ""
+//       )}
+//     </Toolbar>
+//   );
+// };
 
 const DisplayTableToolbar = (props) => {
   const classes = useStyles();
@@ -357,9 +358,9 @@ const DisplayTableToolbar = (props) => {
   return <Toolbar className={clsx(classes.root)}></Toolbar>;
 };
 
-DeletableTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
+// DeletableTableToolbar.propTypes = {
+//   numSelected: PropTypes.number.isRequired,
+// };
 
 DisplayTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
@@ -434,11 +435,11 @@ function DeletableTable(props) {
   return (
     <div>
       <Paper className={classes.paper}>
-        <DeletableTableToolbar
+        {/* <DeletableTableToolbar
           numSelected={selected.length}
           selectedData={selected}
           ProductProps={props.ProductProps}
-        />
+        /> */}
         <TableContainer>
           <Table
             className={classes.table}
@@ -446,7 +447,7 @@ function DeletableTable(props) {
             size={dense ? "small" : "medium"}
             aria-label="enhanced table"
           >
-            <DeletableTableHead
+            {/* <DeletableTableHead
               classes={classes}
               numSelected={selected.length}
               order={order}
@@ -454,7 +455,7 @@ function DeletableTable(props) {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={props.Data.length}
-            />
+            /> */}
             <TableBody>
               {stableSort(props.Data, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -484,11 +485,6 @@ function DeletableTable(props) {
                       <TableCell align="left">{row.PaymentMethod}</TableCell>
                       <TableCell align="left">{row.TrackingStatus}</TableCell>
                       <TableCell align="right">
-                        {/* {row.OrderProductDetail
-                          ? JSON.parse(
-                              row.OrderProductDetail
-                            ).map((product) => <p>{product.ProductName}</p>)
-                          : null} */}
                         {row.OrderProductDetail ? (
                           <p>{JSON.parse(row.OrderProductDetail).length}</p>
                         ) : (
@@ -538,6 +534,10 @@ function Row(props) {
   const [selectedProductIndex, setSelectedProductIndex] = React.useState([]);
   const [logisticID, setLogisticID] = React.useState(1);
   const [trackingNumber, setTrackingNumber] = React.useState("");
+  const [existingTrackingData, setTrackingData] = React.useState([]);
+  // const [existingLogisticID, setExistingLogisticID] = React.useState(1);
+  // const [existingTrackingNumber, setExistingTrackingNumber] = React.useState("");
+  // const [selectedExistingIndex, setSelectedExistingIndex] = React.useState("");
 
 
   const handleSelectedProduct = (product, index) => {
@@ -550,33 +550,27 @@ function Row(props) {
 
           if (X === product.OrderProductDetailID) {
             let tempIndex = selectedProductIndex
-            let tempID = selectedProductIndex
+            let tempID = selectedRowID
 
             tempIndex = selectedProductIndex.filter((x) => selectedProductIndex.indexOf(x) !== selectedProductDetailsID.indexOf(X))
             tempID = selectedProductDetailsID.filter((x) => parseInt(x) !== parseInt(product.OrderProductDetailID))
-
             setSelectedProductDetailsID(tempID)
-            // setSelectedProductIndex(tempIndex)
           }
         })
       }
       else {
         setSelectedProductDetailsID(selectedProductDetailsID => [...selectedProductDetailsID, product.OrderProductDetailID])
-        // setSelectedProductIndex(selectedProductIndex => [...selectedProductIndex, index])
       }
     }
     else {
       setSelectedProductDetailsID(selectedProductDetailsID => [...selectedProductDetailsID, product.OrderProductDetailID])
-      // setSelectedProductIndex(selectedProductIndex => [...selectedProductIndex, index])
     }
-
   }
 
   const handleSelectAllProduct = (order, index) => {
 
     if (selectedRowID.length === selectedProductDetailsID.length) {
       setSelectedProductDetailsID([])
-      // setSelectedProductIndex([])
     }
     else {
       setSelectedProductDetailsID(selectedRowID)
@@ -595,7 +589,6 @@ function Row(props) {
     return (
 
       <TableBody>
-        {console.log("PRODUCT0", product)}
         <TableRow>
           <TableCell style={{ width: "10%" }}>
             <Checkbox
@@ -615,7 +608,7 @@ function Row(props) {
               alt={product.ProductName}
             />
           </TableCell>
-          <TableCell style={{ width: "45%" }}>
+          <TableCell style={{ width: "50%" }}>
             <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
             <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
             <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
@@ -649,36 +642,144 @@ function Row(props) {
             <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
           </TableCell>
           <TableCell style={{ width: "5%" }}> X {product.ProductQuantity}</TableCell>
-          <TableCell style={{ width: "20%" }}>
+          <TableCell style={{ width: "15%" }}>
             <div style={{ fontWeight: "bold" }}>   Total : RM {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}</div>
           </TableCell>
           <TableCell style={{ width: "20%" }}>
             <div>   Tracking Number :</div>
-            <div style={{ fontWeight: "bold" }}>   {product.TrackingNumber}</div>
-            {logistic.filter(x => x.LogisticID === product.LogisticID).map((courier) => {
-              return (
-                <div style={{ fontWeight: "bold" }}> {courier.LogisticName}  </div>
-              )
-            })}
+            {
+              checkExisting(product) !== 0 ?
+                checkExisting(product).map((Data) => {
+                  return (
+                    <>
+                      <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
+                        <Select
+                          native
+                          id="Logistic"
+                          value={Data.existingLogisticID}
+                          onChange={(x) => handleInputChange(x.target.value, "LogisticID", product)}
+                          className="select"
+                        >
+                          {logistic.map((courier) => (
+                            <option
+                              value={courier.LogisticID}
+                              key={courier.LogisticID}
+                            >
+                              {courier.LogisticName}
+                            </option>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        id="outlined-size-small" size="small"
+                        width="100%"
+                        className="font"
+                        variant="outlined"
+                        value={Data.existingTrackingNumber}
+                        onChange={(x) => handleInputChange(x.target.value, "Tracking", product)}
+                      />
+                    </>
+                  )
+                })
+                :
+                <>
+                  <div style={{ fontWeight: "bold" }}>   {product.TrackingNumber}</div>
+                  {logistic.filter(x => x.LogisticID === product.LogisticID).map((courier) => {
+                    return (
+                      <div style={{ fontWeight: "bold" }}> {courier.LogisticName}  </div>
+                    )
+                  })}
+                </>
+            }
           </TableCell>
-          <TableCell style={{ width: "10%" }}>
-            <Button style={{ backgroundColor: "#28a745", color: "white" }}
-            // onClick={() => handleSubmitTracking()}
-            >EDIT</Button>
+          <TableCell style={{ width: "15%" }}>
+            <div className="row">
+              <div className="col-6">
+                {checkExisting(product) !== 0 &&
+                  <Button style={{ backgroundColor: "#28a745", color: "white" }}
+                    onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID)}
+                  >UPDATE</Button>
+                }
+              </div>
+              <div className="col-6">
+                <Button style={{
+                  backgroundColor: checkExisting(product) !== 0 ? "#808080" : "#28a745", color: "white"
+                }}
+                  onClick={() => handleEditExistingTracking(product, i)}  >{checkExisting(product) !== 0 ? "CANCEL" : "EDIT"}</Button>
+              </div>
+            </div>
           </TableCell>
         </TableRow>
       </TableBody>
     )
   }
 
-  const handleSubmitTracking = () => {
-    prop.CallUpdateOrderTracking({
-      ORDERTRACKINGNUMBER: trackingNumber,
-      LOGISTICID: logisticID,
-      ORDERPRODUCTDETAILSID: selectedProductDetailsID
-    })
+  const checkExisting = (product) => {
+    if (existingTrackingData.length > 0) {
+      let filterData = existingTrackingData.filter((x) => parseInt(x.existingProductDetailsID) === parseInt(product.OrderProductDetailID))
+      if (filterData.length > 0)
+        return filterData
+      else
+        return 0
+    }
+    else
+      return 0
   }
 
+  const handleInputChange = (value, type, product) => {
+    let Listing = [...existingTrackingData]
+    let DataIndex = existingTrackingData.findIndex((x) => x.existingProductDetailsID === product.OrderProductDetailID)
+    switch (type) {
+      case "Tracking":
+        Listing[DataIndex].existingLogisticID = Listing[DataIndex].existingLogisticID
+        Listing[DataIndex].existingTrackingNumber = value
+        break;
+
+      case "LogisticID":
+        Listing[DataIndex].existingLogisticID = value
+        Listing[DataIndex].existingTrackingNumber = Listing[DataIndex].existingTrackingNumber
+
+        break;
+
+      default:
+        break;
+    }
+    Listing[DataIndex].existingProductDetailsID = Listing[DataIndex].existingProductDetailsID
+    setTrackingData(Listing)
+  }
+
+  const handleEditExistingTracking = (product, productIndex) => {
+
+    if (checkExisting(product) !== 0) {
+      setTrackingData(existingTrackingData.filter((x) => x.existingProductDetailsID !== product.OrderProductDetailID))
+    } else {
+      setTrackingData([...existingTrackingData,
+      {
+        existingLogisticID: product.LogisticID,
+        existingTrackingNumber: product.TrackingNumber,
+        existingProductDetailsID: product.OrderProductDetailID,
+      }])
+    }
+  }
+
+  const handleUpdateExistingTracking = (ProductDetailsID) => {
+    let Listing = existingTrackingData.filter((x) => x.existingProductDetailsID === ProductDetailsID)
+    prop.CallUpdateOrderTracking({
+      ORDERTRACKINGNUMBER: Listing[0].existingTrackingNumber,
+      LOGISTICID: Listing[0].existingLogisticID,
+      ORDERPRODUCTDETAILSID: ProductDetailsID
+    })
+    setTrackingData(existingTrackingData.filter((x) => x.existingProductDetailsID !== ProductDetailsID))
+  }
+
+  const handleSubmitTracking = (tracking, LogisticID, ProductDetailsID) => {
+    prop.CallUpdateOrderTracking({
+      ORDERTRACKINGNUMBER: tracking,
+      LOGISTICID: LogisticID,
+      ORDERPRODUCTDETAILSID: ProductDetailsID
+    })
+    setSelectedProductDetailsID([])
+  }
 
   const trackingView = () => {
     return (
@@ -688,7 +789,7 @@ function Row(props) {
             <label className="px-6">Logistic Tracking Number : </label>
           </div>
           <div className="col-3" style={{ paddingTop: "10px" }}>
-            <FormControl variant="outlined" size="small" style={{ width: "200px" }}>
+            <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
               <Select
                 native
                 id="Logistic"
@@ -718,9 +819,9 @@ function Row(props) {
               onChange={(x) => setTrackingNumber(x.target.value)}
             />
           </div>
-          <div className="col-2" style={{ paddingTop: "20px" }}>
+          <div className="col-2" style={{ paddingTop: "10px" }}>
             <Button style={{ backgroundColor: trackingNumber === "" ? "#808080" : "#28a745", color: "white" }}
-              onClick={() => handleSubmitTracking()}
+              onClick={() => handleSubmitTracking(trackingNumber, logisticID, selectedProductDetailsID)}
               disabled={trackingNumber === "" ? true : false}
             >SUBMIT</Button>
           </div>
@@ -829,9 +930,7 @@ function Row(props) {
                             </>
                           ))
                           }
-
                         </>
-
                         : null}
                     </div>
                   </div>
@@ -851,8 +950,6 @@ function Row(props) {
                 <p className="fadedText">No Products To Display</p>
               )}
             </Box>
-
-
           </Collapse>
         </TableCell>
       </TableRow>
@@ -906,7 +1003,6 @@ class DisplayTable extends Component {
       address: row.UserAddressLine1,
       detailsShown: false,
     });
-    console.log(this.props.Data[index]);
 
     if (this.state.detailsShown) {
       this.setState({
@@ -1165,11 +1261,6 @@ class ViewTransactionsComponent extends Component {
       tabsHidden: false,
       currentlyChosen: "Payment Confirm",
     };
-
-    // this.props.CallAllProductsByProductStatus({
-    //   ProductStatus: this.state.productStatus,
-    //   UserID: localStorage.getItem("id"),
-    // });
   }
 
   componentDidMount() {
@@ -1178,6 +1269,13 @@ class ViewTransactionsComponent extends Component {
     this.props.CallCourierService();
   }
 
+
+  componentDidUpdate(prevProps) {
+    if (this.props.tracking.length > 0 && this.props.tracking[0].ReturnVal !== undefined) {
+      this.props.CallResetOrderTracking()
+      this.props.CallGetTransaction("Payment Confirm");
+    }
+  }
 
   setTabsHidden = (value) => {
     this.setState({
@@ -1293,9 +1391,6 @@ class ViewTransactionsComponent extends Component {
         );
 
     }
-    console.log("this.props 1212", this.props)
-
-
     return (
       <div className="mainContainer">
         {!this.state.tabsHidden ? (

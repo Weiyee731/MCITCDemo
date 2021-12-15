@@ -2501,11 +2501,6 @@ export class GitEpic {
   updateOrderTrackingNumber = (action$) =>
     action$.ofType(GitAction.updateTrackingNumber).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
-          "Order_UpdateTrackingNumber?ORDERTRACKINGNUMBER=" + payload.ORDERTRACKINGNUMBER +
-          "&LOGISTICID=" + payload.LOGISTICID +
-          "&ORDERPRODUCTDETAILSID=" + payload.ORDERPRODUCTDETAILSID)
-
         const response = await fetch(
           url +
           "Order_UpdateTrackingNumber?ORDERTRACKINGNUMBER=" + payload.ORDERTRACKINGNUMBER +
@@ -2515,8 +2510,10 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
         console.log("JSON", json)
+        if (json[0].ReturnVal === 1)
+          toast.success("Logistic Data is successfully Updated")
         return {
-          type: GitAction.GotDeliverableList,
+          type: GitAction.updatedTrackingNumber,
           payload: json,
         };
       } catch (error) {
@@ -2824,7 +2821,6 @@ export class GitEpic {
 
   getAllTransactions = (action$) =>
     action$.ofType(GitAction.GetTransactions).switchMap(async ({ payload }) => {
-
       try {
         const response = await fetch(
           url +

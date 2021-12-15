@@ -906,6 +906,8 @@ export function counterReducer(state = INITIAL_STATE, action) {
         tracking: action.payload,
       });
 
+    case GitAction.resetTracking:
+      return Object.assign({}, state, { tracking: [] });
 
     case GitAction.GetProductStockByStatus:
       return Object.assign({}, state, { loading: true });
