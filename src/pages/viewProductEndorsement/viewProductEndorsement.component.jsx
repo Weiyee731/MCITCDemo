@@ -28,7 +28,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import Logo from "../../assets/Logo.png";
+import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { toast } from "react-toastify";
 

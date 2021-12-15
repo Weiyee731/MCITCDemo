@@ -1043,6 +1043,30 @@ export class GitEpic {
       }
     });
 
+  // All Courier Service
+  getAllCourierService = (action$) =>
+    action$.ofType(GitAction.GetCourierService).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "User_ViewCourierService"
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.GotCourierService,
+          payload: json,
+        };
+
+      } catch (error) {
+        alert('getAllCourierService: ' + error);
+        return {
+          type: GitAction.GotCourierService,
+          payload: [],
+        };
+      }
+    });
+
   // All Payment Method
   getAllPaymentMethod = (action$) =>
     action$.ofType(GitAction.GetPaymentMethod).switchMap(async ({ payload }) => {
@@ -2467,6 +2491,38 @@ export class GitEpic {
         alert('deleteProductCart: ' + error);
         return {
           type: GitAction.AddedOrder,
+          payload: [],
+        };
+      }
+    });
+
+
+  // UPDATE TRACKING
+  updateOrderTrackingNumber = (action$) =>
+    action$.ofType(GitAction.updateTrackingNumber).switchMap(async ({ payload }) => {
+      try {
+        console.log(url +
+          "Order_UpdateTrackingNumber?ORDERTRACKINGNUMBER=" + payload.ORDERTRACKINGNUMBER +
+          "&LOGISTICID=" + payload.LOGISTICID +
+          "&ORDERPRODUCTDETAILSID=" + payload.ORDERPRODUCTDETAILSID)
+
+        const response = await fetch(
+          url +
+          "Order_UpdateTrackingNumber?ORDERTRACKINGNUMBER=" + payload.ORDERTRACKINGNUMBER +
+          "&LOGISTICID=" + payload.LOGISTICID +
+          "&ORDERPRODUCTDETAILSID=" + payload.ORDERPRODUCTDETAILSID
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        console.log("JSON", json)
+        return {
+          type: GitAction.GotDeliverableList,
+          payload: json,
+        };
+      } catch (error) {
+        alert('getDeliverableList: ' + error);
+        return {
+          type: GitAction.updatedTrackingNumber,
           payload: [],
         };
       }

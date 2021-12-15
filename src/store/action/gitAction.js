@@ -180,6 +180,16 @@ export class GitAction {
     };
   }
 
+    //==================COURIER SERVICE==========================//
+    static GetCourierService = "GET-COURIER-SERVICE";
+    static GotCourierService = "GOT-COURIER-SERVICE";
+  
+    static CallCourierService() {
+      return {
+        type: GitAction.GetCourierService,
+      };
+    }
+
   //==================PAYMENT METHOD==========================//
   static GetPaymentMethod = "GET-PAYMENTMETHID";
   static GotPaymentMethod = "GOT-PAYMENTMETHID";
@@ -952,6 +962,8 @@ export class GitAction {
   //=================ORDER====================//
   static AddOrder = "ADD-ORDER";
   static AddedOrder = "ADDED-ORDER";
+  static updateTrackingNumber = "UPDATE-TRACKING-NUMBER";
+  static updatedTrackingNumber = "UPDATED-TRACKING-NUMBER";
   static ClearOrder = "CLEAR-ORDER";
   static ClearedOrder = "CLEARED-ORDER";
   static GetProductStockByStatus = "GET-PRODUCTSTOCKBYSTATUS";
@@ -967,6 +979,13 @@ export class GitAction {
   static CallClearOrder() {
     return {
       type: GitAction.AddOrder
+    };
+  }
+
+  static CallUpdateOrderTracking(prodData) {
+    return {
+      type: GitAction.updateTrackingNumber,
+      payload: prodData,
     };
   }
 

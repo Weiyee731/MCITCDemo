@@ -50,6 +50,8 @@ function mapStateToProps(state) {
     allpromocodes: state.counterReducer["promoCodes"],
     allstocks: state.counterReducer["products"],
     alltransactions: state.counterReducer["transactions"],
+    logistic: state.counterReducer["logistic"],
+    tracking: state.counterReducer["tracking"],
     alltransactionstatus: state.counterReducer["transactionStatus"],
   };
 }
@@ -60,10 +62,12 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallGetTransaction(transactionData)),
     CallDeletePromoCode: (promoCodeData) =>
       dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
-    // CallAllProductsByProductStatus: (prodData) =>
-    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+    CallCourierService: () =>
+      dispatch(GitAction.CallCourierService()),
     CallGetTransactionStatus: () =>
       dispatch(GitAction.CallGetTransactionStatus()),
+    CallUpdateOrderTracking: (propData) =>
+      dispatch(GitAction.CallUpdateOrderTracking(propData)),
   };
 }
 
@@ -372,8 +376,6 @@ function DeletableTable(props) {
   const [open, setOpen] = React.useState(false);
 
 
-
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -527,98 +529,233 @@ const useRowStyles = makeStyles({
 
 
 
-
-
-
 function Row(props) {
-  const { row, setData, index } = props;
+  const { row, setData, index, logistic, prop } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
-  const [selectedProductID, setSelectedProductID] = React.useState([]);
+  const [selectedProductDetailsID, setSelectedProductDetailsID] = React.useState([]);
+  const [selectedRowID, setSelectedRowID] = React.useState([]);
   const [selectedProductIndex, setSelectedProductIndex] = React.useState([]);
+  const [logisticID, setLogisticID] = React.useState(1);
+  const [trackingNumber, setTrackingNumber] = React.useState("");
 
 
   const handleSelectedProduct = (product, index) => {
 
-    let tempArray = selectedProductID.filter((x) => parseInt(x) === parseInt(product.ProductID))
-
-    console.log("THIS IS INDEX ARRAY", tempArray)
-    console.log("THIS IS INDEX ARRAY", selectedProductID)
-    console.log("THIS IS INDEX ARRAY", product.ProductID)
-
-    if (selectedProductID.length > 0) {
+    let tempArray = selectedProductDetailsID.filter((x) => parseInt(x) === parseInt(product.OrderProductDetailID))
+    if (selectedProductDetailsID.length > 0) {
 
       if (tempArray.length > 0) {
-        selectedProductID.map((X) => {
+        selectedProductDetailsID.map((X) => {
 
-          if (X === product.ProductID) {
+          if (X === product.OrderProductDetailID) {
             let tempIndex = selectedProductIndex
             let tempID = selectedProductIndex
 
-            tempIndex = selectedProductIndex.filter((x) => selectedProductIndex.indexOf(x) !== selectedProductID.indexOf(X))
-            tempID = selectedProductID.filter((x) => parseInt(x) !== parseInt(product.ProductID))
+            tempIndex = selectedProductIndex.filter((x) => selectedProductIndex.indexOf(x) !== selectedProductDetailsID.indexOf(X))
+            tempID = selectedProductDetailsID.filter((x) => parseInt(x) !== parseInt(product.OrderProductDetailID))
 
-            setSelectedProductID( [tempID])
-            setSelectedProductIndex( [tempIndex])
+            setSelectedProductDetailsID(tempID)
+            // setSelectedProductIndex(tempIndex)
           }
         })
       }
       else {
-        setSelectedProductID(selectedProductID => [...selectedProductID, product.ProductID])
-        setSelectedProductIndex(selectedProductIndex => [...selectedProductIndex, index])
+        setSelectedProductDetailsID(selectedProductDetailsID => [...selectedProductDetailsID, product.OrderProductDetailID])
+        // setSelectedProductIndex(selectedProductIndex => [...selectedProductIndex, index])
       }
     }
     else {
-      setSelectedProductID(selectedProductID => [...selectedProductID, product.ProductID])
-      setSelectedProductIndex(selectedProductIndex => [...selectedProductIndex, index])
+      setSelectedProductDetailsID(selectedProductDetailsID => [...selectedProductDetailsID, product.OrderProductDetailID])
+      // setSelectedProductIndex(selectedProductIndex => [...selectedProductIndex, index])
     }
-
-    console.log("handleSelectedProduct1", product)
-    console.log("handleSelectedProduct2", index)
 
   }
 
-  const [trackingNumber, setTrackingNumber] = React.useState("");
+  const handleSelectAllProduct = (order, index) => {
 
-  console.log("THIS IS THE PROPS", props)
+    if (selectedRowID.length === selectedProductDetailsID.length) {
+      setSelectedProductDetailsID([])
+      // setSelectedProductIndex([])
+    }
+    else {
+      setSelectedProductDetailsID(selectedRowID)
+    }
+  }
 
-  console.log("trackingNumber", trackingNumber)
+  const handleSetProduct = (row) => {
+    let tempOrderDetails = []
+    row.OrderProductDetail !== null && JSON.parse(row.OrderProductDetail).map((x) => {
+      tempOrderDetails.push(x.OrderProductDetailID)
+    })
+    setSelectedRowID(tempOrderDetails)
+  }
+
+  const orderListing = (product, i) => {
+    return (
+
+      <TableBody>
+        {console.log("PRODUCT0", product)}
+        <TableRow>
+          <TableCell style={{ width: "10%" }}>
+            <Checkbox
+              checked={
+                selectedProductDetailsID.length > 0 ?
+                  selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ?
+                    true : false : false
+              }
+              onClick={() => handleSelectedProduct(product, i)}
+            />
+          </TableCell>
+          <TableCell style={{ width: "10%" }}>
+            <img
+              height={60}
+              src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
+              onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+              alt={product.ProductName}
+            />
+          </TableCell>
+          <TableCell style={{ width: "45%" }}>
+            <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
+            <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
+            <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
+            <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
+          </TableCell>
+          <TableCell style={{ width: "5%" }}> X {product.ProductQuantity}</TableCell>
+          <TableCell style={{ width: "20%" }}>
+            <div style={{ fontWeight: "bold" }}>   Total : RM {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}</div>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    )
+  }
+
+  const confirmListing = (product, i) => {
+    return (
+      <TableBody>
+        <TableRow>
+          <TableCell style={{ width: "10%" }}>
+            <img
+              height={60}
+              src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
+              onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+              alt={product.ProductName}
+            />
+          </TableCell>
+          <TableCell style={{ width: "40%" }}>
+            <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
+            <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
+            <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
+            <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
+          </TableCell>
+          <TableCell style={{ width: "5%" }}> X {product.ProductQuantity}</TableCell>
+          <TableCell style={{ width: "20%" }}>
+            <div style={{ fontWeight: "bold" }}>   Total : RM {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}</div>
+          </TableCell>
+          <TableCell style={{ width: "20%" }}>
+            <div>   Tracking Number :</div>
+            <div style={{ fontWeight: "bold" }}>   {product.TrackingNumber}</div>
+            {logistic.filter(x => x.LogisticID === product.LogisticID).map((courier) => {
+              return (
+                <div style={{ fontWeight: "bold" }}> {courier.LogisticName}  </div>
+              )
+            })}
+          </TableCell>
+          <TableCell style={{ width: "10%" }}>
+            <Button style={{ backgroundColor: "#28a745", color: "white" }}
+            // onClick={() => handleSubmitTracking()}
+            >EDIT</Button>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    )
+  }
+
+  const handleSubmitTracking = () => {
+    prop.CallUpdateOrderTracking({
+      ORDERTRACKINGNUMBER: trackingNumber,
+      LOGISTICID: logisticID,
+      ORDERPRODUCTDETAILSID: selectedProductDetailsID
+    })
+  }
+
+
+  const trackingView = () => {
+    return (
+      <div style={{ textAlign: "left" }}>
+        <div className="row" >
+          <div className="col-3" style={{ paddingTop: "20px" }}>
+            <label className="px-6">Logistic Tracking Number : </label>
+          </div>
+          <div className="col-3" style={{ paddingTop: "10px" }}>
+            <FormControl variant="outlined" size="small" style={{ width: "200px" }}>
+              <Select
+                native
+                id="Logistic"
+                defaultValue={1}
+                value={logisticID}
+                onChange={(x) => setLogisticID(x.target.value)}
+                className="select"
+              >
+                {logistic.map((courier) => (
+                  <option
+                    value={courier.LogisticID}
+                    key={courier.LogisticID}
+                  >
+                    {courier.LogisticName}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="col-3" style={{ paddingTop: "10px" }}>
+            <TextField
+              id="outlined-size-small" size="small"
+              width="100%"
+              className="font"
+              variant="outlined"
+              value={trackingNumber}
+              onChange={(x) => setTrackingNumber(x.target.value)}
+            />
+          </div>
+          <div className="col-2" style={{ paddingTop: "20px" }}>
+            <Button style={{ backgroundColor: trackingNumber === "" ? "#808080" : "#28a745", color: "white" }}
+              onClick={() => handleSubmitTracking()}
+              disabled={trackingNumber === "" ? true : false}
+            >SUBMIT</Button>
+          </div>
+        </div>
+      </div >
+
+    )
+  }
 
   return (
     <React.Fragment>
       <TableRow
         hover
-        // onClick={(event) => this.onRowClick(event, row, index)}
         role="checkbox"
-        // aria-checked={isItemSelected}
         tabIndex={-1}
         key={row.Username}
-        onClick={() => setOpen(!open)}
-      // selected={isItemSelected}
+        onClick={() =>
+          <>
+            {(setOpen(!open), handleSetProduct(row))}
+          </>
+        }
       >
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
-            onBlur={() => setOpen(false)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-
         <TableCell align="left">{row.OrderName}</TableCell>
         <TableCell align="left">{row.Username}</TableCell>
         <TableCell align="left">{row.PaymentMethod}</TableCell>
         <TableCell align="left">{row.TrackingStatus}</TableCell>
         <TableCell align="left">
-          {/* {row.OrderProductDetail
-                                  ? JSON.parse(
-                                      row.OrderProductDetail
-                                    ).map((product) => (
-                                      <p>{product.ProductName}</p>
-                                    ))
-                                  : null} */}
           {row.OrderProductDetail ? (
             <p>{JSON.parse(row.OrderProductDetail).length}</p>
           ) : (
@@ -662,96 +799,60 @@ function Row(props) {
               </div>
               <p className="subHeading">Products Ordered</p>
               {row.OrderProductDetail ? (
-                <Table size="small" aria-label="products">
-                  {/* <TableHead>
-                    <TableRow>
-                      <TableCell><Checkbox /></TableCell>
-                      <TableCell>Product Image</TableCell>
-                      <TableCell>Product Name</TableCell>
-                      <TableCell>Quantity</TableCell>
-                      <TableCell>Price per Unit (RM)</TableCell>
-                      <TableCell>Total (RM)</TableCell>
-                      <TableCell>Remark</TableCell>
+                <>
+                  <div size="small" aria-label="products">
+                    <TableCell><Checkbox
+                      checked={selectedProductDetailsID.length === 0 ? false :
+                        selectedRowID.length === selectedProductDetailsID.length ? true : false
+                      }
+                      onClick={() => handleSelectAllProduct(row, index)}
+                    /></TableCell>
+                    <div>
+                      {row.OrderProductDetail ?
+                        <>
+                          {JSON.parse(row.OrderProductDetail).map((product, i) => (
+                            <>
+                              {
+                                product.LogisticID === null && selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
+                                orderListing(product, i)
+                              }
+                            </>
+                          ))
+                          }
+                          {selectedProductDetailsID.length > 0 && trackingView()}
+                          {JSON.parse(row.OrderProductDetail).map((product, i) => (
+                            <>
+                              {
+                                selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ? "" :
+                                  product.LogisticID === null && orderListing(product, i)
+                              }
+                            </>
+                          ))
+                          }
 
-                    </TableRow>
-                  </TableHead> */}
-                  <TableHead>
-                    <TableRow>
-                      <TableCell><Checkbox /></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {row.OrderProductDetail
-                      ?
-                      <>
-                        {JSON.parse(row.OrderProductDetail).map((product, i) => (
-                          <TableRow>
-                            {console.log("THIS IS PRO", product)}
-                            <TableCell style={{ width: "10%" }}>
-                              <Checkbox
+                        </>
 
-                                onClick={() => handleSelectedProduct(product, i)}
-                              /></TableCell>
-                            <TableCell style={{ width: "10%" }}>
-                              <img
-                                height={60}
-                                src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
-                                onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-                                alt={product.ProductName}
-                              />
-                            </TableCell>
-                            <TableCell style={{ width: "50%" }}>
-                              <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
-                              <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
-                              <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
-                              <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
-                            </TableCell>
-                            <TableCell style={{ width: "10%" }}> X {product.ProductQuantity}</TableCell>
-                            {/* <TableCell>{product.ProductVariationPrice}</TableCell> */}
-                            <TableCell style={{ width: "20%" }}>
-                              <div style={{ fontWeight: "bold" }}>   Total : RM {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}</div>
-                            </TableCell>
-                            {/* <TableCell>{product.TrackingStatus}</TableCell> */}
-                            {/* <TableCell>
-                            <Input
-                              id="component-simple"
-                              value={this.state.userContactNo}
-                              onChange={this.handleChange}
-                            />
-                          </TableCell> */}
-                          </TableRow>
-                        ))
-                        }
-                      </>
-                      : null}
+                        : null}
+                    </div>
+                  </div>
 
-                  </TableBody>
-
-                </Table>
+                  {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail).map((product, i) => (
+                    <>
+                      {
+                        product.TrackingNumber !== null && product.LogisticID !== null &&
+                        confirmListing(product, i)
+                      }
+                    </>
+                  ))
+                    : null}
+                </>
 
               ) : (
                 <p className="fadedText">No Products To Display</p>
               )}
-
-              <div style={{ textAlign: "left" }}>
-                <p className="subTextField">
-                  <label className="px-6">Tracking Number : </label>
-                  <TextField
-                    id="outlined-size-small" size="small"
-                    className="px-6"
-                    value={trackingNumber}
-                    onChange={(x) => setTrackingNumber(x.target.value)}
-                  />
-                  <Button style={{ backgroundColor: "#28a745", color: "white" }} >SUBMIT</Button>
-                </p>
-              </div>
-              {/* <Button
-                className="orderButton"
-                onClick={() => setData(row, index)}
-              >
-                View Order Details
-              </Button> */}
             </Box>
+
+
           </Collapse>
         </TableCell>
       </TableRow>
@@ -983,6 +1084,8 @@ class DisplayTable extends Component {
                                 setDetailsShown={this.setDetailsShown}
                                 index={index}
                                 setData={this.setData}
+                                prop={this.props.ProductProps}
+                                logistic={this.props.ProductProps.logistic}
                               />
                             );
                           })}
@@ -1062,13 +1165,19 @@ class ViewTransactionsComponent extends Component {
       tabsHidden: false,
       currentlyChosen: "Payment Confirm",
     };
-    this.props.CallGetTransactionStatus();
-    this.props.CallGetTransaction("Payment Confirm");
+
     // this.props.CallAllProductsByProductStatus({
     //   ProductStatus: this.state.productStatus,
     //   UserID: localStorage.getItem("id"),
     // });
   }
+
+  componentDidMount() {
+    this.props.CallGetTransactionStatus();
+    this.props.CallGetTransaction("Payment Confirm");
+    this.props.CallCourierService();
+  }
+
 
   setTabsHidden = (value) => {
     this.setState({
@@ -1184,6 +1293,8 @@ class ViewTransactionsComponent extends Component {
         );
 
     }
+    console.log("this.props 1212", this.props)
+
 
     return (
       <div className="mainContainer">

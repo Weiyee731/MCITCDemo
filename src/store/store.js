@@ -55,6 +55,8 @@ const rootEpic = combineEpics(
   gitEpic.updateEmail,
   //==================COUNTRY==========================//
   gitEpic.getCountry,
+   //==================COURIER SERVICE==========================//
+   gitEpic.getAllCourierService,
   //==================PAYMENT METHOD==========================//
   gitEpic.getAllPaymentMethod,
   //==================CREDIT CARD==========================//
@@ -107,6 +109,7 @@ const rootEpic = combineEpics(
   gitEpic.getNotification,
   //==================ORDER==========================//
   gitEpic.AddOrder,
+  gitEpic.updateOrderTrackingNumber,
   gitEpic.getProductStockByStatus,
   gitEpic.getAllDeliveryList,
   //==================PROMOTIONS=========================//

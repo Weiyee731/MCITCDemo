@@ -66,7 +66,9 @@ const INITIAL_STATE = {
   emailUpdated: [],
   shopUpdated: [],
   emailVerification: [],
-  endorsedProduct: []
+  endorsedProduct: [],
+  logistic: [],
+  tracking: []
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -212,6 +214,16 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         countries: action.payload,
+      });
+
+    //=======================COURIER SERVICE========================//
+
+    case GitAction.GetCourierService:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotCourierService:
+      return Object.assign({}, state, {
+        loading: false,
+        logistic: action.payload,
       });
 
     //==================PAYMENT METHOD==========================//
@@ -885,6 +897,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         order: [],
       });
+
+    case GitAction.updateTrackingNumber:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.updatedTrackingNumber:
+      return Object.assign({}, state, {
+        loading: false,
+        tracking: action.payload,
+      });
+
 
     case GitAction.GetProductStockByStatus:
       return Object.assign({}, state, { loading: true });
