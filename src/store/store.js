@@ -68,6 +68,7 @@ const rootEpic = combineEpics(
   gitEpic.getAllProducts,
   gitEpic.getProductsListing,
   gitEpic.getProductDetail,
+  gitEpic.DeleteProductMedia,
   // gitEpic.getAllProductsByStatus,
   gitEpic.addProduct,
   gitEpic.updateProduct,

@@ -2035,8 +2035,9 @@ class AddProductComponent extends Component {
         imageWidth: imageWidth,
         imageHeight: imageHeight,
       }
-
-      axios.post("https://myemporia.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
+      // axios.post("https://tourism.denoo.my/MCITCApi/php/uploadproductImages.php", formData, config).then((res) => {
+        axios.post("https://myemporia.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
+        console.log(res)
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
         }
@@ -2085,6 +2086,8 @@ class AddProductComponent extends Component {
       sku: sku,
     }
 
+    console.log(object)
+
     this.props.CallAddProductVariationDetail(object)
 
   }
@@ -2093,11 +2096,13 @@ class AddProductComponent extends Component {
     const { productSpecificationOptions } = this.state
     let ProductVariation = ""
     let values = ""
-    for (let i = 0; i < productSpecificationOptions.length; i++) {
-      ProductVariation += productSpecificationOptions[i].categoryId
-      values += productSpecificationOptions[i].value
 
-      if (i !== (productSpecificationOptions.length - 1)) {
+    let tempOptions = productSpecificationOptions.filter((x) => x.value !== "")
+    for (let i = 0; i < tempOptions.length; i++) {
+      ProductVariation += tempOptions[i].categoryId
+      values += tempOptions[i].value
+
+      if (i !== (tempOptions.length - 1)) {
         ProductVariation += ","
         values += ","
       }
@@ -3134,26 +3139,87 @@ class AddProductComponent extends Component {
     );
   };
 
+  checkSpecError = () => {
+    let checkSpec = this.state.productSpecificationOptions.filter((x) => x.error === true || x.value === "")
+    if (checkSpec.length > 0)
+      return 1
+    else return 0
+  }
+
+  checkVariationError = (variation1) => {
+    if (variation1 !== undefined) {
+      let checkOption = variation1.filter((x) => x.errorOption === true || x.optionName === "")
+      let checkPrice = variation1.filter((x) => x.errorPrice === true || x.price === "")
+      let checkSKU = variation1.filter((x) => x.errorSKU === true || x.sku === "")
+      let checkStock = variation1.filter((x) => x.errorStock === true || x.stock === "")
+
+      if (checkOption.length > 0 || checkPrice.length > 0 || checkSKU.length > 0 || checkStock.length > 0)
+        return 1
+      else return 0
+    }
+    else return 0
+  }
+
+  checkGeneral = () => {
+
+    if (this.state.brandEmpty ||
+      this.state.depthNotDecimal ||
+      this.state.depthEmpty ||
+      this.state.productDesciptionEmpty ||
+      this.state.productNameEmpty ||
+      this.state.productNameDublicated ||
+      this.state.productCategoryEmpty ||
+      this.state.productSupplierEmpty ||
+      this.state.heightEmpty ||
+      this.state.heightNotDecimal ||
+      this.state.widthNotDecimal ||
+      this.state.widthEmpty ||
+      this.state.weightNotDecimal ||
+      this.state.weightEmpty ||
+      this.state.modelEmpty ||
+      this.state.skuEmpty ||
+      this.state.skuNotLongEnough ||
+      this.state.productTagsEmpty
+      // ||
+      // this.state.notEnoughFiles1600x900 ||
+      // this.state.notEnoughFiles512x512
+    )
+      return 1
+    else return 0
+  }
+
   OnSubmit = () => {
     this.checkEverything();
 
-    let object = {
-      name: this.state.name,
-      description: this.state.description,
-      productCategory: this.state.productCategory,
-      productSupplier: this.state.productSupplier,
-      height: this.state.height,
-      width: this.state.width,
-      depth: this.state.depth,
-      weight: this.state.weight,
-      sku: this.state.sku,
-      brand: this.state.brand,
-      model: this.state.model,
-      tags: this.state.tags,
+    if (this.checkGeneral() === 1) {
+      toast.error("Please fill in all required information")
     }
-    this.props.callAddProduct(object)
+    else {
 
-    this.setState({ isSubmit: true })
+      if (this.state.name === "" || this.state.description === "" || this.state.productCategory === "" || this.state.productSupplier === "" || this.state.height === ""
+        || this.state.width === "" || this.state.depth === "" || this.state.weight === "" || this.state.sku === ""
+        || this.state.brand === "" || this.state.model === "" || this.state.tags === "")
+        toast.error("Please fill in all required information")
+      else {
+        let object = {
+          name: this.state.name,
+          description: this.state.description,
+          productCategory: this.state.productCategory,
+          productSupplier: this.state.productSupplier,
+          height: this.state.height,
+          width: this.state.width,
+          depth: this.state.depth,
+          weight: this.state.weight,
+          sku: this.state.sku,
+          brand: this.state.brand,
+          model: this.state.model,
+          tags: this.state.tags,
+        }
+        this.props.callAddProduct(object)
+
+        this.setState({ isSubmit: true })
+      }
+    }
   }
 
   bindProductInfoToState = () => {
@@ -3196,7 +3262,7 @@ class AddProductComponent extends Component {
         }
 
         // submit the product specifications 
-        if (productSpecificationOptions.length > 0)
+        if (productSpecificationOptions.length > 0 && productSpecificationOptions.filter((x) => x.value !== "").length > 0)
           this.onSubmitProductSpecification(ProductID)
 
         this.props.CallResetProductReturnVal()
@@ -3224,7 +3290,7 @@ class AddProductComponent extends Component {
       if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal == 1) {
         toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
         this.props.CallResetProductMediaResult()
-        this.setState({ isSubmit: false })
+        // this.setState({ isSubmit: false })
       }
       else {
         if (this.state.isSubmit === true) {
@@ -3330,6 +3396,7 @@ class AddProductComponent extends Component {
   render() {
     const { isOnViewState } = this.props  //this props used to indicate it is on the state of viewing product details or it is adding product
 
+    console.log("this.state", this.state)
     const steps = [
       "Basic Information",
       "Product Details",
@@ -5383,8 +5450,8 @@ class AddProductComponent extends Component {
                     added.
                   </p>
                 )} */}
-                <p className="FontType1">Product Video:</p>
-                <div className="DropZoneMain">
+                {/* <p className="FontType1">Product Video:</p> */}
+                {/* <div className="DropZoneMain">
                   <div className="DropZoneGrid">
                     {!this.state.file1Added3 && (
                       <Dropzone
@@ -5465,12 +5532,12 @@ class AddProductComponent extends Component {
                       />
                     ))}
                   </div>
-                </div>
-                {this.state.notEnoughFilesVideo && (
+                </div> */}
+                {/* {this.state.notEnoughFilesVideo && (
                   <p className="error">
                     There has to be at least 1 video added.
                   </p>
-                )}
+                )} */}
                 {/* {this.state.variation1On ? (
                   <p className="FontType1">Product Variant 1:</p>
                 ) : null} */}

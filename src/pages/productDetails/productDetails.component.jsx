@@ -115,7 +115,7 @@ function mapDispatchToProps(dispatch) {
     callAddProduct: (prodData) => dispatch(GitAction.CallAddProduct(prodData)),
     callAllSupplierByUserStatus: (suppData) => dispatch(GitAction.CallAllSupplierByUserStatus(suppData)),
     callCheckProduct: (prodData) => dispatch(GitAction.CallCheckProduct(prodData)),
-    callAddProductMedia: (prodData) => dispatch(GitAction.CallAddProductMedia(prodData)),
+    CallAddProductMedia: (prodData) => dispatch(GitAction.CallAddProductMedia(prodData)),
     CallAllProductVariationByCategoryID: (prodData) => dispatch(GitAction.CallAllProductVariationByCategoryID(prodData)),
     CallAllProductsCategories: () => dispatch(GitAction.CallAllProductCategory()),
     CallResetProductReturnVal: () => dispatch(GitAction.CallResetProductReturnVal()),
@@ -1507,35 +1507,27 @@ class ProductDetailsComponent extends Component {
 
     } else {
 
-      console.log("CHECK MEDIA", data)
-      console.log("CHECK MEDIA", acceptedFiles)
       if (data === "512x512") {
         if (this.state.fileInfo.length + acceptedFiles.length > 3) {
           this.setState({
-
           })
           toast.error("Only 3 images are allowed.");
         } else {
           this.setState((state) => {
-
-            console.log("CHECK MEDIA STATE", state.file)
-            const file = JSON.parse(state.file).concat(acceptedFiles.map((file) => file));
+            const file = (state.file !== null && state.file !== undefined) ? state.file.concat(acceptedFiles.map((file) => file)) : [];
             const fileInfo = state.fileInfo.concat(
               acceptedFiles.map((file) => file.name)
             );
             const url = state.url.concat(
               acceptedFiles.map((file) => URL.createObjectURL(file))
             );
-
-            console.log("CHECK MEDIA STATE", file)
-            console.log("CHECK MEDIA STATE", fileInfo)
-            console.log("CHECK MEDIA STATE", url)
             return {
               file,
               fileInfo,
               url,
             };
           });
+
           if (this.state.fileInfo.length === 1) {
             this.setState({
               file1Added: true,
@@ -1692,99 +1684,125 @@ class ProductDetailsComponent extends Component {
   onDelete = (index, data, selectedFile) => {
     if (data === "512x512") {
 
-      if (this.state.file !== undefined) {
+      if (this.state.file !== undefined && this.state.file.length > 0) {
 
-        this.props.CallDeleteProductMedia({ imageID: this.state.ImageId[index] })
-
-        var newList2 = this.state.file[0] === "[" ? JSON.parse(this.state.file) : this.state.file
+        var newList2 = this.state.file
+        var tempFileInfo = this.state.fileInfo
         var tempURL = this.state.url
-        console.log("THIS IS THE FILE URL", tempURL)
-        console.log("THIS IS THE FILE URL 22", tempURL[index])
+        var checkLength = newList2.filter((el, i) => i !== index).length
 
+        if (newList2[index].ProductMediaID !== undefined)
+          this.props.CallDeleteProductMedia({ imageID: newList2[index].ProductMediaID })
 
         this.setState({
-          file: newList2.map((file3) => file3),
-          fileInfo: newList2.map((file3) => file3.name),
-          url: tempURL.filter((x) => x !== tempURL[index])
-          // newList2.map((file3) => window.URL.createObjectURL(file3)),
+          file: newList2.filter((el, i) => i !== index),
+          fileInfo: tempFileInfo.filter((el, i) => i !== index),
+          url: tempURL.filter((el, i) => i !== index),
         });
 
-        if (this.state.fileInfo.length === 1) {
-          this.setState({
-            file1Added: false,
-            file2Added: false,
-            file3Added: false,
-            Total512x512: 0,
-          });
-        } else if (this.state.fileInfo.length === 2) {
-          this.setState({
-            file1Added: true,
-            file2Added: false,
-            file3Added: false,
-            Total512x512: 1 / 3,
-          });
-        } else if (this.state.fileInfo.length === 3) {
-          this.setState({
-            file1Added: true,
-            file2Added: true,
-            file3Added: false,
-            Total512x512: 2 / 3,
-          });
-        } else if (this.state.fileInfo.length === 4) {
-          this.setState({
-            file1Added: true,
-            file2Added: true,
-            file3Added: true,
-            Total512x512: 3 / 3,
-          });
+        if (checkLength === 0) {
+          this.setState({ file1Added: false })
+          this.setState({ file2Added: false })
+          this.setState({ file3Added: false })
+          this.setState({ Total512x512: 0 })
         }
+
+        if (checkLength === 1) {
+          this.setState({ file2Added: false })
+          this.setState({ file3Added: false })
+          this.setState({ Total512x512: 1 / 3 })
+        }
+
+        if (checkLength === 2) {
+          this.setState({ file3Added: false })
+          this.setState({ Total512x512: 2 / 3 })
+        }
+
+
+
+        // if (newList2.length === 1)
+        //   this.setState({ Total512x512: 0 })
+        // if (newList2.length === 2)
+        //   this.setState({ Total512x512: 1 / 3 })
+        // if (newList2.length === 3)
+        //   this.setState({ Total512x512: 2 / 3 })
+
+        // if (this.state.fileInfo.length === 1) {
+        //   this.setState({
+        //     file1Added: false,
+        //     file2Added: false,
+        //     file3Added: false,
+        //     Total512x512: 0,
+        //   });
+        // } else if (this.state.fileInfo.length === 2) {
+        //   this.setState({
+        //     file1Added: true,
+        //     file2Added: false,
+        //     file3Added: false,
+        //     Total512x512: 1 / 3,
+        //   });
+        // } else if (this.state.fileInfo.length === 3) {
+        //   this.setState({
+        //     file1Added: true,
+        //     file2Added: true,
+        //     file3Added: false,
+        //     Total512x512: 2 / 3,
+        //   });
+        // } else if (this.state.fileInfo.length === 4) {
+        //   this.setState({
+        //     file1Added: true,
+        //     file2Added: true,
+        //     file3Added: true,
+        //     Total512x512: 3 / 3,
+        //   });
+        // }
       }
     } else if (data === "1600x900") {
-      var newList3 = this.state.file2;
-      this.state.file2.map((file, i) => {
-        var valueToBeUsed2 = parseInt(index);
-        if (i === valueToBeUsed2) {
-          newList3 = newList3.filter((file2) => file !== file2);
-          this.setState({
-            counter2: this.state.counter2 + 1,
-          });
-        }
-      });
-      this.setState({
-        file2: newList3.map((file3) => file3),
-        fileInfo2: newList3.map((file3) => file3.name),
-        url2: newList3.map((file3) => URL.createObjectURL(file3)),
-      });
+      // var newList3 = this.state.file2;
+      // this.state.file2.map((file, i) => {
+      //   var valueToBeUsed2 = parseInt(index);
+      //   if (i === valueToBeUsed2) {
+      //     newList3 = newList3.filter((file2) => file !== file2);
+      //     this.setState({
+      //       counter2: this.state.counter2 + 1,
+      //     });
+      //   }
+      // });
+      // this.setState({
+      //   file2: newList3.map((file3) => file3),
+      //   fileInfo2: newList3.map((file3) => file3.name),
+      //   url2: newList3.map((file3) => URL.createObjectURL(file3)),
+      // });
 
-      if (this.state.fileInfo2.length === 1) {
-        this.setState({
-          file1Added2: false,
-          file2Added2: false,
-          file3Added2: false,
-          Total1600x900: 0,
-        });
-      } else if (this.state.fileInfo2.length === 2) {
-        this.setState({
-          file1Added2: true,
-          file2Added2: false,
-          file3Added2: false,
-          Total1600x900: 1 / 3,
-        });
-      } else if (this.state.fileInfo2.length === 3) {
-        this.setState({
-          file1Added2: true,
-          file2Added2: true,
-          file3Added2: false,
-          Total1600x900: 2 / 3,
-        });
-      } else if (this.state.fileInfo2.length === 4) {
-        this.setState({
-          file1Added2: true,
-          file2Added2: true,
-          file3Added2: true,
-          Total1600x900: 3 / 3,
-        });
-      }
+      // if (this.state.fileInfo2.length === 1) {
+      //   this.setState({
+      //     file1Added2: false,
+      //     file2Added2: false,
+      //     file3Added2: false,
+      //     Total1600x900: 0,
+      //   });
+      // } else if (this.state.fileInfo2.length === 2) {
+      //   this.setState({
+      //     file1Added2: true,
+      //     file2Added2: false,
+      //     file3Added2: false,
+      //     Total1600x900: 1 / 3,
+      //   });
+      // } else if (this.state.fileInfo2.length === 3) {
+      //   this.setState({
+      //     file1Added2: true,
+      //     file2Added2: true,
+      //     file3Added2: false,
+      //     Total1600x900: 2 / 3,
+      //   });
+      // } else if (this.state.fileInfo2.length === 4) {
+      //   this.setState({
+      //     file1Added2: true,
+      //     file2Added2: true,
+      //     file3Added2: true,
+      //     Total1600x900: 3 / 3,
+      //   });
+      // }
     } else if (data === "video") {
       var newList3 = this.state.file3;
       this.state.file3.map((file, i) => {
@@ -2065,16 +2083,11 @@ class ProductDetailsComponent extends Component {
 
   uploadFile = (productID) => {
     // combine images and video for upload in an array
-    console.log("UPLOAD IMAGE")
-    console.log("UPLOAD IMAGE", this.state.file)
-    console.log("UPLOAD IMAGE", this.state.file3[0])
-
     let uploadingMedia = []
+    let existingMedia = []
 
-    if (this.state.file[0] === "[")
-      uploadingMedia = [...JSON.parse(this.state.file)]
-    else
-      uploadingMedia = [...this.state.file]
+    uploadingMedia = [...this.state.file.filter((x) => x.ProductMediaID === undefined)]
+    existingMedia = [...this.state.file.filter((x) => x.ProductMediaID !== undefined)]
 
     if (typeof productID !== "undefined" && productID !== null && uploadingMedia.length > 0) {
       //basic form setup
@@ -2090,13 +2103,9 @@ class ProductDetailsComponent extends Component {
       let imageWidth = ""
       let imageHeight = ""
 
-      console.log("UPLOAD IMAGE", uploadingMedia)
       for (let i = 0; i < uploadingMedia.length; i++) {
         let fileExt = getFileExtension(uploadingMedia[i])
-
-        console.log("UPLOAD IMAGE fileExt", fileExt)
-        let filename = productID + "_" + i + "_" + convertDateTimeToString(new Date())
-        console.log("UPLOAD IMAGE fileExt", filename)
+        let filename = productID + "_" + (parseInt(existingMedia.length) + i) + "_" + convertDateTimeToString(new Date())
         filenames += filename + "." + fileExt
         mediaType += getFileTypeByExtension(fileExt)
         variationID += "0"
@@ -2126,12 +2135,11 @@ class ProductDetailsComponent extends Component {
         imageWidth: imageWidth,
         imageHeight: imageHeight,
       }
-
+      // axios.post("https://tourism.denoo.my/MCITCApi/php/uploadproductImages.php", formData, config).then((res) => {
       axios.post("https://myemporia.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
-
         console.log("res", res)
         if (res.status === 200 && res.data === 1) {
-          this.props.callAddProductMedia(object)
+          this.props.CallAddProductMedia(object)
           this.setState({ isMediaFileSend: true })
         }
         else {
@@ -3343,9 +3351,11 @@ class ProductDetailsComponent extends Component {
       this.state.modelEmpty ||
       this.state.skuEmpty ||
       this.state.skuNotLongEnough ||
-      this.state.productTagsEmpty ||
-      this.state.notEnoughFiles1600x900 ||
-      this.state.notEnoughFiles512x512)
+      this.state.productTagsEmpty
+      // ||
+      // this.state.notEnoughFiles1600x900 ||
+      // this.state.notEnoughFiles512x512
+    )
       return 1
     else return 0
   }
@@ -3353,6 +3363,7 @@ class ProductDetailsComponent extends Component {
 
   OnSubmit = () => {
     // this.checkEverything();
+
     if (this.checkVariationError(this.state.variation1.options) === 1 || this.checkSpecError() === 1 || this.checkGeneral() === 1) {
       toast.error("Please fill in all required information")
     }
@@ -3465,7 +3476,10 @@ class ProductDetailsComponent extends Component {
 
     //set Images
     //check url sent from database since it says 404 not found
-    var productImages = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductImages !== null ? JSON.parse(this.props.productInfo[0].ProductImages) : "";
+    // var productImages = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductImages !== null ? JSON.parse(this.props.productInfo[0].ProductImages) : "";
+    var productImages = this.props.productInfo.length > 0 && this.props.productInfo[0].ProductImages !== null ?
+      JSON.parse(this.props.productInfo[0].ProductImages).filter((x) => x.ProductMediaUrl.includes("/products/" + this.props.productInfo[0].ProductID + "/")) : "";
+
     var fileInfo = [];
     var url = [];
     var ImageId = [];
@@ -3476,12 +3490,9 @@ class ProductDetailsComponent extends Component {
 
     if (productImages !== "") {
       for (var z = 0; z < productImages.length; z++) {
-
-        console.log("this is the file", productImages[z])
         fileInfo = [...fileInfo, productImages[z].ProductMediaTitle];
         url = [...url, productImages[z].ProductMediaUrl];
         ImageId = [...ImageId, productImages[z].ProductMediaID];
-
 
         if (z == 0 && productImages[z].ProductMediaType == "image") {
           file1Added = true;
@@ -3528,7 +3539,7 @@ class ProductDetailsComponent extends Component {
       variation1Options: this.props.productInfo.length > 0 && this.props.productInfo[0].ProductVariation !== null ? JSON.parse(this.props.productInfo[0].ProductVariation).length : 0,
       productSpecification: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductSpecification : "",
       productSpecificationOptions: specificationArray,
-      file: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductImages !== null ? this.props.productInfo[0].ProductImages : [] : [],
+      file: this.props.productInfo.length > 0 ? this.props.productInfo[0].ProductImages !== null ? productImages : [] : [],
       fileInfo: fileInfo,
       url: url,
       ImageId: ImageId,
@@ -3576,7 +3587,7 @@ class ProductDetailsComponent extends Component {
     // Since in the React lifecycle it did mentioned the componentdidupdate will be triggered if any updates occur on this page,
     // then we need a state to check the allows to prevent the infinite looping of this function
 
-    if (this.props.productInfo) {
+    if (typeof this.props.productInfo !== "undefined" && this.props.productInfo) {
       if (this.props.productInfo.length > 0 && typeof this.props.productInfo.ReturnVal === "undefined" && !this.state.isProductIntoBind) {
         this.bindProductInfoToState()
       }
@@ -3586,32 +3597,36 @@ class ProductDetailsComponent extends Component {
       this.bindProductInfoToState()
 
     if (this.state.isSubmit === true && this.state.isSubmissionSpecChecking === true && this.state.isSubmissionVariationChecking === true) {
-      if (this.props.returnUpdateProduct.length > 0 && this.props.returnUpdateProduct[0].ReturnVal === 1) {
+      if (typeof this.props.returnUpdateProduct !== "undefined" && this.props.returnUpdateProduct.length > 0 && this.props.returnUpdateProduct[0].ReturnVal === 1) {
         this.props.CallResetUpdateProduct()
       }
 
-      if (this.props.productSpecsDetail.length > 0 && this.props.productSpecsDetail[0].ReturnVal === "1") {
+      if (typeof this.props.productSpecsDetail !== "undefined" && this.props.productSpecsDetail.length > 0 && this.props.productSpecsDetail[0].ReturnVal === "1") {
         this.props.CallResetProductSpecsDetailResults()
       }
 
-      if (this.props.SpecsDetail.length > 0 && this.props.SpecsDetail[0].ReturnVal === "1") {
+      if (typeof this.props.SpecsDetail !== "undefined" && this.props.SpecsDetail.length > 0 && this.props.SpecsDetail[0].ReturnVal === "1") {
         this.props.CallResetUpdateProductSpecsDetail()
       }
 
-      if (this.props.addProductVariationResult.length > 0 && this.props.addProductVariationResult[0].ReturnVal === "1") {
+      if (typeof this.props.addProductVariationResult !== "undefined" && this.props.addProductVariationResult.length > 0 && this.props.addProductVariationResult[0].ReturnVal === "1") {
         this.props.CallResetProductVariationDetailResult()
       }
 
-      if (this.props.variationResult.length > 0 && this.props.variationResult[0].ReturnVal === "1") {
+      if (typeof this.props.variationResult !== "undefined" && this.props.variationResult.length > 0 && this.props.variationResult[0].ReturnVal === "1") {
         this.props.CallResetUpdateProductVariationDetail()
       }
 
-      if (this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal === "1" && this.state.isMediaFileSend === true) {
+      if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal === "1" && this.state.isMediaFileSend === true) {
         this.props.CallResetProductMediaResult()
       }
 
-      if (this.props.returnUpdateProduct.length === 0 && this.props.productSpecsDetail.length === 0 && this.props.SpecsDetail.length === 0 &&
-        this.props.addProductVariationResult.length === 0 && this.props.variationResult.length === 0 && this.props.productMediaResult.length === 0) {
+      if (typeof this.props.returnUpdateProduct !== "undefined" && this.props.returnUpdateProduct.length === 0 &&
+        typeof this.props.productSpecsDetail !== "undefined" && this.props.productSpecsDetail.length === 0 &&
+        typeof this.props.SpecsDetail !== "undefined" && this.props.SpecsDetail.length === 0 &&
+        typeof this.props.addProductVariationResult !== "undefined" && this.props.addProductVariationResult.length === 0 &&
+        typeof this.props.variationResult !== "undefined" && this.props.variationResult.length === 0 &&
+        typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length === 0) {
         setTimeout(() => {
           browserHistory.push("/viewProduct");
           window.location.reload(false);
@@ -3809,9 +3824,7 @@ class ProductDetailsComponent extends Component {
     const { isOnViewState } = this.props  //this props used to indicate it is on the state of viewing product details or it is adding product
     const { description } = this.state
 
-
-    console.log("CHECK STATE", this.state)
-    console.log("CHECK STATE PROPS", this.props)
+    console.log("THIS.STATE", this.state)
     const steps = [
       "Basic Information",
       "Product Details",
@@ -6035,7 +6048,7 @@ class ProductDetailsComponent extends Component {
                     added.
                   </p>
                 )} */}
-                  <p className="FontType1">Product Video:</p>
+                  {/* <p className="FontType1">Product Video:</p>
                   <div className="DropZoneMain">
                     <div className="DropZoneGrid">
                       {!this.state.file1Added3 && (
@@ -6117,12 +6130,12 @@ class ProductDetailsComponent extends Component {
                         />
                       ))}
                     </div>
-                  </div>
-                  {this.state.notEnoughFilesVideo && this.state.toBeEdited && (
+                  </div> */}
+                  {/* {this.state.notEnoughFilesVideo && this.state.toBeEdited && (
                     <p className="error">
                       There has to be at least 1 video added.
                     </p>
-                  )}
+                  )} */}
                   {/* {this.state.variation1On ? (
                   <p className="FontType1">Product Variant 1:</p>
                 ) : null} */}

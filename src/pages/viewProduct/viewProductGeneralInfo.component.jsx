@@ -139,10 +139,13 @@ class ViewProductGeneralInfo extends Component {
     if (this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined) {
       this.getReviewList(JSON.parse(this.props.reviews))
     }
-
+    console.log("THIS.PROPS", this.props)
     if (this.props.reviews !== prevProps.reviews) {
       this.setState({ isReviewSet: false })
-      this.getReviewList(JSON.parse(this.props.reviews))
+
+      if (this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined) {
+        this.getReviewList(JSON.parse(this.props.reviews))
+      }
     }
 
     if (this.props.variationStock.length > 0) {
@@ -623,7 +626,7 @@ class ViewProductGeneralInfo extends Component {
                                                           :
                                                           <TextField
                                                             type="number"
-                                                            textAlign= "center"
+                                                            textAlign="center"
                                                             value={parseInt(details.ProductStockAmount)}
                                                             onChange={(x) => this.handleStockLevel(details.ProductVariationDetailID, index, x)}
                                                           />
