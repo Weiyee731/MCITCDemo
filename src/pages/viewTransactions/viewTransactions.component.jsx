@@ -60,8 +60,6 @@ function mapDispatchToProps(dispatch) {
   return {
     CallGetTransaction: (transactionData) =>
       dispatch(GitAction.CallGetTransaction(transactionData)),
-    // CallDeletePromoCode: (promoCodeData) =>
-    //   dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
     CallCourierService: () =>
       dispatch(GitAction.CallCourierService()),
     CallGetTransactionStatus: () =>
@@ -179,57 +177,6 @@ const headCells = [
   },
 ];
 
-// function DeletableTableHead(props) {
-//   const {
-//     classes,
-//     onSelectAllClick,
-//     order,
-//     orderBy,
-//     numSelected,
-//     rowCount,
-//     onRequestSort,
-//   } = props;
-//   const createSortHandler = (property) => (event) => {
-//     onRequestSort(event, property);
-//   };
-
-//   return (
-//     <TableHead>
-//       <TableRow>
-//         <TableCell padding="checkbox">
-//           <Checkbox
-//             indeterminate={numSelected > 0 && numSelected < rowCount}
-//             checked={rowCount > 0 && numSelected === rowCount}
-//             onChange={onSelectAllClick}
-//             inputProps={{ "aria-label": "select all order" }}
-//           />
-//         </TableCell>
-//         {headCells.map((headCell) => (
-//           <TableCell
-//             key={headCell.id}
-//             align={headCell.numeric ? "right" : "left"}
-//             padding={headCell.disablePadding ? "none" : "default"}
-//             sortDirection={orderBy === headCell.id ? order : false}
-//           >
-//             <TableSortLabel
-//               active={orderBy === headCell.id}
-//               direction={orderBy === headCell.id ? order : "asc"}
-//               onClick={createSortHandler(headCell.id)}
-//             >
-//               {headCell.label}
-//               {orderBy === headCell.id ? (
-//                 <span className={classes.visuallyHidden}>
-//                   {order === "desc" ? "sorted descending" : "sorted ascending"}
-//                 </span>
-//               ) : null}
-//             </TableSortLabel>
-//           </TableCell>
-//         ))}
-//       </TableRow>
-//     </TableHead>
-//   );
-// }
-
 function DisplayTableHead(props) {
   const {
     onSelectAllClick,
@@ -272,16 +219,6 @@ function DisplayTableHead(props) {
   );
 }
 
-// DeletableTableHead.propTypes = {
-//   classes: PropTypes.object.isRequired,
-//   numSelected: PropTypes.number.isRequired,
-//   onRequestSort: PropTypes.func.isRequired,
-//   onSelectAllClick: PropTypes.func.isRequired,
-//   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-//   orderBy: PropTypes.string.isRequired,
-//   rowCount: PropTypes.number.isRequired,
-// };
-
 DisplayTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
@@ -292,65 +229,6 @@ DisplayTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-// const DeletableTableToolbar = (props) => {
-//   const classes = useStyles();
-
-//   const { numSelected } = props;
-
-//   const onDeleteProduct = () => {
-//     props.ProductProps.CallDeletePromoCode(props.selectedData);
-//     setTimeout(
-//       function () {
-//         window.location.reload(false);
-//       }.bind(this),
-//       500
-//     );
-//   };
-
-//   return (
-//     <Toolbar
-//       className={clsx(classes.root, {
-//         [classes.highlight]: numSelected > 0,
-//       })}
-//     >
-//       {numSelected > 0 ? (
-//         <Typography
-//           className={classes.title}
-//           color="inherit"
-//           variant="subtitle1"
-//           component="div"
-//         >
-//           {numSelected} selected
-//         </Typography>
-//       ) : (
-//         <Typography
-//           className={classes.title}
-//           // variant="h6"
-//           id="tableTitle"
-//           component="div"
-//         >
-//           Please select the promo codes that you want to delete.
-//         </Typography>
-//       )}
-
-//       {numSelected > 0 ? (
-//         <Tooltip title="Delete">
-//           <IconButton
-//             aria-label="delete"
-//             onClick={() => {
-//               onDeleteProduct();
-//             }}
-//           >
-//             <DeleteIcon />
-//           </IconButton>
-//         </Tooltip>
-//       ) : (
-//         ""
-//       )}
-//     </Toolbar>
-//   );
-// };
-
 const DisplayTableToolbar = (props) => {
   const classes = useStyles();
   const { numSelected } = props;
@@ -358,163 +236,10 @@ const DisplayTableToolbar = (props) => {
   return <Toolbar className={clsx(classes.root)}></Toolbar>;
 };
 
-// DeletableTableToolbar.propTypes = {
-//   numSelected: PropTypes.number.isRequired,
-// };
-
 DisplayTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-function DeletableTable(props) {
-  const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [open, setOpen] = React.useState(false);
-
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = props.Data.map((n) => n.OrderID);
-      setSelected(newSelecteds);
-      console.log(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    console.log(newSelected);
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, props.Data.length - page * rowsPerPage);
-
-
-
-  return (
-    <div>
-      <Paper className={classes.paper}>
-        {/* <DeletableTableToolbar
-          numSelected={selected.length}
-          selectedData={selected}
-          ProductProps={props.ProductProps}
-        /> */}
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
-          >
-            {/* <DeletableTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={props.Data.length}
-            /> */}
-            <TableBody>
-              {stableSort(props.Data, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.OrderID);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.OrderID)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.OrderID}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell>
-
-                      <TableCell align="left">{row.OrderName}</TableCell>
-                      <TableCell align="left">{row.Username}</TableCell>
-                      <TableCell align="left">{row.PaymentMethod}</TableCell>
-                      <TableCell align="left">{row.TrackingStatus}</TableCell>
-                      <TableCell align="right">
-                        {row.OrderProductDetail ? (
-                          <p>{JSON.parse(row.OrderProductDetail).length}</p>
-                        ) : (
-                          0
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={props.Data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </div>
-  );
-}
 const useRowStyles = makeStyles({
   root: {
     "& > *": {
@@ -535,10 +260,7 @@ function Row(props) {
   const [logisticID, setLogisticID] = React.useState(1);
   const [trackingNumber, setTrackingNumber] = React.useState("");
   const [existingTrackingData, setTrackingData] = React.useState([]);
-  // const [existingLogisticID, setExistingLogisticID] = React.useState(1);
-  // const [existingTrackingNumber, setExistingTrackingNumber] = React.useState("");
-  // const [selectedExistingIndex, setSelectedExistingIndex] = React.useState("");
-
+  const [existingTracking, setCheckTracking] = React.useState([]);
 
   const handleSelectedProduct = (product, index) => {
 
@@ -625,27 +347,24 @@ function Row(props) {
 
   const confirmListing = (product, i) => {
     return (
-      <TableBody>
-        <TableRow>
-          <TableCell style={{ width: "10%" }}>
+      <div style={{ paddingTop: "10px" }}>
+        <div className="row">
+          <div className="col-2" style={{ width: "10%" }}>
             <img
               height={60}
               src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
               onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
               alt={product.ProductName}
             />
-          </TableCell>
-          <TableCell style={{ width: "40%" }}>
+          </div>
+          <div className="col-5" style={{ width: "40%" }}>
             <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
             <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
             <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
             <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
-          </TableCell>
-          <TableCell style={{ width: "5%" }}> X {product.ProductQuantity}</TableCell>
-          <TableCell style={{ width: "15%" }}>
-            <div style={{ fontWeight: "bold" }}>   Total : RM {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}</div>
-          </TableCell>
-          <TableCell style={{ width: "20%" }}>
+            <div style={{ fontSize: "13px", fontWeight: "bold" }}>  Total Paid : {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}  / Qty ({product.ProductQuantity})</div>
+          </div>
+          <div className="col-3" >
             <div>   Tracking Number :</div>
             {
               checkExisting(product) !== 0 ?
@@ -691,26 +410,26 @@ function Row(props) {
                   })}
                 </>
             }
-          </TableCell>
-          <TableCell style={{ width: "15%" }}>
+          </div>
+          <div className="col-2"  >
             <div className="row">
-              <div className="col-6">
-                {checkExisting(product) !== 0 &&
+              {checkExisting(product) !== 0 &&
+                <div className="col-6" style={{ alignItems: "center" }}>
                   <Button style={{ backgroundColor: "#28a745", color: "white" }}
                     onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID)}
                   >UPDATE</Button>
-                }
-              </div>
-              <div className="col-6">
+                </div>
+              }
+              <div className="col-6" style={{ alignItems: "center" }}>
                 <Button style={{
                   backgroundColor: checkExisting(product) !== 0 ? "#808080" : "#28a745", color: "white"
                 }}
                   onClick={() => handleEditExistingTracking(product, i)}  >{checkExisting(product) !== 0 ? "CANCEL" : "EDIT"}</Button>
               </div>
             </div>
-          </TableCell>
-        </TableRow>
-      </TableBody>
+          </div>
+        </div>
+      </div>
     )
   }
 
@@ -831,6 +550,22 @@ function Row(props) {
     )
   }
 
+  const getTrackingLength = (Data) => {
+
+    let checkDuplicte = Data.filter((ele, ind) => ind === Data.findIndex(elem => elem.TrackingNumber === ele.TrackingNumber && elem.LogisticID === ele.LogisticID))
+    console.log("THIS IS DATA", Data)
+    console.log("THIS IS DATA checkDuplicte", checkDuplicte)
+
+    setCheckTracking(checkDuplicte)
+
+    // setTrackingData([...existingTrackingData,
+    // {
+    //   existingLogisticID: product.LogisticID,
+    //   existingTrackingNumber: product.TrackingNumber,
+    //   existingProductDetailsID: product.OrderProductDetailID,
+    // }])
+
+  }
   return (
     <React.Fragment>
       <TableRow
@@ -902,39 +637,59 @@ function Row(props) {
               {row.OrderProductDetail ? (
                 <>
                   <div size="small" aria-label="products">
-                    <TableCell><Checkbox
-                      checked={selectedProductDetailsID.length === 0 ? false :
-                        selectedRowID.length === selectedProductDetailsID.length ? true : false
+                    {JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID === null).length > 0 ?
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedProductDetailsID.length === 0 ? false :
+                            selectedRowID.length === selectedProductDetailsID.length ? true : false
+                          }
+                          onClick={() => handleSelectAllProduct(row, index)}
+                        />
+                      </TableCell> : ""}
+                    <>
+                      {
+                        row.OrderProductDetail ?
+                          <>
+                            {JSON.parse(row.OrderProductDetail).map((product, i) => (
+                              <>
+                                {
+                                  product.LogisticID === null && selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
+                                  orderListing(product, i)
+                                }
+                              </>
+                            ))
+                            }
+                            {selectedProductDetailsID.length > 0 && trackingView()}
+                            {JSON.parse(row.OrderProductDetail).map((product, i) => (
+                              <>
+                                {
+                                  selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ? "" :
+                                    product.LogisticID === null && orderListing(product, i)
+                                }
+                              </>
+                            ))
+                            }
+                          </>
+                          : null
                       }
-                      onClick={() => handleSelectAllProduct(row, index)}
-                    /></TableCell>
-                    <div>
-                      {row.OrderProductDetail ?
-                        <>
-                          {JSON.parse(row.OrderProductDetail).map((product, i) => (
-                            <>
-                              {
-                                product.LogisticID === null && selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
-                                orderListing(product, i)
-                              }
-                            </>
-                          ))
-                          }
-                          {selectedProductDetailsID.length > 0 && trackingView()}
-                          {JSON.parse(row.OrderProductDetail).map((product, i) => (
-                            <>
-                              {
-                                selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ? "" :
-                                  product.LogisticID === null && orderListing(product, i)
-                              }
-                            </>
-                          ))
-                          }
-                        </>
-                        : null}
-                    </div>
+                    </>
                   </div>
 
+                  {/* {getTrackingLength(JSON.parse(row.OrderProductDetail).length > 0 && existingTracking.map((track) => {
+
+                    return (
+                      row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)..map((product, i) => (
+                        <>
+                          {
+                            product.TrackingNumber === track.TrackingNumber && product.LogisticID === track.LogisticID &&
+                            confirmListing(product, i)
+                          }
+                        </>
+                      ))
+                        : null
+
+                    )
+                  }))} */}
                   {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail).map((product, i) => (
                     <>
                       {
@@ -953,7 +708,7 @@ function Row(props) {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </React.Fragment >
   );
 }
 
@@ -971,9 +726,12 @@ class DisplayTable extends Component {
       detailsShown: false,
       deleteActive: false,
       searchFilter: "",
+      isFiltered: false,
+      // filteredList: [],
+      filteredProduct: [],
+
     };
 
-    this.ToggleDeletable = this.ToggleDeletable.bind(this);
     this.handleRequestSort = this.handleRequestSort.bind(this);
     this.onRowClick = this.onRowClick.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -1062,11 +820,6 @@ class DisplayTable extends Component {
     // this.state.selected.indexOf(name) !== -1;
   };
 
-  ToggleDeletable() {
-    this.setState((prevState, props) => {
-      return { deleteActive: !prevState.deleteActive };
-    });
-  }
   setDetailsShown = () => {
     if (this.state.detailsShown) {
       this.setState({
@@ -1080,6 +833,31 @@ class DisplayTable extends Component {
       this.props.setTabsHidden(true);
     }
   };
+
+  searchSpace = (value) => {
+    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    this.state.filteredProduct.splice(0, this.state.filteredProduct.length)
+
+    this.props.Data.filter((searchedItem) =>
+      searchedItem.OrderName !== null && searchedItem.OrderName.toLowerCase().includes(
+        value.toLowerCase()
+      )
+    ).map((filteredItem) => {
+      this.state.filteredProduct.push(filteredItem);
+    })
+
+    this.props.Data.map((list) => {
+      list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter(x => x.TrackingNumber !== null
+        && x.TrackingNumber.toLowerCase().includes(value.toLowerCase())).map(filteredItem => {
+          this.state.filteredProduct.push(list);
+        });
+    })
+
+    let removeDeplicate = this.state.filteredProduct.filter((ele, ind) => ind === this.state.filteredProduct.findIndex(elem => elem.OrderID === ele.OrderID))
+
+    console.log("THIS.PROPS.FILTERED", removeDeplicate)
+    this.setState({ isFiltered: true, filteredProduct: removeDeplicate })
+  }
 
   render() {
     const { classes } = this.props;
@@ -1100,8 +878,6 @@ class DisplayTable extends Component {
     const table = {
       minWidth: 750,
     };
-
-    var filteredProduct = [];
 
     const classes2 = {
       border: 0,
@@ -1129,8 +905,8 @@ class DisplayTable extends Component {
           <div>
             <SearchBox
               style={divStyle}
-              placeholder="Search..."
-              onChange={(e) => this.setState({ searchFilter: e.target.value })}
+              placeholder="Search By Tracking Number or Order Number..."
+              onChange={e => this.searchSpace(e.target.value)}
             />
 
             <div>
@@ -1151,16 +927,9 @@ class DisplayTable extends Component {
                         onRequestSort={this.handleRequestSort}
                         rowCount={this.props.Data.length}
                       />
-                      {this.props.Data.filter((searchedItem) =>
-                        searchedItem.OrderName.toLowerCase().includes(
-                          this.state.searchFilter
-                        )
-                      ).map((filteredItem) => {
-                        filteredProduct.push(filteredItem);
-                      })}
                       <TableBody>
                         {stableSort(
-                          filteredProduct,
+                          this.state.isFiltered ? this.state.filteredProduct : this.props.Data,
                           getComparator(this.state.order, this.state.orderBy)
                         )
                           .slice(
@@ -1173,7 +942,6 @@ class DisplayTable extends Component {
                               row.Username
                             );
                             const labelId = `enhanced-table-checkbox-${index}`;
-
                             return (
                               <Row
                                 row={row}
@@ -1267,6 +1035,7 @@ class ViewTransactionsComponent extends Component {
     this.props.CallGetTransactionStatus();
     this.props.CallGetTransaction("Payment Confirm");
     this.props.CallCourierService();
+
   }
 
 

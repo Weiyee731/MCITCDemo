@@ -49,6 +49,8 @@ function mapStateToProps(state) {
     addresses: state.counterReducer["addresses"],
     creditcard: state.counterReducer["creditcards"],
     transaction: state.counterReducer["transaction"],
+    merchant: state.counterReducer["merchant"],
+    logistic: state.counterReducer["logistic"],
   };
 }
 
@@ -64,6 +66,12 @@ function mapDispatchToProps(dispatch) {
 
     CallAllCreditCard: (prodData) =>
       dispatch(GitAction.CallAllCreditCard(prodData)),
+
+    CallMerchants: (prodData) =>
+      dispatch(GitAction.CallMerchants(prodData)),
+
+    CallCourierService: () =>
+      dispatch(GitAction.CallCourierService()),
   };
 }
 
@@ -112,6 +120,15 @@ class AccountPageOrders extends Component {
     });
     this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
 
+    this.props.CallMerchants({
+      type: "Status",
+      typeValue: "Endorsed",
+      USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
+      productPage: 999,
+      page: 1,
+    })
+    this.props.CallCourierService();
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.state = {
       page: 1,
@@ -200,14 +217,19 @@ class AccountPageOrders extends Component {
     this.state.filteredList.splice(0, this.state.filteredList.length)
     this.props.allmerchantorders.filter(searchedItem =>
       format.test(value) === false
-      // && searchedItem.trackingNumber.toLowerCase().trim().includes(value)
       && moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
-    )
-      .map(filteredItem => {
-        this.state.filteredList.push(filteredItem);
-      });
+    ).map(filteredItem => {
+      this.state.filteredList.push(filteredItem);
+    });
 
-    this.setState({ isFiltered: true })
+    this.props.allmerchantorders.map((list) => {
+      list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter(x => x.TrackingNumber !== null
+        &&  format.test(value) === false && x.TrackingNumber.toLowerCase().includes(value.toLowerCase())).map(filteredItem => {
+          this.state.filteredList.push(list);
+        });
+    })
+    let removeDeplicate = this.state.filteredList.filter((ele, ind) => ind === this.state.filteredList.findIndex(elem => elem.OrderID === ele.OrderID))
+    this.setState({ isFiltered: true, filteredList: removeDeplicate})
   }
 
   clearFilter = () => {
@@ -221,6 +243,15 @@ class AccountPageOrders extends Component {
   render() {
     const { page } = this.state;
     let ordersList;
+
+    this.props.allmerchantorders.length > 0 &&
+      // console.log("THIS.PROPS", this.props.allmerchantorders)
+      (this.props.allmerchantorders).map((x) => {
+        x.OrderProductDetail !== null &&
+          JSON.parse(x.OrderProductDetail).map((y) => {
+            console.log("allmerchantorders", y)
+          })
+      })
 
     let orderDetailListing = (listing) => (
       <>
@@ -280,6 +311,8 @@ class AccountPageOrders extends Component {
                   orderprice: totalPrice,
                   address: this.props.addresses,
                   creditcards: this.props.creditcard,
+                  merchant: this.props.merchant,
+                  logistic: this.props.logistic,
                 }
                 let TrackingList = (
                   <tr key={order.OrderID} >
@@ -333,7 +366,6 @@ class AccountPageOrders extends Component {
                     })
                   : ""
                 }
-                {console.log("THIS IS ORDER11", orders)}
                 {
                   this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
                     this.state.TrackingStatus === "-" ?

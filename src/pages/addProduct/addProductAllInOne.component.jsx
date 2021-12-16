@@ -1483,11 +1483,11 @@ class AddProductComponent extends Component {
               file3Added: true,
             });
           }
-          toast.success(
-            this.state.file2Added +
-            " file Length: " +
-            this.state.fileInfo.length
-          );
+          // toast.success(
+          //   this.state.file2Added +
+          //   " file Length: " +
+          //   this.state.fileInfo.length
+          // );
           // this.checkFiles512x512();
         }
       } else if (data === "1600x900") {
@@ -2036,7 +2036,7 @@ class AddProductComponent extends Component {
         imageHeight: imageHeight,
       }
       // axios.post("https://tourism.denoo.my/MCITCApi/php/uploadproductImages.php", formData, config).then((res) => {
-        axios.post("https://myemporia.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
+      axios.post("https://myemporia.my/emporiaimage/uploadproductImages.php", formData, config).then((res) => {
         console.log(res)
         if (res.status === 200 && res.data === 1) {
           this.props.callAddProductMedia(object)
@@ -3202,18 +3202,18 @@ class AddProductComponent extends Component {
         toast.error("Please fill in all required information")
       else {
         let object = {
-          name: this.state.name,
-          description: this.state.description,
+          name: encodeURIComponent(this.state.name),
+          description: encodeURIComponent(this.state.description),
           productCategory: this.state.productCategory,
           productSupplier: this.state.productSupplier,
           height: this.state.height,
           width: this.state.width,
           depth: this.state.depth,
           weight: this.state.weight,
-          sku: this.state.sku,
-          brand: this.state.brand,
-          model: this.state.model,
-          tags: this.state.tags,
+          sku: encodeURIComponent(this.state.sku),
+          brand: encodeURIComponent(this.state.brand),
+          model: encodeURIComponent(this.state.model),
+          tags: encodeURIComponent(this.state.tags),
         }
         this.props.callAddProduct(object)
 

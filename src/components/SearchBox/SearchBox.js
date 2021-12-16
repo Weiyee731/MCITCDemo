@@ -11,6 +11,7 @@ const SearchBox = (props) => {
               className="form-control search-menu"
               placeholder={props.placeholder}
               onChange={props.onChange}
+              style={{fontSize:"13px"}}
             />
             <div className="input-group-append">
               <span className="input-group-text">

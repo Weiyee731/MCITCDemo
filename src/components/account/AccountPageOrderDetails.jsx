@@ -70,8 +70,6 @@ export default function AccountPageOrderDetails(props) {
     setOpen(false);
   };
 
-
-
   //Stepper
   // const [activeStep, setActiveStep] = React.useState(0);
 
@@ -135,9 +133,9 @@ export default function AccountPageOrderDetails(props) {
 
   let trackingDetail = (index) => (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Order {index}</Typography>
-      <Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Tracking No: AA987654321BB</Typography>
-      <IconButton aria-label="View" style={{ marginLeft: 'auto' }} onClick={handleClickOpen}> <VisibilityIcon /></IconButton>
+      <Typography style={{ marginLeft: '4%', marginTop: '1%', marginBottom: '1%' }}>Order {index}</Typography>
+      {/* <Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Tracking No: AA987654321BB</Typography>
+      <IconButton aria-label="View" style={{ marginLeft: 'auto' }} onClick={handleClickOpen}> <VisibilityIcon /></IconButton> */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -148,23 +146,11 @@ export default function AccountPageOrderDetails(props) {
           {"Tracking No:  AA987654321BB"}
         </Typography>
         <DialogContent>
-          {/* Stepper Content */}
           <Box sx={{ maxWidth: 400 }}>
             <Stepper orientation="vertical" >
               {steps.map((step, index) => (
                 <Step key={step.date} expanded="true">
-                  <StepLabel
-                  // optional={
-                  //   index === 3 ? (
-                  //     <div>
-                  //     <Button variant="text" color="secondary" size="small" onClick={handleOpenImg} >View Delivery Proof</Button>
-                  //     { display &&
-                  //     <div>
-                  //     <img src={step.receipt} alt="" style={{width:'90%'}} /> 
-                  //      <Button variant="text" color="primary" size="small" onClick={handleCloseImg} >Close</Button> </div>}</div>
-                  //   ) : null
-                  // }
-                  >
+                  <StepLabel  >
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                       <Typography variant="caption"> {step.date} </Typography>
                       <Typography variant="caption" style={{ marginLeft: "auto" }}> {step.time} </Typography>
@@ -176,19 +162,10 @@ export default function AccountPageOrderDetails(props) {
                 </Step>
               ))}
             </Stepper>
-            {/* {activeStep === steps.length && (
-            <Paper square elevation={0} sx={{ p: 3 }}>
-              <Typography>All steps completed - you&apos;re finished</Typography>
-              <Button onClick={handleOpenImg} sx={{ mt: 1, mr: 1 }}>
-                Delivery Proof
-              </Button>
-            </Paper>
-          )} */}
           </Box>
           {/* ---------------------------------------------------------------------- */}
         </DialogContent>
         <DialogActions>
-
           <Button onClick={handleClose} autoFocus>
             Close
           </Button>
@@ -232,7 +209,11 @@ export default function AccountPageOrderDetails(props) {
                     <>
                       <div>
                         <th>
-                          ABC MERCHANT SDN BHD
+                          {
+                            props.location.merchant.length > 0 && props.location.merchant.filter((X) => X.UserID === MerchantList.MerchantID).map((merchant) => {
+                              return (merchant.ShopName)
+                            })
+                          }
                         </th>
                       </div>
                       <div style={{ backgroundColor: '#F9D295' }}>
@@ -247,28 +228,17 @@ export default function AccountPageOrderDetails(props) {
                             <th>Unit Price</th>
                             <th>Quantity</th>
                             <th>Total</th>
+                            <th>Tracking</th>
                           </tr>
                         </thead>
-                        {/* <tr style={{ backgroundColor: '#F9D295' }}>
-                          <th><Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Order {i + 1}</Typography></th>
-                          <th></th>
-                          <th></th>
-                          <th><Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Tracking No: AA987654321BB</Typography></th>
-                          <th><IconButton aria-label="View" style={{ marginLeft: 'auto' }} onClick={handleClickOpen}> <VisibilityIcon /></IconButton></th>
-                          {trackingDetail()}
-                        </tr> */}
-                        {/* <tr>
-                          <th>
-                            ABC MERCHANT SDN BHD
-                          </th>
-                        </tr> */}
                         {
                           orderDetail.OrderProductDetail !== null && JSON.parse(orderDetail.OrderProductDetail).filter((x) => x.MerchantID === MerchantList.MerchantID)
                             .map((orders) => {
                               return (
                                 <tbody className="card-table__body card-table__body--merge-rows">
                                   <tr>
-                                    <td>
+                                    <td style={{ width: "15%" }}>
+                                      {console.log("TO CHECK 22", orders)}
                                       <img
                                         className="product-image dropcart__product-image"
                                         src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
@@ -279,13 +249,37 @@ export default function AccountPageOrderDetails(props) {
                                         }}
                                       />
                                     </td>
-                                    <td>{orders.ProductName}</td>
-                                    <td>RM{orders.ProductVariationPrice}</td>
-                                    <td>{orders.ProductQuantity}</td>
-                                    <td>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
+                                    {console.log("ORDER", orders)}
+                                    <td style={{ width: "20%" }}>{orders.ProductName}</td>
+                                    <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice}</td>
+                                    <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
+                                    <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
+                                    {
+                                      orders.LogisticID !== null ?
+                                        <>
+                                          <td style={{ width: "10%" }}>
+                                            <div style={{ fontSize: "13px" }}>
+                                              {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
+                                                return (courier.LogisticName)
+                                              })}
+                                            </div>
+                                            <div style={{ fontSize: "13px" }}>
+                                              {orders.TrackingNumber}
+                                            </div>
+                                          </td>
+                                          <td style={{ width: "5%" }}>
+                                            <IconButton aria-label="View" style={{ marginLeft: 'auto' }} onClick={handleClickOpen}> <VisibilityIcon /></IconButton>
+                                          </td>
+                                        </>
+                                        :
+                                        <td style={{ width: "15%" }}>
+                                          <div style={{ fontSize: "13px", textAlign: "center" }}>
+                                            Temporarily no tracking for this item
+                                          </div>
+                                        </td>
+                                    }
                                   </tr>
                                 </tbody>
-
                               )
                             })}
                       </table>

@@ -132,10 +132,17 @@ class ViewProductGeneralInfo extends Component {
     if (this.props.productCategories.length > 0 && this.props.productInfo.length > 0 && this.state.categoryHierachy === 0) {
       this.getCategoryListing(this.props.productInfo[0], this.props.productCategories)
       this.getVariationList(this.props.productInfo[0])
+      // this.setState({
+      //   newArray: JSON.parse(this.props.productInfo[0].ProductVariation)
+      // })
+    }
+
+    if (this.props.productInfo.length > 0 && this.state.newArray.length === 0) {
       this.setState({
         newArray: JSON.parse(this.props.productInfo[0].ProductVariation)
       })
     }
+
     if (this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined) {
       this.getReviewList(JSON.parse(this.props.reviews))
     }
@@ -499,7 +506,7 @@ class ViewProductGeneralInfo extends Component {
                         <img
                           width="150"
                           height="150"
-                          src={this.props.productInfo[0].ProductImages !== null ? this.props.productInfo[0].ProductImages : Logo}
+                          src={this.props.productInfo[0].ProductImages !== null ? JSON.parse(this.props.productInfo[0].ProductImages)[0].ProductMediaUrl : Logo}
                           onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
                           alt=""
                         />

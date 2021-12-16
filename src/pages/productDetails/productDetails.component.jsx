@@ -1544,11 +1544,11 @@ class ProductDetailsComponent extends Component {
               file3Added: true,
             });
           }
-          toast.success(
-            this.state.file2Added +
-            " file Length: " +
-            this.state.fileInfo.length
-          );
+          // toast.success(
+          //   this.state.file2Added +
+          //   " file Length: " +
+          //   this.state.fileInfo.length
+          // );
           // this.checkFiles512x512();
         }
       } else if (data === "1600x900") {
@@ -3371,7 +3371,7 @@ class ProductDetailsComponent extends Component {
       let object = {
         ProductID: this.state.ProductID,
         productSupplier: this.state.productSupplier,
-        name: this.state.name,
+        name: encodeURIComponent(this.state.name),
         description: encodeURIComponent(this.state.description),
         productCategory: this.state.productCategory,
         // productSupplier: this.state.productSupplier,
@@ -3379,10 +3379,10 @@ class ProductDetailsComponent extends Component {
         width: this.state.width,
         depth: this.state.depth,
         weight: this.state.weight,
-        sku: this.state.sku,
-        brand: this.state.brand,
-        model: this.state.model,
-        tags: this.state.tags,
+        sku: encodeURIComponent(this.state.sku),
+        brand: encodeURIComponent(this.state.brand),
+        model: encodeURIComponent(this.state.model),
+        tags: encodeURIComponent(this.state.tags),
       }
 
       this.props.CallUpdateProduct(object)
@@ -5621,7 +5621,7 @@ class ProductDetailsComponent extends Component {
                                   : "#828282",
                               }}
                             >
-                              <input {...getInputProps()} />
+                              {this.state.toBeEdited ? <input {...getInputProps()} /> : ""}
                               <AddIcon className="DropZoneAddIcon" />
                             </div>
                           )}
@@ -5693,7 +5693,7 @@ class ProductDetailsComponent extends Component {
                                   : "#828282",
                               }}
                             >
-                              <input {...getInputProps()} />
+                              {this.state.toBeEdited ? <input {...getInputProps()} /> : ""}
 
                               <AddIcon className="DropZoneAddIcon" />
                             </div>
@@ -5766,7 +5766,7 @@ class ProductDetailsComponent extends Component {
                                   : "#828282",
                               }}
                             >
-                              <input {...getInputProps()} />
+                              {this.state.toBeEdited ? <input {...getInputProps()} /> : ""}
                               <AddIcon className="DropZoneAddIcon" />
                             </div>
                           )}
