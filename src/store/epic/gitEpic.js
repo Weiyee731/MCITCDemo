@@ -2496,7 +2496,6 @@ export class GitEpic {
       }
     });
 
-
   // UPDATE TRACKING
   updateOrderTrackingNumber = (action$) =>
     action$.ofType(GitAction.updateTrackingNumber).switchMap(async ({ payload }) => {

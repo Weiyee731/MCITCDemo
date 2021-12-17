@@ -45,6 +45,8 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Input from "@material-ui/core/Input";
 import { ConstructionOutlined } from "@mui/icons-material";
 
+import Divider from '@mui/material/Divider';
+
 function mapStateToProps(state) {
   return {
     allpromocodes: state.counterReducer["promoCodes"],
@@ -301,7 +303,7 @@ function Row(props) {
 
   const handleSetProduct = (row) => {
     let tempOrderDetails = []
-    row.OrderProductDetail !== null && JSON.parse(row.OrderProductDetail).map((x) => {
+    row.OrderProductDetail !== null && JSON.parse(row.OrderProductDetail).filter((filtered) => filtered.LogisticID === null || filtered.LogisticID === 0).map((x) => {
       tempOrderDetails.push(x.OrderProductDetailID)
     })
     setSelectedRowID(tempOrderDetails)
@@ -347,9 +349,9 @@ function Row(props) {
 
   const confirmListing = (product, i) => {
     return (
-      <div style={{ paddingTop: "10px" }}>
+      <div className="col-8" style={{ paddingTop: "10px" }}>
         <div className="row">
-          <div className="col-2" style={{ width: "10%" }}>
+          <div className="col-3" style={{ width: "10%" }}>
             <img
               height={60}
               src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
@@ -357,14 +359,14 @@ function Row(props) {
               alt={product.ProductName}
             />
           </div>
-          <div className="col-5" style={{ width: "40%" }}>
+          <div className="col-9" style={{ width: "40%" }}>
             <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
             <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
             <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
             <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
             <div style={{ fontSize: "13px", fontWeight: "bold" }}>  Total Paid : {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}  / Qty ({product.ProductQuantity})</div>
           </div>
-          <div className="col-3" >
+          {/* <div className="col-3" >
             <div>   Tracking Number :</div>
             {
               checkExisting(product) !== 0 ?
@@ -410,8 +412,8 @@ function Row(props) {
                   })}
                 </>
             }
-          </div>
-          <div className="col-2"  >
+          </div> */}
+          {/* <div className="col-2"  >
             <div className="row">
               {checkExisting(product) !== 0 &&
                 <div className="col-6" style={{ alignItems: "center" }}>
@@ -427,6 +429,87 @@ function Row(props) {
                   onClick={() => handleEditExistingTracking(product, i)}  >{checkExisting(product) !== 0 ? "CANCEL" : "EDIT"}</Button>
               </div>
             </div>
+          </div> */}
+        </div>
+      </div>
+    )
+  }
+
+  const confirmListingTracking = (product, i, TrackingData) => {
+    return (
+      <div className="col-4" style={{ paddingTop: "10px" }}>
+        <div className="row">
+          <div className="col-6" >
+            <div>   Tracking Number :</div>            {
+              checkExisting(product) !== 0 ?
+                checkExisting(product).map((Data) => {
+                  return (
+                    <>
+                      <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
+                        <Select
+                          native
+                          id="Logistic"
+                          value={Data.existingLogisticID}
+                          onChange={(x) => handleInputChange(x.target.value, "LogisticID", product)}
+                          className="select"
+                        >
+                          {logistic.map((courier) => (
+                            <option
+                              value={courier.LogisticID}
+                              key={courier.LogisticID}
+                            >
+                              {courier.LogisticName}
+                            </option>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        id="outlined-size-small" size="small"
+                        width="100%"
+                        className="font"
+                        variant="outlined"
+                        value={Data.existingTrackingNumber}
+                        onChange={(x) => handleInputChange(x.target.value, "Tracking", product)}
+                      />
+                    </>
+                  )
+                })
+                :
+                <>
+                  <div style={{ fontWeight: "bold" }}> {product.TrackingNumber}</div>
+                  {logistic.filter(x => x.LogisticID === product.LogisticID).map((courier) => {
+                    return (
+                      <div style={{ fontWeight: "bold" }}> {courier.LogisticName}  </div>
+                    )
+                  })}
+                </>
+            }
+          </div>
+          <div className="col-6"  >
+            <div className="row">
+              {checkExisting(product) !== 0 &&
+                <div className="col-4" style={{ alignItems: "center" }}>
+                  <Button style={{ backgroundColor: "#28a745", color: "white" }}
+                    onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID, TrackingData, "update")}
+                  // onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID)}
+                  >UPDATE</Button>
+                </div>
+              }
+              <div className="col-4" style={{ alignItems: "center" }}>
+                <Button style={{
+                  backgroundColor: checkExisting(product) !== 0 ? "#808080" : "#28a745", color: "white"
+                }}
+                  onClick={() => handleEditExistingTracking(product, i, TrackingData)}  >{checkExisting(product) !== 0 ? "CANCEL" : "EDIT"}</Button>
+              </div>
+              {checkExisting(product) !== 0 &&
+                <div className="col-4" style={{ alignItems: "center" }}>
+                  <Button style={{ backgroundColor: "#FF7F7F", color: "white" }}
+                    onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID, TrackingData, "delete")}
+                  // onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID)}
+                  >DELETE</Button>
+                </div>
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -435,7 +518,17 @@ function Row(props) {
 
   const checkExisting = (product) => {
     if (existingTrackingData.length > 0) {
-      let filterData = existingTrackingData.filter((x) => parseInt(x.existingProductDetailsID) === parseInt(product.OrderProductDetailID))
+      let filterData = []
+      let DataIndex = ""
+
+      existingTrackingData.map((tracking, index) => {
+        if (tracking.existingProductDetailsID.filter((x) => parseInt(x) === parseInt(product.OrderProductDetailID)).length > 0)
+          DataIndex = index
+      })
+
+      if (DataIndex !== "")
+        filterData.push(existingTrackingData[DataIndex])
+
       if (filterData.length > 0)
         return filterData
       else
@@ -447,7 +540,13 @@ function Row(props) {
 
   const handleInputChange = (value, type, product) => {
     let Listing = [...existingTrackingData]
-    let DataIndex = existingTrackingData.findIndex((x) => x.existingProductDetailsID === product.OrderProductDetailID)
+    let DataIndex = ""
+
+    existingTrackingData.map((tracking, index) => {
+      if (tracking.existingProductDetailsID.filter((x) => parseInt(x) === parseInt(product.OrderProductDetailID)).length > 0)
+        DataIndex = index
+    })
+
     switch (type) {
       case "Tracking":
         Listing[DataIndex].existingLogisticID = Listing[DataIndex].existingLogisticID
@@ -467,39 +566,79 @@ function Row(props) {
     setTrackingData(Listing)
   }
 
-  const handleEditExistingTracking = (product, productIndex) => {
-
+  const handleEditExistingTracking = (product, productIndex, TrackingData) => {
     if (checkExisting(product) !== 0) {
-      setTrackingData(existingTrackingData.filter((x) => x.existingProductDetailsID !== product.OrderProductDetailID))
+      let filterIndex = ""
+      existingTrackingData.map((tracking, index) => {
+        if (tracking.existingProductDetailsID.filter((x) => parseInt(x) === parseInt(product.OrderProductDetailID)).length > 0)
+          filterIndex = index
+      })
+      setTrackingData(existingTrackingData.filter((x, i) => i !== filterIndex))
     } else {
+
       setTrackingData([...existingTrackingData,
       {
         existingLogisticID: product.LogisticID,
         existingTrackingNumber: product.TrackingNumber,
-        existingProductDetailsID: product.OrderProductDetailID,
+        existingProductDetailsID: getOrderDetailsID(TrackingData, product),
       }])
     }
   }
 
-  const handleUpdateExistingTracking = (ProductDetailsID) => {
-    let Listing = existingTrackingData.filter((x) => x.existingProductDetailsID === ProductDetailsID)
-    prop.CallUpdateOrderTracking({
-      ORDERTRACKINGNUMBER: Listing[0].existingTrackingNumber,
-      LOGISTICID: Listing[0].existingLogisticID,
-      ORDERPRODUCTDETAILSID: ProductDetailsID
+  const getOrderDetailsID = (TrackingData, product) => {
+    let OrderProductDetailID = []
+    TrackingData.filter((x) => x.TrackingNumber === product.TrackingNumber && x.LogisticID === product.LogisticID).map((order) => {
+      OrderProductDetailID.push(order.OrderProductDetailID)
     })
-    setTrackingData(existingTrackingData.filter((x) => x.existingProductDetailsID !== ProductDetailsID))
+    return OrderProductDetailID
   }
 
+  const handleUpdateExistingTracking = (ProductDetailsID, TrackingData, option) => {
+    let Listing = []
+    let filterIndex = ""
+
+    existingTrackingData.map((tracking, index) => {
+      if (tracking.existingProductDetailsID.filter((x) => parseInt(x) === parseInt(ProductDetailsID)).length > 0)
+        filterIndex = index
+    })
+    Listing = existingTrackingData.filter((x, i) => i === filterIndex)
+
+    switch (option) {
+      case "update":
+        prop.CallUpdateOrderTracking({
+          ORDERTRACKINGNUMBER: encodeURIComponent(Listing[0].existingTrackingNumber),
+          LOGISTICID: Listing[0].existingLogisticID,
+          ORDERPRODUCTDETAILSID: Listing[0].existingProductDetailsID
+        })
+        break;
+
+      case "delete":
+        prop.CallUpdateOrderTracking({
+          ORDERTRACKINGNUMBER: "-",
+          LOGISTICID: 0,
+          ORDERPRODUCTDETAILSID: Listing[0].existingProductDetailsID
+        })
+        break;
+
+      default:
+        break;
+    }
+
+    setTrackingData(existingTrackingData.filter((x, i) => i !== filterIndex))
+  }
+
+
+  // Submit First Tracking Number
   const handleSubmitTracking = (tracking, LogisticID, ProductDetailsID) => {
     prop.CallUpdateOrderTracking({
-      ORDERTRACKINGNUMBER: tracking,
+      ORDERTRACKINGNUMBER: encodeURIComponent(tracking),
       LOGISTICID: LogisticID,
       ORDERPRODUCTDETAILSID: ProductDetailsID
     })
     setSelectedProductDetailsID([])
   }
 
+  // Before having Tracking Number 
   const trackingView = () => {
     return (
       <div style={{ textAlign: "left" }}>
@@ -551,21 +690,10 @@ function Row(props) {
   }
 
   const getTrackingLength = (Data) => {
-
-    let checkDuplicte = Data.filter((ele, ind) => ind === Data.findIndex(elem => elem.TrackingNumber === ele.TrackingNumber && elem.LogisticID === ele.LogisticID))
-    console.log("THIS IS DATA", Data)
-    console.log("THIS IS DATA checkDuplicte", checkDuplicte)
-
-    setCheckTracking(checkDuplicte)
-
-    // setTrackingData([...existingTrackingData,
-    // {
-    //   existingLogisticID: product.LogisticID,
-    //   existingTrackingNumber: product.TrackingNumber,
-    //   existingProductDetailsID: product.OrderProductDetailID,
-    // }])
-
+    let checkDuplicte = Data.filter((ele, ind) => ind === Data.findIndex(elem => elem.TrackingNumber === ele.TrackingNumber && elem.LogisticID === ele.LogisticID && elem.LogisticID !== null && elem.LogisticID !== 0))
+    return (checkDuplicte)
   }
+
   return (
     <React.Fragment>
       <TableRow
@@ -637,7 +765,7 @@ function Row(props) {
               {row.OrderProductDetail ? (
                 <>
                   <div size="small" aria-label="products">
-                    {JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID === null).length > 0 ?
+                    {JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID === null || x.LogisticID === 0).length > 0 ?
                       <TableCell>
                         <Checkbox
                           checked={selectedProductDetailsID.length === 0 ? false :
@@ -653,8 +781,16 @@ function Row(props) {
                             {JSON.parse(row.OrderProductDetail).map((product, i) => (
                               <>
                                 {
-                                  product.LogisticID === null && selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
-                                  orderListing(product, i)
+
+                                  product.LogisticID === null ?
+                                    selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
+                                    orderListing(product, i)
+                                    :
+                                    product.LogisticID === 0 &&
+                                    selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
+                                    orderListing(product, i)
+                                  // selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
+                                  // orderListing(product, i)
                                 }
                               </>
                             ))
@@ -664,7 +800,8 @@ function Row(props) {
                               <>
                                 {
                                   selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ? "" :
-                                    product.LogisticID === null && orderListing(product, i)
+                                    product.LogisticID === null ? orderListing(product, i) :
+                                      product.LogisticID === 0 && orderListing(product, i)
                                 }
                               </>
                             ))
@@ -674,23 +811,27 @@ function Row(props) {
                       }
                     </>
                   </div>
-
-                  {/* {getTrackingLength(JSON.parse(row.OrderProductDetail).length > 0 && existingTracking.map((track) => {
-
+                  {getTrackingLength(JSON.parse(row.OrderProductDetail)).length > 0 && getTrackingLength(JSON.parse(row.OrderProductDetail)).map((track, index) => {
                     return (
-                      row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)..map((product, i) => (
-                        <>
-                          {
-                            product.TrackingNumber === track.TrackingNumber && product.LogisticID === track.LogisticID &&
-                            confirmListing(product, i)
-                          }
-                        </>
-                      ))
-                        : null
+                      <div className="row">
+                        <Divider />
+                        {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail).map((product, i) => (
+                          <>
+                            {
+                              product.TrackingNumber === track.TrackingNumber && product.LogisticID === track.LogisticID &&
+                              confirmListing(product, i)
+                            }
+                          </>
+                        ))
+                          : null}
+                        {confirmListingTracking(track, index, JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID !== null && x.LogisticID !== 0))}
+                        <Divider />
+                      </div>
 
                     )
-                  }))} */}
-                  {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail).map((product, i) => (
+                  })}
+
+                  {/* {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail).map((product, i) => (
                     <>
                       {
                         product.TrackingNumber !== null && product.LogisticID !== null &&
@@ -698,7 +839,7 @@ function Row(props) {
                       }
                     </>
                   ))
-                    : null}
+                    : null} */}
                 </>
 
               ) : (
@@ -707,7 +848,7 @@ function Row(props) {
             </Box>
           </Collapse>
         </TableCell>
-      </TableRow>
+      </TableRow >
     </React.Fragment >
   );
 }
@@ -854,8 +995,6 @@ class DisplayTable extends Component {
     })
 
     let removeDeplicate = this.state.filteredProduct.filter((ele, ind) => ind === this.state.filteredProduct.findIndex(elem => elem.OrderID === ele.OrderID))
-
-    console.log("THIS.PROPS.FILTERED", removeDeplicate)
     this.setState({ isFiltered: true, filteredProduct: removeDeplicate })
   }
 
@@ -867,6 +1006,7 @@ class DisplayTable extends Component {
         this.state.rowsPerPage,
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
+
 
     const divStyle = {
       width: "100%",
@@ -1060,7 +1200,6 @@ class ViewTransactionsComponent extends Component {
 
   render() {
     const handleChange = (event, newValue) => {
-      console.log(newValue);
       this.setState({ value: newValue });
     };
 
@@ -1097,13 +1236,11 @@ class ViewTransactionsComponent extends Component {
 
     let allTransactionStatusData = this.props.alltransactionstatus
       ? Object.keys(this.props.alltransactionstatus).map((key) => {
-        console.log(this.props.alltransactionstatus);
         return this.props.alltransactionstatus[key];
       })
       : {};
 
     if (allTransactionStatusData.length > 0) {
-      console.log(allTransactionStatusData);
       var generateOptions = allTransactionStatusData.map((status, i) => {
         return (
           <option value={status.TrackingStatus}>{status.TrackingStatus}</option>
