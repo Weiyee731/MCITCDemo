@@ -38,6 +38,7 @@ const rootEpic = combineEpics(
   gitEpic.RegisterUser,
   gitEpic.getUserPage,
   gitEpic.ViewAddress,
+  gitEpic.ViewAllAddress,
   gitEpic.addAddress,
   gitEpic.checkUser,
   gitEpic.updatePassword,
@@ -110,6 +111,7 @@ const rootEpic = combineEpics(
   gitEpic.getNotification,
   //==================ORDER==========================//
   gitEpic.AddOrder,
+  gitEpic.UpdateOrderUserDetails,
   gitEpic.updateOrderTrackingNumber,
   gitEpic.getProductStockByStatus,
   gitEpic.getAllDeliveryList,

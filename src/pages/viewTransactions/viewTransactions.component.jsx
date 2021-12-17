@@ -44,8 +44,10 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Input from "@material-ui/core/Input";
 import { ConstructionOutlined } from "@mui/icons-material";
+import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 
 import Divider from '@mui/material/Divider';
+import { toast } from "react-toastify";
 
 function mapStateToProps(state) {
   return {
@@ -55,21 +57,25 @@ function mapStateToProps(state) {
     logistic: state.counterReducer["logistic"],
     tracking: state.counterReducer["tracking"],
     alltransactionstatus: state.counterReducer["transactionStatus"],
+    allAddress: state.counterReducer["allAddress"],
+    countries: state.counterReducer["countries"],
+    order: state.counterReducer["order"],
+
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallGetTransaction: (transactionData) =>
-      dispatch(GitAction.CallGetTransaction(transactionData)),
-    CallCourierService: () =>
-      dispatch(GitAction.CallCourierService()),
-    CallGetTransactionStatus: () =>
-      dispatch(GitAction.CallGetTransactionStatus()),
-    CallResetOrderTracking: () =>
-      dispatch(GitAction.CallResetOrderTracking()),
-    CallUpdateOrderTracking: (propData) =>
-      dispatch(GitAction.CallUpdateOrderTracking(propData)),
+    CallGetTransaction: (transactionData) => dispatch(GitAction.CallGetTransaction(transactionData)),
+    CallCourierService: () => dispatch(GitAction.CallCourierService()),
+    CallGetTransactionStatus: () => dispatch(GitAction.CallGetTransactionStatus()),
+    CallResetOrderTracking: () => dispatch(GitAction.CallResetOrderTracking()),
+    CallAllUserAddress: () => dispatch(GitAction.CallAllUserAddress()),
+    CallCountry: () => dispatch(GitAction.CallCountry()),
+    CallClearOrder: () => dispatch(GitAction.CallClearOrder()),
+    CallUpdateOrderTracking: (propData) => dispatch(GitAction.CallUpdateOrderTracking(propData)),
+    CallUpdateOrderUserDetails: (propData) => dispatch(GitAction.CallUpdateOrderUserDetails(propData)),
+
   };
 }
 
@@ -251,9 +257,8 @@ const useRowStyles = makeStyles({
 });
 
 
-
 function Row(props) {
-  const { row, setData, index, logistic, prop } = props;
+  const { row, setData, index, logistic, prop, address, country } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
   const [selectedProductDetailsID, setSelectedProductDetailsID] = React.useState([]);
@@ -262,8 +267,9 @@ function Row(props) {
   const [logisticID, setLogisticID] = React.useState(1);
   const [trackingNumber, setTrackingNumber] = React.useState("");
   const [existingTrackingData, setTrackingData] = React.useState([]);
-  const [existingTracking, setCheckTracking] = React.useState([]);
+  const [newUserDetails, setUserDetails] = React.useState([]);
 
+  // Check Particular Product
   const handleSelectedProduct = (product, index) => {
 
     let tempArray = selectedProductDetailsID.filter((x) => parseInt(x) === parseInt(product.OrderProductDetailID))
@@ -290,7 +296,7 @@ function Row(props) {
       setSelectedProductDetailsID(selectedProductDetailsID => [...selectedProductDetailsID, product.OrderProductDetailID])
     }
   }
-
+  // Check All Product
   const handleSelectAllProduct = (order, index) => {
 
     if (selectedRowID.length === selectedProductDetailsID.length) {
@@ -301,6 +307,7 @@ function Row(props) {
     }
   }
 
+  //Set the available row of product can be select
   const handleSetProduct = (row) => {
     let tempOrderDetails = []
     row.OrderProductDetail !== null && JSON.parse(row.OrderProductDetail).filter((filtered) => filtered.LogisticID === null || filtered.LogisticID === 0).map((x) => {
@@ -309,6 +316,7 @@ function Row(props) {
     setSelectedRowID(tempOrderDetails)
   }
 
+  //View the listing with without tracking number
   const orderListing = (product, i) => {
     return (
 
@@ -347,6 +355,7 @@ function Row(props) {
     )
   }
 
+  //View the listing with existing tracking number (Product Detail)
   const confirmListing = (product, i) => {
     return (
       <div className="col-8" style={{ paddingTop: "10px" }}>
@@ -366,75 +375,12 @@ function Row(props) {
             <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
             <div style={{ fontSize: "13px", fontWeight: "bold" }}>  Total Paid : {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}  / Qty ({product.ProductQuantity})</div>
           </div>
-          {/* <div className="col-3" >
-            <div>   Tracking Number :</div>
-            {
-              checkExisting(product) !== 0 ?
-                checkExisting(product).map((Data) => {
-                  return (
-                    <>
-                      <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
-                        <Select
-                          native
-                          id="Logistic"
-                          value={Data.existingLogisticID}
-                          onChange={(x) => handleInputChange(x.target.value, "LogisticID", product)}
-                          className="select"
-                        >
-                          {logistic.map((courier) => (
-                            <option
-                              value={courier.LogisticID}
-                              key={courier.LogisticID}
-                            >
-                              {courier.LogisticName}
-                            </option>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <TextField
-                        id="outlined-size-small" size="small"
-                        width="100%"
-                        className="font"
-                        variant="outlined"
-                        value={Data.existingTrackingNumber}
-                        onChange={(x) => handleInputChange(x.target.value, "Tracking", product)}
-                      />
-                    </>
-                  )
-                })
-                :
-                <>
-                  <div style={{ fontWeight: "bold" }}>   {product.TrackingNumber}</div>
-                  {logistic.filter(x => x.LogisticID === product.LogisticID).map((courier) => {
-                    return (
-                      <div style={{ fontWeight: "bold" }}> {courier.LogisticName}  </div>
-                    )
-                  })}
-                </>
-            }
-          </div> */}
-          {/* <div className="col-2"  >
-            <div className="row">
-              {checkExisting(product) !== 0 &&
-                <div className="col-6" style={{ alignItems: "center" }}>
-                  <Button style={{ backgroundColor: "#28a745", color: "white" }}
-                    onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID)}
-                  >UPDATE</Button>
-                </div>
-              }
-              <div className="col-6" style={{ alignItems: "center" }}>
-                <Button style={{
-                  backgroundColor: checkExisting(product) !== 0 ? "#808080" : "#28a745", color: "white"
-                }}
-                  onClick={() => handleEditExistingTracking(product, i)}  >{checkExisting(product) !== 0 ? "CANCEL" : "EDIT"}</Button>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     )
   }
 
+  //View the listing with existing tracking number (Tracking Details)
   const confirmListingTracking = (product, i, TrackingData) => {
     return (
       <div className="col-4" style={{ paddingTop: "10px" }}>
@@ -491,7 +437,6 @@ function Row(props) {
                 <div className="col-4" style={{ alignItems: "center" }}>
                   <Button style={{ backgroundColor: "#28a745", color: "white" }}
                     onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID, TrackingData, "update")}
-                  // onClick={() => handleUpdateExistingTracking(product.OrderProductDetailID)}
                   >UPDATE</Button>
                 </div>
               }
@@ -516,6 +461,7 @@ function Row(props) {
     )
   }
 
+  // Check whether the selected orderdetail is in the editing list
   const checkExisting = (product) => {
     if (existingTrackingData.length > 0) {
       let filterData = []
@@ -538,6 +484,7 @@ function Row(props) {
       return 0
   }
 
+  // Edit Tracking and Logistic ID 
   const handleInputChange = (value, type, product) => {
     let Listing = [...existingTrackingData]
     let DataIndex = ""
@@ -549,23 +496,21 @@ function Row(props) {
 
     switch (type) {
       case "Tracking":
-        Listing[DataIndex].existingLogisticID = Listing[DataIndex].existingLogisticID
         Listing[DataIndex].existingTrackingNumber = value
         break;
 
       case "LogisticID":
         Listing[DataIndex].existingLogisticID = value
-        Listing[DataIndex].existingTrackingNumber = Listing[DataIndex].existingTrackingNumber
 
         break;
 
       default:
         break;
     }
-    Listing[DataIndex].existingProductDetailsID = Listing[DataIndex].existingProductDetailsID
     setTrackingData(Listing)
   }
 
+  // Check whether the Data is in the editing list 
   const handleEditExistingTracking = (product, productIndex, TrackingData) => {
     if (checkExisting(product) !== 0) {
       let filterIndex = ""
@@ -585,6 +530,7 @@ function Row(props) {
     }
   }
 
+  //Call to get OrderDetailsID with same tracking number
   const getOrderDetailsID = (TrackingData, product) => {
     let OrderProductDetailID = []
     TrackingData.filter((x) => x.TrackingNumber === product.TrackingNumber && x.LogisticID === product.LogisticID).map((order) => {
@@ -593,6 +539,7 @@ function Row(props) {
     return OrderProductDetailID
   }
 
+  // Call API to update tracking number
   const handleUpdateExistingTracking = (ProductDetailsID, TrackingData, option) => {
     let Listing = []
     let filterIndex = ""
@@ -626,7 +573,6 @@ function Row(props) {
 
     setTrackingData(existingTrackingData.filter((x, i) => i !== filterIndex))
   }
-
 
   // Submit First Tracking Number
   const handleSubmitTracking = (tracking, LogisticID, ProductDetailsID) => {
@@ -689,9 +635,276 @@ function Row(props) {
     )
   }
 
+  // Get Total Number of different tracking
   const getTrackingLength = (Data) => {
     let checkDuplicte = Data.filter((ele, ind) => ind === Data.findIndex(elem => elem.TrackingNumber === ele.TrackingNumber && elem.LogisticID === ele.LogisticID && elem.LogisticID !== null && elem.LogisticID !== 0))
     return (checkDuplicte)
+  }
+
+  // Check whether the selected user details is in the editing list
+  const checkExistingUserDetails = (userdetails) => {
+    let filterData = []
+    if (newUserDetails.length > 0) {
+      filterData = newUserDetails.filter((x) => parseInt(x.OrderID) === parseInt(userdetails.OrderID))
+
+      if (filterData.length > 0)
+        return filterData
+      else
+        return 0
+    }
+    else
+      return 0
+  }
+
+  const handleSetAddressDetails = (row) => {
+    let AddressList = []
+
+    if (row.UserAddressLine1 === null)
+      address.length > 0 && row.UserAddresID !== 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
+        AddressList = address
+      })
+    else
+      AddressList = row
+
+    if (checkExistingUserDetails(row) !== 0) {
+      setUserDetails(newUserDetails.filter((x, i) => x.OrderID !== row.OrderID))
+    }
+    else {
+      setUserDetails([...newUserDetails,
+      {
+        OrderID: row.OrderID,
+        UserFullName: row.FirstName !== null ? row.FirstName + row.LastName : "",
+        UserContactNo: row.UserContactNo !== null ? row.UserContactNo : "",
+        UserEmailAddress: row.UserEmailAddress !== null ? row.UserEmailAddress : "",
+        Method: row.UserAddresID === 0 ? "Self Pick Up" : "Delivery",
+
+        UserAddressLine1: AddressList.UserAddressLine1 !== null ? AddressList.UserAddressLine1 : "",
+        UserAddressLine2: AddressList.UserAddressLine2 !== null ? AddressList.UserAddressLine2 : "",
+        UserCity: AddressList.UserCity !== null ? AddressList.UserCity : "",
+        UserPoscode: AddressList.UserPoscode !== null ? AddressList.UserPoscode : "",
+        UserState: AddressList.UserState !== null ? AddressList.UserState : "",
+        CountryID: AddressList.CountryID !== null ? AddressList.CountryID : 0,
+      }])
+    }
+  }
+
+  const addressList = (address, row) => {
+    return (
+      <>
+        <div className="row" style={{ display: "flex" }}>
+          <div className="subContainer col-6">
+            <div className="col-2" style={{ textAlign: "left", paddingLeft: "0px" }}>
+              <p className="subTextLeft">{"Address Line 1  "}</p>
+            </div>
+            <div className="col-10">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.UserAddressLine1) }) : address.UserAddressLine1}
+                disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                onChange={(x) => handleUserDetailsChange(x.target.value, "Address1", row)}
+              />
+            </div>
+          </div>
+          <div className="subContainer col-6">
+            <div className="col-2" style={{ textAlign: "left" }}>
+              <p className="subTextLeft">{"Address Line 2"}</p>
+            </div>
+            <div className="col-10">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.UserAddressLine2) }) : address.UserAddressLine2}
+                disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                onChange={(x) => handleUserDetailsChange(x.target.value, "Address2", row)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="row" style={{ display: "flex" }}>
+          <div className="subContainer col-3">
+            <div className="col-2" style={{ textAlign: "left", paddingLeft: "0px" }}>
+              <p className="subTextLeft">{"City"}</p>
+            </div>
+            <div className="col-10">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.UserCity) }) : address.UserCity}
+                disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                onChange={(x) => handleUserDetailsChange(x.target.value, "City", row)}
+              />
+            </div>
+          </div>
+          <div className="subContainer col-3">
+            <div className="col-2" style={{ textAlign: "left" }}>
+              <p className="subTextLeft">{"State"}</p>
+            </div>
+            <div className="col-10">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.UserState) }) : address.UserState}
+                disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                onChange={(x) => handleUserDetailsChange(x.target.value, "State", row)}
+              />
+            </div>
+          </div>
+
+          <div className="subContainer col-3">
+            <div className="col-2" style={{ textAlign: "left", paddingLeft: "0px" }}>
+              <p className="subTextLeft">{"Poscode"}</p>
+            </div>
+            <div className="col-10">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.UserPoscode) }) : address.UserPoscode}
+                disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                onChange={(x) => handleUserDetailsChange(x.target.value, "Poscode", row)}
+              />
+            </div>
+          </div>
+          <div className="subContainer col-3">
+            <div className="col-2" style={{ textAlign: "left" }}>
+              <p className="subTextLeft">{"Country"}</p>
+            </div>
+            <div className="col-10">
+              <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
+                <Select
+                  native
+                  id="Logistic"
+                  value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.CountryID) }) : address.CountryID}
+                  onChange={(x) => handleUserDetailsChange(x.target.value, "Country", row)}
+                  className="select"
+                  disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                >
+                  {country.length > 0 && country.map((country) => (
+                    <option
+                      value={country.CountryID}
+                      key={country.CountryID}
+                    >
+                      {country.CountryName}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  const handleUserDetailsChange = (data, type, userDetails) => {
+    let Listing = [...newUserDetails]
+    let DataIndex = ""
+
+    if (newUserDetails.filter((x) => parseInt(x.OrderID) === parseInt(userDetails.OrderID)).length > 0)
+      DataIndex = index
+
+    switch (type) {
+      case "Name":
+        Listing[DataIndex].UserFullName = data
+        setUserDetails(Listing)
+        break;
+
+      case "Contact":
+        Listing[DataIndex].UserContactNo = data
+        setUserDetails(Listing)
+        break;
+
+      case "Email":
+        Listing[DataIndex].UserEmailAddress = data
+        break;
+
+      case "Method":
+        Listing[DataIndex].Method = data
+        break;
+
+      case "Address1":
+        Listing[DataIndex].UserAddressLine1 = data
+        break;
+
+      case "Address2":
+        Listing[DataIndex].UserAddressLine2 = data
+        break;
+
+      case "City":
+        Listing[DataIndex].UserCity = data
+        break;
+
+      case "State":
+        Listing[DataIndex].UserState = data
+        break;
+
+      case "Poscode":
+        Listing[DataIndex].UserPoscode = data
+        break;
+
+      case "Country":
+        Listing[DataIndex].CountryID = data
+        break;
+
+      default:
+        break;
+    }
+    setUserDetails(Listing)
+  }
+
+  const handleSubmitChangeUserDetails = (userDetails) => {
+    let filterData = []
+    if (newUserDetails.length > 0) {
+      filterData = newUserDetails.filter((x) => parseInt(x.OrderID) === parseInt(userDetails.OrderID))
+      prop.CallUpdateOrderUserDetails({
+        OrderID: filterData[0].OrderID,
+        FirstName: filterData[0].UserFullName,
+        LastName: "-",
+        UserContactNo: filterData[0].UserContactNo,
+        UserEmailAddress: filterData[0].UserEmailAddress,
+        UserAddressLine1: filterData[0].UserAddressLine1,
+        UserAddressLine2: filterData[0].UserAddressLine2,
+
+        UserPoscode: filterData[0].UserPoscode,
+        UserState: filterData[0].UserState,
+
+        UserCity: filterData[0].UserCity,
+        CountryID: filterData[0].CountryID,
+      })
+      setUserDetails(newUserDetails.filter((x) => parseInt(x.OrderID) !== parseInt(userDetails.OrderID)))
+    } else {
+      toast.warning("Unable to update the User Details, Please Try Again Later")
+    }
+  }
+
+  const checkError = (userDetails) => {
+    let filterData = []
+    if (newUserDetails.length > 0) {
+      filterData = newUserDetails.filter((x) => parseInt(x.OrderID) === parseInt(userDetails.OrderID))
+      if (filterData.length > 0) {
+        if (isContactValid(filterData[0].UserContactNo) === true && isEmailValid(filterData[0].UserEmailAddress) === true && isStringNullOrEmpty(filterData[0].UserAddressLine1) === false
+          && isStringNullOrEmpty(filterData[0].UserAddressLine2) === false && isStringNullOrEmpty(filterData[0].UserCity) === false && isStringNullOrEmpty(filterData[0].UserFullName) === false
+          && isStringNullOrEmpty(filterData[0].UserPoscode) === false && isStringNullOrEmpty(filterData[0].UserState) === false)
+          return 1
+        else
+          return 0
+      }
+      else
+        return 0
+    }
+    else
+      return 0
   }
 
   return (
@@ -731,36 +944,122 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={2}>
-              <p className="subHeading">User Details</p>
-              <div style={{ display: "flex" }}>
-                <div className="subContainer">
-                  <p className="subTextLeft">{"Full Name "}</p>
-                  <p className="subTextField">
-                    {row.UserFullName ? row.UserFullName : "-"}
-                  </p>
-                </div>
-                <div style={{ width: "100%", display: "flex" }}>
-                  <p className="subTextRight">{"Contact Number"}</p>
-                  <p className="subTextField">
-                    {row.UserContactNo ? row.UserContactNo : "-"}
-                  </p>
+              <div className="row" style={{ display: "flex" }}>
+                <div className="subContainer col-10"><p className="subHeading">User Details</p></div>
+                <div className="subContainer col-2" >
+                  <div classNam="row" style={{ display: "flex", textAlign: "right" }}>
+                    <div className="col-6">
+                      {
+                        checkExistingUserDetails(row) !== 0 &&
+                        <Button style={{ backgroundColor: checkError(row) === 0 ? "#4d6b53" : "#28a745", color: "white" }}
+                          onClick={() => handleSubmitChangeUserDetails(row)}
+                          disabled={checkError(row) === 0 ? true : false}
+                        >UPDATE</Button>
+                      }
+                    </div>
+                    <div className="col-6"><Button style={{ backgroundColor: checkExistingUserDetails(row) !== 0 ? "#808080" : "#0277bd", color: "white" }}
+                      onClick={() => handleSetAddressDetails(row)}
+                    >{checkExistingUserDetails(row) !== 0 ? "CANCEL" : "EDIT"}</Button></div>
+                  </div>
                 </div>
               </div>
-              <div style={{ display: "flex" }}>
-                <div className="subContainer">
-                  <p className="subTextLeft">{"Email"}</p>
-                  <p className="subTextField">
-                    {row.UserEmailAddress ? row.UserEmailAddress : "-"}
-                  </p>
+
+              {console.log("THIS IS NEW ADDRESS", checkError(row))}
+              {console.log("CHECK ERROR", newUserDetails)}
+              <div className="row" style={{ display: "flex", paddingTop: "10px" }}>
+                <div className="subContainer col-6">
+                  <div className="col-2" style={{ textAlign: "left", paddingLeft: "0px" }}>
+                    <p className="subTextLeft">{"Full Name "}</p>
+                  </div>
+                  <div className="col-10">
+                    <TextField
+                      id="outlined-size-small" size="small"
+                      width="100%"
+                      className="font"
+                      variant="outlined"
+                      value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.UserFullName) }) : row.UserFullName}
+                      disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                      onChange={(x) => handleUserDetailsChange(x.target.value, "Name", row)}
+                    />
+                  </div>
+                </div>
+                <div className="subContainer col-6">
+                  <div className="col-2" style={{ textAlign: "left" }}>
+                    <p className="subTextLeft">{"Contact Number"}</p>
+                  </div>
+                  <div className="col-10">
+                    <TextField
+                      id="outlined-size-small" size="small"
+                      width="100%"
+                      className="font"
+                      variant="outlined"
+                      value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.UserContactNo) }) : row.UserContactNo}
+                      disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                      onChange={(x) => handleUserDetailsChange(x.target.value, "Contact", row)}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row" style={{ display: "flex" }}>
+                <div className="subContainer col-6">
+                  <div className="col-2" style={{ textAlign: "left", paddingLeft: "0px" }}>
+                    <p className="subTextLeft">{"Email"}</p>
+                  </div>
+                  <div className="col-10">
+                    <TextField
+                      id="outlined-size-small" size="small"
+                      width="100%"
+                      className="font"
+                      variant="outlined"
+                      value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.UserEmailAddress) }) : row.UserEmailAddress}
+                      disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                      onChange={(x) => handleUserDetailsChange(x.target.value, "Email", row)}
+                    />
+                  </div>
                 </div>
 
-                <div style={{ width: "100%", display: "flex" }}>
-                  <p className="subTextRight">{"Address Line 1"}</p>
-                  <p className="subTextField">
-                    {row.UserAddressLine1 ? row.UserAddressLine1 : "-"}
-                  </p>
+                <div className="subContainer col-6">
+                  {
+                    checkExistingUserDetails(row) === 0 &&
+                    <>
+                      <div className="col-2" style={{ textAlign: "left" }}>
+                        <p className="subTextLeft">{"Method"}</p>
+                      </div>
+                      <div className="col-10">
+                        <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
+                          <Select
+                            native
+                            id="Logistic"
+                            value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.Method) }) : row.UserAddresID === 0 ? "Self Pick Up" : "Delivery"}
+                            // onChange={(x) => handleUserDetailsChange(x.target.value, "Country", row)}
+                            onChange={(x) => handleUserDetailsChange(x.target.value, "Method", row)}
+                            className="select"
+                            disabled={checkExistingUserDetails(row) !== 0 ? false : true}
+                          >
+                            <option> Self Pick Up   </option>
+                            <option> Delivery </option>
+                          </Select>
+                        </FormControl>
+                      </div>
+                    </>
+                  }
                 </div>
               </div>
+
+              {
+                address.length > 0 && row.UserAddresID !== 0 && row.UserAddressLine1 === null && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
+                  return (addressList(address, row))
+                })
+              }
+              {
+                row.UserAddressLine1 !== null &&
+                addressList(row, row)
+              }
+              {
+                address.length > 0 && row.UserAddresID === 0 && row.UserAddressLine1 === null && checkExistingUserDetails(row) !== 0 &&
+                addressList([], row)
+              }
+
               <p className="subHeading">Products Ordered</p>
               {row.OrderProductDetail ? (
                 <>
@@ -789,8 +1088,6 @@ function Row(props) {
                                     product.LogisticID === 0 &&
                                     selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
                                     orderListing(product, i)
-                                  // selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
-                                  // orderListing(product, i)
                                 }
                               </>
                             ))
@@ -813,33 +1110,22 @@ function Row(props) {
                   </div>
                   {getTrackingLength(JSON.parse(row.OrderProductDetail)).length > 0 && getTrackingLength(JSON.parse(row.OrderProductDetail)).map((track, index) => {
                     return (
-                      <div className="row">
-                        <Divider />
+                      <div className="row" style={{ borderTop: "4px solid #fff", paddingTop: "5px", paddingBottom: "5px" }}>
                         {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail).map((product, i) => (
                           <>
                             {
                               product.TrackingNumber === track.TrackingNumber && product.LogisticID === track.LogisticID &&
-                              confirmListing(product, i)
+                              <>{confirmListing(product, i)}
+                                {/* {confirmListingTracking(track, index, JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID !== null && x.LogisticID !== 0))} */}
+                              </>
                             }
                           </>
                         ))
                           : null}
                         {confirmListingTracking(track, index, JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID !== null && x.LogisticID !== 0))}
-                        <Divider />
                       </div>
-
                     )
                   })}
-
-                  {/* {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail).map((product, i) => (
-                    <>
-                      {
-                        product.TrackingNumber !== null && product.LogisticID !== null &&
-                        confirmListing(product, i)
-                      }
-                    </>
-                  ))
-                    : null} */}
                 </>
 
               ) : (
@@ -868,9 +1154,7 @@ class DisplayTable extends Component {
       deleteActive: false,
       searchFilter: "",
       isFiltered: false,
-      // filteredList: [],
       filteredProduct: [],
-
     };
 
     this.handleRequestSort = this.handleRequestSort.bind(this);
@@ -1090,6 +1374,8 @@ class DisplayTable extends Component {
                                 setData={this.setData}
                                 prop={this.props.ProductProps}
                                 logistic={this.props.ProductProps.logistic}
+                                address={this.props.ProductProps.allAddress}
+                                country={this.props.ProductProps.countries}
                               />
                             );
                           })}
@@ -1175,13 +1461,18 @@ class ViewTransactionsComponent extends Component {
     this.props.CallGetTransactionStatus();
     this.props.CallGetTransaction("Payment Confirm");
     this.props.CallCourierService();
-
+    this.props.CallAllUserAddress();
+    this.props.CallCountry();
   }
-
 
   componentDidUpdate(prevProps) {
     if (this.props.tracking.length > 0 && this.props.tracking[0].ReturnVal !== undefined) {
       this.props.CallResetOrderTracking()
+      this.props.CallGetTransaction("Payment Confirm");
+    }
+
+    if (this.props.order.length > 0 && this.props.order[0].ReturnVal !== undefined) {
+      this.props.CallClearOrder()
       this.props.CallGetTransaction("Payment Confirm");
     }
   }
@@ -1200,6 +1491,7 @@ class ViewTransactionsComponent extends Component {
 
   render() {
     const handleChange = (event, newValue) => {
+      console.log(newValue);
       this.setState({ value: newValue });
     };
 
@@ -1236,11 +1528,13 @@ class ViewTransactionsComponent extends Component {
 
     let allTransactionStatusData = this.props.alltransactionstatus
       ? Object.keys(this.props.alltransactionstatus).map((key) => {
+        console.log(this.props.alltransactionstatus);
         return this.props.alltransactionstatus[key];
       })
       : {};
 
     if (allTransactionStatusData.length > 0) {
+      console.log(allTransactionStatusData);
       var generateOptions = allTransactionStatusData.map((status, i) => {
         return (
           <option value={status.TrackingStatus}>{status.TrackingStatus}</option>

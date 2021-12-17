@@ -68,7 +68,8 @@ const INITIAL_STATE = {
   emailVerification: [],
   endorsedProduct: [],
   logistic: [],
-  tracking: []
+  tracking: [],
+  allAddress: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -890,13 +891,21 @@ export function counterReducer(state = INITIAL_STATE, action) {
         order: action.payload,
       });
 
-    case GitAction.ClearOrder:
+    case GitAction.OrderUserDetailsUpdate:
       return Object.assign({}, state, { loading: true });
-    case GitAction.ClearedOrder:
+    case GitAction.OrderUserDetailsUpdated:
       return Object.assign({}, state, {
         loading: false,
-        order: [],
+        order: action.payload,
       });
+
+    case GitAction.ClearOrder:
+      return Object.assign({}, state, { order: [],});
+    // case GitAction.ClearedOrder:
+    //   return Object.assign({}, state, {
+    //     loading: false,
+    //     order: [],
+    //   });
 
     case GitAction.updateTrackingNumber:
       return Object.assign({}, state, { loading: true });
@@ -1087,6 +1096,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         addresses: action.payload,
+      });
+
+    case GitAction.GetAllAddress:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotAllAddress:
+      return Object.assign({}, state, {
+        loading: false,
+        allAddress: action.payload,
       });
 
     case GitAction.AddAddress:

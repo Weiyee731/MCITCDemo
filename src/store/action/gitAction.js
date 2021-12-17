@@ -180,15 +180,15 @@ export class GitAction {
     };
   }
 
-    //==================COURIER SERVICE==========================//
-    static GetCourierService = "GET-COURIER-SERVICE";
-    static GotCourierService = "GOT-COURIER-SERVICE";
-  
-    static CallCourierService() {
-      return {
-        type: GitAction.GetCourierService,
-      };
-    }
+  //==================COURIER SERVICE==========================//
+  static GetCourierService = "GET-COURIER-SERVICE";
+  static GotCourierService = "GOT-COURIER-SERVICE";
+
+  static CallCourierService() {
+    return {
+      type: GitAction.GetCourierService,
+    };
+  }
 
   //==================PAYMENT METHOD==========================//
   static GetPaymentMethod = "GET-PAYMENTMETHID";
@@ -962,6 +962,8 @@ export class GitAction {
   //=================ORDER====================//
   static AddOrder = "ADD-ORDER";
   static AddedOrder = "ADDED-ORDER";
+  static OrderUserDetailsUpdate = "UPDATE-ORDER-USERDETAILS";
+  static OrderUserDetailsUpdated = "UPDATED-ORDER-USERDETAILS";
   static updateTrackingNumber = "UPDATE-TRACKING-NUMBER";
   static updatedTrackingNumber = "UPDATED-TRACKING-NUMBER";
   static resetTracking = "RESET-TRACKING-NUMBER";
@@ -979,9 +981,17 @@ export class GitAction {
 
   static CallClearOrder() {
     return {
-      type: GitAction.AddOrder
+      type: GitAction.ClearOrder
     };
   }
+
+  static CallUpdateOrderUserDetails(prodData) {
+    return {
+      type: GitAction.OrderUserDetailsUpdate,
+      payload: prodData,
+    };
+  }
+
 
   static CallUpdateOrderTracking(prodData) {
     return {
@@ -1176,6 +1186,9 @@ export class GitAction {
   static GetAddress = "GET-ADDRESS";
   static GotAddress = "GOT-ADDRESS";
 
+  static GetAllAddress = "GET-ALL-ADDRESS";
+  static GotAllAddress = "GOT-ALL-ADDRESS";
+
   static AddAddress = "ADD-ADDRESS";
   static AddedAddress = "ADDED-ADDRESS";
 
@@ -1192,6 +1205,12 @@ export class GitAction {
     return {
       type: GitAction.GetAddress,
       payload: prodData,
+    };
+  }
+
+  static CallAllUserAddress() {
+    return {
+      type: GitAction.GetAllAddress,
     };
   }
 

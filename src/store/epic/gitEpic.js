@@ -531,6 +531,29 @@ export class GitEpic {
       }
     });
 
+
+  ViewAllAddress = (action$) =>
+    action$.ofType(GitAction.GetAllAddress).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url +
+          "User_ViewAllAddressBook"
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.GotAllAddress,
+          payload: json,
+        };
+      } catch (error) {
+        alert('Err code GotAllAddress: ' + error);
+        return {
+          type: GitAction.GotAllAddress,
+          payload: [],
+        };
+      }
+    });
+
   addAddress = (action$) =>
     action$.ofType(GitAction.AddAddress).switchMap(async ({ payload }) => {
       try {
@@ -2491,6 +2514,53 @@ export class GitEpic {
         alert('deleteProductCart: ' + error);
         return {
           type: GitAction.AddedOrder,
+          payload: [],
+        };
+      }
+    });
+
+  // Update Order Details - User Details
+  UpdateOrderUserDetails = (action$) =>
+    action$.ofType(GitAction.OrderUserDetailsUpdate).switchMap(async ({ payload }) => {
+
+      console.log("Order_UpdateOrderUserDetails?OrderID=" + payload.OrderID +
+        "&FirstName=" + payload.FirstName +
+        "&LastName=" + payload.LastName +
+        "&UserContactNo=" + payload.UserContactNo +
+        "&UserEmailAddress=" + payload.UserEmailAddress +
+        "&UserAddressLine1=" + payload.UserAddressLine1 +
+        "&UserAddressLine2=" + payload.UserAddressLine2 +
+        "&UserPoscode=" + payload.UserPoscode +
+        "&UserState=" + payload.UserState +
+        "&UserCity=" + payload.UserCity +
+        "&CountryID=" + payload.CountryID)
+      try {
+        const response = await fetch(
+          url +
+          "Order_UpdateOrderUserDetails?OrderID=" + payload.OrderID +
+          "&FirstName=" + payload.FirstName +
+          "&LastName=" + payload.LastName +
+          "&UserContactNo=" + payload.UserContactNo +
+          "&UserEmailAddress=" + payload.UserEmailAddress +
+          "&UserAddressLine1=" + payload.UserAddressLine1 +
+          "&UserAddressLine2=" + payload.UserAddressLine2 +
+          "&UserPoscode=" + payload.UserPoscode +
+          "&UserState=" + payload.UserState +
+          "&UserCity=" + payload.UserCity +
+          "&CountryID=" + payload.CountryID
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+
+        return {
+          type: GitAction.OrderUserDetailsUpdated,
+          payload: json,
+        };
+      }
+      catch (error) {
+        alert('OrderUserDetailsUpdate: ' + error);
+        return {
+          type: GitAction.OrderUserDetailsUpdated,
           payload: [],
         };
       }
