@@ -174,6 +174,58 @@ export default function AccountPageOrderDetails(props) {
     </div>
   )
 
+  let addressListing = (addresspreview, data) => {
+
+    return (
+      <div className="row mt-3 no-gutters mx-n2">
+        <div className="col-sm-6 col-12 px-2">
+          <div className="card address-card address-card--featured">
+            <div className="address-card__body">
+              <div className="address-card__badge address-card__badge--muted">
+                Shipping Address
+              </div>
+              <div className="address-card__name">
+                {
+                  data === "addressBook" ?
+                    addresspreview.UserAddressName !== null ? (addresspreview.UserAddressName).toUpperCase() : ""
+                    :
+                    addresspreview.UserFullName === null ? (addresspreview.FirstName).toUpperCase() : (addresspreview.FirstName).toUpperCase()
+                }
+              </div>
+              <div className="address-card__row">
+                <div className="address-card__row-title">Shipping Address</div>
+                {addresspreview.UserAddressLine1 !== null ? (addresspreview.UserAddressLine1).toUpperCase() : ""}
+                <br />
+                {addresspreview.UserAddressLine2 !== null ? (addresspreview.UserAddressLine2).toUpperCase() : ""}
+                <br />
+                {addresspreview.UserCity !== null ? (addresspreview.UserCity).toUpperCase() : ""}
+                {addresspreview.UserPoscode}{" "}
+                {addresspreview.UserState !== null ? (addresspreview.UserState).toUpperCase() : ""}
+              </div>
+              <div className="address-card__row">
+                <div className="address-card__row-title">Phone Number</div>
+                <div className="address-card__row-content">
+                  {addresspreview.UserContactNo}
+                </div>
+              </div>
+              <div className="address-card__row">
+                <div className="address-card__row-title">Email Address</div>
+                <div className="address-card__row-content">
+                  {
+                    data === "addressBook" ?
+                      addresspreview.UserEmail !== null ? (addresspreview.UserEmail).toLowerCase() : ""
+                      :
+                      addresspreview.UserEmailAddress !== null ? (addresspreview.UserEmailAddress).toLowerCase() : ""
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <React.Fragment>
       <Helmet>
@@ -207,7 +259,7 @@ export default function AccountPageOrderDetails(props) {
                 {filteredMerchant.length > 0 && filteredMerchant.map((MerchantList, i) => {
                   return (
                     <>
-                      <div>
+                      <div key={i}>
                         <th>
                           {
                             props.location.merchant.length > 0 && props.location.merchant.filter((X) => X.UserID === MerchantList.MerchantID).map((merchant) => {
@@ -238,7 +290,6 @@ export default function AccountPageOrderDetails(props) {
                                 <tbody className="card-table__body card-table__body--merge-rows">
                                   <tr>
                                     <td style={{ width: "15%" }}>
-                                      {console.log("TO CHECK 22", orders)}
                                       <img
                                         className="product-image dropcart__product-image"
                                         src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
@@ -249,7 +300,6 @@ export default function AccountPageOrderDetails(props) {
                                         }}
                                       />
                                     </td>
-                                    {console.log("ORDER", orders)}
                                     <td style={{ width: "20%" }}>{orders.ProductName}</td>
                                     <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice}</td>
                                     <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
@@ -317,42 +367,39 @@ export default function AccountPageOrderDetails(props) {
         </div>
       </div>
       {
-        orderDetail.UserAddresID !== 0 ?
-          address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
-            <div className="row mt-3 no-gutters mx-n2">
-              <div className="col-sm-6 col-12 px-2">
-                <div className="card address-card address-card--featured">
-                  <div className="address-card__body">
-                    <div className="address-card__badge address-card__badge--muted">
-                      Shipping Address
-                    </div>
-                    <div className="address-card__name">
-                      {addresspreview.UserAddressName}
-                    </div>
-                    <div className="address-card__row">
-                      {addresspreview.UserAddressLine1}
-                      <br />
-                      {addresspreview.UserAddressLine2}
-                      <br />
-                      {addresspreview.UserCity} {addresspreview.UserPoscode}{" "}
-                      {addresspreview.UserState}
-                    </div>
-                    <div className="address-card__row">
-                      <div className="address-card__row-title">Phone Number</div>
-                      <div className="address-card__row-content">
-                        {addresspreview.UserContactNo}
-                      </div>
-                    </div>
-                    <div className="address-card__row">
-                      <div className="address-card__row-title">Email Address</div>
-                      <div className="address-card__row-content">
-                        {addresspreview.UserEmail}
-                      </div>
-                    </div>
+        orderDetail.PickUpInd === 0 ?
+          orderDetail.UserAddresID !== 0 && orderDetail.UserAddressLine1 === null ?
+            address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
+              addressListing(addresspreview, "addressBook")
+            ))
+            :
+            addressListing(orderDetail, "newAddress")
+          :
+          <div className="row mt-3 no-gutters mx-n2">
+            <div className="col-sm-6 col-12 px-2">
+              <div className="card address-card address-card--featured">
+                <div className="address-card__body">
+                  <div className="address-card__badge address-card__badge--muted">
+                    Self Pick Up
+                  </div>
+                  <div className="address-card__name">
+                    User Self Pick Up
+                  </div>
+                  <div className="address-card__name">
+                    {orderDetail.UserFullName === null ? orderDetail.FirstName : orderDetail.UserFullName}
+                  </div>
+                  <div className="address-card__row">
+                    {orderDetail.UserContactNo}
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+      }
+      {/* {
+        orderDetail.UserAddresID !== 0 ?
+          address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
+            addressListing(addresspreview)
           ))
           :
           <div className="row mt-3 no-gutters mx-n2">
@@ -375,7 +422,7 @@ export default function AccountPageOrderDetails(props) {
               </div>
             </div>
           </div>
-      }
+      } */}
 
       <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
         {

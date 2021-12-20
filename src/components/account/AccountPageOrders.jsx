@@ -244,15 +244,6 @@ class AccountPageOrders extends Component {
     const { page } = this.state;
     let ordersList;
 
-    this.props.allmerchantorders.length > 0 &&
-      // console.log("THIS.PROPS", this.props.allmerchantorders)
-      (this.props.allmerchantorders).map((x) => {
-        x.OrderProductDetail !== null &&
-          JSON.parse(x.OrderProductDetail).map((y) => {
-            console.log("allmerchantorders", y)
-          })
-      })
-
     let orderDetailListing = (listing) => (
       <>
         {
