@@ -659,10 +659,15 @@ function Row(props) {
   const handleSetAddressDetails = (row) => {
     let AddressList = []
 
-    if (row.UserAddressLine1 === null)
-      address.length > 0 && row.UserAddresID !== 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
-        AddressList = address
-      })
+    if (row.UserAddressLine1 === null) {
+
+      if (row.UserAddresID === 0)
+        AddressList = row
+      else
+        address.length > 0 && row.UserAddresID !== 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
+          AddressList = address
+        })
+    }
     else
       AddressList = row
 
@@ -676,14 +681,14 @@ function Row(props) {
         UserFullName: row.FirstName !== null ? row.FirstName + row.LastName : "",
         UserContactNo: row.UserContactNo !== null ? row.UserContactNo : "",
         UserEmailAddress: row.UserEmailAddress !== null ? row.UserEmailAddress : "",
-        Method: row.UserAddresID === 0 ? "Self Pick Up" : "Delivery",
+        Method: row.PickUpInd === 1 ? "Self Pick Up" : "Delivery",
 
         UserAddressLine1: AddressList.UserAddressLine1 !== null ? AddressList.UserAddressLine1 : "",
         UserAddressLine2: AddressList.UserAddressLine2 !== null ? AddressList.UserAddressLine2 : "",
         UserCity: AddressList.UserCity !== null ? AddressList.UserCity : "",
         UserPoscode: AddressList.UserPoscode !== null ? AddressList.UserPoscode : "",
         UserState: AddressList.UserState !== null ? AddressList.UserState : "",
-        CountryID: AddressList.CountryID !== null ? AddressList.CountryID : 0,
+        CountryID: AddressList.CountryID !== null ? AddressList.CountryID : 148,
       }])
     }
   }
@@ -792,8 +797,8 @@ function Row(props) {
                 >
                   {country.length > 0 && country.map((country) => (
                     <option
-                      value={country.CountryID}
-                      key={country.CountryID}
+                      value={country.CountryId}
+                      key={country.CountryId}
                     >
                       {country.CountryName}
                     </option>
@@ -808,11 +813,12 @@ function Row(props) {
   }
 
   const handleUserDetailsChange = (data, type, userDetails) => {
-    let Listing = [...newUserDetails]
-    let DataIndex = ""
 
-    if (newUserDetails.filter((x) => parseInt(x.OrderID) === parseInt(userDetails.OrderID)).length > 0)
-      DataIndex = index
+    console.log("handleUserDetailsChange", userDetails)
+    let Listing = [...newUserDetails]
+    let DataIndex = 0
+
+    DataIndex = newUserDetails.findIndex((x) => parseInt(x.OrderID) === parseInt(userDetails.OrderID))
 
     switch (type) {
       case "Name":
@@ -869,19 +875,21 @@ function Row(props) {
       filterData = newUserDetails.filter((x) => parseInt(x.OrderID) === parseInt(userDetails.OrderID))
       prop.CallUpdateOrderUserDetails({
         OrderID: filterData[0].OrderID,
-        FirstName: filterData[0].UserFullName,
+        FirstName: filterData[0].UserFullName !== "" ? filterData[0].UserFullName : "-",
         LastName: "-",
-        UserContactNo: filterData[0].UserContactNo,
-        UserEmailAddress: filterData[0].UserEmailAddress,
-        UserAddressLine1: filterData[0].UserAddressLine1,
-        UserAddressLine2: filterData[0].UserAddressLine2,
+        PickUpInd: filterData[0].Method === "Delivery" ? 0 : 1,
+        UserContactNo: filterData[0].UserContactNo !== "" ? filterData[0].UserContactNo : "-",
+        UserEmailAddress: filterData[0].UserEmailAddress !== "" ? filterData[0].UserEmailAddress : "-",
+        UserAddressLine1: filterData[0].UserAddressLine1 !== "" ? filterData[0].UserAddressLine1 : "-",
+        UserAddressLine2: filterData[0].UserAddressLine2 !== "" ? filterData[0].UserAddressLine2 : "-",
 
-        UserPoscode: filterData[0].UserPoscode,
-        UserState: filterData[0].UserState,
+        UserPoscode: filterData[0].UserPoscode !== "" ? filterData[0].UserPoscode : "-",
+        UserState: filterData[0].UserState !== "" ? filterData[0].UserState : "-",
 
-        UserCity: filterData[0].UserCity,
+        UserCity: filterData[0].UserCity !== "" ? filterData[0].UserCity : "-",
         CountryID: filterData[0].CountryID,
       })
+
       setUserDetails(newUserDetails.filter((x) => parseInt(x.OrderID) !== parseInt(userDetails.OrderID)))
     } else {
       toast.warning("Unable to update the User Details, Please Try Again Later")
@@ -893,12 +901,17 @@ function Row(props) {
     if (newUserDetails.length > 0) {
       filterData = newUserDetails.filter((x) => parseInt(x.OrderID) === parseInt(userDetails.OrderID))
       if (filterData.length > 0) {
-        if (isContactValid(filterData[0].UserContactNo) === true && isEmailValid(filterData[0].UserEmailAddress) === true && isStringNullOrEmpty(filterData[0].UserAddressLine1) === false
-          && isStringNullOrEmpty(filterData[0].UserAddressLine2) === false && isStringNullOrEmpty(filterData[0].UserCity) === false && isStringNullOrEmpty(filterData[0].UserFullName) === false
-          && isStringNullOrEmpty(filterData[0].UserPoscode) === false && isStringNullOrEmpty(filterData[0].UserState) === false)
-          return 1
+
+        if (filterData[0].Method === "Delivery") {
+          if (isContactValid(filterData[0].UserContactNo) === true && isEmailValid(filterData[0].UserEmailAddress) === true && isStringNullOrEmpty(filterData[0].UserAddressLine1) === false
+            && isStringNullOrEmpty(filterData[0].UserAddressLine2) === false && isStringNullOrEmpty(filterData[0].UserCity) === false && isStringNullOrEmpty(filterData[0].UserFullName) === false
+            && isStringNullOrEmpty(filterData[0].UserPoscode) === false && isStringNullOrEmpty(filterData[0].UserState) === false)
+            return 1
+          else
+            return 0
+        }
         else
-          return 0
+          return 1
       }
       else
         return 0
@@ -964,6 +977,7 @@ function Row(props) {
                 </div>
               </div>
 
+
               {console.log("THIS IS NEW ADDRESS", checkError(row))}
               {console.log("CHECK ERROR", newUserDetails)}
               <div className="row" style={{ display: "flex", paddingTop: "10px" }}>
@@ -1017,10 +1031,8 @@ function Row(props) {
                     />
                   </div>
                 </div>
-
                 <div className="subContainer col-6">
                   {
-                    checkExistingUserDetails(row) === 0 &&
                     <>
                       <div className="col-2" style={{ textAlign: "left" }}>
                         <p className="subTextLeft">{"Method"}</p>
@@ -1030,13 +1042,12 @@ function Row(props) {
                           <Select
                             native
                             id="Logistic"
-                            value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.Method) }) : row.UserAddresID === 0 ? "Self Pick Up" : "Delivery"}
-                            // onChange={(x) => handleUserDetailsChange(x.target.value, "Country", row)}
+                            value={checkExistingUserDetails(row) !== 0 ? checkExistingUserDetails(row).map((Data) => { return (Data.Method) }) : row.PickUpInd === 1 ? "Self Pick Up" : "Delivery"}
                             onChange={(x) => handleUserDetailsChange(x.target.value, "Method", row)}
                             className="select"
                             disabled={checkExistingUserDetails(row) !== 0 ? false : true}
                           >
-                            <option> Self Pick Up   </option>
+                            <option> Self Pick Up </option>
                             <option> Delivery </option>
                           </Select>
                         </FormControl>
@@ -1045,19 +1056,22 @@ function Row(props) {
                   }
                 </div>
               </div>
-
               {
-                address.length > 0 && row.UserAddresID !== 0 && row.UserAddressLine1 === null && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
+                address.length > 0 && row.UserAddresID !== 0 && row.UserAddressLine1 === null && row.PickUpInd === 0 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
                   return (addressList(address, row))
                 })
               }
               {
-                row.UserAddressLine1 !== null &&
+                row.PickUpInd === 0 && checkExistingUserDetails(row) === 0 &&
                 addressList(row, row)
               }
               {
-                address.length > 0 && row.UserAddresID === 0 && row.UserAddressLine1 === null && checkExistingUserDetails(row) !== 0 &&
-                addressList([], row)
+                row.PickUpInd === 1 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
+                addressList(row, row)
+              }
+              {
+                row.PickUpInd === 0 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
+                addressList(row, row)
               }
 
               <p className="subHeading">Products Ordered</p>

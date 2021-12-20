@@ -73,6 +73,9 @@ class PageCheckout extends Component {
       toast.error("Please fill in correct payment method info to continue")
     }
     else {
+      let PickUpIndicator = 0
+      if (this.state.address === 0)
+        PickUpIndicator = 1
       this.props.data.map((x) => {
         this.state.ProductID.push(x.product.ProductID)
         this.state.UserCartID.push(x.product.UserCartID)
@@ -81,7 +84,9 @@ class PageCheckout extends Component {
       })
 
 
-      
+
+
+
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
         ProductID: this.state.ProductID,
@@ -93,7 +98,8 @@ class PageCheckout extends Component {
         OrderTotalAmount: this.state.OrderTotalAmount,
         OrderPaidAmount: this.state.OrderTotalAmount,
         ProductVariationDetailID: this.state.ProductVariationDetailID,
-        TrackingStatusID: this.state.TrackingStatusID
+        TrackingStatusID: this.state.TrackingStatusID,
+        PickUpInd: PickUpIndicator
       })
     }
   }

@@ -2483,7 +2483,9 @@ export class GitEpic {
           "&PRODUCTVARIATIONDETAILID=" +
           payload.ProductVariationDetailID +
           "&TRACKINGSTATUSID=" +
-          payload.TrackingStatusID
+          payload.TrackingStatusID + 
+          "&PickUpInd=" +
+          payload.PickUpInd
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -2527,6 +2529,7 @@ export class GitEpic {
         "&FirstName=" + payload.FirstName +
         "&LastName=" + payload.LastName +
         "&UserContactNo=" + payload.UserContactNo +
+        "&PickUpInd=" + payload.PickUpInd +
         "&UserEmailAddress=" + payload.UserEmailAddress +
         "&UserAddressLine1=" + payload.UserAddressLine1 +
         "&UserAddressLine2=" + payload.UserAddressLine2 +
@@ -2541,6 +2544,7 @@ export class GitEpic {
           "&FirstName=" + payload.FirstName +
           "&LastName=" + payload.LastName +
           "&UserContactNo=" + payload.UserContactNo +
+          "&PickUpInd=" + payload.PickUpInd +
           "&UserEmailAddress=" + payload.UserEmailAddress +
           "&UserAddressLine1=" + payload.UserAddressLine1 +
           "&UserAddressLine2=" + payload.UserAddressLine2 +
