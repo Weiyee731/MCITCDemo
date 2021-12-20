@@ -48,7 +48,6 @@ class Product extends Component {
     const { product } = this.props
     // this.props.CallProductReviewByProductID({ ProductID: product.ProductID, ParentProductReviewID: 0 })
 
-    console.log("AHHAHAHA", this.props)
 
     window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
 

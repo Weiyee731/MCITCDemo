@@ -1294,18 +1294,6 @@ export class GitEpic {
     action$.ofType(GitAction.GetProduct).switchMap(async ({ payload }) => {
       try {
 
-        console.log(url +
-          "Product_ItemListByType?Type=" +
-          payload.type +
-          "&TypeValue=" +
-          payload.typeValue +
-          "&USERID=" +
-          payload.userId +
-          "&PRODUCTPERPAGE=" +
-          payload.productPage +
-          "&PAGE=" +
-          payload.page)
-
         const response = await fetch(
           url +
           "Product_ItemListByType?Type=" +
@@ -1560,13 +1548,13 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
         return {
-          type: GitAction.DeletedProduct,
+          type: GitAction.ProductDeleted,
           payload: json,
         };
       } catch (error) {
         alert('deleteProduct: ' + error);
         return {
-          type: GitAction.DeletedProduct,
+          type: GitAction.ProductDeleted,
           payload: [],
         };
       }
@@ -2483,7 +2471,7 @@ export class GitEpic {
           "&PRODUCTVARIATIONDETAILID=" +
           payload.ProductVariationDetailID +
           "&TRACKINGSTATUSID=" +
-          payload.TrackingStatusID + 
+          payload.TrackingStatusID +
           "&PickUpInd=" +
           payload.PickUpInd
         );

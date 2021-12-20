@@ -290,6 +290,7 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteProduct = () => {
+    console.log("props.selectedData", props.selectedData)
     props.ProductProps.CallDeleteProduct(props.selectedData);
   };
 
@@ -429,6 +430,7 @@ function DeletableTable(props) {
             e.target.src = Logo;
           }}
         />
+
       </div>
     );
   });
@@ -540,9 +542,12 @@ class DisplayTable extends Component {
       detailsShown: false,
       deleteActive: false,
       searchFilter: "",
+      filteredProduct: [],
+      isFiltered: false,
     };
 
     this.ToggleDeletable = this.ToggleDeletable.bind(this);
+    this.searchSpace = this.searchSpace.bind(this);
     this.handleRequestSort = this.handleRequestSort.bind(this);
     this.onRowClick = this.onRowClick.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -645,6 +650,21 @@ class DisplayTable extends Component {
     this.setState({ detailsShown: false })
   }
 
+  searchSpace = (value) => {
+    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    this.state.filteredProduct.splice(0, this.state.filteredProduct.length)
+
+    this.props.Data.filter((searchedItem) =>
+      searchedItem.ProductName !== null && searchedItem.ProductName.toLowerCase().includes(
+        value.toLowerCase()
+      )
+    ).map((filteredItem) => {
+      this.state.filteredProduct.push(filteredItem);
+    })
+
+    this.setState({ isFiltered: true })
+  }
+
   render() {
     const { classes } = this.props;
     const emptyRows =
@@ -687,7 +707,7 @@ class DisplayTable extends Component {
       minWidth: 750,
     };
 
-    var filteredProduct = [];
+    // var filteredProduct = [];
 
     const classes2 = {
       border: 0,
@@ -733,17 +753,10 @@ class DisplayTable extends Component {
             <SearchBox
               style={divStyle}
               placeholder="Search..."
-              onChange={(e) => this.setState({ searchFilter: e.target.value })}
+              onChange={(e) => this.searchSpace(e.target.value)}
             />
-            {this.props.Data.filter((searchedItem) =>
-              searchedItem.ProductName.toLowerCase().includes(
-                this.state.searchFilter
-              )
-            ).map((filteredItem) => {
-              filteredProduct.push(filteredItem);
-            })}
             <DeletableTable
-              Data={filteredProduct}
+              Data={this.state.isFiltered ? this.state.filteredProduct : this.props.Data}
               ProductProps={this.props.ProductProps}
             ></DeletableTable>
           </div>
@@ -774,7 +787,7 @@ class DisplayTable extends Component {
             <SearchBox
               style={divStyle}
               placeholder="Search..."
-              onChange={(e) => this.setState({ searchFilter: e.target.value.toLowerCase() })}
+              onChange={(e) => this.searchSpace(e.target.value)}
             />
 
             <div>
@@ -795,17 +808,17 @@ class DisplayTable extends Component {
                       onRequestSort={this.handleRequestSort}
                       rowCount={this.props.Data.length}
                     />
-                    {this.props.Data.filter((searchedItem) =>
+                    {/* {this.props.Data.filter((searchedItem) =>
                       typeof searchedItem.ProductName !== "undefined" &&
                       searchedItem.ProductName.toLowerCase().includes(
                         this.state.searchFilter
                       )
                     ).map((filteredItem) => {
                       filteredProduct.push(filteredItem);
-                    })}
+                    })} */}
                     <TableBody>
                       {stableSort(
-                        filteredProduct,
+                        this.state.isFiltered ? this.state.filteredProduct : this.props.Data,
                         getComparator(this.state.order, this.state.orderBy)
                       )
                         .slice(

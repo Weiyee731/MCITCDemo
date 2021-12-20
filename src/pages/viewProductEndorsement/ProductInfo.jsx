@@ -227,7 +227,7 @@ class ProductEndorsementInfo extends Component {
                                             ProductMedias.length > 0 && ProductMedias.map((el, idx) => {
                                                 return (
                                                     <div className="product-medias-gallery-image">
-                                                        <img src={currentImage.ProductMediaUrl} alt={currentImage.ProductName} width="100%" height="100%" onError={(e) => { e.target.onerror = null; e.target.src = Logo; }}  onClick={() => this.handleImageCarousel(idx)}/>
+                                                        <img src={el.ProductMediaUrl} alt={el.ProductName} width="100%" height="100%" onError={(e) => { e.target.onerror = null; e.target.src = Logo; }} onClick={() => this.handleImageCarousel(idx)} />
                                                     </div>
                                                 )
                                             })
@@ -343,7 +343,7 @@ class ProductEndorsementInfo extends Component {
                             </div>
                             :
                             <div>
-                                <i>Internal Server Error 500</i>
+                                <i>Something went wrong, please try again later</i>
                             </div>
                     }
 

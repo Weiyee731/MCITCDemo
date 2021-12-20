@@ -304,8 +304,9 @@ export default function AccountPageOrderDetails(props) {
                                     <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice}</td>
                                     <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
                                     <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
+                                    {console.log("CHECK", orders)}
                                     {
-                                      orders.LogisticID !== null ?
+                                      orders.LogisticID !== null && orders.LogisticID !== 0 ?
                                         <>
                                           <td style={{ width: "10%" }}>
                                             <div style={{ fontSize: "13px" }}>

@@ -105,8 +105,6 @@ function HomePageTwo(props) {
 
 
   useEffect(() => {
-
-
     props.CallMerchants({
       type: "Status",
       typeValue: "Endorsed",

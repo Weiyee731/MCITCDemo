@@ -260,6 +260,7 @@ const useRowStyles = makeStyles({
 function Row(props) {
   const { row, setData, index, logistic, prop, address, country } = props;
   const [open, setOpen] = React.useState(false);
+  const [openId, setOpenId] = React.useState(false);
   const classes = useRowStyles();
   const [selectedProductDetailsID, setSelectedProductDetailsID] = React.useState([]);
   const [selectedRowID, setSelectedRowID] = React.useState([]);
@@ -422,10 +423,10 @@ function Row(props) {
                 })
                 :
                 <>
-                  <div style={{ fontWeight: "bold" }}> {product.TrackingNumber}</div>
+                  <div style={{ fontWeight: "bold", fontSize: "14px", color: "red" }}> {product.TrackingNumber}</div>
                   {logistic.filter(x => x.LogisticID === product.LogisticID).map((courier) => {
                     return (
-                      <div style={{ fontWeight: "bold" }}> {courier.LogisticName}  </div>
+                      <div style={{ fontWeight: "bold", fontSize: "12px" }}> {courier.LogisticName}  </div>
                     )
                   })}
                 </>
@@ -656,6 +657,7 @@ function Row(props) {
       return 0
   }
 
+  // set the address into the array
   const handleSetAddressDetails = (row) => {
     let AddressList = []
 
@@ -693,6 +695,7 @@ function Row(props) {
     }
   }
 
+  // show the list of address
   const addressList = (address, row) => {
     return (
       <>
@@ -812,9 +815,8 @@ function Row(props) {
     )
   }
 
+  // handle user details change
   const handleUserDetailsChange = (data, type, userDetails) => {
-
-    console.log("handleUserDetailsChange", userDetails)
     let Listing = [...newUserDetails]
     let DataIndex = 0
 
@@ -869,6 +871,7 @@ function Row(props) {
     setUserDetails(Listing)
   }
 
+  // handle submit user details into db
   const handleSubmitChangeUserDetails = (userDetails) => {
     let filterData = []
     if (newUserDetails.length > 0) {
@@ -896,6 +899,7 @@ function Row(props) {
     }
   }
 
+  // check error of userdetails before submission to db
   const checkError = (userDetails) => {
     let filterData = []
     if (newUserDetails.length > 0) {
@@ -929,7 +933,7 @@ function Row(props) {
         key={row.Username}
         onClick={() =>
           <>
-            {(setOpen(!open), handleSetProduct(row))}
+            {(setOpen(!open), setOpenId(row.OrderID), handleSetProduct(row))}
           </>
         }
       >
@@ -978,8 +982,6 @@ function Row(props) {
               </div>
 
 
-              {console.log("THIS IS NEW ADDRESS", checkError(row))}
-              {console.log("CHECK ERROR", newUserDetails)}
               <div className="row" style={{ display: "flex", paddingTop: "10px" }}>
                 <div className="subContainer col-6">
                   <div className="col-2" style={{ textAlign: "left", paddingLeft: "0px" }}>
@@ -1587,6 +1589,14 @@ class ViewTransactionsComponent extends Component {
       // });
 
       let transactionList = []
+
+      // this.props.alltransactions.filter((x) => x.TrackingStatus === this.state.currentlyChosen).map((y) => {
+      //   y.OrderProductDetail !== null && JSON.parse(y.OrderProductDetail).map((list) => {
+          
+      //     console.log("CHECK", list)
+      //     console.log("CHECK 1", localStorage.getItem("id"))
+      //     console.log("CHECK 2", list.MerchantID === localStorage.getItem("id"))
+      //   })
       this.props.alltransactions.filter((x) => x.TrackingStatus === this.state.currentlyChosen).map((y) => {
         transactionList.push(y)
       })

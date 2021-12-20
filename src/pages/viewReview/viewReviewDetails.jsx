@@ -140,7 +140,8 @@ const ViewReviewDetails = (props) => {
                         {state.ProductReviewDetail !== null && state.ProductReviewDetail !== undefined &&
                             JSON.parse(state.ProductReviewDetail).map((reviewItem, index) => {
                                 return (
-                                    reviewItem.UserID !== parseInt(localStorage.getItem("id")) &&
+                                    // reviewItem.UserID !== parseInt(localStorage.getItem("id")) &&
+                                    reviewItem.replyParentID === 0 &&
                                     userReviewFormat(reviewItem, index)
                                 )
                             })

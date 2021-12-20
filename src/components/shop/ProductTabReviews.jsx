@@ -120,7 +120,7 @@ class ProductTabReviews extends Component {
     //backgroundColor: "#778899" 
     return (
       <ListItem key={index} button style={{ display: "inline-block" }} >
-        <div style={{ width: '80%', display: "block", float: "right" }}>
+        <div style={{ width: '80%', display: "block", float: "right", backgroundColor: "#D8D8D8", padding: "0.2rem" }}>
           {/* <CardBody style={{ padding: "0.5rem" }}>
             <CardText> */}
           {this.reviewListing(reviewItem)}
@@ -224,7 +224,7 @@ class ProductTabReviews extends Component {
                             value={this.state.productReplyReviewComment}
                             onChange={({ target }) => { this.setState({ productReplyReviewComment: target.value, productReviewRating: 0 }); }} required />
                         </div>
-                        <div id="reply_btn" className="pt-3" style={{ textAlign: "center" }} onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.onSubmitReviewReply()} >
+                        <div id="reply_btn" className="pt-3" style={{ textAlign: "center" }} onClick={() => localStorage.getItem("isLogin") !== "true" ? this.login() : this.onSubmitReviewReply()} >
                           <button className="btn btn-primary btn-lg">
                             Post Your Reply
                           </button>
