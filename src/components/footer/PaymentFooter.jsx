@@ -11,8 +11,8 @@ import FPX from '../../assets/fpx-logo.png';
 
 export default function PaymentFooter() {
     return (
-        <div className="site-footer__widget footer-newsletter">
-            <h5 className="footer-newsletter__title">Payment</h5>
+        <div className="site-footer__widget footer-links">
+            <h5>Payment</h5>
             <div className='row'>
                 <div className="col-4">
                     <Image width="100%" height="auto" src={VISA} />

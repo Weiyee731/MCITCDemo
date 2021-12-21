@@ -13,6 +13,7 @@ import {
     LogoSmallSvg,
     Search20Svg,
     Heart20Svg,
+    Person20Svg
 } from '../../svg';
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Search from '../header/Search';
@@ -84,11 +85,11 @@ class MobileHeader extends Component {
 
                                 <IndicatorCart />
 
-                                {/* <Indicator
+                                <Indicator
                                     className="indicator--mobile"
                                     url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/login'}
                                     icon={<Person20Svg />}
-                                /> */}
+                                />
 
                             </div>
                         </div>

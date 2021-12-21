@@ -6,10 +6,10 @@ import SocialLinks from '../shared/SocialLinks';
 
 export default function FooterNewsletter() {
     return (
-        <div className="site-footer__widget footer-newsletter">
-            <h5 className="footer-newsletter__title">Newsletter</h5>
+        <div className="site-footer__widget footer-links">
+            <h5>Newsletter</h5>
             <div className="footer-newsletter__text">
-                Sign up our newsletter to get the shocking deals and latest news!! 
+                Sign up our newsletter to get the shocking deals and latest news!!
             </div>
 
             <form action="" className="footer-newsletter__form">

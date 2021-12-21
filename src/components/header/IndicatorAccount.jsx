@@ -10,6 +10,7 @@ import { Person20Svg } from "../../svg";
 import Indicator from "./Indicator";
 import Cookies from "universal-cookie";
 import userImage from "../../assets/user.jpg";
+import AccountDropdown from "./AccountDropdown";
 
 // Third-party
 import TextField from "@material-ui/core/TextField";
@@ -98,6 +99,7 @@ class IndicatorAccount extends Component {
     this.handleOnLogin = this.handleOnLogin.bind(this);
     this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
+    this.logout = this.logout.bind(this)
   }
 
   OnSubmitLogin(e) {
@@ -127,7 +129,6 @@ class IndicatorAccount extends Component {
   }
 
   logout = () => {
-
     this.props.callLogout({ UserID: localStorage.getItem("id") });
     this.setState({ isLogout: true })
     window.localStorage.clear()

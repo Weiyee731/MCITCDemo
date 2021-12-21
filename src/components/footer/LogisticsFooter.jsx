@@ -9,8 +9,8 @@ import JNT from '../../assets/J&TExpress.jpg';
 
 export default function LogisticsFooter() {
     return (
-        <div className="site-footer__widget footer-newsletter">
-            <h5 className="footer-newsletter__title">Logistics</h5>
+        <div className="site-footer__widget footer-links">
+            <h5>Logistics</h5>
             <div className='row'>
                 <div className="col-4">
                     <Image width="100%" height="auto" src={JNT} />
