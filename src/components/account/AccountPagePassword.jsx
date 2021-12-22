@@ -525,11 +525,11 @@ class AccountPagePassword extends Component {
                           ),
                         }}
                       />
-                      {this.state.validPassword === false && this.state.UpdatedValue !== "" && (
+                      {/* {this.state.validPassword === false && this.state.UpdatedValue !== "" && (
                         <FormHelperText style={{ color: "red" }}>
                           Invalid password
                         </FormHelperText>
-                      )}
+                      )} */}
                     </div>
                     <div className="tooltip_1 d-flex align-items-center">
                       <HelpOutlineIcon />

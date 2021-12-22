@@ -83,10 +83,6 @@ class PageCheckout extends Component {
         this.state.ProductVariationDetailID.push(x.product.ProductVariationDetailID)
       })
 
-
-
-
-
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
         ProductID: this.state.ProductID,

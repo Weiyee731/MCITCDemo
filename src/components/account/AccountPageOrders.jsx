@@ -215,6 +215,7 @@ class AccountPageOrders extends Component {
     var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
     this.state.filteredList.splice(0, this.state.filteredList.length)
+    if(this.state.selectedDate)
     this.props.allmerchantorders.filter(searchedItem =>
       format.test(value) === false
       && moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
@@ -224,12 +225,13 @@ class AccountPageOrders extends Component {
 
     this.props.allmerchantorders.map((list) => {
       list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter(x => x.TrackingNumber !== null
-        &&  format.test(value) === false && x.TrackingNumber.toLowerCase().includes(value.toLowerCase())).map(filteredItem => {
+        && x.TrackingNumber.toLowerCase().includes(value.toLowerCase())).map(filteredItem => {
           this.state.filteredList.push(list);
         });
     })
+
     let removeDeplicate = this.state.filteredList.filter((ele, ind) => ind === this.state.filteredList.findIndex(elem => elem.OrderID === ele.OrderID))
-    this.setState({ isFiltered: true, filteredList: removeDeplicate})
+    this.setState({ isFiltered: true, filteredList: removeDeplicate })
   }
 
   clearFilter = () => {
@@ -409,6 +411,7 @@ class AccountPageOrders extends Component {
               id="standard-helperText"
               label="Tracking Number"
               variant="standard"
+              value={this.state.trackingNumber}
               onChange={(x) => this.handleTrackingNoChange(x.target.value)}
               style={{
                 width: '100%'

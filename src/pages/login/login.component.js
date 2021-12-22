@@ -46,6 +46,7 @@ function mapDispatchToProps(dispatch) {
   return {
     loginUser: (credentials) => dispatch(GitAction.CallLogin(credentials)),
     CallCheckUserExists: (credentials) => dispatch(GitAction.CallCheckUserExists(credentials)),
+    CallResetCheckUserExists: (credentials) => dispatch(GitAction.CallResetCheckUserExists(credentials)),
     CallSendOTP: (credentials) => dispatch(GitAction.CallSendOTP(credentials)),
     CallUpdatePassword: (credentials) => dispatch(GitAction.CallUpdatePassword(credentials)),
   };
@@ -64,41 +65,44 @@ const inputstyle = {
   caretColor: "blue",
 };
 
+const initialState = {
+  username: "",
+  password: "",
+  usernameErr: false,
+  passwordErr: false,
+  rememberMe: false,
+  isToLogin: false,
+  isForgetPassword: false,
+  isResetEmailErr: false,
+  verifyEmail: false,
+  isReturn: false,
+  resetEmail: "",
+  resetUserID: "",
+  isEmailVerify: false,
+  UpdatedValue: "",
+
+  showpassword: false,
+  validpassword: false,
+  validPassword: false,
+
+  hidden: true,
+  counter: 60,
+  confirmPasswordPage: true,
+
+  startCountDown: false,
+  enableOTP: false,
+
+  GETOTPTYPE: "EMAIL",
+  UPDATETYPE: "PASSWORD",
+  otp: "",
+}
 
 class LoginComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      username: "",
-      password: "",
-      usernameErr: false,
-      passwordErr: false,
-      rememberMe: false,
-      isToLogin: false,
-      isForgetPassword: false,
-      isResetEmailErr: false,
-      verifyEmail: false,
-      resetEmail: "",
-      resetUserID: "",
-      isEmailVerify: false,
-      UpdatedValue: "",
+    this.state = initialState;
 
-      showpassword: false,
-      validpassword: false,
-      validPassword: false,
-
-      hidden: true,
-      counter: 60,
-      confirmPasswordPage: true,
-
-      startCountDown: false,
-      enableOTP: false,
-
-      GETOTPTYPE: "EMAIL",
-      UPDATETYPE: "PASSWORD",
-      otp: "",
-    };
     this.toggleShow = this.toggleShow.bind(this);
     this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
     // this.resetPassword = this.resetPassword.bind(this);
@@ -176,8 +180,16 @@ class LoginComponent extends Component {
         toast.error("The username and password does not match.")
       }
     }
-    if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true) {
-      this.setState({ resetUserID: this.props.emailVerification[0].UserID, isEmailVerify: true, verifyEmail: false })
+    if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true && this.state.isReturn === false) {
+      console.log("this.props.emailVerification[0]", this.props.emailVerification[0])
+      if (this.props.emailVerification[0].UserID !== undefined) {
+        this.setState({ resetUserID: this.props.emailVerification[0].UserID, isEmailVerify: true, verifyEmail: false, isReturn: true })
+      }
+      else {
+        toast.warning("This email was not registered")
+        this.setState({ isReturn: true })
+      }
+      this.props.CallResetCheckUserExists()
     }
 
     if (prevProps.updatePassword !== this.props.updatePassword) {
@@ -256,10 +268,10 @@ class LoginComponent extends Component {
   verifyEmail() {
 
     if (isEmailValid(this.state.resetEmail))
-      this.props.CallCheckUserExists(this.state.resetEmail)
+      this.props.CallCheckUserExists({ Email: this.state.resetEmail, Value: "forgetPassword" })
 
-    this.props.CallCheckUserExists({ Email: this.state.resetEmail, Value: "forgetPassword" })
-    this.setState({ verifyEmail: true })
+    // this.props.CallCheckUserExists({ Email: this.state.resetEmail, Value: "forgetPassword" })
+    this.setState({ verifyEmail: true, isReturn: false })
   }
 
   getNewOTP = (e) => {
@@ -448,7 +460,7 @@ class LoginComponent extends Component {
           </Row>
         </form>
 
-        <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState({ isForgetPassword: false }) }} fullWidth="true" maxWidth="xs">
+        <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth="true" maxWidth="xs">
           <DialogContent dividers>
             <div className="text-center">
               <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>

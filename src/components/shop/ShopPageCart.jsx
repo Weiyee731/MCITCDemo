@@ -268,19 +268,21 @@ class ShopPageCart extends Component {
                         {image}
                     </td>
                     <td className="cart-table__column cart-table__column--product">
-                        <Link to={url.product(item.product)} className="cart-table__product-name">
-                            {item.product.ProductName}
-                        </Link>
-                        {
-                            this.state.overProductStockAmountLimitID.length > 0 &&
-                            this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 &&
-                            this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x) => {
-                                return (
-                                    <label className='mt-3' style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
-                                )
-                            })
-                        }
-                        <div>
+                        <div style={{ fontSize: "14px" }}>
+                            <Link to={url.product(item.product)} className="cart-table__product-name">
+                                {item.product.ProductName}
+                            </Link>
+                            {
+                                this.state.overProductStockAmountLimitID.length > 0 &&
+                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 &&
+                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x) => {
+                                    return (
+                                        <label className='mt-3' style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{ fontSize: "11px" }}>
                             Variation: {item.product.ProductVariationValue}
                         </div>
                     </td>

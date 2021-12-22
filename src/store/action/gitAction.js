@@ -34,6 +34,8 @@ export class GitAction {
   static CheckUser = "CHECK-USER";
   static CheckedUser = "CHECKED-USER";
 
+  static ResetCheckUser = "RESET-CHECK-USER";
+
   static UpdatePassword = "UPDATE-PASSWORD";
   static UpdatedPassword = "UPDATED-PASSWORD";
 
@@ -65,6 +67,12 @@ export class GitAction {
     return {
       type: GitAction.CheckUser,
       payload: credentials,
+    };
+  }
+
+  static CallResetCheckUserExists() {
+    return {
+      type: GitAction.ResetCheckUser,
     };
   }
 

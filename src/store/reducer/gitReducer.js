@@ -111,6 +111,21 @@ export function counterReducer(state = INITIAL_STATE, action) {
         emailVerification: action.payload,
       });
 
+    case GitAction.ResetCheckUser:
+      return Object.assign({}, state, { loading: false, emailVerification: [] });
+    // case GitAction.CheckedUser:
+    //   return Object.assign({}, state, {
+    //     loading: false,
+    //     emailVerification: action.payload,
+    //   });
+
+
+    // case GitAction.ResetProductReturnVal:
+    //   return Object.assign({}, state, {
+    //     loading: false,
+    //     addResult: [],
+    //   });
+
     case GitAction.UpdatePassword:
       return Object.assign({}, state, { loading: true });
     case GitAction.UpdatedPassword:
@@ -900,7 +915,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
       });
 
     case GitAction.ClearOrder:
-      return Object.assign({}, state, { order: [],});
+      return Object.assign({}, state, { order: [], });
     // case GitAction.ClearedOrder:
     //   return Object.assign({}, state, {
     //     loading: false,

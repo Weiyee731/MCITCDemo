@@ -34,7 +34,8 @@ class Product extends Component {
       productQuantity: 0,
       productVariationDetailID: "",
       selectedVariation: "",
-      isVariationSet: false
+      isVariationSet: false,
+      productVariationType: ""
     };
     this.addCart = this.addCart.bind(this)
     this.handleWishlist = this.handleWishlist.bind(this)
@@ -52,18 +53,20 @@ class Product extends Component {
     window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
 
     product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
+      console.log("PRODUCT VARIATION", variation)
       variation.ProductVariationValue === "-" &&
         this.setState({
           productVariation: variation.ProductVariationValue,
           productQuantity: variation.ProductStockAmount,
-          productVariationDetailID: variation.ProductVariationDetailID
+          productVariationDetailID: variation.ProductVariationDetailID,
+          productVariationType: variation.ProductVariation,
         })
     })
     this.setState({ productPrice: product.ProductPrice })
   }
 
   checkCart(product, quantity) {
-    if (this.state.productVariationDetailID === "")
+    if (this.state.productVariationDetailID === "" && this.state.productVariationType !== "None")
       toast.error("Please Select One of the Variation")
     else
       this.addCart(product, quantity)
@@ -178,6 +181,10 @@ class Product extends Component {
 
     let merchant = product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
     let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
+    console.log("PRODUCT variation", variation)
+    console.log("PRODUCT product.ProductVariation  !== null", product.ProductVariation !== null)
+    product.ProductVariation !== null &&
+      console.log("PRODUCT product.ProductVariation", JSON.parse(product.ProductVariation)[0])
 
     return (
       <div className="block" >
@@ -365,7 +372,10 @@ class Product extends Component {
                     <div className="product__actions-item product__actions-item--addtocart mx-1">
                       <button
                         type="button"
-                        disabled={this.state.isVariationSet === true ? this.state.productQuantity > 0 ? false : true : product.ProductStockAmount > 0 ? false : true}
+                        disabled={this.state.isVariationSet === true ?
+                          (this.state.productQuantity > 0 ? false : true) :
+                          (product.ProductStockAmount > 0 ? false : true)
+                        }
                         onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
                         className="btn btn-primary product-card__addtocart"
                       >

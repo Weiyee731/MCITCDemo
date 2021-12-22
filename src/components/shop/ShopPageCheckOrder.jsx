@@ -194,7 +194,11 @@ class PageCheckOrder extends Component {
       <>
         {FilteredList.map((item) => (
           <tr key={item.id}>
-            <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
+            {console.log("CHECKING", item.product)}
+            <td>
+              <div style={{ fontSize: "13px" }}>    {`${item.product.ProductName} × ${item.quantity}`}  </div>
+              <div style={{ fontSize: "11px" }}>  Variation : {item.product.ProductVariationValue} </div>
+            </td>
             <td>
               <Currency value={item.total} />
             </td>
@@ -376,7 +380,6 @@ class PageCheckOrder extends Component {
 
         <Button className="addresses-list__item addresses-list__item--new" onClick={() => this.goAddAddress()} >
           <div className="addresses-list__plus"></div>
-          {/* <div className="btn btn-secondary btn-sm">Add New</div> */}
         </Button>
         <div className="addresses-list__divider" />
       </div >

@@ -300,11 +300,16 @@ export default function AccountPageOrderDetails(props) {
                                         }}
                                       />
                                     </td>
-                                    <td style={{ width: "20%" }}>{orders.ProductName}</td>
+                                    <td style={{ width: "20%" }}>
+                                      <div style={{ fontSize: "14px", fontWeight: "bold" }}>  {orders.ProductName}  </div>
+                                      <div style={{ fontSize: "11px" }}>  Variation : {orders.ProductVariationValue}  </div>
+                                      <div style={{ fontSize: "11px" }}>  SKU : {orders.SKU}  </div>
+                                      <div style={{ fontSize: "11px" }}>  Dimension : {orders.ProductDimensionWidth}m (W) X {orders.ProductDimensionHeight}m (H) X {orders.ProductDimensionDeep}m (L) </div>
+                                      <div style={{ fontSize: "11px" }}>  Weight : {orders.ProductWeight} kg   </div>
+                                    </td>
                                     <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice}</td>
                                     <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
                                     <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
-                                    {console.log("CHECK", orders)}
                                     {
                                       orders.LogisticID !== null && orders.LogisticID !== 0 ?
                                         <>

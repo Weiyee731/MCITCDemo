@@ -144,6 +144,13 @@ export class GitEpic {
     action$.ofType(GitAction.VerifyPassword).switchMap(async ({ payload }) => {
       try {
 
+        console.log( url +
+          "User_ValidationByType?USERID=" +
+          payload.USERID +
+          "&TYPE=" +
+          payload.VerifyType +
+          "&VALIDATIONFIELD=" +
+          payload.password)
         const response = await fetch(
           url +
           "User_ValidationByType?USERID=" +
@@ -325,6 +332,10 @@ export class GitEpic {
   getUserPage = (action$) =>
     action$.ofType(GitAction.GetPages).switchMap(async ({ payload }) => {
       try {
+        console.log(url +
+          "User_ViewPage?ROLEGROUPID=" +
+          payload)
+
         const response = await fetch(
           url +
           "User_ViewPage?ROLEGROUPID=" +
@@ -2448,6 +2459,30 @@ export class GitEpic {
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
 
+      console.log(url +
+        "Order_AddOrder?USERID=" +
+        payload.UserID +
+        "&USERADDRESSID=" +
+        payload.UserAddressID +
+        "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" +
+        payload.PaymentMethodID +
+        "&USERPAYMENTMETHODID=" +
+        payload.UserPaymentMethodID +
+        "&ORDERTOTALAMOUNT=" +
+        payload.OrderTotalAmount +
+        "&ORDERPAIDAMOUNT=" +
+        payload.OrderPaidAmount +
+        "&PRODUCTID=" +
+        payload.ProductID +
+        "&PRODUCTQUANTITY=" +
+        payload.ProductQuantity +
+        "&PRODUCTVARIATIONDETAILID=" +
+        payload.ProductVariationDetailID +
+        "&TRACKINGSTATUSID=" +
+        payload.TrackingStatusID +
+        "&PickUpInd=" +
+        payload.PickUpInd)
+
       try {
 
         const response = await fetch(
@@ -2477,6 +2512,7 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+        console.log("JSON", json)
         if (json[0].ReturnVal === 1) {
           toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
         }
@@ -3049,6 +3085,14 @@ export class GitEpic {
 
   getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
+      console.log(
+        url + "User_ProfileListByType?TYPE=" + payload.type +
+        "&TYPEVALUE=" + payload.typeValue +
+        "&USERID=" + payload.USERID +
+        "&UserRoleID=" + payload.userRoleID +
+        "&LISTPERPAGE=" + payload.productPage +
+        "&PAGE=" + payload.page
+      )
       try {
         const response = await fetch(
           url + "User_ProfileListByType?TYPE=" + payload.type +

@@ -373,6 +373,7 @@ class DisplayTable extends Component {
                             <TableCell align="left">{row.Picture}</TableCell>
                             <TableCell align="left">
                               {row.ProductName}
+                              {console.log("THIS IS PRODUCT", row)}
                             </TableCell>
                             <TableCell align="right">
                               {row.ProductQuantity}

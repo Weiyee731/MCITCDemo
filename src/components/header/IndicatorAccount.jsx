@@ -192,7 +192,7 @@ class IndicatorAccount extends Component {
             </Link>
             <div className="account-menu__divider" />
             <ul className="account-menu__links">
-              {localStorage.getItem("roleid") <= 15 && (
+              {localStorage.getItem("roleid") <= 16 && (
                 <li onClick={() => backtoinventory("Dashboard")}>
                   <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a>
                 </li>

@@ -59,7 +59,10 @@ class PageCompleted extends Component {
       <>
         {FilteredList.map((item) => (
           <tr key={item.id}>
-            <td>{`${item.product.ProductName} × ${item.quantity}`}</td>
+            <td>
+              <div style={{ fontSize: "13px" }}>    {`${item.product.ProductName} × ${item.quantity}`}  </div>
+              <div style={{ fontSize: "11px" }}>  Variation : {item.product.ProductVariationValue} </div>
+            </td>
             <td>
               <Currency value={item.total} />
             </td>

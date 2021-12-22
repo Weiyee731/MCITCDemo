@@ -60,6 +60,7 @@ function mapStateToProps(state) {
     allAddress: state.counterReducer["allAddress"],
     countries: state.counterReducer["countries"],
     order: state.counterReducer["order"],
+    merchant: state.counterReducer["merchant"],
 
   };
 }
@@ -75,7 +76,7 @@ function mapDispatchToProps(dispatch) {
     CallClearOrder: () => dispatch(GitAction.CallClearOrder()),
     CallUpdateOrderTracking: (propData) => dispatch(GitAction.CallUpdateOrderTracking(propData)),
     CallUpdateOrderUserDetails: (propData) => dispatch(GitAction.CallUpdateOrderUserDetails(propData)),
-
+    CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
   };
 }
 
@@ -311,9 +312,11 @@ function Row(props) {
   //Set the available row of product can be select
   const handleSetProduct = (row) => {
     let tempOrderDetails = []
-    row.OrderProductDetail !== null && JSON.parse(row.OrderProductDetail).filter((filtered) => filtered.LogisticID === null || filtered.LogisticID === 0).map((x) => {
-      tempOrderDetails.push(x.OrderProductDetailID)
-    })
+    row.OrderProductDetail !== null && JSON.parse(row.OrderProductDetail).filter((filtered) => filtered.LogisticID === null || filtered.LogisticID === 0)
+      .filter((x) => localStorage.getItem("roleid") === "16" ? parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")) : [])
+      .map((x) => {
+        tempOrderDetails.push(x.OrderProductDetailID)
+      })
     setSelectedRowID(tempOrderDetails)
   }
 
@@ -342,7 +345,9 @@ function Row(props) {
             />
           </TableCell>
           <TableCell style={{ width: "50%" }}>
+            {console.log("CHECKING PRODUCT", product)}
             <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
+            <div style={{ fontSize: "11px" }}>  Variation : {product.ProductVariationValue}  </div>
             <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
             <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
             <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
@@ -371,6 +376,7 @@ function Row(props) {
           </div>
           <div className="col-9" style={{ width: "40%" }}>
             <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
+            <div style={{ fontSize: "11px" }}>  Variation : {product.ProductVariationValue}  </div>
             <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
             <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
             <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
@@ -821,7 +827,6 @@ function Row(props) {
     let DataIndex = 0
 
     DataIndex = newUserDetails.findIndex((x) => parseInt(x.OrderID) === parseInt(userDetails.OrderID))
-
     switch (type) {
       case "Name":
         Listing[DataIndex].UserFullName = data
@@ -1058,21 +1063,39 @@ function Row(props) {
                   }
                 </div>
               </div>
-              {
-                address.length > 0 && row.UserAddresID !== 0 && row.UserAddressLine1 === null && row.PickUpInd === 0 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
+
+
+              {/* {
+                address.length > 0 && row.UserAddresID !== 0 && row.UserAddressLine1 === null && row.PickUpInd === 0 && 
+                checkExistingUserDetails(row) === 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
                   return (addressList(address, row))
                 })
               }
               {
-                row.PickUpInd === 0 && checkExistingUserDetails(row) === 0 &&
+                address.length > 0 && row.UserAddresID !== 0 && row.UserAddressLine1 === null && row.PickUpInd === 0 && 
+                checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
+                  return (addressList(address, row))
+                })
+              } */}
+              {
+                console.log("THIS IS ORDER", row)
+              }
+              {
+                row.UserAddresID === 0 && row.PickUpInd === 1 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
+                addressList(row, row)
+              }
+
+              {
+                row.UserAddressLine1 !== null && row.PickUpInd === 0 && checkExistingUserDetails(row) === 0 &&
                 addressList(row, row)
               }
               {
-                row.PickUpInd === 1 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
+                row.UserAddressLine1 !== null && row.PickUpInd === 1 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
                 addressList(row, row)
               }
+
               {
-                row.PickUpInd === 0 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
+                row.UserAddressLine1 !== null && row.PickUpInd === 0 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
                 addressList(row, row)
               }
 
@@ -1080,7 +1103,9 @@ function Row(props) {
               {row.OrderProductDetail ? (
                 <>
                   <div size="small" aria-label="products">
-                    {JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID === null || x.LogisticID === 0).length > 0 ?
+                    {JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID === null || x.LogisticID === 0)
+                      .filter((x) => localStorage.getItem("roleid") === "16" ? parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")) : [])
+                      .length > 0 ?
                       <TableCell>
                         <Checkbox
                           checked={selectedProductDetailsID.length === 0 ? false :
@@ -1093,55 +1118,62 @@ function Row(props) {
                       {
                         row.OrderProductDetail ?
                           <>
-                            {JSON.parse(row.OrderProductDetail).map((product, i) => (
-                              <>
-                                {
+                            {JSON.parse(row.OrderProductDetail)
+                              .filter((x) => localStorage.getItem("roleid") === "16" ? parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")) : [])
+                              .map((product, i) => (
+                                <>
+                                  {
 
-                                  product.LogisticID === null ?
-                                    selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
-                                    orderListing(product, i)
-                                    :
-                                    product.LogisticID === 0 &&
-                                    selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
-                                    orderListing(product, i)
-                                }
-                              </>
-                            ))
+                                    product.LogisticID === null ?
+                                      selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
+                                      orderListing(product, i)
+                                      :
+                                      product.LogisticID === 0 &&
+                                      selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 &&
+                                      orderListing(product, i)
+                                  }
+                                </>
+                              ))
                             }
                             {selectedProductDetailsID.length > 0 && trackingView()}
-                            {JSON.parse(row.OrderProductDetail).map((product, i) => (
-                              <>
-                                {
-                                  selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ? "" :
-                                    product.LogisticID === null ? orderListing(product, i) :
-                                      product.LogisticID === 0 && orderListing(product, i)
-                                }
-                              </>
-                            ))
+                            {JSON.parse(row.OrderProductDetail)
+                              .filter((x) => localStorage.getItem("roleid") === "16" ? parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")) : [])
+                              .map((product, i) => (
+                                <>
+                                  {
+                                    selectedProductDetailsID.length > 0 && selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ? "" :
+                                      product.LogisticID === null ? orderListing(product, i) :
+                                        product.LogisticID === 0 && orderListing(product, i)
+                                  }
+                                </>
+                              ))
                             }
                           </>
                           : null
                       }
                     </>
                   </div>
-                  {getTrackingLength(JSON.parse(row.OrderProductDetail)).length > 0 && getTrackingLength(JSON.parse(row.OrderProductDetail)).map((track, index) => {
-                    return (
-                      <div className="row" style={{ borderTop: "4px solid #fff", paddingTop: "5px", paddingBottom: "5px" }}>
-                        {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail).map((product, i) => (
-                          <>
-                            {
-                              product.TrackingNumber === track.TrackingNumber && product.LogisticID === track.LogisticID &&
-                              <>{confirmListing(product, i)}
-                                {/* {confirmListingTracking(track, index, JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID !== null && x.LogisticID !== 0))} */}
+                  {getTrackingLength(JSON.parse(row.OrderProductDetail)).length > 0 && getTrackingLength(JSON.parse(row.OrderProductDetail))
+                    .filter((x) => localStorage.getItem("roleid") === "16" ? parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")) : [])
+                    .map((track, index) => {
+                      return (
+                        <div className="row" style={{ borderTop: "4px solid #fff", paddingTop: "5px", paddingBottom: "5px" }}>
+                          {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
+                            .filter((x) => localStorage.getItem("roleid") === "16" ? parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")) : [])
+                            .map((product, i) => (
+                              <>
+                                {
+                                  product.TrackingNumber === track.TrackingNumber && product.LogisticID === track.LogisticID &&
+                                  <>{confirmListing(product, i)}
+                                  </>
+                                }
                               </>
-                            }
-                          </>
-                        ))
-                          : null}
-                        {confirmListingTracking(track, index, JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID !== null && x.LogisticID !== 0))}
-                      </div>
-                    )
-                  })}
+                            ))
+                            : null}
+                          {confirmListingTracking(track, index, JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID !== null && x.LogisticID !== 0))}
+                        </div>
+                      )
+                    })}
                 </>
 
               ) : (
@@ -1207,12 +1239,12 @@ class DisplayTable extends Component {
       this.setState({
         detailsShown: false,
       });
-      //   this.props.setTabsHidden(false);
+      this.props.setTabsHidden(false);
     } else {
       this.setState({
         detailsShown: true,
       });
-      //   this.props.setTabsHidden(true);
+      this.props.setTabsHidden(true);
     }
   };
 
@@ -1479,7 +1511,17 @@ class ViewTransactionsComponent extends Component {
     this.props.CallCourierService();
     this.props.CallAllUserAddress();
     this.props.CallCountry();
+
+    this.props.CallMerchants({
+      type: "Status",
+      typeValue: "Endorsed",
+      USERID: localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
+      productPage: 999,
+      page: 1,
+    })
   }
+
 
   componentDidUpdate(prevProps) {
     if (this.props.tracking.length > 0 && this.props.tracking[0].ReturnVal !== undefined) {
@@ -1492,6 +1534,8 @@ class ViewTransactionsComponent extends Component {
       this.props.CallGetTransaction("Payment Confirm");
     }
   }
+
+
 
   setTabsHidden = (value) => {
     this.setState({
@@ -1510,6 +1554,8 @@ class ViewTransactionsComponent extends Component {
       console.log(newValue);
       this.setState({ value: newValue });
     };
+
+    console.log("this.props", this.props)
 
     function a11yProps(index) {
       return {
@@ -1592,20 +1638,33 @@ class ViewTransactionsComponent extends Component {
 
       // this.props.alltransactions.filter((x) => x.TrackingStatus === this.state.currentlyChosen).map((y) => {
       //   y.OrderProductDetail !== null && JSON.parse(y.OrderProductDetail).map((list) => {
-          
+
       //     console.log("CHECK", list)
       //     console.log("CHECK 1", localStorage.getItem("id"))
       //     console.log("CHECK 2", list.MerchantID === localStorage.getItem("id"))
       //   })
-      this.props.alltransactions.filter((x) => x.TrackingStatus === this.state.currentlyChosen).map((y) => {
-        transactionList.push(y)
-      })
+      // console.log(this.props.alltransactions.OrderProductDetail !== null)
+
+
+      if (localStorage.getItem("roleid") === "1")
+        this.props.alltransactions.filter((x) => x.TrackingStatus === this.state.currentlyChosen).map((y) => {
+          transactionList.push(y)
+        })
+      if (localStorage.getItem("roleid") === "16") {
+        this.props.alltransactions !== null && this.props.alltransactions.map((list) => {
+          list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter((y) => parseInt(y.MerchantID) === parseInt(localStorage.getItem("id")) && list.TrackingStatus === this.state.currentlyChosen).map((data) => {
+            transactionList.push(list)
+            console.log("THIS IS ORDER", data)
+            console.log("THIS IS ORDER", list)
+          })
+        })
+      }
 
       var generateTable =
         (
           <div>
             <DisplayTable
-              Data={transactionList}
+              Data={transactionList.filter((ele, ind) => ind === transactionList.findIndex(elem => elem.OrderID === ele.OrderID))}
               ProductProps={this.props}
               history={this.props.history}
               tabsHidden={this.state.tabsHidden}

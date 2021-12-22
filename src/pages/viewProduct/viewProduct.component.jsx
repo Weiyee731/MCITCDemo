@@ -952,7 +952,9 @@ class ViewProductComponent extends Component {
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable
-          Data={this.props.allstocks}
+          Data={localStorage.getItem("roleid") === "1" ? this.props.allstocks :
+            localStorage.getItem("roleid") === "16" && this.props.allstocks !== undefined ? this.props.allstocks.filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id"))) : []
+          }
           ProductProps={this.props}
         ></DisplayTable>
       </div>
