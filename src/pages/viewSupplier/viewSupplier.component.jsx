@@ -33,14 +33,16 @@ import SearchBox from "../../components/SearchBox/SearchBox";
 
 function mapStateToProps(state) {
   return {
-    allUser: state.counterReducer["supplier"],
+    allUser: state.counterReducer["currentUser"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    callAllSupplierByUserStatus: (suppData) =>
-      dispatch(GitAction.CallAllSupplierByUserStatus(suppData)),
+    // callAllSupplierByUserStatus: (suppData) =>
+    //   dispatch(GitAction.CallAllSupplierByUserStatus(suppData)),
+    CallUserProfile: (suppData) =>
+      dispatch(GitAction.CallUserProfile(suppData)),
   };
 }
 
@@ -842,15 +844,31 @@ class ViewSupplierComponent extends Component {
   }
 
   componentDidMount() {
-    this.props.callAllSupplierByUserStatus("endorsed");
+    // this.props.callAllSupplierByUserStatus("endorsed");
+    this.props.CallUserProfile({
+      TYPE: "Usertype",
+      TYPEVALUE: 15,
+      USERID: localStorage.getItem("id") ? localStorage.getItem("id") : 0,
+      USERROLEID: localStorage.getItem("roleid") ? localStorage.getItem("roleid") : 0,
+      LISTPERPAGE: 999,
+      PAGE: 1,
+    })
   }
   componentDidUpdate() {
-    this.props.callAllSupplierByUserStatus("endorsed");
+    this.props.CallUserProfile({
+      TYPE: "Usertype",
+      TYPEVALUE: 15,
+      USERID: localStorage.getItem("id") ? localStorage.getItem("id") : 0,
+      USERROLEID: localStorage.getItem("roleid") ? localStorage.getItem("roleid") : 0,
+      LISTPERPAGE: 999,
+      PAGE: 1,
+    })
   }
-  componentWillUnmount() {
-    clearImmediate(this.props.allUser)
-  }
+  // componentWillUnmount() {
+  //   clearImmediate(this.props.allUser)
+  // }
   render() {
+    console.log("currentUser", this.props)
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable

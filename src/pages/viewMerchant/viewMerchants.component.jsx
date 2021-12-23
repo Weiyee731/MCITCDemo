@@ -25,30 +25,33 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchBox from "../../components/SearchBox/SearchBox";
-// import Tabs from '@mui/material/Tabs';
-// import Tab from '@mui/material/Tab';
-// import TabPanel from '@mui/lab/TabPanel';
-// import TabContext from "@mui/lab/TabContext";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+// import Tab from '@material-ui/core/Tab';
+// import TabPanel from '@mui/core/TabPanel';
+// import TabContext from "@mui/core/TabContext";
+
+import { TabContext, TabPanel } from '@material-ui/lab';
 import Button from '@mui/material/Button';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
 function mapStateToProps(state) {
   return {
-    allpromocodes: state.counterReducer["promoCodes"],
-    allstocks: state.counterReducer["products"],
+    // allpromocodes: state.counterReducer["promoCodes"],
+    // allstocks: state.counterReducer["products"],
     allmerchants: state.counterReducer["merchant"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallGetPromoCode: () => dispatch(GitAction.CallGetPromoCode()),
-    CallDeletePromoCode: (promoCodeData) =>
-      dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
+    // CallGetPromoCode: () => dispatch(GitAction.CallGetPromoCode()),
+    // CallDeletePromoCode: (promoCodeData) =>
+    //   dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
     // CallAllProductsByProductStatus: (prodData) =>
     //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
-    CallMerchants: () => dispatch(GitAction.CallMerchants()),
+    CallMerchants: (prodData) => dispatch(GitAction.CallMerchants(prodData)),
   };
 }
 
@@ -309,19 +312,22 @@ class DisplayTable extends Component {
   };
 
   onRowClick = (event, row, index) => {
+
+    console.log("ROW", row)
     this.setState({
-      name: row.CompanyName,
-      companyContactNo: row.CompanyContactNo,
+      userId: row.UserID,
+      name: row.ShopName,
+      companyContactNo: row.UserContactNo,
       firstName: row.FirstName,
       lastName: row.LastName,
-      companyDescription: row.CompanyDescription,
+      companyDescription: row.ShopDescription,
       companyWebsite: row.CompanyWebsite,
       companyAddressLine1: row.CompanyAddressLine1,
       companyAddressLine2: row.CompanyAddressLine2,
-      companyPoscode: row.CompanyPoscode,
-      companyCity: row.CompanyCity,
-      companyState: row.CompanyState,
-      UserStatus: row.UserStatus,
+      companyPoscode: row.ShopPoscode,
+      companyCity: row.ShopCity,
+      companyState: row.ShopState,
+      UserStatus: row.Userstatus,
       row: index,
       detailsShown: false,
     });
@@ -402,227 +408,211 @@ class DisplayTable extends Component {
       });
     };
 
+    const TableHeading = () => {
+      return (
+        <>
+          <DisplayTableHead
+            classes={classes2}
+            numSelected={this.state.selected.length}
+            order={this.state.order}
+            orderBy={this.state.orderBy}
+            onRequestSort={this.handleRequestSort}
+            rowCount={this.props.Data.length}
+          />
+          {
+            this.props.Data.length > 0 && this.props.Data.filter((searchedItem) => (searchedItem.FirstName + " " + searchedItem.LastName).toLowerCase()
+              .includes(this.state.searchFilter.toLowerCase()))
+              .map((filteredItem) => { filteredProduct.push(filteredItem) })
+          }
+        </>
+      )
+    }
+    const TableListing = (status) => {
+      return (
+        <TableBody>
+          {stableSort(
+            filteredProduct,
+            getComparator(this.state.order, this.state.orderBy)
+          )
+            .slice(
+              this.state.page * this.state.rowsPerPage,
+              this.state.page * this.state.rowsPerPage +
+              this.state.rowsPerPage
+            )
+            .filter((x) => x.Userstatus === status)
+            .map((row, index) => {
+              const isItemSelected = this.isSelected(
+                row.PromotionID
+              );
+              // const labelId = `enhanced-table-checkbox-${index}`;
+
+              return (
+                <TableRow
+                  hover
+                  onClick={(event) =>
+                    this.onRowClick(event, row, index)
+                  }
+                  role="checkbox"
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={row.UserID}
+                  selected={isItemSelected}
+                >
+                  <TableCell align="left">
+                    {row.FirstName + " " + row.LastName}
+                  </TableCell>
+                  <TableCell align="left">
+                    {row.ShopName}
+                  </TableCell>
+                  <TableCell align="left">
+                    {row.UserContactNo}
+                  </TableCell>
+                  <TableCell align="left">
+                    {row.ShopCity}
+                  </TableCell>
+                  <TableCell align="left">
+                    {row.ShopState}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          {emptyRows > 0 && (
+            <TableRow
+              style={{
+                height: (this.state.dense ? 33 : 53) * emptyRows,
+              }}
+            >
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
+        </TableBody>
+      )
+    }
+
+    const TableListingPagination = () => {
+      return (
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={this.props.Data.length}
+          rowsPerPage={this.state.rowsPerPage}
+          page={this.state.page}
+          onPageChange={this.handleChangePage}
+          onRowsPerPageChange={this.handleChangeRowsPerPage}
+        />
+      )
+    }
+
     return (
       <div style={{ margin: "2%" }}>
-        {this.state.detailsShown ? (
-          <MerchantDetails
-            data={this.state}
-            data2={this.props}
-            history={this.props.history}
-            setDetailsShown={setDetailsShown}
-          />
-        ) : (
-          <div>
-            <h1>Merchants List</h1>
+        {
+          this.state.detailsShown ? (
+            <MerchantDetails
+              data={this.state}
+              data2={this.props}
+              history={this.props.history}
+              setDetailsShown={setDetailsShown}
+            />
+          ) : (
             <div>
-
-              <SearchBox
-                style={divStyle}
-                placeholder="Search..."
-                onChange={(e) => this.setState({ searchFilter: e.target.value })}
-              />
-
+              <h1>Merchants List</h1>
               <div>
-                {/* <TabContext value={this.state.tabvalue}>
-                  <Tabs
-                    // value={this.state.tabvalue}
-                    value={this.state.tabvalue}
-                    onChange={this.handleTabChange}
-                  >
-                    <Tab
-                      value="0"
-                      label="Approved Merchant"
-                    />
-                    <Tab label="Pending Merchant" value="1" />
-                  </Tabs>
 
-                  <TabPanel value="0" index={0}>
-                    <Paper style={divStyle}>
-                      <TableContainer>
-                        <Table
-                          className={table}
-                          aria-labelledby="tableTitle"
-                          size={this.state.dense ? "small" : "medium"}
-                          aria-label="enhanced table"
-                        >
-                          <DisplayTableHead
-                            classes={classes2}
-                            numSelected={this.state.selected.length}
-                            order={this.state.order}
-                            orderBy={this.state.orderBy}
-                            onRequestSort={this.handleRequestSort}
-                            rowCount={this.props.Data.length}
-                          />
-                          {
-                            this.props.Data.length > 0 && this.props.Data.filter((searchedItem) => (searchedItem.FirstName + " " + searchedItem.LastName).toLowerCase()
-                              .includes(this.state.searchFilter))
-                              .map((filteredItem) => { filteredProduct.push(filteredItem) })
-                          }
-                          <TableBody>
-                            {stableSort(
-                              filteredProduct,
-                              getComparator(this.state.order, this.state.orderBy)
-                            )
-                              .slice(
-                                this.state.page * this.state.rowsPerPage,
-                                this.state.page * this.state.rowsPerPage +
-                                this.state.rowsPerPage
-                              )
-                              .map((row, index) => {
-                                const isItemSelected = this.isSelected(
-                                  row.PromotionID
-                                );
-                                // const labelId = `enhanced-table-checkbox-${index}`;
+                <SearchBox
+                  style={divStyle}
+                  placeholder="Search..."
+                  onChange={(e) => this.setState({ searchFilter: e.target.value })}
+                />
 
-                                return (
-                                  <TableRow
-                                    hover
-                                    onClick={(event) =>
-                                      this.onRowClick(event, row, index)
-                                    }
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    key={row.UserID}
-                                    selected={isItemSelected}
-                                  >
-                                    <TableCell align="left">
-                                      {row.FirstName + " " + row.LastName}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row.CompanyName}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row.CompanyContactNo}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row.CompanyCity}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row.CompanyState}
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                            {emptyRows > 0 && (
-                              <TableRow
-                                style={{
-                                  height: (this.state.dense ? 33 : 53) * emptyRows,
-                                }}
-                              >
-                                <TableCell colSpan={6} />
-                              </TableRow>
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={this.props.Data.length}
-                        rowsPerPage={this.state.rowsPerPage}
-                        page={this.state.page}
-                        onPageChange={this.handleChangePage}
-                        onRowsPerPageChange={this.handleChangeRowsPerPage}
-                      />
-                    </Paper>
-                  </TabPanel>
+                <div>
+                  <TabContext value={this.state.tabvalue}>
+                    <Tabs
+                      // value={this.state.tabvalue}
+                      value={this.state.tabvalue}
+                      onChange={this.handleTabChange}
+                    >
+                      <Tab value="0" label="Approved Merchant" />
+                      <Tab label="Pending Merchant" value="1" />
+                      <Tab label="Rejected Merchant" value="2" />
+                      <Tab label="Terminated Merchant" value="3" />
+                    </Tabs>
 
-                  <TabPanel value="1" index={1}>
-                    <Paper style={divStyle}>
-                      <TableContainer>
-                        <Table
-                          className={table}
-                          aria-labelledby="tableTitle"
-                          size={this.state.dense ? "small" : "medium"}
-                          aria-label="enhanced table"
-                        >
-                          <DisplayTableHead
-                            classes={classes2}
-                            numSelected={this.state.selected.length}
-                            order={this.state.order}
-                            orderBy={this.state.orderBy}
-                            onRequestSort={this.handleRequestSort}
-                            rowCount={this.props.Data.length}
-                          />
-                          {
-                            this.props.Data.length > 0 && this.props.Data.filter((searchedItem) => (searchedItem.FirstName + " " + searchedItem.LastName).toLowerCase()
-                              .includes(this.state.searchFilter))
-                              .map((filteredItem) => { filteredProduct.push(filteredItem) })
-                          }
-                          <TableBody>
-                            {stableSort(
-                              filteredProduct,
-                              getComparator(this.state.order, this.state.orderBy)
-                            )
-                              .slice(
-                                this.state.page * this.state.rowsPerPage,
-                                this.state.page * this.state.rowsPerPage +
-                                this.state.rowsPerPage
-                              )
-                              .map((row, index) => {
-                                const isItemSelected = this.isSelected(
-                                  row.PromotionID
-                                );
-                                return (
-                                  <TableRow
-                                    hover
-                                    onClick={(event) =>
-                                      this.onRowClick(event, row, index)
-                                    }
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    key={row.UserID}
-                                    selected={isItemSelected}
-                                  >
-                                    <TableCell align="left">
-                                      {row.FirstName + " " + row.LastName}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row.CompanyName}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row.CompanyContactNo}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row.CompanyCity}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row.CompanyState}
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                            {emptyRows > 0 && (
-                              <TableRow
-                                style={{
-                                  height: (this.state.dense ? 33 : 53) * emptyRows,
-                                }}
-                              >
-                                <TableCell colSpan={6} />
-                              </TableRow>
-                            )}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={this.props.Data.length}
-                        rowsPerPage={this.state.rowsPerPage}
-                        page={this.state.page}
-                        onPageChange={this.handleChangePage}
-                        onRowsPerPageChange={this.handleChangeRowsPerPage}
-                      />
-                    </Paper>
-                  </TabPanel>
-                </TabContext> */}
+                    <TabPanel value="0" index={0}>
+                      <Paper style={divStyle}>
+                        <TableContainer>
+                          <Table
+                            className={table}
+                            aria-labelledby="tableTitle"
+                            size={this.state.dense ? "small" : "medium"}
+                            aria-label="enhanced table"
+                          >
+                            {TableHeading()}
+                            {TableListing("Endorsed")}
+                          </Table>
+                        </TableContainer>
+                        {TableListingPagination()}
+                      </Paper>
+                    </TabPanel>
+
+                    <TabPanel value="1" index={1}>
+                      <Paper style={divStyle}>
+                        <TableContainer>
+                          <Table
+                            className={table}
+                            aria-labelledby="tableTitle"
+                            size={this.state.dense ? "small" : "medium"}
+                            aria-label="enhanced table"
+                          >
+                            {TableHeading()}
+                            {TableListing("Pending")}
+                          </Table>
+                        </TableContainer>
+                        {TableListingPagination()}
+                      </Paper>
+                    </TabPanel>
+
+                    
+                    <TabPanel value="2" index={2}>
+                      <Paper style={divStyle}>
+                        <TableContainer>
+                          <Table
+                            className={table}
+                            aria-labelledby="tableTitle"
+                            size={this.state.dense ? "small" : "medium"}
+                            aria-label="enhanced table"
+                          >
+                            {TableHeading()}
+                            {TableListing("Rejected")}
+                          </Table>
+                        </TableContainer>
+                        {TableListingPagination()}
+                      </Paper>
+                    </TabPanel>
+
+                    <TabPanel value="3" index={3}>
+                      <Paper style={divStyle}>
+                        <TableContainer>
+                          <Table
+                            className={table}
+                            aria-labelledby="tableTitle"
+                            size={this.state.dense ? "small" : "medium"}
+                            aria-label="enhanced table"
+                          >
+                            {TableHeading()}
+                            {TableListing("Terminate")}
+                          </Table>
+                        </TableContainer>
+                        {TableListingPagination()}
+                      </Paper>
+                    </TabPanel>
+
+                  </TabContext>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          )
+        }
+      </div >
     );
   }
 }
@@ -665,17 +655,28 @@ class ViewMerchantsComponent extends Component {
       productShoplot: null,
       productStatus: "Endorsed",
       backPage: "viewProduct",
+      userId: ""
     };
 
-    this.props.CallGetPromoCode();
+    // this.props.CallGetPromoCode();
     // this.props.CallAllProductsByProductStatus({
     //   ProductStatus: this.state.productStatus,
     //   UserID: window.localStorage.getItem("id"),
     // });
-    this.props.CallMerchants();
+    this.props.CallMerchants({
+
+      type: "Status",
+      typeValue: "-",
+      USERID: localStorage.getItem("id") ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("roleid") ? localStorage.getItem("roleid") : 0,
+      productPage: 999,
+      page: 1
+    });
   }
 
   render() {
+
+    console.log("merchant", this.props)
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable

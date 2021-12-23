@@ -23,6 +23,8 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
+
+
 function mapStateToProps(state) {
     return {
         productInfo: state.counterReducer["productsByID"],
@@ -108,11 +110,14 @@ class ProductEndorsementInfo extends Component {
                     autoClose: 3000,
                     onClose: () => { this.props.backToList(false) }
                 })
+
             }
             else {
                 toast.error("Something wents wrong during endorsing this product. Please contact developer.", { autoClose: 3000, })
             }
         }
+
+      
     }
 
     bindProductInfoToState = () => {
@@ -146,8 +151,9 @@ class ProductEndorsementInfo extends Component {
     }
 
     endorseProduct = () => {
+        console.log("this.props.ProductID", this.props.ProductID)
         if (typeof this.props.ProductID !== "undefined" && this.props.ProductID != null)
-            this.props.CallEndorseProduct(this.props.ProductID)
+            this.props.CallEndorseProduct({ ProductID: this.props.ProductID })
     }
 
     handleImageCarousel = (index) => {

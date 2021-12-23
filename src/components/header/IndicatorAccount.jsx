@@ -134,7 +134,7 @@ class IndicatorAccount extends Component {
     window.localStorage.clear()
     cookies.set("isLogin", false);
     localStorage.setItem("isLogin", false);
- 
+
     browserHistory.push("/");
     window.location.reload(false);
   };
@@ -194,7 +194,8 @@ class IndicatorAccount extends Component {
             <ul className="account-menu__links">
               {localStorage.getItem("roleid") <= 16 && (
                 <li onClick={() => backtoinventory("Dashboard")}>
-                  <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a>
+                  {/* <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a> */}
+                  <a href="/viewProduct" onClick={() => window.location.reload()}>Inventory</a>
                 </li>
               )}
               <li>

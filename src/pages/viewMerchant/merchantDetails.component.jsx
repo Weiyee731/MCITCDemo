@@ -32,6 +32,10 @@ import Tab from "@material-ui/core/Tab";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import "../../scss/inventory/inventory-merchant-details.scss";
+import Collapse from "@material-ui/core/Collapse";
+import Logo from "../../assets/Emporia.png";
+
+import { browserHistory } from "react-router";
 
 function mapStateToProps(state) {
   return {
@@ -39,6 +43,8 @@ function mapStateToProps(state) {
     allpromocodes: state.counterReducer["promoCodes"],
     allstocks: state.counterReducer["products"],
     alltransactionstatus: state.counterReducer["transactionStatus"],
+    currentUser: state.counterReducer["currentUser"],
+    countries: state.counterReducer["countries"],
   };
 }
 
@@ -52,8 +58,15 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
     // CallAllProductsByProductStatus: (prodData) =>
     //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
+
+    CallCountry: () => dispatch(GitAction.CallCountry()),
     CallGetTransactionStatus: () =>
       dispatch(GitAction.CallGetTransactionStatus()),
+
+    CallUpdateUserStatus: (prodData) =>
+      dispatch(GitAction.CallUpdateUserStatus(prodData)),
+    CallClearCurrentUser: () =>
+      dispatch(GitAction.CallClearCurrentUser()),
   };
 }
 function descendingComparator(a, b, orderBy) {
@@ -296,6 +309,8 @@ class DisplayTable extends Component {
       detailsShown: false,
       deleteActive: false,
       searchFilter: "",
+      open: false,
+      openId: []
     };
 
     this.handleRequestSort = this.handleRequestSort.bind(this);
@@ -373,6 +388,23 @@ class DisplayTable extends Component {
     });
   };
 
+  setOpen = (row) => {
+    let listing = this.state.openId
+    if (listing.length === 0)
+      listing.push(row.OrderID)
+    else {
+      if ((listing.filter((x) => x === row.OrderID)).length > 0) {
+        listing = listing.filter((x) => x !== row.OrderID)
+      }
+      else {
+        listing.push(row.OrderID)
+      }
+
+    }
+    this.setState({ openId: listing })
+
+  }
+
   render() {
     const emptyRows =
       this.state.rowsPerPage -
@@ -384,7 +416,7 @@ class DisplayTable extends Component {
     const divStyle = {
       width: "100%",
       margin: "auto",
-      padding: "1%",
+      padding: "0.5%",
       marginTop: "15px",
     };
 
@@ -406,8 +438,65 @@ class DisplayTable extends Component {
       width: 1,
     };
 
+    const UserDetailListing = (leftTitle, leftValue, rightTitle, rightValue) => {
+      return (
+        <div className="row" style={{ display: "flex", paddingTop: "10px" }}>
+          <div className="subContainer col-6">
+            <div className="col-3" style={{ textAlign: "left", paddingLeft: "0px" }}>
+              <p className="subTextLeft">{leftTitle}</p>
+            </div>
+            <div className="col-9">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={leftValue}
+                disabled={true}
+              />
+            </div>
+          </div>
+          <div className="subContainer col-6">
+            <div className="col-3" style={{ textAlign: "left" }}>
+              <p className="subTextLeft">{rightTitle}</p>
+            </div>
+            <div className="col-9">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={rightValue}
+                disabled={true}
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    const UserSmallColListing = (Title, Value) => {
+      return (
+        <div className="subContainer col-3">
+          <div className="col-2" style={{ textAlign: "left", paddingLeft: "0px" }}>
+            <p className="subTextLeft">{Title}</p>
+          </div>
+          <div className="col-10">
+            <TextField
+              id="outlined-size-small" size="small"
+              width="100%"
+              className="font"
+              variant="outlined"
+              value={Value}
+              disabled={true}
+            />
+          </div>
+        </div>
+      )
+    }
+
     return (
-      <div style={{ margin: "2%" }}>
+      <div>
         {this.state.detailsShown ? (
           <TransactionDetails
             data={this.state}
@@ -420,7 +509,7 @@ class DisplayTable extends Component {
           <div>
             <SearchBox
               style={divStyle}
-              placeholder="Search..."
+              placeholder="Search Order Number..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
 
@@ -443,7 +532,7 @@ class DisplayTable extends Component {
                     />
                     {this.props.Data.filter((searchedItem) =>
                       searchedItem.OrderName.toLowerCase().includes(
-                        this.state.searchFilter
+                        this.state.searchFilter.toLowerCase()
                       )
                     ).map((filteredItem) => {
                       filteredProduct.push(filteredItem);
@@ -463,37 +552,111 @@ class DisplayTable extends Component {
                           const labelId = `enhanced-table-checkbox-${index}`;
 
                           return (
-                            <TableRow
-                              hover
-                              onClick={(event) =>
-                                this.onRowClick(event, row, index)
-                              }
-                              role="checkbox"
-                              aria-checked={isItemSelected}
-                              tabIndex={-1}
-                              key={row.Username}
-                              selected={isItemSelected}
-                            >
-                              <TableCell align="center">
-                                {row.OrderName}
-                              </TableCell>
-                              <TableCell align="left">{row.Username}</TableCell>
-                              <TableCell align="left">
-                                {row.PaymentMethod}
-                              </TableCell>
-                              <TableCell align="left">
-                                {row.TrackingStatus}
-                              </TableCell>
-                              <TableCell align="left">
-                                {row.OrderProductDetail ? (
-                                  <p>
-                                    {JSON.parse(row.OrderProductDetail).length}
-                                  </p>
-                                ) : (
-                                  0
-                                )}
-                              </TableCell>
-                            </TableRow>
+                            <>
+                              <TableRow
+                                hover
+                                onClick={(event) =>
+                                  // this.onRowClick(event, row, index)
+                                  this.setOpen(row)
+                                  // this.setState({ open: !this.state.open })
+                                }
+                                role="checkbox"
+                                aria-checked={isItemSelected}
+                                tabIndex={-1}
+                                key={row.Username}
+                                selected={isItemSelected}
+                              >
+                                <TableCell align="center">
+                                  {row.OrderName}
+                                </TableCell>
+                                <TableCell align="left">{row.Username}</TableCell>
+                                <TableCell align="left">
+                                  {row.PaymentMethod}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {row.TrackingStatus}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {row.OrderProductDetail ? (
+                                    <p>
+                                      {JSON.parse(row.OrderProductDetail).length}
+                                    </p>
+                                  ) : (
+                                    0
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                              {console.log("CHECKING", this.state)}
+
+                              <TableRow className="subTable">
+                                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                                  <Collapse in={this.state.openId.length > 0 && this.state.openId.filter((x) => x === row.OrderID).length > 0} timeout="auto" unmountOnExit>
+                                    <Box margin={2}>
+                                      {console.log("THIS.PROPS", this.props)}
+                                      <div className="row" style={{ display: "flex" }}>
+                                        <div className="subContainer col-10"><p className="subHeading">User Details</p></div>
+                                      </div>
+                                      {UserDetailListing("Full Name", row.FirstName, "Contact Number", row.UserContactNo)}
+                                      {UserDetailListing("Email", row.UserEmailAddress, "Method", row.PickUpInd === 1 ? "Self Pick Up" : "Delivery")}
+                                      {
+                                        row.PickUpInd === 0 &&
+                                        <>
+                                          {UserDetailListing("Address Line 1", row.UserAddressLine1, "Address Line 2", row.UserAddressLine2)}
+                                          <div className="row" style={{ display: "flex" }}>
+                                            {UserSmallColListing("City", row.UserCity)}
+                                            {UserSmallColListing("State", row.UserState)}
+                                            {UserSmallColListing("Poscode", row.UserPoscode)}
+                                            {
+                                              this.props.ProductProps.countries.length > 0 && this.props.ProductProps.countries.filter((X) => X.CountryId === row.CountryID).map((y) => {
+                                                return (UserSmallColListing("Country", y.CountryName))
+                                              })
+                                            }
+                                          </div>
+                                        </>
+                                      }
+
+                                      <p className="subHeading">Products Ordered</p>
+                                      {
+                                        row.OrderProductDetail !== null ? (
+                                          <>
+                                            <div size="small" aria-label="products">
+                                              <div className="row" style={{ borderTop: "4px solid #fff", paddingTop: "5px", paddingBottom: "5px" }}>
+                                                {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
+                                                  .map((product, i) => (
+                                                    <>
+                                                      <div className="col-8" style={{ paddingTop: "10px" }}>
+                                                        <div className="row">
+                                                          <div className="col-3" style={{ width: "10%" }}>
+                                                            <img
+                                                              height={60}
+                                                              src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
+                                                              onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+                                                              alt={product.ProductName}
+                                                            />
+                                                          </div>
+                                                          <div className="col-9" style={{ width: "40%" }}>
+                                                            <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
+                                                            <div style={{ fontSize: "11px" }}>  Variation : {product.ProductVariationValue}  </div>
+                                                            <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
+                                                            <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
+                                                            <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
+                                                            <div style={{ fontSize: "13px", fontWeight: "bold" }}>  Total Paid : {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}  / Qty ({product.ProductQuantity})</div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </>
+                                                  ))
+                                                  : ""}
+                                              </div>
+                                            </div>
+                                          </>
+                                        ) : ""
+                                      }
+                                    </Box>
+                                  </Collapse>
+                                </TableCell>
+                              </TableRow >
+                            </>
                           );
                         })}
                       {emptyRows > 0 && (
@@ -580,9 +743,11 @@ class MerchantDetailsComponent extends Component {
       backPage: "viewProduct",
       value: 0,
       tabsHidden: false,
+      userId: this.props.data.userId
     };
     this.props.CallGetTransactionStatus();
     this.props.CallGetTransaction("In Cart");
+
     // this.props.CallAllProductsByProductStatus({
     //   ProductStatus: this.state.productStatus,
     //   Username: window.localStorage.getItem("id"),
@@ -593,15 +758,53 @@ class MerchantDetailsComponent extends Component {
       UserID: window.localStorage.getItem("id"),
     });
   }
+
   componentDidMount() {
+    this.props.CallCountry();
     if (this.state.UserStatus && typeof this.state.UserStatus !== "undefined" && this.state.UserStatus === "Endorsed") {
       this.setState({ showTerminatebutton: true });
     } else if (this.state.UserStatus && typeof this.state.UserStatus !== "undefined" && this.state.UserStatus === "Pending") {
       this.setState({ showTerminatebutton: false });
-    } else return (<div>The user status is undefined, please contact administrator</div>)
+    } else if (this.state.UserStatus && typeof this.state.UserStatus !== "undefined" && this.state.UserStatus === "Terminate") {
+      this.setState({ showTerminatebutton: true });
+    } else if (this.state.UserStatus && typeof this.state.UserStatus !== "undefined" && this.state.UserStatus === "Rejected") {
+      this.setState({ showTerminatebutton: false });
+    }
+    else return (<div>The user status is undefined, please contact administrator</div>)
   }
+
+  componentDidUpdate(prodData) {
+    if (this.props.currentUser.length > 0) {
+      this.props.CallClearCurrentUser()
+      setTimeout(() => {
+        browserHistory.push("/viewMerchants");
+        window.location.reload(false);
+      }, 3000);
+    }
+  }
+
   handleChange = (data, e) => { };
+
+  handleClick = (data) => {
+    let status = ""
+
+    if (data === "reject")
+      status = "Rejected"
+    else if (data === "endorse")
+      status = "Endorsed"
+    else if (data === "terminate")
+      status = "Terminate"
+    else if (data === "revise")
+      status = "Pending"
+
+    this.props.CallUpdateUserStatus({
+      USERID: this.state.userId,
+      USERSTATUS: status
+    })
+  }
   render() {
+
+    console.log("DATA22", this.props.data)
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -677,138 +880,147 @@ class MerchantDetailsComponent extends Component {
     return (
       <div>
         {this.state.showTerminatebutton ? (
-        <div>  
-          <h2>Merchant Details</h2>
-          <Button onClick={back}>
-            <i className="fas fa-chevron-left"></i>Back
-          </Button>
-          <Card style={{ width: "80%", margin: "0 auto" }}>
-            <CardContent>
-              <Button variant="outlined" size="medium" className="float-right-button">Terminate this merchant</Button>
-              <h5>Representative Details</h5>
-              <div style={{ display: "flex", width: "100%" }}>
-                <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                  <InputLabel htmlFor="component-simple">
-                    Representative First Name
-                  </InputLabel>
+          <div>
+            <h2>Merchant Details</h2>
+            <Button onClick={back}>
+              <i className="fas fa-chevron-left"></i>Back
+            </Button>
+            <Card style={{ width: "80%", margin: "0 auto" }}>
+              <CardContent>
+                {
+                  this.state.UserStatus === "Endorsed" ?
+                    <Button variant="outlined" size="medium" className="float-right-button" onClick={() => this.handleClick("terminate")}>Terminate this merchant</Button>
+                    :
+                    <>
+                      <Button variant="outlined" size="medium" className="float-right-accept-button" onClick={() => this.handleClick("endorse")}>Endorse</Button>
+                      <Button variant="outlined" size="medium" className="float-right-button" onClick={() => this.handleClick("revise")}>Revise merchant</Button>
+                    </>
+
+                }
+                <h5>Representative Details</h5>
+                <div style={{ display: "flex", width: "100%" }}>
+                  <FormControl style={{ width: "100%", marginRight: "5px" }}>
+                    <InputLabel htmlFor="component-simple">
+                      Representative First Name
+                    </InputLabel>
+                    <Input
+                      id="component-simple"
+                      value={this.state.firstName}
+                      onChange={this.handleChange}
+                      readOnly
+                    />
+                  </FormControl>
+                  <FormControl style={{ width: "100%", marginLeft: "5px" }}>
+                    <InputLabel htmlFor="component-simple">
+                      Representative Last Name
+                    </InputLabel>
+                    <Input
+                      id="component-simple"
+                      value={this.state.lastName}
+                      onChange={this.handleChange}
+                      readOnly
+                    />
+                  </FormControl>
+                </div>
+                <h5 style={{ marginTop: "5px" }}>Company Details</h5>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Company Name</InputLabel>
                   <Input
                     id="component-simple"
-                    value={this.state.firstName}
+                    value={this.state.companyName}
                     onChange={this.handleChange}
                     readOnly
                   />
                 </FormControl>
-                <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                  <InputLabel htmlFor="component-simple">
-                    Representative Last Name
-                  </InputLabel>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
                   <Input
                     id="component-simple"
-                    value={this.state.lastName}
+                    value={this.state.companyContactNo}
                     onChange={this.handleChange}
                     readOnly
                   />
                 </FormControl>
-              </div>
-              <h5 style={{ marginTop: "5px" }}>Company Details</h5>
-              <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                <InputLabel htmlFor="component-simple">Company Name</InputLabel>
-                <Input
-                  id="component-simple"
-                  value={this.state.companyName}
-                  onChange={this.handleChange}
-                  readOnly
-                />
-              </FormControl>
-              <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
-                <Input
-                  id="component-simple"
-                  value={this.state.companyContactNo}
-                  onChange={this.handleChange}
-                  readOnly
-                />
-              </FormControl>
-              <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                <InputLabel htmlFor="component-simple">Website</InputLabel>
-                <Input
-                  id="component-simple"
-                  value={this.state.companyWebsite}
-                  onChange={this.handleChange}
-                  readOnly
-                />
-              </FormControl>
-              <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
-                <Input
-                  id="component-simple"
-                  value={this.state.companyAddressLine1}
-                  onChange={this.handleChange}
-                  readOnly
-                />
-              </FormControl>
-              <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
-                <Input
-                  id="component-simple"
-                  value={this.state.companyAddressLine2}
-                  onChange={this.handleChange}
-                  readOnly
-                />
-              </FormControl>
-              <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
-                <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                  <InputLabel htmlFor="component-simple">City</InputLabel>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Website</InputLabel>
                   <Input
                     id="component-simple"
-                    value={this.state.companyCity}
+                    value={this.state.companyWebsite}
                     onChange={this.handleChange}
                     readOnly
                   />
                 </FormControl>
-                <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                  <InputLabel htmlFor="component-simple">State</InputLabel>
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
                   <Input
                     id="component-simple"
-                    value={this.state.companyState}
+                    value={this.state.companyAddressLine1}
                     onChange={this.handleChange}
                     readOnly
                   />
                 </FormControl>
-              </div>
-              <TextField
-                style={{ width: "100%", marginTop: "5px" }}
-                id="outlined-multiline-flexible"
-                label="Company Description"
-                multiline
-                maxRows={4}
-                value={this.state.companyDescription}
-                onChange={this.handleChange}
-                inputProps={{ readOnly: true }}
-              />
-              <h5 style={{ marginTop: "5px" }}>Purchase Order History</h5>
-              {/* <DisplayTable Data={JSON.parse(this.props.data.promoCodeDetail)} /> */}
-              <div style={{ width: "100%" }}>
-                {!this.state.detailsShown ? (
-                  <AppBar position="static" color="default">
-                    <Tabs
-                      value={this.state.value}
-                      onChange={handleChange}
-                      indicatorColor="primary"
-                      textColor="primary"
-                      variant="scrollable"
-                      scrollButtons="auto"
-                      aria-label="scrollable auto tabs example"
-                    >
-                      {generateTabs}
-                    </Tabs>
-                  </AppBar>
-                ) : null}
-                {generatePanels}
-              </div>
-            </CardContent>
-          </Card>
-        </div>)
+                <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                  <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
+                  <Input
+                    id="component-simple"
+                    value={this.state.companyAddressLine2}
+                    onChange={this.handleChange}
+                    readOnly
+                  />
+                </FormControl>
+                <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
+                  <FormControl style={{ width: "100%", marginRight: "5px" }}>
+                    <InputLabel htmlFor="component-simple">City</InputLabel>
+                    <Input
+                      id="component-simple"
+                      value={this.state.companyCity}
+                      onChange={this.handleChange}
+                      readOnly
+                    />
+                  </FormControl>
+                  <FormControl style={{ width: "100%", marginLeft: "5px" }}>
+                    <InputLabel htmlFor="component-simple">State</InputLabel>
+                    <Input
+                      id="component-simple"
+                      value={this.state.companyState}
+                      onChange={this.handleChange}
+                      readOnly
+                    />
+                  </FormControl>
+                </div>
+                <TextField
+                  style={{ width: "100%", marginTop: "5px" }}
+                  id="outlined-multiline-flexible"
+                  label="Company Description"
+                  multiline
+                  maxRows={4}
+                  value={this.state.companyDescription}
+                  onChange={this.handleChange}
+                  inputProps={{ readOnly: true }}
+                />
+                <h5 style={{ marginTop: "15px", marginBottom: "15px" }}>Purchase Order History</h5>
+                {/* <DisplayTable Data={JSON.parse(this.props.data.promoCodeDetail)} /> */}
+                <div style={{ width: "100%" }}>
+                  {!this.state.detailsShown ? (
+                    <AppBar position="static" color="default">
+                      <Tabs
+                        value={this.state.value}
+                        onChange={handleChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        aria-label="scrollable auto tabs example"
+                      >
+                        {generateTabs}
+                      </Tabs>
+                    </AppBar>
+                  ) : null}
+                  {generatePanels}
+                </div>
+              </CardContent>
+            </Card>
+          </div>)
           :
           (<div>
             <h2>Merchant Details</h2>
@@ -817,8 +1029,19 @@ class MerchantDetailsComponent extends Component {
             </Button>
             <Card style={{ width: "80%", margin: "0 auto" }}>
               <CardContent>
-                <Button variant="outlined" size="medium" className="float-right-accept-button">Endorse</Button>
-                <Button size="medium" className="float-right-reject-button">Reject</Button>
+                {
+                  this.state.UserStatus === "Pending" ?
+                    <>
+                      <Button variant="outlined" size="medium" className="float-right-accept-button" onClick={() => this.handleClick("endorse")}>Endorse</Button>
+                      <Button size="medium" className="float-right-reject-button" onClick={() => this.handleClick("reject")}>Reject</Button>
+                    </>
+                    :
+                    <>
+                      <Button variant="outlined" size="medium" className="float-right-accept-button" onClick={() => this.handleClick("endorse")}>Endorse</Button>
+                      <Button variant="outlined" size="medium" className="float-right-button" onClick={() => this.handleClick("revise")}>Revise Merchant</Button>
+                    </>
+                }
+
                 <h5>Representative Details</h5>
                 <div style={{ display: "flex", width: "100%" }}>
                   <FormControl style={{ width: "100%", marginRight: "5px" }}>

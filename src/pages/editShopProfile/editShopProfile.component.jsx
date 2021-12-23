@@ -40,6 +40,8 @@ function mapStateToProps(state) {
     countrylist: state.counterReducer["countries"],
     merchant: state.counterReducer["merchant"],
     shopUpdated: state.counterReducer["shopUpdated"],
+    currentUser: state.counterReducer["currentUser"],
+    productsListing: state.counterReducer["productsListing"],
   };
 }
 
@@ -56,10 +58,15 @@ function mapDispatchToProps(dispatch) {
     CallMerchants: (propData) => dispatch(GitAction.CallMerchants(propData)),
 
     CallUpdateShopDetail: (propData) => dispatch(GitAction.CallUpdateShopDetail(propData)),
+
+    CallClearCurrentUser: () => dispatch(GitAction.CallClearCurrentUser()),
+    CallClearShopUpdate: () => dispatch(GitAction.CallClearShopUpdate()),
+
+    CallAllProductsListing: (propData) => dispatch(GitAction.CallAllProductsListing(propData)),
   };
 }
 
-const group={
+const group = {
 
   USERID: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
   USERFIRSTNAME: "",
@@ -96,61 +103,107 @@ const group={
 
   SHOPNAME: "",
   SHOPDESC: "",
-  SHOPCOUNTRYID: "",
+  SHOPCOUNTRYID: 148,
   SHOPPOSCODE: "",
   SHOPSTATE: "",
   SHOPCITY: "",
+  shopRating: 0,
 }
 class EditShopProfile extends Component {
   constructor(props) {
     super(props);
 
     this.state = group;
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
     this.uploadHandler = this.uploadHandler.bind(this);
+    this.setDetails = this.setDetails.bind(this);
   }
 
+
+  setDetails(shopDetails) {
+    this.setState({
+      SHOPNAME: shopDetails.ShopName !== undefined ? shopDetails.ShopName : "",
+      SHOPDESC: shopDetails.ShopDescription !== undefined ? shopDetails.ShopDescription : "",
+      SHOPCOUNTRYID: shopDetails.ShopCountryID !== null ? shopDetails.ShopCountryID : 148,
+      SHOPPOSCODE: shopDetails.ShopPoscode !== undefined ? shopDetails.ShopPoscode : "",
+      SHOPSTATE: shopDetails.ShopState !== undefined ? shopDetails.ShopState : "",
+      SHOPCITY: shopDetails.ShopCity !== undefined ? shopDetails.ShopCity : "",
+    })
+  }
 
   componentDidMount() {
     if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.typeValue !== undefined) {
       this.props.CallMerchants(this.state);
       this.props.CallCountry();
+
+      this.props.CallAllProductsListing({
+        type: "Merchant",
+        typeValue: localStorage.getItem("isLogin") !== false ? 0 : localStorage.getItem("id"),
+        userId: localStorage.getItem("isLogin") !== false ? 0 : localStorage.getItem("id"),
+        productPage: 999,
+        page: 1
+      })
       if (this.props.merchant !== null) {
         console.log(this.props.merchant[0])
         let shopDetails = this.props.merchant[0];
         if (shopDetails !== undefined) {
-          this.setState({
-            SHOPNAME: shopDetails.ShopName !== undefined ? shopDetails.ShopName : "",
-            SHOPDESC: shopDetails.ShopDescription !== undefined ? shopDetails.ShopDescription : "",
-            SHOPCOUNTRYID: shopDetails.ShopCountryID !== undefined ? shopDetails.ShopCountryID : "",
-            SHOPPOSCODE: shopDetails.ShopPoscode !== undefined ? shopDetails.ShopPoscode : "",
-            SHOPSTATE: shopDetails.ShopState !== undefined ? shopDetails.ShopState : "",
-            SHOPCITY: shopDetails.ShopCity !== undefined ? shopDetails.ShopCity : "",
-          })
+          this.setDetails(shopDetails)
         }
-
       }
+      let ratingCount = []
+      if (this.props.productsListing !== null) {
+        JSON.parse(this.props.productsListing).map((X) => {
+          console.log("CHECK", X)
+          ratingCount.push(X.ProductRating)
+
+        })
+      }
+      this.setState({ shopRating: parseFloat(ratingCount.reduce((subtotal, item) => subtotal + item, 0) / ratingCount.length).toFixed(2) })
+
+      // console.log("CHECK", parseFloat(ratingCount.reduce((subtotal, item) => subtotal + item, 0) / rating.length).toFixed(2))
+      // console.log("CHECK", rating.reduce((subtotal, item) => subtotal + item, 0))
+
     } else {
       // browserHistory.push("/login");
       // window.location.reload(false);
     }
   }
+  // {console.log("MERCHANT", this.p)}
+  componentDidUpdate(prevProps) {
 
-componentDidUpdate(prevProps){
+    if (prevProps.shopUpdated !== this.props.shopUpdated) {
+      // browserHistory.push("/");
+      // delete this.state;
 
-  if (prevProps.shopUpdated !== this.props.shopUpdated) {
-    // browserHistory.push("/");
-    // delete this.state;
-    this.setState(group);
-    clearImmediate( this.props.merchant);
-    // window.location.reload(false);
+      // this.setState(group);
+
+      // clearImmediate(this.props.merchant);
+      // window.location.reload(false);
+    }
+
+    if (this.props.shopUpdated.length > 0) {
+      this.props.CallMerchants(this.state);
+      this.props.CallClearShopUpdate()
+
+      if (this.props.merchant !== null) {
+        let shopDetails = this.props.merchant[0];
+        if (shopDetails !== undefined) {
+          this.setDetails(shopDetails)
+        }
+      }
+    }
+
+    if (this.props.currentUser.length > 0) {
+      this.props.CallMerchants(this.state);
+      this.props.CallClearCurrentUser()
+      this.modalClose()
+    }
   }
-}
   // componentWillUnmount(){ 
   //   this.setState(group); 
   //   window.location.reload(false);
   // }
-  
+
 
   /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
   onFileUpload = () => {
@@ -167,7 +220,7 @@ componentDidUpdate(prevProps){
     let file = {
       USERID: window.localStorage.getItem("id"),
       USERPROFILEIMAGE: FullImageName,
-      TYPE: "PROFILEIMAGE",
+      TYPE: "SHOPIMAGE",
     };
     axios
       .post(
@@ -236,11 +289,13 @@ componentDidUpdate(prevProps){
       });
     } else {
     }
-  };  
+  };
 
   handleChange(data, e) {
     // var { value } = e.target;
     // value = value.replace(/ /g,"%20");
+    console.log("data", data)
+    console.log("data", e.target.value)
     if (data === "SHOPPOSCODE") {
       this.setState({
         SHOPPOSCODE: e.target.value,
@@ -268,7 +323,9 @@ componentDidUpdate(prevProps){
     //   this.state.SHOPCITY.length !== 0 &&
     //   this.state.SHOPCOUNTRYID.length !== 0
     // ) {
-      this.props.CallUpdateShopDetail(this.state);
+    console.log("UPDATE", this.state)
+    this.props.CallUpdateShopDetail(this.state);
+
     // } else {
     //   toast.error("Please fill in all required data");
     // }
@@ -288,7 +345,7 @@ componentDidUpdate(prevProps){
       this.props.merchant[0].ReturnVal === undefined && this.props.merchant[0];
 
     const imgurl = "https://myemporia.my/emporiaimage/userprofile/"
-    { console.log(merchantDetails) }
+
     const links = [
       // { title: "My Shop Page", url: "merchant/" + userid, data: "view >", icons: <StorefrontOutlinedIcon className="titleicon" /> },
       { title: "Products", url: "viewProduct", data: merchantDetails ? merchantDetails.MerchantTotalProduct : [0], icons: <ListAltOutlinedIcon className="titleicon" /> },
@@ -296,8 +353,10 @@ componentDidUpdate(prevProps){
       // { title: "Response Time", url: "", data: "Within Hour", icons: <AccessTimeOutlinedIcon className="titleicon" /> },
       {
         title: "Shop Rating",
-        url: "viewReviews",
-        data: merchantDetails.ShopRating ? merchantDetails.ShopReviewCount + (merchantDetails.ShopRating) : [0],
+        url: "viewProduct",
+        // url: "viewReviews",
+        // data: merchantDetails.ShopRating ? merchantDetails.ShopReviewCount + (merchantDetails.ShopRating) : [0],
+        data: this.state.shopRating,
         icons: <GradeOutlinedIcon className="titleicon" />
       },
     ].map((link) => {
@@ -320,6 +379,8 @@ componentDidUpdate(prevProps){
     };
 
     const handleSubmit = (files, allFiles) => {
+      console.log("CHECK ", allFiles)
+      console.log("CHECK ", this.state)
       allFiles.forEach((f) => f.remove());
     };
     return (
@@ -358,9 +419,12 @@ componentDidUpdate(prevProps){
               <div className="col-12 col-md-12 col-lg-4 border-line-right">
                 <div className="row">
                   <div onClick={() => this.modalOpen()} className="imagecontainer">
+                    {
+                      console.log("CHECK SHOP", merchantDetails)
+                    }
                     <img
                       className="profilePic"
-                      src={merchantDetails.ShopImage && merchantDetails.ShopImage.length ? Logo + merchantDetails.ShopImage : Logo}
+                      src={merchantDetails.ShopImage && merchantDetails.ShopImage.length ? imgurl + merchantDetails.ShopImage : Logo}
                       alt="Profile"
                       onError={(e) => {
                         e.target.onerror = null;
@@ -386,6 +450,8 @@ componentDidUpdate(prevProps){
                 {links}
 
               </div>
+              {console.log("currentUser", this.props)}
+              {console.log("currentUser", this.state)}
 
               <div className="container col-12 col-md-12 col-lg-8">
                 {this.props.merchant && this.props.merchant.length > 0 && this.props.merchant[0] !== null &&
@@ -453,16 +519,16 @@ componentDidUpdate(prevProps){
                             <Select
                               id="Country"
                               variant="outlined"
-                              defaultValue={row.ShopCountryID ? row.ShopCountryID : 0}
+                              defaultValue={row.ShopCountryID ? row.ShopCountryID : 148}
                               // {this.state.SHOPCOUNTRYID}
                               size="small"
                               onChange={this.handleChange.bind(this, "SHOPCOUNTRYID")}
                               className="font"
                             >
-                              <option value={0}
-                                  key={0}>
+                              {/* <option value={0}
+                                key={0}>
                                 {"Please select a country"}
-                              </option>
+                              </option> */}
                               {this.props.countrylist.map((country) => (
                                 <option
                                   value={country.CountryId}

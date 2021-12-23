@@ -158,6 +158,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
         currentUser: action.payload,
       });
 
+    case GitAction.UpdateUserStatus:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedUserStatus:
+      return Object.assign({}, state, {
+        loading: false,
+        currentUser: action.payload,
+      });
+
     // case GitAction.UpdateProfileSpecificField:
     //   return Object.assign({}, state, { loading: true });
     // case GitAction.UpdatedProfileSpecificField:
@@ -173,6 +181,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         currentUser: action.payload,
       });
+
+    case GitAction.ClearCurrentUser:
+      return Object.assign({}, state, { loading: true, currentUser: [] });
 
     case GitAction.VerifyPassword:
       return Object.assign({}, state, { loading: true });
@@ -222,6 +233,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         shopUpdated: action.payload,
       });
+
+    case GitAction.ClearUpdateShop:
+      return Object.assign({}, state, { loading: true, shopUpdated: [] });
     //=======================COUNTRY========================//
 
     case GitAction.GetCountry:

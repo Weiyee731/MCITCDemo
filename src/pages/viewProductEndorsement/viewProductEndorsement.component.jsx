@@ -31,6 +31,7 @@ import DoneAllIcon from "@material-ui/icons/DoneAll";
 import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { toast } from "react-toastify";
+import { browserHistory } from "react-router";
 
 function mapStateToProps(state) {
   return {
@@ -285,7 +286,7 @@ const DeletableTableToolbar = (props) => {
     props.ProductProps.CallEndorseProduct({
       ProductID: props.selectedData,
       UserID: window.localStorage.getItem("id")
-    })    
+    })
     // props.callAllGridStorages();
   };
 
@@ -698,12 +699,12 @@ class DisplayTable extends Component {
             </div>
             <SearchBox
               style={divStyle}
-              placeholder="Search..."
+              placeholder="Search123..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
             {
               this.props.Data.filter((searchedItem) =>
-                searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+                searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter.toLowerCase()))
                 .map((filteredItem) => { filteredProduct.push(filteredItem); })
             }
             <DeletableTable
@@ -759,7 +760,7 @@ class DisplayTable extends Component {
                       rowCount={this.props.Data.length}
                     />
                     {
-                      this.props.Data.filter((searchedItem) => typeof searchedItem.ProductName !== "undefined" && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter))
+                      this.props.Data.filter((searchedItem) => typeof searchedItem.ProductName !== "undefined" && searchedItem.ProductName.toLowerCase().includes(this.state.searchFilter.toLowerCase()))
                         .map((filteredItem) => { filteredProduct.push(filteredItem); })
                     }
                     <TableBody>
@@ -878,6 +879,23 @@ class ViewProductEndorsementComponent extends Component {
         productPage: '999',
         page: '1'
       });
+
+      toast.success("This product endorsed successfully.", {
+        autoClose: 3000
+      })
+
+      setTimeout(() => {
+        browserHistory.push("/viewProductEndorsement");
+        window.location.reload(false);
+    }, 3000);
+
+      // console.log("THIS.PROPS", this.props)
+      // if (this.props.endorsedProduct !== undefined && this.props.endorsedProduct.length > 0 && this.props.endorsedProduct[0].ReturnVal == "1") {
+      //     setTimeout(() => {
+      //         browserHistory.push("/viewProductEndorsement");
+      //         window.location.reload(false);
+      //     }, 3000);
+      // }
     }
   }
 

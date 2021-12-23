@@ -28,6 +28,9 @@ export class GitAction {
   static EditUserProfile = "EDIT-USERPROFILE";
   static EditedUserProfile = "EDITED-USERPROFILE";
 
+  static UpdateUserStatus = "UPDATE-USERPROFILE-STATUS";
+  static UpdatedUserStatus = "UPDATED-USERPROFILE-STATUS";
+
   // static UpdateProfileSpecificField = "UPDATE-PROFILESPECIFICFIELD";
   // static UpdatedProfileSpecificField = "UPDATED-PROFILESPECIFICFIELD";
 
@@ -44,6 +47,9 @@ export class GitAction {
 
   static UpdateProfileImage = "UPDATE-PROFILEIMAGE";
   static UpdatedProfileImage = "UPDATED-PROFILEIMAGE";
+
+  static ClearCurrentUser = "CLEAR-UPDATE-PROFILEIMAGE";
+  static ClearUpdateShop = "CLEAR-UPDATE-SHOP"
 
   static VerifyPassword = "VERIFY-PASSWORD";
   static VerifiedPassword = "VERIFIED-PASSWORD";
@@ -131,6 +137,14 @@ export class GitAction {
     };
   }
 
+  static CallUpdateUserStatus(propsData) {
+    return {
+      type: GitAction.UpdateUserStatus,
+      payload: propsData,
+    };
+  }
+
+
   static CallUpdateShopDetail(propsData) {
     return {
       type: GitAction.UpdateShopDetail,
@@ -142,6 +156,18 @@ export class GitAction {
     return {
       type: GitAction.UpdateProfileImage,
       payload: propsData,
+    };
+  }
+
+  static CallClearCurrentUser() {
+    return {
+      type: GitAction.ClearCurrentUser,
+    };
+  }
+
+  static CallClearShopUpdate(){
+    return {
+      type: GitAction.ClearUpdateShop,
     };
   }
 

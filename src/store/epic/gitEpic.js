@@ -144,7 +144,7 @@ export class GitEpic {
     action$.ofType(GitAction.VerifyPassword).switchMap(async ({ payload }) => {
       try {
 
-        console.log( url +
+        console.log(url +
           "User_ValidationByType?USERID=" +
           payload.USERID +
           "&TYPE=" +
@@ -440,9 +440,45 @@ export class GitEpic {
       }
     });
 
+  UpdateUserProfileStatus = (action$) =>
+    action$.ofType(GitAction.UpdateUserStatus).switchMap(async ({ payload }) => {
+      try {
+        console.log(url +
+          "User_UpdateProfileStatus?USERID=" +
+          payload.USERID +
+          "&USERSTATUS=" +
+          payload.USERSTATUS)
+
+        const response = await fetch(
+          url +
+          "User_UpdateProfileStatus?USERID=" +
+          payload.USERID +
+          "&USERSTATUS=" +
+          payload.USERSTATUS
+        );
+
+        let json = await response.json();
+        json = JSON.parse(json);
+        if (json.map((val) => val.ReturnVal === 1)) {
+          toast.success("Updated Successful");
+        }
+        return {
+          type: GitAction.UpdatedUserStatus,
+          payload: json,
+        };
+      } catch (error) {
+        alert('UpdateUserProfileStatus: ' + error);
+        return {
+          type: GitAction.UpdatedUserStatus,
+          payload: [],
+        };
+      }
+    });
+
   UpdateShopDetail = (action$) =>
     action$.ofType(GitAction.UpdateShopDetail).switchMap(async ({ payload }) => {
       try {
+
         const response = await fetch(
           url +
           "User_UpdateShopDetail?USERID=" +
@@ -1573,6 +1609,7 @@ export class GitEpic {
 
   endorseProduct = (action$) =>
     action$.ofType(GitAction.EndorseProduct).switchMap(async ({ payload }) => {
+      console.log(url + "Product_EndorseProducts?ProductIDs=" + payload.ProductID)
       try {
         const response = await fetch(url + "Product_EndorseProducts?ProductIDs=" + payload.ProductID);
         let json = await response.json();
@@ -2237,6 +2274,11 @@ export class GitEpic {
   getAllSupplierByUserStatus = (action$) =>
     action$.ofType(GitAction.GetSupplierByUserStatus).switchMap(async ({ payload }) => {
       try {
+
+        console.log(url +
+          "User_ProfileListByUserStatus?UserStatus=" +
+          payload +
+          "&UserRoleID=15")
         const response = await fetch(
           url +
           "User_ProfileListByUserStatus?UserStatus=" +
