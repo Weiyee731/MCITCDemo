@@ -181,10 +181,6 @@ class Product extends Component {
 
     let merchant = product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
     let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
-    console.log("PRODUCT variation", variation)
-    console.log("PRODUCT product.ProductVariation  !== null", product.ProductVariation !== null)
-    product.ProductVariation !== null &&
-      console.log("PRODUCT product.ProductVariation", JSON.parse(product.ProductVariation)[0])
 
     return (
       <div className="block" >

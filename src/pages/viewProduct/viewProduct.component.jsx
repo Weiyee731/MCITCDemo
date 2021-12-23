@@ -290,7 +290,6 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteProduct = () => {
-    console.log("props.selectedData", props.selectedData)
     props.ProductProps.CallDeleteProduct(props.selectedData);
   };
 

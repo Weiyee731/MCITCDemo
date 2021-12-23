@@ -181,7 +181,6 @@ class LoginComponent extends Component {
       }
     }
     if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true && this.state.isReturn === false) {
-      console.log("this.props.emailVerification[0]", this.props.emailVerification[0])
       if (this.props.emailVerification[0].UserID !== undefined) {
         this.setState({ resetUserID: this.props.emailVerification[0].UserID, isEmailVerify: true, verifyEmail: false, isReturn: true })
       }

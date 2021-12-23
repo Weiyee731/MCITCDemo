@@ -345,7 +345,6 @@ function Row(props) {
             />
           </TableCell>
           <TableCell style={{ width: "50%" }}>
-            {console.log("CHECKING PRODUCT", product)}
             <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
             <div style={{ fontSize: "11px" }}>  Variation : {product.ProductVariationValue}  </div>
             <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
@@ -1063,25 +1062,8 @@ function Row(props) {
                   }
                 </div>
               </div>
-
-
-              {/* {
-                address.length > 0 && row.UserAddresID !== 0 && row.UserAddressLine1 === null && row.PickUpInd === 0 && 
-                checkExistingUserDetails(row) === 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
-                  return (addressList(address, row))
-                })
-              }
               {
-                address.length > 0 && row.UserAddresID !== 0 && row.UserAddressLine1 === null && row.PickUpInd === 0 && 
-                checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 && address.filter((x) => x.UserAddressBookID === row.UserAddresID).map((address) => {
-                  return (addressList(address, row))
-                })
-              } */}
-              {
-                console.log("THIS IS ORDER", row)
-              }
-              {
-                row.UserAddresID === 0 && row.PickUpInd === 1 && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
+                row.UserAddresID === 0 && row.PickUpInd === 1 && row.UserAddressLine1 === null && checkExistingUserDetails(row) !== 0 && checkExistingUserDetails(row).filter((x) => x.Method === "Delivery").length > 0 &&
                 addressList(row, row)
               }
 
@@ -1100,7 +1082,7 @@ function Row(props) {
               }
 
               <p className="subHeading">Products Ordered</p>
-              {row.OrderProductDetail ? (
+              {row.OrderProductDetail ? ( 
                 <>
                   <div size="small" aria-label="products">
                     {JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID === null || x.LogisticID === 0)
@@ -1551,11 +1533,8 @@ class ViewTransactionsComponent extends Component {
 
   render() {
     const handleChange = (event, newValue) => {
-      console.log(newValue);
       this.setState({ value: newValue });
     };
-
-    console.log("this.props", this.props)
 
     function a11yProps(index) {
       return {
@@ -1590,13 +1569,11 @@ class ViewTransactionsComponent extends Component {
 
     let allTransactionStatusData = this.props.alltransactionstatus
       ? Object.keys(this.props.alltransactionstatus).map((key) => {
-        console.log(this.props.alltransactionstatus);
         return this.props.alltransactionstatus[key];
       })
       : {};
 
     if (allTransactionStatusData.length > 0) {
-      console.log(allTransactionStatusData);
       var generateOptions = allTransactionStatusData.map((status, i) => {
         return (
           <option value={status.TrackingStatus}>{status.TrackingStatus}</option>
@@ -1635,17 +1612,6 @@ class ViewTransactionsComponent extends Component {
       // });
 
       let transactionList = []
-
-      // this.props.alltransactions.filter((x) => x.TrackingStatus === this.state.currentlyChosen).map((y) => {
-      //   y.OrderProductDetail !== null && JSON.parse(y.OrderProductDetail).map((list) => {
-
-      //     console.log("CHECK", list)
-      //     console.log("CHECK 1", localStorage.getItem("id"))
-      //     console.log("CHECK 2", list.MerchantID === localStorage.getItem("id"))
-      //   })
-      // console.log(this.props.alltransactions.OrderProductDetail !== null)
-
-
       if (localStorage.getItem("roleid") === "1")
         this.props.alltransactions.filter((x) => x.TrackingStatus === this.state.currentlyChosen).map((y) => {
           transactionList.push(y)
@@ -1654,8 +1620,6 @@ class ViewTransactionsComponent extends Component {
         this.props.alltransactions !== null && this.props.alltransactions.map((list) => {
           list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter((y) => parseInt(y.MerchantID) === parseInt(localStorage.getItem("id")) && list.TrackingStatus === this.state.currentlyChosen).map((data) => {
             transactionList.push(list)
-            console.log("THIS IS ORDER", data)
-            console.log("THIS IS ORDER", list)
           })
         })
       }
