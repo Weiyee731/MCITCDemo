@@ -33,8 +33,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    callEndorseSupplier: (suppData) =>
-      dispatch(GitAction.CallEndorseSupplier(suppData)),
+    CallUpdateUserStatus: (suppData) =>
+      dispatch(GitAction.CallUpdateUserStatus(suppData)),
   };
 }
 
@@ -44,33 +44,38 @@ class SupplierDetailsComponent extends Component {
 
     // const [open, setOpen] = React.useState(false);
     this.state = {
-      supplierName: this.props.singleUserData.name.CompanyName,
-      supplierAddress: this.props.singleUserData.name.CompanyAddressLine1,
-      supplierCity: this.props.singleUserData.name.CompanyCity,
-      supplierState: this.props.singleUserData.name.CompanyState,
-      supplierPostal: this.props.singleUserData.name.CompanyPoscode,
-      supplierAddressLine2: this.props.singleUserData.name.CompanyAddressLine2,
-      supplierContact: this.props.singleUserData.name.CompanyContactNo,
-      supplierWebsite: this.props.singleUserData.name.CompanyWebsite,
-      supplierDescription: this.props.singleUserData.name.CompanyDescription,
+      supplierName: this.props.singleUserData.name.ShopName,
+      supplierAddress: this.props.singleUserData.name.ShopAddressLine1,
+      supplierCity: this.props.singleUserData.name.ShopCity,
+      supplierState: this.props.singleUserData.name.ShopState,
+      supplierPostal: this.props.singleUserData.name.ShopPoscode,
+      supplierAddressLine2: this.props.singleUserData.name.ShopAddressLine2,
+      supplierContact: this.props.singleUserData.name.ShopContactNo,
+      supplierWebsite: this.props.singleUserData.name.ShopWebsite,
+      supplierDescription: this.props.singleUserData.name.ShopDescription,
       repFirstName: this.props.singleUserData.name.FirstName,
       repLastName: this.props.singleUserData.name.LastName,
-      repContact: this.props.singleUserData.UserContactNo,
+      repContact: this.props.singleUserData.name.UserContactNo,
       open: false,
       index: 0,
       userId: this.props.singleUserData.name.UserID,
-      status: "pending",
+      status: "Pending",
     };
   }
-
-
 
   endorseProduct = (data) => {
     this.setState({
       status: data,
     });
+    // console.log("DATA", data)
+    // console.log("DATA", this.state)
 
-    this.props.callEndorseSupplier(this.state);
+    // this.props.callEndorseSupplier(this.state);
+
+    this.props.CallUpdateUserStatus({
+      USERID: this.state.userId,
+      USERSTATUS: data
+    })
   };
 
   handleChangeSlider = (event, value) => {
@@ -412,7 +417,7 @@ class SupplierDetailsComponent extends Component {
                         Cancel
                       </Button>
                       <Button
-                        onClick={this.endorseProduct.bind(this, "endorsed")}
+                        onClick={this.endorseProduct.bind(this, "Endorsed")}
                         color="primary"
                       >
                         Endorse
@@ -452,7 +457,7 @@ class SupplierDetailsComponent extends Component {
                   Cancel
                 </Button>
                 <Button
-                  onClick={this.endorseProduct.bind(this, "rejected")}
+                  onClick={this.endorseProduct.bind(this, "Rejected")}
                   style={{
                     background: "#507500",
                     color: "#fff",

@@ -259,7 +259,7 @@ const DeletableTableToolbar = (props) => {
   const { numSelected } = props;
 
   const onDeleteSupplier = () => {
-    props.ProductProps.CallDeleteSupplier(props.selectedData);
+    // props.ProductProps.CallDeleteSupplier(props.selectedData);
   };
 
   return (
@@ -575,20 +575,6 @@ class DisplayTable extends Component {
         this.state.rowsPerPage,
         this.props.Data.length - this.state.page * this.state.rowsPerPage
       );
-    // this.props.Data.map((d, i) => {
-    //   d.Picture = (
-    //     <div>
-    //       <img
-    //         height={50}
-    //         src={
-    //           JSON.parse(d.ProductImages)
-    //             ? JSON.parse(d.ProductImages)[0].ProductMediaUrl
-    //             : ""
-    //         }
-    //       />
-    //     </div>
-    //   );
-    // });
 
     const divStyle = {
       width: "100%",
@@ -657,15 +643,18 @@ class DisplayTable extends Component {
               placeholder="Search..."
               onChange={(e) => this.setState({ searchFilter: e.target.value })}
             />
-            {this.props.Data.filter(
-              (searchedItem) =>
-                searchedItem.FirstName.toLowerCase().includes(
-                  this.state.searchFilter
-                ) ||
-                searchedItem.LastName.toLowerCase().includes(
-                  this.state.searchFilter
-                )
-            ).map((filteredItem) => {
+            {this.props.Data
+            // .filter(
+            //   (searchedItem) =>
+            //     searchedItem.FirstName !== null && searchedItem.FirstName.toLowerCase().includes(
+            //       this.state.searchFilter
+            //     )
+            //     ||
+            //     searchedItem.LastName !== null && searchedItem.LastName.toLowerCase().includes(
+            //       this.state.searchFilter
+            //     )
+            // )
+            .map((filteredItem) => {
               filteredSupplier.push(filteredItem);
             })}
             <DeletableTable
@@ -721,15 +710,17 @@ class DisplayTable extends Component {
                       onRequestSort={this.handleRequestSort}
                       rowCount={this.props.Data.length}
                     />
-                    {this.props.Data.filter(
-                      (searchedItem) =>
-                        searchedItem.FirstName.toLowerCase().includes(
-                          this.state.searchFilter
-                        ) ||
-                        searchedItem.LastName.toLowerCase().includes(
-                          this.state.searchFilter
-                        )
-                    ).map((filteredItem) => {
+                    {this.props.Data
+                    // .filter(
+                    //   (searchedItem) =>
+                    //     searchedItem.FirstName.toLowerCase().includes(
+                    //       this.state.searchFilter
+                    //     ) ||
+                    //     searchedItem.LastName.toLowerCase().includes(
+                    //       this.state.searchFilter
+                    //     )
+                    // )
+                    .map((filteredItem) => {
                       filteredSupplier.push(filteredItem);
                     })}
                     <TableBody>
@@ -765,10 +756,10 @@ class DisplayTable extends Component {
                                 {row.UserContactNo}
                               </TableCell>
                               <TableCell align="left">
-                                {row.CompanyName}
+                                {row.ShopName}
                               </TableCell>
                               <TableCell align="left">
-                                {row.CompanyContactNo}
+                                {row.ShopContactNo}
                               </TableCell>
                             </TableRow>
                           );
@@ -855,14 +846,14 @@ class ViewSupplierComponent extends Component {
     })
   }
   componentDidUpdate() {
-    this.props.CallUserProfile({
-      TYPE: "Usertype",
-      TYPEVALUE: 15,
-      USERID: localStorage.getItem("id") ? localStorage.getItem("id") : 0,
-      USERROLEID: localStorage.getItem("roleid") ? localStorage.getItem("roleid") : 0,
-      LISTPERPAGE: 999,
-      PAGE: 1,
-    })
+    // this.props.CallUserProfile({
+    //   TYPE: "Usertype",
+    //   TYPEVALUE: 15,
+    //   USERID: localStorage.getItem("id") ? localStorage.getItem("id") : 0,
+    //   USERROLEID: localStorage.getItem("roleid") ? localStorage.getItem("roleid") : 0,
+    //   LISTPERPAGE: 999,
+    //   PAGE: 1,
+    // })
   }
   // componentWillUnmount() {
   //   clearImmediate(this.props.allUser)

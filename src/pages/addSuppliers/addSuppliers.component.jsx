@@ -49,8 +49,8 @@ function mapDispatchToProps(dispatch) {
     CallAllProductCategoryListing: () =>
       dispatch(GitAction.CallAllProductCategoryListing()),
     callAddProduct: (prodData) => dispatch(GitAction.CallAddProduct(prodData)),
-    callAllSupplierByUserStatus: (suppData) =>
-      dispatch(GitAction.CallAllSupplierByUserStatus(suppData)),
+    // callAllSupplierByUserStatus: (suppData) =>
+    //   dispatch(GitAction.CallAllSupplierByUserStatus(suppData)),
     callCheckProduct: (prodData) =>
       dispatch(GitAction.CallCheckProduct(prodData)),
     callAddProductMedia: (prodData) =>
@@ -223,7 +223,7 @@ class AddSuppliersComponent extends Component {
   constructor(props) {
     super(props);
     this.props.CallAllProductCategoryListing();
-    this.props.callAllSupplierByUserStatus("endorsed");
+    // this.props.callAllSupplierByUserStatus("endorsed");
     this.handlePrevClickButton = this.handlePrevClickButton.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
@@ -311,6 +311,11 @@ class AddSuppliersComponent extends Component {
       selectedItem: "Choose a Category",
       menuPosition: null,
       buttonDisabled: true,
+
+      isEditSupplier: false,
+      isEditContact: false,
+      isEditCompanyName: false,
+      isEditCompanyNumber: false
     };
   }
 
@@ -725,6 +730,7 @@ class AddSuppliersComponent extends Component {
     if (data === "supplierName") {
       this.setState({
         supplierName: e.target.value,
+        isEditSupplier: true
       });
 
       setTimeout(
@@ -736,14 +742,17 @@ class AddSuppliersComponent extends Component {
     } else if (data === "contactNumber") {
       this.setState({
         contactNumber: e.target.value,
+        isEditContact: true
       });
     } else if (data === "companyName") {
       this.setState({
         companyName: e.target.value,
+        isEditCompanyName: true
       });
     } else if (data === "companyNumber") {
       this.setState({
         companyNumber: e.target.value,
+        isEditCompanyNumber: true
       });
     }
   }
@@ -978,7 +987,7 @@ class AddSuppliersComponent extends Component {
     const query = queryString.parse(this.props.location.search);
     toast.success(query);
     const barcode = query.barcode;
-    toast.success("barcode", barcode);
+    // toast.success("barcode", barcode);
     const previewStyle = {
       display: "inline",
       width: 60,
@@ -1177,6 +1186,10 @@ class AddSuppliersComponent extends Component {
         </Button>
         <div style={Object.assign({})}>
           <Card style={cardStyle}>
+            {/* isEditSupplier
+  isEditContact
+  isEditCompanyName
+  isEditCompanyNumber */}
             <CardContent>
               <TextField
                 id="supplierName"
@@ -1190,7 +1203,7 @@ class AddSuppliersComponent extends Component {
                 style={{ width: "100%" }}
               />
               <br />
-              {this.state.productNameEmpty && (
+              {this.state.isEditSupplier === true && this.state.productNameEmpty && (
                 <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
                   Supplier name cannot be empty.
                 </p>
@@ -1209,7 +1222,7 @@ class AddSuppliersComponent extends Component {
                 style={{ width: "100%" }}
               />
               <br />
-              {this.state.productNameEmpty && (
+              {this.state.isEditContact === true && this.state.productNameEmpty && (
                 <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
                   Contact Number cannot be empty.
                 </p>
@@ -1228,7 +1241,7 @@ class AddSuppliersComponent extends Component {
                 style={{ width: "100%" }}
               />
               <br />
-              {this.state.productNameEmpty && (
+              {this.state.isEditCompanyName === true && this.state.productNameEmpty && (
                 <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
                   Company name cannot be empty.
                 </p>
@@ -1247,7 +1260,7 @@ class AddSuppliersComponent extends Component {
                 style={{ width: "100%" }}
               />
               <br />
-              {this.state.productNameEmpty && (
+              {this.state.isEditCompanyNumber === true && this.state.productNameEmpty && (
                 <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
                   Company number cannot be empty.
                 </p>
@@ -1268,7 +1281,7 @@ class AddSuppliersComponent extends Component {
               <br />
               {this.state.productNameEmpty && (
                 <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                  Company number cannot be empty.
+                  Company address cannot be empty.
                 </p>
               )}
               {this.state.name && checkDuplicate}
@@ -1293,10 +1306,6 @@ class AddSuppliersComponent extends Component {
             </CardContent>
           </Card>
         </div>
-
-
-
-
 
         {/*=================== Sliders ===================*/}
 

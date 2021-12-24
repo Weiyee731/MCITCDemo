@@ -151,7 +151,7 @@ class EditShopProfile extends Component {
         }
       }
       let ratingCount = []
-      if (this.props.productsListing !== null) {
+      if (this.props.productsListing !== null && this.props.productsListing.length > 0) {
         JSON.parse(this.props.productsListing).map((X) => {
           console.log("CHECK", X)
           ratingCount.push(X.ProductRating)
