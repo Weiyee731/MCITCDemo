@@ -312,8 +312,6 @@ class DisplayTable extends Component {
   };
 
   onRowClick = (event, row, index) => {
-
-    console.log("ROW", row)
     this.setState({
       userId: row.UserID,
       name: row.ShopName,
@@ -409,6 +407,8 @@ class DisplayTable extends Component {
     };
 
     const TableHeading = () => {
+
+      // let filteredList = []
       return (
         <>
           <DisplayTableHead
@@ -422,7 +422,10 @@ class DisplayTable extends Component {
           {
             this.props.Data.length > 0 && this.props.Data.filter((searchedItem) => (searchedItem.FirstName + " " + searchedItem.LastName).toLowerCase()
               .includes(this.state.searchFilter.toLowerCase()))
-              .map((filteredItem) => { filteredProduct.push(filteredItem) })
+              .map((filteredItem) => {
+                if ((filteredProduct.filter((x) => x.UserID === filteredItem.UserID)).length === 0)
+                  filteredProduct.push(filteredItem)
+              })
           }
         </>
       )
@@ -444,8 +447,6 @@ class DisplayTable extends Component {
               const isItemSelected = this.isSelected(
                 row.PromotionID
               );
-              // const labelId = `enhanced-table-checkbox-${index}`;
-
               return (
                 <TableRow
                   hover
@@ -571,7 +572,7 @@ class DisplayTable extends Component {
                       </Paper>
                     </TabPanel>
 
-                    
+
                     <TabPanel value="2" index={2}>
                       <Paper style={divStyle}>
                         <TableContainer>
@@ -664,7 +665,6 @@ class ViewMerchantsComponent extends Component {
     //   UserID: window.localStorage.getItem("id"),
     // });
     this.props.CallMerchants({
-
       type: "Status",
       typeValue: "-",
       USERID: localStorage.getItem("id") ? localStorage.getItem("id") : 0,
@@ -675,8 +675,6 @@ class ViewMerchantsComponent extends Component {
   }
 
   render() {
-
-    console.log("merchant", this.props)
     return (
       <div style={{ width: "100%" }}>
         <DisplayTable

@@ -495,6 +495,31 @@ class DisplayTable extends Component {
       )
     }
 
+    const productListing = (product) => {
+      return (
+        <div className="col-8" style={{ paddingTop: "10px" }}>
+          <div className="row">
+            <div className="col-3" style={{ width: "10%" }}>
+              <img
+                height={60}
+                src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
+                onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+                alt={product.ProductName}
+              />
+            </div>
+            <div className="col-9" style={{ width: "40%" }}>
+              <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
+              <div style={{ fontSize: "11px" }}>  Variation : {product.ProductVariationValue}  </div>
+              <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
+              <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
+              <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
+              <div style={{ fontSize: "13px", fontWeight: "bold" }}>  Total Paid : {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}  / Qty ({product.ProductQuantity})</div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div>
         {this.state.detailsShown ? (
@@ -579,20 +604,26 @@ class DisplayTable extends Component {
                                 <TableCell align="left">
                                   {row.OrderProductDetail ? (
                                     <p>
-                                      {JSON.parse(row.OrderProductDetail).length}
+                                      {row.OrderProductDetail && (JSON.parse(row.OrderProductDetail)
+                                        .filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")))).length}
+                                      {/* {
+                                        localStorage.getItem("roleid") === "16" ?
+                                          row.OrderProductDetail && (JSON.parse(row.OrderProductDetail).filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")))).length
+                                          :
+                                          row.OrderProductDetail && JSON.parse(row.OrderProductDetail).length
+                                      } */}
+
+                                      {/* {JSON.parse(row.OrderProductDetail).length} */}
                                     </p>
                                   ) : (
                                     0
                                   )}
                                 </TableCell>
                               </TableRow>
-                              {console.log("CHECKING", this.state)}
-
                               <TableRow className="subTable">
                                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                                   <Collapse in={this.state.openId.length > 0 && this.state.openId.filter((x) => x === row.OrderID).length > 0} timeout="auto" unmountOnExit>
                                     <Box margin={2}>
-                                      {console.log("THIS.PROPS", this.props)}
                                       <div className="row" style={{ display: "flex" }}>
                                         <div className="subContainer col-10"><p className="subHeading">User Details</p></div>
                                       </div>
@@ -622,31 +653,27 @@ class DisplayTable extends Component {
                                             <div size="small" aria-label="products">
                                               <div className="row" style={{ borderTop: "4px solid #fff", paddingTop: "5px", paddingBottom: "5px" }}>
                                                 {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
+                                                  .filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")))
                                                   .map((product, i) => (
-                                                    <>
-                                                      <div className="col-8" style={{ paddingTop: "10px" }}>
-                                                        <div className="row">
-                                                          <div className="col-3" style={{ width: "10%" }}>
-                                                            <img
-                                                              height={60}
-                                                              src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
-                                                              onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-                                                              alt={product.ProductName}
-                                                            />
-                                                          </div>
-                                                          <div className="col-9" style={{ width: "40%" }}>
-                                                            <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
-                                                            <div style={{ fontSize: "11px" }}>  Variation : {product.ProductVariationValue}  </div>
-                                                            <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
-                                                            <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
-                                                            <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
-                                                            <div style={{ fontSize: "13px", fontWeight: "bold" }}>  Total Paid : {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}  / Qty ({product.ProductQuantity})</div>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </>
+                                                    productListing(product)
                                                   ))
                                                   : ""}
+                                                {/* {
+                                                  localStorage.getItem("roleid") === 16 ?
+                                                    (row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
+                                                      .filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")))
+                                                      .map((product, i) => (
+                                                        productListing(product)
+                                                      ))
+                                                      : "")
+                                                    :
+                                                    (row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
+                                                      .map((product, i) => (
+                                                        console.log("productsss", product)
+                                                        // productListing(product)
+                                                      ))
+                                                      : "")
+                                                } */}
                                               </div>
                                             </div>
                                           </>
@@ -748,11 +775,6 @@ class MerchantDetailsComponent extends Component {
     this.props.CallGetTransactionStatus();
     this.props.CallGetTransaction("In Cart");
 
-    // this.props.CallAllProductsByProductStatus({
-    //   ProductStatus: this.state.productStatus,
-    //   Username: window.localStorage.getItem("id"),
-    // });
-
     this.props.CallGetMerchantsOrders({
       trackingStatus: this.state.trackingStatus,
       UserID: window.localStorage.getItem("id"),
@@ -804,7 +826,6 @@ class MerchantDetailsComponent extends Component {
   }
   render() {
 
-    console.log("DATA22", this.props.data)
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -841,6 +862,114 @@ class MerchantDetailsComponent extends Component {
       this.props.setDetailsShown(false);
     };
 
+    const UserListing = () => {
+      return (
+        <>
+          <h5>Representative Details</h5>
+          <div style={{ display: "flex", width: "100%" }}>
+            <FormControl style={{ width: "100%", marginRight: "5px" }}>
+              <InputLabel htmlFor="component-simple">
+                Representative First Name
+              </InputLabel>
+              <Input
+                id="component-simple"
+                value={this.state.firstName}
+                onChange={this.handleChange}
+                readOnly
+              />
+            </FormControl>
+            <FormControl style={{ width: "100%", marginLeft: "5px" }}>
+              <InputLabel htmlFor="component-simple">
+                Representative Last Name
+              </InputLabel>
+              <Input
+                id="component-simple"
+                value={this.state.lastName}
+                onChange={this.handleChange}
+                readOnly
+              />
+            </FormControl>
+          </div>
+          <h5 style={{ marginTop: "5px" }}>Company Details</h5>
+          <FormControl style={{ width: "100%", marginTop: "5px" }}>
+            <InputLabel htmlFor="component-simple">Company Name</InputLabel>
+            <Input
+              id="component-simple"
+              value={this.state.companyName}
+              onChange={this.handleChange}
+              readOnly
+            />
+          </FormControl>
+          <FormControl style={{ width: "100%", marginTop: "5px" }}>
+            <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
+            <Input
+              id="component-simple"
+              value={this.state.companyContactNo}
+              onChange={this.handleChange}
+              readOnly
+            />
+          </FormControl>
+          <FormControl style={{ width: "100%", marginTop: "5px" }}>
+            <InputLabel htmlFor="component-simple">Website</InputLabel>
+            <Input
+              id="component-simple"
+              value={this.state.companyWebsite}
+              onChange={this.handleChange}
+              readOnly
+            />
+          </FormControl>
+          <FormControl style={{ width: "100%", marginTop: "5px" }}>
+            <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
+            <Input
+              id="component-simple"
+              value={this.state.companyAddressLine1}
+              onChange={this.handleChange}
+              readOnly
+            />
+          </FormControl>
+          <FormControl style={{ width: "100%", marginTop: "5px" }}>
+            <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
+            <Input
+              id="component-simple"
+              value={this.state.companyAddressLine2}
+              onChange={this.handleChange}
+              readOnly
+            />
+          </FormControl>
+          <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
+            <FormControl style={{ width: "100%", marginRight: "5px" }}>
+              <InputLabel htmlFor="component-simple">City</InputLabel>
+              <Input
+                id="component-simple"
+                value={this.state.companyCity}
+                onChange={this.handleChange}
+                readOnly
+              />
+            </FormControl>
+            <FormControl style={{ width: "100%", marginLeft: "5px" }}>
+              <InputLabel htmlFor="component-simple">State</InputLabel>
+              <Input
+                id="component-simple"
+                value={this.state.companyState}
+                onChange={this.handleChange}
+                readOnly
+              />
+            </FormControl>
+          </div>
+          <TextField
+            style={{ width: "100%", marginTop: "5px" }}
+            id="outlined-multiline-flexible"
+            label="Company Description"
+            multiline
+            maxRows={4}
+            value={this.state.companyDescription}
+            onChange={this.handleChange}
+            inputProps={{ readOnly: true }}
+          />
+        </>
+      )
+    }
+
     let allTransactionStatusData = this.props.alltransactionstatus
       ? Object.keys(this.props.alltransactionstatus).map((key) => {
         return this.props.alltransactionstatus[key];
@@ -853,7 +982,6 @@ class MerchantDetailsComponent extends Component {
           <Tab
             label={status.TrackingStatus}
             {...a11yProps(i)}
-          // onClick={changeData.bind(this, status.TrackingStatus)}
           />
         );
       });
@@ -895,111 +1023,9 @@ class MerchantDetailsComponent extends Component {
                       <Button variant="outlined" size="medium" className="float-right-accept-button" onClick={() => this.handleClick("endorse")}>Endorse</Button>
                       <Button variant="outlined" size="medium" className="float-right-button" onClick={() => this.handleClick("revise")}>Revise merchant</Button>
                     </>
-
                 }
-                <h5>Representative Details</h5>
-                <div style={{ display: "flex", width: "100%" }}>
-                  <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                    <InputLabel htmlFor="component-simple">
-                      Representative First Name
-                    </InputLabel>
-                    <Input
-                      id="component-simple"
-                      value={this.state.firstName}
-                      onChange={this.handleChange}
-                      readOnly
-                    />
-                  </FormControl>
-                  <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                    <InputLabel htmlFor="component-simple">
-                      Representative Last Name
-                    </InputLabel>
-                    <Input
-                      id="component-simple"
-                      value={this.state.lastName}
-                      onChange={this.handleChange}
-                      readOnly
-                    />
-                  </FormControl>
-                </div>
-                <h5 style={{ marginTop: "5px" }}>Company Details</h5>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Company Name</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyName}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyContactNo}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Website</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyWebsite}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyAddressLine1}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyAddressLine2}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
-                  <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                    <InputLabel htmlFor="component-simple">City</InputLabel>
-                    <Input
-                      id="component-simple"
-                      value={this.state.companyCity}
-                      onChange={this.handleChange}
-                      readOnly
-                    />
-                  </FormControl>
-                  <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                    <InputLabel htmlFor="component-simple">State</InputLabel>
-                    <Input
-                      id="component-simple"
-                      value={this.state.companyState}
-                      onChange={this.handleChange}
-                      readOnly
-                    />
-                  </FormControl>
-                </div>
-                <TextField
-                  style={{ width: "100%", marginTop: "5px" }}
-                  id="outlined-multiline-flexible"
-                  label="Company Description"
-                  multiline
-                  maxRows={4}
-                  value={this.state.companyDescription}
-                  onChange={this.handleChange}
-                  inputProps={{ readOnly: true }}
-                />
+                {UserListing()}
                 <h5 style={{ marginTop: "15px", marginBottom: "15px" }}>Purchase Order History</h5>
-                {/* <DisplayTable Data={JSON.parse(this.props.data.promoCodeDetail)} /> */}
                 <div style={{ width: "100%" }}>
                   {!this.state.detailsShown ? (
                     <AppBar position="static" color="default">
@@ -1041,108 +1067,7 @@ class MerchantDetailsComponent extends Component {
                       <Button variant="outlined" size="medium" className="float-right-button" onClick={() => this.handleClick("revise")}>Revise Merchant</Button>
                     </>
                 }
-
-                <h5>Representative Details</h5>
-                <div style={{ display: "flex", width: "100%" }}>
-                  <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                    <InputLabel htmlFor="component-simple">
-                      Representative First Name
-                    </InputLabel>
-                    <Input
-                      id="component-simple"
-                      value={this.state.firstName}
-                      onChange={this.handleChange}
-                      readOnly
-                    />
-                  </FormControl>
-                  <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                    <InputLabel htmlFor="component-simple">
-                      Representative Last Name
-                    </InputLabel>
-                    <Input
-                      id="component-simple"
-                      value={this.state.lastName}
-                      onChange={this.handleChange}
-                      readOnly
-                    />
-                  </FormControl>
-                </div>
-                <h5 style={{ marginTop: "5px" }}>Company Details</h5>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Company Name</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyName}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyContactNo}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Website</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyWebsite}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyAddressLine1}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <FormControl style={{ width: "100%", marginTop: "5px" }}>
-                  <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
-                  <Input
-                    id="component-simple"
-                    value={this.state.companyAddressLine2}
-                    onChange={this.handleChange}
-                    readOnly
-                  />
-                </FormControl>
-                <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
-                  <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                    <InputLabel htmlFor="component-simple">City</InputLabel>
-                    <Input
-                      id="component-simple"
-                      value={this.state.companyCity}
-                      onChange={this.handleChange}
-                      readOnly
-                    />
-                  </FormControl>
-                  <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                    <InputLabel htmlFor="component-simple">State</InputLabel>
-                    <Input
-                      id="component-simple"
-                      value={this.state.companyState}
-                      onChange={this.handleChange}
-                      readOnly
-                    />
-                  </FormControl>
-                </div>
-                <TextField
-                  style={{ width: "100%", marginTop: "5px" }}
-                  id="outlined-multiline-flexible"
-                  label="Company Description"
-                  multiline
-                  maxRows={4}
-                  value={this.state.companyDescription}
-                  onChange={this.handleChange}
-                  inputProps={{ readOnly: true }}
-                />
+                {UserListing()}
               </CardContent>
             </Card></div>)}
 

@@ -32,7 +32,7 @@ function load() {
 
 const rootEpic = combineEpics(
   //==================USER==========================//
-  gitEpic.getAllUserByTypeId,
+  // gitEpic.getAllUserByTypeId,
   gitEpic.LoginUser,
   gitEpic.LogoutUser,
   gitEpic.RegisterUser,

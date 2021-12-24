@@ -19,25 +19,23 @@ import SearchBox from "../../components/SearchBox/SearchBox";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import PropTypes from "prop-types";
 import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
 import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
-import DeleteIcon from "@material-ui/icons/Delete";
-import TransactionDetails from "../transactionDetails/transactionDetails.component";
 import Box from "@material-ui/core/Box";
 import Tab from "@material-ui/core/Tab";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
+import TextField from "@material-ui/core/TextField";
+import Logo from "../../assets/Emporia.png";
+import Collapse from "@material-ui/core/Collapse";
 
 function mapStateToProps(state) {
   return {
     allmerchantorders: state.counterReducer["merchantOrders"],
-    allpromocodes: state.counterReducer["promoCodes"],
-    allstocks: state.counterReducer["products"],
-    // alltransactions: state.counterReducer["transactions"],
     alltransactionstatus: state.counterReducer["transactionStatus"],
-    currentUser: state.counterReducer["currentUser"]
+    currentUser: state.counterReducer["currentUser"],
+    countries: state.counterReducer["countries"],
+    allmerchants: state.counterReducer["merchant"],
   };
 }
 
@@ -47,13 +45,11 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallGetMerchantsOrders(propsData)),
     CallGetTransaction: (transactionData) =>
       dispatch(GitAction.CallGetTransaction(transactionData)),
-    CallDeletePromoCode: (promoCodeData) =>
-      dispatch(GitAction.CallDeletePromoCode(promoCodeData)),
-    // CallAllProductsByProductStatus: (prodData) =>
-    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)),
     CallGetTransactionStatus: () =>
       dispatch(GitAction.CallGetTransactionStatus()),
     CallUserProfile: (prodData) => dispatch(GitAction.CallUserProfile(prodData)),
+    CallCountry: () => dispatch(GitAction.CallCountry()),
+    CallMerchants: (prodData) => dispatch(GitAction.CallMerchants(prodData)),
   };
 }
 function descendingComparator(a, b, orderBy) {
@@ -90,11 +86,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     margin: "auto",
     padding: "1%",
-    // paddingRight: "1%",
     marginTop: "15px",
   },
   table: {
-    // margin: "20px",
     minWidth: 750,
   },
   visuallyHidden: {
@@ -158,11 +152,8 @@ const headCells = [
 
 function DisplayTableHead(props) {
   const {
-    onSelectAllClick,
     order,
     orderBy,
-    numSelected,
-    rowCount,
     onRequestSort,
   } = props;
   const createSortHandler = (property) => (event) => {
@@ -202,70 +193,9 @@ DisplayTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
-};
-
-const DeletableTableToolbar = (props) => {
-  const classes = useStyles();
-
-  const { numSelected } = props;
-
-  const onDeleteProduct = () => {
-    console.log(props.selectedData);
-    props.ProductProps.CallDeletePromoCode(props.selectedData);
-    setTimeout(
-      function () {
-        window.location.reload(false);
-      }.bind(this),
-      500
-    );
-  };
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component={'div'}
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          // variant="h6"
-          id="tableTitle"
-          component={'div'}
-        >
-          Please select the promo codes that you want to delete.
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton
-            aria-label="delete"
-            onClick={() => {
-              onDeleteProduct();
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        ""
-      )}
-    </Toolbar>
-  );
 };
 
 const DisplayTableToolbar = (props) => {
@@ -275,9 +205,6 @@ const DisplayTableToolbar = (props) => {
   return <Toolbar className={clsx(classes.root)}></Toolbar>;
 };
 
-DeletableTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
 
 DisplayTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
@@ -295,52 +222,21 @@ class DisplayTable extends Component {
       dense: false,
       rowsPerPage: 5,
       detailsShown: false,
-      deleteActive: false,
       searchFilter: "",
+      open: false,
+      openId: [],
     };
 
     this.handleRequestSort = this.handleRequestSort.bind(this);
-    this.onRowClick = this.onRowClick.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeDense = this.handleChangeDense.bind(this);
-    this.isSelected = this.isSelected.bind(this);
   }
 
   handleRequestSort = (event, property) => {
     const isAsc = this.state.orderBy === property && this.state.order === "asc";
     this.setState({ order: isAsc ? "desc" : "asc" });
     this.setState({ orderBy: property });
-  };
-
-  onRowClick = (event, row, index) => {
-    this.setState({
-      name: row.OrderName,
-      PaymentMethod: row.PaymentMethod,
-      TrackingStatus: row.TrackingStatus,
-      orderProductDetail: row.OrderProductDetail,
-      username: row.Username,
-      orderID: row.OrderID,
-      row: index,
-      fullName: row.UserFullName,
-      phoneNumber: row.UserContactNo,
-      email: row.UserEmailAddress,
-      address: row.UserAddressLine1,
-      detailsShown: false,
-    });
-    console.log(this.props.Data[index]);
-
-    if (this.state.detailsShown) {
-      this.setState({
-        detailsShown: false,
-      });
-      //   this.props.setTabsHidden(false);
-    } else {
-      this.setState({
-        detailsShown: true,
-      });
-      //   this.props.setTabsHidden(true);
-    }
   };
 
   handleChangePage = (event, newPage) => {
@@ -356,24 +252,22 @@ class DisplayTable extends Component {
     this.setState({ dense: event.target.checked });
   };
 
-  isSelected = (name) => {
-    // this.state.selected.indexOf(name) !== -1;
-  };
+  setOpen = (row) => {
+    let listing = this.state.openId
+    if (listing.length === 0)
+      listing.push(row.OrderID)
+    else {
+      if ((listing.filter((x) => x === row.OrderID)).length > 0) {
+        listing = listing.filter((x) => x !== row.OrderID)
+      }
+      else {
+        listing.push(row.OrderID)
+      }
 
-  setDetailsShown = (value) => {
-    //   if (this.state.detailsShown == true) {
-    //     this.setState({
-    //       detailsShown: false,
-    //     });
-    //   } else if (this.state.detailsShown == false) {
-    //     this.setState({
-    //       detailsShown: true,
-    //     });
-    //   }
-    this.setState({
-      detailsShown: value,
-    });
-  };
+    }
+    this.setState({ openId: listing })
+
+  }
 
   render() {
     const emptyRows =
@@ -408,73 +302,127 @@ class DisplayTable extends Component {
       width: 1,
     };
 
-    return (
-      <div style={{ margin: "2%" }}>
-        {this.state.detailsShown ? (
-          <TransactionDetails
-            data={this.state}
-            data2={this.props}
-            history={this.props.history}
-            forMerchants={true}
-            setDetailsShown={this.setDetailsShown}
-          />
-        ) : (
-          <div>
-            <SearchBox
-              style={divStyle}
-              placeholder="Search..."
-              onChange={(e) => this.setState({ searchFilter: e.target.value })}
+    const UserDetailListing = (leftTitle, leftValue, rightTitle, rightValue) => {
+      return (
+        <div className="row" style={{ display: "flex", paddingTop: "10px" }}>
+          <div className="subContainer col-6">
+            <div className="col-3" style={{ textAlign: "left", paddingLeft: "0px" }}>
+              <p className="subTextLeft">{leftTitle}</p>
+            </div>
+            <div className="col-9">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={leftValue}
+                disabled={true}
+              />
+            </div>
+          </div>
+          <div className="subContainer col-6">
+            <div className="col-3" style={{ textAlign: "left" }}>
+              <p className="subTextLeft">{rightTitle}</p>
+            </div>
+            <div className="col-9">
+              <TextField
+                id="outlined-size-small" size="small"
+                width="100%"
+                className="font"
+                variant="outlined"
+                value={rightValue}
+                disabled={true}
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    const UserSmallColListing = (Title, Value) => {
+      return (
+        <div className="subContainer col-3">
+          <div className="col-2" style={{ textAlign: "left", paddingLeft: "0px" }}>
+            <p className="subTextLeft">{Title}</p>
+          </div>
+          <div className="col-10">
+            <TextField
+              id="outlined-size-small" size="small"
+              width="100%"
+              className="font"
+              variant="outlined"
+              value={Value}
+              disabled={true}
             />
+          </div>
+        </div>
+      )
+    }
 
-            <div>
-              <Paper style={divStyle}>
-                <TableContainer>
-                  <Table
-                    className={table}
-                    aria-labelledby="tableTitle"
-                    size={this.state.dense ? "small" : "medium"}
-                    aria-label="enhanced table"
-                  >
-                    <DisplayTableHead
-                      classes={classes2}
-                      numSelected={this.state.selected.length}
-                      order={this.state.order}
-                      orderBy={this.state.orderBy}
-                      onRequestSort={this.handleRequestSort}
-                      rowCount={this.props.Data.length}
-                    />
-                    {this.props.Data.filter((searchedItem) =>
-                      searchedItem.OrderName.toLowerCase().includes(
-                        this.state.searchFilter
-                      )
-                    ).map((filteredItem) => {
-                      filteredProduct.push(filteredItem);
-                    })}
-                    <TableBody>
-                      {stableSort(
-                        filteredProduct,
-                        getComparator(this.state.order, this.state.orderBy)
-                      )
-                        .slice(
-                          this.state.page * this.state.rowsPerPage,
-                          this.state.page * this.state.rowsPerPage +
-                          this.state.rowsPerPage
-                        )
-                        .map((row, index) => {
-                          const isItemSelected = this.isSelected(row.Username);
-                          const labelId = `enhanced-table-checkbox-${index}`;
+    let merchantID = []
+    let merchantList = []
 
-                          return (
+    const getMerchantNum = (row) => {
+      row !== null && JSON.parse(row).map((X) => {
+        merchantID.push(X)
+      })
+      merchantList = merchantID.filter((ele, ind) => ind === merchantID.findIndex(elem => elem.MerchantID === ele.MerchantID))
+    }
+
+    return (
+      <div>
+        <div>
+          <SearchBox
+            style={divStyle}
+            placeholder="Search Order Number..."
+            onChange={(e) => this.setState({ searchFilter: e.target.value })}
+          />
+
+          <div>
+            <Paper style={divStyle}>
+              <TableContainer>
+                <Table
+                  className={table}
+                  aria-labelledby="tableTitle"
+                  size={this.state.dense ? "small" : "medium"}
+                  aria-label="enhanced table"
+                >
+                  <DisplayTableHead
+                    classes={classes2}
+                    numSelected={this.state.selected.length}
+                    order={this.state.order}
+                    orderBy={this.state.orderBy}
+                    onRequestSort={this.handleRequestSort}
+                    rowCount={this.props.Data.length}
+                  />
+                  {this.props.Data.filter((searchedItem) =>
+                    searchedItem.OrderName.toLowerCase().includes(
+                      this.state.searchFilter.toLowerCase()
+                    )
+                  ).map((filteredItem) => {
+                    filteredProduct.push(filteredItem);
+                  })}
+                  <TableBody>
+                    {stableSort(
+                      filteredProduct,
+                      getComparator(this.state.order, this.state.orderBy)
+                    )
+                      .slice(
+                        this.state.page * this.state.rowsPerPage,
+                        this.state.page * this.state.rowsPerPage +
+                        this.state.rowsPerPage
+                      )
+                      .map((row, index) => {
+                        return (
+                          <>
                             <TableRow
                               hover
                               onClick={(event) =>
-                                this.onRowClick(event, row, index)
+                                this.setOpen(row)
                               }
                               role="checkbox"
-                              aria-checked={isItemSelected}
                               tabIndex={-1}
                               key={row.Username}
-                              selected={isItemSelected}
                             >
                               <TableCell align="center">
                                 {row.OrderName}
@@ -496,33 +444,116 @@ class DisplayTable extends Component {
                                 )}
                               </TableCell>
                             </TableRow>
-                          );
-                        })}
-                      {emptyRows > 0 && (
-                        <TableRow
-                          style={{
-                            height: (this.state.dense ? 33 : 53) * emptyRows,
-                          }}
-                        >
-                          <TableCell colSpan={6} />
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={this.props.Data.length}
-                  rowsPerPage={this.state.rowsPerPage}
-                  page={this.state.page}
-                  onPageChange={this.handleChangePage}
-                  onRowsPerPageChange={this.handleChangeRowsPerPage}
-                />
-              </Paper>
-            </div>
+                            {getMerchantNum(row.OrderProductDetail)}
+                            <TableRow className="subTable">
+                              <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                                <Collapse in={this.state.openId.length > 0 && this.state.openId.filter((x) => x === row.OrderID).length > 0} timeout="auto" unmountOnExit>
+                                  <Box margin={2}>
+                                    <div className="row" style={{ display: "flex" }}>
+                                      <div className="subContainer col-10"><p className="subHeading">User Details</p></div>
+                                    </div>
+                                    {UserDetailListing("Full Name", row.FirstName, "Contact Number", row.UserContactNo)}
+                                    {UserDetailListing("Email", row.UserEmailAddress, "Method", row.PickUpInd === 1 ? "Self Pick Up" : "Delivery")}
+                                    {
+                                      row.PickUpInd === 0 &&
+                                      <>
+                                        {UserDetailListing("Address Line 1", row.UserAddressLine1, "Address Line 2", row.UserAddressLine2)}
+                                        <div className="row" style={{ display: "flex" }}>
+                                          {UserSmallColListing("City", row.UserCity)}
+                                          {UserSmallColListing("State", row.UserState)}
+                                          {UserSmallColListing("Poscode", row.UserPoscode)}
+                                          {
+                                            this.props.ProductProps.countries.length > 0 && this.props.ProductProps.countries.filter((X) => X.CountryId === row.CountryID).map((y) => {
+                                              return (UserSmallColListing("Country", y.CountryName))
+                                            })
+                                          }
+                                        </div>
+                                      </>
+                                    }
+                                    <p className="subHeading">Products Ordered</p>
+                                    {
+                                      row.OrderProductDetail !== null ? (
+                                        <>
+                                          <div size="small" aria-label="products">
+                                            {
+                                              merchantList.length > 0 && merchantList.map((listing) => {
+                                                return (
+                                                  <>
+                                                    <div>
+                                                      {this.props.ProductProps.allmerchants.length > 0 && this.props.ProductProps.allmerchants.filter((X) => X.UserID === listing.MerchantID).map((merchant) => {
+                                                        return (<span style={{ fontWeight: "bold", fontSize: "15px", color: "green" }}>  {merchant.ShopName}  </span>)
+                                                      })}
+                                                    </div>
+                                                    <div className="row" style={{ borderTop: "4px solid #fff", paddingTop: "5px", paddingBottom: "5px" }}>
+                                                      {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
+                                                        .filter((x) => x.MerchantID === listing.MerchantID)
+                                                        .map((product, i) => (
+                                                          <>
+                                                            <div className="col-8" style={{ paddingTop: "10px" }}>
+                                                              <div className="row">
+                                                                <div className="col-3" style={{ width: "10%" }}>
+                                                                  <img
+                                                                    height={60}
+                                                                    src={product.ProductImage !== null ? JSON.parse(product.ProductImages)[0] : Logo}
+                                                                    onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+                                                                    alt={product.ProductName}
+                                                                  />
+                                                                </div>
+                                                                <div className="col-9" style={{ width: "40%" }}>
+                                                                  <div style={{ fontWeight: "bold", fontSize: "13px" }}>  {product.ProductName} </div>
+                                                                  <div style={{ fontSize: "11px" }}>  Variation : {product.ProductVariationValue}  </div>
+                                                                  <div style={{ fontSize: "11px" }}>  SKU : {product.SKU}  </div>
+                                                                  <div style={{ fontSize: "11px" }}>  Dimension : {product.ProductDimensionWidth}m (W) X {product.ProductDimensionHeight}m (H) X {product.ProductDimensionDeep}m (L) </div>
+                                                                  <div style={{ fontSize: "11px" }}>  Weight : {product.ProductWeight} kg   </div>
+                                                                  <div style={{ fontSize: "13px", fontWeight: "bold" }}>  Total Paid : {(product.ProductQuantity * product.ProductVariationPrice).toFixed(2)}  / Qty ({product.ProductQuantity})</div>
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                          </>
+                                                        ))
+                                                        : ""}
+                                                    </div>
+                                                  </>
+                                                )
+
+                                              })
+                                            }
+                                          </div>
+                                        </>
+                                      ) : ""
+                                    }
+                                  </Box>
+                                </Collapse>
+                              </TableCell>
+                            </TableRow >
+                          </>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow
+                        style={{
+                          height: (this.state.dense ? 33 : 53) * emptyRows,
+                        }}
+                      >
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={this.props.Data.length}
+                rowsPerPage={this.state.rowsPerPage}
+                page={this.state.page}
+                onPageChange={this.handleChangePage}
+                onRowsPerPageChange={this.handleChangeRowsPerPage}
+              />
+            </Paper>
           </div>
-        )}
+        </div>
+        )
       </div>
     );
   }
@@ -532,17 +563,10 @@ class UserDetailsComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // companyName: this.props.data.name,
-      userContact: this.props.data.userContact,
-      firstName: this.props.data.firstName,
-      lastName: this.props.data.lastName,
-      companyDescription: this.props.data.companyDescription,
-      companyWebsite: this.props.data.companyWebsite,
-      companyAddressLine1: this.props.data.companyAddressLine1,
-      companyAddressLine2: this.props.data.companyAddressLine2,
-      companyPoscode: this.props.data.companyPoscode,
-      companyCity: this.props.data.companyCity,
-      companyState: this.props.data.companyState,
+      userContact: this.props.data.name.UserContactNo,
+      firstName: this.props.data.name.FirstName,
+      lastName: this.props.data.name.LastName,
+      email: this.props.data.name.UserEmailAddress,
       trackingStatus: "In Cart",
       fixedHeader: true,
       fixedFooter: true,
@@ -580,24 +604,30 @@ class UserDetailsComponent extends Component {
       backPage: "viewProduct",
       value: 0,
       tabsHidden: false,
-      // USERID: this.props.
     };
 
   }
   componentDidMount() {
-    // getUserProfile
+    this.props.CallCountry();
     this.props.CallGetTransactionStatus();
     this.props.CallGetTransaction("In Cart");
-
     this.props.CallGetMerchantsOrders({
       trackingStatus: this.state.trackingStatus,
-      UserID: window.localStorage.getItem("id"),
+      UserID: this.props.data.name.UserID,
     });
+    this.props.CallMerchants({
+      type: "Status",
+      typeValue: "-",
+      USERID: localStorage.getItem("id") ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("roleid") ? localStorage.getItem("roleid") : 0,
+      productPage: 999,
+      page: 1
+    });
+
   }
   handleChange = (data, e) => { };
   render() {
-    console.log(this.props.data.name.UserID)
-    console.log(this.props.data.name.UserTypeID)
+
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -631,7 +661,6 @@ class UserDetailsComponent extends Component {
 
     const back = () => {
       window.location.reload(false);
-      // this.props.setDetailsShown(false);
     };
 
     let allTransactionStatusData = this.props.alltransactionstatus.length > 0 && this.props.alltransactionstatus[0].ReturnVal !== "0" && this.props.alltransactionstatus !== undefined && this.props.alltransactionstatus
@@ -647,7 +676,6 @@ class UserDetailsComponent extends Component {
             key={i}
             label={status.TrackingStatus}
             {...a11yProps(i)}
-          // onClick={changeData.bind(this, status.TrackingStatus)}
           />
         );
       });
@@ -685,7 +713,6 @@ class UserDetailsComponent extends Component {
                 <Input
                   id="component-simple"
                   value={this.state.firstName}
-                  onChange={this.handleChange}
                   readOnly
                 />
               </FormControl>
@@ -694,88 +721,29 @@ class UserDetailsComponent extends Component {
                 <Input
                   id="component-simple"
                   value={this.state.lastName}
-                  onChange={this.handleChange}
                   readOnly
                 />
               </FormControl>
             </div>
-            {/* <h5 style={{ marginTop: "5px" }}>Company Details</h5> */}
-            {/* <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Company Name</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.companyName}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl> */}
-            <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.userContact}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl>
-            <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Website</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.companyWebsite}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl>
-            <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Address Line 1</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.companyAddressLine1}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl>
-            <FormControl style={{ width: "100%", marginTop: "5px" }}>
-              <InputLabel htmlFor="component-simple">Address Line 2</InputLabel>
-              <Input
-                id="component-simple"
-                value={this.state.companyAddressLine2}
-                onChange={this.handleChange}
-                readOnly
-              />
-            </FormControl>
-            <div style={{ display: "flex", width: "100%", marginTop: "5px" }}>
-              <FormControl style={{ width: "100%", marginRight: "5px" }}>
-                <InputLabel htmlFor="component-simple">City</InputLabel>
+            <div style={{ display: "flex", width: "100%" }}>
+              <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                <InputLabel htmlFor="component-simple">Contact No.</InputLabel>
                 <Input
                   id="component-simple"
-                  value={this.state.companyCity}
-                  onChange={this.handleChange}
+                  value={this.state.userContact}
                   readOnly
                 />
               </FormControl>
-              <FormControl style={{ width: "100%", marginLeft: "5px" }}>
-                <InputLabel htmlFor="component-simple">State</InputLabel>
+              <FormControl style={{ width: "100%", marginTop: "5px" }}>
+                <InputLabel htmlFor="component-simple">Email</InputLabel>
                 <Input
                   id="component-simple"
-                  value={this.state.companyState}
-                  onChange={this.handleChange}
+                  value={this.state.email}
                   readOnly
                 />
               </FormControl>
             </div>
-            {/* <TextField
-              style={{ width: "100%", marginTop: "5px" }}
-              id="outlined-multiline-flexible"
-              label="Description"
-              multiline
-              rowsMax={4}
-              value={this.state.companyDescription}
-              onChange={this.handleChange}
-              inputProps={{ readonly: true }}
-            /> */}
-            <h5 style={{ marginTop: "5px" }}>Purchase Order History</h5>
+            <h5 style={{ marginTop: "15px", marginBottom: "15px" }}>Purchase Order History</h5>
             <div style={{ width: "100%" }}>
               {!this.state.detailsShown ? (
                 <AppBar position="static" color="default">

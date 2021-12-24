@@ -1182,7 +1182,6 @@ class DisplayTable extends Component {
       rowsPerPage: 5,
       detailsShown: false,
       deleteActive: false,
-      searchFilter: "",
       isFiltered: false,
       filteredProduct: [],
     };

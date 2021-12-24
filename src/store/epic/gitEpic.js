@@ -10,26 +10,26 @@ export class GitEpic {
 
   // USER
 
-  getAllUserByTypeId = (action$) =>
-    action$.ofType(GitAction.GetUser).switchMap(async () => {
-      try {
-        const response = await fetch(url +
-          "User_ProfileListByUserType?UserTypeID=17"
-        );
-        let json = await response.json();
-        json = JSON.parse(json)
-        return {
-          type: GitAction.GotUser,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllUserByTypeId: ' + error);
-        return {
-          type: GitAction.GotUser,
-          payload: [],
-        };
-      }
-    });
+  // getAllUserByTypeId = (action$) =>
+  //   action$.ofType(GitAction.GetUser).switchMap(async () => {
+  //     try {
+  //       const response = await fetch(url +
+  //         "User_ProfileListByUserType?UserTypeID=17"
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json)
+  //       return {
+  //         type: GitAction.GotUser,
+  //         payload: json,
+  //       };
+  //     } catch (error) {
+  //       alert('getAllUserByTypeId: ' + error);
+  //       return {
+  //         type: GitAction.GotUser,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
 
   LoginUser = (action$) =>
     action$.ofType(GitAction.Login).switchMap(async ({ payload }) => {
@@ -359,6 +359,13 @@ export class GitEpic {
   getUserProfile = (action$) =>
     action$.ofType(GitAction.GetUserProfile).switchMap(async ({ payload }) => {
       try {
+        console.log(url +
+          "User_ProfileListByType?TYPE=" + payload.TYPE +
+          "&TYPEVALUE=" + payload.TYPEVALUE +
+          "&USERID=" + payload.USERID +
+          "&UserRoleID=" + payload.USERROLEID +
+          "&LISTPERPAGE=" + payload.LISTPERPAGE +
+          "&PAGE=" + payload.PAGE)
         const response = await fetch(
           url +
           "User_ProfileListByType?TYPE=" + payload.TYPE +
