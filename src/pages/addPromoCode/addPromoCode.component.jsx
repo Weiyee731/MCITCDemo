@@ -21,7 +21,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
 import "date-fns";
 import { format } from "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
+// import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -842,7 +842,7 @@ class AddProductVoucherComponent extends Component {
                 justifyContent: "space-between",
               }}
             >
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <div style={{ width: "100%", margin: "10px" }}>
                   <KeyboardDatePicker
                     disableToolbar
@@ -891,7 +891,7 @@ class AddProductVoucherComponent extends Component {
                     </FormHelperText>
                   ) : null}
                 </div>
-              </MuiPickersUtilsProvider>
+              </MuiPickersUtilsProvider> */}
             </div>
             <InputLabel style={{ marginTop: "20px" }}>
               Select the products for the promotion

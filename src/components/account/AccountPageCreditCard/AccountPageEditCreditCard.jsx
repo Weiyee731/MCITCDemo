@@ -142,7 +142,7 @@ class AccountPageEditCreditCard extends Component {
           name={this.state.name}
           number={this.state.number}
         />
-         <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
+        <form ref={(c) => (this.form = c)} onSubmit={this.handleSubmit}>
           <div className="row" style={{ marginTop: "20px" }}>
             <TextField
               variant="outlined"
@@ -221,7 +221,7 @@ class AccountPageEditCreditCard extends Component {
               className="btn btn-primary btn-block"
               type="button"
             >
-              Save the changes on this credit card
+              Save changes
             </button>
           </div>
         </form>

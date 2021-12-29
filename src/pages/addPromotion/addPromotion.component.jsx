@@ -35,7 +35,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 //------------------------------------------------------------------- DatePicker-----------------------------------------------
 import "date-fns";
 import { format } from "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
+// import DateFnsUtils from "@date-io/date-fns";
+import DatePicker from 'react-date-picker'
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -53,9 +54,9 @@ function mapStateToProps(state) {
   return {
     Promotion: state.counterReducer["addPromo"], // Add data to Promotion
     // allstocks: state.counterReducer["products"],
-    allproducts: state.counterReducer["products"],
+    allproducts: state.counterReducer["productsListing"],
     promotionBannerReturn: state.counterReducer["promotionBannerReturn"],
-
+    // productsListing: state.counterReducer["productsListing"],
   };
 }
 
@@ -64,37 +65,12 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAddPromotion: (promoData) =>
       dispatch(GitAction.CallAddPromotion(promoData)), // To add data
-    // CallAllProductsByProductStatus: (prodData) =>
-    //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)), // To call Product List For Promotion Product
+    CallAllProductsListing: (prodData) =>
+      dispatch(GitAction.CallAllProductsListing(prodData)), // To call Product List For Promotion Product
   };
 }
 
 //------------------------------------- Table Component ------------------------------------------------
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-// function getComparator(order, orderBy) {
-//   return order === "desc"
-//     ? (a, b) => descendingComparator(a, b, orderBy)
-//     : (a, b) => -descendingComparator(a, b, orderBy);
-// }
-
-// function stableSort(array, comparator) {
-//   const stabilizedThis = array.map((el, index) => [el, index]);
-//   stabilizedThis.sort((a, b) => {
-//     const order = comparator(a[0], b[0]);
-//     if (order !== 0) return order;
-//     return a[1] - b[1];
-//   });
-//   return stabilizedThis.map((el) => el[0]);
-// }
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -161,9 +137,14 @@ function TransferList(props) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState(
-    props.allProducts.map((product) => product.ProductName)
+    props.allProducts !== null && props.allProducts.length > 0 &&
+    (props.allProducts).map((product) =>
+      product.ProductName
+    )
   );
+
   const [right, setRight] = React.useState([]);
+  const [LeftImages, setLeftImage] = React.useState(props);
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
   const handleToggle = (value) => () => {
@@ -192,12 +173,14 @@ function TransferList(props) {
     setRight(right.concat(leftChecked));
     setLeft(not(left, leftChecked));
     setChecked(not(checked, leftChecked));
+    props.setChosen(leftChecked, "add")
   };
 
   const handleCheckedLeft = () => {
     setLeft(left.concat(rightChecked));
     setRight(not(right, rightChecked));
     setChecked(not(checked, rightChecked));
+    props.setChosen(rightChecked, "remove")
   };
 
   const updateSearch = (title, e) => {
@@ -221,7 +204,8 @@ function TransferList(props) {
   React.useEffect(() => {
     const timeOutId = setTimeout(() => props.setChosenProducts(right, left), 0);
     return () => clearTimeout(timeOutId);
-  }, [right]);
+
+  }, [], [right]);
 
   React.useEffect(() => {
     const timeOutId = setTimeout(
@@ -241,6 +225,11 @@ function TransferList(props) {
     );
     return () => clearTimeout(timeOutId);
   }, [props.fullChosenProducts]);
+
+
+  // React.useEffect(()=>{
+  //   setLeftImage([LeftImages, ...props.imageLeft])
+  // },[], [LeftImages])
 
   const customList = (title, items, valueToBeUsed, allItems) => (
     <Card>
@@ -276,11 +265,9 @@ function TransferList(props) {
         title={title}
         subheader={`${numberOfChecked(items)}/${items.length} selected`}
       />
-
       <Divider />
-
-      <List className={classes.list} dense component="div" role="list">
-        {items.map((value, i) => {
+      <List className={classes.list} dense component="div" role="list" style={{ width: "500px", height: "300px" }}>
+        {items.length > 0 && items.map((value, i) => {
           const labelId = `transfer-list-all-item-${value}-label`;
 
           return (
@@ -297,15 +284,17 @@ function TransferList(props) {
                   disableRipple
                   inputProps={{ "aria-labelledby": labelId }}
                 />
-                <img
-                  style={{ margin: "10px" }}
-                  height={50}
-                  // src={JSON.parse(allItems[i].ProductImages)[0].ProductMediaUrl}
-                  src={allItems[i]}
-                />
-              </ListItemIcon>
 
-              <ListItemText id={labelId} primary={value} />
+                {/* <img src={props.allProducts[i] !== undefined && props.allProducts[i].ProductImage !== null ? props.allProducts[i].ProductImage : Logo}
+                  height={50}
+                  width={50}
+                  alt={value} onError={(e) => (e.target.src = Logo)} /> */}
+                {/* <img src={allItems.length > 0 && allItems[i] !== null ? allItems[i] : Logo}
+                  height={50}
+                  width={50}
+                  alt={value} onError={(e) => (e.target.src = Logo)} /> */}
+              </ListItemIcon>
+              <ListItemText style={{ paddingLeft: "10px" }} id={labelId} primary={value} />
             </ListItem>
           );
         })}
@@ -327,7 +316,7 @@ function TransferList(props) {
           "Products Left",
           left,
           props.searchWordAdd,
-          props.imagesLeft
+          props.imageLeft
         )}
       </Grid>
       <Grid item>
@@ -359,7 +348,7 @@ function TransferList(props) {
           "Chosen Products",
           right,
           props.searchWordRemove,
-          props.imagesChosen
+          props.imageChosen
         )}
       </Grid>
     </Grid>
@@ -426,9 +415,11 @@ class AddPromotionBannerComponent extends Component {
       PromotionTitle: "",
       PromotionDesc: "",
       DiscountPercentage: null,
+      isDetailsSet: false,
 
       file: [],
       productsDisplayed: [],
+      productsChoosen: [],
       ProductID: [], //ADD PRODUCT
       fullChosenProducts: [],
       fullChosenProductsBackup: [], //final products chosen to be sent
@@ -457,12 +448,20 @@ class AddPromotionBannerComponent extends Component {
     };
 
     this.uploadHandler = this.uploadHandler.bind(this);
+    // this.setProductChosen = this.setProductChosen.bind(this)
 
     // this.props.CallAllProductsByProductStatus({
     //   ProductStatus: "Endorsed",
     //   UserID: window.localStorage.getItem("id"),
     // });
 
+    this.props.CallAllProductsListing({
+      type: "Merchant",
+      typeValue: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+      userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+      productPage: 999,
+      page: 1,
+    })
   }
 
   uploadHandler(e) {
@@ -789,10 +788,10 @@ class AddPromotionBannerComponent extends Component {
       //============= Promotion Content and Promotion Banner Updator =============
 
       const formData = new FormData();
-      
+
       //============= Set BannerImage Name by Date + Time =============
       var today = new Date();
-      var date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+      var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
       var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
       var BannerImage = date + ' ' + time;
 
@@ -824,26 +823,68 @@ class AddPromotionBannerComponent extends Component {
     if (this.props.promotionBannerReturn !== undefined) {
       if (this.props.promotionBannerReturn.length > 0) {
         if (this.props.promotionBannerReturn[0].ReturnVal === 1) {
-            toast.success("Promotion Banner Added Successfully.")
-            window.location.href = '/viewProductPromotion';
+          toast.success("Promotion Banner Added Successfully.")
+          window.location.href = '/viewProductPromotion';
         }
       }
     }
   }
 
+
   render() {
-    let allProductsData = this.props.allproducts
-      ? Object.keys(this.props.allproducts).map((key) => {
-        return this.props.allproducts[key];
+
+    let allProductsData = {}
+    if (this.props.allproducts !== null && this.props.allproducts.length > 0) {
+      allProductsData = JSON.parse(this.props.allproducts)
+        ? Object.keys(JSON.parse(this.props.allproducts)).map((key) => {
+          return JSON.parse(this.props.allproducts)[key];
+        })
+        : {};
+    }
+
+    if (this.state.isDetailsSet === false && allProductsData.length > 0) {
+      this.setState({ productsDisplayed: allProductsData, isDetailsSet: true })
+    }
+
+    const setProductChosen = (value, type) => {
+      let filteredSameListing = []
+      let filterDiffListing = []
+      let listing = []
+
+      if (type === "add")
+        listing = this.state.productsDisplayed
+      else
+        listing = this.state.productsChoosen
+
+      value.length > 0 && value.map((data) => {
+
+        listing.filter((x) => x.ProductName === data).map((filteredData) => {
+          filteredSameListing.push(filteredData)
+        })
+        if (filterDiffListing.length === 0) {
+          listing.filter((x) => x.ProductName !== data).map((filteredData) => {
+            filterDiffListing.push(filteredData)
+          })
+        }
+
+        else 
+          filterDiffListing = filterDiffListing.filter((x) => x.ProductName !== data)
+        
       })
-      : {};
+
+      if (type === "add") 
+        this.setState({ productsDisplayed: filterDiffListing, productsChoosen: this.state.productsChoosen.concat(filteredSameListing) })
+      
+      else 
+        this.setState({ productsChoosen: filterDiffListing, productsDisplayed: this.state.productsDisplayed.concat(filteredSameListing) })
+    }
+    console.log("this.state1212", this.state)
 
     const Search = (type) => {
       var newList = [];
       if (type == "add") {
         newList = allProductsData;
-
-        newList.map((productLeft) => {
+        newList.length > 0 && newList.map((productLeft) => {
           this.state.fullChosenProducts.map((chosen) => {
             if (productLeft.ProductName != chosen.ProductName) {
               newList = newList.filter(
@@ -852,9 +893,11 @@ class AddPromotionBannerComponent extends Component {
             }
           });
         });
+        console.log("HERE    this.state.fullChosenProducts", this.state.fullChosenProducts)
+        console.log("HERE ", newList)  
 
         var items = [];
-        newList.map((product) => {
+        newList.length > 0 && newList.map((product) => {
           if (
             product.ProductName.toLowerCase().includes(
               this.state.searchWordAdd.toLowerCase()
@@ -863,9 +906,10 @@ class AddPromotionBannerComponent extends Component {
             items.push(product);
           }
         });
+        console.log("HERE items ", items)
         if (items) {
-          var newItemsImages = items.map(
-            (images) => JSON.parse(images.ProductImages)[0].ProductMediaUrl
+          var newItemsImages = items.length > 0 && items.map(
+            (images) => images.ProductImage
           );
         }
         this.setState({
@@ -873,13 +917,18 @@ class AddPromotionBannerComponent extends Component {
           imagesLeft: newItemsImages,
         });
       } else if (type == "remove") {
+
+        console.log("HERE ", type)
         var chosenItems = allProductsData;
-        this.state.productsLeft.map((product) => {
+        console.log("HERE REMOVE ", chosenItems)
+        this.state.productsLeft.length > 0 && this.state.productsLeft.map((product) => {
           chosenItems = chosenItems.filter(
             (listItem) => listItem.ProductName != product
           );
         });
-        chosenItems.map((product) => {
+        console.log("HERE REMOVE ", this.state)
+        console.log("HERE REMOVE ", chosenItems)
+        chosenItems.length > 0 && chosenItems.map((product) => {
           if (
             product.ProductName.toLowerCase().includes(
               this.state.searchWordRemove.toLowerCase()
@@ -888,9 +937,10 @@ class AddPromotionBannerComponent extends Component {
             newList.push(product);
           }
         });
-        var newProductListImages = newList.map(
-          (images) => JSON.parse(images.ProductImages)[0].ProductMediaUrl
+        var newProductListImages = newList.length > 0 && newList.map(
+          (images) => images.ProductImage
         );
+
         this.setState({
           fullChosenProducts: newList,
           fullChosenProductsBackup: chosenItems,
@@ -921,8 +971,8 @@ class AddPromotionBannerComponent extends Component {
 
     const setFullChosenProduct = () => {
       var newProductList = [];
-      this.state.chosenProductsNames.map((chosenProduct) => {
-        allProductsData.map((product) => {
+      this.state.chosenProductsNames.length > 0 && this.state.chosenProductsNames.map((chosenProduct) => {
+        allProductsData.length > 0 && allProductsData.map((product) => {
           if (product.ProductName == chosenProduct) {
             newProductList.push(product);
           }
@@ -930,12 +980,12 @@ class AddPromotionBannerComponent extends Component {
       });
       var newList = [];
       var chosenItems = allProductsData;
-      this.state.productsLeft.map((product) => {
+      this.state.productsLeft.length > 0 && this.state.productsLeft.map((product) => {
         chosenItems = chosenItems.filter(
           (listItem) => listItem.ProductName != product
         );
       });
-      chosenItems.map((product) => {
+      chosenItems.length > 0 && chosenItems.map((product) => {
         if (
           product.ProductName.toLowerCase().includes(
             this.state.searchWordRemove.toLowerCase()
@@ -945,18 +995,18 @@ class AddPromotionBannerComponent extends Component {
         }
       });
 
-      var newProductListImages = newProductList.map(
-        (images) => JSON.parse(images.ProductImages)[0].ProductMediaUrl
+      var newProductListImages = newProductList.length > 0 && newProductList.map(
+        (images) => images.ProductImage
       );
       var ItemsLeft = allProductsData;
-      newProductList.map((productItem) => {
+      newProductList.length > 0 && newProductList.map((productItem) => {
         ItemsLeft = ItemsLeft.filter(
           (items) => items.ProductName !== productItem.ProductName
         );
       });
 
-      var leftImages = ItemsLeft.map(
-        (images) => JSON.parse(images.ProductImages).length > 0 && JSON.parse(images.ProductImages)[0].ProductMediaUrl
+      var leftImages = ItemsLeft.length > 0 && ItemsLeft.map(
+        (images) => images.ProductImage
       );
 
       this.setState({
@@ -1068,93 +1118,77 @@ class AddPromotionBannerComponent extends Component {
               {/* -------------------------------- Add Promotion Title ------------------------------------- */}
               <TextField
                 id="text-field-controlled"
-                helperText="Promotion Title"
+                variant="outlined"
+                label="Promotion Title"
+                size="small"
+                // helperText="Promotion Title"
                 value={this.state.PromotionTitle}
                 onChange={this.handleChange.bind(this, "PromotionTitle")}
                 type="text"
                 style={{ width: "100%" }}
                 error={this.state.PromotionTitleEmpty}
               />
+
               <br />
               {this.state.PromotionTitleEmpty && (
                 <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
                   Product Title Need to Be Set.
                 </p>
               )}
-
               <br />
               {/* -------------------------------- Add Promotion Effective Date----------------------------- */}
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-around" }}
-                >
-                  <FormHelperText>Effective Date: </FormHelperText>
-                  <br />
-                  <div style={{ margin: "5px", width: "100%" }}>
-                    <KeyboardDatePicker
-                      disableToolbar
-                      variant="inline"
-                      margin="normal"
-                      id="date-picker-inline"
-                      // label="Start Date"
-                      helperText="Start Date"
-                      value={this.state.PromotionStartDate}
-                      format="dd/MM/yyyy"
-                      onChange={this.handleChange.bind(
-                        this,
-                        "PromotionStartDate"
-                      )}
-                      KeyboardButtonProps={{
-                        "aria-label": "change date",
-                      }}
-                      style={{ width: "100%" }}
-                      error={
-                        this.state.startDateNotSet ||
-                        this.state.startDateInvalid
-                      }
-                    />
-                    {this.state.startDateNotSet ||
-                      this.state.startDateInvalid ? (
-                      <FormHelperText style={{ color: "red" }}>
-                        Please enter a valid start date.
-                      </FormHelperText>
-                    ) : null}
-                  </div>
-                  <div style={{ margin: "5px", width: "100%" }}>
-                    <KeyboardDatePicker
-                      disableToolbar
-                      variant="inline"
-                      margin="normal"
-                      id="date-picker-inline"
-                      // label="End Date"
-                      helperText="End Date"
-                      value={this.state.PromotionEndDate}
-                      format="dd/MM/yyyy"
-                      onChange={this.handleChange.bind(
-                        this,
-                        "PromotionEndDate"
-                      )}
-                      KeyboardButtonProps={{
-                        "aria-label": "change date",
-                      }}
-                      style={{ width: "100%" }}
-                      error={
-                        this.state.endDateNotSet || this.state.endDateInvalid
-                      }
-                    />
-                    {this.state.endDateNotSet || this.state.endDateInvalid ? (
-                      <FormHelperText style={{ color: "red" }}>
-                        Please enter a valid end date.
-                      </FormHelperText>
-                    ) : null}
-                  </div>
-                </div>
-              </MuiPickersUtilsProvider>
-              {/* -----------------------------------Add Discount Percentage  -------------------------------------- */}
 
+              <div style={{ display: "flex", justifyContent: "space-around" }}   >
+                <br />
+                <div style={{ width: "100%", paddingRight: "20px" }}>
+                  <DatePicker
+                    size="small"
+                    placeholderText="Start Date"
+                    // onChange={(e) => this.handleDateChange(e)}
+                    // value={this.state.selectedDate}
+                    value={this.state.PromotionStartDate}
+                    format="dd/MM/yyyy"
+                    onChange={this.handleChange.bind(
+                      this,
+                      "PromotionStartDate"
+                    )}
+                    className={`w-100`}
+                  />
+                  {this.state.startDateNotSet ||
+                    this.state.startDateInvalid ? (
+                    <FormHelperText style={{ color: "red" }}>
+                      Please enter a valid start date.
+                    </FormHelperText>
+                  ) : null}
+                </div>
+                <div style={{ width: "100%" }}>
+                  <DatePicker
+                    size="small"
+                    placeholderText="End Date"
+                    // onChange={(e) => this.handleDateChange(e)}
+                    onChange={this.handleChange.bind(
+                      this,
+                      "PromotionEndDate"
+                    )}
+                    format="dd/MM/yyyy"
+                    value={this.state.PromotionEndDate}
+                    className={`w-100`}
+                  />
+                  {this.state.endDateNotSet || this.state.endDateInvalid ? (
+                    <FormHelperText style={{ color: "red" }}>
+                      Please enter a valid end date.
+                    </FormHelperText>
+                  ) : null}
+                </div>
+              </div>
+              <br />
+              {/* -----------------------------------Add Discount Percentage  -------------------------------------- */}
               <TextField
                 id="text-field-controlled"
-                helperText="Discount Percentage"
+                variant="outlined"
+                label="Discount Percentage"
+                size="small"
+                // helperText="Discount Percentage"
                 value={this.state.DiscountPercentage}
                 onChange={this.handleChange.bind(this, "DiscountPercentage")}
                 type="number"
@@ -1190,8 +1224,11 @@ class AddPromotionBannerComponent extends Component {
                 <InputLabel style={{ marginTop: "20px" }}>
                   Select Promotion Products
                 </InputLabel>
+                <br />
+
                 <TransferList
                   allProducts={this.state.productsDisplayed}
+                  // allProducts={allProductsData}
                   search={Search}
                   searchWordAdd={this.state.searchWordAdd}
                   setSearchValue={setSearchValue}
@@ -1199,8 +1236,9 @@ class AddPromotionBannerComponent extends Component {
                   setChosenProducts={setChosenProducts}
                   chosenProducts={this.state.ProductID}
                   fullChosenProducts={this.state.fullChosenProducts}
-                  imagesChosen={this.state.imagesChosen}
-                  imagesLeft={this.state.imagesLeft}
+                  imageChosen={this.state.imagesChosen}
+                  imageLeft={this.state.imagesLeft}
+                  setChosen={setProductChosen}
                 />
                 {this.state.productsAreNotChosen ? (
                   <FormHelperText style={{ color: "red" }}>
@@ -1315,6 +1353,7 @@ class AddPromotionBannerComponent extends Component {
               {/* </div> */}
               {/* ---------------------------------------------------------------------------------------------------------- */}
               <br />
+
               <div>
                 <TextField
                   id="PromotionDesc"

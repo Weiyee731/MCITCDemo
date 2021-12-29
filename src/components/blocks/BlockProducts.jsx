@@ -35,7 +35,7 @@ export default function BlockProducts(props) {
       </div>
     ));
 
-    smalls = <div className="block-products__list">{console.log("HAHAHAHA333")}{productsList}</div>;
+    smalls = <div className="block-products__list">{productsList}</div>;
   }
 
   return (

@@ -54,6 +54,7 @@ function mapStateToProps(state) {
   return {
     addresses: state.counterReducer["addresses"],
     defaultAddress: state.counterReducer["defaultAddress"],
+    countrylist: state.counterReducer["countries"],
   };
 }
 
@@ -63,8 +64,9 @@ function mapDispatchToProps(dispatch) {
 
     CallUpdateDefaultAddress: (prodData) => dispatch(GitAction.CallUpdateDefaultAddress(prodData)),
 
-    CallDeleteAddress: (prodData) =>
-      dispatch(GitAction.CallDeleteAddress(prodData)), //the backend of deletion is require
+    CallDeleteAddress: (prodData) => dispatch(GitAction.CallDeleteAddress(prodData)), //the backend of deletion is require
+
+    CallCountry: () => dispatch(GitAction.CallCountry()),
   };
 }
 class AccountPageAddresses extends Component {
@@ -79,6 +81,7 @@ class AccountPageAddresses extends Component {
       addressIdClicked: " ",
     };
     this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
+    this.props.CallCountry();
     this.handleCallbackfromAdd = this.handleCallbackfromAdd.bind(this);
     this.handleCallbackfromEdit = this.handleCallbackfromEdit.bind(this);
     this.onAddClick = this.onAddClick.bind(this);
@@ -264,7 +267,11 @@ class AccountPageAddresses extends Component {
                                       {address.UserAddressLine1}
                                       {address.UserAddressLine2}
                                       {address.UserPoscode},{address.UserCity}
-                                      {address.CountryID}
+                                      , {this.props.countrylist.length > 0 && this.props.countrylist.filter((x) => x.CountryId === address.CountryID).map((country) => {
+                                        return country.CountryName
+                                      })}
+                                      {console.log(this.props.countrylist)}
+                                      {/* {address.CountryID} */}
                                     </h6>
                                     <h6
                                       style={{

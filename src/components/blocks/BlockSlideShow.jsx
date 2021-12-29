@@ -169,7 +169,7 @@ class BlockSlideShow extends Component {
               dangerouslySetInnerHTML={{ __html: slide.text }}
             />
             <div className="block-slideshow__slide-button">
-              <Link to="/" className="btn btn-primary btn-lg">
+              <Link to={"/shop/ProductListing/type:Merchant&typevalue:" + 0} className="btn btn-primary btn-lg">
                 Shop Now
               </Link>
             </div>

@@ -24,8 +24,12 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
+import CloseIcon from '@mui/icons-material/Close';
 import Card from "@material-ui/core/Card";
 import { CardContent, Divider, Typography } from "@material-ui/core";
+
+
+
 function mapStateToProps(state) {
   return {
     creditcard: state.counterReducer["creditcards"],
@@ -140,6 +144,16 @@ class AccountPageCreditCard extends Component {
                   Manage your Credit Cards
                 </Typography>
               </div>
+              {
+                this.state.addNewCard == true &&
+                <div className="col-3 col-lg-3 col-xl-3">
+                  <Tooltip title="Add" style={{ float: "right" }}>
+                    <IconButton aria-label="Add" onClick={() => this.setState({ addNewCard: false })}>
+                      <CloseIcon fontSize="large" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              }
               <div className="col-3 col-lg-3 col-xl-3">
                 <Tooltip title="Add" style={{ float: "right" }}>
                   <IconButton aria-label="Add" onClick={() => this.onAddClick()}>

@@ -394,6 +394,22 @@ export class GitEpic {
     action$.ofType(GitAction.EditUserProfile).switchMap(async ({ payload }) => {
       try {
 
+        console.log(url +
+          "User_UpdateProfile?USERID=" +
+          payload.USERID +
+          "&FIRSTNAME=" +
+          payload.USERFIRSTNAME +
+          "&LASTNAME=" +
+          payload.USERLASTNAME +
+          "&USERCONTACTNO=" +
+          payload.USERCONTACTNO +
+          "&USERDOB=" +
+          payload.USERDATEBIRTH +
+          "&USEREMAIL=" +
+          payload.USEREMAIL +
+          "&USERGENDER=" +
+          payload.USERGENDER)
+
         const response = await fetch(
           url +
           "User_UpdateProfile?USERID=" +
@@ -434,7 +450,7 @@ export class GitEpic {
         } catch (error) {
           alert('getUserProfile: ' + error);
           return {
-            type: GitAction.GotUserProfile,
+            type: GitAction.EditedUserProfile,
             payload: [],
           };
         }
@@ -531,6 +547,7 @@ export class GitEpic {
         payload.TYPE +
         "&USERPROFILEIMAGE=" +
         payload.USERPROFILEIMAGE)
+
       try {
         const response = await fetch(
           url +

@@ -155,7 +155,7 @@ class PagePayment extends Component {
 
       case "cvc":
         e.target.value = formatCVC(e.target.value);
-        if (formatCVC(e.target.value).length === 4) {
+        if (formatCVC(e.target.value).length === 3) {
           this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
         }
 
@@ -351,7 +351,7 @@ class PagePayment extends Component {
                                     name="cvc"
                                     className="form-control"
                                     placeholder="CVC"
-                                    pattern="\d{3,4}"
+                                    pattern="\d{3}"
                                     required
                                     value={this.state.cvc}
                                     onChange={this.handleInputChange}

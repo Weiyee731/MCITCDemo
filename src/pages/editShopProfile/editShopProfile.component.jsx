@@ -47,8 +47,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    CallUpdateUserProfile: (propsData) =>
-      dispatch(GitAction.CallUpdateUserProfile(propsData)),
+    // CallUpdateUserProfile: (propsData) =>
+    //   dispatch(GitAction.CallUpdateUserProfile(propsData)),
 
     CallCountry: () => dispatch(GitAction.CallCountry()),
 

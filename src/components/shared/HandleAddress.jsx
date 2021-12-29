@@ -1,10 +1,12 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
+import CloseButton from 'react-bootstrap/CloseButton'
+import { Row, Col } from "reactstrap";
 
 const HandleAddress = (props) => {
     const {
@@ -28,11 +30,19 @@ const HandleAddress = (props) => {
         <Modal
             className="modal-dialog-centered"
             isOpen={isOpen}
-            handleClose={handleClose}
+            onClosed={handleClose}
         >
             <ModalHeader>
-                Edit Address Details
+                <div className='row'>
+                    <div className='col-10'>
+                        Edit Address Details
+                    </div>
+                    <div className='col-1'>
+                        <CloseButton onClick={handleClose}/>
+                    </div>
+                </div>
             </ModalHeader>
+
             <ModalBody>
 
                 <div className="card-body">

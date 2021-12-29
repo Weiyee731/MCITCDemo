@@ -71,7 +71,6 @@ function HomePageTwo(props) {
     }
   }, [])
 
-
   useEffect(() => {
     let didCancel = false
     props.CallAllProducts({
@@ -101,8 +100,6 @@ function HomePageTwo(props) {
       didCancel = true;
     }
   }, [])
-
-
 
   useEffect(() => {
     props.CallMerchants({

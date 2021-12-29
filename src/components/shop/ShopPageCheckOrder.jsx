@@ -317,7 +317,9 @@ class PageCheckOrder extends Component {
             >
               <div className="address-card__name">{`${address.UserAddressName}`}</div>
               <div className="address-card__row">
-                {address.CountryID}
+                {this.props.countries.length > 0 && this.props.countries.filter((x) => x.CountryId === address.CountryID).map((country) => {
+                  return country.CountryName
+                })}
                 <br />
                 {address.UserPoscode},{address.UserCity}
                 <br />

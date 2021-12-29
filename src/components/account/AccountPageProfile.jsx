@@ -296,6 +296,7 @@ class AccountPageProfile extends Component {
     // //   !isStringNullOrEmpty(this.state.USERCOUNTRYID)
     // // )
 
+    console.log("CALL")
     this.props.CallUpdateUserProfile({
       USERID: this.state.USERID,
       USERFIRSTNAME: this.state.USERFIRSTNAME,

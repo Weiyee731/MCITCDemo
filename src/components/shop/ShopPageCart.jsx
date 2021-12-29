@@ -54,7 +54,6 @@ class ShopPageCart extends Component {
         this.handleAllProductSellect = this.handleAllProductSellect.bind(this)
     }
     getItemQuantity(item) {
-
         var { quantities } = this.state;
         var quantity = quantities.find((x) => x.itemId === item.id);
 

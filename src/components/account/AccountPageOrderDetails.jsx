@@ -313,7 +313,7 @@ export default function AccountPageOrderDetails(props) {
                                     {
                                       orders.LogisticID !== null && orders.LogisticID !== 0 ?
                                         <>
-                                          <td style={{ width: "10%" }}>
+                                          <td style={{ width: "15%" }}>
                                             <div style={{ fontSize: "13px" }}>
                                               {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
                                                 return (courier.LogisticName)
@@ -322,9 +322,6 @@ export default function AccountPageOrderDetails(props) {
                                             <div style={{ fontSize: "13px" }}>
                                               {orders.TrackingNumber}
                                             </div>
-                                          </td>
-                                          <td style={{ width: "5%" }}>
-                                            <IconButton aria-label="View" style={{ marginLeft: 'auto' }} onClick={handleClickOpen}> <VisibilityIcon /></IconButton>
                                           </td>
                                         </>
                                         :

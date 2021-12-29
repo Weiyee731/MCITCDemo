@@ -213,24 +213,24 @@ class AccountPageOrders extends Component {
 
   searchFilter = (value, date) => {
     var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-
-    this.state.filteredList.splice(0, this.state.filteredList.length)
-    if(this.state.selectedDate)
-    this.props.allmerchantorders.filter(searchedItem =>
-      format.test(value) === false
-      && moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
+    let listing = this.props.allmerchantorders
+    let filtered = []
+   
+    listing.length > 0 && listing.filter(searchedItem =>
+      moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
     ).map(filteredItem => {
-      this.state.filteredList.push(filteredItem);
+      filtered.push(filteredItem);
     });
 
-    this.props.allmerchantorders.map((list) => {
-      list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter(x => x.TrackingNumber !== null
+
+    listing.length > 0 && listing.map((list) => {
+      value !== "" && list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter(x => x.TrackingNumber !== null
         && x.TrackingNumber.toLowerCase().includes(value.toLowerCase())).map(filteredItem => {
-          this.state.filteredList.push(list);
+          filtered.push(list);
         });
     })
 
-    let removeDeplicate = this.state.filteredList.filter((ele, ind) => ind === this.state.filteredList.findIndex(elem => elem.OrderID === ele.OrderID))
+    let removeDeplicate = filtered.filter((ele, ind) => ind === filtered.findIndex(elem => elem.OrderID === ele.OrderID))
     this.setState({ isFiltered: true, filteredList: removeDeplicate })
   }
 
