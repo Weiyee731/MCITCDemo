@@ -3617,9 +3617,10 @@ class ProductDetailsComponent extends Component {
         this.props.CallResetUpdateProductVariationDetail()
       }
 
-      if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal === "1" && this.state.isMediaFileSend === true) {
+      if (typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length > 0 && this.props.productMediaResult[0].ReturnVal === "1") {
         this.props.CallResetProductMediaResult()
       }
+      console.log("this.props23", this.props)
 
       if (typeof this.props.returnUpdateProduct !== "undefined" && this.props.returnUpdateProduct.length === 0 &&
         typeof this.props.productSpecsDetail !== "undefined" && this.props.productSpecsDetail.length === 0 &&
@@ -3627,13 +3628,14 @@ class ProductDetailsComponent extends Component {
         typeof this.props.addProductVariationResult !== "undefined" && this.props.addProductVariationResult.length === 0 &&
         typeof this.props.variationResult !== "undefined" && this.props.variationResult.length === 0 &&
         typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length === 0) {
+ 
         setTimeout(() => {
+          toast.success("Product details successfully updated")
           browserHistory.push("/viewProduct");
           window.location.reload(false);
-        }, 3000);
+        }, 1000);
       }
     }
-
 
     // if (prevProps.returnUpdateProduct !== this.props.returnUpdateProduct) {
     //   if (this.props.returnUpdateProduct.length > 0 && this.props.returnUpdateProduct[0].ReturnVal === 1) {
@@ -6452,7 +6454,7 @@ class ProductDetailsComponent extends Component {
             <div className="SubmitButtonContainer w-100">
               {this.state.toBeEdited ?
                 <Button variant="contained" className="w-100" onClick={() => { this.OnSubmit() }} color="primary">
-                  Submit to Review
+                  Update Product Details
                 </Button> : null}
             </div>
           </div>

@@ -885,6 +885,12 @@ export class GitEpic {
 
   updateProductCart = (action$) =>
     action$.ofType(GitAction.UpdateProductCart).switchMap(async ({ payload }) => {
+
+      console.log(url +
+        "Product_UpdateProductCart?USERCARTID=" +
+        payload.userCartID +
+        "&PRODUCTQUANTITY=" +
+        payload.productQuantity)
       try {
         const response = await fetch(
           url +
@@ -1589,11 +1595,11 @@ export class GitEpic {
         let json = await response.json();
         json = JSON.parse(json);
 
-        if (json[0].ReturnVal === 1) {
-          toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
-        } else {
-          json = [];
-        }
+        // if (json[0].ReturnVal === 1) {
+        //   toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
+        // } else {
+        //   json = [];
+        // }
 
         return {
           type: GitAction.UpdatedProduct,

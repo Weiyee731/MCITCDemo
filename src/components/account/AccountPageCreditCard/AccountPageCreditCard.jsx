@@ -126,7 +126,7 @@ class AccountPageCreditCard extends Component {
         <Card>
           <CardContent>
             <div className="row" style={{ margin: "10px" }}>
-              <div className="col-9 col-lg-9 col-xl-9">
+              <div className={this.state.addNewCard == true ? "col-10 col-lg-10 col-xl-10" : "col-11 col-lg-11 col-xl-11"}>
                 <h5
                   style={{
                     textAlign: "left",
@@ -144,17 +144,18 @@ class AccountPageCreditCard extends Component {
                   Manage your Credit Cards
                 </Typography>
               </div>
+
               {
                 this.state.addNewCard == true &&
-                <div className="col-3 col-lg-3 col-xl-3">
-                  <Tooltip title="Add" style={{ float: "right" }}>
-                    <IconButton aria-label="Add" onClick={() => this.setState({ addNewCard: false })}>
+                <div className="col-1 col-lg-1 col-xl-1">
+                  <Tooltip title="Back" style={{ float: "right" }}>
+                    <IconButton aria-label="Back" onClick={() => this.setState({ addNewCard: false })}>
                       <CloseIcon fontSize="large" />
                     </IconButton>
                   </Tooltip>
                 </div>
               }
-              <div className="col-3 col-lg-3 col-xl-3">
+              <div className="col-1 col-lg-1 col-xl-1">
                 <Tooltip title="Add" style={{ float: "right" }}>
                   <IconButton aria-label="Add" onClick={() => this.onAddClick()}>
                     <AddIcon fontSize="large" />
@@ -256,7 +257,7 @@ class AccountPageCreditCard extends Component {
             )}
           </CardContent>
         </Card>
-      </div>
+      </div >
     );
   }
 }

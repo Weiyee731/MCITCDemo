@@ -547,6 +547,7 @@ class DisplayTable extends Component {
                     size={this.state.dense ? "small" : "medium"}
                     aria-label="enhanced table"
                   >
+
                     <DisplayTableHead
                       classes={classes2}
                       numSelected={this.state.selected.length}
@@ -555,7 +556,8 @@ class DisplayTable extends Component {
                       onRequestSort={this.handleRequestSort}
                       rowCount={this.props.Data.length}
                     />
-                    {this.props.Data.filter((searchedItem) =>
+                    {/* {c} */}
+                    {this.props.Data.length > 0 && this.props.Data.filter((searchedItem) =>
                       searchedItem.OrderName.toLowerCase().includes(
                         this.state.searchFilter.toLowerCase()
                       )
@@ -605,15 +607,7 @@ class DisplayTable extends Component {
                                   {row.OrderProductDetail ? (
                                     <p>
                                       {row.OrderProductDetail && (JSON.parse(row.OrderProductDetail)
-                                        .filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")))).length}
-                                      {/* {
-                                        localStorage.getItem("roleid") === "16" ?
-                                          row.OrderProductDetail && (JSON.parse(row.OrderProductDetail).filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")))).length
-                                          :
-                                          row.OrderProductDetail && JSON.parse(row.OrderProductDetail).length
-                                      } */}
-
-                                      {/* {JSON.parse(row.OrderProductDetail).length} */}
+                                        .filter((x) => parseInt(x.MerchantID) === parseInt(this.props.state.userID))).length}
                                     </p>
                                   ) : (
                                     0
@@ -645,7 +639,6 @@ class DisplayTable extends Component {
                                           </div>
                                         </>
                                       }
-
                                       <p className="subHeading">Products Ordered</p>
                                       {
                                         row.OrderProductDetail !== null ? (
@@ -653,27 +646,11 @@ class DisplayTable extends Component {
                                             <div size="small" aria-label="products">
                                               <div className="row" style={{ borderTop: "4px solid #fff", paddingTop: "5px", paddingBottom: "5px" }}>
                                                 {row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
-                                                  .filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")))
+                                                  .filter((x) => parseInt(x.MerchantID) === parseInt(this.props.state.userID))
                                                   .map((product, i) => (
                                                     productListing(product)
                                                   ))
                                                   : ""}
-                                                {/* {
-                                                  localStorage.getItem("roleid") === 16 ?
-                                                    (row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
-                                                      .filter((x) => parseInt(x.MerchantID) === parseInt(localStorage.getItem("id")))
-                                                      .map((product, i) => (
-                                                        productListing(product)
-                                                      ))
-                                                      : "")
-                                                    :
-                                                    (row.OrderProductDetail ? JSON.parse(row.OrderProductDetail)
-                                                      .map((product, i) => (
-                                                        console.log("productsss", product)
-                                                        // productListing(product)
-                                                      ))
-                                                      : "")
-                                                } */}
                                               </div>
                                             </div>
                                           </>
@@ -722,6 +699,7 @@ class MerchantDetailsComponent extends Component {
     this.state = {
       companyName: this.props.data.name,
       companyContactNo: this.props.data.companyContactNo,
+      userID: this.props.data.userId,
       firstName: this.props.data.firstName,
       lastName: this.props.data.lastName,
       companyDescription: this.props.data.companyDescription,
@@ -986,11 +964,22 @@ class MerchantDetailsComponent extends Component {
         );
       });
       var generatePanels = allTransactionStatusData.map((status, i) => {
-        var transactionList = this.props.allmerchantorders;
-        transactionList = transactionList.filter(
+
+        let orderList = []
+        this.props.allmerchantorders.length > 0 && this.props.allmerchantorders.map((order) => {
+          order.OrderProductDetail !== null && JSON.parse(order.OrderProductDetail).filter((x) => parseInt(x.MerchantID) === parseInt(this.state.userID)).map((details) => {
+            orderList.push(order)
+          })
+        })
+
+        let removeDuplicate = orderList.length > 0 ? orderList.filter((ele, ind) => ind === orderList.findIndex(elem => elem.OrderID === ele.OrderID)) : []
+        var transactionList = removeDuplicate;
+        transactionList = transactionList.length > 0 ? transactionList.filter(
           (items) =>
             items.TrackingStatus == allTransactionStatusData[i].TrackingStatus
-        );
+        ) : []
+
+
         return (
           <TabPanel value={this.state.value} index={i}>
             <DisplayTable
@@ -999,6 +988,7 @@ class MerchantDetailsComponent extends Component {
               history={this.props.history}
               tabsHidden={this.state.tabsHidden}
               setTabsHidden={this.setTabsHidden}
+              state={this.state}
             ></DisplayTable>
           </TabPanel>
         );

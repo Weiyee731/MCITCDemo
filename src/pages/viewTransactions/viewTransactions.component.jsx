@@ -1082,7 +1082,7 @@ function Row(props) {
               }
 
               <p className="subHeading">Products Ordered</p>
-              {row.OrderProductDetail ? ( 
+              {row.OrderProductDetail ? (
                 <>
                   <div size="small" aria-label="products">
                     {JSON.parse(row.OrderProductDetail).filter((x) => x.LogisticID === null || x.LogisticID === 0)
@@ -1483,6 +1483,7 @@ class ViewTransactionsComponent extends Component {
       value: 0,
       tabsHidden: false,
       currentlyChosen: "Payment Confirm",
+      setting: false
     };
   }
 
@@ -1508,11 +1509,13 @@ class ViewTransactionsComponent extends Component {
     if (this.props.tracking.length > 0 && this.props.tracking[0].ReturnVal !== undefined) {
       this.props.CallResetOrderTracking()
       this.props.CallGetTransaction("Payment Confirm");
+      this.setState({ setting: true })
     }
 
     if (this.props.order.length > 0 && this.props.order[0].ReturnVal !== undefined) {
       this.props.CallClearOrder()
       this.props.CallGetTransaction("Payment Confirm");
+      this.setState({ setting: true })
     }
   }
 

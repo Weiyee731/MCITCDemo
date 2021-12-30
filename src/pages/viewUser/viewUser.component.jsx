@@ -299,7 +299,7 @@ class DisplayTable extends Component {
       this.state.filteredProduct.push(filteredItem);
     })
 
-    let removeDuplicate = this.state.filteredProduct.filter((ele, ind) => ind === this.state.filteredProduct.findIndex(elem => elem.UserID === ele.UserID))
+    let removeDuplicate = this.state.filteredProduct.length > 0 ? this.state.filteredProduct.filter((ele, ind) => ind === this.state.filteredProduct.findIndex(elem => elem.UserID === ele.UserID)) : []
     this.setState({ isFiltered: true, filteredProduct: removeDuplicate })
   }
 

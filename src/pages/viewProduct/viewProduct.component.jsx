@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -35,6 +36,9 @@ import { toast } from "react-toastify";
 import { connectableObservableDescriptor } from "rxjs/observable/ConnectableObservable";
 import { url } from "../../services/utils";
 import { browserHistory } from "react-router";
+
+import FormControl from "@material-ui/core/FormControl";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 function mapStateToProps(state) {
   return {
@@ -543,6 +547,7 @@ class DisplayTable extends Component {
       searchFilter: "",
       filteredProduct: [],
       isFiltered: false,
+      selectedMerchant: 0,
     };
 
     this.ToggleDeletable = this.ToggleDeletable.bind(this);
@@ -595,10 +600,7 @@ class DisplayTable extends Component {
         detailsShown: true,
       });
     }
-
-
   };
-
 
   componentDidUpdate(prevProps) {
 
@@ -612,7 +614,6 @@ class DisplayTable extends Component {
         productPage: '999',
         page: '1'
       });
-
       toast.success("Selected products removed successfully.")
     }
   }
@@ -647,6 +648,11 @@ class DisplayTable extends Component {
 
   handleSetDetailShown = () => {
     this.setState({ detailsShown: false })
+  }
+
+  filterMerchantListing = (e) => {
+    this.setState({ selectedMerchant: e.target.value })
+    console.log("THIS IS VALUE", e.target.value)
   }
 
   searchSpace = (value) => {
@@ -720,13 +726,46 @@ class DisplayTable extends Component {
       width: 1,
     };
 
+    this.state.filteredProduct.filter((ele, ind) => ind === this.state.filteredProduct.findIndex(elem => elem.OrderID === ele.OrderID))
+    console.log("this.props11", this.props)
+    if (this.props.Data.length > 0) {
+      var generateOptions = []
+      generateOptions = this.props.Data.length > 0 &&
+        this.props.Data
+          .filter((ele, ind) => ind === this.props.Data.findIndex(elem => elem.MerchantID === ele.MerchantID))
+          .map((data, i) => {
+            return (
+              <option value={data.MerchantID}>{data.MerchantShopName}</option>
+            );
+          });
+    }
+
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
           <ProductDetailsComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
         ) : this.state.deleteActive ? (
           <div>
-            <h1>Product List</h1>
+            <div className="row">
+              <div className="col-6">
+                <h1>Product List</h1>
+              </div>
+              <div className="col-6" style={{ paddingTop: "10px" }}>
+                <div className="selectContainer">
+                  <FormControl variant="outlined" size="small">
+                    <Select
+                      native
+                      value={this.state.selectedMerchant}
+                      onChange={this.filterMerchantListing.bind(this)}
+                      className="select"
+                    >
+                      <option value={0}>All Merchant Shop</option>
+                      {generateOptions}
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
+            </div>
             <div>
               <Button>
                 <i class="fa fa-plus" aria-hidden="true"></i>
@@ -751,17 +790,40 @@ class DisplayTable extends Component {
             </div>
             <SearchBox
               style={divStyle}
-              placeholder="Search..."
+              placeholder="Search By Product Name..."
               onChange={(e) => this.searchSpace(e.target.value)}
             />
             <DeletableTable
-              Data={this.state.isFiltered ? this.state.filteredProduct : this.props.Data}
+              Data={
+                this.state.isFiltered ?
+                  parseInt(this.state.selectedMerchant) === 0 ? this.state.filteredProduct : this.state.filteredProduct.length > 0 && this.state.filteredProduct.filter((x) => parseInt(x.MerchantID) === parseInt(this.state.selectedMerchant))
+                  : parseInt(this.state.selectedMerchant) === 0 ? this.props.Data : this.props.Data.length > 0 && this.props.Data.filter((x) => parseInt(x.MerchantID) === parseInt(this.state.selectedMerchant))
+              }
               ProductProps={this.props.ProductProps}
             ></DeletableTable>
           </div>
         ) : (
           <div>
-            <h1>Product List</h1>
+            <div className="row">
+              <div className="col-6">
+                <h1>Product List</h1>
+              </div>
+              <div className="col-6" style={{ paddingTop: "10px" }}>
+                <div className="selectContainer">
+                  <FormControl variant="outlined" size="small">
+                    <Select
+                      native
+                      value={this.state.selectedMerchant}
+                      onChange={this.filterMerchantListing.bind(this)}
+                      className="select"
+                    >
+                      <option value={0}>All Merchant Shop</option>
+                      {generateOptions}
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
+            </div>
             <div>
               <Button>
                 <i class="fa fa-plus" aria-hidden="true"></i>
@@ -785,13 +847,12 @@ class DisplayTable extends Component {
             </div>
             <SearchBox
               style={divStyle}
-              placeholder="Search..."
+              placeholder="Search By Product Name..."
               onChange={(e) => this.searchSpace(e.target.value)}
             />
 
             <div>
               <Paper style={divStyle}>
-                {/* <DisplayTableToolbar numSelected={this.state.selected.length} /> */}
                 <TableContainer>
                   <Table
                     className={table}
@@ -807,17 +868,11 @@ class DisplayTable extends Component {
                       onRequestSort={this.handleRequestSort}
                       rowCount={this.props.Data.length}
                     />
-                    {/* {this.props.Data.filter((searchedItem) =>
-                      typeof searchedItem.ProductName !== "undefined" &&
-                      searchedItem.ProductName.toLowerCase().includes(
-                        this.state.searchFilter
-                      )
-                    ).map((filteredItem) => {
-                      filteredProduct.push(filteredItem);
-                    })} */}
                     <TableBody>
                       {stableSort(
-                        this.state.isFiltered ? this.state.filteredProduct : this.props.Data,
+                        this.state.isFiltered ?
+                          parseInt(this.state.selectedMerchant) === 0 ? this.state.filteredProduct : this.state.filteredProduct.length > 0 && this.state.filteredProduct.filter((x) => parseInt(x.MerchantID) === parseInt(this.state.selectedMerchant))
+                          : parseInt(this.state.selectedMerchant) === 0 ? this.props.Data : this.props.Data.length > 0 && this.props.Data.filter((x) => parseInt(x.MerchantID) === parseInt(this.state.selectedMerchant)),
                         getComparator(this.state.order, this.state.orderBy)
                       )
                         .slice(
@@ -879,7 +934,16 @@ class DisplayTable extends Component {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
-                  count={this.props.Data.length}
+                  count={
+
+                    this.state.isFiltered ?
+                      parseInt(this.state.selectedMerchant) === 0 ?
+                        this.state.filteredProduct.length :
+                        this.state.filteredProduct.length > 0 && this.state.filteredProduct.filter((x) => parseInt(x.MerchantID) === parseInt(this.state.selectedMerchant)).length
+                      : parseInt(this.state.selectedMerchant) === 0 ?
+                        this.props.Data.length :
+                        this.props.Data.length > 0 && this.props.Data.filter((x) => parseInt(x.MerchantID) === parseInt(this.state.selectedMerchant)).length
+                  }
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
                   onPageChange={this.handleChangePage}

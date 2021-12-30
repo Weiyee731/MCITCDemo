@@ -274,8 +274,6 @@ class ViewProductGeneralInfo extends Component {
     let variationType = []
     let variationTypeID = []
 
-    console.log("THIS IS GET VARIATION", productInfo)
-
     if (productInfo.ProductVariation !== null && this.state.isVariationSet === false) {
       variationList = JSON.parse(productInfo.ProductVariation).filter((ele, ind) => ind === JSON.parse(productInfo.ProductVariation).findIndex(elem => elem.ProductVariationID === ele.ProductVariationID))
 

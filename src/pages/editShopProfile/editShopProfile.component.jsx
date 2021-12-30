@@ -150,12 +150,12 @@ class EditShopProfile extends Component {
           this.setDetails(shopDetails)
         }
       }
+      console.log("CHECKING PROPS", this.props)
       let ratingCount = []
       if (this.props.productsListing !== null && this.props.productsListing.length > 0) {
         JSON.parse(this.props.productsListing).map((X) => {
-          console.log("CHECK", X)
+          console.log("CHECKING PROPS2", X)
           ratingCount.push(X.ProductRating)
-
         })
       }
       this.setState({ shopRating: parseFloat(ratingCount.reduce((subtotal, item) => subtotal + item, 0) / ratingCount.length).toFixed(2) })
@@ -348,12 +348,12 @@ class EditShopProfile extends Component {
 
     const links = [
       // { title: "My Shop Page", url: "merchant/" + userid, data: "view >", icons: <StorefrontOutlinedIcon className="titleicon" /> },
-      { title: "Products", url: "viewProduct", data: merchantDetails ? merchantDetails.MerchantTotalProduct : [0], icons: <ListAltOutlinedIcon className="titleicon" /> },
+      { title: "Products", url: "", data: merchantDetails ? merchantDetails.MerchantTotalProduct : [0], icons: <ListAltOutlinedIcon className="titleicon" /> },
       // { title: "Response Rate", url: "", data: "37%", icons: <SmsOutlinedIcon className="titleicon" /> },
       // { title: "Response Time", url: "", data: "Within Hour", icons: <AccessTimeOutlinedIcon className="titleicon" /> },
       {
         title: "Shop Rating",
-        url: "viewProduct",
+        url: "",
         // url: "viewReviews",
         // data: merchantDetails.ShopRating ? merchantDetails.ShopReviewCount + (merchantDetails.ShopRating) : [0],
         data: this.state.shopRating,
@@ -395,7 +395,7 @@ class EditShopProfile extends Component {
                     fontWeight: 800
                   }}
                 >
-                  My Profile
+                  Shop Profile
                 </div>
 
                 <div className="font font-subtitle">
@@ -508,6 +508,7 @@ class EditShopProfile extends Component {
                           />
                         </div>
                       </div> */}
+                      <br/>
                       <div className="row">
                         <div className="col-2 rowStyle vertical-align">Country</div>
                         <div className="col-9">

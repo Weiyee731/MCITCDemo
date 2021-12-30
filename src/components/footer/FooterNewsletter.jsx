@@ -7,8 +7,9 @@ import SocialLinks from '../shared/SocialLinks';
 export default function FooterNewsletter() {
     return (
         <div className="site-footer__widget footer-links">
-            <h5>Newsletter</h5>
-            <div className="footer-newsletter__text">
+            <h5>Social Network</h5>
+            {/* <h5>Newsletter</h5> */}
+            {/* <div className="footer-newsletter__text">
                 Sign up our newsletter to get the shocking deals and latest news!!
             </div>
 
@@ -21,7 +22,7 @@ export default function FooterNewsletter() {
                     placeholder="Email Address..."
                 />
                 <button className="footer-newsletter__form-button btn btn-primary">Subscribe</button>
-            </form>
+            </form> */}
 
             <div className="footer-newsletter__text footer-newsletter__text--social">
                 Follow us on social networks

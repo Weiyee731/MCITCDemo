@@ -133,7 +133,7 @@ const headCells = [
     id: "CompanyName",
     numeric: false,
     disablePadding: true,
-    label: "Company Name",
+    label: "Shop Name",
   },
   {
     id: "CompanyContactNo",
@@ -141,12 +141,6 @@ const headCells = [
     disablePadding: false,
     label: "Contact No.",
   },
-  // {
-  //   id: "CompanyPoscode",
-  //   numeric: false,
-  //   disablePadding: false,
-  //   label: "Postcode",
-  // },
   { id: "CompanyCity", numeric: false, disablePadding: false, label: "City" },
   {
     id: "CompanyState",
@@ -292,7 +286,9 @@ class DisplayTable extends Component {
       detailsShown: false,
       deleteActive: false,
       searchFilter: "",
-      tabvalue: "0"
+      tabvalue: "0",
+      filteredProduct: [],
+      isFiltered: false
     };
 
     this.ToggleDeletable = this.ToggleDeletable.bind(this);
@@ -368,6 +364,34 @@ class DisplayTable extends Component {
     this.setState({ tabvalue: newValue });
   };
 
+  searchSpace = (value) => {
+    this.state.filteredProduct.splice(0, this.state.filteredProduct.length)
+
+    this.props.Data.filter((searchedItem) =>
+      searchedItem.UserContactNo !== null && searchedItem.UserContactNo.includes(
+        value
+      )
+    ).map((filteredItem) => {
+      this.state.filteredProduct.push(filteredItem);
+    })
+
+    this.props.Data.filter((searchedItem) =>
+      searchedItem.ShopName !== null && searchedItem.ShopName.toLowerCase().includes(
+        value.toLowerCase()
+      )
+    ).map((filteredItem) => {
+      this.state.filteredProduct.push(filteredItem);
+    })
+
+    this.props.Data.filter((searchedItem) => (searchedItem.FirstName + " " + searchedItem.LastName).toLowerCase()
+      .includes(value.toLowerCase())).map((filteredItem) => {
+        this.state.filteredProduct.push(filteredItem);
+      })
+
+    let removeDeplicate = this.state.filteredProduct.filter((ele, ind) => ind === this.state.filteredProduct.findIndex(elem => elem.UserID === ele.UserID))
+    this.setState({ isFiltered: true, filteredProduct: removeDeplicate })
+  }
+
   render() {
     const emptyRows =
       this.state.rowsPerPage -
@@ -387,7 +411,7 @@ class DisplayTable extends Component {
       minWidth: 750,
     };
 
-    var filteredProduct = [];
+
 
     const classes2 = {
       border: 0,
@@ -418,15 +442,7 @@ class DisplayTable extends Component {
             orderBy={this.state.orderBy}
             onRequestSort={this.handleRequestSort}
             rowCount={this.props.Data.length}
-          />
-          {
-            this.props.Data.length > 0 && this.props.Data.filter((searchedItem) => (searchedItem.FirstName + " " + searchedItem.LastName).toLowerCase()
-              .includes(this.state.searchFilter.toLowerCase()))
-              .map((filteredItem) => {
-                if ((filteredProduct.filter((x) => x.UserID === filteredItem.UserID)).length === 0)
-                  filteredProduct.push(filteredItem)
-              })
-          }
+          />         
         </>
       )
     }
@@ -434,7 +450,7 @@ class DisplayTable extends Component {
       return (
         <TableBody>
           {stableSort(
-            filteredProduct,
+            this.state.isFiltered === true ? this.state.filteredProduct : this.props.Data,
             getComparator(this.state.order, this.state.orderBy)
           )
             .slice(
@@ -521,8 +537,10 @@ class DisplayTable extends Component {
 
                 <SearchBox
                   style={divStyle}
-                  placeholder="Search..."
-                  onChange={(e) => this.setState({ searchFilter: e.target.value })}
+                  placeholder="Search By Representive Name, Shop Name and Contact..."
+
+                  onChange={e => this.searchSpace(e.target.value)}
+                // onChange={(e) => this.setState({ searchFilter: e.target.value })}
                 />
 
                 <div>
