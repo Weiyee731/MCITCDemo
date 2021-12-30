@@ -95,9 +95,6 @@ const rootEpic = combineEpics(
   gitEpic.deleteProductCategory,
   gitEpic.addProductPurchaseOrder,
   gitEpic.AddProductMedia,
-  //=================PROMOTION=============================//
-  gitEpic.getAllPromotion,
-  gitEpic.AddPromotion,
   //=================SUPPLIER=============================//
   gitEpic.getAllSupplierByUserStatus,
   gitEpic.registerSupplier,

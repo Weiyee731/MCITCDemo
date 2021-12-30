@@ -1042,6 +1042,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         addPromo: action.payload,
       });
 
+    case GitAction.ClearAddPromo:
+      return Object.assign({}, state, { addPromo: [], });
+
     case GitAction.UpdatePromotion:
       return Object.assign({}, state, { loading: true });
     case GitAction.UpdatedPromotion:

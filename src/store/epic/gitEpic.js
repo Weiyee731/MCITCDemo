@@ -2775,13 +2775,21 @@ export class GitEpic {
           payload.PromotionDesc +
           "&PROMOTIONSTARTDATE=" +
           payload.PromotionStartDate +
+          "&PROMOTIONDISCOUNTPERCENTAGE=" +
+          payload.DiscountPercentage +
+          "&BANNERIMAGE=" +
+          payload.BannerImage +
+          "&SLIDEORDER=" +
+          payload.SlideOrder +
           "&PROMOTIONENDDATE=" +
           payload.PromotionEndDate +
           "&PRODUCTID=" +
-          payload.ProductID // {98,99,100}
-        );
+          payload.ProductID);
+          
         let json = await response.json();
         json = JSON.parse(json);
+
+        console.log("json", json)
         return {
           type: GitAction.AddedPromotion,
           payload: json,

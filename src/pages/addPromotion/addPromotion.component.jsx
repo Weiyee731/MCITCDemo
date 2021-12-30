@@ -54,6 +54,7 @@ function mapStateToProps(state) {
   return {
     Promotion: state.counterReducer["addPromo"], // Add data to Promotion
     // allstocks: state.counterReducer["products"],
+
     allproducts: state.counterReducer["productsListing"],
     promotionBannerReturn: state.counterReducer["promotionBannerReturn"],
     // productsListing: state.counterReducer["productsListing"],
@@ -63,10 +64,9 @@ function mapStateToProps(state) {
 // ------------------------------------------- Call call-----------------------------------------------
 function mapDispatchToProps(dispatch) {
   return {
-    CallAddPromotion: (promoData) =>
-      dispatch(GitAction.CallAddPromotion(promoData)), // To add data
-    CallAllProductsListing: (prodData) =>
-      dispatch(GitAction.CallAllProductsListing(prodData)), // To call Product List For Promotion Product
+    CallClearPromotion: () => dispatch(GitAction.CallClearPromotion()),
+    CallAddPromotion: (promoData) => dispatch(GitAction.CallAddPromotion(promoData)), // To add data
+    CallAllProductsListing: (prodData) => dispatch(GitAction.CallAllProductsListing(prodData)), // To call Product List For Promotion Product
   };
 }
 
@@ -269,7 +269,6 @@ function TransferList(props) {
       <List className={classes.list} dense component="div" role="list" style={{ width: "500px", height: "300px" }}>
         {items.length > 0 && items.map((value, i) => {
           const labelId = `transfer-list-all-item-${value}-label`;
-
           return (
             <ListItem
               key={value}
@@ -418,8 +417,16 @@ class AddPromotionBannerComponent extends Component {
       isDetailsSet: false,
 
       file: [],
+
       productsDisplayed: [],
+      filteredProduct: [],
+      isFiltered: false,
+      filteredChosenProduct: [],
       productsChoosen: [],
+      isChosenFiltered: false,
+
+      // productsDisplayed: [],
+      // productsChoosen: [],
       ProductID: [], //ADD PRODUCT
       fullChosenProducts: [],
       fullChosenProductsBackup: [], //final products chosen to be sent
@@ -444,6 +451,9 @@ class AddPromotionBannerComponent extends Component {
       PromotionDescEmpty: false,
       productsAreNotChosen: false,
       promotionDiscountNotSet: false,
+
+      mediaAlert: false,
+      isPromoSubmit: false
 
     };
 
@@ -708,7 +718,7 @@ class AddPromotionBannerComponent extends Component {
   };
 
   checkProductsAreChosen = () => {
-    if (this.state.fullChosenProductsBackup.length > 0) {
+    if (this.state.productsChoosen.length > 0) {
       this.setState({
         productsAreNotChosen: false,
       });
@@ -749,13 +759,15 @@ class AddPromotionBannerComponent extends Component {
         this.state.startDateInvalid ||
         this.state.endDateInvalid ||
         this.state.PromotionDescEmpty ||
-        this.state.promotionDiscountNotSet
+        this.state.promotionDiscountNotSet ||
+        this.state.file.length === 0
       )
     ) {
       var ProductIDOnly = [];
-      this.state.fullChosenProductsBackup.map((product) => {
+      this.state.productsChoosen.map((product) => {
         ProductIDOnly.push(product.ProductID);
       });
+
       var EndDate =
         this.state.PromotionEndDate.getFullYear() +
         "" +
@@ -774,16 +786,7 @@ class AddPromotionBannerComponent extends Component {
         ((this.state.PromotionStartDate.getDate() < 10 ? "0" : "") +
           this.state.PromotionStartDate.getDate());
 
-      const promoInfo = {
-        ProductID: ProductIDOnly,
-        PromotionDesc: this.state.PromotionDesc,
-        PromotionTitle: this.state.PromotionTitle,
-        BannerImage: BannerImage + ".jpg",
-        SlideOrder: "Null",
-        promoStart: StartDate,
-        promoEnd: EndDate,
-        DiscountPercentage: this.state.DiscountPercentage,
-      };
+
 
       //============= Promotion Content and Promotion Banner Updator =============
 
@@ -791,22 +794,28 @@ class AddPromotionBannerComponent extends Component {
 
       //============= Set BannerImage Name by Date + Time =============
       var today = new Date();
-      var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-      var BannerImage = date + ' ' + time;
+      var date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate();
+      var time = today.getHours() + "" + today.getMinutes() + "" + today.getSeconds();
+      var BannerImage = date + '_' + time;
+
+      const promoInfo = {
+        ProductID: ProductIDOnly,
+        PromotionDesc: this.state.PromotionDesc,
+        PromotionTitle: this.state.PromotionTitle,
+        BannerImage: BannerImage + ".jpg",
+        SlideOrder: 1,
+        PromotionStartDate: StartDate,
+        PromotionEndDate: EndDate,
+        DiscountPercentage: this.state.DiscountPercentage,
+      };
 
       formData.append("imageFile", this.state.file[0]);
       formData.append("imageName", BannerImage);
-      let url = "https://myemporia.my/emporiaimage/uploaduserprofilepicture.php";
+      let url = "https://myemporia.my/emporiaimage/uploadpromotion.php"
       axios.post(url, formData, {}).then(res => {
         if (res.status === 200) {
-          if (res.data === 1) {
-            toast.success("Promotion Banner Added.")
-            this.props.CallAddPromotion(promoInfo)
-          }
-          else {
-            toast.error("Res Data error.");
-          }
+          this.props.CallAddPromotion(promoInfo)
+          this.setState({ isPromoSubmit: true })
         }
         else {
           toast.error("Res Status error.");
@@ -814,22 +823,26 @@ class AddPromotionBannerComponent extends Component {
       });
     }
     else {
-      toast.error("add promotion error");
+      toast.error("Please fill in all required details");
+      if (this.state.file.length === 0)
+        this.setState({ mediaAlert: true })
     }
   };
 
   componentDidUpdate() {
     // to capture the photo is successfully save into the database, then reload if success
-    if (this.props.promotionBannerReturn !== undefined) {
-      if (this.props.promotionBannerReturn.length > 0) {
-        if (this.props.promotionBannerReturn[0].ReturnVal === 1) {
-          toast.success("Promotion Banner Added Successfully.")
-          window.location.href = '/viewProductPromotion';
+    if (this.props.Promotion !== undefined && this.state.isPromoSubmit === true) {
+      if (this.props.Promotion.length > 0) {
+        if (this.props.Promotion[0].ReturnVal === 1) {
+          this.props.CallClearPromotion()
         }
+      }
+      else {
+        toast.success("Promotion Banner Added Successfully.")
+        window.location.href = '/viewProductPromotion';
       }
     }
   }
-
 
   render() {
 
@@ -866,24 +879,23 @@ class AddPromotionBannerComponent extends Component {
             filterDiffListing.push(filteredData)
           })
         }
-
-        else 
+        else
           filterDiffListing = filterDiffListing.filter((x) => x.ProductName !== data)
-        
       })
 
-      if (type === "add") 
+      if (type === "add")
         this.setState({ productsDisplayed: filterDiffListing, productsChoosen: this.state.productsChoosen.concat(filteredSameListing) })
-      
-      else 
+
+      else
         this.setState({ productsChoosen: filterDiffListing, productsDisplayed: this.state.productsDisplayed.concat(filteredSameListing) })
     }
-    console.log("this.state1212", this.state)
 
     const Search = (type) => {
       var newList = [];
       if (type == "add") {
-        newList = allProductsData;
+
+
+        newList = this.state.productsDisplayed;
         newList.length > 0 && newList.map((productLeft) => {
           this.state.fullChosenProducts.map((chosen) => {
             if (productLeft.ProductName != chosen.ProductName) {
@@ -893,8 +905,6 @@ class AddPromotionBannerComponent extends Component {
             }
           });
         });
-        console.log("HERE    this.state.fullChosenProducts", this.state.fullChosenProducts)
-        console.log("HERE ", newList)  
 
         var items = [];
         newList.length > 0 && newList.map((product) => {
@@ -906,28 +916,24 @@ class AddPromotionBannerComponent extends Component {
             items.push(product);
           }
         });
-        console.log("HERE items ", items)
         if (items) {
           var newItemsImages = items.length > 0 && items.map(
             (images) => images.ProductImage
           );
         }
+
         this.setState({
-          productsDisplayed: items,
+          filteredProduct: items,
           imagesLeft: newItemsImages,
+          isFiltered: true
         });
       } else if (type == "remove") {
-
-        console.log("HERE ", type)
-        var chosenItems = allProductsData;
-        console.log("HERE REMOVE ", chosenItems)
+        var chosenItems = this.state.productsChoosen;
         this.state.productsLeft.length > 0 && this.state.productsLeft.map((product) => {
           chosenItems = chosenItems.filter(
             (listItem) => listItem.ProductName != product
           );
         });
-        console.log("HERE REMOVE ", this.state)
-        console.log("HERE REMOVE ", chosenItems)
         chosenItems.length > 0 && chosenItems.map((product) => {
           if (
             product.ProductName.toLowerCase().includes(
@@ -945,6 +951,7 @@ class AddPromotionBannerComponent extends Component {
           fullChosenProducts: newList,
           fullChosenProductsBackup: chosenItems,
           imagesChosen: newProductListImages,
+          isChosenFiltered: true
         });
       }
     };
@@ -1132,7 +1139,7 @@ class AddPromotionBannerComponent extends Component {
               <br />
               {this.state.PromotionTitleEmpty && (
                 <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                  Product Title Need to Be Set.
+                  Please insert a Product Title.
                 </p>
               )}
               <br />
@@ -1198,7 +1205,7 @@ class AddPromotionBannerComponent extends Component {
               <br />
               {this.state.promotionDiscountNotSet && (
                 <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                  Promotion Discount Need to Be Set.
+                  Please set the Promotion Discount.
                 </p>
               )}
 
@@ -1214,8 +1221,8 @@ class AddPromotionBannerComponent extends Component {
                     onChange={this.uploadHandler}
                   />
                 </div>
-                {this.state.mediaAlert === true ? <FormHelperText className="invalid-message">Please Insert an Story Photo</FormHelperText> : ""}
-              </div>
+                {this.state.mediaAlert === true ? <FormHelperText className="invalid-message" style={{ color: "#e31e10" }}>Please Insert a Promotion Banner</FormHelperText> : ""}
+              </div>  
 
               {/* ----------------------------------------------- (End) Add Promotion Banner --------------------------------------- */}
 
@@ -1227,7 +1234,7 @@ class AddPromotionBannerComponent extends Component {
                 <br />
 
                 <TransferList
-                  allProducts={this.state.productsDisplayed}
+                  allProducts={this.state.isFiltered === false ? this.state.productsDisplayed : this.state.filteredProduct}
                   // allProducts={allProductsData}
                   search={Search}
                   searchWordAdd={this.state.searchWordAdd}

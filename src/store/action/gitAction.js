@@ -165,7 +165,7 @@ export class GitAction {
     };
   }
 
-  static CallClearShopUpdate(){
+  static CallClearShopUpdate() {
     return {
       type: GitAction.ClearUpdateShop,
     };
@@ -1101,6 +1101,8 @@ export class GitAction {
   static AddPromotion = "ADD-PROMOTION";
   static AddedPromotion = "ADDED-PROMOTION";
 
+  static ClearAddPromo = "CLEAR-ADD-PROMOTION";
+
   static UpdatePromotion = "UPDATE-PROMOTION";
   static UpdatedPromotion = "UPDATED-PROMOTION";
 
@@ -1111,6 +1113,12 @@ export class GitAction {
     return {
       type: GitAction.AddPromotion,
       payload: promoData,
+    };
+  }
+
+  static CallClearPromotion() {
+    return {
+      type: GitAction.ClearAddPromo
     };
   }
 
