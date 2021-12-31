@@ -24,15 +24,9 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TableHead from "@material-ui/core/TableHead";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import InputLabel from "@material-ui/core/InputLabel";
+import DeleteIcon from "@material-ui/icons/Delete";
 //------------------------------------------------------------------- DatePicker-----------------------------------------------
-import "date-fns";
-import { format } from "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+import DatePicker from 'react-date-picker'
 import moment from "moment";
 
 // -------------------------------------------------ADD PRODUCT THINGS--------------------------------------------------------
@@ -46,6 +40,14 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
 import CardHeader from "@material-ui/core/CardHeader";
 import { browserHistory } from "react-router";
+import { ThreeSixtyTwoTone, ThumbUpSharp } from "@mui/icons-material";
+import Pagination from "../../components/shared/Pagination";
+import Dialog from '@material-ui/core/Dialog';
+import AppBar from '@material-ui/core/AppBar';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 //----------------------------------------------------------------------------------------------------
 function mapStateToProps(state) {
@@ -82,235 +84,6 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-function TransferList(props) {
-  const classes = useStyles();
-  const [checked, setChecked] = React.useState([]);
-
-  const getListOfProductName = () => {
-    let list = []
-    props.allProducts.filter(el => !props.productsListFromProps.includes(el.ProductName)).map((el) => list.push(el.ProductName))
-    return list
-  }
-
-  const [left, setLeft] = React.useState(getListOfProductName());
-  const [right, setRight] = React.useState(props.productsListFromProps);
-  // var [left, setLeft] = React.useState(
-  //   [props.allProducts.filter(function(e) {
-  //     let i = right.indexOf(e)
-  //     return 1 == -1 ? true : (right.splice(i, 1), false)
-  //   ;})])
-
-
-  const leftChecked = intersection(checked, left);
-  const rightChecked = intersection(checked, right);
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-    setChecked(newChecked);
-  };
-
-  const numberOfChecked = (items) => intersection(checked, items).length;
-
-  const handleToggleAll = (items) => () => {
-    if (numberOfChecked(items) === items.length) {
-      setChecked(not(checked, items));
-    } else {
-      setChecked(union(checked, items));
-    }
-  };
-
-  const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked));
-    setLeft(not(left, leftChecked));
-    setChecked(not(checked, leftChecked));
-  };
-
-  const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked));
-    setRight(not(right, rightChecked));
-    setChecked(not(checked, rightChecked));
-  };
-
-  const updateSearch = (title, e) => {
-    if (title === "Products Left") {
-      props.setSearchValue(e.target.value, "add");
-    } else if (title === "Chosen Products") {
-      props.setSearchValue(e.target.value, "remove");
-    }
-  };
-
-  React.useEffect(() => {
-    const timeOutId = setTimeout(() => props.search("add"), 0);
-    return () => clearTimeout(timeOutId);
-  }, [props.searchWordAdd]);
-
-  React.useEffect(() => {
-    const timeOutId = setTimeout(() => props.search("remove"), 0);
-    return () => clearTimeout(timeOutId);
-  }, [props.searchWordRemove]);
-
-  React.useEffect(() => {
-    const timeOutId = setTimeout(() => props.setChosenProducts(right, left), 0);
-    return () => clearTimeout(timeOutId);
-  }, [right]);
-
-  React.useEffect(() => {
-    const timeOutId = setTimeout(
-      () => setLeft(getListOfProductName()),
-      5000
-    );
-    return () => clearTimeout(timeOutId);
-  }, [props.allProducts]);
-
-  React.useEffect(() => {
-    const timeOutId = setTimeout(
-      () =>
-        setRight(
-          props.fullChosenProducts.map((product) => product.ProductName)
-        ),
-      5000
-    );
-    return () => clearTimeout(timeOutId);
-  }, [props.fullChosenProducts]);
-
-  const customList = (title, items, valueToBeUsed, allItems) => (
-    <Card>
-      <div
-        style={{
-          width: "100%",
-          textAlign: "center",
-          maxHeight: "230dp",
-          overflow: "auto",
-        }}
-      >
-        <Input
-          style={{ width: "80%", marginBottom: "5px" }}
-          id="input-with-icon-adornment"
-          value={valueToBeUsed}
-          onChange={updateSearch.bind(this, title)}
-          startAdornment={
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          }
-        />
-      </div>
-      <CardHeader
-        className={classes.cardHeader}
-        avatar={
-          <Checkbox
-            onClick={handleToggleAll(items)}
-            checked={
-              numberOfChecked(items) === items.length && items.length !== 0
-            }
-            indeterminate={
-              numberOfChecked(items) !== items.length &&
-              numberOfChecked(items) !== 0
-            }
-            disabled={items.length === 0}
-            inputProps={{ "aria-label": "all items selected" }}
-          />
-        }
-        title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
-      />
-
-      <Divider />
-
-      <List className={classes.list} dense component="div" role="list">
-
-        {items.map((value, i) => {
-          const labelId = `transfer-list-all-item-${value}-label`;
-
-          return (
-            <ListItem
-              key={value}
-              role="listitem"
-              button
-              onClick={handleToggle(value)}
-            >
-              <ListItemIcon>
-                <Checkbox
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ "aria-labelledby": labelId }}
-                />
-                <img
-                  style={{ margin: "10px" }}
-                  height={50}
-                  // src={JSON.parse(allItems[i].ProductImages)[0].ProductMediaUrl}
-                  src={allItems[i]}
-                  alt=""
-                />
-              </ListItemIcon>
-
-              <ListItemText id={labelId} primary={value} />
-            </ListItem>
-          );
-        })}
-        <ListItem />
-      </List>
-    </Card>
-  );
-
-  return (
-    <Grid
-      container
-      spacing={2}
-      justifyContent="center"
-      alignItems="center"
-      className={classes.root}
-    >
-      <Grid item>
-        {customList(
-          "Products Left",
-          left,
-          props.searchWordAdd,
-          props.imagesLeft
-        )}
-      </Grid>
-      <Grid item>
-        <Grid container direction="column" alignItems="center">
-          <Button
-            variant="outlined"
-            size="small"
-            className={classes.button}
-            onClick={handleCheckedRight}
-            disabled={leftChecked.length === 0}
-            aria-label="move selected right"
-          >
-            &gt;
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            className={classes.button}
-            onClick={handleCheckedLeft}
-            disabled={rightChecked.length === 0}
-            aria-label="move selected left"
-          >
-            &lt;
-          </Button>
-        </Grid>
-      </Grid>
-      <Grid item>
-        {customList(
-          "Chosen Products",
-          right,
-          props.searchWordRemove,
-          props.imagesChosen
-        )}
-      </Grid>
-    </Grid>
-  );
-}
 
 //------------------------------------- Table Component ------------------------------------------------
 function descendingComparator(a, b, orderBy) {
@@ -323,12 +96,6 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -339,405 +106,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  paper: {
-    width: "100%",
-    margin: "auto",
-    padding: "1%",
-    // paddingRight: "1%",
-    marginTop: "15px",
-  },
-  list: {
-    width: 300,
-    height: 230,
-    backgroundColor: theme.palette.background.paper,
-    overflow: "auto",
-  },
-  table: {
-    // margin: "20px",
-    minWidth: 750,
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
-  },
-  // highlight:
-  //   theme.palette.type === "light"
-  //     ? {
-  //         color: theme.palette.secondary.main,
-  //         // backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-  //       }
-  //     : {
-  //         color: theme.palette.text.primary,
-  //         backgroundColor: theme.palette.secondary.dark,
-  //       },
-  title: {
-    flex: "1 1 100%",
-  },
-}));
-const useStyles2 = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  paper: {
-    width: "100%",
-    margin: "auto",
-    padding: "1%",
-    // paddingRight: "1%",
-    marginTop: "15px",
-  },
-  table: {
-    // margin: "20px",
-    minWidth: 750,
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
-  },
-  // highlight:
-  //   theme.palette.type === "light"
-  //     ? {
-  //         color: theme.palette.secondary.main,
-  //         backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-  //       }
-  //     : {
-  //         color: theme.palette.text.primary,
-  //         backgroundColor: theme.palette.secondary.dark,
-  //       },
-  title: {
-    flex: "1 1 100%",
-  },
-}));
-
-const SelectProductTableToolbar = (props) => {
-  const classes = useStyles();
-
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-    // className={clsx(classes.root, {
-    //   [classes.highlight]: numSelected > 0,
-    // })}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} Selected Product
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          // variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Promotion Product Selection
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Add">
-          <IconButton aria-label="add">
-            <AddIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        ""
-      )}
-    </Toolbar>
-  );
-};
-
-SelectProductTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
-function DisplayTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-  const classes = useStyles2();
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-const headCells = [
-  {
-    id: "ProductImage",
-    numeric: false,
-    disablePadding: true,
-    label: "Product Name",
-  },
-  {
-    id: "ProductName",
-    numeric: false,
-    // disablePadding: true,
-    label: "Brand",
-  },
-];
-
-class DisplayTable extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      order: "asc",
-      orderBy: "OrderID",
-      selected: [],
-      page: 0,
-      dense: false,
-      rowsPerPage: 5,
-      detailsShown: false,
-      deleteActive: false,
-      searchFilter: "",
-      // ProductID: JSON.parse(this.props.data.PromotionDetail),
-    };
-    this.handleRequestSort = this.handleRequestSort.bind(this);
-    this.onRowClick = this.onRowClick.bind(this);
-    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-    this.handleChangePage = this.handleChangePage.bind(this);
-    this.handleChangeDense = this.handleChangeDense.bind(this);
-    this.isSelected = this.isSelected.bind(this);
-  }
-
-  handleRequestSort = (event, property) => {
-    const isAsc = this.state.orderBy === property && this.state.order === "asc";
-    this.setState({ order: isAsc ? "desc" : "asc" });
-    this.setState({ orderBy: property });
-  };
-
-  onRowClick = (event, row, index) => {
-    this.setState({
-      ProductName: row.ProductName,
-      Brand: row.Brand,
-      ProductID: row.ProductID,
-    });
-
-
-    if (this.state.detailsShown) {
-      this.setState({
-        detailsShown: false,
-      });
-      //   this.props.setTabsHidden(false);
-    } else {
-      this.setState({
-        detailsShown: true,
-      });
-      //   this.props.setTabsHidden(true);
-    }
-  };
-
-  handleChangePage = (event, newPage) => {
-    this.setState({ page: newPage });
-  };
-
-  handleChangeRowsPerPage = (event) => {
-    this.setState({ rowsPerPage: parseInt(event.target.value, 10) });
-    this.setState({ page: 0 });
-  };
-
-  handleChangeDense = (event) => {
-    this.setState({ dense: event.target.checked });
-  };
-
-  isSelected = (name) => { };
-
-  render() {
-
-
-    const { classes, data, data2 } = this.props;
-
-    const emptyRows =
-      this.state.rowsPerPage -
-      Math.min(
-        this.state.rowsPerPage,
-        this.props.Data.length - this.state.page * this.state.rowsPerPage
-      );
-
-    const divStyle = {
-      width: "100%",
-      margin: "auto",
-      padding: "1%",
-      marginTop: "15px",
-    };
-
-    const table = {
-      minWidth: 750,
-    };
-
-    var filteredProduct = [];
-
-    const classes2 = {
-      border: 0,
-      clip: "rect(0 0 0 0)",
-      height: 1,
-      margin: -1,
-      overflow: "hidden",
-      padding: 0,
-      position: "absolute",
-      top: 20,
-      width: 1,
-    };
-
-    return (
-      <div style={{ margin: "2%" }}>
-        <div>
-          <div>
-            <Paper style={divStyle}>
-              <TableContainer style={{ maxHeight: "300px" }}>
-                <Table
-                  className={table}
-                  aria-labelledby="tableTitle"
-                  size={this.state.dense ? "small" : "medium"}
-                  aria-label="enhanced table"
-                  stickyHeader
-                >
-                  <DisplayTableHead
-                    classes={classes2}
-                    numSelected={this.state.selected.length}
-                    order={this.state.order}
-                    orderBy={this.state.orderBy}
-                    onRequestSort={this.handleRequestSort}
-                    rowCount={this.props.Data.length}
-                  />
-                  {this.props.Data.filter((searchedItem) =>
-                    searchedItem.ProductName.toLowerCase().includes(
-                      this.state.searchFilter
-                    )
-                  ).map((filteredItem) => {
-                    filteredProduct.push(filteredItem);
-                  })}
-                  <TableBody>
-                    {stableSort(
-                      filteredProduct,
-                      getComparator(this.state.order, this.state.orderBy)
-                    )
-                      .slice(
-                        this.state.page * this.state.rowsPerPage,
-                        this.state.page * this.state.rowsPerPage +
-                        this.state.rowsPerPage
-                      )
-                      .map((row, index) => {
-                        const isItemSelected = this.isSelected(row.ProductID);
-                        const labelId = `enhanced-table-checkbox-${index}`;
-
-                        return (
-                          <TableRow
-                            hover
-                            // onClick={(event) =>
-                            //   this.onRowClick(event, row, index)
-                            // }
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.ProductID}
-                            selected={this.state.ProductID}
-                          >
-                            {/* <TableCell padding="checkbox">
-                                <Checkbox
-                                  checked={isItemSelected}
-                                  inputProps={{ "aria-labelledby": labelId }}
-                                />
-                              </TableCell> */}
-                            <TableCell align="left">
-                              {row.ProductName}
-                            </TableCell>
-                            <TableCell align="left">{row.Brand}</TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    {emptyRows > 0 && (
-                      <TableRow
-                        style={{
-                          height: (this.state.dense ? 33 : 53) * emptyRows,
-                        }}
-                      >
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={this.props.Data.length}
-                rowsPerPage={this.state.rowsPerPage}
-                page={this.state.page}
-                onPageChange={this.handleChangePage}
-                onRowsPerPageChange={this.handleChangeRowsPerPage}
-              />
-            </Paper>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
 class PromotionDetailsComponent extends Component {
-  constructor(props) {
-    super(props);
-    // this.props.CallAllProductsByProductStatus({
-    //   ProductStatus: "Endorsed",
-    //   UserID: window.localStorage.getItem("id"),
-    // });
-  }
-
   state = {
     order: "asc",
     orderBy: "productName",
@@ -747,7 +116,7 @@ class PromotionDetailsComponent extends Component {
     rowsPerPage: 5,
     searchFilter: "",
     Discount: null,
-    // Amount: [],
+
     isChecked: true,
     PromotionID: this.props.data.PromotionID,
     PromotionTitle: this.props.data.PromotionTitle,
@@ -758,29 +127,22 @@ class PromotionDetailsComponent extends Component {
     PromotionStartDate: new Date(this.props.data.BeginDate),
     PromotionEndDate: new Date(this.props.data.EndDate),
 
-    productsDisplayed: [],
-    searchWordAdd: "",
-    searchWordRemove: "",
-    chosenProducts: [],
-    imagesChosen: [],
-    imagesLeft: [],
-    chosenProductsNames: [],
-    productsLeft: [],
-    fullChosenProducts: JSON.parse(this.props.data.PromotionDetail),
-    fullChosenProductsBackup: JSON.parse(this.props.data.PromotionDetail), //final products chosen to be sent
-
     startDateNotSet: false,
     startDateInvalid: false,
     endDateNotSet: false,
     endDateInvalid: false,
     PromotionTitleEmpty: false,
     PromotionDescEmpty: false,
-    productsAreNotChosen: false,
+
     toBeEdited: false,
+    currentPage: 1,
+    rowPerPage: 5,
+    isAddOpen: false,
   };
-  // this.isSelected = this.isSelected.bind(this);
 
   handleChange(data, e) {
+    console.log("this.state data", data)
+    console.log("this.state e", e)
     if (data === "PromotionTitle") {
       this.setState({
         PromotionTitle: e.target.value,
@@ -810,9 +172,7 @@ class PromotionDetailsComponent extends Component {
           });
         }
       } else {
-        this.setState({
-          promoStart: "",
-        });
+        this.setState({ promoStart: "", });
       }
       setTimeout(
         function () {
@@ -864,17 +224,11 @@ class PromotionDetailsComponent extends Component {
         }.bind(this),
         200
       );
-    } else if (data === "Discount") {
+    } else if (data === "DiscountPercentage") {
       this.setState({
-        Discount: e.target.value,
+        DiscountPercentage: e.target.value,
       });
     }
-    // else if (data === "ProductID") {
-
-    //   this.setState({
-    //     ProductID: e.target.value,
-    //   });
-    // }
   }
 
   checkPromotionTitle = () => {
@@ -1109,14 +463,12 @@ class PromotionDetailsComponent extends Component {
     }
   };
 
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page })
+  };
+
   render() {
     const { data, data2 } = this.props;
-    let allProductsData = this.props.allproducts
-      ? Object.keys(this.props.allproducts).map((key) => {
-        return this.props.allproducts[key];
-      })
-      : {};
-
     const back = () => {
       window.location.reload(false);
     };
@@ -1124,65 +476,10 @@ class PromotionDetailsComponent extends Component {
     // ------------------------------------------------------------ Edit Component ---------------------------------------------------
     const edit = (e) => {
       if (this.state.toBeEdited) {
-        this.setState({
-          toBeEdited: false,
-        });
+        this.setState({ toBeEdited: false, });
       } else {
-        this.setState({
-          toBeEdited: true,
-        });
+        this.setState({ toBeEdited: true, });
       }
-    };
-
-    let PromotionsData = this.props.allpromo
-      ? Object.keys(this.props.allpromo).map((key) => {
-        return this.props.allpromo[key];
-      })
-      : {};
-
-    // -----------------------------------------------------------------------------------------------------------------------------------
-
-    // const handleClick = (event, name) => {
-    //   const selectedIndex = this.state.ProductID.indexOf(name);
-    //   let newSelected = [];
-
-    //   if (selectedIndex === -1) {
-    //     newSelected = newSelected.concat(this.state.ProductID, name);
-    //   } else if (selectedIndex === 0) {
-    //     newSelected = newSelected.concat(this.state.ProductID.slice(1));
-    //   } else if (selectedIndex === this.state.ProductID.length - 1) {
-    //     newSelected = newSelected.concat(this.state.ProductID.slice(0, -1));
-    //   } else if (selectedIndex > 0) {
-    //     newSelected = newSelected.concat(
-    //       this.state.ProductID.slice(0, selectedIndex),
-    //       this.state.ProductID.slice(selectedIndex + 1)
-    //     );
-    //   }
-    //   this.setState({ ProductID: newSelected });
-    // };
-
-    // const isSelected = (name) => this.state.ProductID.indexOf(name) !== -1;
-
-    const handleChangePage = (event, newPage) => {
-      this.setState({ page: newPage });
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-      this.setState({ rowsPerPage: parseInt(event.target.value, 10) });
-    };
-
-    const emptyRows =
-      this.state.rowsPerPage -
-      Math.min(
-        this.state.rowsPerPage,
-        this.props.allproducts.length - this.state.page * this.state.rowsPerPage
-      );
-
-    const divStyle = {
-      width: "100%",
-      margin: "auto",
-      padding: "1%",
-      marginTop: "15px",
     };
 
     const classes = {
@@ -1214,232 +511,114 @@ class PromotionDetailsComponent extends Component {
       title: {
         flex: "1 1 100%",
       },
-    };
-
-    const classes2 = {
-      border: 0,
-      clip: "rect(0 0 0 0)",
-      height: 1,
-      margin: -1,
-      overflow: "hidden",
-      padding: 0,
-      position: "absolute",
-      top: 20,
-      width: 1,
+      height: "700px"
     };
 
     // ------------------------------------------------------- Add Product -------------------------------------------------------
 
-    const Search = (type) => {
-      var newList = [];
-      if (type === "add") {
-        newList = allProductsData;
 
-        newList.map((productLeft) => {
-          if (!this.state.fullChosenProducts == null) {
-            this.state.fullChosenProducts.map((chosen) => {
-              if (productLeft.ProductName !== chosen.ProductName) {
-                newList = newList.filter(
-                  (item) => item.ProductName !== chosen.ProductName
-                );
-              }
-            });
-          }
-        });
+    const checkPromo = () => {
+      let listing = []
 
-        var items = [];
-        newList.map((product) => {
-          if (
-            product.ProductName.toLowerCase().includes(
-              this.state.searchWordAdd.toLowerCase()
-            )
-          ) {
-            items.push(product);
-          }
-        });
-
-        var newItemsImages = items.map(
-          (images) => JSON.parse(images.ProductImages)[0].ProductMediaUrl
-        );
-        this.setState({
-          productsDisplayed: items,
-          imagesLeft: newItemsImages,
-        });
-      } else if (type === "remove") {
-        var chosenItems = allProductsData;
-        this.state.productsLeft.map((product) => {
-          chosenItems = chosenItems.filter(
-            (listItem) => listItem.ProductName !== product
-          );
-        });
-        chosenItems.map((product) => {
-          if (
-            product.ProductName.toLowerCase().includes(
-              this.state.searchWordRemove.toLowerCase()
-            )
-          ) {
-            newList.push(product);
-          }
-        });
-
-        var newProductListImages = newList.map(
-          (images) => JSON.parse(images.ProductImages)[0].ProductMediaUrl
-        );
-        this.setState({
-          fullChosenProducts: newList,
-          fullChosenProductsBackup: chosenItems,
-          imagesChosen: newProductListImages,
-        });
-      }
-    };
-
-    const setSearchValue = (value, type) => {
-      if (type === "add") {
-        this.setState({
-          searchWordAdd: value,
-        });
-      } else if (type === "remove") {
-        this.setState({
-          searchWordRemove: value,
-        });
-      }
-    };
-
-    const setChosenProducts = (chosen, left) => {
-      this.setState({
-        chosenProductsNames: chosen,
-        productsLeft: left,
-      });
-      setFullChosenProduct();
-    };
-
-    const setFullChosenProduct = () => {
-      var newProductList = [];
-      this.state.chosenProductsNames.map((chosenProduct) => {
-        allProductsData.map((product) => {
-          if (product.ProductName === chosenProduct) {
-            newProductList.push(product);
-          }
-        });
-      });
-      var newList = [];
-      var chosenItems = allProductsData;
-      this.state.productsLeft.map((product) => {
-        chosenItems = chosenItems.filter(
-          (listItem) => listItem.ProductName !== product
-        );
-      });
-      chosenItems.map((product) => {
-        if (
-          product.ProductName.toLowerCase().includes(
-            this.state.searchWordRemove.toLowerCase()
-          )
-        ) {
-          newList.push(product);
-        }
-      });
-      var newProductListImages = newProductList.map(
-        (images) => JSON.parse(images.ProductImages)[0].ProductMediaUrl
-      );
-      var ItemsLeft = allProductsData;
-      newProductList.map((productItem) => {
-        ItemsLeft = ItemsLeft.filter(
-          (items) => items.ProductName !== productItem.ProductName
-        );
-      });
-
-      var leftImages = ItemsLeft.map(
-        (images) => JSON.parse(images.ProductImages)[0].ProductMediaUrl
-      );
-
-      this.setState({
-        fullChosenProducts: newProductList,
-        fullChosenProductsBackup: newList,
-        imagesChosen: newProductListImages,
-        imagesLeft: leftImages,
-      });
-      if (this.state.productsAreNotChosen) {
-        setTimeout(
-          function () {
-            this.checkProductsAreChosen();
-          }.bind(this),
-          200
-        );
-      }
-    };
+      listing = this.props.allpromo.length > 0 && this.props.allpromo.filter((x) => x.PromotionID === this.props.data.PromotionID)
+      return listing
+    }
 
     return (
       <div>
         {" "}
-        {this.state.toBeEdited ? (
-          <div
-            className="App"
-            style={{ width: "100%", alignContent: "center" }}
-          >
-            <div className="App-header">
-              <h1 style={{ margin: "10px" }}>Update Promotion</h1>
-            </div>
+        {console.log("THIS.PROPS", this.props)}
+        <div className="App" style={{ width: "100%", alignContent: "center" }}   >
+          <div className="App-header">
+            <h1 style={{ margin: "10px" }}>Promotion Details</h1>
             <Button onClick={back}>
               <i className="fas fa-chevron-left"></i>Back
             </Button>
-            <Card style={{ width: "80%", margin: "0 auto" }}>
-              <CardContent>
-                <Button
-                  variant="outlined"
-                  onClick={edit}
-                  style={{
-                    float: "right",
-                  }}
-                >
-                  {this.state.toBeEdited ? "Cancel" : "Edit"}
-                </Button>
-                {/* -------------------------------- Add Promotion Title ------------------------------------- */}
+          </div>
+          <Card style={classes} >
+            <CardContent>
+              <div className="row">
+                <div className="col-2">
+                  <label>Promotion Title : </label>
+                </div>
+                {console.log("THIS.STATE", this.state)}
+                <div className="col-4">
+                  <TextField
+                    id="outlined-size-small" size="small"
+                    width="100%"
+                    className="font"
+                    variant="outlined"
+                    value={this.state.PromotionTitle}
+                    disabled={this.state.toBeEdited === false ? true : false}
+                    onChange={(x) => this.handleChange("PromotionTitle", x)}
+                  />
+                </div>
+                <div className="col-6" style={{ float: "right" }}>
+                  <Button variant="outlined" onClick={edit} style={{ float: "right" }} >
+                    {this.state.toBeEdited ? "Cancel" : "Edit"}
+                  </Button>
+                  {this.state.toBeEdited &&
+                    <Button variant="outlined" style={{ backgroundColor: "#28a745", color: "white", float: "right" }}
+                      onClick={() => console.log("SAVE")}>
+                      Save
+                    </Button>
+                  }
+                </div>
+              </div>
+              <br />
+              <div className="row">
+                <div className="col-2">
+                  <label>Percentage Discount : </label>
+                </div>
+                <div className="col-4">
+                  <TextField
+                    id="outlined-size-small" size="small"
+                    width="100%"
+                    className="font"
+                    type="number"
+                    variant="outlined"
+                    value={this.state.DiscountPercentage}
+                    disabled={this.state.toBeEdited === false ? true : false}
+                    onChange={(x) => this.handleChange("DiscountPercentage", x)}
+                  />
+                </div>
+              </div>
+              <br />
+              <div className="row">
+                <div className="col-2">
+                  <label>Promotion Description : </label>
+                </div>
+                <div className="col-10">
+                  <TextField
+                    id="outlined-size-small" size="small"
+                    width="100%"
+                    className="font"
+                    multiline
+                    rows={4}
+                    variant="outlined"
+                    value={this.state.PromotionDesc}
+                    disabled={this.state.toBeEdited === false ? true : false}
 
-                <TextField
-                  id="text-field-controlled"
-                  helperText="Promotion Title"
-                  value={this.state.PromotionTitle}
-                  onChange={this.handleChange.bind(this, "PromotionTitle")}
-                  type="text"
-                  style={{ width: "100%" }}
-                  error={this.state.PromotionTitleEmpty}
-                />
-                <br />
-                {this.state.PromotionTitleEmpty && (
-                  <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                    Product Title Need to Be Set.
-                  </p>
-                )}
+                    onChange={(x) => this.handleChange("PromotionDesc", x)}
+                  />
+                </div>
+              </div>
+              <br />
+              <div style={{ display: "flex", justifyContent: "space-around" }}   >
+                <div style={{ width: "100%", paddingRight: "20px" }}>
 
-                {/* -------------------------------- Add Promotion Effective Date----------------------------- */}
-
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-around" }}
-                  >
-                    <FormHelperText>Effective Date: </FormHelperText>
-                    <br />
-                    <div style={{ margin: "5px", width: "100%" }}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        margin="normal"
-                        id="PromotionStartDate"
-                        label="Start Date"
+                  <div className="row">
+                    <div className="col-2">
+                      <label>Promotion Start Date: </label>
+                    </div>
+                    <div className="col-4">
+                      <DatePicker
+                        size="small"
                         value={this.state.PromotionStartDate}
                         format="dd/MM/yyyy"
-                        onChange={this.handleChange.bind(
-                          this,
-                          "PromotionStartDate"
-                        )}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
-                        style={{ width: "100%" }}
-                        error={
-                          this.state.startDateNotSet ||
-                          this.state.startDateInvalid
-                        }
+                        onChange={this.handleChange.bind(this, "PromotionStartDate")}
+                        className={`w-100`}
+                        disabled={this.state.toBeEdited === false ? true : false}
                       />
                       {this.state.startDateNotSet ||
                         this.state.startDateInvalid ? (
@@ -1448,27 +627,20 @@ class PromotionDetailsComponent extends Component {
                         </FormHelperText>
                       ) : null}
                     </div>
-                    <div style={{ margin: "5px", width: "100%" }}>
-                      {/* <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        margin="normal"
-                        id="PromotionEndDate"
-                        label="End Date"
-                        value={this.state.PromotionEndDate}
+
+                    <div className="col-2">
+                      <label>Promotion End Date: </label>
+                    </div>
+                    <div className="col-4">
+                      <DatePicker
+                        size="small"
+                        placeholderText="End Date"
+                        onChange={this.handleChange.bind(this, "PromotionEndDate")}
                         format="dd/MM/yyyy"
-                        onChange={this.handleChange.bind(
-                          this,
-                          "PromotionEndDate"
-                        )}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
-                        style={{ width: "100%" }}
-                        error={
-                          this.state.endDateNotSet || this.state.endDateInvalid
-                        }
-                      /> */}
+                        value={this.state.PromotionEndDate}
+                        className={`w-100`}
+                        disabled={this.state.toBeEdited === false ? true : false}
+                      />
                       {this.state.endDateNotSet || this.state.endDateInvalid ? (
                         <FormHelperText style={{ color: "red" }}>
                           Please enter a valid end date.
@@ -1476,263 +648,102 @@ class PromotionDetailsComponent extends Component {
                       ) : null}
                     </div>
                   </div>
-                </MuiPickersUtilsProvider>
-
-                {/* -----------------------------------Add Discount Percentage  -------------------------------------- */}
-                <div>
-                  <TextField
-                    id="text-field-controlled"
-                    helperText="Discount Percentage"
-                    value={this.state.Discount}
-                    onChange={this.handleChange.bind(this, "Discount")}
-                    type="number"
-                    style={{ width: "30%" }}
-                    error={this.state.DiscountEmpty}
-                  />
-                  {this.state.DiscountEmpty && (
-                    <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                      Promotion Discount Percentage Need to Be Set.
-                    </p>
-                  )}
                 </div>
-
-                {/* ----------------------------------- Add Product  --------------------------------------- */}
-                <div>
-                  <InputLabel style={{ marginTop: "20px" }}>
-                    Select the products for the promotion
-                  </InputLabel>
-                  <TransferList
-                    allProducts={this.state.productsDisplayed}
-                    search={Search}
-                    searchWordAdd={this.state.searchWordAdd}
-                    setSearchValue={setSearchValue}
-                    searchWordRemove={this.state.searchWordRemove}
-                    setChosenProducts={setChosenProducts}
-                    chosenProducts={this.state.chosenProductsNames}
-                    fullChosenProducts={this.state.fullChosenProducts}
-                    productsListFromProps={
-                      this.props.data.PromotionDetail
-                        ? JSON.parse(this.props.data.PromotionDetail).map(
-                          (product) => product.ProductName
-                        )
-                        : []
-                    }
-                    imagesChosen={this.state.imagesChosen}
-                    imagesLeft={this.state.imagesLeft}
-                  />
-                  {this.state.productsAreNotChosen ? (
-                    <FormHelperText style={{ color: "red" }}>
-                      Have to have at least one product chosen.
-                    </FormHelperText>
-                  ) : null}
+              </div>
+              <br />
+              <div className="row">
+                <div className="col-2">
+                  <label>Choosen Products ({checkPromo()[0].PromotionDetail !== null ? JSON.parse(checkPromo()[0].PromotionDetail).length : 0})</label>
                 </div>
-                {/* ---------------------------------------------------------------------------------------------------------- */}
-                <br />
-                <TextField
-                  id="PromotionDesc"
-                  label="Promotion Description"
-                  multiline
-                  rows={4}
-                  defaultValue=" "
-                  value={this.state.PromotionDesc}
-                  variant="outlined"
-                  onChange={this.handleChange.bind(this, "PromotionDesc")}
-                  style={{ width: "100%" }}
-                  error={this.state.PromotionDescEmpty}
-                />
-                <br />
-                {this.state.PromotionDescEmpty && (
-                  <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
-                    Promotion Description Need to Be Set.
-                  </p>
-                )}
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                  }}
-                ></div>
-                <br />
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                  }}
-                ></div>
-                <br />
-
-                <div style={{ width: "100%", textAlign: "center" }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.checkEverything}
-                    style={{ margin: "0 auto" }}
-                  >
-                    Submit Changes
+                <div className="col-10" style={{ textAlign: "right" }}>
+                  <Button variant="outlined" onClick={() => this.setState({ isAddOpen: true })} style={{ float: "right" }} >
+                    Add More Product
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        ) : (
-          <div
-            className="App"
-            style={{ width: "100%", alignContent: "center" }}
-          >
-            <div className="App-header">
-              <h1 style={{ margin: "10px" }}>Promotion Details</h1>
-              <Button onClick={back}>
-                <i className="fas fa-chevron-left"></i>Back
-              </Button>
-            </div>
-            <Card style={classes}>
-              <CardContent>
-                <Button
-                  variant="outlined"
-                  onClick={edit}
-                  style={{
-                    float: "right",
-                  }}
-                >
-                  {this.state.toBeEdited ? "Cancel" : "Edit"}
-                </Button>
-                {/* -------------------------------- Add Promotion Title ------------------------------------- */}
-                <TextField
-                  id="text-field-controlled"
-                  helperText="Promotion Title"
-                  value={this.state.PromotionTitle}
-                  onChange={this.handleChange.bind(this, "PromotionTitle")}
-                  style={{ width: "100%" }}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-                <br />
-                {/* -------------------------------- Add Promotion Effective Date----------------------------- */}
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-around" }}
-                  >
-                    <br />
-                    <FormHelperText style={{ margin: "10px" }}>
-                      Effective Date:{" "}
-                    </FormHelperText>
-                    <div style={{ margin: "5px", width: "100%" }}>
+              </div>
+              <br />
 
-                      {/* <KeyboardDatePicker
-                        style={{ width: "100%" }}
-                        disableToolbar
-                        variant="inline"
-                        margin="normal"
-                        id="component-simple"
-                        label="Start Date"
-                        value={this.state.PromotionStartDate.toLocaleDateString()}
-                        format="dd/MM/yyyy"
-                        onChange={this.handleChange.bind(
-                          this,
-                          "PromotionStartDate"
-                        )}
-                        readOnly
-                      /> */}
-                      {/* <TextField
-                        id="text-field-controlled"
-                        helperText="Start Date"
-                        value={this.state.PromotionStartDate.toLocaleDateString()}
-                        type="number"
-                        style={{ margin: "5px", width: "100%" }}
-                        inputProps={{ readOnly: "true" }}
-                      /> */}
-                    </div>
-                    {
-                      console.log(this.state.PromotionEndDate)
-                    }
-                    <div style={{ margin: "5px", width: "100%" }}>
-                      {/* <KeyboardDatePicker
-                        style={{ width: "100%" }}
-                        disableToolbar
-                        variant="inline"
-                        margin="normal"
-                        id="component-simple"
-                        label="End Date"
-                        value={this.state.PromotionEndDate.toLocaleDateString()}
-                        format="dd/MM/yyyy"
-                        onChange={this.handleChange.bind(
-                          this,
-                          "PromotionEndDate"
-                        )}
-                        readOnly
-                      /> */}
-                      {/* <TextField
-                        id="text-field-controlled"
-                        helperText="End Date"
-                        value={this.state.PromotionEndDate.toLocaleDateString()}
-                        type="number"
-                        style={{ margin: "5px", width: "100%" }}
-                        inputProps={{ readOnly: "true" }}
-                      /> */}
-                    </div>
+              {
+                this.props.data.PromotionDetail !== null ?
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell style={{ fontWeight: "bold" }} align="center" >Product Name</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Stock</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Original Price&nbsp;(RM)</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Discounted Price&nbsp;(RM)</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Action</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail).map((row) => (
+                          <TableRow
+                            key={row.ProductID}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            {console.log("row", row)}
+                            <TableCell component="th" scope="row">
+                              <div className="row">
+                                <div style={{ paddingLeft: "5px" }}>
+                                  <img src={row.ProductImage !== undefined && row.ProductImage !== null ? row.ProductImage : Logo}
+                                    height={50}
+                                    width={50}
+                                    alt={row.ProductName} onError={(e) => (e.target.src = Logo)} />
+                                </div>
+                                <div style={{ padding: "10px" }}><label> {row.ProductName}</label></div>
+                              </div>
+                            </TableCell>
+                            <TableCell align="right"><label> {row.ProductStockAmount}</label></TableCell>
+                            <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
+                            <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
+                            <TableCell align="right"> <DeleteIcon fontSize="small" /></TableCell>
+                          </TableRow>
+                        ))
+                        }
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  :
+                  <div style={{ textAlign: "center" }}>
+                    <label>Temporarily there is no products for this promotion</label>
                   </div>
-                </MuiPickersUtilsProvider>
-                {/* -----------------------------------Add Percentage  -------------------------------------- */}
+              }
+              <Pagination
+                current={this.state.currentPage}
+                total={
+                  checkPromo()[0].PromotionDetail !== null ? JSON.parse(checkPromo()[0].PromotionDetail).length / this.state.rowPerPage : 0
+                  // this.state.variationTypeList.length > 0 ?
+                  //   Math.ceil(this.state.variationTypeList.length / this.state.variationRowsPerPage)
+                  //   : 0
+                }
+                onPageChange={this.handlePageChange}
+              />
+            </CardContent>
+          </Card>
+        </div>
 
-                <TextField
-                  id="text-field-controlled"
-                  helperText="Discount Percentage"
-                  value={this.state.DiscountPercentage}
-                  onChange={this.handleChange.bind(this, "DiscountPercentage")}
-                  type="number"
-                  style={{ width: "30%" }}
-                  inputProps={{ readOnly: "true" }}
-                />
-                <Paper className={classes.paper} style={divStyle}>
-                  <div>
-                    <InputLabel style={{ marginTop: "20px" }}>
-                      Chosen Products
-                    </InputLabel>
-
-                    {/* <DisplayTable
-                      Data={this.props.data}
-                    /> */}
-                  </div>
-                </Paper>
-                <br />
-                <TextField
-                  id="PromotionDesc"
-                  label="Promotion Description"
-                  multiline
-                  rows={4}
-                  defaultValue=" "
-                  value={this.state.PromotionDesc}
-                  variant="outlined"
-                  onChange={this.handleChange.bind(this, "PromotionDesc")}
-                  style={{ width: "100%" }}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-                <br />
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                  }}
-                ></div>
-                <br />
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                  }}
-                ></div>
-                <br />
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        <Dialog
+          maxWidth={'md'}
+          open={this.state.isAddOpen}
+          // TransitionComponent={Transition}
+        // onClose={handleClose}
+        // aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>Select Product to Add Into Promotion</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Let Google help apps determine location. This means sending anonymous
+              location data to Google, even when no apps are running.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            {/* <Button onClick={handleClose}>Disagree</Button>
+            <Button onClick={handleClose}>Agree</Button> */}
+          </DialogActions>
+        </Dialog>
       </div>
-    );
+    )
   }
 }
 

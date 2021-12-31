@@ -2745,12 +2745,16 @@ export class GitEpic {
 
   getAllPromotion = (action$) =>
     action$.ofType(GitAction.GetPromotion).switchMap(async () => {
+      console.log(url +
+        "Promo_ViewPromotion?ACTIVEIND")
       try {
         const response = await fetch(url +
           "Promo_ViewPromotion?ACTIVEIND"
         );
         let json = await response.json();
         json = JSON.parse(json);
+
+        console.log("JSON", json)
         return {
           type: GitAction.GotPromotion,
           payload: json,

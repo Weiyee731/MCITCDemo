@@ -33,15 +33,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import CardHeader from "@material-ui/core/CardHeader";
 import InputLabel from "@material-ui/core/InputLabel";
 //------------------------------------------------------------------- DatePicker-----------------------------------------------
-import "date-fns";
-import { format } from "date-fns";
-// import DateFnsUtils from "@date-io/date-fns";
 import DatePicker from 'react-date-picker'
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+
 import moment from "moment";
 //---------------------------------- ADD IMAGE THINGS ---------------------------------------------------
 import { DropzoneArea } from "material-ui-dropzone";

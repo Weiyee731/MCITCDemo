@@ -676,7 +676,7 @@ class DisplayTable extends Component {
         {this.state.detailsShown ? (
           <PromotionDetailsComponent data={this.state} data2={this.props} />
         ) : this.state.deleteActive ? (
-          <div>Promotion List
+          <div>
             <h1>Promotion List</h1>
             <div>
               <Button>
