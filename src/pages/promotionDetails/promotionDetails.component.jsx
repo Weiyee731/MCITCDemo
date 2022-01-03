@@ -521,7 +521,68 @@ class PromotionDetailsComponent extends Component {
       let listing = []
 
       listing = this.props.allpromo.length > 0 && this.props.allpromo.filter((x) => x.PromotionID === this.props.data.PromotionID)
+      // else
+      //   listing = this.props.allproducts.length > 0 && this.props.allproducts.filter((x) => x.ProductID !== this.props.data.PromotionID)
+
+      console.log("listing", listing)
       return listing
+
+    }
+
+    const checkSelected = (data) => {
+      console.log("THIS IS DATA", data)
+
+      let selectedID = []
+      data.map((x)=>{
+        selectedID.push(x.ProductID)
+      })
+      console.log("THIS IS DATA", selectedID)
+
+      
+    }
+
+    const TablePromoListing = (tableData) => {
+      return (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: "bold" }} align="center" >Product Name</TableCell>
+                <TableCell style={{ fontWeight: "bold" }} align="right">Stock</TableCell>
+                <TableCell style={{ fontWeight: "bold" }} align="right">Original Price&nbsp;(RM)</TableCell>
+                <TableCell style={{ fontWeight: "bold" }} align="right">Discounted Price&nbsp;(RM)</TableCell>
+                <TableCell style={{ fontWeight: "bold" }} align="right">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tableData.map((row) => (
+                <TableRow
+                  key={row.ProductID}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  {console.log("row", row)}
+                  <TableCell component="th" scope="row">
+                    <div className="row">
+                      <div style={{ paddingLeft: "5px" }}>
+                        <img src={row.ProductImage !== undefined && row.ProductImage !== null ? row.ProductImage : Logo}
+                          height={50}
+                          width={50}
+                          alt={row.ProductName} onError={(e) => (e.target.src = Logo)} />
+                      </div>
+                      <div style={{ padding: "10px" }}><label> {row.ProductName}</label></div>
+                    </div>
+                  </TableCell>
+                  <TableCell align="right"><label> {row.ProductStockAmount}</label></TableCell>
+                  <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
+                  <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
+                  <TableCell align="right"> <DeleteIcon fontSize="small" /></TableCell>
+                </TableRow>
+              ))
+              }
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )
     }
 
     return (
@@ -665,45 +726,46 @@ class PromotionDetailsComponent extends Component {
 
               {
                 this.props.data.PromotionDetail !== null ?
-                  <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell style={{ fontWeight: "bold" }} align="center" >Product Name</TableCell>
-                          <TableCell style={{ fontWeight: "bold" }} align="right">Stock</TableCell>
-                          <TableCell style={{ fontWeight: "bold" }} align="right">Original Price&nbsp;(RM)</TableCell>
-                          <TableCell style={{ fontWeight: "bold" }} align="right">Discounted Price&nbsp;(RM)</TableCell>
-                          <TableCell style={{ fontWeight: "bold" }} align="right">Action</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail).map((row) => (
-                          <TableRow
-                            key={row.ProductID}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                          >
-                            {console.log("row", row)}
-                            <TableCell component="th" scope="row">
-                              <div className="row">
-                                <div style={{ paddingLeft: "5px" }}>
-                                  <img src={row.ProductImage !== undefined && row.ProductImage !== null ? row.ProductImage : Logo}
-                                    height={50}
-                                    width={50}
-                                    alt={row.ProductName} onError={(e) => (e.target.src = Logo)} />
-                                </div>
-                                <div style={{ padding: "10px" }}><label> {row.ProductName}</label></div>
-                              </div>
-                            </TableCell>
-                            <TableCell align="right"><label> {row.ProductStockAmount}</label></TableCell>
-                            <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
-                            <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
-                            <TableCell align="right"> <DeleteIcon fontSize="small" /></TableCell>
-                          </TableRow>
-                        ))
-                        }
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                  TablePromoListing(checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail))
+                  // <TableContainer component={Paper}>
+                  //   <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  //     <TableHead>
+                  //       <TableRow>
+                  //         <TableCell style={{ fontWeight: "bold" }} align="center" >Product Name</TableCell>
+                  //         <TableCell style={{ fontWeight: "bold" }} align="right">Stock</TableCell>
+                  //         <TableCell style={{ fontWeight: "bold" }} align="right">Original Price&nbsp;(RM)</TableCell>
+                  //         <TableCell style={{ fontWeight: "bold" }} align="right">Discounted Price&nbsp;(RM)</TableCell>
+                  //         <TableCell style={{ fontWeight: "bold" }} align="right">Action</TableCell>
+                  //       </TableRow>
+                  //     </TableHead>
+                  //     <TableBody>
+                  //       {checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail).map((row) => (
+                  //         <TableRow
+                  //           key={row.ProductID}
+                  //           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  //         >
+                  //           {console.log("row", row)}
+                  //           <TableCell component="th" scope="row">
+                  //             <div className="row">
+                  //               <div style={{ paddingLeft: "5px" }}>
+                  //                 <img src={row.ProductImage !== undefined && row.ProductImage !== null ? row.ProductImage : Logo}
+                  //                   height={50}
+                  //                   width={50}
+                  //                   alt={row.ProductName} onError={(e) => (e.target.src = Logo)} />
+                  //               </div>
+                  //               <div style={{ padding: "10px" }}><label> {row.ProductName}</label></div>
+                  //             </div>
+                  //           </TableCell>
+                  //           <TableCell align="right"><label> {row.ProductStockAmount}</label></TableCell>
+                  //           <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
+                  //           <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
+                  //           <TableCell align="right"> <DeleteIcon fontSize="small" /></TableCell>
+                  //         </TableRow>
+                  //       ))
+                  //       }
+                  //     </TableBody>
+                  //   </Table>
+                  // </TableContainer>
                   :
                   <div style={{ textAlign: "center" }}>
                     <label>Temporarily there is no products for this promotion</label>
@@ -723,18 +785,30 @@ class PromotionDetailsComponent extends Component {
           </Card>
         </div>
 
+
         <Dialog
           maxWidth={'md'}
           open={this.state.isAddOpen}
-          // TransitionComponent={Transition}
+        // TransitionComponent={Transition}
         // onClose={handleClose}
         // aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle>Select Product to Add Into Promotion</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Let Google help apps determine location. This means sending anonymous
-              location data to Google, even when no apps are running.
+              {
+                checkSelected(checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail))
+              }
+              {/* {
+                this.props.allproducts !== null ?
+                  TablePromoListing(checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail))
+                  :
+                  <div style={{ textAlign: "center" }}>
+                    <label>All available products has been added into the promo</label>
+                  </div>
+              } */}
+              {/* Let Google help apps determine location. This means sending anonymous
+              location data to Google, even when no apps are running. */}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
