@@ -38,7 +38,8 @@ export class GitEpic {
           "User_Login?username=" +
           payload.username +
           "&password=" +
-          payload.password
+          payload.password +
+          "&ProjectID=2"
         );
         let json = await response.json();
         json = JSON.parse(json)
@@ -87,7 +88,8 @@ export class GitEpic {
           "User_RegisterSimplified?userEmail=" +
           payload.Email +
           "&password=" +
-          payload.Password
+          payload.Password +
+          "&ProjectID=2"
         );
 
         let json = await response.json();
@@ -117,7 +119,8 @@ export class GitEpic {
         const response = await fetch(
           url +
           "User_CheckDuplicate?email=" +
-          payload.Email
+          payload.Email +
+          "&ProjectID=2"
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -1510,7 +1513,8 @@ export class GitEpic {
           "&PRODUCTMODEL=" +
           payload.model +
           "&PRODUCTTAG=" +
-          payload.tags
+          payload.tags +
+          "&ProjectID=2"
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -2553,7 +2557,8 @@ export class GitEpic {
         "&TRACKINGSTATUSID=" +
         payload.TrackingStatusID +
         "&PickUpInd=" +
-        payload.PickUpInd)
+        payload.PickUpInd +
+        "&ProjectID=2")
 
       try {
 
@@ -2788,8 +2793,9 @@ export class GitEpic {
           "&PROMOTIONENDDATE=" +
           payload.PromotionEndDate +
           "&PRODUCTID=" +
-          payload.ProductID);
-          
+          payload.ProductID +
+          "&ProjectID=2");
+
         let json = await response.json();
         json = JSON.parse(json);
 
@@ -3149,7 +3155,8 @@ export class GitEpic {
         const response = await fetch(
           url +
           "Subcriber_AddNew?SUBSCRIBEREMAIL=" +
-          payload.SubsMail
+          payload.SubsMail +
+          "&ProjectID=2"
         );
         const json = await response.json();
         json = JSON.parse(json);

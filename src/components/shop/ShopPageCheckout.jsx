@@ -20,6 +20,7 @@ import "react-step-progress/dist/index.css";
 import PageCart from "./ShopPageCart";
 import PageCompleted from "./ShopPageCompleted";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 function step2Validator() {
   // return a boolean
@@ -97,12 +98,36 @@ class PageCheckout extends Component {
         TrackingStatusID: this.state.TrackingStatusID,
         PickUpInd: PickUpIndicator
       })
+
+      // const formData = new FormData();
+      // formData.append("sellerExchangeID", "EX00013776");
+      // formData.append("sellerExOrder", "EX00013776");
+      // formData.append("sellerTxnTime", "EX00013776");
+      // formData.append("sellerOrderNo", "EX00013776");
+      // formData.append("sellerID", "SE00015397");
+      // formData.append("txnAmount", "EX00013776");
+      // formData.append("buyerEmail", "EX00013776");
+      // formData.append("buyerBankID", "EX00013776");
+      // formData.append("productDesc", "EX00013776");
+
+      // let url = "https://myemporia.my/emporiaimage/uploadpromotion.php"
+      // axios.post(url, formData, {}).then(res => {
+      //   if (res.status === 200) {
+      //     // this.props.CallAddPromotion(promoInfo)
+      //     this.setState({ isPromoSubmit: true })
+      //   }
+      //   else {
+      //     toast.error("Res Status error.");
+      //   }
+      // });
+
     }
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.order !== this.props.order) {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
+        console.log("this.props.order", this.props.order)
         browserHistory.push("/");
         window.location.reload(false);
       }
