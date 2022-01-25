@@ -827,12 +827,12 @@ class AddPromotionBannerComponent extends Component {
     if (this.props.Promotion !== undefined && this.state.isPromoSubmit === true) {
       if (this.props.Promotion.length > 0) {
         if (this.props.Promotion[0].ReturnVal === 1) {
-          this.props.CallClearPromotion()
+          // this.props.CallClearPromotion()
         }
       }
       else {
         toast.success("Promotion Banner Added Successfully.")
-        window.location.href = '/viewProductPromotion';
+        // window.location.href = '/viewProductPromotion';
       }
     }
   }

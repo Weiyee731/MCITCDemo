@@ -335,7 +335,7 @@ export class GitEpic {
   getUserPage = (action$) =>
     action$.ofType(GitAction.GetPages).switchMap(async ({ payload }) => {
       try {
-        console.log(url +
+        console.log("aaa", url +
           "User_ViewPage?ROLEGROUPID=" +
           payload)
 
@@ -369,6 +369,7 @@ export class GitEpic {
           "&UserRoleID=" + payload.USERROLEID +
           "&LISTPERPAGE=" + payload.LISTPERPAGE +
           "&PAGE=" + payload.PAGE)
+
         const response = await fetch(
           url +
           "User_ProfileListByType?TYPE=" + payload.TYPE +
@@ -2495,12 +2496,6 @@ export class GitEpic {
         if (json[0].ReturnVal === 1) {
           toast.success("Sucessfully send a review");
         }
-
-        // return {
-        //   type: GitAction.addedProductReview,
-        //   // payload: json_1,
-        //   payload2: json,
-        // };
         try {
           const response_1 = await fetch(
             url +
@@ -2775,6 +2770,25 @@ export class GitEpic {
 
   AddPromotion = (action$) =>
     action$.ofType(GitAction.AddPromotion).switchMap(async ({ payload }) => {
+
+      console.log(url +
+        "Promo_AddPromotion?PROMOTIONTITLE=" +
+        payload.PromotionTitle +
+        "&PROMOTIONDESC=" +
+        payload.PromotionDesc +
+        "&PROMOTIONSTARTDATE=" +
+        payload.PromotionStartDate +
+        "&PROMOTIONDISCOUNTPERCENTAGE=" +
+        payload.DiscountPercentage +
+        "&BANNERIMAGE=" +
+        payload.BannerImage +
+        "&SLIDEORDER=" +
+        payload.SlideOrder +
+        "&PROMOTIONENDDATE=" +
+        payload.PromotionEndDate +
+        "&PRODUCTID=" +
+        payload.ProductID +
+        "&ProjectID=2")
       try {
         const response = await fetch(
           url +
@@ -2794,7 +2808,8 @@ export class GitEpic {
           payload.PromotionEndDate +
           "&PRODUCTID=" +
           payload.ProductID +
-          "&ProjectID=2");
+          "&ProjectID=2"
+        );
 
         let json = await response.json();
         json = JSON.parse(json);

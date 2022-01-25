@@ -136,7 +136,6 @@ function MerchantPage(props) {
             const filterList = tempArray.filter((ele, ind) => ind === tempArray.findIndex(elem => elem.ProductID === ele.ProductID))
             setPostsToShow(filterList)
         }
-
     };
 
     useEffect(() => {

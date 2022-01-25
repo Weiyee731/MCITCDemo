@@ -32,6 +32,7 @@ import { isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import emailjs from "emailjs-com"
 import { toast } from "react-toastify";
 import OtpInput from "react-otp-input";
+import { Link } from "react-router-dom";
 
 function mapStateToProps(state) {
   return {
@@ -419,7 +420,19 @@ class LoginComponent extends Component {
               <div className="row">
                 <div className="col-6">
                   <p className=" text-left" style={{ fontSize: "13px", paddingTop: "10px" }}>
-                    New to Emporia? <a href="/signup"><b>Sign Up</b></a>
+                    New to Emporia?
+                    {/* <Link className="nav-link" to={"/signup"}>
+                      Sign Up
+                    </Link> */}
+                    <label onClick={() =>
+                      <>
+                        {browserHistory.push("/signup")}
+                        {window.location.reload(false)}
+                      </>
+                    }>
+                      Sign Up
+                    </label>
+                    {/* <a href="/signup"><b>Sign Up</b></a> */}
                   </p>
                 </div>
                 <div className="col-6">

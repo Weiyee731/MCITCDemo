@@ -45,7 +45,6 @@ function mapDispatchToProps(dispatch) {
     CallAllProducts: (prodData) => dispatch(GitAction.CallAllProducts(prodData)),
     CallEndorseProduct: (prodData) => dispatch(GitAction.CallEndorseProduct(prodData)),
     CallResetEndorseProduct: () => dispatch(GitAction.CallResetEndorseProduct()),
-    CallResetEndorseProductReturnValue: (prodData) => dispatch(GitAction.CallResetEndorseProductReturnValue(prodData)),
   };
 }
 

@@ -28,7 +28,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 // import Fade from "@material-ui/core/Fade";
-import NestedMenuItem from "material-ui-nested-menu-item";
+// import NestedMenuItem from "material-ui-nested-menu-item";
 import RestoreIcon from "@material-ui/icons/Restore";
 import queryString from "query-string";
 import { toast } from "react-toastify";
@@ -3507,43 +3507,43 @@ class AddProductComponent extends Component {
       transform: "translateY(-50%)",
     };
 
-    var subMenu = (hierarchyList) => {
-      if (typeof hierarchyList !== "object")
-        hierarchyList = JSON.parse(hierarchyList);
-      var elemList = [];
-      hierarchyList.map((d, i) => {
-        if (d.HierarchyID < 5) {
-          if (d.HierarchyItem) {
-            let menuitem = (
-              <NestedMenuItem
-                label={(d.ProductCategoryID, d.ProductCategory)}
-                parentMenuOpen={!!this.state.menuPosition}
-              >
-                {subMenu(d.HierarchyItem)}
-              </NestedMenuItem>
-            );
-            elemList.push(menuitem);
-          } else {
-            let menuitem = (
-              <MenuItem
-                onClick={() =>
-                  this.selectCategory(
-                    d.ProductCategoryID,
-                    d.ProductCategory,
-                    d.HierarchyID
-                  )
-                }
-              >
-                {" "}
-                {d.ProductCategory}
-              </MenuItem>
-            );
-            elemList.push(menuitem);
-          }
-        }
-      });
-      return elemList;
-    };
+    // var subMenu = (hierarchyList) => {
+    //   if (typeof hierarchyList !== "object")
+    //     hierarchyList = JSON.parse(hierarchyList);
+    //   var elemList = [];
+    //   hierarchyList.map((d, i) => {
+    //     if (d.HierarchyID < 5) {
+    //       if (d.HierarchyItem) {
+    //         let menuitem = (""
+    //           // <NestedMenuItem
+    //           //   label={(d.ProductCategoryID, d.ProductCategory)}
+    //           //   parentMenuOpen={!!this.state.menuPosition}
+    //           // >
+    //           //   {subMenu(d.HierarchyItem)}
+    //           // </NestedMenuItem>
+    //         );
+    //         elemList.push(menuitem);
+    //       } else {
+    //         let menuitem = (
+    //           <MenuItem
+    //             onClick={() =>
+    //               this.selectCategory(
+    //                 d.ProductCategoryID,
+    //                 d.ProductCategory,
+    //                 d.HierarchyID
+    //               )
+    //             }
+    //           >
+    //             {" "}
+    //             {d.ProductCategory}
+    //           </MenuItem>
+    //         );
+    //         elemList.push(menuitem);
+    //       }
+    //     }
+    //   });
+    //   return elemList;
+    // };
 
 
     let productCategoriesList = this.props.productCategories
@@ -3552,9 +3552,9 @@ class AddProductComponent extends Component {
       })
       : {};
 
-    if (productCategoriesList.length > 0) {
-      var productCategoryDDL = subMenu(productCategoriesList);
-    }
+    // if (productCategoriesList.length > 0) {
+    //   var productCategoryDDL = subMenu(productCategoriesList);
+    // }
 
     let productCategoriesFullListList = this.props.productCategoriesFullList
       ? Object.keys(this.props.productCategoriesFullList).map((key) => {

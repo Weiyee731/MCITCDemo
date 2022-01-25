@@ -174,6 +174,8 @@ export function counterReducer(state = INITIAL_STATE, action) {
     //     profileUpdate: action.payload,
     //   });
 
+    
+
     case GitAction.UpdateProfileImage:
       return Object.assign({}, state, { loading: true });
     case GitAction.UpdatedProfileImage:
@@ -798,8 +800,8 @@ export function counterReducer(state = INITIAL_STATE, action) {
       });
 
     //ADD PRODUCT CATEGORY
-    case GitAction.AddProductCategory:
-      return Object.assign({}, state, { loading: true });
+    // case GitAction.AddProductCategory:
+    //   return Object.assign({}, state, { loading: true });
     case GitAction.ProductCategoryAdded:
       var newProdObj = Object.assign({}, state);
       newProdObj.loading = false;

@@ -53,7 +53,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 function mapStateToProps(state) {
   return {
     // allstocks: state.counterReducer["products"],
-    allproducts: state.counterReducer["products"],
+    allproducts: state.counterReducer["productsListing"],
     allpromo: state.counterReducer["promotions"],
     updatepromo: state.counterReducer["newPromoObj"],
   };
@@ -66,6 +66,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(GitAction.CallViewPromotion(promoData)),
     CallUpdatePromotion: (promoData) =>
       dispatch(GitAction.CallUpdatePromotion(promoData)),
+
+    CallAllProductsListing: (prodData) => dispatch(GitAction.CallAllProductsListing(prodData)), // To call Product List For Promotion Product
     // CallAllProductsByProductStatus: (prodData) =>
     //   dispatch(GitAction.CallAllProductsByProductStatus(prodData)), // To call Product List For Promotion Product
   };
@@ -138,6 +140,9 @@ class PromotionDetailsComponent extends Component {
     currentPage: 1,
     rowPerPage: 5,
     isAddOpen: false,
+
+    unselectedListing: [],
+    selectedListing: []
   };
 
   handleChange(data, e) {
@@ -467,6 +472,19 @@ class PromotionDetailsComponent extends Component {
     this.setState({ currentPage: page })
   };
 
+  componentDidMount() {
+    this.props.CallAllProductsListing({
+      type: "Merchant",
+      typeValue: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+      userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
+      productPage: 999,
+      page: 1,
+    })
+  }
+
+
+
+
   render() {
     const { data, data2 } = this.props;
     const back = () => {
@@ -520,7 +538,9 @@ class PromotionDetailsComponent extends Component {
     const checkPromo = () => {
       let listing = []
 
+
       listing = this.props.allpromo.length > 0 && this.props.allpromo.filter((x) => x.PromotionID === this.props.data.PromotionID)
+
       // else
       //   listing = this.props.allproducts.length > 0 && this.props.allproducts.filter((x) => x.ProductID !== this.props.data.PromotionID)
 
@@ -530,16 +550,59 @@ class PromotionDetailsComponent extends Component {
     }
 
     const checkSelected = (data) => {
-      console.log("THIS IS DATA", data)
+      let allProductListing = []
+      allProductListing = this.props.allproducts.length !== 0 && JSON.parse(this.props.allproducts)
+      let filteredListing = []
 
-      let selectedID = []
-      data.map((x)=>{
-        selectedID.push(x.ProductID)
+      // let selectedID = []
+      // data.length > 0 && data.map((x) => {
+      //   selectedID.push(x.ProductID)
+      // })
+
+      let selectedID = [1, 3, 5]
+      selectedID.length > 0 && selectedID.map((data) => {
+
+        if (filteredListing.length === 0) {
+          allProductListing.length > 0 && allProductListing.filter((x) => x.ProductID !== data).map((filteredData) => {
+            filteredListing.push(filteredData)
+          })
+        }
+        else
+          filteredListing = filteredListing.filter((x) => x.ProductID !== data)
       })
-      console.log("THIS IS DATA", selectedID)
 
-      
+      // this.setState({ unselectedListing: filteredListing })
+      return filteredListing
+
     }
+
+    const handleSelectedProduct = (productID, index) => {
+      let tempArray = this.state.selectedListing
+      if (this.state.selectedListing.length > 0) {
+
+        // if (tempArray.length > 0) {
+        //   this.state.unselectedListing.map((X) => {
+
+        //     if (X === productID) {
+        //       let tempIndex = selectedProductIndex
+        //       let tempID = selectedRowID
+
+        //       tempIndex = selectedProductIndex.filter((x) => selectedProductIndex.indexOf(x) !== selectedProductDetailsID.indexOf(X))
+        //       tempID = selectedProductDetailsID.filter((x) => parseInt(x) !== parseInt(product.OrderProductDetailID))
+        //       setSelectedProductDetailsID(tempID)
+        //     }
+        //   })
+        // }
+        // else {
+        //   setSelectedProductDetailsID(selectedProductDetailsID => [...selectedProductDetailsID, product.OrderProductDetailID])
+        // }
+      }
+      else {
+        // this.setState({selectedListing: })
+        // setSelectedProductDetailsID(selectedProductDetailsID => [...selectedProductDetailsID, product.OrderProductDetailID])
+      }
+    }
+
 
     const TablePromoListing = (tableData) => {
       return (
@@ -723,49 +786,11 @@ class PromotionDetailsComponent extends Component {
                 </div>
               </div>
               <br />
+              {console.log("CHECKING", this.props)}
 
               {
                 this.props.data.PromotionDetail !== null ?
                   TablePromoListing(checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail))
-                  // <TableContainer component={Paper}>
-                  //   <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  //     <TableHead>
-                  //       <TableRow>
-                  //         <TableCell style={{ fontWeight: "bold" }} align="center" >Product Name</TableCell>
-                  //         <TableCell style={{ fontWeight: "bold" }} align="right">Stock</TableCell>
-                  //         <TableCell style={{ fontWeight: "bold" }} align="right">Original Price&nbsp;(RM)</TableCell>
-                  //         <TableCell style={{ fontWeight: "bold" }} align="right">Discounted Price&nbsp;(RM)</TableCell>
-                  //         <TableCell style={{ fontWeight: "bold" }} align="right">Action</TableCell>
-                  //       </TableRow>
-                  //     </TableHead>
-                  //     <TableBody>
-                  //       {checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail).map((row) => (
-                  //         <TableRow
-                  //           key={row.ProductID}
-                  //           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  //         >
-                  //           {console.log("row", row)}
-                  //           <TableCell component="th" scope="row">
-                  //             <div className="row">
-                  //               <div style={{ paddingLeft: "5px" }}>
-                  //                 <img src={row.ProductImage !== undefined && row.ProductImage !== null ? row.ProductImage : Logo}
-                  //                   height={50}
-                  //                   width={50}
-                  //                   alt={row.ProductName} onError={(e) => (e.target.src = Logo)} />
-                  //               </div>
-                  //               <div style={{ padding: "10px" }}><label> {row.ProductName}</label></div>
-                  //             </div>
-                  //           </TableCell>
-                  //           <TableCell align="right"><label> {row.ProductStockAmount}</label></TableCell>
-                  //           <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
-                  //           <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
-                  //           <TableCell align="right"> <DeleteIcon fontSize="small" /></TableCell>
-                  //         </TableRow>
-                  //       ))
-                  //       }
-                  //     </TableBody>
-                  //   </Table>
-                  // </TableContainer>
                   :
                   <div style={{ textAlign: "center" }}>
                     <label>Temporarily there is no products for this promotion</label>
@@ -796,9 +821,70 @@ class PromotionDetailsComponent extends Component {
           <DialogTitle>Select Product to Add Into Promotion</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              {
-                checkSelected(checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail))
-              }
+
+
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <Checkbox
+                        // checked={
+                        //   selectedProductDetailsID.length > 0 ?
+                        //     selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ?
+                        //       true : false : false
+                        // }
+                        // onClick={() => handleSelectedProduct(product, i)}
+                        />
+                      </TableCell>
+
+                      <TableCell style={{ fontWeight: "bold" }} align="center" >Product Name</TableCell>
+                      <TableCell style={{ fontWeight: "bold" }} align="right">Stock</TableCell>
+                      <TableCell style={{ fontWeight: "bold" }} align="right">Original Price&nbsp;(RM)</TableCell>
+                      <TableCell style={{ fontWeight: "bold" }} align="right">Discounted Price&nbsp;(RM)</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {checkSelected(checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail)).length > 0 &&
+                      checkSelected(checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail)).map((row, i) => (
+                        <TableRow
+                          key={row.ProductID}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          {console.log("row", row)}
+                          <TableCell>
+                            <Checkbox
+                              // checked={
+                              //   selectedProductDetailsID.length > 0 ?
+                              //     selectedProductDetailsID.filter(x => x === product.OrderProductDetailID).length > 0 ?
+                              //       true : false : false
+                              // }
+                              onClick={() => handleSelectedProduct(row.ProductID, i)}
+                            />
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <div className="row">
+                              <div style={{ paddingLeft: "5px" }}>
+                                <img src={row.ProductImage !== undefined && row.ProductImage !== null ? row.ProductImage : Logo}
+                                  height={50}
+                                  width={50}
+                                  alt={row.ProductName} onError={(e) => (e.target.src = Logo)} />
+                              </div>
+                              <div style={{ padding: "10px" }}><label> {row.ProductName}</label></div>
+                            </div>
+                          </TableCell>
+                          <TableCell align="right"><label> {row.ProductStockAmount}</label></TableCell>
+                          <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
+                          <TableCell align="right"><label> {row.ProductPrice}</label></TableCell>
+                        </TableRow>
+                      ))
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+
+              {/* } */}
               {/* {
                 this.props.allproducts !== null ?
                   TablePromoListing(checkPromo()[0].PromotionDetail !== null && JSON.parse(checkPromo()[0].PromotionDetail))
