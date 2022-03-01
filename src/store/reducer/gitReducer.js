@@ -70,6 +70,9 @@ const INITIAL_STATE = {
   logistic: [],
   tracking: [],
   allAddress: [],
+
+  payment: [],
+  bankList: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -174,7 +177,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     //     profileUpdate: action.payload,
     //   });
 
-    
+
 
     case GitAction.UpdateProfileImage:
       return Object.assign({}, state, { loading: true });
@@ -1321,6 +1324,23 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         promotionBannerReturn: action.payload,
       });
+
+    //================= PAYMENT ================//
+    case GitAction.SendPayment:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.SentPayment:
+      return Object.assign({}, state, {
+        loading: false,
+        payment: action.payload,
+      });
+
+      case GitAction.ViewBankList:
+        return Object.assign({}, state, { loading: true });
+      case GitAction.ViewedBankList:
+        return Object.assign({}, state, {
+          loading: false,
+          bankList: action.payload,
+        });
 
     /////////////////////////////////////////////////// Default /////////////////////////////////////////////////// 
     default:

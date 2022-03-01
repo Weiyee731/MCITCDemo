@@ -150,6 +150,10 @@ class LoginComponent extends Component {
           localStorage.setItem("role", this.props.currentUser[0].UserType);
           cookies.set("role", this.props.currentUser[0].UserType);
           localStorage.setItem("id", this.props.currentUser[0].UserID);
+
+
+          localStorage.setItem("email", this.props.currentUser[0].UserEmailAddress);
+          localStorage.setItem("contact", this.props.currentUser[0].UserContactNo);
         } else {
           let date = new Date();
           date.setTime(date.getTime() + 60 * 60 * 24 * 1000);
@@ -167,8 +171,11 @@ class LoginComponent extends Component {
           localStorage.setItem("role", this.props.currentUser[0].UserType);
           localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
           cookies.set("role", this.props.currentUser[0].UserType, options);
-        }
 
+          localStorage.setItem("email", this.props.currentUser[0].UserEmailAddress);
+          localStorage.setItem("contact", this.props.currentUser[0].UserContactNo);
+        }
+        console.log("this.props.currentUser[0]", this.props.currentUser[0])
 
         // if (localStorage.getItem("isLogin") === true) {
         // this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })

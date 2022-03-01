@@ -21,6 +21,9 @@ import PageCart from "./ShopPageCart";
 import PageCompleted from "./ShopPageCompleted";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { sha256, sha224 } from 'js-sha256';
+import { stringToBytes } from 'convert-string-bytes'
+import { Crypto } from 'crypto-js'
 
 function step2Validator() {
   // return a boolean
@@ -35,7 +38,8 @@ function mapStateToProps(state) {
   return {
     // cart: state.cart,
     productcart: state.counterReducer.productcart,
-    order: state.counterReducer.order
+    order: state.counterReducer.order,
+    payment: state.counterReducer.payment,
   };
 }
 
@@ -43,6 +47,7 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAddOrder: (propsData) => dispatch(GitAction.CallAddOrder(propsData)),
     CallClearOrder: () => dispatch(GitAction.CallClearOrder()),
+    CallSentPayment: (propsData) => dispatch(GitAction.CallSentPayment(propsData)),
   };
 }
 class PageCheckout extends Component {
@@ -63,15 +68,123 @@ class PageCheckout extends Component {
       PaymentMethodTypeID: 0,
       PaymentMethod: "",
       PaymentMethodType: "",
-      OrderTotalAmount: 0
+      OrderTotalAmount: 0,
 
+      clientReferenceInformation: {
+        code: "TC50171_3",
+      },
+
+      orderInformation: {
+        amountDetails: {
+          totalAmount: "102.21",
+          currency: "USD"
+        },
+      },
+
+      paymentInformation: {
+        card: {
+          number: "4111111111111111",
+          expirationMonth: "12",
+          expirationYear: "2031",
+
+        },
+      },
+
+      Date: new Date(),
+      userdetails: [],
+
+      billTo: {
+        firstName: "John",
+        lastName: "Doe",
+        address1: "1 Market St",
+        locality: "san francisco",
+        administrativeArea: "CA",
+        postalCode: "94105",
+        country: "US",
+        email: "test@cybs.com",
+        phoneNumber: "4158880000"
+      },
     };
+
+
+
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
   onFormSubmit() {
     if (this.state.PaymentMethodID === 0) {
       toast.error("Please fill in correct payment method info to continue")
+
+      const formData = new FormData();
+
+      formData.append("access_key", "0646aa159df03a8fa52c81ab8a5bc4a7");
+      formData.append("profile_id", "9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0");
+
+      formData.append("transaction_uuid", "123456");
+      formData.append("signed_field_names", "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country");
+      formData.append("signed_date_time", new Date());
+      formData.append("locale", "en");
+      formData.append("transaction_type", "authorization");
+      formData.append("reference_number", "9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0");
+
+      formData.append("amount", this.state.userdetails.total);
+      formData.append("currency", "USD");
+      formData.append("bill_to_surname", localStorage.getItem("lastname"));
+      formData.append("bill_to_forename", localStorage.getItem("lastname"));
+
+      formData.append("bill_to_email", this.state.userdetails.email);
+      formData.append("bill_to_address_line1", this.state.userdetails.addressLine1);
+      formData.append("bill_to_address_city", this.state.userdetails.city);
+      formData.append("bill_to_address_postal_code", this.state.userdetails.poscode);
+      formData.append("bill_to_address_state", this.state.userdetails.state);
+      formData.append("bill_to_address_country", "MY");
+
+      const headers = {
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": 'HEAD, GET, POST, PUT, PATCH, DELETE',
+        "Access-Control-Allow-Headers": 'Origin, Content-Type, X-Auth-Token',
+        'Authorization': 'JWT fefege...',
+        'HMAC_SHA256': 'sha256',
+        'SECRET_KEY': '08fd3b4b9f8d4866b5b58c5039ed1c795393402695da4b7fb8e33aac2929bf5d8bc43156efb34d5b97a632dad2e0b55001e3d1a751f4420f90b42b140594a3adfcb2852df84a4bb59d9f8f47458dacf12316b373362a419a99fe32a3286b3d0b5056c6c1923f4ded83014852dcce8c7085baaf83536c4e65933f6ecbd96fe3fb'
+      }
+
+      // axios
+      //   .post(
+      //     "https://testsecureacceptance.cybersource.com/pay",
+      //     formData,
+      //     { headers: headers }
+      //   )
+      //   .then((res) => {
+      //     console.log("RES", res)
+      //     if (res.status === 200) {
+      //       // this.props.CallUserProfile(this.state);
+      //     }
+      //   });
+
+
+      // browserHistory.push("https://myemporia.my/php/web/payment_form.php");
+      // window.location.reload(false);
+
+
+      axios
+        .post(
+          "https://myemporia.my/php/web/payment_form.php",
+          formData,
+          { headers: headers }
+        )
+        .then((res) => {
+
+          // browserHistory.push("https://myemporia.my/php/web/payment_form.php");
+          window.location.reload(false);
+          console.log("RES", res)
+          if (res.status === 200) {
+            // this.props.CallUserProfile(this.state);
+          }
+        });
+
+
+
     }
     else {
       let PickUpIndicator = 0
@@ -84,20 +197,82 @@ class PageCheckout extends Component {
         this.state.ProductVariationDetailID.push(x.product.ProductVariationDetailID)
       })
 
-      this.props.CallAddOrder({
-        UserID: window.localStorage.getItem("id"),
-        ProductID: this.state.ProductID,
-        ProductQuantity: this.state.ProductQuantity,
-        UserCartID: this.state.UserCartID,
-        UserAddressID: this.state.address,
-        PaymentMethodID: this.state.PaymentMethodID,
-        UserPaymentMethodID: this.state.PaymentMethodTypeID,
-        OrderTotalAmount: this.state.OrderTotalAmount,
-        OrderPaidAmount: this.state.OrderTotalAmount,
-        ProductVariationDetailID: this.state.ProductVariationDetailID,
-        TrackingStatusID: this.state.TrackingStatusID,
-        PickUpInd: PickUpIndicator
-      })
+      let obj = {
+        clientReferenceInformation: this.state.clientReferenceInformation,
+        paymentInformation: this.state.paymentInformation,
+        orderInformation: this.state.orderInformation
+      }
+
+      console.log("CHECK obj", obj)
+
+      console.log("CHECK", sha256(JSON.stringify(obj)))
+      // console.log("CHECK22", sha256(JSON.stringify(obj)).getBytes())
+
+      var myBuffer = [];
+      var str = sha256(JSON.stringify(obj));
+      var buffer = new Buffer(str);
+      // for (var i = 0; i < buffer.length; i++) {
+      //   myBuffer.push(buffer[i]);
+      // }
+      var bytes = require('utf8-bytes');
+      console.log("CHECK22 BYTESSSS", bytes(sha256(JSON.stringify(obj))))
+      console.log("CHECK22 Buffer", Buffer(str).toJSON())
+      console.log("CHECK22", buffer);
+      console.log("CHECK22", "SHA-256=" + buffer.toString('base64'));
+
+      var header = {
+        host: "apitest.cybersource.com",
+        date: new Date(),
+        "(request- target)": "post/pts/v2/payments/",
+        digest: "SHA-256=" + buffer.toString('base64'),
+        "v-c-merchant-id": "emporiatest"
+      }
+
+      console.log("header", header)
+      console.log("header", Buffer(JSON.stringify(header)).toJSON())
+      console.log("header", Buffer("5f3d124b-abd8-46ce-bcf4-307fd1f7f227").toJSON())
+      // console.log("header", Crypto.createHmac('sha256', Buffer("5f3d124b-abd8-46ce-bcf4-307fd1f7f227").toJSON()).update("json").digest("base64"))
+
+
+      const crypto = require('crypto');
+
+      // Defining key
+      const secret = 'GfG';
+
+      // Calling createHmac method
+      const hash = crypto.createHmac('sha256', Buffer("5f3d124b-abd8-46ce-bcf4-307fd1f7f227").toJSON())
+
+        // // updating data
+        // .update('GeeksforGeeks')
+
+        // Encoding to be used
+        .digest('base64');
+
+      console.log("hash", hash)
+
+
+      // MessageDigest hashString = MessageDigest.getInstance("SHA-256")
+      // this.props.CallSentPayment({
+      //   clientReferenceInformation: this.state.clientReferenceInformation,
+      //   paymentInformation: this.state.paymentInformation,
+      //   orderInformation: this.state.orderInformation
+      // })
+
+
+      // this.props.CallAddOrder({
+      //   UserID: window.localStorage.getItem("id"),
+      //   ProductID: this.state.ProductID,
+      //   ProductQuantity: this.state.ProductQuantity,
+      //   UserCartID: this.state.UserCartID,
+      //   UserAddressID: this.state.address,
+      //   PaymentMethodID: this.state.PaymentMethodID,
+      //   UserPaymentMethodID: this.state.PaymentMethodTypeID,
+      //   OrderTotalAmount: this.state.OrderTotalAmount,
+      //   OrderPaidAmount: this.state.OrderTotalAmount,
+      //   ProductVariationDetailID: this.state.ProductVariationDetailID,
+      //   TrackingStatusID: this.state.TrackingStatusID,
+      //   PickUpInd: PickUpIndicator
+      // })
 
       // const formData = new FormData();
       // formData.append("sellerExchangeID", "EX00013776");
@@ -128,8 +303,8 @@ class PageCheckout extends Component {
     if (prevProps.order !== this.props.order) {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
         console.log("this.props.order", this.props.order)
-        browserHistory.push("/");
-        window.location.reload(false);
+        // browserHistory.push("/");
+        // window.location.reload(false);
       }
     }
   }
@@ -143,6 +318,11 @@ class PageCheckout extends Component {
     const handleGetAddressId = (value) => {
       if (value.length !== 0)
         this.setState({ address: value })
+    }
+
+    const handleUserData = (value) => {
+      if (value.length !== 0)
+        this.setState({ userdetails: value })
     }
 
     const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
@@ -175,10 +355,36 @@ class PageCheckout extends Component {
     );
 
     const step3Content = (
-      <PagePayment handleGetPaymentId={handleGetPaymentId} data={this.props.data} merchant={this.props.merchant} />
+      <PagePayment handleGetPaymentId={handleGetPaymentId} addresss={this} data={this.props.data} merchant={this.props.merchant} handleUserData={handleUserData} />
     );
 
+    console.log("IN CHECK OUT", this.props)
+    console.log("IN CHECK OUT state", this.state)
     const step4Content = (
+      // <form id="payment_confirmation" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+      //   <input type="hidden" name="access_key" value="0646aa159df03a8fa52c81ab8a5bc4a7" />
+      //   <input type="hidden" name="profile_id" value="9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0" />
+      //   <input type="hidden" name="transaction_uuid" value="123456" />
+      //   <input type="hidden" name="signed_field_names" value="access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country" />
+      //   <input type="hidden" name="signed_date_time" value={new Date()} />
+      //   <input type="hidden" name="locale" value="en" />
+
+      //   <input type="hidden" name="transaction_type" value="authorization" />
+      //   <input type="hidden" name="reference_number" value="9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0" />
+      //   <input type="hidden" name="amount" value={this.state.userdetails.total} />
+      //   <input type="hidden" name="currency" value="USD" />
+
+
+      //   <input type="hidden" name="bill_to_surname" value={localStorage.getItem("lastname")} />
+      //   <input type="hidden" name="bill_to_forename" value={localStorage.getItem("firstname")} />
+      //   <input type="hidden" name="bill_to_email" value={this.state.userdetails.email} />
+      //   <input type="hidden" name="bill_to_address_line1" value={this.state.userdetails.addressLine1} />
+      //   <input type="hidden" name="bill_to_address_city" value={this.state.userdetails.city} />
+
+      //   <input type="hidden" name="bill_to_address_postal_code" value={this.state.userdetails.poscode} />
+      //   <input type="hidden" name="bill_to_address_state" value={this.state.userdetails.state} />
+      //   <input type="hidden" name="bill_to_address_country" value="MY" />
+      // </form>
       <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} merchant={this.props.merchant} />
     );
     return (

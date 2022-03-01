@@ -2,22 +2,18 @@
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
-
 import { browserHistory } from "react-router";
-import React, { useState, useEffect, Component } from "react";
-import PageHeader from "../../components/shared/PageHeader";
-import TextField from "@material-ui/core/TextField";
 
+import React, { useState, useEffect, Component } from "react";
+import TextField from "@material-ui/core/TextField";
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
-import clsx from 'clsx';
 import { Row, Col } from "react-bootstrap"
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-
 import { toast } from "react-toastify";
 
 // Application
@@ -121,8 +117,6 @@ const SignUp = (props) => {
         };
     };
 
-    const { register } = useForm();
-
     const submitForm = () => {
         props.CallSignup(userDetail);
         setSubmitRegisterForm(true);
@@ -146,6 +140,7 @@ const SignUp = (props) => {
     };
 
     useEffect(() => {
+        console.log("11")
         const timeOutId = setTimeout(() => checkEmail(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.Email]);
@@ -164,6 +159,7 @@ const SignUp = (props) => {
     };
 
     useEffect(() => {
+        console.log("22")
         const timeOutId = setTimeout(() => checkPassword(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.Password]);
@@ -177,6 +173,7 @@ const SignUp = (props) => {
     };
 
     useEffect(() => {
+        console.log("33")
         const timeOutId = setTimeout(() => checkConfirmPassword(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.ConfirmPassword]);
@@ -193,11 +190,13 @@ const SignUp = (props) => {
     };
 
     useEffect(() => {
+        console.log("44")
         const timeOutId = setTimeout(() => verifyPass(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.Password, userDetail.ConfirmPassword]);
 
     useEffect(() => {
+        console.log("55")
         const timeOutId = setTimeout(() => verifyPassFormat(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.Password]);
@@ -255,8 +254,9 @@ const SignUp = (props) => {
 
 
     useEffect(() => {
+        console.log("66")
         if (props.currentUser.length > 0 && submitRegisterForm === true && props.currentUser[0].ReturnVal !== "0") {
-
+            console.log("77")
             localStorage.setItem("isLogin", true);
             localStorage.setItem("role", props.currentUser[0].UserType);
             localStorage.setItem("roleid", props.currentUser[0].UserTypeID);
@@ -286,6 +286,7 @@ const SignUp = (props) => {
     return (
         <div className="block block--margin-top" style={{ width: "100%" }}>
             <div className="text-center">
+                {console.log("AHDJJDHJAHDJAHD")}
                 <img
                     src={Logo}
                     alt="Emporia"
@@ -293,6 +294,7 @@ const SignUp = (props) => {
                     width="auto"
                     className="mx-auto"
                 ></img>
+                {console.log("HERE IS SIGNUP EMPOIA")}
             </div>
             <div className="container" style={{ width: "100%" }}>
                 <div className="text-center">
@@ -301,7 +303,7 @@ const SignUp = (props) => {
                 <Row className="justify-content-center">
                     <Col lg="5" md="5">
                         <div className="mt-3" >
-                            <TextField id="Email" label="Email" variant="outlined" className="w-100" type="email" value={userDetail.Email} ref={register({ required: true })} onChange={handleChangeData.bind(this, "email")} />
+                            <TextField id="Email" label="Email" variant="outlined" className="w-100" type="email" value={userDetail.Email} onChange={handleChangeData.bind(this, "email")} />
                             {checkDuplicate && userDetail.Email}
                             {EmailEmpty && userDetail.isEmailFill === true && (
                                 <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}  >
@@ -322,7 +324,6 @@ const SignUp = (props) => {
                                     label="Password"
                                     value={userDetail.Password}
                                     type={passwordHidden ? 'password' : 'text'}
-                                    ref={register({ required: true })}
                                     onChange={handleChangeData.bind(this, "password")}
                                     endAdornment={
                                         <InputAdornment position="end">
@@ -362,7 +363,6 @@ const SignUp = (props) => {
                                     label="Password"
                                     value={userDetail.ConfirmPassword}
                                     type={confirmPasswordHidden ? 'password' : 'text'}
-                                    ref={register({ required: true })}
                                     onChange={handleChangeData.bind(this, "confirmPassword")}
                                     endAdornment={
                                         <InputAdornment position="end">

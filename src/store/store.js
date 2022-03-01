@@ -57,8 +57,8 @@ const rootEpic = combineEpics(
   gitEpic.updateEmail,
   //==================COUNTRY==========================//
   gitEpic.getCountry,
-   //==================COURIER SERVICE==========================//
-   gitEpic.getAllCourierService,
+  //==================COURIER SERVICE==========================//
+  gitEpic.getAllCourierService,
   //==================PAYMENT METHOD==========================//
   gitEpic.getAllPaymentMethod,
   //==================CREDIT CARD==========================//
@@ -149,6 +149,9 @@ const rootEpic = combineEpics(
   gitEpic.deleteProductWishlist,
   //====================== PROMOTION BANNER ====================//
   gitEpic.AddPromotionBannerByIds,
+  //====================== PAYMENT ====================//
+  gitEpic.Payment_Send,
+  gitEpic.BankList_View,
 );
 
 // const rootReducerCombine = rootReducer;

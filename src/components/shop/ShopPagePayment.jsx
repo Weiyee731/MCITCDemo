@@ -9,6 +9,7 @@ import { Button } from "@material-ui/core";
 import Currency from "../shared/Currency";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import input from "@material-ui/core"
 import SwipeableViews from "react-swipeable-views";
 // data stubs
 import payments from "../../data/shopPayments";
@@ -48,7 +49,10 @@ const initialState = {
   focus: "",
   newname: "",
   newnumber: "",
-  cardtype: ""
+  cardtype: "",
+
+  setAddress: false,
+  Userdetails: []
 }
 class PagePayment extends Component {
   payments = payments;
@@ -76,6 +80,58 @@ class PagePayment extends Component {
     })
     this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
     this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+
+
+    if (this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.state.setAddress === false) {
+
+      if (this.props.addresss.state.address !== 0) {
+        this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
+          parseInt(x.UserAddressBookID) === parseInt(this.props.addresss.state.address)).map((address) => {
+            let Userdetails = []
+            console.log("addressaddress", address)
+
+            Userdetails = {
+              email: address.UserEmail,
+              addressLine1: address.UserAddressLine1,
+              addressLine2: address.UserAddressLine2,
+              addressName: address.UserAddressName,
+
+              poscode: address.UserPoscode,
+              city: address.UserCity,
+              state: address.UserState,
+              contact: address.UserContactNo,
+              total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping
+            }
+            this.setState({
+              Userdetails: Userdetails,
+              setAddress: true
+            })
+            this.props.handleUserData(Userdetails)
+          })
+      }
+      else {
+        let Userdetails = []
+        Userdetails = {
+          email: localStorage.getItem("email"),
+          addressLine1: "Self Collect",
+          addressLine2: "Self Collect",
+          addressName: localStorage.getItem("firstname") + localStorage.getItem("lastname"),
+
+          poscode: "Self Collect",
+          city: "Self Collect",
+          state: "Self Collect",
+          contact: localStorage.getItem("contact"),
+          total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping
+        }
+        this.setState({
+          Userdetails: Userdetails,
+          setAddress: true
+        })
+        this.props.handleUserData(Userdetails)
+      }
+    }
+
+
   }
 
   componentDidMount() {
@@ -188,6 +244,14 @@ class PagePayment extends Component {
     }
   }
 
+  handlePaymentClick = (id, value) => {
+    if (value === true) {
+      this.setState({ paymentMethodsID: id })
+    } else {
+      this.setState({ paymentMethodsID: "" })
+    }
+  }
+
   handleAddCreditCard = () => {
     const { newname, newnumber, newexpiry, cardtype } = this.state
     if (newname !== "" && newnumber !== "" && newexpiry !== "" && cardtype !== "") {
@@ -265,10 +329,19 @@ class PagePayment extends Component {
   }
 
   renderPaymentsList() {
-    const payments = this.props.paymentmethod !== undefined && this.props.paymentmethod.length > 0 &&
-      this.props.paymentmethod.map((payment) => {
-        return <Tab label={payment.PaymentMethodType} />;
+
+    const paymentMethod = [{ id: 1, method: "Online Banking" }, { id: 2, method: "Debit/Credit Card" }]
+    const payments = paymentMethod !== undefined && paymentMethod.length > 0 &&
+      paymentMethod.map((payment) => {
+        return <Tab label={payment} />;
       });
+
+
+
+    // const payments = this.props.paymentmethod !== undefined && this.props.paymentmethod.length > 0 &&
+    //   this.props.paymentmethod.map((payment) => {
+    //     return <Tab label={payment.PaymentMethodType} />;
+    //   });
 
     const handleChangeIndex = (index) => {
       this.setState({ tabvalue: index });
@@ -289,8 +362,67 @@ class PagePayment extends Component {
 
     return (
       <div className="checkout">
-        <div className="container">
-          <Tabs
+        <div className="container" style={{ textAlign: "left" }}>
+          <hr />
+          <h5>Payment Method</h5>
+          {
+            paymentMethod.length > 0 && paymentMethod.map((payment, index) => {
+              return (
+                <>
+                  {
+                    parseInt(this.state.paymentMethodsID) === parseInt(payment.id) ?
+                      <div>
+                        <IconButton aria-label="payment">
+                          <RadioButtonCheckedIcon
+                            fontSize="small"
+                            onClick={() => this.handlePaymentClick(payment.id, false)} />
+                        </IconButton><label style={{ fontSize: "16px" }}>{payment.method}</label>
+                      </div>
+                      :
+                      <div>
+                        <IconButton aria-label="payment">
+                          <RadioButtonUncheckedIcon
+                            fontSize="small"
+                            onClick={() => this.handlePaymentClick(payment.id, true)} />
+                        </IconButton><label style={{ fontSize: "16px" }}>{payment.method}</label>
+                      </div>
+                  }
+                </>
+              )
+            })
+          }
+          {console.log("this.props.addresss.state.address", this.props.addresss.state.address)}
+
+          {/* <form id="payment_form" action="payment_confirmation.php" method="post"> */}
+          <form id="payment_confirmation" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+            <input type="hidden" name="access_key" value="0646aa159df03a8fa52c81ab8a5bc4a7" />
+            <input type="hidden" name="profile_id" value="9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0" />
+            <input type="hidden" name="transaction_uuid" value="123456" />
+            <input type="hidden" name="signed_field_names" value="access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country" />
+            <input type="hidden" name="signed_date_time" value={new Date()} />
+            <input type="hidden" name="locale" value="en" />
+
+            <input type="hidden" name="transaction_type" value="authorization" />
+            <input type="hidden" name="reference_number" value="9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0" />
+            <input type="hidden" name="amount" value={this.state.tota} />
+            <input type="hidden" name="currency" value="USD" />
+
+
+            <input type="hidden" name="bill_to_surname" value={localStorage.getItem("lastname")} />
+            <input type="hidden" name="bill_to_forename" value={localStorage.getItem("firstname")} />
+            <input type="hidden" name="bill_to_email" value={this.state.Userdetails.email} />
+            <input type="hidden" name="bill_to_address_line1" value={this.state.Userdetails.addressLine1} />
+            <input type="hidden" name="bill_to_address_city" value={this.state.Userdetails.city} />
+
+            <input type="hidden" name="bill_to_address_postal_code" value={this.state.Userdetails.poscode} />
+            <input type="hidden" name="bill_to_address_state" value={this.state.Userdetails.state} />
+            <input type="hidden" name="bill_to_address_country" value="MY" />
+          </form>
+
+          {console.log("CHECK", new Date())}
+
+
+          {/* <Tabs
             value={this.state.tabvalue}
             indicatorColor="primary"
             textColor="primary"
@@ -298,15 +430,15 @@ class PagePayment extends Component {
             aria-label="disabled tabs example"
           >
             {payments}
-          </Tabs>
+          </Tabs> */}
 
-          <SwipeableViews
+          {/* <SwipeableViews
             enableMouseEvents
             axis={theme.direction === "rtl" ? "x-reverse" : "x"}
             index={this.state.tabvalue}
             onChangeIndex={handleChangeIndex}
           >
-            {/* Credit Card */}
+
             <div className="mt-3 mx-2">
               <Button
                 variant="contained"
@@ -426,9 +558,9 @@ class PagePayment extends Component {
                 )
               })
             }
-          </SwipeableViews>
+          </SwipeableViews> */}
         </div>
-      </div>
+      </div >
     );
   }
 
@@ -436,6 +568,11 @@ class PagePayment extends Component {
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
+    console.log("this.propsssss12345", this.props)
+    console.log("this.propsssss", this.props.addresss)
+    console.log("this.propsssss", this.props.addresss.state)
+
+
 
     return (
       <React.Fragment>
@@ -449,7 +586,7 @@ class PagePayment extends Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </React.Fragment >
     );
   }
 }
@@ -457,6 +594,7 @@ class PagePayment extends Component {
 const mapStateToProps = (state) => ({
   creditcard: state.counterReducer["creditcards"],
   paymentmethod: state.counterReducer["paymentmethod"],
+  addresses: state.counterReducer["addresses"],
 });
 
 const mapDispatchToProps = (dispatch) => {

@@ -3366,5 +3366,103 @@ export class GitEpic {
         return console.log("Add promotion banner error code: 4002.2", error_1);
       }
     });
+
+  //=================================== PAYMENT ===================================//
+
+  Payment_Send = (action$) =>
+    action$.ofType(GitAction.SendPayment).switchMap(async ({ payload }) => {
+      return fetch(
+        "https://apitest.cybersource.com/pts/v2/payments"
+        , {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Signature' : 'keyid="08c94330-f618-42a3-b09d-e1e43be5efda", algorithm="HmacSHA256", headers="host (request-target) digest v-c-merchant-id", signature="ldqJNbiFZ0ZhOHzhejvuAaNomlFmXv1xykNAEq7irn4="',
+            'Host': 'apitest.cybersource.com',
+            'v-c-merchant-id': 'emporiatest',
+            'Date': 'Fri, 12 Jul 201900:44:13 GMT'
+
+          },
+          body: JSON.stringify({
+            // PRODUCTNAME: payload.name,
+            // PROJECTID: payload.ProjectID,
+            // MERCHANTID: payload.productSupplier,
+            // PRODUCTDESC: payload.description,
+            // PRODUCTCATEGORYID: payload.productCategory,
+            // PRODUCTHEIGHT: payload.height,
+            // PRODUCTWIDTH: payload.width,
+            // PRODUCTDEPTH: payload.depth,
+            // PRODUCTWEIGHT: payload.weight,
+            // PRODUCTSKU: payload.sku,
+            // PRODUCTBRAND: payload.brand,
+
+            // PRODUCTMODEL: payload.model,
+            // PRODUCTTAG: payload.tags,
+            // USERID: payload.UserID
+            clientReferenceInformation : payload.clientReferenceInformation,
+            paymentInformation : payload.paymentInformation,
+            orderInformation : payload.orderInformation
+          })
+        }
+      )
+        .then(response => response.json())
+        .then(json => {
+          json = json;
+          console.log("sent Payment", json)
+          return {
+            type: GitAction.SentPayment,
+            payload: json,
+          };
+        })
+        .catch(error => alert('SentPayment: ' + error));
+    });
+
+    BankList_View = (action$) =>
+    action$.ofType(GitAction.ViewBankList).switchMap(async ({ payload }) => {
+      return fetch(
+        "https://uat.mepsfpx.com.my/FPXMain/RetrieveBankList"
+        , {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+                 },
+          body: {}
+          // JSON.stringify({
+          //   // PRODUCTNAME: payload.name,
+          //   // PROJECTID: payload.ProjectID,
+          //   // MERCHANTID: payload.productSupplier,
+          //   // PRODUCTDESC: payload.description,
+          //   // PRODUCTCATEGORYID: payload.productCategory,
+          //   // PRODUCTHEIGHT: payload.height,
+          //   // PRODUCTWIDTH: payload.width,
+          //   // PRODUCTDEPTH: payload.depth,
+          //   // PRODUCTWEIGHT: payload.weight,
+          //   // PRODUCTSKU: payload.sku,
+          //   // PRODUCTBRAND: payload.brand,
+
+          //   // PRODUCTMODEL: payload.model,
+          //   // PRODUCTTAG: payload.tags,
+          //   // USERID: payload.UserID
+          //   clientReferenceInformation : payload.clientReferenceInformation,
+          //   paymentInformation : payload.paymentInformation,
+          //   orderInformation : payload.orderInformation
+          // })
+        }
+      )
+        .then(response => response.json())
+        .then(json => {
+          json = json;
+          console.log("sent Payment", json)
+          return {
+            type: GitAction.ViewedBankList,
+            payload: json,
+          };
+        })
+        .catch(error => alert('ViewBankList: ' + error));
+    });
+
+
 }
 export let gitEpic = new GitEpic();

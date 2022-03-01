@@ -1485,4 +1485,23 @@ export class GitAction {
     };
   }
 
+    //================= PAYMENT ================//
+    static SendPayment = "SEND-PAYMENT";
+    static SentPayment =  "SENT-PAYMENT";
+    static CallSentPayment(propsData) {
+      return {
+        type: GitAction.SendPayment,
+        payload: propsData
+      };
+    }
+
+    static ViewBankList = "VIEW-BANKLIST";
+    static ViewedBankList =  "VIEWED-BANKLIST";
+    static CallRetrieveBankList(propsData) {
+      return {
+        type: GitAction.ViewBankList,
+        payload: propsData
+      };
+    }
+
 }
