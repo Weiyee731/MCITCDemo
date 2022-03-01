@@ -88,7 +88,6 @@ class PagePayment extends Component {
         this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
           parseInt(x.UserAddressBookID) === parseInt(this.props.addresss.state.address)).map((address) => {
             let Userdetails = []
-            console.log("addressaddress", address)
 
             Userdetails = {
               email: address.UserEmail,
@@ -391,7 +390,6 @@ class PagePayment extends Component {
               )
             })
           }
-          {console.log("this.props.addresss.state.address", this.props.addresss.state.address)}
 
           {/* <form id="payment_form" action="payment_confirmation.php" method="post"> */}
           <form id="payment_confirmation" action="https://testsecureacceptance.cybersource.com/pay" method="post">
@@ -418,9 +416,6 @@ class PagePayment extends Component {
             <input type="hidden" name="bill_to_address_state" value={this.state.Userdetails.state} />
             <input type="hidden" name="bill_to_address_country" value="MY" />
           </form>
-
-          {console.log("CHECK", new Date())}
-
 
           {/* <Tabs
             value={this.state.tabvalue}
@@ -568,11 +563,6 @@ class PagePayment extends Component {
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
-    console.log("this.propsssss12345", this.props)
-    console.log("this.propsssss", this.props.addresss)
-    console.log("this.propsssss", this.props.addresss.state)
-
-
 
     return (
       <React.Fragment>

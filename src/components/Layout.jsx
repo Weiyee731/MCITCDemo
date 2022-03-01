@@ -28,6 +28,7 @@ import BlogPageCategory from "./blog/BlogPageCategory";
 import BlogPagePost from "./blog/BlogPagePost";
 import PageCart from "./shop/ShopPageCart";
 import PageCheckout from "./shop/ShopPageCheckout";
+import ShopPageCheckOut from "./shop/CheckOut";
 import PageCompare from "./shop/ShopPageCompare";
 import PageWishlist from "./shop/ShopPageWishlist";
 import ShopPageCategory from "./shop/ShopPageCategory";
@@ -463,6 +464,7 @@ function Layout(props) {
                 {productLayouts}
                 <Route exact path="/shop/cart" component={PageCart} />
                 <Route exact path="/shop/checkout" component={PageCheckout} />
+                <Route exact path="/shop/checkout2" component={ShopPageCheckOut} />
                 <Route
                   exact
                   path="/shop/checkout/success"
