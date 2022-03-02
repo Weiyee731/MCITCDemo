@@ -32,6 +32,11 @@ import { createBrowserHistory } from 'history';
 
 import { browserHistory } from "react-router";
 
+// import sha256 from 'crypto-js/sha256';
+// import hmacSHA512 from 'crypto-js/hmac-sha512';
+// import Base64 from 'crypto-js/enc-base64';
+// var CryptoJS = require("crypto-js");
+const crypto = require('crypto');
 // import history from 'history'
 
 const history = createBrowserHistory()
@@ -122,33 +127,65 @@ class PageCheckout extends Component {
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
+//   sign(HashMap params) throws InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//     return sign(buildDataToSign(params), SECRET_KEY);
+// }
+
+//   sign(String data, String secretKey) throws InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//     SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), HMAC_SHA256);
+//     Mac mac = Mac.getInstance(HMAC_SHA256);
+//     mac.init(secretKeySpec);
+//     byte[] rawHmac = mac.doFinal(data.getBytes("UTF-8"));
+//     return DatatypeConverter.printBase64Binary(rawHmac).replace("\n", "");
+//   }
+
+//   buildDataToSign(HashMap params) {
+//     String[] signedFieldNames = String.valueOf(params.get("signed_field_names")).split(",");
+//     ArrayList<String> dataToSign = new ArrayList<String>();
+//     for (String signedFieldName : signedFieldNames) {
+//         dataToSign.add(signedFieldName + "=" + String.valueOf(params.get(signedFieldName)));
+//     }
+//     return commaSeparate(dataToSign);
+//   } 
+
+//   commaSeparate(ArrayList<String> dataToSign) {
+//     StringBuilder csv = new StringBuilder();
+//     for (Iterator<String> it = dataToSign.iterator(); it.hasNext(); ) {
+//         csv.append(it.next());
+//         if (it.hasNext()) {
+//             csv.append(",");
+//         }
+//     }
+//     return csv.toString();
+//   }
+
   async onFormSubmit() {
     // if (this.state.PaymentMethodID === 0) {
     //   toast.error("Please fill in correct payment method info to continue")
 
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    formData.append("access_key", "0646aa159df03a8fa52c81ab8a5bc4a7");
-    formData.append("profile_id", "9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0");
+    // formData.append("access_key", "0646aa159df03a8fa52c81ab8a5bc4a7");
+    // formData.append("profile_id", "9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0");
 
-    formData.append("transaction_uuid", "123456");
-    formData.append("signed_field_names", "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country");
-    formData.append("signed_date_time", new Date());
-    formData.append("locale", "en");
-    formData.append("transaction_type", "authorization");
-    formData.append("reference_number", "9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0");
+    // formData.append("transaction_uuid", "123456");
+    // formData.append("signed_field_names", "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country");
+    // formData.append("signed_date_time", new Date());
+    // formData.append("locale", "en");
+    // formData.append("transaction_type", "authorization");
+    // formData.append("reference_number", "9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0");
 
-    formData.append("amount", this.state.userdetails.total);
-    formData.append("currency", "USD");
-    formData.append("bill_to_surname", localStorage.getItem("lastname"));
-    formData.append("bill_to_forename", localStorage.getItem("firstname"));
+    // formData.append("amount", this.state.userdetails.total);
+    // formData.append("currency", "USD");
+    // formData.append("bill_to_surname", localStorage.getItem("lastname"));
+    // formData.append("bill_to_forename", localStorage.getItem("firstname"));
 
-    formData.append("bill_to_email", this.state.userdetails.email);
-    formData.append("bill_to_address_line1", this.state.userdetails.addressLine1);
-    formData.append("bill_to_address_city", this.state.userdetails.city);
-    formData.append("bill_to_address_postal_code", this.state.userdetails.poscode);
-    formData.append("bill_to_address_state", this.state.userdetails.state);
-    formData.append("bill_to_address_country", "MY");
+    // formData.append("bill_to_email", this.state.userdetails.email);
+    // formData.append("bill_to_address_line1", this.state.userdetails.addressLine1);
+    // formData.append("bill_to_address_city", this.state.userdetails.city);
+    // formData.append("bill_to_address_postal_code", this.state.userdetails.poscode);
+    // formData.append("bill_to_address_state", this.state.userdetails.state);
+    // formData.append("bill_to_address_country", "MY");
 
     // axios({
     //   method:'post',
@@ -161,37 +198,80 @@ class PageCheckout extends Component {
     //  .catch(error => {
     //      console.log(error);
     //  });
+    let now = new Date().toISOString().split('.').shift() + 'Z';
+    
+    const d = new Date();
+    let time = d.getTime();
 
-    const data = {access_key:"0646aa159df03a8fa52c81ab8a5bc4a7",
-                  profile_id:"9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0",
-                  transaction_uuid:"123456",
-                  signed_field_names:"access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country",
-                  signed_date_time:new Date(),
-                  locale:"en",
-                  transaction_type:"authorization",
-                  reference_number:"9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0",
-                  amount:"101.00",
-                  currency:"USD",
-                  bill_to_surname:"KIUN",
-                  bill_to_forename:"SIE SUAI",
-                  bill_to_email:"alankiun.tic@gmail.com",
-                  bill_to_address_line1:"myhome",
-                  bill_to_address_city:"SIBU",
-                  bill_to_address_postal_code:"96000",
-                  bill_to_address_state:"SARAWAK",
-                  bill_to_address_country:"MY"
-                };
+    var n = Math.floor(Math.random() * 11);
+    var k = Math.floor(Math.random() * 1000000);
+    var m = String.fromCharCode(n) + k;
+
+    console.log(now)
+    console.log(m)
+
+    const signature = "access_key=0646aa159df03a8fa52c81ab8a5bc4a7,profile_id=9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0,transaction_uuid=" + m + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=101.00,currency=USD,bill_to_surname=KIUN,bill_to_forename=SIE SUAI,bill_to_email=alankiun.tic@gmail.com,bill_to_address_line1=1H, Lorong Lada 9E,bill_to_address_city=SIBU,bill_to_address_postal_code=96000,bill_to_address_state=SARAWAK,bill_to_address_country=MY"
+    const APIKey = "08fd3b4b9f8d4866b5b58c5039ed1c795393402695da4b7fb8e33aac2929bf5d8bc43156efb34d5b97a632dad2e0b55001e3d1a751f4420f90b42b140594a3adfcb2852df84a4bb59d9f8f47458dacf12316b373362a419a99fe32a3286b3d0b5056c6c1923f4ded83014852dcce8c7085baaf83536c4e65933f6ecbd96fe3fb";
+    
+    var signed = crypto
+    .createHmac('sha256', APIKey)
+    .update(signature)
+    .digest('base64');
+
+    // const data = {access_key:'0646aa159df03a8fa52c81ab8a5bc4a7',
+    //               profile_id:"9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0",
+    //               transaction_uuid:m,
+    //               signed_field_names:"access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country",
+    //               signed_date_time:now,
+    //               locale:"en",
+    //               transaction_type:"authorization",
+    //               reference_number:time,
+    //               amount:"101.00",
+    //               currency:"USD",
+    //               bill_to_surname:"KIUN",
+    //               bill_to_forename:"SIE SUAI",
+    //               bill_to_email:"alankiun.tic@gmail.com",
+    //               bill_to_address_line1:"1H, Lorong Lada 9E",
+    //               bill_to_address_city:"SIBU",
+    //               bill_to_address_postal_code:"96000",
+    //               bill_to_address_state:"SARAWAK",
+    //               bill_to_address_country:"MY",
+    //               signature:signed};
+
+    const formData = new FormData();
+    formData.append("access_key", "0646aa159df03a8fa52c81ab8a5bc4a7");
+    formData.append("profile_id", "9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0");
+    formData.append("transaction_uuid", time.toString());
+    formData.append("signed_field_names", "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country");
+    formData.append("signed_date_time", now);
+    formData.append("locale", "en");
+    formData.append("transaction_type", "authorization");
+    formData.append("reference_number", time.toString());
+    formData.append("amount", "101.00");
+    formData.append("currency", "USD");
+    formData.append("bill_to_surname", "KIUN");
+    formData.append("bill_to_forename", "SIE SUAI");
+    formData.append("bill_to_email", "alankiun.tic@gmail.com");
+    formData.append("bill_to_address_line1", "1H, Lorong Lada 9E");
+    formData.append("bill_to_address_city", "SIBU");
+    formData.append("bill_to_address_postal_code", "96000");
+    formData.append("bill_to_address_state", "SARAWAK");
+    formData.append("bill_to_address_country", "MY");
+    formData.append("signature", signed);
+    formData.append("submit", "Submit");
+
     const requestInfo = {
         method:'POST',
-        body: JSON.stringify({data}),
+        body: formData,
         mode: "cors",
         headers: new Headers({
-          'Content-Type': 'application/json',
-          "Access-Control-Allow-Origin": 'https://myemporia.my',
-          "Access-Control-Allow-Methods": 'POST',
-          "Access-Control-Allow-Headers": 'Origin, Content-Type, X-Auth-Token',
-          'HMAC_SHA256': 'sha256',
-          'SECRET_KEY': '08fd3b4b9f8d4866b5b58c5039ed1c795393402695da4b7fb8e33aac2929bf5d8bc43156efb34d5b97a632dad2e0b55001e3d1a751f4420f90b42b140594a3adfcb2852df84a4bb59d9f8f47458dacf12316b373362a419a99fe32a3286b3d0b5056c6c1923f4ded83014852dcce8c7085baaf83536c4e65933f6ecbd96fe3fb'
+          'content-type': 'application/x-www-form-urlencoded',
+          'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+          // "Access-Control-Allow-Origin": '*',
+          // "Access-Control-Allow-Methods": 'POST',
+          // "Access-Control-Allow-Headers": 'Origin, Content-Type, X-Auth-Token',
+          // 'HMAC_SHA256': 'sha256',
+          // 'SECRET_KEY': '08fd3b4b9f8d4866b5b58c5039ed1c795393402695da4b7fb8e33aac2929bf5d8bc43156efb34d5b97a632dad2e0b55001e3d1a751f4420f90b42b140594a3adfcb2852df84a4bb59d9f8f47458dacf12316b373362a419a99fe32a3286b3d0b5056c6c1923f4ded83014852dcce8c7085baaf83536c4e65933f6ecbd96fe3fb'
         }),
     };
     fetch('https://testsecureacceptance.cybersource.com/pay', requestInfo)

@@ -5,7 +5,6 @@
   "private": true,
   "dependencies": {
     "@atlaskit/css-reset": "^6.0.4",
-    "@babel/plugin-transform-react-jsx": "^7.10.4",
     "@ckeditor/ckeditor5-basic-styles": "^26.0.0",
     "@ckeditor/ckeditor5-core": "^26.0.0",
     "@ckeditor/ckeditor5-dev-utils": "^24.3.0",
@@ -77,6 +76,7 @@
     "react-360-web": "^1.1.0",
     "react-accessible-accordion": "^4.0.0",
     "react-beautiful-dnd": "^13.0.0",
+    "react-bootstrap": "^2.1.2",
     "react-bootstrap-accordion": "^1.0.0",
     "react-bootstrap-timezone-picker": "^2.0.1",
     "react-chartjs-2": "^2.10.0",

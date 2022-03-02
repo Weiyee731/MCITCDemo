@@ -4052,7 +4052,7 @@ class AddProductComponent extends Component {
                   <TextField
                     id="productSku"
                     value={this.state.sku}
-                    error={this.state.skuEmpty}
+                    // error={this.state.skuEmpty}
                     onChange={this.handleChange.bind(this, "SKU")}
                     InputLabelProps={{
                       shrink: "true",
