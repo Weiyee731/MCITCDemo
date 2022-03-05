@@ -435,7 +435,7 @@ class PageCheckOrder extends Component {
               <div className="card-body">
                 <h5>Please select your desired shipping address</h5>
                 {this.renderAddress()}
-                {this.renderCart()}
+                {/* {this.renderCart()} */}
                 <HandleAddress
                   isOpen={this.state.isHandleAddress}
                   // handleOpen={this.handleAddNewCard}

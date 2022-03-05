@@ -1005,6 +1005,9 @@ export class GitAction {
   static ClearedOrder = "CLEARED-ORDER";
   static GetProductStockByStatus = "GET-PRODUCTSTOCKBYSTATUS";
   static GotProductStockByStatus = "GOT-PRODUCTSTOCKBYSTATUS";
+  static OrderStatusUpdate = "UPDATE-ORDER-STATUS";
+  static OrderStatusUpdated = "UPDATED-ORDER-STATUS";
+  static ClearOrderStatus = "CLEAR-ORDER-STATUS";
 
   static CallAddOrder(prodData) {
     return {
@@ -1016,6 +1019,19 @@ export class GitAction {
   static CallClearOrder() {
     return {
       type: GitAction.ClearOrder
+    };
+  }
+
+  static CallUpdateOrderStatus(prodData) {
+    return {
+      type: GitAction.OrderStatusUpdate,
+      payload: prodData,
+    };
+  }
+
+  static CallClearOrderStatus() {
+    return {
+      type: GitAction.ClearOrderStatus
     };
   }
 
@@ -1485,23 +1501,23 @@ export class GitAction {
     };
   }
 
-    //================= PAYMENT ================//
-    static SendPayment = "SEND-PAYMENT";
-    static SentPayment =  "SENT-PAYMENT";
-    static CallSentPayment(propsData) {
-      return {
-        type: GitAction.SendPayment,
-        payload: propsData
-      };
-    }
+  //================= PAYMENT ================//
+  static SendPayment = "SEND-PAYMENT";
+  static SentPayment = "SENT-PAYMENT";
+  static CallSentPayment(propsData) {
+    return {
+      type: GitAction.SendPayment,
+      payload: propsData
+    };
+  }
 
-    static ViewBankList = "VIEW-BANKLIST";
-    static ViewedBankList =  "VIEWED-BANKLIST";
-    static CallRetrieveBankList(propsData) {
-      return {
-        type: GitAction.ViewBankList,
-        payload: propsData
-      };
-    }
+  static ViewBankList = "VIEW-BANKLIST";
+  static ViewedBankList = "VIEWED-BANKLIST";
+  static CallRetrieveBankList(propsData) {
+    return {
+      type: GitAction.ViewBankList,
+      payload: propsData
+    };
+  }
 
 }

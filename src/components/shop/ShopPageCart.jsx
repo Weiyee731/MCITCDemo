@@ -404,6 +404,7 @@ class ShopPageCart extends Component {
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },
         ];
+
         let content;
         let continueshopping = (
             <div className="block block-empty" >

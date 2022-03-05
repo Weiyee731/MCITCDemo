@@ -119,7 +119,7 @@ class LoginComponent extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.currentUser !== this.props.currentUser) {
-      if (this.props.currentUser[0].ReturnVal !== "0") {
+      if (this.props.currentUser !== undefined && this.props.currentUser[0].ReturnVal !== "0") {
 
         localStorage.setItem("isLogin", true);
         localStorage.setItem("firstname", this.props.currentUser[0].FirstName);

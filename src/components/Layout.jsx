@@ -27,6 +27,9 @@ import AccountLayout from "./account/AccountLayout";
 import BlogPageCategory from "./blog/BlogPageCategory";
 import BlogPagePost from "./blog/BlogPagePost";
 import PageCart from "./shop/ShopPageCart";
+import ShopPageReceipt from "./shop/ShopPageReceipt";
+
+
 import PageCheckout from "./shop/ShopPageCheckout";
 import ShopPageCheckOut from "./shop/CheckOut";
 import PageCompare from "./shop/ShopPageCompare";
@@ -96,6 +99,8 @@ import ViewMerchantsComponent from "../pages/viewMerchant/viewMerchants.componen
 // import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
 import AddProductAllInOne from "../pages/addProduct/addProductAllInOne.component";
 import EditShopProfile from "../pages/editShopProfile/editShopProfile.component";
+
+
 
 const productLayouts = [
   ["/shop/product-standard", { layout: "standard" }],
@@ -463,6 +468,25 @@ function Layout(props) {
                 />
                 {productLayouts}
                 <Route exact path="/shop/cart" component={PageCart} />
+                {/* <Route exact path="/shop/ShopPageReceipt" component={ShopPageReceipt} /> */}
+
+                <Route
+                  exact
+                  path="/shop/ShopPageReceipt/:decision/:transactionuuid/:amount"
+                  render={(props) => (
+                    <>
+                      {console.log("props1234", props)}
+                      <ShopPageReceipt
+                        {...props}
+                        layout="standard"
+                        decision={props.match.params.decision}
+                        transactionuuid={props.match.params.transactionuuid}
+                        amount={props.match.params.amount}
+                      />
+                    </>
+                  )}
+                />
+
                 <Route exact path="/shop/checkout" component={PageCheckout} />
                 <Route exact path="/shop/checkout2" component={ShopPageCheckOut} />
                 <Route

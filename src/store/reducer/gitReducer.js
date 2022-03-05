@@ -73,6 +73,7 @@ const INITIAL_STATE = {
 
   payment: [],
   bankList: [],
+  orderstatus: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -925,6 +926,18 @@ export function counterReducer(state = INITIAL_STATE, action) {
         order: action.payload,
       });
 
+
+    case GitAction.OrderStatusUpdate:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.OrderStatusUpdated:
+      return Object.assign({}, state, {
+        loading: false,
+        orderstatus: action.payload,
+      });
+
+    case GitAction.ClearOrderStatus:
+      return Object.assign({}, state, { orderstatus: [], });
+
     case GitAction.OrderUserDetailsUpdate:
       return Object.assign({}, state, { loading: true });
     case GitAction.OrderUserDetailsUpdated:
@@ -1334,13 +1347,13 @@ export function counterReducer(state = INITIAL_STATE, action) {
         payment: action.payload,
       });
 
-      case GitAction.ViewBankList:
-        return Object.assign({}, state, { loading: true });
-      case GitAction.ViewedBankList:
-        return Object.assign({}, state, {
-          loading: false,
-          bankList: action.payload,
-        });
+    case GitAction.ViewBankList:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ViewedBankList:
+      return Object.assign({}, state, {
+        loading: false,
+        bankList: action.payload,
+      });
 
     /////////////////////////////////////////////////// Default /////////////////////////////////////////////////// 
     default:

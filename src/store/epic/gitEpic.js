@@ -2553,6 +2553,8 @@ export class GitEpic {
         payload.TrackingStatusID +
         "&PickUpInd=" +
         payload.PickUpInd +
+        "&TRANSACTIONUUID=" +
+        payload.TRANSACTIONUUID +
         "&ProjectID=2")
 
       try {
@@ -2580,7 +2582,10 @@ export class GitEpic {
           "&TRACKINGSTATUSID=" +
           payload.TrackingStatusID +
           "&PickUpInd=" +
-          payload.PickUpInd
+          payload.PickUpInd +
+          "&TRANSACTIONUUID=" +
+          payload.TRANSACTIONUUID +
+          "&ProjectID=2"
         );
         let json = await response.json();
         json = JSON.parse(json);
@@ -2612,6 +2617,37 @@ export class GitEpic {
         alert('deleteProductCart: ' + error);
         return {
           type: GitAction.AddedOrder,
+          payload: [],
+        };
+      }
+    });
+
+  // Update Order Details - User Details
+  UpdateOrderStatus = (action$) =>
+    action$.ofType(GitAction.OrderStatusUpdate).switchMap(async ({ payload }) => {
+      console.log(url +
+        "Order_UpdateOrderStatus?Transactionuuid=" + payload.Transactionuuid +
+        "&TrackingStatusID=" + payload.TrackingStatusID +
+        "&OrderPaidAmounte=" + payload.OrderPaidAmount)
+      try {
+        const response = await fetch(
+          url +
+          "Order_UpdateOrderStatus?Transactionuuid=" + payload.Transactionuuid +
+          "&TrackingStatusID=" + payload.TrackingStatusID +
+          "&OrderPaidAmounte=" + payload.OrderPaidAmount
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+
+        return {
+          type: GitAction.OrderStatusUpdated,
+          payload: json,
+        };
+      }
+      catch (error) {
+        alert('OrderStatusUpdated: ' + error);
+        return {
+          type: GitAction.OrderStatusUpdated,
           payload: [],
         };
       }
@@ -3378,7 +3414,7 @@ export class GitEpic {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Signature' : 'keyid="08c94330-f618-42a3-b09d-e1e43be5efda", algorithm="HmacSHA256", headers="host (request-target) digest v-c-merchant-id", signature="ldqJNbiFZ0ZhOHzhejvuAaNomlFmXv1xykNAEq7irn4="',
+            'Signature': 'keyid="08c94330-f618-42a3-b09d-e1e43be5efda", algorithm="HmacSHA256", headers="host (request-target) digest v-c-merchant-id", signature="ldqJNbiFZ0ZhOHzhejvuAaNomlFmXv1xykNAEq7irn4="',
             'Host': 'apitest.cybersource.com',
             'v-c-merchant-id': 'emporiatest',
             'Date': 'Fri, 12 Jul 201900:44:13 GMT'
@@ -3400,9 +3436,9 @@ export class GitEpic {
             // PRODUCTMODEL: payload.model,
             // PRODUCTTAG: payload.tags,
             // USERID: payload.UserID
-            clientReferenceInformation : payload.clientReferenceInformation,
-            paymentInformation : payload.paymentInformation,
-            orderInformation : payload.orderInformation
+            clientReferenceInformation: payload.clientReferenceInformation,
+            paymentInformation: payload.paymentInformation,
+            orderInformation: payload.orderInformation
           })
         }
       )
@@ -3418,7 +3454,7 @@ export class GitEpic {
         .catch(error => alert('SentPayment: ' + error));
     });
 
-    BankList_View = (action$) =>
+  BankList_View = (action$) =>
     action$.ofType(GitAction.ViewBankList).switchMap(async ({ payload }) => {
       return fetch(
         "https://uat.mepsfpx.com.my/FPXMain/RetrieveBankList"
@@ -3427,7 +3463,7 @@ export class GitEpic {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-                 },
+          },
           body: {}
           // JSON.stringify({
           //   // PRODUCTNAME: payload.name,

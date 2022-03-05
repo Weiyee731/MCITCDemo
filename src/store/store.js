@@ -109,6 +109,7 @@ const rootEpic = combineEpics(
   gitEpic.getNotification,
   //==================ORDER==========================//
   gitEpic.AddOrder,
+  gitEpic.UpdateOrderStatus,
   gitEpic.UpdateOrderUserDetails,
   gitEpic.updateOrderTrackingNumber,
   gitEpic.getProductStockByStatus,
