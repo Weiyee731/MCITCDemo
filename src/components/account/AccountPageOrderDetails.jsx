@@ -429,87 +429,107 @@ export default function AccountPageOrderDetails(props) {
 
       <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
         {
-          orderDetail.PaymentMethodID === 0 ?
-            creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
-              <div className="card address-card address-card--featured">
-                <div className="address-card__body">
-                  <div className="address-card__badge address-card__badge--muted">
-                    Credit Card
-                  </div>
+          orderDetail.TrackingStatus === "In Purchasing" ?
+            <div className="card address-card address-card--featured">
+              <div className="address-card__body">
+                <div className="address-card__badge address-card__badge--muted">
+                  Pending Payment
+                </div>
+                <div className="address-card__row">
                   <div className="address-card__name">
-                    {paymentcard.UserCardName}
-                  </div>
-                  <div className="address-card__row">
-                    <div className="address-card__row-title">
-                      User Card Number
-                    </div>
-                    {paymentcard.UserCardNo}
-                  </div>
-                  <div className="address-card__row">
-                    <div className="address-card__row-title">Expiry Date</div>
-                    <div className="address-card__row-content">
-                      {paymentcard.UserCardExpireDate}
-                    </div>
-                  </div>
-                  <div className="address-card__row">
-                    <div className="address-card__row-title">Card Type</div>
-                    <div className="address-card__row-content">
-                      {paymentcard.UserCardType}
-                    </div>
+                    Waiting for payment to complete the order
                   </div>
                 </div>
               </div>
-            ))
+            </div>
             :
             <>
               {
-                orderDetail.PaymentMethodID === 1 &&
-                <div className="card address-card address-card--featured">
-                  <div className="address-card__body">
-                    <div className="address-card__badge address-card__badge--muted">
-                      E-WALLET
-                    </div>
-                    <div className="address-card__row">
-                      <div className="address-card__name">
-                        E-WALLET PAYMENT
+                orderDetail.PaymentMethodID === 0 ?
+                  creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
+                    <div className="card address-card address-card--featured">
+                      <div className="address-card__body">
+                        <div className="address-card__badge address-card__badge--muted">
+                          Credit Card
+                        </div>
+                        <div className="address-card__name">
+                          {paymentcard.UserCardName}
+                        </div>
+                        <div className="address-card__row">
+                          <div className="address-card__row-title">
+                            User Card Number
+                          </div>
+                          {paymentcard.UserCardNo}
+                        </div>
+                        <div className="address-card__row">
+                          <div className="address-card__row-title">Expiry Date</div>
+                          <div className="address-card__row-content">
+                            {paymentcard.UserCardExpireDate}
+                          </div>
+                        </div>
+                        <div className="address-card__row">
+                          <div className="address-card__row-title">Card Type</div>
+                          <div className="address-card__row-content">
+                            {paymentcard.UserCardType}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              }
-              {
-                orderDetail.PaymentMethodID === 2 &&
-                <div className="card address-card address-card--featured">
-                  <div className="address-card__body">
-                    <div className="address-card__badge address-card__badge--muted">
-                      FPX
-                    </div>
-                    <div className="address-card__row">
-                      <div className="address-card__name">
-                        FPX PAYMENT
+                  ))
+                  :
+                  <>
+                    {
+                      orderDetail.PaymentMethodID === 1 &&
+                      <div className="card address-card address-card--featured">
+                        <div className="address-card__body">
+                          <div className="address-card__badge address-card__badge--muted">
+                            E-WALLET
+                          </div>
+                          <div className="address-card__row">
+                            <div className="address-card__name">
+                              E-WALLET PAYMENT
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              }
-              {
-                orderDetail.PaymentMethodID === 3 &&
-                <div className="card address-card address-card--featured">
-                  <div className="address-card__body">
-                    <div className="address-card__badge address-card__badge--muted">
-                      PAYPAL
-                    </div>
-                    <div className="address-card__row">
-                      <div className="address-card__name">
-                        PAYPAL PAYMENT
+                    }
+                    {
+                      orderDetail.PaymentMethodID === 2 &&
+                      <div className="card address-card address-card--featured">
+                        <div className="address-card__body">
+                          <div className="address-card__badge address-card__badge--muted">
+                            FPX
+                          </div>
+                          <div className="address-card__row">
+                            <div className="address-card__name">
+                              FPX PAYMENT
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              }
+                    }
+                    {
+                      orderDetail.PaymentMethodID === 3 &&
+                      <div className="card address-card address-card--featured">
+                        <div className="address-card__body">
+                          <div className="address-card__badge address-card__badge--muted">
+                            PAYPAL
+                          </div>
+                          <div className="address-card__row">
+                            <div className="address-card__name">
+                              PAYPAL PAYMENT
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
 
+                  </>
+              }
             </>
+
         }
+
 
       </div>
     </React.Fragment>

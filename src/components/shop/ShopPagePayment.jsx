@@ -1,10 +1,11 @@
 // react
 import React, { Component } from "react";
-import { Card, CardContent } from "@material-ui/core";
 // third-party
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import {
+  Select
+} from "@material-ui/core";
 // application
 import Currency from "../shared/Currency";
 import Tabs from "@material-ui/core/Tabs";
@@ -20,11 +21,13 @@ import Cards from "react-credit-cards";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import { toast } from "react-toastify";
 import Logo from "../../assets/Emporia.png";
 import text from './EX00013776.key'; // Relative path to your File
+import axios from "axios";
+import FormControl from "@material-ui/core/FormControl";
 
 import {
   formatCreditCardNumber,
@@ -33,7 +36,6 @@ import {
 } from "../account/AccountPageCreditCard/utils";
 import AddCreditCard from '../shared/AddCreditCard'
 import moment from "moment";
-var CryptoJS = require("crypto-js");
 const crypto = require('crypto');
 
 
@@ -60,7 +62,11 @@ const initialState = {
   setAddress: false,
   Userdetails: [],
   priv_key: "",
-  isPrivSet: false
+  isPrivSet: false,
+  fpx_checkSum: "",
+  BankID: "",
+  bankDetails: [],
+  isBankSet: false,
 }
 class PagePayment extends Component {
   payments = payments;
@@ -339,12 +345,19 @@ class PagePayment extends Component {
   renderPaymentsList() {
 
     const paymentMethod = [{ id: 1, method: "Online Banking" }, { id: 2, method: "Debit/Credit Card" }]
-    const payments = paymentMethod !== undefined && paymentMethod.length > 0 &&
-      paymentMethod.map((payment) => {
-        return <Tab label={payment} />;
-      });
+    // const payments = paymentMethod !== undefined && paymentMethod.length > 0 &&
+    //   paymentMethod.map((payment) => {
+    //     return <Tab label={payment} />;
+    //   });
 
-
+    if (this.props.paymentmethod.length > 0 && this.state.isBankSet === false) {
+      this.props.paymentmethod !== null && this.props.paymentmethod.filter((x) => parseInt(x.PaymentMethodTypeID) === 2).map((bank) => {
+        bank.PaymentMethod !== null && JSON.parse(bank.PaymentMethod).filter((x) => x.TestingInd !== null && x.TestingInd === 1).map((details) => {
+          this.state.bankDetails.push(details)
+          this.setState({ isBankSet: true, BankID: this.state.bankDetails[0].BankID })
+        })
+      })
+    }
 
     // const payments = this.props.paymentmethod !== undefined && this.props.paymentmethod.length > 0 &&
     //   this.props.paymentmethod.map((payment) => {
@@ -388,29 +401,31 @@ class PagePayment extends Component {
     let PickUpIndicator = ""
 
     // FPX Online Banking
-    let fpx_msgType = "AR";
-    let fpx_msgToken = "01";
-    let fpx_sellerExId = "EX00013776";
+    let fpx_msgType = "AR"
+    let fpx_msgToken = "01"
+    let fpx_sellerExId = "EX00013776"
     // let fpx_sellerExOrderNo = moment(new Date()).format("YYYYMMDDHHmmss");
-    let fpx_sellerExOrderNo = "20220305130204";
+    let fpx_sellerExOrderNo = "20220305170224"
 
-    let fpx_sellerTxnTime = "20220305130204";
-    let fpx_sellerOrderNo = "20220305130204";
-    let fpx_sellerId = "SE00015397";
-    let fpx_sellerBankCode = "01";
-    let fpx_txnCurrency = "MYR";
-    let fpx_txnAmount = "1.00";
-    let fpx_buyerEmail = "";
-    let fpx_checkSum = "";
-    let fpx_buyerName = "";
-    let fpx_buyerBankId = "ABB0234";
-    let fpx_buyerBankBranch = "";
-    let fpx_buyerAccNo = "";
-    let fpx_buyerId = "";
-    let fpx_makerName = "";
-    let fpx_buyerIban = "";
-    let fpx_productDesc = "SampleProduct";
-    let fpx_version = "6.0";
+    let fpx_sellerTxnTime = "20220305170224"
+    let fpx_sellerOrderNo = "20220305170224"
+    let fpx_sellerId = "SE00015397"
+    let fpx_sellerBankCode = "01"
+    let fpx_txnCurrency = "MYR"
+    let fpx_txnAmount = "1.00"
+    let fpx_buyerEmail = ""
+    let fpx_checkSum = "693497063FC66DA1127F3C2778941AD1FAA0219FBC1A444FEEE305A2FE9E8B62668FEDD8E0BDCDAD5125FA07BB4988780B955814F2603D209521ECAE5274C52EC3AADA9EB036EF76EC2CCE6954031FBC72331F2B8C59A02988D295C823D15EC12B2E6906346D4A12496825E4A1FFAC2B49EE31806EB0501D82C5CEE95A0A2954579534F2912564D3CDBBA430FDB4641D593C9F97ED20BFE9F20562CB649EFCE256E6D3E9F5D1AC780B7675496543571D27123994F63649D0FBE067E3E76176A322F652A1D4B38A06124650722C67073C4E318A0041BD3AE1940F78CAB6897E0386D5DA705DBAE56B1F415BDA7098F64C128F148A789DD82CD1C45920AFB533E3"
+    let fpx_buyerName = ""
+    let fpx_buyerBankId = "ABB0234"
+    let fpx_buyerBankBranch = ""
+    let fpx_buyerAccNo = ""
+    let fpx_buyerId = ""
+    let fpx_makerName = ""
+    let fpx_buyerIban = ""
+    let fpx_productDesc = "SampleProduct"
+    let fpx_version = "6.0"
+    let bankingdata = ""
+
 
     if (this.props.addresss.state.address === 0) {
       lastname = localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia"
@@ -439,7 +454,6 @@ class PagePayment extends Component {
       // fpx_buyerName = this.state.Userdetails.addressName
 
     }
-
     const signature = "access_key=0646aa159df03a8fa52c81ab8a5bc4a7,profile_id=9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=" + totalPrice + ",currency=USD,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
     const APIKey = "08fd3b4b9f8d4866b5b58c5039ed1c795393402695da4b7fb8e33aac2929bf5d8bc43156efb34d5b97a632dad2e0b55001e3d1a751f4420f90b42b140594a3adfcb2852df84a4bb59d9f8f47458dacf12316b373362a419a99fe32a3286b3d0b5056c6c1923f4ded83014852dcce8c7085baaf83536c4e65933f6ecbd96fe3fb";
 
@@ -450,114 +464,44 @@ class PagePayment extends Component {
 
 
 
-    let bankingdata = fpx_buyerAccNo + "|" + fpx_buyerBankBranch + "|" + fpx_buyerBankId + "|" + fpx_buyerEmail + "|" + fpx_buyerIban + "|" + fpx_buyerId + "|" + fpx_buyerName + "|" + fpx_makerName + "|" + fpx_msgToken + "|" + fpx_msgType + "|" + fpx_productDesc + "|" + fpx_sellerBankCode + "|" + fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + fpx_txnAmount + "|" + fpx_txnCurrency + "|" + fpx_version;
-    // let priv_key = ""
-    // var bytes = crypto.AES.decrypt(ciphertext, 'my-secret-key@123');
-    // var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    const handleBanking = (bankid) => {
+      // fpx_buyerBankId = bankid
+      bankingdata = fpx_buyerAccNo + "|" + fpx_buyerBankBranch + "|" + fpx_buyerBankId + "|" + fpx_buyerEmail + "|" + fpx_buyerIban + "|" + fpx_buyerId + "|" + fpx_buyerName + "|" + fpx_makerName + "|" + fpx_msgToken + "|" + fpx_msgType + "|" + fpx_productDesc + "|" + fpx_sellerBankCode + "|" + fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + fpx_txnAmount + "|" + fpx_txnCurrency + "|" + fpx_version
 
-    if (this.state.isPrivSet === false) {
-      fetch(text)
-        .then(r => r.text())
-        .then(data => {
-          this.setState({ priv_key: data, isPrivSet: true })
-          // console.log("payment11", text)
-          // console.log("payment11", priv_key)
-          // console.log("payment113", decodeURI(text))
-          // console.log("payment113", encodeURI(text))
+      let URL = "https://myemporia.my/payment/check.php"
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+      const formData = new FormData()
+      formData.append("bankingdata", bankingdata);
 
-          // console.log("CryptoJS", CryptoJS.SHA256(text))
+      axios.post(URL, formData, config).then((res) => {
+        fpx_checkSum = res.data.split('"')[1]
+        if (res.status === 200) {
+          this.setState({ fpx_checkSum: res.data.split('"')[1] })
+        }
+        else {
+          toast.error("There is something wrong with uploading images. Please try again.")
+        }
+      }).catch(e => {
+        toast.error("There is something wrong with uploading images. Please try again.")
+      })
 
-          // var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(text), 'my-secret-key@123').toString();
+      // fpx_checkSum = crypto
+      //   .createHmac('sha256', this.state.priv_key)
+      //   .update(bankingdata)
+      //   .digest('base64');
 
-          // var bytes = CryptoJS.AES.decrypt(ciphertext, 'my-secret-key@123');
-          // var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-          // console.log("decryptedData", decryptedData)
-          // CryptoJS.SHA256( text );
-
-          // const privateKey = crypto.createPrivateKey({
-          //   key: Buffer.from(text, 'base64'),
-          //   format: "der",
-          //   type: 'pkcs1',
-          // })
-
-          // console.log("privateKey", privateKey)
-
-          // const privateKey = crypto.createPrivateKey({
-          //   key: Buffer.from(text, 'base64'),
-          //   format: "der",
-          //   type: 'pkcs1',
-          // })
-
-          // console.log("privateKey", privateKey)
-
-          // const hash = crypto.createHmac('sha256', text)
-          //   // .update('I love cupcakes')
-          //   .digest('hex');
-          // console.log(hash);
-        });
-    }
-
-    console.log("priv_key", this.state.priv_key)
-
-    // fpx_checkSum = crypto
-    //   .createHmac('sha256', this.state.priv_key)
-    //   .update(bankingdata)
-    //   .digest('base64');
-
-
-    if (this.state.priv_key !== "") {
-      const signer = crypto.createSign('RSA-SHA1');
-      signer.write(bankingdata);
-      signer.end();
-      const data = signer.sign(this.state.priv_key, 'base64')
-      fpx_checkSum = (data.toString('utf-8')).toUpperCase()
-      console.log("fpx_checkSum11", data)
-
+      // const signer = crypto.createSign('RSA-SHA1');
+      // signer.write(bankingdata);
+      // signer.end();
+      // const data = signer.sign(this.state.priv_key, 'base64')
+      // fpx_checkSum = (data.toString('utf-8')).toUpperCase()
+      // console.log("fpx_checkSum11", data)
       // fpx_checkSum = data.replace(/\d+./g, char => String.fromCharCode(`0b${char}`)).toUpperCase()
-      // console.log("fpx_checkSum", hex)
-      // console.log("fpx_checkSum1212", aa)
+
+      this.setState({ BankID: bankid })
     }
-    // Returns the signature in output_format which can be 'binary', 'hex' or 'base64'
-
-  
-    console.log("fpx_checkSum", fpx_checkSum)
-
-
-    // fpx_checkSum = strtoupper(bin2hex($binary_signature));
-
-    // openssl_sign($data, $binary_signature, $pkeyid, OPENSSL_ALGO_SHA1);
-
-
-
-
-    // let pkeyid = openssl_get_privatekey($priv_key);
-
-    // console.log("payment221", priv_key)
-    // console.log("payment133", decodeURI(priv_key))
-    // console.log("payment", EX00013776.key)
-
-
-
-
-    // const reader = new FileReader();
-    // reader.onload = (e) => {
-    //   const text = e.target.result;
-    //   console.log(text);
-    // };
-    // reader.readAsText(e.target.files[0]);
-
-    // fetch('./EX00013776.key')
-    //   .then(response => response.text())
-    //   .then(data => {
-    //     // Do something with your data
-    //     console.log("payment", data)
-
-    //   });
-
-
 
     const onSubmit = () => {
-
       let ProductID = []
       let UserCartID = []
       let ProductQuantity = []
@@ -569,7 +513,6 @@ class PagePayment extends Component {
         ProductQuantity.push(x.product.ProductQuantity)
         ProductVariationDetailID.push(x.product.ProductVariationDetailID)
       })
-
 
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
@@ -594,9 +537,6 @@ class PagePayment extends Component {
         <div className="container" style={{ textAlign: "left" }}>
           <hr />
           <h5>Payment Method</h5>
-          {console.log("this.props", this.props)}
-
-
           {
             paymentMethod.length > 0 && paymentMethod.map((payment, index) => {
               return (
@@ -610,6 +550,27 @@ class PagePayment extends Component {
                             fontSize="small"
                             onClick={() => this.handlePaymentClick(payment.id, false)} />
                         </IconButton><label style={{ fontSize: "16px" }}>{payment.method}</label>
+                        {
+                          parseInt(this.state.paymentMethodsID) === 1 &&
+                          <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
+                            <Select
+                              native
+                              id="Bank"
+                              value={this.state.BankID}
+                              onChange={(x) => handleBanking(x.target.value)}
+                              className="select"
+                            >
+                              {
+                                this.state.bankDetails !== null && this.state.bankDetails.map((details) =>
+                                  <option value={details.BankID} key={details.BankID}  >
+                                    {details.BankID}
+                                  </option>
+                                )
+                              }
+                            </Select>
+                          </FormControl>
+                        }
+
                       </div>
                       :
                       <div>
@@ -626,46 +587,8 @@ class PagePayment extends Component {
             })
           }
 
-
-
-
           {
-            this.state.paymentMethodsID !== 1 ?
-              <React.Fragment>
-                <div>
-                  <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
-                    <input type="hidden" id="access_key" name="access_key" value="0646aa159df03a8fa52c81ab8a5bc4a7"></input>
-                    <input type="hidden" id="profile_id" name="profile_id" value="9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0"></input>
-                    <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={time + '123'}></input>
-                    <input type="hidden" id="signed_field_names" name="signed_field_names" value="access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country"></input>
-                    <input type="hidden" id="signed_date_time" name="signed_date_time" value={now}></input>
-                    <input type="hidden" id="locale" name="locale" value="en"></input>
-                    <input type="hidden" id="transaction_type" name="transaction_type" value="authorization"></input>
-                    <input type="hidden" id="reference_number" name="reference_number" value={time}></input>
-                    <input type="hidden" id="amount" name="amount" value={totalPrice}></input>
-                    <input type="hidden" id="currency" name="currency" value="USD"></input>
-                    <input type="hidden" id="bill_to_surname" name="bill_to_surname" value={lastname}></input>
-                    <input type="hidden" id="bill_to_forename" name="bill_to_forename" value={firstname}></input>
-                    <input type="hidden" id="bill_to_email" name="bill_to_email" value={email}></input>
-                    <input type="hidden" id="bill_to_address_line1" name="bill_to_address_line1" value={addressLine1}></input>
-                    <input type="hidden" id="bill_to_address_city" name="bill_to_address_city" value={city}></input>
-                    <input type="hidden" id="bill_to_address_postal_code" name="bill_to_address_postal_code" value={poscode}></input>
-                    <input type="hidden" id="bill_to_address_state" name="bill_to_address_state" value={state}></input>
-                    <input type="hidden" id="bill_to_address_country" name="bill_to_address_country" value="MY"></input>
-                    <input type="hidden" id="signature" name="signature" value={signed}></input>
-                    <input type="submit" style={{
-                      backgroundColor: this.state.paymentMethodsID === 2 ? "#04AA6D" : "#808080",
-                      border: "none",
-                      color: "white",
-                      fontSize: "14px",
-                      textDecoration: "none",
-                    }} id="submit" name="submit" value="Submit" onClick={() =>
-                      onSubmit()
-                    } disabled={this.state.paymentMethodsID === 2 ? false : true} />
-                  </form>
-                </div>
-              </React.Fragment>
-              :
+            this.state.paymentMethodsID === 1 && this.state.BankID !== "" ?
               <React.Fragment>
                 <div>
                   <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
@@ -699,6 +622,41 @@ class PagePayment extends Component {
                       textDecoration: "none",
                     }} id="submit" name="submit" value="Submit"
                       onClick={() => console.log("YES")} />
+                  </form>
+                </div>
+              </React.Fragment>
+              :
+              <React.Fragment>
+                <div>
+                  <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+                    <input type="hidden" id="access_key" name="access_key" value="0646aa159df03a8fa52c81ab8a5bc4a7"></input>
+                    <input type="hidden" id="profile_id" name="profile_id" value="9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0"></input>
+                    <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={time + '123'}></input>
+                    <input type="hidden" id="signed_field_names" name="signed_field_names" value="access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country"></input>
+                    <input type="hidden" id="signed_date_time" name="signed_date_time" value={now}></input>
+                    <input type="hidden" id="locale" name="locale" value="en"></input>
+                    <input type="hidden" id="transaction_type" name="transaction_type" value="authorization"></input>
+                    <input type="hidden" id="reference_number" name="reference_number" value={time}></input>
+                    <input type="hidden" id="amount" name="amount" value={totalPrice}></input>
+                    <input type="hidden" id="currency" name="currency" value="USD"></input>
+                    <input type="hidden" id="bill_to_surname" name="bill_to_surname" value={lastname}></input>
+                    <input type="hidden" id="bill_to_forename" name="bill_to_forename" value={firstname}></input>
+                    <input type="hidden" id="bill_to_email" name="bill_to_email" value={email}></input>
+                    <input type="hidden" id="bill_to_address_line1" name="bill_to_address_line1" value={addressLine1}></input>
+                    <input type="hidden" id="bill_to_address_city" name="bill_to_address_city" value={city}></input>
+                    <input type="hidden" id="bill_to_address_postal_code" name="bill_to_address_postal_code" value={poscode}></input>
+                    <input type="hidden" id="bill_to_address_state" name="bill_to_address_state" value={state}></input>
+                    <input type="hidden" id="bill_to_address_country" name="bill_to_address_country" value="MY"></input>
+                    <input type="hidden" id="signature" name="signature" value={signed}></input>
+                    <input type="submit" style={{
+                      backgroundColor: this.state.paymentMethodsID === 2 ? "#04AA6D" : "#808080",
+                      border: "none",
+                      color: "white",
+                      fontSize: "14px",
+                      textDecoration: "none",
+                    }} id="submit" name="submit" value="Submit" onClick={() =>
+                      onSubmit()
+                    } disabled={this.state.paymentMethodsID === 2 ? false : true} />
                   </form>
                 </div>
               </React.Fragment>
@@ -852,6 +810,8 @@ class PagePayment extends Component {
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
+
+    console.log("checkcheck", this.state)
 
     return (
       <React.Fragment>

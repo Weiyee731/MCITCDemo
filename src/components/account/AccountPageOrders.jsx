@@ -170,11 +170,18 @@ class AccountPageOrders extends Component {
       case 2:
         this.setState({
           value: value,
-          TrackingStatus: "In Shipping",
+          TrackingStatus: "In Purchasing",
         })
         this.handlePageChange(1)
         break;
       case 3:
+        this.setState({
+          value: value,
+          TrackingStatus: "In Shipping",
+        })
+        this.handlePageChange(1)
+        break;
+      case 4:
         this.setState({
           value: value,
           TrackingStatus: "To Receive",
@@ -215,7 +222,7 @@ class AccountPageOrders extends Component {
     var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
     let listing = this.props.allmerchantorders
     let filtered = []
-   
+
     listing.length > 0 && listing.filter(searchedItem =>
       moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
     ).map(filteredItem => {
@@ -348,6 +355,8 @@ class AccountPageOrders extends Component {
                   <th>Total</th>
                 </tr>
               </thead>
+              {console.log("this.props.allmerchantorders", this.props.allmerchantorders)}
+              {console.log("this.props.allmerchantorders", this.state.TrackingStatuss)}
               <tbody>
                 {this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
                   this.state.isFiltered === false ?
@@ -448,8 +457,9 @@ class AccountPageOrders extends Component {
               >
                 <Tab label="All" {...a11yProps(0)} />
                 <Tab label="Confirm Payment" {...a11yProps(1)} />
-                <Tab label="In Shipping" {...a11yProps(2)} />
-                <Tab label="To Receive" {...a11yProps(3)} />
+                <Tab label="Pending Payment" {...a11yProps(2)} />
+                <Tab label="In Shipping" {...a11yProps(3)} />
+                <Tab label="Receive" {...a11yProps(4)} />
               </Tabs>
             </AppBar>
             <SwipeableViews
@@ -474,6 +484,11 @@ class AccountPageOrders extends Component {
               {/* -------------------------------------------- In Shipping -------------------------------------------------------- */}
               <TabPanel value={this.state.value} index={3} dir={theme.direction}>
                 {this.state.value === 3 && orderListing(3)}
+              </TabPanel>
+
+              {/* -------------------------------------------- To Receive -------------------------------------------------------- */}
+              <TabPanel value={this.state.value} index={3} dir={theme.direction}>
+                {this.state.value === 4 && orderListing(4)}
               </TabPanel>
             </SwipeableViews>
           </Box>
