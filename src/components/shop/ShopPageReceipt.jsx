@@ -34,10 +34,11 @@ class ShopPageReceipt extends Component {
                 this.props.CallClearOrderStatus()
             }
             else {
-
                 console.log("this.props", this.props)
-                // window.location.href = "/"
-                // window.reload(false)
+                setTimeout(() => {
+                    window.location.href = "/"
+                    window.reload(false)
+                }, 4000);
             }
         }
     }

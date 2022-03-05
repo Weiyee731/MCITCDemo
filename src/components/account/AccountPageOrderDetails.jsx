@@ -445,41 +445,53 @@ export default function AccountPageOrderDetails(props) {
             :
             <>
               {
-                orderDetail.PaymentMethodID === 0 ?
-                  creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
-                    <div className="card address-card address-card--featured">
-                      <div className="address-card__body">
-                        <div className="address-card__badge address-card__badge--muted">
-                          Credit Card
-                        </div>
+                orderDetail.PaymentMethodID === 1 ?
+                  <div className="card address-card address-card--featured">
+                    <div className="address-card__body">
+                      <div className="address-card__badge address-card__badge--muted">
+                        CREDIT / DEBIT CARD
+                      </div>
+                      <div className="address-card__row">
                         <div className="address-card__name">
-                          {paymentcard.UserCardName}
-                        </div>
-                        <div className="address-card__row">
-                          <div className="address-card__row-title">
-                            User Card Number
-                          </div>
-                          {paymentcard.UserCardNo}
-                        </div>
-                        <div className="address-card__row">
-                          <div className="address-card__row-title">Expiry Date</div>
-                          <div className="address-card__row-content">
-                            {paymentcard.UserCardExpireDate}
-                          </div>
-                        </div>
-                        <div className="address-card__row">
-                          <div className="address-card__row-title">Card Type</div>
-                          <div className="address-card__row-content">
-                            {paymentcard.UserCardType}
-                          </div>
+                          CREDIT / DEBIT CARD PAYMENT
                         </div>
                       </div>
                     </div>
-                  ))
+                  </div>
+                  // creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
+                  //   <div className="card address-card address-card--featured">
+                  //     <div className="address-card__body">
+                  //       <div className="address-card__badge address-card__badge--muted">
+                  //         Credit Card
+                  //       </div>
+                  //       <div className="address-card__name">
+                  //         {paymentcard.UserCardName}
+                  //       </div>
+                  //       <div className="address-card__row">
+                  //         <div className="address-card__row-title">
+                  //           User Card Number
+                  //         </div>
+                  //         {paymentcard.UserCardNo}
+                  //       </div>
+                  //       <div className="address-card__row">
+                  //         <div className="address-card__row-title">Expiry Date</div>
+                  //         <div className="address-card__row-content">
+                  //           {paymentcard.UserCardExpireDate}
+                  //         </div>
+                  //       </div>
+                  //       <div className="address-card__row">
+                  //         <div className="address-card__row-title">Card Type</div>
+                  //         <div className="address-card__row-content">
+                  //           {paymentcard.UserCardType}
+                  //         </div>
+                  //       </div>
+                  //     </div>
+                  //   </div>
+                  // ))
                   :
                   <>
                     {
-                      orderDetail.PaymentMethodID === 1 &&
+                      orderDetail.PaymentMethodID === 3 &&
                       <div className="card address-card address-card--featured">
                         <div className="address-card__body">
                           <div className="address-card__badge address-card__badge--muted">
@@ -509,7 +521,7 @@ export default function AccountPageOrderDetails(props) {
                       </div>
                     }
                     {
-                      orderDetail.PaymentMethodID === 3 &&
+                      orderDetail.PaymentMethodID === 4 &&
                       <div className="card address-card address-card--featured">
                         <div className="address-card__body">
                           <div className="address-card__badge address-card__badge--muted">
