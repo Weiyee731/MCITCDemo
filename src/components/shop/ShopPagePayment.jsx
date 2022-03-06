@@ -405,16 +405,17 @@ class PagePayment extends Component {
     let fpx_msgToken = "01"
     let fpx_sellerExId = "EX00013776"
     // let fpx_sellerExOrderNo = moment(new Date()).format("YYYYMMDDHHmmss");
-    let fpx_sellerExOrderNo = "20220305170224"
-
-    let fpx_sellerTxnTime = "20220305170224"
-    let fpx_sellerOrderNo = "20220305170224"
+    let fpx_sellerExOrderNo = moment(new Date()).format("YYYYMMDDHHmmss")
+    // let fpx_sellerTxnTime = "20220305170224"
+    let fpx_sellerTxnTime = moment(new Date()).format("YYYYMMDDHHmmss")
+    let fpx_sellerOrderNo = moment(new Date()).format("YYYYMMDDHHmmss")
     let fpx_sellerId = "SE00015397"
     let fpx_sellerBankCode = "01"
     let fpx_txnCurrency = "MYR"
     let fpx_txnAmount = "1.00"
     let fpx_buyerEmail = ""
-    let fpx_checkSum = "693497063FC66DA1127F3C2778941AD1FAA0219FBC1A444FEEE305A2FE9E8B62668FEDD8E0BDCDAD5125FA07BB4988780B955814F2603D209521ECAE5274C52EC3AADA9EB036EF76EC2CCE6954031FBC72331F2B8C59A02988D295C823D15EC12B2E6906346D4A12496825E4A1FFAC2B49EE31806EB0501D82C5CEE95A0A2954579534F2912564D3CDBBA430FDB4641D593C9F97ED20BFE9F20562CB649EFCE256E6D3E9F5D1AC780B7675496543571D27123994F63649D0FBE067E3E76176A322F652A1D4B38A06124650722C67073C4E318A0041BD3AE1940F78CAB6897E0386D5DA705DBAE56B1F415BDA7098F64C128F148A789DD82CD1C45920AFB533E3"
+    // let fpx_checkSum = "693497063FC66DA1127F3C2778941AD1FAA0219FBC1A444FEEE305A2FE9E8B62668FEDD8E0BDCDAD5125FA07BB4988780B955814F2603D209521ECAE5274C52EC3AADA9EB036EF76EC2CCE6954031FBC72331F2B8C59A02988D295C823D15EC12B2E6906346D4A12496825E4A1FFAC2B49EE31806EB0501D82C5CEE95A0A2954579534F2912564D3CDBBA430FDB4641D593C9F97ED20BFE9F20562CB649EFCE256E6D3E9F5D1AC780B7675496543571D27123994F63649D0FBE067E3E76176A322F652A1D4B38A06124650722C67073C4E318A0041BD3AE1940F78CAB6897E0386D5DA705DBAE56B1F415BDA7098F64C128F148A789DD82CD1C45920AFB533E3"
+    let fpx_checkSum = ""
     let fpx_buyerName = ""
     let fpx_buyerBankId = "ABB0234"
     let fpx_buyerBankBranch = ""
@@ -465,7 +466,7 @@ class PagePayment extends Component {
 
 
     const handleBanking = (bankid) => {
-      // fpx_buyerBankId = bankid
+      fpx_buyerBankId = bankid
       bankingdata = fpx_buyerAccNo + "|" + fpx_buyerBankBranch + "|" + fpx_buyerBankId + "|" + fpx_buyerEmail + "|" + fpx_buyerIban + "|" + fpx_buyerId + "|" + fpx_buyerName + "|" + fpx_makerName + "|" + fpx_msgToken + "|" + fpx_msgType + "|" + fpx_productDesc + "|" + fpx_sellerBankCode + "|" + fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + fpx_txnAmount + "|" + fpx_txnCurrency + "|" + fpx_version
 
       let URL = "https://myemporia.my/payment/check.php"
@@ -563,7 +564,7 @@ class PagePayment extends Component {
                               {
                                 this.state.bankDetails !== null && this.state.bankDetails.map((details) =>
                                   <option value={details.BankID} key={details.BankID}  >
-                                    {details.BankID}
+                                    {details.PaymentMethod}
                                   </option>
                                 )
                               }
@@ -603,7 +604,7 @@ class PagePayment extends Component {
                     <input type="hidden" value={fpx_txnCurrency} id="fpx_txnCurrency" name="fpx_txnCurrency"></input>
                     <input type="hidden" value={fpx_txnAmount} id="fpx_txnAmount" name="fpx_txnAmount"></input>
                     <input type="hidden" value={fpx_buyerEmail} id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
-                    <input type="hidden" value={fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
+                    <input type="hidden" value={this.state.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
                     <input type="hidden" value={fpx_buyerName} id="fpx_buyerName" name="fpx_buyerName"></input>
                     <input type="hidden" value={fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
                     <input type="hidden" value={fpx_buyerBankBranch} id="fpx_buyerBankBranch" name="fpx_buyerBankBranch"></input>
