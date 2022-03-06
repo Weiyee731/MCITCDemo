@@ -400,15 +400,18 @@ class PagePayment extends Component {
     let poscode = ""
     let PickUpIndicator = ""
 
+    let date = moment(new Date()).format("YYYYMMDDHHmm").toString()
+    let date2 = moment(new Date()).format("YYYYMMDDHHmmSS").toString()
     // FPX Online Banking
     let fpx_msgType = "AR"
     let fpx_msgToken = "01"
     let fpx_sellerExId = "EX00013776"
     // let fpx_sellerExOrderNo = moment(new Date()).format("YYYYMMDDHHmmss");
-    let fpx_sellerExOrderNo = moment(new Date()).format("YYYYMMDDHHmmss")
+    let fpx_sellerExOrderNo = date + "12"
     // let fpx_sellerTxnTime = "20220305170224"
-    let fpx_sellerTxnTime = moment(new Date()).format("YYYYMMDDHHmmss")
-    let fpx_sellerOrderNo = moment(new Date()).format("YYYYMMDDHHmmss")
+    let fpx_sellerTxnTime = date + "12"
+    let fpx_sellerOrderNo = date + "12"
+    console.log(fpx_sellerOrderNo)
     let fpx_sellerId = "SE00015397"
     let fpx_sellerBankCode = "01"
     let fpx_txnCurrency = "MYR"
@@ -468,7 +471,7 @@ class PagePayment extends Component {
     const handleBanking = (bankid) => {
       fpx_buyerBankId = bankid
       bankingdata = fpx_buyerAccNo + "|" + fpx_buyerBankBranch + "|" + fpx_buyerBankId + "|" + fpx_buyerEmail + "|" + fpx_buyerIban + "|" + fpx_buyerId + "|" + fpx_buyerName + "|" + fpx_makerName + "|" + fpx_msgToken + "|" + fpx_msgType + "|" + fpx_productDesc + "|" + fpx_sellerBankCode + "|" + fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + fpx_txnAmount + "|" + fpx_txnCurrency + "|" + fpx_version
-
+      console.log(bankingdata)
       let URL = "https://myemporia.my/payment/check.php"
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
       const formData = new FormData()
@@ -478,6 +481,7 @@ class PagePayment extends Component {
         fpx_checkSum = res.data.split('"')[1]
         if (res.status === 200) {
           this.setState({ fpx_checkSum: res.data.split('"')[1] })
+          console.log(res.data.split('"')[1] )
         }
         else {
           toast.error("There is something wrong with uploading images. Please try again.")
