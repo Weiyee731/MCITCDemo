@@ -35,10 +35,10 @@ class ShopPageReceipt extends Component {
             }
             else {
                 console.log("this.props", this.props)
-                setTimeout(() => {
-                    window.location.href = "/"
-                    window.reload(false)
-                }, 4000);
+                // setTimeout(() => {
+                //     window.location.href = "/"
+                //     window.reload(false)
+                // }, 4000);
             }
         }
     }

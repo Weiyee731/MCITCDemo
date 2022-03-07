@@ -67,6 +67,7 @@ const initialState = {
   BankID: "",
   bankDetails: [],
   isBankSet: false,
+  fpx_buyerBankId:""
 }
 class PagePayment extends Component {
   payments = payments;
@@ -415,12 +416,14 @@ class PagePayment extends Component {
     let fpx_sellerId = "SE00015397"
     let fpx_sellerBankCode = "01"
     let fpx_txnCurrency = "MYR"
-    let fpx_txnAmount = "1.00"
+    let fpx_txnAmount = "101.00"
     let fpx_buyerEmail = ""
     // let fpx_checkSum = "693497063FC66DA1127F3C2778941AD1FAA0219FBC1A444FEEE305A2FE9E8B62668FEDD8E0BDCDAD5125FA07BB4988780B955814F2603D209521ECAE5274C52EC3AADA9EB036EF76EC2CCE6954031FBC72331F2B8C59A02988D295C823D15EC12B2E6906346D4A12496825E4A1FFAC2B49EE31806EB0501D82C5CEE95A0A2954579534F2912564D3CDBBA430FDB4641D593C9F97ED20BFE9F20562CB649EFCE256E6D3E9F5D1AC780B7675496543571D27123994F63649D0FBE067E3E76176A322F652A1D4B38A06124650722C67073C4E318A0041BD3AE1940F78CAB6897E0386D5DA705DBAE56B1F415BDA7098F64C128F148A789DD82CD1C45920AFB533E3"
     let fpx_checkSum = ""
     let fpx_buyerName = ""
     let fpx_buyerBankId = "ABB0234"
+    // let fpx_buyerBankId = "TEST0021"
+    
     let fpx_buyerBankBranch = ""
     let fpx_buyerAccNo = ""
     let fpx_buyerId = ""
@@ -470,8 +473,10 @@ class PagePayment extends Component {
 
     const handleBanking = (bankid) => {
       fpx_buyerBankId = bankid
+      console.log("bankid", bankid)
       bankingdata = fpx_buyerAccNo + "|" + fpx_buyerBankBranch + "|" + fpx_buyerBankId + "|" + fpx_buyerEmail + "|" + fpx_buyerIban + "|" + fpx_buyerId + "|" + fpx_buyerName + "|" + fpx_makerName + "|" + fpx_msgToken + "|" + fpx_msgType + "|" + fpx_productDesc + "|" + fpx_sellerBankCode + "|" + fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + fpx_txnAmount + "|" + fpx_txnCurrency + "|" + fpx_version
       console.log(bankingdata)
+
       let URL = "https://myemporia.my/payment/check.php"
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
       const formData = new FormData()
@@ -481,6 +486,7 @@ class PagePayment extends Component {
         fpx_checkSum = res.data.split('"')[1]
         if (res.status === 200) {
           this.setState({ fpx_checkSum: res.data.split('"')[1] })
+          this.setState({fpx_buyerBankId : bankid})
           console.log(res.data.split('"')[1] )
         }
         else {
@@ -591,7 +597,6 @@ class PagePayment extends Component {
               )
             })
           }
-
           {
             this.state.paymentMethodsID === 1 && this.state.BankID !== "" ?
               <React.Fragment>
@@ -610,7 +615,7 @@ class PagePayment extends Component {
                     <input type="hidden" value={fpx_buyerEmail} id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
                     <input type="hidden" value={this.state.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
                     <input type="hidden" value={fpx_buyerName} id="fpx_buyerName" name="fpx_buyerName"></input>
-                    <input type="hidden" value={fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
+                    <input type="hidden" value={this.state.fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
                     <input type="hidden" value={fpx_buyerBankBranch} id="fpx_buyerBankBranch" name="fpx_buyerBankBranch"></input>
                     <input type="hidden" value={fpx_buyerAccNo} id="fpx_buyerAccNo" name="fpx_buyerAccNo"></input>
                     <input type="hidden" value={fpx_buyerId} id="fpx_buyerId" name="fpx_buyerId"></input>
