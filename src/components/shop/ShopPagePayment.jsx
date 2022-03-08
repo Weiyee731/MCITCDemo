@@ -67,7 +67,7 @@ const initialState = {
   BankID: "",
   bankDetails: [],
   isBankSet: false,
-  fpx_buyerBankId:""
+  fpx_buyerBankId: ""
 }
 class PagePayment extends Component {
   payments = payments;
@@ -416,14 +416,14 @@ class PagePayment extends Component {
     let fpx_sellerId = "SE00015397"
     let fpx_sellerBankCode = "01"
     let fpx_txnCurrency = "MYR"
-    let fpx_txnAmount = "101.00"
+    let fpx_txnAmount = "10000000.00"
     let fpx_buyerEmail = ""
     // let fpx_checkSum = "693497063FC66DA1127F3C2778941AD1FAA0219FBC1A444FEEE305A2FE9E8B62668FEDD8E0BDCDAD5125FA07BB4988780B955814F2603D209521ECAE5274C52EC3AADA9EB036EF76EC2CCE6954031FBC72331F2B8C59A02988D295C823D15EC12B2E6906346D4A12496825E4A1FFAC2B49EE31806EB0501D82C5CEE95A0A2954579534F2912564D3CDBBA430FDB4641D593C9F97ED20BFE9F20562CB649EFCE256E6D3E9F5D1AC780B7675496543571D27123994F63649D0FBE067E3E76176A322F652A1D4B38A06124650722C67073C4E318A0041BD3AE1940F78CAB6897E0386D5DA705DBAE56B1F415BDA7098F64C128F148A789DD82CD1C45920AFB533E3"
     let fpx_checkSum = ""
     let fpx_buyerName = ""
     let fpx_buyerBankId = "ABB0234"
     // let fpx_buyerBankId = "TEST0021"
-    
+
     let fpx_buyerBankBranch = ""
     let fpx_buyerAccNo = ""
     let fpx_buyerId = ""
@@ -486,8 +486,8 @@ class PagePayment extends Component {
         fpx_checkSum = res.data.split('"')[1]
         if (res.status === 200) {
           this.setState({ fpx_checkSum: res.data.split('"')[1] })
-          this.setState({fpx_buyerBankId : bankid})
-          console.log(res.data.split('"')[1] )
+          this.setState({ fpx_buyerBankId: bankid })
+          console.log(res.data.split('"')[1])
         }
         else {
           toast.error("There is something wrong with uploading images. Please try again.")
@@ -525,21 +525,24 @@ class PagePayment extends Component {
         ProductVariationDetailID.push(x.product.ProductVariationDetailID)
       })
 
+
       this.props.CallAddOrder({
         UserID: window.localStorage.getItem("id"),
         ProductID: ProductID,
         ProductQuantity: ProductQuantity,
         UserCartID: UserCartID,
         UserAddressID: this.props.addresss.state.address,
-        PaymentMethodID: 1,
-        UserPaymentMethodID: 1,
+        PaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
+        UserPaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
         OrderTotalAmount: totalPrice,
         OrderPaidAmount: 0,
         ProductVariationDetailID: ProductVariationDetailID,
         TrackingStatusID: 2,
         PickUpInd: PickUpIndicator,
-        TRANSACTIONUUID: time + '123'
+        TRANSACTIONUUID: this.state.paymentMethodsID === 1 ? time + '123' : fpx_sellerOrderNo
       })
+
+
     }
 
 
