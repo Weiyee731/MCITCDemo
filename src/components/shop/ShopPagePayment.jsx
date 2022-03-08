@@ -25,7 +25,10 @@ import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import { toast } from "react-toastify";
 import Logo from "../../assets/Emporia.png";
-import text from './EX00013776.key'; // Relative path to your File
+import {
+  Link,
+} from "react-router-dom";
+// import text from './EX00013776.key'; // Relative path to your File
 import axios from "axios";
 import FormControl from "@material-ui/core/FormControl";
 
@@ -36,6 +39,8 @@ import {
 } from "../account/AccountPageCreditCard/utils";
 import AddCreditCard from '../shared/AddCreditCard'
 import moment from "moment";
+import FPX from '../../assets/fpx-logo.png';
+import { Image } from 'react-bootstrap';
 const crypto = require('crypto');
 
 
@@ -67,7 +72,12 @@ const initialState = {
   BankID: "",
   bankDetails: [],
   isBankSet: false,
-  fpx_buyerBankId: ""
+  fpx_buyerBankId: "",
+  FPXBankList: [],
+
+  isAllBankSet: false,
+  allBankDetails: [],
+  finalAllBankDetails: []
 }
 class PagePayment extends Component {
   payments = payments;
@@ -144,8 +154,6 @@ class PagePayment extends Component {
         // this.props.handleUserData(Userdetails)
       }
     }
-
-
   }
 
   componentDidMount() {
@@ -153,6 +161,41 @@ class PagePayment extends Component {
       this.setDetails(this.props.data)
     }
     this.props.handleGetPaymentId(null, 0, 0)
+
+    let URL2 = "https://myemporia.my/payment/06_fpx_bankListRequest.php"
+    const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+    axios.post(URL2, {}, config).then((res) => {
+      if (res.status === 200) {
+        let bankFinalList = []
+        let bankList = res.data.split('|')[0]
+        bankList = bankList.split(',')
+        bankList.length > 0 && bankList.map((bank) => {
+          this.state.allBankDetails.filter((x) => x.BankID === bank.split("~")[0]).map((x) => {
+            let bankListing = {
+              BankID: bank.split("~")[0],
+              BankStatus: bank.split("~")[1],
+              BankName: x.BankName,
+              BankType: x.BankType,
+              PaymentMethod: x.PaymentMethod,
+              PaymentMethodCharges: x.PaymentMethodCharges,
+              PaymentMethodDesc: x.PaymentMethodDesc,
+              PaymentMethodID: x.PaymentMethodID,
+              PaymentMethodImage: x.PaymentMethodImage,
+              TestingInd: x.TestingInd
+            }
+            bankFinalList.push(bankListing)
+          })
+        })
+        let removeDuplicate = bankFinalList.length > 0 ? bankFinalList.filter((ele, ind) => ind === bankFinalList.findIndex(elem => elem.BankID === ele.BankID)) : []
+        this.setState({ finalAllBankDetails: removeDuplicate, BankID: this.state.allBankDetails[0].BankID })
+      }
+
+
+
+    }).catch(e => {
+      toast.error("There is something wrong with uploading images. Please try again.")
+    })
+
   }
 
 
@@ -345,17 +388,27 @@ class PagePayment extends Component {
 
   renderPaymentsList() {
 
-    const paymentMethod = [{ id: 1, method: "Online Banking" }, { id: 2, method: "Debit/Credit Card" }]
+    const paymentMethod = [{ id: 1, method: "Online Banking", image: { FPX } }, { id: 2, method: "Debit/Credit Card", image: "" }]
     // const payments = paymentMethod !== undefined && paymentMethod.length > 0 &&
     //   paymentMethod.map((payment) => {
     //     return <Tab label={payment} />;
     //   });
 
-    if (this.props.paymentmethod.length > 0 && this.state.isBankSet === false) {
+    // if (this.props.paymentmethod.length > 0 && this.state.isBankSet === false) {
+    //   this.props.paymentmethod !== null && this.props.paymentmethod.filter((x) => parseInt(x.PaymentMethodTypeID) === 2).map((bank) => {
+    //     bank.PaymentMethod !== null && JSON.parse(bank.PaymentMethod).filter((x) => x.TestingInd !== null && x.TestingInd === 1).map((details) => {
+    //       this.state.bankDetails.push(details)
+    //       this.setState({ isBankSet: true, BankID: this.state.bankDetails[0].BankID })
+    //     })
+    //   })
+    // }
+
+
+    if (this.props.paymentmethod.length > 0 && this.state.isAllBankSet === false) {
       this.props.paymentmethod !== null && this.props.paymentmethod.filter((x) => parseInt(x.PaymentMethodTypeID) === 2).map((bank) => {
-        bank.PaymentMethod !== null && JSON.parse(bank.PaymentMethod).filter((x) => x.TestingInd !== null && x.TestingInd === 1).map((details) => {
-          this.state.bankDetails.push(details)
-          this.setState({ isBankSet: true, BankID: this.state.bankDetails[0].BankID })
+        bank.PaymentMethod !== null && JSON.parse(bank.PaymentMethod).map((details) => {
+          this.state.allBankDetails.push(details)
+          this.setState({ isAllBankSet: true, })
         })
       })
     }
@@ -404,7 +457,7 @@ class PagePayment extends Component {
     let date = moment(new Date()).format("YYYYMMDDHHmm").toString()
     let date2 = moment(new Date()).format("YYYYMMDDHHmmSS").toString()
     // FPX Online Banking
-    let fpx_msgType = "AR"
+    let fpx_msgType = "AE"
     let fpx_msgToken = "01"
     let fpx_sellerExId = "EX00013776"
     // let fpx_sellerExOrderNo = moment(new Date()).format("YYYYMMDDHHmmss");
@@ -412,17 +465,16 @@ class PagePayment extends Component {
     // let fpx_sellerTxnTime = "20220305170224"
     let fpx_sellerTxnTime = date + "12"
     let fpx_sellerOrderNo = date + "12"
-    console.log(fpx_sellerOrderNo)
     let fpx_sellerId = "SE00015397"
     let fpx_sellerBankCode = "01"
     let fpx_txnCurrency = "MYR"
-    let fpx_txnAmount = "10000000.00"
-    let fpx_buyerEmail = ""
+    let fpx_txnAmount = "20.00"
+    let fpx_buyerEmail = "weiyee731@gmail.com"
     // let fpx_checkSum = "693497063FC66DA1127F3C2778941AD1FAA0219FBC1A444FEEE305A2FE9E8B62668FEDD8E0BDCDAD5125FA07BB4988780B955814F2603D209521ECAE5274C52EC3AADA9EB036EF76EC2CCE6954031FBC72331F2B8C59A02988D295C823D15EC12B2E6906346D4A12496825E4A1FFAC2B49EE31806EB0501D82C5CEE95A0A2954579534F2912564D3CDBBA430FDB4641D593C9F97ED20BFE9F20562CB649EFCE256E6D3E9F5D1AC780B7675496543571D27123994F63649D0FBE067E3E76176A322F652A1D4B38A06124650722C67073C4E318A0041BD3AE1940F78CAB6897E0386D5DA705DBAE56B1F415BDA7098F64C128F148A789DD82CD1C45920AFB533E3"
-    let fpx_checkSum = ""
-    let fpx_buyerName = ""
-    let fpx_buyerBankId = "ABB0234"
-    // let fpx_buyerBankId = "TEST0021"
+    // let fpx_checkSum = ""
+    let fpx_buyerName = "123"
+    // let fpx_buyerBankId = "ABB0234"
+    let fpx_buyerBankId = "TEST0021"
 
     let fpx_buyerBankBranch = ""
     let fpx_buyerAccNo = ""
@@ -444,9 +496,9 @@ class PagePayment extends Component {
       poscode = "94300"
       PickUpIndicator = 1
 
-      // fpx_buyerName = localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "Emporia"
+      fpx_buyerName = localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "Emporia"
       // fpx_buyerEmail = localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com"
-
+      fpx_buyerEmail = "weiyee731@gmail.com"
     } else {
       lastname = this.state.Userdetails.addressName
       firstname = this.state.Userdetails.addressName
@@ -457,8 +509,8 @@ class PagePayment extends Component {
       poscode = this.state.Userdetails.poscode
       PickUpIndicator = 0
 
-      // fpx_buyerEmail = this.state.Userdetails.email
-      // fpx_buyerName = this.state.Userdetails.addressName
+      fpx_buyerEmail = this.state.Userdetails.email
+      fpx_buyerName = this.state.Userdetails.addressName
 
     }
     const signature = "access_key=0646aa159df03a8fa52c81ab8a5bc4a7,profile_id=9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=" + totalPrice + ",currency=USD,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
@@ -474,6 +526,8 @@ class PagePayment extends Component {
     const handleBanking = (bankid) => {
       fpx_buyerBankId = bankid
       console.log("bankid", bankid)
+      console.log("bankid22", fpx_buyerBankId)
+      console.log("bankid22", bankid === fpx_buyerBankId)
       bankingdata = fpx_buyerAccNo + "|" + fpx_buyerBankBranch + "|" + fpx_buyerBankId + "|" + fpx_buyerEmail + "|" + fpx_buyerIban + "|" + fpx_buyerId + "|" + fpx_buyerName + "|" + fpx_makerName + "|" + fpx_msgToken + "|" + fpx_msgType + "|" + fpx_productDesc + "|" + fpx_sellerBankCode + "|" + fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + fpx_txnAmount + "|" + fpx_txnCurrency + "|" + fpx_version
       console.log(bankingdata)
 
@@ -481,13 +535,10 @@ class PagePayment extends Component {
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
       const formData = new FormData()
       formData.append("bankingdata", bankingdata);
-
       axios.post(URL, formData, config).then((res) => {
-        fpx_checkSum = res.data.split('"')[1]
         if (res.status === 200) {
           this.setState({ fpx_checkSum: res.data.split('"')[1] })
           this.setState({ fpx_buyerBankId: bankid })
-          console.log(res.data.split('"')[1])
         }
         else {
           toast.error("There is something wrong with uploading images. Please try again.")
@@ -495,20 +546,6 @@ class PagePayment extends Component {
       }).catch(e => {
         toast.error("There is something wrong with uploading images. Please try again.")
       })
-
-      // fpx_checkSum = crypto
-      //   .createHmac('sha256', this.state.priv_key)
-      //   .update(bankingdata)
-      //   .digest('base64');
-
-      // const signer = crypto.createSign('RSA-SHA1');
-      // signer.write(bankingdata);
-      // signer.end();
-      // const data = signer.sign(this.state.priv_key, 'base64')
-      // fpx_checkSum = (data.toString('utf-8')).toUpperCase()
-      // console.log("fpx_checkSum11", data)
-      // fpx_checkSum = data.replace(/\d+./g, char => String.fromCharCode(`0b${char}`)).toUpperCase()
-
       this.setState({ BankID: bankid })
     }
 
@@ -563,7 +600,7 @@ class PagePayment extends Component {
                             color="blue"
                             fontSize="small"
                             onClick={() => this.handlePaymentClick(payment.id, false)} />
-                        </IconButton><label style={{ fontSize: "16px" }}>{payment.method}</label>
+                        </IconButton><label onClick={() => this.handlePaymentClick(payment.id, true)} style={{ fontSize: "16px" }}>{payment.method}  {payment.image !== "" && <Image paddingRight="20px" width="150px" height="60px" src={FPX} />}</label>
                         {
                           parseInt(this.state.paymentMethodsID) === 1 &&
                           <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
@@ -574,10 +611,17 @@ class PagePayment extends Component {
                               onChange={(x) => handleBanking(x.target.value)}
                               className="select"
                             >
-                              {
+                              {/* {
                                 this.state.bankDetails !== null && this.state.bankDetails.map((details) =>
                                   <option value={details.BankID} key={details.BankID}  >
                                     {details.PaymentMethod}
+                                  </option>
+                                )
+                              } */}
+                              {
+                                this.state.finalAllBankDetails !== null && this.state.finalAllBankDetails.map((details) =>
+                                  <option disabled={details.BankStatus === "B" ? true : false} value={details.BankID} key={details.BankID}  >
+                                    {details.BankName}{details.BankStatus === "B" ? " (Offline)" : ""}
                                   </option>
                                 )
                               }
@@ -593,16 +637,54 @@ class PagePayment extends Component {
                             color="blue"
                             fontSize="small"
                             onClick={() => this.handlePaymentClick(payment.id, true)} />
-                        </IconButton><label style={{ fontSize: "16px" }}>{payment.method}</label>
+                        </IconButton><label onClick={() => this.handlePaymentClick(payment.id, true)} style={{ fontSize: "16px" }}>{payment.method}  {payment.image !== "" && <Image paddingRight="20px" width="150px" height="60px" src={FPX} />}</label>
                       </div>
                   }
                 </>
               )
             })
           }
+          {/* {
+            <React.Fragment> <div>
+              <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/RetrieveBankList" method="post">
+                <input type="hidden" value={fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
+                <input type="hidden" value={fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
+                <input type="hidden" value={fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
+                <input type="hidden" value={fpx_sellerExOrderNo} id="fpx_sellerExOrderNo" name="fpx_sellerExOrderNo"></input>
+                <input type="hidden" value={fpx_sellerTxnTime} id="fpx_sellerTxnTime" name="fpx_sellerTxnTime"></input>
+                <input type="hidden" value={fpx_sellerOrderNo} id="fpx_sellerOrderNo" name="fpx_sellerOrderNo"></input>
+                <input type="hidden" value={fpx_sellerId} id="fpx_sellerId" name="fpx_sellerId"></input>
+                <input type="hidden" value={fpx_sellerBankCode} id="fpx_sellerBankCode" name="fpx_sellerBankCode"></input>
+                <input type="hidden" value={fpx_txnCurrency} id="fpx_txnCurrency" name="fpx_txnCurrency"></input>
+                <input type="hidden" value={fpx_txnAmount} id="fpx_txnAmount" name="fpx_txnAmount"></input>
+                <input type="hidden" value="weiyee731@gmail.com" name="fpx_buyerEmail"></input>
+                <input type="hidden" value={this.state.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
+                <input type="hidden" value="weiyee" id="fpx_buyerName" name="fpx_buyerName"></input>
+                <input type="hidden" value={this.state.fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
+                <input type="hidden" value={fpx_buyerBankBranch} id="fpx_buyerBankBranch" name="fpx_buyerBankBranch"></input>
+                <input type="hidden" value={fpx_buyerAccNo} id="fpx_buyerAccNo" name="fpx_buyerAccNo"></input>
+                <input type="hidden" value={fpx_buyerId} id="fpx_buyerId" name="fpx_buyerId"></input>
+                <input type="hidden" value={fpx_makerName} id="fpx_makerName" name="fpx_makerName"></input>
+                <input type="hidden" value={fpx_buyerIban} id="fpx_buyerIban" name="fpx_buyerIban"></input>
+                <input type="hidden" value={fpx_version} id="fpx_version" name="fpx_version"></input>
+                <input type="hidden" value={fpx_productDesc} id="fpx_productDesc" name="fpx_productDesc"></input>
+
+                <input type="submit" style={{
+                  backgroundColor: "#04AA6D",
+                  border: "none",
+                  color: "white",
+                  fontSize: "14px",
+                  textDecoration: "none",
+                }} id="submit" name="submit" value="Proceed"
+                  onClick={() => console.log("YES")} />
+              </form>
+            </div>
+            </React.Fragment>
+          } */}
           {
             this.state.paymentMethodsID === 1 && this.state.BankID !== "" ?
               <React.Fragment>
+                <label style={{ fontSize: "14px" }}>By Clicking on the "Proceed" button , you hereby agree with <a href={"https://www.mepsfpx.com.my/FPXMain/termsAndConditions.jsp"} style={{ color: "blue" }} >FPX's Term & Condition</a> </label>
                 <div>
                   <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
                     <input type="hidden" value={fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
@@ -615,9 +697,9 @@ class PagePayment extends Component {
                     <input type="hidden" value={fpx_sellerBankCode} id="fpx_sellerBankCode" name="fpx_sellerBankCode"></input>
                     <input type="hidden" value={fpx_txnCurrency} id="fpx_txnCurrency" name="fpx_txnCurrency"></input>
                     <input type="hidden" value={fpx_txnAmount} id="fpx_txnAmount" name="fpx_txnAmount"></input>
-                    <input type="hidden" value={fpx_buyerEmail} id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
+                    <input type="hidden" value="weiyee731@gmail.com" id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
                     <input type="hidden" value={this.state.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
-                    <input type="hidden" value={fpx_buyerName} id="fpx_buyerName" name="fpx_buyerName"></input>
+                    <input type="hidden" value="weiyee731" id="fpx_buyerName" name="fpx_buyerName"></input>
                     <input type="hidden" value={this.state.fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
                     <input type="hidden" value={fpx_buyerBankBranch} id="fpx_buyerBankBranch" name="fpx_buyerBankBranch"></input>
                     <input type="hidden" value={fpx_buyerAccNo} id="fpx_buyerAccNo" name="fpx_buyerAccNo"></input>
@@ -633,8 +715,7 @@ class PagePayment extends Component {
                       color: "white",
                       fontSize: "14px",
                       textDecoration: "none",
-                    }} id="submit" name="submit" value="Submit"
-                      onClick={() => console.log("YES")} />
+                    }} id="submit" name="submit" value="Proceed" />
                   </form>
                 </div>
               </React.Fragment>
@@ -667,7 +748,7 @@ class PagePayment extends Component {
                       color: "white",
                       fontSize: "14px",
                       textDecoration: "none",
-                    }} id="submit" name="submit" value="Submit" onClick={() =>
+                    }} id="submit" name="submit" value="Proceed" onClick={() =>
                       onSubmit()
                     } disabled={this.state.paymentMethodsID === 2 ? false : true} />
                   </form>

@@ -62,6 +62,12 @@ class ShopPageReceipt extends Component {
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <label style={{ color: "green", fontWeight: "bold", fontSize: "28px" }}>Order Confirmed</label>
                             </div>
+                            <div style={{ textAlign: "center", margin: 2 }}>
+                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Order Number: {this.props.match.params.transactionuuid}</label>
+                            </div>
+                            <div style={{ textAlign: "center" }}>
+                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Transaction Amount: {this.props.match.params.amount}</label>
+                            </div>
                         </div>
                         <div style={{ textAlign: "center", margin: 5 }}>
 
@@ -106,6 +112,12 @@ class ShopPageReceipt extends Component {
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <label style={{ color: "blue", fontWeight: "bold", fontSize: "28px" }}>Pending Approvel</label>
                             </div>
+                            <div style={{ textAlign: "center", margin: 2 }}>
+                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Order Number: {this.props.match.params.transactionuuid}</label>
+                            </div>
+                            <div style={{ textAlign: "center" }}>
+                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Transaction Amount: {this.props.match.params.amount}</label>
+                            </div>
                         </div>
                         <div style={{ textAlign: "center", margin: 5 }}>
 
@@ -148,6 +160,12 @@ class ShopPageReceipt extends Component {
                             <CancelIcon style={{ color: "red", width: "15%", height: "50%" }} />
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <label style={{ color: "red", fontWeight: "bold", fontSize: "28px" }}>Transaction Failed</label>
+                            </div>
+                            <div style={{ textAlign: "center", margin: 2 }}>
+                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Order Number: {this.props.match.params.transactionuuid}</label>
+                            </div>
+                            <div style={{ textAlign: "center" }}>
+                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Transaction Amount: {this.props.match.params.amount}</label>
                             </div>
                         </div>
                         <div style={{ textAlign: "center", margin: 5 }}>
