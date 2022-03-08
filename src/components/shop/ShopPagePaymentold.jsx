@@ -80,6 +80,7 @@ const initialState = {
   finalAllBankDetails: [],
 
 
+  // let date = moment(new Date()).format("YYYYMMDDHHmm").toString()
   // FPX Online Banking
   fpx_msgType: "AE",
   fpx_msgToken: "01",
@@ -93,6 +94,7 @@ const initialState = {
   fpx_txnAmount: "20.00",
   fpx_buyerEmail: "weiyee731@gmail.com",
   fpx_buyerName: "123",
+  fpx_buyerBankId: "",
 
   fpx_buyerBankBranch: "",
   fpx_buyerAccNo: "",
@@ -737,6 +739,146 @@ class PagePayment extends Component {
                 </div>
               </React.Fragment>
           }
+
+
+
+          {/* <Tabs
+            value={this.state.tabvalue}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={handleChange}
+            aria-label="disabled tabs example"
+          >
+            {payments}
+          </Tabs> */}
+
+          {/* <SwipeableViews
+            enableMouseEvents
+            axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+            index={this.state.tabvalue}
+            onChangeIndex={handleChangeIndex}
+          >
+
+            <div className="mt-3 mx-2">
+              <Button
+                variant="contained"
+                color="primary"
+                style={{
+                  float: 'right'
+                }}
+                onClick={() => this.handleAddNewCard()}
+              >
+                Add New Card
+              </Button>
+
+              <Grid container>
+                {
+                  this.props.creditcard.length > 0 && this.props.creditcard[0].ReturnVal !== "0" && this.props.creditcard[0].ReturnVal === undefined ?
+                    this.props.creditcard.map((cards) => {
+                      return (
+                        <Grid item>
+                          {
+                            this.state.cvcVisible === true && cards.UserPaymentMethodID === this.state.paymentMethodsID ?
+                              <>
+                                <div className="d-flex mt-3">
+                                  <Tooltip title="Edit">
+                                    <IconButton aria-label="Edit">
+                                      <RadioButtonCheckedIcon
+                                        fontSize="small"
+                                        onClick={() => this.handleCardClick(cards, false)} />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Cards
+                                    cvc={this.state.cvc}
+                                    expiry={cards.UserCardExpireDate}
+                                    focused={this.state.focus}
+                                    name={cards.UserCardName}
+                                    number={cards.UserCardNo}
+                                    preview={true}
+                                  />
+                                </div>
+                                <div className="mt-3">
+                                  <input
+                                    type="tel"
+                                    name="cvc"
+                                    className="form-control"
+                                    placeholder="CVC"
+                                    pattern="\d{3}"
+                                    required
+                                    value={this.state.cvc}
+                                    onChange={this.handleInputChange}
+                                    onFocus={this.handleInputFocus}
+                                  />
+                                </div>
+                              </>
+                              :
+                              <div className="d-flex">
+                                <Tooltip title="Edit">
+                                  <IconButton aria-label="Edit">
+                                    <RadioButtonUncheckedIcon
+                                      fontSize="small"
+                                      onClick={() => this.handleCardClick(cards, true)} />
+                                  </IconButton>
+                                </Tooltip>
+                                <Cards
+                                  expiry={cards.UserCardExpireDate}
+                                  name={cards.UserCardName}
+                                  number={cards.UserCardNo}
+                                  preview={true}
+                                />
+                              </div>
+                          }
+                        </Grid>
+                      )
+                    })
+                    :
+                    <div className="block-empty__message" style={{ textAlign: "center" }}> No cards saved. Please add a new card</div>
+                }
+                <AddCreditCard
+                  isOpen={this.state.isAddNewCard}
+                  handleOpen={this.handleAddNewCard}
+                  handleAddCreditCard={this.handleAddCreditCard}
+                  handleOnChange={this.handleInputChange}
+                  handleInputFocus={this.handleInputFocus}
+                  state={this.state}
+                  handleChangeCardType={this.handleChangeCardType}
+                />
+              </Grid>
+            </div>
+
+            {
+              this.props.paymentmethod !== undefined && this.props.paymentmethod.length !== 0 &&
+              this.props.paymentmethod.map((payment) => {
+                return (
+                  <>
+                    {
+                      this.props.paymentmethod.filter(x => x.PaymentMethodTypeID === (parseInt(this.state.tabvalue) + 1)).map((method) => {
+                        return (
+                          <div className="mt-3">
+                            <div className="text-left h6 mb-3">Selected : {method.PaymentMethodTypeID !== 6 ?
+                              isNaN(this.state.paymentMethods) === true && this.state.paymentMethods.toUpperCase()
+                              : method.PaymentMethodType.toUpperCase()}
+                            </div>
+                            {
+                              method.PaymentMethod !== null && method.PaymentMethod !== undefined && method.PaymentMethod.length > 0 && JSON.parse(method.PaymentMethod).map((paymentList) => {
+                                return (
+                                  <Button onClick={() => this.handlePaymentChange(paymentList, method.PaymentMethodTypeID, method.PaymentMethodType)}>
+                                    <img width="250" src={paymentList.PaymentMethodImage !== null ? paymentList.PaymentMethodImage : Logo}
+                                      alt={paymentList.PaymentMethod !== null ? paymentList.PaymentMethod : "Emporia"} onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                                  </Button>
+                                )
+
+                              })
+                            }
+                          </div>
+                        )
+                      })
+                    }
+                  </>
+                )
+              })
+            }
+          </SwipeableViews> */}
         </div >
       </div >
     );
@@ -746,6 +888,9 @@ class PagePayment extends Component {
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
+
+    console.log("checkcheck", this.state)
+
     return (
       <React.Fragment>
         <div className="cart">
