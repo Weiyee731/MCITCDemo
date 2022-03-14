@@ -119,17 +119,17 @@ function ProductCard(props) {
     price = (
       <div className="product-card__prices">
         <span className="product-card__new-price">
-          <Currency value={product.ProductPrice} currency={"RM"} />
+          From <Currency value={product.ProductPrice} currency={"RM"} />
         </span>{" "}
         <span className="product-card__old-price">
-          <Currency value={product.compareAtPrice} currency={"RM"} />
+          From <Currency value={product.compareAtPrice} currency={"RM"} />
         </span>
       </div>
     );
   } else {
     price = (
       <div className="product-card__prices">
-        <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
+        From <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
       </div>
     );
   }
@@ -177,17 +177,17 @@ function ProductCard(props) {
   return (
     <div className={containerClasses}>
       {badges}
-      <Link to={url.product(product)}>{image}</Link>
+      <a href={product.url}>{image}</a>
       <div className="product-card__info">
         <div className="product-card__name">
-          <Link to={url.product(product)}>{product.ProductName}</Link>
+          <a href={product.url}>{product.ProductName}</a>
         </div>
         <div className="product-card__rating">
           <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
           <div className="product-card__rating-legend">{product.ProductRating !== null ? parseFloat(product.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
         </div>
         {
-          product.ProductSold !== "0" && product.ProductSold !== null &&
+          product.ProductSold && product.ProductSold !== "0" && product.ProductSold !== null &&
           <div
             className="product-card__rating-legend mt-1"
             style={{

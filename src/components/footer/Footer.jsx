@@ -15,7 +15,7 @@ import appstore from "../../assets/appstore.png";
 
 export default function Footer() {
   const informationLinks = [
-    { title: "About Emporia", url: "/site/about-us" },
+    { title: "About Us", url: "/site/about-us" },
     // { title: "Afﬁliate Program", url: "/site/affiliate" },
     // { title: "Careers", url: "/site/careers" },
     { title: "Terms & Conditions", url: "/site/terms" },

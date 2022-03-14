@@ -79,6 +79,78 @@ const initialState = {
     breadcrumb: [
         { title: "Home", url: "" },
         { title: "Main Category", url: "/shop/AllProductCategory/" },
+    ],
+
+    // for tourism demo purpose
+    dummyData: [
+        {
+            ProductImage: "https://pix8.agoda.net/hotelImages/4043634/-1/7a10fcb85f6dbf33386d58e198e466c2.jpg?ca=20&ce=0&s=1024x768",
+            ProductName: "Kingwood Hotel Sibu",
+            ProductRating: 5,
+            review: "1048",
+            desc: "Kingwood Hotel Sibu is one of the best choices to stay at in Sibu. With its ideal location by the Rejang River, guests can enjoy a leisure stay with one of the best view that Sibu has to offer. The hotel is the biggest in Sibu, and offers guests with an array of facilities such as free WiFi, a restaurant and an outdoor pool. Guests can also enjoy the on-site restaurant and free private parking. All rooms are equipped with a private bathroom, and tourists can choose to have either a city view or a river view. Needless to say, both views are spectacular so guests will definitely enjoy their stay at Kingwood Hotel Sibu.",
+            ProductPrice: "129",
+            ShopState: "Sibu",
+            url: "https://www.sarawak2discover.com/PlaceDetail.aspx?pid=37&plat=2.283430000000000&plng=111.832617000000000"
+        },
+        {
+            ProductImage: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/124344871.jpg?k=82daced0f7392440064c6ec25622e0d0154f02c62a2c885d96103c320273befe&o=&hp=1",
+            ProductName: "Tune Hotel - Waterfront Kuching",
+            ProductRating: 4.5,
+            review: "2254",
+            desc: "Kingwood Hotel Sibu is one of the best choices to stay at in Sibu. With its ideal location by the Rejang River, guests can enjoy a leisure stay with one of the best view that Sibu has to offer. The hotel is the biggest in Sibu, and offers guests with an array of facilities such as free WiFi, a restaurant and an outdoor pool. Guests can also enjoy the on-site restaurant and free private parking. All rooms are equipped with a private bathroom, and tourists can choose to have either a city view or a river view. Needless to say, both views are spectacular so guests will definitely enjoy their stay at Kingwood Hotel Sibu.",
+            ProductPrice: "119",
+            ShopState: "Kuching",
+            url: "https://www.sarawak2discover.com/PlaceDetail.aspx?pid=59&plat=1.557412000000000&plng=110.350804000000000"
+        },
+        {
+            ProductImage: "https://pix8.agoda.net/hotelImages/945/9454621/9454621_19083016430080293179.jpg?ca=9&ce=1&s=1024x768",
+            ProductName: "Roxy Hotel Kuching",
+            ProductRating: 5,
+            review: "2958",
+            desc: "Kingwood Hotel Sibu is one of the best choices to stay at in Sibu. With its ideal location by the Rejang River, guests can enjoy a leisure stay with one of the best view that Sibu has to offer. The hotel is the biggest in Sibu, and offers guests with an array of facilities such as free WiFi, a restaurant and an outdoor pool. Guests can also enjoy the on-site restaurant and free private parking. All rooms are equipped with a private bathroom, and tourists can choose to have either a city view or a river view. Needless to say, both views are spectacular so guests will definitely enjoy their stay at Kingwood Hotel Sibu.",
+            ProductPrice: "149",
+            ShopState: "Kuching",
+            url: "https://www.sarawak2discover.com/PlaceDetail.aspx?pid=37&plat=2.283430000000000&plng=111.832617000000000"
+        }
+    ],
+
+    dummyData2: [
+        {
+            ProductImage: "https://miro.medium.com/max/1400/0*joLFxl3aEXlREffU.jpg",
+            ProductName: "World Musical Festival",
+            ProductRating: 5,
+            review: "3690",
+            desc: "The Rainforest World Music Festival (often abbreviated as RWMF) is an annual three-day music festival celebrating the diversity of world music, held in Kuching, Sarawak, Malaysia, with daytime music workshops, cultural displays, craft displays, food stalls, and main-stage evening concerts.",
+            ProductPrice: "103",
+            ShopState: "Buy",
+        }, {
+            ProductImage: "https://360tour.asia/wp-content/uploads/2017/03/theborneohousemuseumlogo-400x200.jpg",
+            ProductName: "Borneo House Museum",
+            ProductRating: 4.6,
+            review: "2800",
+            desc: "The Sarawak State Museum is the oldest museum in Borneo. It was founded in 1888 and opened in 1891 in a purpose-built building in Kuching, Sarawak.",
+            ProductPrice: "29",
+            ShopState: "Buy"
+        },
+        {
+            ProductImage: "https://visitingmalaysiablog.files.wordpress.com/2014/08/7.jpg",
+            ProductName: "Sarawak Cultural Village",
+            ProductRating: 4.8,
+            review: "2200",
+            desc: "17-acre site exploring local ethnic groups via longhouse replicas, programs & cultural performances.",
+            ProductPrice: "129",
+            ShopState: "Buy",
+        },
+        {
+            ProductImage: "https://sarawaktourism.com/v2/wp-content/uploads/2014/09/Semenggoh1.png",
+            ProductName: "Samunsam Wildlife Sanctuary",
+            ProductRating: 4.5,
+            review: "1060",
+            desc: "Sarawak Forestry Corporation (SFC) is a statutory body of the Sarawak Government formed under Sarawak Forestry Corporation Ordinance, 1995. Our main functions are to manage Totally Protected Areas (TPAs) and to conserve Biodiversity of Sarawak. We have been entrusted to protect the wildlife of Sarawak, particularly the totally protected and protected species.",
+            ProductPrice: "68",
+            ShopState: "Buy",
+        }
     ]
 }
 
@@ -94,16 +166,12 @@ const GreenCheckbox = withStyles({
     checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-
 const sortingOption = [
     { value: 'latest', label: 'Latest' },
     { value: 'top-sales', label: 'Top Sales' },
     { value: 'low-to-high', label: 'Price Low to High' },
     { value: 'high-to-low', label: 'Price High to Low' }
 ]
-
-
-
 
 class BlockListingDetails extends Component {
     constructor(props) {
@@ -393,7 +461,7 @@ class BlockListingDetails extends Component {
                 case "low-to-high":
 
                     list.sort((a, b) => (a.ProductPrice - b.ProductPrice))
-           
+
                     // if (tempList.length > 0) {
                     //     tempList.map((x) => {
                     //         console.log(x.ProductPrice.split("-")[0])
@@ -520,14 +588,16 @@ class BlockListingDetails extends Component {
             "block-products-carousel--loading": loading,
         });
 
+        console.log(this.props.match.params.selectedtypevalue === ":3")
+
         return (
             <React.Fragment>
-                <Helmet>
+                {/* <Helmet>
                     <title>{`Category — ${theme.name}`}</title>
-                </Helmet>
+                </Helmet> */}
 
-                <PageHeader header="Category" breadcrumb={this.state.breadcrumb} />
-                <div className="container">
+                {/* <PageHeader header="Category" breadcrumb={this.state.breadcrumb} /> */}
+                <div className="container mt-2">
                     <div className="row">
                         <div className="col-lg-3 col-md-3 ">
                             <div className="category-segment ">
@@ -544,7 +614,7 @@ class BlockListingDetails extends Component {
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div> */}
-                                <div className="sub-title" >
+                                {/* <div className="sub-title" >
                                     <Link to="/shop/AllProductCategory/">
                                         <FormatListBulletedIcon /> All Categories
                                     </Link>
@@ -630,7 +700,7 @@ class BlockListingDetails extends Component {
                                     </div>
                                 </div>
 
-                                <hr />
+                                <hr /> */}
 
                                 <div className="prices-segment mt-3">
                                     <div className="filter-options-label"><MonetizationOnOutlinedIcon /> PRICE</div>
@@ -710,7 +780,7 @@ class BlockListingDetails extends Component {
                         </div>
                         <div className="col-lg-9 col-md-9 ">
                             <div className="d-flex sorting-options-panel align-middle px-3 mb-2 ">
-                                <div className="flex-grow-1 d-flex my-auto">
+                                {/* <div className="flex-grow-1 d-flex my-auto">
                                     {
                                         this.state.categoryHierachy === 1 && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') === "Category" &&
 
@@ -727,7 +797,6 @@ class BlockListingDetails extends Component {
                                         this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 ?
                                             <div className="sorting-option-label">
                                                 Category - {this.state.categoryName}
-                                                {/* {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}  */}
                                             </div>
                                             : ""
                                     }
@@ -737,7 +806,7 @@ class BlockListingDetails extends Component {
                                             Keyword Search - {this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')}
                                         </div>
                                     }
-                                </div>
+                                </div> */}
                                 <div>
                                     <FormControl variant="outlined" style={{ width: 200, height: 40 }} size="small" >
                                         <InputLabel id="demo-simple-select-outlined-label">Sort By</InputLabel>
@@ -767,7 +836,7 @@ class BlockListingDetails extends Component {
 
                             <div className="container">
                                 <div className="row">
-                                    {
+                                    {/* {
                                         this.state.productList.length > 0 ?
                                             this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?
                                                 this.state.productList[0].map((products, index) => {
@@ -783,6 +852,32 @@ class BlockListingDetails extends Component {
                                                 <div className="ml-2"><i>No products for this section</i></div>
                                             :
                                             <div className="ml-2"><i>No products for this section</i></div>
+                                    } */}
+
+                                    {
+                                        this.state.dummyData.length > 0 && this.props.match.params.selectedtypevalue === ":3" &&
+                                        this.state.dummyData.map((products, index) => {
+
+                                            return (
+                                                <div key={index} className="block-products__list-item">
+                                                    <ProductCard product={products}></ProductCard>
+                                                </div>
+
+                                            )
+                                        })
+                                    }
+
+                                    {
+                                        this.state.dummyData2.length > 0 && this.props.match.params.selectedtypevalue === ":4" &&
+                                        this.state.dummyData2.map((products, index) => {
+
+                                            return (
+                                                <div key={index} className="block-products__list-item">
+                                                    <ProductCard product={products}></ProductCard>
+                                                </div>
+
+                                            )
+                                        })
                                     }
 
                                 </div>
