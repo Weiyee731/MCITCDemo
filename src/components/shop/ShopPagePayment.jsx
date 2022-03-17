@@ -24,6 +24,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import { toast } from "react-toastify";
+import TextField from '@mui/material/TextField';
 import Logo from "../../assets/Emporia.png";
 import {
   Link,
@@ -42,6 +43,7 @@ import moment from "moment";
 import FPX from '../../assets/fpx-logo.png';
 import { Image } from 'react-bootstrap';
 const crypto = require('crypto');
+// const CyberSource = require('CyberSource');
 
 
 
@@ -213,8 +215,10 @@ class PagePayment extends Component {
             bankFinalList.push(bankListing)
           })
         })
-        let removeDuplicate = bankFinalList.length > 0 ? bankFinalList.filter((ele, ind) => ind === bankFinalList.findIndex(elem => elem.BankID === ele.BankID)) : []
-        this.setState({ finalAllBankDetails: removeDuplicate, BankID: this.state.allBankDetails[0].BankID })
+        // let removeDuplicate = bankFinalList.length > 0 ? bankFinalList.filter((ele, ind) => ind === bankFinalList.findIndex(elem => elem.BankID === ele.BankID)) : []
+        this.setState({ finalAllBankDetails: bankFinalList, BankID: this.state.allBankDetails[0].BankID })
+        // let removeDuplicate = bankFinalList.length > 0 ? bankFinalList.filter((ele, ind) => ind === bankFinalList.findIndex(elem => elem.BankID === ele.BankID)) : []
+        // this.setState({ finalAllBankDetails: removeDuplicate, BankID: this.state.allBankDetails[0].BankID })
       }
     }).catch(e => {
       toast.error("There is something wrong with 111. Please try again.")
@@ -419,7 +423,7 @@ class PagePayment extends Component {
     let fpx_sellerTxnTime = date + "12"
     let fpx_sellerOrderNo = date + "12"
 
-    let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + this.state.fpx_txnAmount + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
+    let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
 
     let URL = "https://myemporia.my/payment/check.php"
     const config = { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -444,11 +448,8 @@ class PagePayment extends Component {
     this.setState({ BankID: bankid })
   }
 
-  renderPaymentsList = () => {
 
-    const testing = () => {
-      console.log("testing")
-    }
+  renderPaymentsList = () => {
 
     const paymentMethod = [{ id: 1, method: "Online Banking", image: { FPX } }, { id: 2, method: "Debit/Credit Card", image: "" }]
     // const payments = paymentMethod !== undefined && paymentMethod.length > 0 &&
@@ -553,9 +554,19 @@ class PagePayment extends Component {
       }
     }
 
+    //Ashley Account 
+    // const signature = "access_key=0646aa159df03a8fa52c81ab8a5bc4a7,profile_id=9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=" + totalPrice + ",currency=MYR,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
+    // const APIKey = "08fd3b4b9f8d4866b5b58c5039ed1c795393402695da4b7fb8e33aac2929bf5d8bc43156efb34d5b97a632dad2e0b55001e3d1a751f4420f90b42b140594a3adfcb2852df84a4bb59d9f8f47458dacf12316b373362a419a99fe32a3286b3d0b5056c6c1923f4ded83014852dcce8c7085baaf83536c4e65933f6ecbd96fe3fb";
 
-    const signature = "access_key=0646aa159df03a8fa52c81ab8a5bc4a7,profile_id=9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=" + totalPrice + ",currency=USD,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
-    const APIKey = "08fd3b4b9f8d4866b5b58c5039ed1c795393402695da4b7fb8e33aac2929bf5d8bc43156efb34d5b97a632dad2e0b55001e3d1a751f4420f90b42b140594a3adfcb2852df84a4bb59d9f8f47458dacf12316b373362a419a99fe32a3286b3d0b5056c6c1923f4ded83014852dcce8c7085baaf83536c4e65933f6ecbd96fe3fb";
+
+    // Emporia Account
+    // const signature = "access_key=fb2033f6e3fe3bb29fa96ebc01c911ae,profile_id=FCC3E6E0-639C-4A4E-B58B-9C759897778F,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=" + totalPrice + ",currency=MYR,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
+    // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
+
+
+    // Emporia Account
+    const signature = "access_key=fb2033f6e3fe3bb29fa96ebc01c911ae,profile_id=FCC3E6E0-639C-4A4E-B58B-9C759897778F,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=" + totalPrice + ",currency=MYR,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
+    const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
 
     var signed = crypto
       .createHmac('sha256', APIKey)
@@ -595,6 +606,40 @@ class PagePayment extends Component {
       })
     }
 
+    const handleVoid = (value) => {
+
+      let URL = "https://apitest.cybersource.com/pts/v2/payments/6473074940736919503004/voids"
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'v-c-merchant-id': 'FCC3E6E0-639C-4A4E-B58B-9C759897778F',
+          'Digest': '',
+          'Date': time,
+          'Signature': signature,
+
+        }
+      }
+      const formData = new FormData()
+      formData.append("code", "test_void");
+      axios.post(URL, formData, config).then((res) => {
+        console.log("reeeeee", res)
+        if (res.status === 200) {
+          // this.setState({
+          //   fpx_checkSum: res.data.split('"')[1],
+          //   fpx_buyerBankId: bankid,
+          //   fpx_sellerExOrderNo: fpx_sellerExOrderNo,
+          //   fpx_sellerTxnTime: fpx_sellerTxnTime,
+          //   fpx_sellerOrderNo: fpx_sellerOrderNo
+          // })
+        }
+        else {
+          toast.error("There is something wrong with uploading images. Please try again.")
+        }
+      }).catch(e => {
+        toast.error("There is something wrong with uploading images. Please try again.")
+      })
+    }
+
     if (document.getElementById("payment_form2")) {
       console.log("hahaha")
       setTimeout(() => {
@@ -606,6 +651,10 @@ class PagePayment extends Component {
       <div className="checkout">
         <div className="container" style={{ textAlign: "left" }}>
           <hr />
+          <div>
+            <TextField fullWidth label="Total" value={this.
+              s.state.fpx_msgType} name="msgType" onChange={(e) => this.setState({fpx_msgType: e.target.value})}/>
+          </div>
           <h5>Payment Method</h5>
           {
             paymentMethod.length > 0 && paymentMethod.map((payment, index) => {
@@ -678,7 +727,7 @@ class PagePayment extends Component {
                     <input type="hidden" value={this.state.fpx_sellerId} id="fpx_sellerId" name="fpx_sellerId"></input>
                     <input type="hidden" value={this.state.fpx_sellerBankCode} id="fpx_sellerBankCode" name="fpx_sellerBankCode"></input>
                     <input type="hidden" value={this.state.fpx_txnCurrency} id="fpx_txnCurrency" name="fpx_txnCurrency"></input>
-                    <input type="hidden" value={this.state.fpx_txnAmount} id="fpx_txnAmount" name="fpx_txnAmount"></input>
+                    <input type="hidden" value={parseFloat(this.state.fpx_txnAmount).toFixed(2)} id="fpx_txnAmount" name="fpx_txnAmount"></input>
                     <input type="hidden" value={this.state.fpx_buyerEmail} id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
                     <input type="hidden" value={this.state.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
                     <input type="hidden" value={this.state.fpx_buyerName} id="fpx_buyerName" name="fpx_buyerName"></input>
@@ -690,7 +739,6 @@ class PagePayment extends Component {
                     <input type="hidden" value={this.state.fpx_buyerIban} id="fpx_buyerIban" name="fpx_buyerIban"></input>
                     <input type="hidden" value={this.state.fpx_version} id="fpx_version" name="fpx_version"></input>
                     <input type="hidden" value={this.state.fpx_productDesc} id="fpx_productDesc" name="fpx_productDesc"></input>
-
                     <input type="submit" style={{
                       backgroundColor: "#04AA6D",
                       border: "none",
@@ -705,8 +753,8 @@ class PagePayment extends Component {
               <React.Fragment>
                 <div>
                   <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
-                    <input type="hidden" id="access_key" name="access_key" value="0646aa159df03a8fa52c81ab8a5bc4a7"></input>
-                    <input type="hidden" id="profile_id" name="profile_id" value="9D4BDAEB-A0D5-4D05-9E4B-40DB52678DF0"></input>
+                    <input type="hidden" id="access_key" name="access_key" value="fb2033f6e3fe3bb29fa96ebc01c911ae"></input>
+                    <input type="hidden" id="profile_id" name="profile_id" value="FCC3E6E0-639C-4A4E-B58B-9C759897778F"></input>
                     <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={time + '123'}></input>
                     <input type="hidden" id="signed_field_names" name="signed_field_names" value="access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country"></input>
                     <input type="hidden" id="signed_date_time" name="signed_date_time" value={now}></input>
@@ -714,7 +762,7 @@ class PagePayment extends Component {
                     <input type="hidden" id="transaction_type" name="transaction_type" value="authorization"></input>
                     <input type="hidden" id="reference_number" name="reference_number" value={time}></input>
                     <input type="hidden" id="amount" name="amount" value={totalPrice}></input>
-                    <input type="hidden" id="currency" name="currency" value="USD"></input>
+                    <input type="hidden" id="currency" name="currency" value="MYR"></input>
                     <input type="hidden" id="bill_to_surname" name="bill_to_surname" value={lastname}></input>
                     <input type="hidden" id="bill_to_forename" name="bill_to_forename" value={firstname}></input>
                     <input type="hidden" id="bill_to_email" name="bill_to_email" value={email}></input>
@@ -737,10 +785,24 @@ class PagePayment extends Component {
                 </div>
               </React.Fragment>
           }
+
+          <React.Fragment>
+            <div>
+              <input type="submit" style={{
+                border: "none",
+                color: "green",
+                fontSize: "14px",
+                textDecoration: "none",
+              }} id="submit" name="submit" value="Void" onClick={() =>
+                handleVoid("6473074940736919503004")
+              } />
+            </div>
+          </React.Fragment>
         </div >
       </div >
     );
   }
+
 
   render() {
     if (this.props.data.length < 1) {
@@ -775,6 +837,8 @@ class PagePayment extends Component {
                 }
                 {this.renderCart()}
                 {this.renderPaymentsList()}
+
+
               </div>
             </div>
           </div>
