@@ -35,11 +35,10 @@ class ShopPageReceipt extends Component {
                 this.props.CallClearOrderStatus()
             }
             else {
-                console.log("this.props", this.props)
-                // setTimeout(() => {
-                //     window.location.href = "/"
-                //     window.reload(false)
-                // }, 4000);
+                setTimeout(() => {
+                    window.location.href = "/"
+                    window.reload(false)
+                }, 4000);
             }
         }
     }
@@ -192,8 +191,8 @@ class ShopPageReceipt extends Component {
                 {
                     setTimeout(
                         function () {
-                            // window.location.href = "/"
-                            // window.reload(false);
+                            window.location.href = "/"
+                            window.reload(false);
                         }.bind(this),
                         500
                     )
@@ -203,15 +202,14 @@ class ShopPageReceipt extends Component {
     }
 
     render() {
-        console.log("CHECK", this.props)
         let content;
 
         if ((this.props.match.params.decision).toLowerCase() === "accept") {
-            // this.props.CallUpdateOrderStatus({
-            //     Transactionuuid: this.props.match.params.transactionuuid,
-            //     TrackingStatusID: 1,
-            //     OrderPaidAmount: this.props.match.params.amount,
-            // })
+            this.props.CallUpdateOrderStatus({
+                Transactionuuid: this.props.match.params.transactionuuid,
+                TrackingStatusID: 1,
+                OrderPaidAmount: this.props.match.params.amount,
+            })
             content = this.successPage()
         }
         else {

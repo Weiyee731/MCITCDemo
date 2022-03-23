@@ -83,8 +83,8 @@ const initialState = {
 
 
   // FPX Online Banking
-  fpx_msgType: "AE",
-  fpx_msgToken: "01",
+  fpx_msgType: "AC",
+  fpx_msgToken: "02",
   fpx_sellerExId: "EX00013776",
   fpx_sellerExOrderNo: "",
   fpx_sellerTxnTime: "",
@@ -94,7 +94,7 @@ const initialState = {
   fpx_txnCurrency: "MYR",
   fpx_txnAmount: "20.00",
   fpx_buyerEmail: "weiyee731@gmail.com",
-  fpx_buyerName: "123",
+  fpx_buyerName: "weiyee",
 
   fpx_buyerBankBranch: "",
   fpx_buyerAccNo: "",
@@ -105,7 +105,7 @@ const initialState = {
   fpx_version: "6.0",
   bankingdata: "",
 
-  isSetDetail: true,
+  isSetDetail: false,
 }
 class PagePayment extends Component {
   payments = payments;
@@ -501,32 +501,68 @@ class PagePayment extends Component {
     // credit and debit card
     let now = new Date().toISOString().split('.').shift() + 'Z';
     const d = new Date();
-    let time = d.getTime();
+    const time = d.getTime();
     var n = Math.floor(Math.random() * 11);
     var k = Math.floor(Math.random() * 1000000);
     var m = String.fromCharCode(n) + k;
 
+    // let totalPrice = parseFloat(this.state.total).toFixed(2)
+    // let lastname = ""
+    // let firstname = ""
+    // let email = ""
+    // let addressLine1 = ""
+    // let city = ""
+    // let state = ""
+    // let poscode = ""
+    // let PickUpIndicator = ""
+
+
     let totalPrice = parseFloat(this.state.total).toFixed(2)
-    let lastname = ""
-    let firstname = ""
-    let email = ""
-    let addressLine1 = ""
-    let city = ""
-    let state = ""
-    let poscode = ""
-    let PickUpIndicator = ""
+    let lastname = this.props.addresss.state.address === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia" : this.state.Userdetails.addressName
+    let firstname = this.props.addresss.state.address === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia" : this.state.Userdetails.addressName
+    let email = this.props.addresss.state.address === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com" : this.state.Userdetails.email
+    let addressLine1 = this.props.addresss.state.address === 0 ? "SELFCOLECT" : this.state.Userdetails.addressLine1
+    let city = this.props.addresss.state.address === 0 ? "SELFCOLECT" : this.state.Userdetails.city
+    let state = this.props.addresss.state.address === 0 ? "SELFCOLECT" : this.state.Userdetails.state
+    let poscode = this.props.addresss.state.address === 0 ? "94300" : this.state.Userdetails.poscode
+    let PickUpIndicator = this.props.addresss.state.address === 0 ? 1 : 0
+
+    const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
+
+    let access_key = ""
+    let profile_id = ""
+    let transaction_uuid = ""
+    let signed_date_time = ""
+    let locale = ""
+    let transaction_type = ""
+    let reference_number = ""
+    let amount = ""
+
+    let currency = ""
+    let bill_to_surname = ""
+    let bill_to_forename = ""
+
+    let bill_to_email = ""
+    let bill_to_address_line1 = ""
+    let bill_to_address_city = ""
+
+    let bill_to_address_postal_code = ""
+    let bill_to_address_state = ""
+    let bill_to_address_country = ""
+    let signature = ""
+    let signed_field_names = ""
+
 
     if (this.state.isSetDetail === false) {
-
       if (this.props.addresss.state.address === 0) {
-        lastname = localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia"
-        firstname = localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia"
-        email = localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com"
-        addressLine1 = "SELFCOLECT"
-        city = "SELFCOLECT"
-        state = "SELFCOLECT"
-        poscode = "94300"
-        PickUpIndicator = 1
+        // lastname = localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia"
+        // firstname = localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia"
+        // email = localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com"
+        // addressLine1 = "SELFCOLECT"
+        // city = "SELFCOLECT"
+        // state = "SELFCOLECT"
+        // poscode = "94300"
+        // PickUpIndicator = 1
         this.setState({
           isSetDetail: true,
           fpx_buyerName: localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "Emporia",
@@ -537,14 +573,14 @@ class PagePayment extends Component {
         // // // fpx_buyerEmail = localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com"
         // fpx_buyerEmail = "weiyee731@gmail.com"
       } else {
-        lastname = this.state.Userdetails.addressName
-        firstname = this.state.Userdetails.addressName
-          = this.state.Userdetails.email
-        addressLine1 = this.state.Userdetails.addressLine1
-        city = this.state.Userdetails.city
-        state = this.state.Userdetails.state
-        poscode = this.state.Userdetails.poscode
-        PickUpIndicator = 0
+        // lastname = this.state.Userdetails.addressName
+        // firstname = this.state.Userdetails.addressName
+        // email = this.state.Userdetails.email
+        // addressLine1 = this.state.Userdetails.addressLine1
+        // city = this.state.Userdetails.city
+        // state = this.state.Userdetails.state
+        // poscode = this.state.Userdetails.poscode
+        // PickUpIndicator = 0
         this.setState({
           isSetDetail: true,
           fpx_buyerName: lastname,
@@ -552,6 +588,145 @@ class PagePayment extends Component {
 
         })
       }
+    }
+    else {
+
+      access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
+      profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
+      transaction_uuid = time + '123'
+      signed_date_time = now
+      locale = "en"
+      transaction_type = "sale"
+      reference_number = time
+      amount = totalPrice
+      currency = "MYR"
+      bill_to_surname = lastname
+      bill_to_forename = firstname
+      bill_to_email = email
+      bill_to_address_line1 = addressLine1
+      bill_to_address_city = city
+
+      bill_to_address_postal_code = poscode
+      bill_to_address_state = state
+      bill_to_address_country = "MY"
+      signed_field_names ="access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country"
+
+
+      // access_key = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update("fb2033f6e3fe3bb29fa96ebc01c911ae")
+      //   .digest('base64');
+
+        
+
+      // profile_id = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update("FCC3E6E0-639C-4A4E-B58B-9C759897778F")
+      //   .digest('base64');
+
+      // transaction_uuid = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(time + '123')
+      //   .digest('base64');
+
+      // signed_date_time = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(now)
+      //   .digest('base64');
+
+
+      // signed_field_names = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update("access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country")
+      //   .digest('base64');
+
+
+
+      // locale = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update("en")
+      //   .digest('base64');
+
+      // transaction_type = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update("sale")
+      //   .digest('base64');
+
+
+      // reference_number = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(time)
+      //   .digest('base64');
+
+      // amount = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(totalPrice)
+      //   .digest('base64');
+
+
+      // currency = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update("MYR")
+      //   .digest('base64');
+
+      // bill_to_surname = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(lastname)
+      //   .digest('base64');
+
+      // bill_to_forename = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(firstname)
+      //   .digest('base64');
+
+      // bill_to_email = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(email)
+      //   .digest('base64');
+
+
+      // bill_to_address_line1 = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(addressLine1)
+      //   .digest('base64');
+
+      // bill_to_address_city = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(city)
+      //   .digest('base64');
+
+      // bill_to_address_postal_code = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(poscode)
+      //   .digest('base64');
+
+      // bill_to_address_state = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update(state)
+      //   .digest('base64');
+
+      // bill_to_address_country = crypto
+      //   .createHmac('sha256', APIKey)
+      //   .update("MY")
+      //   .digest('base64');
+
+
+      // "signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country" + 
+      // ",locale=en,transaction_type=sale,reference_number=" + time + ",amount=" + totalPrice + ",currency=MYR,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + 
+      // ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
+
+
+      signature = "access_key=" + access_key + ",profile_id=" + profile_id + ",transaction_uuid=" + transaction_uuid + ",signed_field_names=" + signed_field_names + ",signed_date_time=" + signed_date_time + ",locale=" + locale + ",transaction_type=sale,reference_number=" + reference_number + ",amount=" + amount + ",currency=" + currency + ",bill_to_surname=" + bill_to_surname + ",bill_to_forename=" + bill_to_forename + ",bill_to_email=" + bill_to_email + ",bill_to_address_line1=" + bill_to_address_line1 + ",bill_to_address_city=" + bill_to_address_city + ",bill_to_address_postal_code=" + bill_to_address_postal_code + ",bill_to_address_state=" + bill_to_address_state + ",bill_to_address_country=" + bill_to_address_country
+
+      // const signature = "access_key=fb2033f6e3fe3bb29fa96ebc01c911ae,profile_id=FCC3E6E0-639C-4A4E-B58B-9C759897778F,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=sale,reference_number=" + time + ",amount=" + totalPrice + ",currency=MYR,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
+
+
+      console.log("signature", signature)
+      var signed = crypto
+        .createHmac('sha256', APIKey)
+        .update(signature)
+        .digest('base64');
+
     }
 
     //Ashley Account 
@@ -565,17 +740,12 @@ class PagePayment extends Component {
 
 
     // Emporia Account
-    const signature = "access_key=fb2033f6e3fe3bb29fa96ebc01c911ae,profile_id=FCC3E6E0-639C-4A4E-B58B-9C759897778F,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=" + totalPrice + ",currency=MYR,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
-    const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
-
-    var signed = crypto
-      .createHmac('sha256', APIKey)
-      .update(signature)
-      .digest('base64');
 
 
+    // const access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
+    // console.log("access_key1", access_key)
 
-    const onSubmit = () => {
+    const onSubmit = (Ind, transactionUUID) => {
       let ProductID = []
       let UserCartID = []
       let ProductQuantity = []
@@ -588,72 +758,42 @@ class PagePayment extends Component {
         ProductVariationDetailID.push(x.product.ProductVariationDetailID)
       })
 
-
-      this.props.CallAddOrder({
-        UserID: window.localStorage.getItem("id"),
-        ProductID: ProductID,
-        ProductQuantity: ProductQuantity,
-        UserCartID: UserCartID,
-        UserAddressID: this.props.addresss.state.address,
-        PaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
-        UserPaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
-        OrderTotalAmount: totalPrice,
-        OrderPaidAmount: 0,
-        ProductVariationDetailID: ProductVariationDetailID,
-        TrackingStatusID: 2,
-        PickUpInd: PickUpIndicator,
-        TRANSACTIONUUID: this.state.paymentMethodsID === 1 ? time + '123' : this.state.fpx_sellerOrderNo
-      })
+      // this.props.CallAddOrder({
+      //   UserID: window.localStorage.getItem("id"),
+      //   ProductID: ProductID,
+      //   ProductQuantity: ProductQuantity,
+      //   UserCartID: UserCartID,
+      //   UserAddressID: this.props.addresss.state.address,
+      //   PaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
+      //   UserPaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
+      //   OrderTotalAmount: totalPrice,
+      //   OrderPaidAmount: 0,
+      //   ProductVariationDetailID: ProductVariationDetailID,
+      //   TrackingStatusID: 2,
+      //   PickUpInd: Ind,
+      //   TRANSACTIONUUID: transactionUUID
+      // })
     }
 
-    const handleVoid = (value) => {
-
-      let URL = "https://apitest.cybersource.com/pts/v2/payments/6473074940736919503004/voids"
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          'v-c-merchant-id': 'FCC3E6E0-639C-4A4E-B58B-9C759897778F',
-          'Digest': '',
-          'Date': time,
-          'Signature': signature,
-
-        }
-      }
-      const formData = new FormData()
-      formData.append("code", "test_void");
-      axios.post(URL, formData, config).then((res) => {
-        console.log("reeeeee", res)
-        if (res.status === 200) {
-          // this.setState({
-          //   fpx_checkSum: res.data.split('"')[1],
-          //   fpx_buyerBankId: bankid,
-          //   fpx_sellerExOrderNo: fpx_sellerExOrderNo,
-          //   fpx_sellerTxnTime: fpx_sellerTxnTime,
-          //   fpx_sellerOrderNo: fpx_sellerOrderNo
-          // })
-        }
-        else {
-          toast.error("There is something wrong with uploading images. Please try again.")
-        }
-      }).catch(e => {
-        toast.error("There is something wrong with uploading images. Please try again.")
-      })
-    }
-
-    if (document.getElementById("payment_form2")) {
-      console.log("hahaha")
-      setTimeout(() => {
-        "submitForm()"
-      }, 10000);
-    }
+    // if (document.getElementById("payment_form2")) {
+    //   console.log("hahaha")
+    //   setTimeout(() => {
+    //     "submitForm()"
+    //   }, 10000);
+    // }
 
     return (
       <div className="checkout">
         <div className="container" style={{ textAlign: "left" }}>
           <hr />
           <div>
-            <TextField fullWidth label="Total" value={this.
-              s.state.fpx_msgType} name="msgType" onChange={(e) => this.setState({fpx_msgType: e.target.value})}/>
+            <TextField fullWidth label="Total" value={this.state.fpx_txnAmount} name="total" onChange={(e) => this.setState({ fpx_txnAmount: e.target.value })} />
+          </div>
+          <div>
+            <TextField fullWidth label="Msg Type" value={this.state.fpx_msgType} name="msgType" onChange={(e) => this.setState({ fpx_msgType: e.target.value })} />
+          </div>
+          <div>
+            <TextField fullWidth label="Msg Token" value={this.state.fpx_msgToken} name="msgToken" onChange={(e) => this.setState({ fpx_msgToken: e.target.value })} />
           </div>
           <h5>Payment Method</h5>
           {
@@ -668,7 +808,7 @@ class PagePayment extends Component {
                             color="blue"
                             fontSize="small"
                             onClick={() => this.handlePaymentClick(payment.id, false)} />
-                        </IconButton><label onClick={() => this.handlePaymentClick(payment.id, true)} style={{ fontSize: "16px" }}>{payment.method}  {payment.image !== "" && <Image paddingRight="20px" width="150px" height="60px" src={FPX} />}</label>
+                        </IconButton><label onClick={() => this.handlePaymentClick(payment.id, true)} style={{ fontSize: "16px" }}>{payment.method}  {payment.image !== "" && <Image paddingRight="20px" width="150px" height="60px" src={FPX} />} {payment.id !== 1 && <Image paddingRight="20px" width="150px" height="60px" src="https://www.kindpng.com/picc/m/35-351793_credit-or-debit-card-mastercard-logo-visa-card.png" />}</label>
                         {
                           parseInt(this.state.paymentMethodsID) === 1 &&
                           <FormControl variant="outlined" size="small" style={{ width: "100%" }}>
@@ -705,7 +845,7 @@ class PagePayment extends Component {
                             color="blue"
                             fontSize="small"
                             onClick={() => this.handlePaymentClick(payment.id, true)} />
-                        </IconButton><label onClick={() => this.handlePaymentClick(payment.id, true)} style={{ fontSize: "16px" }}>{payment.method}  {payment.image !== "" && <Image paddingRight="20px" width="150px" height="60px" src={FPX} />}</label>
+                        </IconButton><label onClick={() => this.handlePaymentClick(payment.id, true)} style={{ fontSize: "16px" }}>{payment.method}  {payment.image !== "" && <Image paddingRight="20px" width="150px" height="60px" src={FPX} />}{payment.id !== 1 && <Image paddingRight="20px" width="150px" height="60px" src="https://www.kindpng.com/picc/m/35-351793_credit-or-debit-card-mastercard-logo-visa-card.png" />}</label>
                       </div>
                   }
                 </>
@@ -739,27 +879,84 @@ class PagePayment extends Component {
                     <input type="hidden" value={this.state.fpx_buyerIban} id="fpx_buyerIban" name="fpx_buyerIban"></input>
                     <input type="hidden" value={this.state.fpx_version} id="fpx_version" name="fpx_version"></input>
                     <input type="hidden" value={this.state.fpx_productDesc} id="fpx_productDesc" name="fpx_productDesc"></input>
-                    <input type="submit" style={{
-                      backgroundColor: "#04AA6D",
-                      border: "none",
-                      color: "white",
-                      fontSize: "14px",
-                      textDecoration: "none",
-                    }} id="submit" name="submit" value="Proceed" />
+                    <input type="submit"
+                      style={{
+                        backgroundColor: "#04AA6D",
+                        border: "none",
+                        color: "white",
+                        fontSize: "14px",
+                        textDecoration: "none",
+                      }} id="submit" name="submit" value="Proceed" onClick={() => onSubmit(PickUpIndicator, this.state.fpx_sellerOrderNo)} />
                   </form>
                 </div>
               </React.Fragment>
               :
               <React.Fragment>
+                {/* const signature = "access_key="+ access_key +",profile_id="+ profile_id +",transaction_uuid=" + transaction_uuid + ",
+                  signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,
+                  signed_date_time=" + signed_date_time + ",locale" + locale + ",transaction_type=" + transaction_type + ",reference_number=" + reference_number + ",amount=" + amount + ",currency=" + currency + ",bill_to_surname=" + bill_to_surname + ",bill_to_forename=" + bill_to_forename + ",bill_to_email=" + bill_to_email + ",bill_to_address_line1=" + bill_to_address_line1 + ",bill_to_address_city=" + bill_to_address_city + ",bill_to_address_postal_code=" + bill_to_address_postal_code + ",bill_to_address_state=" + bill_to_address_state + ",bill_to_address_country="+bill_to_address_country  */}
+
+                {console.log("AAA access_key", access_key)}
+                {console.log("AAA profile_id", profile_id)}
+                {console.log("AAA transaction_uuid", transaction_uuid)}
+                {console.log("AAA signed_date_time", signed_date_time)}
+                {console.log("AAA locale", locale)}
+
+                {console.log("AAA transaction_type", transaction_type)}
+                {console.log("AAA reference_number", reference_number)}
+                {console.log("AAA amount", amount)}
+                {console.log("AAA currency", currency)}
+                {console.log("AAA bill_to_surname", bill_to_surname)}
+
+                {console.log("AAA bill_to_forename", bill_to_forename)}
+                {console.log("AAA bill_to_email", bill_to_email)}
+                {console.log("AAA bill_to_address_line1", bill_to_address_line1)}
+                {console.log("AAA bill_to_address_city", bill_to_address_city)}
+                {console.log("AAA bill_to_address_postal_code", bill_to_address_postal_code)}
+
+                {console.log("AAA bill_to_address_country", bill_to_address_country)}
+                {console.log("AAA bill_to_address_state", bill_to_address_state)}
+                {console.log("AAA signed", signed)}
+                {console.log("AAA signature", signature)}
                 <div>
                   <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+                    <input type="hidden" id="access_key" name="access_key" value={access_key}></input>
+                    <input type="hidden" id="profile_id" name="profile_id" value={profile_id}></input>
+                    <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={transaction_uuid}></input>
+                    <input type="hidden" id="signed_field_names" name="signed_field_names" value={signed_field_names}></input>
+                    <input type="hidden" id="signed_date_time" name="signed_date_time" value={signed_date_time}></input>
+                    <input type="hidden" id="locale" name="locale" value={locale}></input>
+                    <input type="hidden" id="transaction_type" name="transaction_type" value="sale"></input>
+                    <input type="hidden" id="reference_number" name="reference_number" value={reference_number}></input>
+                    <input type="hidden" id="amount" name="amount" value={amount}></input>
+                    <input type="hidden" id="currency" name="currency" value={currency}></input>
+                    <input type="hidden" id="bill_to_surname" name="bill_to_surname" value={bill_to_surname}></input>
+                    <input type="hidden" id="bill_to_forename" name="bill_to_forename" value={bill_to_forename}></input>
+                    <input type="hidden" id="bill_to_email" name="bill_to_email" value={bill_to_email}></input>
+                    <input type="hidden" id="bill_to_address_line1" name="bill_to_address_line1" value={bill_to_address_line1}></input>
+                    <input type="hidden" id="bill_to_address_city" name="bill_to_address_city" value={bill_to_address_city}></input>
+                    <input type="hidden" id="bill_to_address_postal_code" name="bill_to_address_postal_code" value={bill_to_address_postal_code}></input>
+                    <input type="hidden" id="bill_to_address_state" name="bill_to_address_state" value={bill_to_address_state}></input>
+                    <input type="hidden" id="bill_to_address_country" name="bill_to_address_country" value={bill_to_address_country}></input>
+                    <input type="hidden" id="signature" name="signature" value={signed}></input>
+                    <input type="submit" style={{
+                      backgroundColor: this.state.paymentMethodsID === 2 ? "#04AA6D" : "#808080",
+                      border: "none",
+                      color: "white",
+                      fontSize: "14px",
+                      textDecoration: "none",
+                    }} id="submit" name="submit" value="Proceed" onClick={() =>
+                      onSubmit(PickUpIndicator, time + '123')
+                    } disabled={this.state.paymentMethodsID === 2 ? false : true} />
+                  </form>
+                  {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
                     <input type="hidden" id="access_key" name="access_key" value="fb2033f6e3fe3bb29fa96ebc01c911ae"></input>
                     <input type="hidden" id="profile_id" name="profile_id" value="FCC3E6E0-639C-4A4E-B58B-9C759897778F"></input>
                     <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={time + '123'}></input>
                     <input type="hidden" id="signed_field_names" name="signed_field_names" value="access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country"></input>
                     <input type="hidden" id="signed_date_time" name="signed_date_time" value={now}></input>
                     <input type="hidden" id="locale" name="locale" value="en"></input>
-                    <input type="hidden" id="transaction_type" name="transaction_type" value="authorization"></input>
+                    <input type="hidden" id="transaction_type" name="transaction_type" value="sale"></input>
                     <input type="hidden" id="reference_number" name="reference_number" value={time}></input>
                     <input type="hidden" id="amount" name="amount" value={totalPrice}></input>
                     <input type="hidden" id="currency" name="currency" value="MYR"></input>
@@ -779,25 +976,12 @@ class PagePayment extends Component {
                       fontSize: "14px",
                       textDecoration: "none",
                     }} id="submit" name="submit" value="Proceed" onClick={() =>
-                      onSubmit()
+                      onSubmit(PickUpIndicator, time + '123')
                     } disabled={this.state.paymentMethodsID === 2 ? false : true} />
-                  </form>
+                  </form> */}
                 </div>
               </React.Fragment>
           }
-
-          <React.Fragment>
-            <div>
-              <input type="submit" style={{
-                border: "none",
-                color: "green",
-                fontSize: "14px",
-                textDecoration: "none",
-              }} id="submit" name="submit" value="Void" onClick={() =>
-                handleVoid("6473074940736919503004")
-              } />
-            </div>
-          </React.Fragment>
         </div >
       </div >
     );
