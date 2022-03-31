@@ -758,21 +758,21 @@ class PagePayment extends Component {
         ProductVariationDetailID.push(x.product.ProductVariationDetailID)
       })
 
-      // this.props.CallAddOrder({
-      //   UserID: window.localStorage.getItem("id"),
-      //   ProductID: ProductID,
-      //   ProductQuantity: ProductQuantity,
-      //   UserCartID: UserCartID,
-      //   UserAddressID: this.props.addresss.state.address,
-      //   PaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
-      //   UserPaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
-      //   OrderTotalAmount: totalPrice,
-      //   OrderPaidAmount: 0,
-      //   ProductVariationDetailID: ProductVariationDetailID,
-      //   TrackingStatusID: 2,
-      //   PickUpInd: Ind,
-      //   TRANSACTIONUUID: transactionUUID
-      // })
+      this.props.CallAddOrder({
+        UserID: window.localStorage.getItem("id"),
+        ProductID: ProductID,
+        ProductQuantity: ProductQuantity,
+        UserCartID: UserCartID,
+        UserAddressID: this.props.addresss.state.address,
+        PaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
+        UserPaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
+        OrderTotalAmount: totalPrice,
+        OrderPaidAmount: 0,
+        ProductVariationDetailID: ProductVariationDetailID,
+        TrackingStatusID: 2,
+        PickUpInd: Ind,
+        TRANSACTIONUUID: transactionUUID
+      })
     }
 
     // if (document.getElementById("payment_form2")) {
