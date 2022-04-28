@@ -109,7 +109,7 @@ class ShopPageReceipt extends Component {
                         <div style={{ textAlign: "center", margin: 2, paddingTop: "5%" }}>
                             <HourglassTopIcon style={{ color: "blue", width: "15%", height: "50%" }} />
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <label style={{ color: "blue", fontWeight: "bold", fontSize: "28px" }}>Pending Approvel</label>
+                                <label style={{ color: "blue", fontWeight: "bold", fontSize: "28px" }}>Pending Approval</label>
                             </div>
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Order Number: {this.props.match.params.transactionuuid}</label>
@@ -188,7 +188,7 @@ class ShopPageReceipt extends Component {
                         </div>
                     </div>
                 </div>
-                {
+                {/* {
                     setTimeout(
                         function () {
                             window.location.href = "/"
@@ -196,7 +196,7 @@ class ShopPageReceipt extends Component {
                         }.bind(this),
                         500
                     )
-                }
+                } */}
             </div>
         );
     }

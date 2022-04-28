@@ -326,6 +326,7 @@ const SideBarMenu = ({
                   <Dropdown.Item>Version 1.0.1</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
+              
               <div>
                 <Button onClick={logout}>
                   <a>
