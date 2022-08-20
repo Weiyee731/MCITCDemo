@@ -25,7 +25,6 @@ import { Cross20Svg } from '../../svg';
 import { GitAction } from "../../store/action/gitAction";
 import { browserHistory } from "react-router";
 // import { parseClassName } from "react-toastify/dist/utils";
-
 function MerchantCard(props) {
     const {
         merchant,
@@ -41,7 +40,8 @@ function MerchantCard(props) {
         "product-card--layout--horizontal": layout === "horizontal",
     });
 
-    const picUrl = "https://myemporia.my/UnimasMarketplaceImage/userprofile/";
+    // const picUrl = "https://myemporia.my/UnimasMarketplaceImage/userprofile/";
+    // const picUrl = "https://www.conveyco.com/wp-content/uploads/2016/03/Pharma-and-Medical-2.jpg";
     let badges = [];
     let image;
     let price;
@@ -54,7 +54,8 @@ function MerchantCard(props) {
                 <Link to={{ pathname: url.merchant(merchant), state: { id: merchant.UserID, merchantDetails: merchant } }} className="product-image__body">
                     <img
                         className="product-image__img"
-                        src={picUrl + merchant.UserProfileImage}
+                        // src=""
+                        src={merchant.picUrl + merchant.UserProfileImage}
                         onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
                         alt=""
                     />
@@ -79,7 +80,17 @@ function MerchantCard(props) {
 
         <div className={containerClasses}>
             {badges}
-            {image}
+            {/* {image} */}
+            <div className="product-card__image product-image">
+                <Link to={{ pathname: url.merchant(merchant), state: { id: merchant.UserID, merchantDetails: merchant } }} className="product-image__body">
+                    <img
+                        className="product-image__img"
+                        src={merchant.picUrl}
+                        onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+                        alt=""
+                    />
+                </Link>
+            </div>
             <div className="product-card__info">
                 <div className="product-card__name">
                     <Link to={{ pathname: url.merchant(merchant), state: { id: merchant.UserID, merchantDetails: merchant } }}>

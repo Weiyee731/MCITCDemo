@@ -137,6 +137,7 @@ function HomePageTwo(props) {
 
         <BlockMerchant
           title="Top Merchants"
+          // title="Best Sellers"
           layout="grid-4"
           rows={1}
           merchants={props.merchant}

@@ -17,6 +17,8 @@ import IndicatorCart from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
 import { Cart20Svg, Cross10Svg } from "../../svg";
 
+import Logo from "../../assets/Emporia.png";
+
 // import { wishlistListItem } from "../../store/wishlist";
 import { mobileMenuOpen } from '../../store/mobile-menu';
 
@@ -37,16 +39,25 @@ function Header(props) {
         <div>
           {/* <div className="site-header__logo"> */}
           <Link to="/">
-            <LogoSvg />
+            {/* <LogoSvg /> */}
+            <img
+              src={Logo}
+              alt=""
+              style={{height:"6vw"}}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = Logo;
+              }}
+            />
           </Link>
         </div>
         <div className="site-header__search" style={{ margin: "0 16px" }}>
           <Search context="header" />
         </div>
         <div className="nav-panel__indicators">
-          {localStorage.getItem("isLogin") === 'true' && <Indicator url="/shop/wishlist" 
-          value={props.wishlist  !== undefined && props.wishlist[0] !== undefined && props.wishlist[0].ReturnVal === undefined? props.wishlist.length : 0}
-           icon={<Heart20Svg />} />}
+          {localStorage.getItem("isLogin") === 'true' && <Indicator url="/shop/wishlist"
+            value={props.wishlist !== undefined && props.wishlist[0] !== undefined && props.wishlist[0].ReturnVal === undefined ? props.wishlist.length : 0}
+            icon={<Heart20Svg />} />}
           <IndicatorCart />
           <IndicatorAccount />
         </div>

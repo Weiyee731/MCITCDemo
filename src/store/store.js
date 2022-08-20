@@ -109,11 +109,14 @@ const rootEpic = combineEpics(
   gitEpic.getNotification,
   //==================ORDER==========================//
   gitEpic.AddOrder,
+  gitEpic.AddOrder_CreditCard,
+  gitEpic.Order_ViewPaymentDetailsByUUID,
   gitEpic.UpdateOrderStatus,
   gitEpic.UpdateOrderUserDetails,
   gitEpic.updateOrderTrackingNumber,
   gitEpic.getProductStockByStatus,
   gitEpic.getAllDeliveryList,
+  gitEpic.FPXResponseList_View,
   //==================PROMOTIONS=========================//
   gitEpic.getAllProductPromos,
   gitEpic.getAllPromoCodes,

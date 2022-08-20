@@ -18,6 +18,10 @@ import PageCheckout from "./ShopPageCheckout";
 import { Button } from "@material-ui/core";
 
 import Checkbox from "@material-ui/core/Checkbox";
+import styled from 'styled-components';
+
+import { StyleSheet, css } from "aphrodite";
+
 
 
 // data stubs
@@ -325,55 +329,64 @@ class ShopPageCart extends Component {
             { title: 'Shopping Cart', url: '' },
         ];
 
-        return (
-            <div className="cart block container_" >
-                {
-                    this.props.history !== undefined ?
-                        <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
-                }
-                <div className="container">
-                    {this.state.MerchantShopName.map((shopName) => {
-                        return (
-                            <>
-                                <td><th>
-                                    <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName}</Link>
-                                </th></td>
-                                <table className="cart__table cart-table" size="small">
-                                    <thead className="cart-table__head">
-                                        <tr className="cart-table__row">
-                                            <th className="cart-table__column cart-table__column--checkbox">
-                                                {this.props.history !== undefined ?
-                                                    <Checkbox
-                                                        checked={this.state.selectedProductDetailList.length === 0 ? false :
-                                                            this.state.cart.filter((x) => x.MerchantShopName === shopName).length === this.state.selectedProductDetailList.filter((x) => x.MerchantShopName === shopName).length ? true : false}
-                                                        onClick={() => this.handleAllProductSellect(shopName, this.state.selectedProductDetailList)}
-                                                    /> : ""
-                                                }
-                                            </th>
-                                            <th className="cart-table__column cart-table__column--image">Image</th>
-                                            <th className="cart-table__column cart-table__column--product">Product</th>
-                                            <th className="cart-table__column cart-table__column--price">Price</th>
-                                            <th className="cart-table__column cart-table__column--quantity">Quantity</th>
-                                            <th className="cart-table__column cart-table__column--total">Total</th>
-                                            <th className="cart-table__column cart-table__column--remove" aria-label="Remove" />
-                                        </tr>
-                                    </thead>
-                                    <tbody className="cart-table__body">
-                                        {this.props.history !== undefined ? this.renderItems(this.state.cart.filter((X) => X.MerchantShopName === shopName)) : this.renderItems(this.props.data.filter((X) => X.MerchantShopName === shopName))}
-                                    </tbody>
-                                </table>
-                            </>
-                        )
-                    })}
-                    {
-                        this.props.history !== undefined &&
-                        <div style={{ textAlign: "right", padding: "30px 30px", backgroundColor: "white" }}>
+        const style = {
+            width: '10%',
+            position: 'absolute',
 
-                            <div className="row">
-                                <div className="col-10" style={{ fontWeight: "bold" }}>  Subtotal </div>
-                                <div className="col-2" ><Currency value={this.state.subtotal}></Currency></div>
-                            </div>
-                            {/* <div className="row">
+
+        }
+
+    return(
+            <div className = "cart block container_" >
+        {
+            this.props.history !== undefined ?
+                <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
+        }
+            <div className = "container" >
+            {
+                this.state.MerchantShopName.map((shopName) => {
+                    return (
+                        <>
+                            <td><th>
+                                <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName}</Link>
+                            </th></td>
+                            <table className="cart__table cart-table" size="small">
+                                <thead className="cart-table__head">
+                                    <tr className="cart-table__row">
+                                        <th className="cart-table__column cart-table__column--checkbox">
+                                            {this.props.history !== undefined ?
+                                                <Checkbox
+                                                    checked={this.state.selectedProductDetailList.length === 0 ? false :
+                                                        this.state.cart.filter((x) => x.MerchantShopName === shopName).length === this.state.selectedProductDetailList.filter((x) => x.MerchantShopName === shopName).length ? true : false}
+                                                    onClick={() => this.handleAllProductSellect(shopName, this.state.selectedProductDetailList)}
+                                                /> : ""
+                                            }
+                                        </th>
+                                        <th className="cart-table__column cart-table__column--image">Image</th>
+                                        <th className="cart-table__column cart-table__column--product" >Product</th>
+                                        <th className="cart-table__column cart-table__column--price">Price</th>
+                                        <th className="cart-table__column cart-table__column--quantity">Quantity</th>
+                                        <th className="cart-table__column cart-table__column--total">Total</th>
+                                        <th className="cart-table__column cart-table__column--remove" aria-label="Remove" />
+                                    </tr>
+                                </thead>
+                                <tbody className="cart-table__body">
+                                    {this.props.history !== undefined ? this.renderItems(this.state.cart.filter((X) => X.MerchantShopName === shopName)) : this.renderItems(this.props.data.filter((X) => X.MerchantShopName === shopName))}
+                                </tbody>
+                            </table>
+                        </>
+                    )
+                })
+            }
+                    {
+            this.props.history !== undefined &&
+                <div style={{ textAlign: "right", padding: "30px 30px", backgroundColor: "white" }}>
+
+                    <div className="row">
+                        <div className="col-10" style={{ fontWeight: "bold" }}>  Subtotal </div>
+                        <div className="col-2" ><Currency value={this.state.subtotal}></Currency></div>
+                    </div>
+                    {/* <div className="row">
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Shipping </div>
                                     <div className="col-2" ><Currency value={this.state.shipping}></Currency></div>
                                 </div>
@@ -385,65 +398,65 @@ class ShopPageCart extends Component {
                                     <div className="col-10" style={{ fontWeight: "bold" }}>  Total </div>
                                     <div className="col-2" ><Currency value={this.state.total}></Currency></div>
                                 </div> */}
-                            <div className="mt-5">
-                                <button className="btn btn-primary" variant="outlined" color="primary"
-                                    onClick={() => this.CheckOutOnClick(this.state.selectedProductDetailList)}
-                                > Checkout
-                                </button>
-                            </div>
-                        </div>
-                    }
+                    <div className="mt-5">
+                        <button className="btn btn-primary" variant="outlined" color="primary"
+                            onClick={() => this.CheckOutOnClick(this.state.selectedProductDetailList)}
+                        > Checkout
+                        </button>
+                    </div>
                 </div>
-            </div>
+                    }
+                </div >
+            </div >
         );
     }
 
-    render() {
+render() {
 
-        const breadcrumb = [
-            { title: 'Home', url: '' },
-            { title: 'Shopping Cart', url: '' },
-        ];
+    const breadcrumb = [
+        { title: 'Home', url: '' },
+        { title: 'Shopping Cart', url: '' },
+    ];
 
-        let content;
-        let continueshopping = (
-            <div className="block block-empty" >
-                <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} />
-                <div className="container">
-                    <div className="block-empty__body">
-                        <div className="block-empty__message">Your shopping cart is empty!</div>
-                        <div className="block-empty__actions">
-                            <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
-                        </div>
+    let content;
+    let continueshopping = (
+        <div className="block block-empty" >
+            <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} />
+            <div className="container">
+                <div className="block-empty__body">
+                    <div className="block-empty__message">Your shopping cart is empty!</div>
+                    <div className="block-empty__actions">
+                        <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                     </div>
                 </div>
             </div>
-        );
-        if (this.state.cart.length) {
-            if (this.state.isDataAccepted === true) {
-                return (
-                    <PageCheckout
-                        data={this.state.selectedProductDetailList}
-                        merchant={this.state.selectedProductDetailList.filter((ele, ind) => ind === this.state.selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))}
-                    />
-                )
-            } else {
-                if (this.props.productcart.length > 0 && this.props.productcart[0].ReturnVal !== '0') {
-                    content = this.renderCart();
-                } else {
-                    content = continueshopping;
-                }
-            }
+        </div>
+    );
+    if (this.state.cart.length) {
+        if (this.state.isDataAccepted === true) {
+            return (
+                <PageCheckout
+                    data={this.state.selectedProductDetailList}
+                    merchant={this.state.selectedProductDetailList.filter((ele, ind) => ind === this.state.selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))}
+                />
+            )
         } else {
-            content = continueshopping;
+            if (this.props.productcart.length > 0 && this.props.productcart[0].ReturnVal !== '0') {
+                content = this.renderCart();
+            } else {
+                content = continueshopping;
+            }
         }
-
-        return (
-            <React.Fragment>
-                {content}
-            </React.Fragment>
-        );
+    } else {
+        content = continueshopping;
     }
+
+    return (
+        <React.Fragment>
+            {content}
+        </React.Fragment>
+    );
+}
 }
 
 const mapStateToProps = (state) => ({

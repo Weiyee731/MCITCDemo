@@ -26,6 +26,62 @@ class BlockSlideShow extends Component {
 
   media = window.matchMedia("(min-width: 992px)");
 
+  // slides = [
+    // {
+    //   // title: "11.11<br>Hardware products Sale",
+    //   // text: "11.11 Big Show will also be held during the big sale.",
+    //   image_classic: {
+    //     ltr: "images/slides/slide_1.jpg",
+    //     rtl: "images/slides/slide_1.jpg",
+    //     // ltr: "images/slides/pharmacy1.jpg",
+    //     // rtl: "images/slides/pharmacy1.jpg",
+    //   },
+    //   image_full: {
+    //     // ltr: "images/slides/slide_1_full.jpg",
+    //     // rtl: "images/slides/slide_1_full.jpg",
+    //     ltr: "images/slides/pharmacy2.png",
+    //     rtl: "images/slides/pharmacy2.png",
+    //   },
+    //   image_mobile: {
+    //     ltr: "images/slides/slide_1_mobile.jpg",
+    //     rtl: "images/slides/slide_1_mobile.jpg",
+    //   },
+    // },
+  //   {
+  //     title: "Furniture<br>MEGA SALES",
+  //     text:
+  //       "Enjoy huge savings on home furnishing products. While stocks last. Hurry shop now! Delivery To Your Home. 0% Instalment Plan. 365 Days Return Policy",
+  //     image_classic: {
+  //       ltr: "images/slides/slide_2.jpg",
+  //       rtl: "images/slides/slide_2.jpg",
+  //     },
+  //     image_full: {
+  //       ltr: "images/slides/slide_2_full.jpg",
+  //       rtl: "images/slides/slide_2_full.jpg",
+  //     },
+  //     image_mobile: {
+  //       ltr: "images/slides/slide_2_mobile.jpg",
+  //       rtl: "images/slides/slide_2_mobile.jpg",
+  //     },
+  //   },
+  //   {
+  //     title: 'One more<br>Unique header',
+  //     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
+  //     image_classic: {
+  //       ltr: 'images/slides/slide_3.jpg',
+  //       rtl: 'images/slides/slide_3.jpg',
+  //     },
+  //     image_full: {
+  //       ltr: 'images/slides/slide_3_full.jpg',
+  //       rtl: 'images/slides/slide_3_full.jpg',
+  //     },
+  //     image_mobile: {
+  //       ltr: 'images/slides/slide_3_mobile.jpg',
+  //       rtl: 'images/slides/slide_3_mobile.jpg',
+  //     },
+  //   },
+  // ];
+
   slides = [
     {
       title: "11.11<br>Hardware products Sale",
@@ -168,7 +224,7 @@ class BlockSlideShow extends Component {
               className="block-slideshow__slide-text"
               dangerouslySetInnerHTML={{ __html: slide.text }}
             />
-            <div className="block-slideshow__slide-button">
+            <div className="block-slideshow__slide-button" style={{marginLeft:"21vw", marginBottom:"1vw"}}>
               <Link to={"/shop/ProductListing/type:Merchant&typevalue:" + 0} className="btn btn-primary btn-lg">
                 Shop Now
               </Link>

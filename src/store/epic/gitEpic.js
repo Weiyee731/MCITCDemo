@@ -2380,41 +2380,63 @@ export class GitEpic {
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
       try {
-
         const response = await fetch(
-          url +
-          "Order_AddOrder?USERID=" +
-          payload.UserID +
-          "&USERADDRESSID=" +
-          payload.UserAddressID +
-          "&PROMOTIONID=0&PROMOTIONCODEID=0&PAYMENTMETHODID=" +
-          payload.PaymentMethodID +
-          "&USERPAYMENTMETHODID=" +
-          payload.UserPaymentMethodID +
-          "&ORDERTOTALAMOUNT=" +
-          payload.OrderTotalAmount +
-          "&ORDERPAIDAMOUNT=" +
-          payload.OrderPaidAmount +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&PRODUCTQUANTITY=" +
-          payload.ProductQuantity +
-          "&PRODUCTVARIATIONDETAILID=" +
-          payload.ProductVariationDetailID +
-          "&TRACKINGSTATUSID=" +
-          payload.TrackingStatusID +
-          "&PickUpInd=" +
-          payload.PickUpInd +
-          "&TRANSACTIONUUID=" +
-          payload.TRANSACTIONUUID +
-          "&ProjectID=2"
-        );
+          url + "Order_AddOrder"
+          , {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              USERID: payload.UserID,
+              USERADDRESSID: payload.UserAddressID,
+              PROMOTIONID: 0,
+              PROMOTIONCODEID: 0,
+              PAYMENTMETHODID: payload.PaymentMethodID,
+              USERPAYMENTMETHODID: payload.UserPaymentMethodID,
+              ORDERTOTALAMOUNT: payload.OrderTotalAmount,
+              ORDERPAIDAMOUNT: payload.OrderPaidAmount,
+              PRODUCTID: payload.ProductID,
+              PRODUCTQUANTITY: payload.ProductQuantity,
+              PRODUCTVARIATIONDETAILID: payload.ProductVariationDetailID,
+              TRACKINGSTATUSID: payload.TrackingStatusID,
+              PickUpInd: payload.PickUpInd,
+              TRANSACTIONUUID: payload.TRANSACTIONUUID,
+              ProjectID: 2,
+
+              fpx_msgType: payload.fpx_msgType,
+              fpx_msgToken: payload.fpx_msgToken,
+              fpx_sellerExId: payload.fpx_sellerExId,
+              fpx_sellerExOrderNo: payload.fpx_sellerExOrderNo,
+              fpx_sellerTxnTime: payload.fpx_sellerTxnTime,
+              fpx_sellerOrderNo: payload.fpx_sellerOrderNo,
+              fpx_sellerId: payload.fpx_sellerId,
+              fpx_sellerBankCode: payload.fpx_sellerBankCode,
+              fpx_txnCurrency: payload.fpx_txnCurrency,
+              fpx_buyerEmail: payload.fpx_buyerEmail,
+              fpx_checkSum: payload.fpx_checkSum,
+
+              fpx_buyerName: payload.fpx_buyerName,
+              fpx_buyerBankId: payload.fpx_buyerBankId,
+              fpx_buyerBankBranch: payload.fpx_buyerBankBranch,
+              fpx_buyerAccNo: payload.fpx_buyerAccNo,
+              fpx_buyerId: payload.fpx_buyerId,
+              fpx_makerName: payload.fpx_makerName,
+              fpx_buyerIban: payload.fpx_buyerIban,
+              fpx_version: payload.fpx_version,
+              fpx_productDesc: payload.fpx_productDesc
+            })
+          }
+        )
         let json = await response.json();
-        json = JSON.parse(json);
         if (json[0].ReturnVal === 1) {
           toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
         }
         try {
+          console.log(url +
+            "Product_DeleteProductCart?USERCARTID=" +
+            payload.UserCartID)
           const response_1 = await fetch(
             url +
             "Product_DeleteProductCart?USERCARTID=" +
@@ -2434,7 +2456,7 @@ export class GitEpic {
         }
       }
       catch (error) {
-        alert('deleteProductCart: ' + error);
+        alert('Order_AddOrder: ' + error);
         return {
           type: GitAction.AddedOrder,
           payload: [],
@@ -2442,23 +2464,147 @@ export class GitEpic {
       }
     });
 
-  // Update Order Details - User Details
-  UpdateOrderStatus = (action$) =>
-    action$.ofType(GitAction.OrderStatusUpdate).switchMap(async ({ payload }) => {
+  AddOrder_CreditCard = (action$) =>
+    action$.ofType(GitAction.AddOrderCreditCard).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(
+          url + "Order_AddCreditCardOrder"
+          , {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              USERID: payload.UserID,
+              USERADDRESSID: payload.UserAddressID,
+              PROMOTIONID: 0,
+              PROMOTIONCODEID: 0,
+              PAYMENTMETHODID: payload.PaymentMethodID,
+              USERPAYMENTMETHODID: payload.UserPaymentMethodID,
+              ORDERTOTALAMOUNT: payload.OrderTotalAmount,
+              ORDERPAIDAMOUNT: payload.OrderPaidAmount,
+              PRODUCTID: payload.ProductID,
+              PRODUCTQUANTITY: payload.ProductQuantity,
+              PRODUCTVARIATIONDETAILID: payload.ProductVariationDetailID,
+              TRACKINGSTATUSID: payload.TrackingStatusID,
+              PickUpInd: payload.PickUpInd,
+              TRANSACTIONUUID: payload.TRANSACTIONUUID,
+              ProjectID: 2,
+
+              signed_field_names: payload.signed_field_names,
+              signed_date_time: payload.signed_date_time,
+              locale: payload.locale,
+              reference_number: payload.reference_number,
+              currency: payload.currency,
+              bill_to_surname: payload.bill_to_surname,
+              bill_to_forename: payload.bill_to_forename,
+              bill_to_email: payload.bill_to_email,
+              bill_to_address_line1: payload.bill_to_address_line1,
+              bill_to_address_city: payload.bill_to_address_city,
+              bill_to_address_country: payload.bill_to_address_country
+            })
+          }
+        )
+        let json = await response.json();
+        if (json[0].ReturnVal === 1) {
+          toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
+        }
+        try {
+          const response_1 = await fetch(
+            url +
+            "Product_DeleteProductCart?USERCARTID=" +
+            payload.UserCartID
+          );
+          let json_1 = await response_1.json();
+          return {
+            type: GitAction.AddedOrderCreditCard,
+            payload: json_1,
+          };
+        } catch (error) {
+          alert('deleteProductCart: ' + error);
+          return {
+            type: GitAction.AddedOrderCreditCard,
+            payload: [],
+          };
+        }
+      }
+      catch (error) {
+        alert('deleteProductCart: ' + error);
+        return {
+          type: GitAction.AddedOrderCreditCard,
+          payload: [],
+        };
+      }
+    });
+
+  // View Order Payment Details - Get FPX status
+  Order_ViewPaymentDetailsByUUID = (action$) =>
+    action$.ofType(GitAction.ViewOrderFPXStatus).switchMap(async ({ payload }) => {
       try {
         const response = await fetch(
           url +
-          "Order_UpdateOrderStatus?Transactionuuid=" + payload.Transactionuuid +
-          "&TrackingStatusID=" + payload.TrackingStatusID +
-          "&OrderPaidAmounte=" + payload.OrderPaidAmount
+          "Order_ViewPaymentDetailsByUUID?Transactionuuid=" + payload.Transactionuuid +
+          "&ProjectID=2"
         );
         let json = await response.json();
         json = JSON.parse(json);
 
         return {
-          type: GitAction.OrderStatusUpdated,
+          type: GitAction.ViewedOrderFPXStatus,
           payload: json,
         };
+      }
+      catch (error) {
+        alert('ViewOrderFPXStatus: ' + error);
+        return {
+          type: GitAction.ViewedOrderFPXStatus,
+          payload: [],
+        };
+      }
+    });
+
+
+  // Update Order Details - User Details
+  UpdateOrderStatus = (action$) =>
+    action$.ofType(GitAction.OrderStatusUpdate).switchMap(async ({ payload }) => {
+      console.log( url +
+        "Order_UpdateOrderStatus?Transactionuuid=" + payload.Transactionuuid +
+        "&TrackingStatusID=" + payload.TrackingStatusID +
+        "&OrderPaidAmounte=" + payload.OrderPaidAmount +
+        "&TxnID=" + payload.TxnID)
+      try {
+        const response = await fetch(
+          url +
+          "Order_UpdateOrderStatus?Transactionuuid=" + payload.Transactionuuid +
+          "&TrackingStatusID=" + payload.TrackingStatusID +
+          "&OrderPaidAmounte=" + payload.OrderPaidAmount +
+          "&TxnID=" + payload.TxnID
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+
+        if (json[0].ReturnVal === 1) {
+          toast.success("Status for ORDERID : " + json[0].OrderID + "is updated");
+        }
+        try {
+          const response_1 = await fetch(
+            url +
+            "Order_UpdateOrderStockVariation?ProductVariationDetailID=" + payload.orderVariationDetailIDs +
+            "&ProductQty=" + payload.orderDetailQtys
+          );
+          let json_1 = await response_1.json();
+          return {
+            type: GitAction.OrderStatusUpdated,
+            payload: json_1,
+          };
+        } catch (error) {
+          alert('deleteProductCart: ' + error);
+          return {
+            type: GitAction.OrderStatusUpdated,
+            payload: json,
+          };
+        }
       }
       catch (error) {
         alert('OrderStatusUpdated: ' + error);
@@ -2583,7 +2729,7 @@ export class GitEpic {
 
   getAllPromotion = (action$) =>
     action$.ofType(GitAction.GetPromotion).switchMap(async () => {
- 
+
       try {
         const response = await fetch(url +
           "Promo_ViewPromotion?ACTIVEIND"
@@ -3005,7 +3151,7 @@ export class GitEpic {
 
   getAllMerchants = (action$) =>
     action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
-     
+
       try {
         const response = await fetch(
           url + "User_ProfileListByType?TYPE=" + payload.type +
@@ -3224,6 +3370,29 @@ export class GitEpic {
         .catch(error => alert('SentPayment: ' + error));
     });
 
+  FPXResponseList_View = (action$) =>
+    action$.ofType(GitAction.getFPXResponseList).switchMap(async ({ payload }) => {
+
+      console.log("YES " + url + "General_FPXResponseList")
+      try {
+        const response = await fetch(
+          url + "General_FPXResponseList"
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.gotFPXResponseList,
+          payload: json,
+        };
+      } catch (error) {
+        alert('gotFPXResponseList: ' + error);
+        return {
+          type: GitAction.gotFPXResponseList,
+          payload: [],
+        };
+      }
+    });
+
   BankList_View = (action$) =>
     action$.ofType(GitAction.ViewBankList).switchMap(async ({ payload }) => {
       return fetch(
@@ -3235,26 +3404,6 @@ export class GitEpic {
             'Content-Type': 'application/json',
           },
           body: {}
-          // JSON.stringify({
-          //   // PRODUCTNAME: payload.name,
-          //   // PROJECTID: payload.ProjectID,
-          //   // MERCHANTID: payload.productSupplier,
-          //   // PRODUCTDESC: payload.description,
-          //   // PRODUCTCATEGORYID: payload.productCategory,
-          //   // PRODUCTHEIGHT: payload.height,
-          //   // PRODUCTWIDTH: payload.width,
-          //   // PRODUCTDEPTH: payload.depth,
-          //   // PRODUCTWEIGHT: payload.weight,
-          //   // PRODUCTSKU: payload.sku,
-          //   // PRODUCTBRAND: payload.brand,
-
-          //   // PRODUCTMODEL: payload.model,
-          //   // PRODUCTTAG: payload.tags,
-          //   // USERID: payload.UserID
-          //   clientReferenceInformation : payload.clientReferenceInformation,
-          //   paymentInformation : payload.paymentInformation,
-          //   orderInformation : payload.orderInformation
-          // })
         }
       )
         .then(response => response.json())

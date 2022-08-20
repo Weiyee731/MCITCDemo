@@ -219,6 +219,93 @@ export default class BlockMerchant extends Component {
                 columns.push(merchants.splice(0, rows));
             }
         }
+
+        // let columns2 = [[
+        //     {
+        //         FirstName: "merchant",
+        //         LastName: "B",
+        //         LocalInd: 0,
+        //         ShopCity: "kuching",
+        //         ShopDescription: "THIS IS A HARDWARE SHOP 13566",
+        //         ShopName: " Blood Pressure Monitor ",
+        //         ShopPoscode: "94300",
+        //         ShopRating: 5,
+        //         ShopReviewCount: 70,
+        //         ShopState: "sarawak",
+        //         UserContactNo: "109848355",
+        //         UserID: 13,
+        //         UserTypeID: 16,
+        //         Userstatus: "Endorsed",
+        //         WestMalaysiaInd: 1,
+                
+        //         picUrl: "https://www.alpropharmacy.com/wp-content/uploads/2022/05/00230100_L_1_5710-800x800.jpg",
+        //     }],
+
+        // [
+        //     {
+        //         FirstName: "merchant",
+        //         LastName: "B",
+        //         LocalInd: 0,
+        //         ShopCity: "kuching",
+        //         ShopDescription: "THIS IS A HARDWARE SHOP 13566",
+        //         ShopName: "Dettol Instant Hand Sanitizer Original 50ml",
+        //         ShopPoscode: "94300",
+        //         ShopRating: 5,
+        //         ShopReviewCount: 60,
+        //         ShopState: "sarawak",
+        //         UserContactNo: "109848355",
+        //         UserID: 13,
+        //         UserTypeID: 16,
+        //         Userstatus: "Endorsed",
+        //         WestMalaysiaInd: 1,
+        //         picUrl: "https://www.alpropharmacy.com/wp-content/uploads/2022/03/00284707_L_1_2459-800x800.jpg",
+        //     }],
+
+
+        // [
+        //     {
+        //         FirstName: "merchant",
+        //         LastName: "B",
+        //         LocalInd: 0,
+        //         ShopCity: "kuching",
+        //         ShopDescription: "THIS IS A HARDWARE SHOP 13566",
+        //         ShopName: "VitaPack Nutrition Alcoholic/Smoking Package 28 Days | Liver Care Package for Parents",
+        //         ShopPoscode: "94300",
+        //         ShopRating: 5,
+        //         ShopReviewCount: 60,
+        //         ShopState: "sarawak",
+        //         UserContactNo: "109848355",
+        //         UserID: 13,
+        //         UserTypeID: 16,
+        //         Userstatus: "Endorsed",
+        //         WestMalaysiaInd: 1,
+                
+        //         picUrl: "https://www.alpropharmacy.com/wp-content/uploads/2022/05/00362184_L_1_2758-800x800.jpg",
+        //     }],
+
+
+        // [
+        //     {
+        //         FirstName: "merchant",
+        //         LastName: "B",
+        //         LocalInd: 0,
+        //         ShopCity: "kuching",
+        //         ShopDescription: "THIS IS A HARDWARE SHOP 13566",
+        //         ShopName: "Scotts Emulsion Cod Liver Oil Orange 2x400ml | Immunity",
+        //         ShopPoscode: "94300",
+        //         ShopRating: 5,
+        //         ShopReviewCount: 55,
+        //         ShopState: "sarawak",
+        //         UserContactNo: "109848355",
+        //         UserID: 13,
+        //         UserTypeID: 16,
+        //         Userstatus: "Endorsed",
+        //         WestMalaysiaInd: 1,
+                
+        //         picUrl: "https://www.alpropharmacy.com/wp-content/uploads/2022/04/00065696_L_1_1729-800x800.png",
+        //     }],
+
+        // ]
         return columns;
     }
 
@@ -231,6 +318,8 @@ export default class BlockMerchant extends Component {
             groups,
             loading,
         } = this.props;
+
+
 
         const columns = this.productsColumns().map((column, index) => {
             const merchants = column.map((merchant, index) => (
@@ -255,7 +344,7 @@ export default class BlockMerchant extends Component {
             container: !withSidebar,
         });
         return (
-            <div className={blockClasses} data-layout={layout} style={{ marginTop:"10px" }} >
+            <div className={blockClasses} data-layout={layout} style={{ marginTop: "10px" }} >
                 {
                     this.props.merchants.length === 0 ?
                         (

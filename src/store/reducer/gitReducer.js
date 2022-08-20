@@ -74,6 +74,9 @@ const INITIAL_STATE = {
   payment: [],
   bankList: [],
   orderstatus: [],
+  orderfpxstatus: [],
+  fpxResponseList: [],
+  creditCardOrder: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -926,6 +929,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
         order: action.payload,
       });
 
+    case GitAction.AddOrderCreditCard:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.AddedOrderCreditCard:
+      return Object.assign({}, state, {
+        loading: false,
+        creditCardOrder: action.payload,
+      });
+
 
     case GitAction.OrderStatusUpdate:
       return Object.assign({}, state, { loading: true });
@@ -933,6 +944,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         orderstatus: action.payload,
+      });
+
+    case GitAction.ViewOrderFPXStatus:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ViewedOrderFPXStatus:
+      return Object.assign({}, state, {
+        loading: false,
+        orderfpxstatus: action.payload,
       });
 
     case GitAction.ClearOrderStatus:
@@ -971,6 +990,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         productstock: action.payload,
+      });
+
+    case GitAction.getFPXResponseList:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.gotFPXResponseList:
+      return Object.assign({}, state, {
+        loading: false,
+        fpxResponseList: action.payload,
       });
 
     //===============INVENTORY==============//
