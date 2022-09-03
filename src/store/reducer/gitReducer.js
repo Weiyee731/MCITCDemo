@@ -74,7 +74,7 @@ const INITIAL_STATE = {
   payment: [],
   bankList: [],
   orderstatus: [],
-  orderfpxstatus: [],
+  orderstatusdata: [],
   fpxResponseList: [],
   creditCardOrder: [],
 };
@@ -937,6 +937,22 @@ export function counterReducer(state = INITIAL_STATE, action) {
         creditCardOrder: action.payload,
       });
 
+    case GitAction.UpdateOrder:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedOrder:
+      return Object.assign({}, state, {
+        loading: false,
+        order: action.payload,
+      });
+
+    case GitAction.UpdateOrder_CreditCard:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UpdatedOrder_CreditCard:
+      return Object.assign({}, state, {
+        loading: false,
+        creditCardOrder: action.payload,
+      });
+
 
     case GitAction.OrderStatusUpdate:
       return Object.assign({}, state, { loading: true });
@@ -946,12 +962,12 @@ export function counterReducer(state = INITIAL_STATE, action) {
         orderstatus: action.payload,
       });
 
-    case GitAction.ViewOrderFPXStatus:
+    case GitAction.ViewOrderStatus:
       return Object.assign({}, state, { loading: true });
-    case GitAction.ViewedOrderFPXStatus:
+    case GitAction.ViewedOrderStatus:
       return Object.assign({}, state, {
         loading: false,
-        orderfpxstatus: action.payload,
+        orderstatusdata: action.payload,
       });
 
     case GitAction.ClearOrderStatus:

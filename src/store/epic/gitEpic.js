@@ -2405,17 +2405,17 @@ export class GitEpic {
               TRANSACTIONUUID: payload.TRANSACTIONUUID,
               ProjectID: 2,
 
-              fpx_msgType: payload.fpx_msgType,
+              // fpx_msgType: payload.fpx_msgType,
               fpx_msgToken: payload.fpx_msgToken,
-              fpx_sellerExId: payload.fpx_sellerExId,
+              // fpx_sellerExId: payload.fpx_sellerExId,
               fpx_sellerExOrderNo: payload.fpx_sellerExOrderNo,
               fpx_sellerTxnTime: payload.fpx_sellerTxnTime,
               fpx_sellerOrderNo: payload.fpx_sellerOrderNo,
-              fpx_sellerId: payload.fpx_sellerId,
+              // fpx_sellerId: payload.fpx_sellerId,
               fpx_sellerBankCode: payload.fpx_sellerBankCode,
-              fpx_txnCurrency: payload.fpx_txnCurrency,
+              // fpx_txnCurrency: payload.fpx_txnCurrency,
               fpx_buyerEmail: payload.fpx_buyerEmail,
-              fpx_checkSum: payload.fpx_checkSum,
+              // fpx_checkSum: payload.fpx_checkSum,
 
               fpx_buyerName: payload.fpx_buyerName,
               fpx_buyerBankId: payload.fpx_buyerBankId,
@@ -2538,27 +2538,206 @@ export class GitEpic {
       }
     });
 
+  UpdateOrder_AccountOrder = (action$) =>
+    action$.ofType(GitAction.UpdateOrder).switchMap(async ({ payload }) => {
+      console.log(url +
+        "Order_UpdateOrder?OrderID=" +
+        payload.OrderID +
+        "&PaymentMethodID=" +
+        payload.PaymentMethodID +
+        "&UserPaymentMethodID=" +
+        payload.UserPaymentMethodID +
+        "&OrderTotalAmount=" +
+        payload.OrderTotalAmount +
+        "&OrderPaidAmount=" +
+        payload.OrderPaidAmount +
+        "&TRANSACTIONUUID=" +
+        payload.TRANSACTIONUUID +
+        "&fpx_msgToken=" +
+        payload.fpx_msgToken +
+        "&fpx_sellerExOrderNo=" +
+        payload.fpx_sellerExOrderNo +
+        "&fpx_sellerTxnTime=" +
+        payload.fpx_sellerTxnTime +
+
+        "&fpx_sellerOrderNo=" +
+        payload.fpx_sellerOrderNo +
+        "&fpx_sellerBankCode=" +
+        payload.fpx_sellerBankCode +
+        "&fpx_buyerEmail=" +
+        payload.fpx_buyerEmail +
+        "&fpx_buyerName=" +
+        payload.fpx_buyerName +
+
+        "&fpx_buyerBankId=" +
+        payload.fpx_buyerBankId +
+        "&fpx_buyerBankBranch=" +
+        payload.fpx_buyerBankBranch +
+        "&fpx_buyerAccNo=" +
+        payload.fpx_buyerAccNo +
+        "&fpx_buyerId=" +
+        payload.fpx_buyerId +
+        "&fpx_makerName=" +
+        payload.fpx_makerName +
+
+        "&fpx_buyerIban=" +
+        payload.fpx_buyerIban +
+        "&fpx_version=" +
+        payload.fpx_version +
+        "&fpx_productDesc=" +
+        payload.fpx_productDesc)
+      try {
+        const response = await fetch(url +
+          "Order_UpdateOrder?OrderID=" +
+          payload.OrderID +
+          "&PaymentMethodID=" +
+          payload.PaymentMethodID +
+          "&UserPaymentMethodID=" +
+          payload.UserPaymentMethodID +
+          "&OrderTotalAmount=" +
+          payload.OrderTotalAmount +
+          "&OrderPaidAmount=" +
+          payload.OrderPaidAmount +
+          "&TRANSACTIONUUID=" +
+          payload.TRANSACTIONUUID +
+          "&fpx_msgToken=" +
+          payload.fpx_msgToken +
+          "&fpx_sellerExOrderNo=" +
+          payload.fpx_sellerExOrderNo +
+          "&fpx_sellerTxnTime=" +
+          payload.fpx_sellerTxnTime +
+
+          "&fpx_sellerOrderNo=" +
+          payload.fpx_sellerOrderNo +
+          "&fpx_sellerBankCode=" +
+          payload.fpx_sellerBankCode +
+          "&fpx_buyerEmail=" +
+          payload.fpx_buyerEmail +
+          "&fpx_buyerName=" +
+          payload.fpx_buyerName +
+
+          "&fpx_buyerBankId=" +
+          payload.fpx_buyerBankId +
+          "&fpx_buyerBankBranch=" +
+          payload.fpx_buyerBankBranch +
+          "&fpx_buyerAccNo=" +
+          payload.fpx_buyerAccNo +
+          "&fpx_buyerId=" +
+          payload.fpx_buyerId +
+          "&fpx_makerName=" +
+          payload.fpx_makerName +
+
+          "&fpx_buyerIban=" +
+          payload.fpx_buyerIban +
+          "&fpx_version=" +
+          payload.fpx_version +
+          "&fpx_productDesc=" +
+          payload.fpx_productDesc
+        );
+        let json = await response.json();
+        json = JSON.parse(json)
+        if (json[0].ReturnVal === 1) {
+          toast.success("Order is successfully updated ORDERID : " + json[0].OrderID);
+        }
+        return {
+          type: GitAction.UpdatedOrder,
+          payload: json,
+        };
+      } catch (error) {
+        alert('UpdatedOrder: ' + error);
+        return {
+          type: GitAction.UpdatedOrder,
+          payload: []
+        };
+      }
+    });
+
+
+  UpdateOrder_AccountOrderCreditCard = (action$) =>
+    action$.ofType(GitAction.UpdateOrder_CreditCard).switchMap(async ({ payload }) => {
+      try {
+        const response = await fetch(url +
+          "Order_UpdateOrder_CreditCard?OrderID=" +
+          payload.OrderID +
+          "&PaymentMethodID=" +
+          payload.PaymentMethodID +
+          "&UserPaymentMethodID=" +
+          payload.UserPaymentMethodID +
+          "&OrderTotalAmount=" +
+          payload.OrderTotalAmount +
+          "&OrderPaidAmount=" +
+          payload.OrderPaidAmount +
+          "&TRANSACTIONUUID=" +
+          payload.TRANSACTIONUUID +
+          "&signed_field_names=" +
+          payload.signed_field_names +
+          "&signed_date_time=" +
+          payload.signed_date_time +
+          "&locale=" +
+          payload.locale +
+
+          "&reference_number=" +
+          payload.reference_number +
+          "&currency=" +
+          payload.currency +
+          "&bill_to_surname=" +
+          payload.bill_to_surname +
+          "&bill_to_forename=" +
+          payload.bill_to_forename +
+          "&bill_to_email=" +
+          payload.bill_to_email +
+
+          "&bill_to_address_line1=" +
+          payload.bill_to_address_line1 +
+          "&bill_to_address_city=" +
+          payload.bill_to_address_city +
+          "&bill_to_address_country=" +
+          payload.bill_to_address_country
+        );
+        let json = await response.json();
+        console.log("json", json)
+        json = JSON.parse(json)
+        if (json[0].ReturnVal === 1) {
+          toast.success("Order is successfully updated ORDERID : " + json[0].OrderID);
+        }
+        return {
+          type: GitAction.UpdatedOrder_CreditCard,
+          payload: json,
+        };
+      } catch (error) {
+        alert('UpdatedOrder_CreditCard: ' + error);
+        return {
+          type: GitAction.UpdatedOrder_CreditCard,
+          payload: []
+        };
+      }
+    });
+
+
   // View Order Payment Details - Get FPX status
   Order_ViewPaymentDetailsByUUID = (action$) =>
-    action$.ofType(GitAction.ViewOrderFPXStatus).switchMap(async ({ payload }) => {
+    action$.ofType(GitAction.ViewOrderStatus).switchMap(async ({ payload }) => {
+      console.log(url +
+        "Order_ViewPaymentDetailsByUUID?Transactionuuid=" + payload.Transactionuuid +
+        "&ProjectID=2" + "&PaymentType=" + payload.paymentType)
       try {
         const response = await fetch(
           url +
           "Order_ViewPaymentDetailsByUUID?Transactionuuid=" + payload.Transactionuuid +
-          "&ProjectID=2"
+          "&ProjectID=2" + "&PaymentType=" + payload.paymentType
         );
         let json = await response.json();
         json = JSON.parse(json);
-
+        console.log("json", json)
         return {
-          type: GitAction.ViewedOrderFPXStatus,
+          type: GitAction.ViewedOrderStatus,
           payload: json,
         };
       }
       catch (error) {
-        alert('ViewOrderFPXStatus: ' + error);
+        alert('ViewOrderStatus: ' + error);
         return {
-          type: GitAction.ViewedOrderFPXStatus,
+          type: GitAction.ViewedOrderStatus,
           payload: [],
         };
       }
@@ -2568,9 +2747,9 @@ export class GitEpic {
   // Update Order Details - User Details
   UpdateOrderStatus = (action$) =>
     action$.ofType(GitAction.OrderStatusUpdate).switchMap(async ({ payload }) => {
-      console.log( url +
+      console.log(url +
         "Order_UpdateOrderStatus?Transactionuuid=" + payload.Transactionuuid +
-        "&TrackingStatusID=" + payload.TrackingStatusID +
+        "&PaymentType=" + payload.PaymentType +
         "&OrderPaidAmounte=" + payload.OrderPaidAmount +
         "&TxnID=" + payload.TxnID)
       try {

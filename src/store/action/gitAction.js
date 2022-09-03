@@ -999,6 +999,11 @@ export class GitAction {
   static AddOrderCreditCard = "ADD-ORDER-CREDITCARD";
   static AddedOrderCreditCard = "ADDED-ORDER-CREDITCARD";
 
+  static UpdateOrder = "UPDATE-ORDER";
+  static UpdatedOrder = "UPDATED-ORDER";
+  static UpdateOrder_CreditCard = "UPDATE-ORDER-CREDITCARD";
+  static UpdatedOrder_CreditCard = "UPDATED-ORDER-CREDITCARD";
+
   static OrderUserDetailsUpdate = "UPDATE-ORDER-USERDETAILS";
   static OrderUserDetailsUpdated = "UPDATED-ORDER-USERDETAILS";
   static updateTrackingNumber = "UPDATE-TRACKING-NUMBER";
@@ -1010,8 +1015,8 @@ export class GitAction {
   static GotProductStockByStatus = "GOT-PRODUCTSTOCKBYSTATUS";
   static OrderStatusUpdate = "UPDATE-ORDER-STATUS";
   static OrderStatusUpdated = "UPDATED-ORDER-STATUS";
-  static ViewOrderFPXStatus = "VIEW-ORDER-FPX-STATUS";
-  static ViewedOrderFPXStatus = "VIEWED-ORDER-FPX-STATUS";
+  static ViewOrderStatus = "VIEW-ORDER-FPX-STATUS";
+  static ViewedOrderStatus = "VIEWED-ORDER-FPX-STATUS";
   static ClearOrderStatus = "CLEAR-ORDER-STATUS";
   static getFPXResponseList = "GET-FPX-RESPONSELIST";
   static gotFPXResponseList = "GOT-FPX-RESPONSELIST";
@@ -1029,6 +1034,23 @@ export class GitAction {
       payload: prodData,
     };
   }
+
+
+  static CallUpdateAccountOrder(prodData) {
+    return {
+      type: GitAction.UpdateOrder,
+      payload: prodData,
+    };
+  }
+
+  static CallUpdateAccountOrderCreditCard(prodData) {
+    return {
+      type: GitAction.UpdateOrder_CreditCard,
+      payload: prodData,
+    };
+  }
+
+
 
   static CallClearOrder() {
     return {
@@ -1056,9 +1078,9 @@ export class GitAction {
     };
   }
 
-  static CallViewFPXStatus(prodData) {
+  static CallViewOrderStatus(prodData) {
     return {
-      type: GitAction.ViewOrderFPXStatus,
+      type: GitAction.ViewOrderStatus,
       payload: prodData,
     };
   }

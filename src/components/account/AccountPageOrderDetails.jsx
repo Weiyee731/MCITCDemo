@@ -29,6 +29,7 @@ import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import Box from '@mui/material/Box';
 
+import AccountPagePayment from "./AccountPagePayment";
 
 
 //stepper content
@@ -62,6 +63,7 @@ const steps = [
 export default function AccountPageOrderDetails(props) {
   //dialog
   const [open, setOpen] = React.useState(false);
+  const [isProceedPayment, setProceedPayment] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -225,181 +227,197 @@ export default function AccountPageOrderDetails(props) {
       </div>
     )
   }
+  console.log("orderDetail orderDetail", orderDetail)
+  console.log("orderDetail orderDetail props", filteredMerchant)
 
   return (
+
     <React.Fragment>
-      <Helmet>
-        <title>{`Order Details — ${theme.name}`}</title>
-      </Helmet>
-      <div className="card">
-        <div className="order-header">
-          <div className="order-header__actions">
-            <Link to="/account/orders" className="btn btn-xs btn-secondary">
-              Back to list
-            </Link>
-          </div>
-          <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
-          <div className="order-header__subtitle">
-            Was placed on{" "}
-            <mark className="order-header__date">
-              {orderDetail.CreatedDate}
-            </mark>{" "}
-            and is currently{" "}
-            <mark className="order-header__status">
-              {orderDetail.TrackingStatus}
-            </mark>
-            .
-          </div>
-        </div>
-        <div className="card-divider" />
-        <div className="card-table">
-          <div className="table-responsive-sm">
-            {orderDetail.OrderProductDetail !== null ?
-              <>
-                {filteredMerchant.length > 0 && filteredMerchant.map((MerchantList, i) => {
-                  return (
-                    <>
-                      <div key={i}>
-                        <th>
-                          {
-                            props.location.merchant.length > 0 && props.location.merchant.filter((X) => X.UserID === MerchantList.MerchantID).map((merchant) => {
-                              return (merchant.ShopName)
-                            })
-                          }
-                        </th>
-                      </div>
-                      <div style={{ backgroundColor: '#F9D295' }}>
-                        <Divider light />
-                        {trackingDetail(i + 1)}
-                      </div>
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Preview</th>
-                            <th>Product</th>
-                            <th>Unit Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                            <th>Tracking</th>
-                          </tr>
-                        </thead>
-                        {
-                          orderDetail.OrderProductDetail !== null && JSON.parse(orderDetail.OrderProductDetail).filter((x) => x.MerchantID === MerchantList.MerchantID)
-                            .map((orders) => {
-                              return (
-                                <tbody className="card-table__body card-table__body--merge-rows">
-                                  <tr>
-                                    <td style={{ width: "15%" }}>
-                                      <img
-                                        className="product-image dropcart__product-image"
-                                        src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
-                                        alt=""
-                                        onError={(e) => {
-                                          e.target.onerror = null;
-                                          e.target.src = Logo;
-                                        }}
-                                      />
-                                    </td>
-                                    <td style={{ width: "20%" }}>
-                                      <div style={{ fontSize: "14px", fontWeight: "bold" }}>  {orders.ProductName}  </div>
-                                      <div style={{ fontSize: "11px" }}>  Variation : {orders.ProductVariationValue}  </div>
-                                      <div style={{ fontSize: "11px" }}>  SKU : {orders.SKU}  </div>
-                                      <div style={{ fontSize: "11px" }}>  Dimension : {orders.ProductDimensionWidth}m (W) X {orders.ProductDimensionHeight}m (H) X {orders.ProductDimensionDeep}m (L) </div>
-                                      <div style={{ fontSize: "11px" }}>  Weight : {orders.ProductWeight} kg   </div>
-                                    </td>
-                                    <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice}</td>
-                                    <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
-                                    <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
-                                    {
-                                      orders.LogisticID !== null && orders.LogisticID !== 0 ?
-                                        <>
-                                          <td style={{ width: "15%" }}>
-                                            <div style={{ fontSize: "13px" }}>
-                                              {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
-                                                return (courier.LogisticName)
-                                              })}
-                                            </div>
-                                            <div style={{ fontSize: "13px" }}>
-                                              {orders.TrackingNumber}
-                                            </div>
-                                          </td>
-                                        </>
-                                        :
-                                        <td style={{ width: "15%" }}>
-                                          <div style={{ fontSize: "13px", textAlign: "center" }}>
-                                            Temporarily no tracking for this item
-                                          </div>
-                                        </td>
-                                    }
-                                  </tr>
-                                </tbody>
-                              )
-                            })}
-                      </table>
-                    </>
-                  )
-                })}
-                <Divider light />
-                <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
-                  <div className="row">
-                    <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Subtotal </div>
-                    <div className="col-2" >RM{subtotalPrice}</div>
-                  </div>
-                  <div className="row" >
-                    <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Shipping </div>
-                    <div className="col-2" >RM{shipping}</div>
-                  </div>
-                </div>
-                <Divider light />
-                <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
-                  <div className="row">
-                    <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Total </div>
-                    <div className="col-2" >RM{totalOverall}</div>
-                  </div>
-                </div>
-              </>
-              :
-              <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                <div style={{ marginBottom: "20px" }}>
-                  Something went wrong
-                </div>
-                <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
       {
-        orderDetail.PickUpInd === 0 ?
-          orderDetail.UserAddresID !== 0 && orderDetail.UserAddressLine1 === null ?
-            address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
-              addressListing(addresspreview, "addressBook")
-            ))
-            :
-            addressListing(orderDetail, "newAddress")
+        isProceedPayment === true ?
+          <AccountPagePayment data={orderDetail} />
           :
-          <div className="row mt-3 no-gutters mx-n2">
-            <div className="col-sm-6 col-12 px-2">
-              <div className="card address-card address-card--featured">
-                <div className="address-card__body">
-                  <div className="address-card__badge address-card__badge--muted">
-                    Self Pick Up
+          <>
+            <Helmet>
+              <title>{`Order Details — ${theme.name}`}</title>
+            </Helmet>
+            <div className="card">
+              <div className="order-header">
+                <div className="order-header__actions">
+                  <Button onClick={() => window.location.href = "/account/orders"} style={{ backgroundColor: "grey", color: "white", borderWidth: 0 }}>
+                    BACK TO LIST
+                  </Button>
+                </div>
+                {
+                  orderDetail.TrackingStatusID === 2 &&
+                  <div className="order-header__actions">
+                    <Button onClick={() => setProceedPayment(true)} style={{ backgroundColor: "forestgreen", color: "white", borderWidth: 0 }}>
+                      Proceed Payment
+                    </Button>
                   </div>
-                  <div className="address-card__name">
-                    User Self Pick Up
-                  </div>
-                  <div className="address-card__name">
-                    {orderDetail.UserFullName === null ? orderDetail.FirstName : orderDetail.UserFullName}
-                  </div>
-                  <div className="address-card__row">
-                    {orderDetail.UserContactNo}
-                  </div>
+                }
+                <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
+                <div className="order-header__subtitle">
+                  Was placed on{" "}
+                  <mark className="order-header__date">
+                    {orderDetail.CreatedDate}
+                  </mark>{" "}
+                  and is currently{" "}
+                  <mark className="order-header__status">
+                    {orderDetail.TrackingStatus}
+                  </mark>
+                  .
+                </div>
+              </div>
+              <div className="card-divider" />
+              <div className="card-table">
+                <div className="table-responsive-sm">
+                  {orderDetail.OrderProductDetail !== null ?
+                    <>
+                      {filteredMerchant.length > 0 && filteredMerchant.map((MerchantList, i) => {
+                        return (
+                          <>
+                            <div key={i}>
+                              <th>
+                                {
+                                  props.location.merchant.length > 0 && props.location.merchant.filter((X) => X.UserID === MerchantList.MerchantID).map((merchant) => {
+                                    return (merchant.ShopName)
+                                  })
+                                }
+                              </th>
+                            </div>
+                            <div style={{ backgroundColor: '#F9D295' }}>
+                              <Divider light />
+                              {trackingDetail(i + 1)}
+                            </div>
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Preview</th>
+                                  <th>Product</th>
+                                  <th>Unit Price</th>
+                                  <th>Quantity</th>
+                                  <th>Total</th>
+                                  <th>Tracking</th>
+                                </tr>
+                              </thead>
+                              {
+                                orderDetail.OrderProductDetail !== null && JSON.parse(orderDetail.OrderProductDetail).filter((x) => x.MerchantID === MerchantList.MerchantID)
+                                  .map((orders) => {
+                                    return (
+                                      <tbody className="card-table__body card-table__body--merge-rows">
+                                        <tr>
+                                          <td style={{ width: "15%" }}>
+                                            <img
+                                              className="product-image dropcart__product-image"
+                                              src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
+                                              alt=""
+                                              onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = Logo;
+                                              }}
+                                            />
+                                          </td>
+                                          <td style={{ width: "20%" }}>
+                                            <div style={{ fontSize: "14px", fontWeight: "bold" }}>  {orders.ProductName}  </div>
+                                            <div style={{ fontSize: "11px" }}>  Variation : {orders.ProductVariationValue}  </div>
+                                            <div style={{ fontSize: "11px" }}>  SKU : {orders.SKU}  </div>
+                                            <div style={{ fontSize: "11px" }}>  Dimension : {orders.ProductDimensionWidth}m (W) X {orders.ProductDimensionHeight}m (H) X {orders.ProductDimensionDeep}m (L) </div>
+                                            <div style={{ fontSize: "11px" }}>  Weight : {orders.ProductWeight} kg   </div>
+                                          </td>
+                                          <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice}</td>
+                                          <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
+                                          <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
+                                          {
+                                            orders.LogisticID !== null && orders.LogisticID !== 0 ?
+                                              <>
+                                                <td style={{ width: "15%" }}>
+                                                  <div style={{ fontSize: "13px" }}>
+                                                    {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
+                                                      return (courier.LogisticName)
+                                                    })}
+                                                  </div>
+                                                  <div style={{ fontSize: "13px" }}>
+                                                    {orders.TrackingNumber}
+                                                  </div>
+                                                </td>
+                                              </>
+                                              :
+                                              <td style={{ width: "15%" }}>
+                                                <div style={{ fontSize: "13px", textAlign: "center" }}>
+                                                  Temporarily no tracking for this item
+                                                </div>
+                                              </td>
+                                          }
+                                        </tr>
+                                      </tbody>
+                                    )
+                                  })}
+                            </table>
+                          </>
+                        )
+                      })}
+                      <Divider light />
+                      <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
+                        <div className="row">
+                          <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Subtotal </div>
+                          <div className="col-2" >RM{subtotalPrice}</div>
+                        </div>
+                        <div className="row" >
+                          <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Shipping </div>
+                          <div className="col-2" >RM{shipping}</div>
+                        </div>
+                      </div>
+                      <Divider light />
+                      <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
+                        <div className="row">
+                          <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Total </div>
+                          <div className="col-2" >RM{totalOverall}</div>
+                        </div>
+                      </div>
+                    </>
+                    :
+                    <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                      <div style={{ marginBottom: "20px" }}>
+                        Something went wrong
+                      </div>
+                      <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                    </div>
+                  }
                 </div>
               </div>
             </div>
-          </div>
-      }
-      {/* {
+            {
+              orderDetail.PickUpInd === 0 ?
+                orderDetail.UserAddresID !== 0 && orderDetail.UserAddressLine1 === null ?
+                  address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
+                    addressListing(addresspreview, "addressBook")
+                  ))
+                  :
+                  addressListing(orderDetail, "newAddress")
+                :
+                <div className="row mt-3 no-gutters mx-n2">
+                  <div className="col-sm-6 col-12 px-2">
+                    <div className="card address-card address-card--featured">
+                      <div className="address-card__body">
+                        <div className="address-card__badge address-card__badge--muted">
+                          Self Pick Up
+                        </div>
+                        <div className="address-card__name">
+                          User Self Pick Up
+                        </div>
+                        <div className="address-card__name">
+                          {orderDetail.UserFullName === null ? orderDetail.FirstName : orderDetail.UserFullName}
+                        </div>
+                        <div className="address-card__row">
+                          {orderDetail.UserContactNo}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            }
+            {/* {
         orderDetail.UserAddresID !== 0 ?
           address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
             addressListing(addresspreview)
@@ -427,123 +445,122 @@ export default function AccountPageOrderDetails(props) {
           </div>
       } */}
 
-      <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
-        {
-          orderDetail.TrackingStatus === "In Purchasing" ?
-            <div className="card address-card address-card--featured">
-              <div className="address-card__body">
-                <div className="address-card__badge address-card__badge--muted">
-                  Pending Payment
-                </div>
-                <div className="address-card__row">
-                  <div className="address-card__name">
-                    Waiting for payment to complete the order
-                  </div>
-                </div>
-              </div>
-            </div>
-            :
-            <>
+            <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
               {
-                orderDetail.PaymentMethodID === 1 ?
+                orderDetail.TrackingStatus === "In Purchasing" ?
                   <div className="card address-card address-card--featured">
                     <div className="address-card__body">
                       <div className="address-card__badge address-card__badge--muted">
-                        CREDIT / DEBIT CARD
+                        Pending Payment
                       </div>
                       <div className="address-card__row">
                         <div className="address-card__name">
-                          CREDIT / DEBIT CARD PAYMENT
+                          Waiting for payment to complete the order
                         </div>
                       </div>
                     </div>
                   </div>
-                  // creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
-                  //   <div className="card address-card address-card--featured">
-                  //     <div className="address-card__body">
-                  //       <div className="address-card__badge address-card__badge--muted">
-                  //         Credit Card
-                  //       </div>
-                  //       <div className="address-card__name">
-                  //         {paymentcard.UserCardName}
-                  //       </div>
-                  //       <div className="address-card__row">
-                  //         <div className="address-card__row-title">
-                  //           User Card Number
-                  //         </div>
-                  //         {paymentcard.UserCardNo}
-                  //       </div>
-                  //       <div className="address-card__row">
-                  //         <div className="address-card__row-title">Expiry Date</div>
-                  //         <div className="address-card__row-content">
-                  //           {paymentcard.UserCardExpireDate}
-                  //         </div>
-                  //       </div>
-                  //       <div className="address-card__row">
-                  //         <div className="address-card__row-title">Card Type</div>
-                  //         <div className="address-card__row-content">
-                  //           {paymentcard.UserCardType}
-                  //         </div>
-                  //       </div>
-                  //     </div>
-                  //   </div>
-                  // ))
                   :
                   <>
                     {
-                      orderDetail.PaymentMethodID === 3 &&
-                      <div className="card address-card address-card--featured">
-                        <div className="address-card__body">
-                          <div className="address-card__badge address-card__badge--muted">
-                            E-WALLET
-                          </div>
-                          <div className="address-card__row">
-                            <div className="address-card__name">
-                              E-WALLET PAYMENT
+                      orderDetail.PaymentMethodID === 1 ?
+                        <div className="card address-card address-card--featured">
+                          <div className="address-card__body">
+                            <div className="address-card__badge address-card__badge--muted">
+                              CREDIT / DEBIT CARD
+                            </div>
+                            <div className="address-card__row">
+                              <div className="address-card__name">
+                                CREDIT / DEBIT CARD PAYMENT
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    }
-                    {
-                      orderDetail.PaymentMethodID === 2 &&
-                      <div className="card address-card address-card--featured">
-                        <div className="address-card__body">
-                          <div className="address-card__badge address-card__badge--muted">
-                            FPX
-                          </div>
-                          <div className="address-card__row">
-                            <div className="address-card__name">
-                              FPX PAYMENT
+                        // creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
+                        //   <div className="card address-card address-card--featured">
+                        //     <div className="address-card__body">
+                        //       <div className="address-card__badge address-card__badge--muted">
+                        //         Credit Card
+                        //       </div>
+                        //       <div className="address-card__name">
+                        //         {paymentcard.UserCardName}
+                        //       </div>
+                        //       <div className="address-card__row">
+                        //         <div className="address-card__row-title">
+                        //           User Card Number
+                        //         </div>
+                        //         {paymentcard.UserCardNo}
+                        //       </div>
+                        //       <div className="address-card__row">
+                        //         <div className="address-card__row-title">Expiry Date</div>
+                        //         <div className="address-card__row-content">
+                        //           {paymentcard.UserCardExpireDate}
+                        //         </div>
+                        //       </div>
+                        //       <div className="address-card__row">
+                        //         <div className="address-card__row-title">Card Type</div>
+                        //         <div className="address-card__row-content">
+                        //           {paymentcard.UserCardType}
+                        //         </div>
+                        //       </div>
+                        //     </div>
+                        //   </div>
+                        // ))
+                        :
+                        <>
+                          {
+                            orderDetail.PaymentMethodID === 3 &&
+                            <div className="card address-card address-card--featured">
+                              <div className="address-card__body">
+                                <div className="address-card__badge address-card__badge--muted">
+                                  E-WALLET
+                                </div>
+                                <div className="address-card__row">
+                                  <div className="address-card__name">
+                                    E-WALLET PAYMENT
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      </div>
-                    }
-                    {
-                      orderDetail.PaymentMethodID === 4 &&
-                      <div className="card address-card address-card--featured">
-                        <div className="address-card__body">
-                          <div className="address-card__badge address-card__badge--muted">
-                            PAYPAL
-                          </div>
-                          <div className="address-card__row">
-                            <div className="address-card__name">
-                              PAYPAL PAYMENT
+                          }
+                          {
+                            orderDetail.PaymentMethodID === 2 &&
+                            <div className="card address-card address-card--featured">
+                              <div className="address-card__body">
+                                <div className="address-card__badge address-card__badge--muted">
+                                  FPX
+                                </div>
+                                <div className="address-card__row">
+                                  <div className="address-card__name">
+                                    FPX PAYMENT
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      </div>
-                    }
+                          }
+                          {
+                            orderDetail.PaymentMethodID === 4 &&
+                            <div className="card address-card address-card--featured">
+                              <div className="address-card__body">
+                                <div className="address-card__badge address-card__badge--muted">
+                                  PAYPAL
+                                </div>
+                                <div className="address-card__row">
+                                  <div className="address-card__name">
+                                    PAYPAL PAYMENT
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          }
 
+                        </>
+                    }
                   </>
               }
-            </>
-
-        }
-
-
-      </div>
+            </div>
+          </>
+      }
     </React.Fragment>
   );
 }

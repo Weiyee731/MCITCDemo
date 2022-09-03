@@ -110,6 +110,8 @@ const rootEpic = combineEpics(
   //==================ORDER==========================//
   gitEpic.AddOrder,
   gitEpic.AddOrder_CreditCard,
+  gitEpic.UpdateOrder_AccountOrderCreditCard,
+  gitEpic.UpdateOrder_AccountOrder,
   gitEpic.Order_ViewPaymentDetailsByUUID,
   gitEpic.UpdateOrderStatus,
   gitEpic.UpdateOrderUserDetails,

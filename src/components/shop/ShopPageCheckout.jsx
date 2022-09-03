@@ -161,8 +161,7 @@ class PageCheckout extends Component {
 
     if (this.state.submit === true) {
       return (
-
-        <PagePayment handleGetPaymentId={handleGetPaymentId} addresss={this} data={this.props.data} merchant={this.props.merchant}  />
+        <PagePayment addressID={this.state.address} data={this.props.data} merchant={this.props.merchant}  />
       )
     }
 

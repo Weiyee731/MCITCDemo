@@ -474,7 +474,8 @@ function Layout(props) {
 
                 <Route
                   exact
-                  path="/shop/ShopPageReceipt/:type/:reference/:transactionuuid/:amount"
+                  // path="/shop/ShopPageReceipt/:type/:reference/:transactionuuid/:amount"
+                  path="/shop/ShopPageReceipt/:type/:transactionuuid/"
                   render={(props) => (
                     <>
                       {console.log("props1234", props)}
@@ -482,9 +483,9 @@ function Layout(props) {
                         {...props}
                         layout="standard"
                         type={props.match.params.type}
-                        reference={props.match.params.reference}
+                        // reference={props.match.params.reference}
                         transactionuuid={props.match.params.transactionuuid}
-                        amount={props.match.params.amount}
+                        // amount={props.match.params.amount}
                       />
                     </>
                   )}

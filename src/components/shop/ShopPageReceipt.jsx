@@ -32,7 +32,7 @@ class ShopPageReceipt extends Component {
 
             responseCode: "",
             isStatusCheck: false,
-            isFPXStatusCall: false,
+            isOrderStatusCall: false,
             isOrderUpdated: false,
         };
     }
@@ -41,21 +41,25 @@ class ShopPageReceipt extends Component {
 
         if (parseInt(this.props.type) === 2) {
             this.props.CallGetFPXResponseList()
-            if (this.props !== undefined && this.props.transactionuuid !== undefined) {
-                this.props.CallViewFPXStatus({
-                    Transactionuuid: this.props.transactionuuid,
-                })
-            }
+        }
+
+        if (this.props !== undefined && this.props.transactionuuid !== undefined) {
+            this.props.CallViewOrderStatus({
+                Transactionuuid: this.props.transactionuuid,
+                paymentType: this.props.type
+            })
         }
 
     }
 
     componentDidUpdate(prevProps) {
 
-        if (this.props !== undefined && this.props.transactionuuid !== undefined && this.state.isFPXStatusCall === false && parseInt(this.props.type) === 2) {
-            this.props.CallViewFPXStatus({ Transactionuuid: this.props.transactionuuid })
-            this.setState({ isFPXStatusCall: true })
+        if (this.props !== undefined && this.props.transactionuuid !== undefined && this.state.isOrderStatusCall === false) {
+            this.props.CallViewOrderStatus({ Transactionuuid: this.props.transactionuuid, paymentType: this.props.type })
+            this.setState({ isOrderStatusCall: true })
         }
+
+
 
         if (prevProps.orderstatus !== this.props.orderstatus) {
             if (this.props.orderstatus.length > 0 && this.props.orderstatus[0].ReturnVal === 1) {
@@ -70,30 +74,29 @@ class ShopPageReceipt extends Component {
         }
     }
 
-    UpdateOrderStatus() {
-        if (this.state.isOrderUpdated === false) {
-            let orderVariationDetailIDs = []
-            let orderDetailQtys = []
-            this.props.orderfpxstatus.length > 0 && this.props.orderfpxstatus.map((data) => {
-                data.OrderProductDetail !== undefined && JSON.parse(data.OrderProductDetail).map((dataDetails) => {
-                    orderVariationDetailIDs.push(dataDetails.ProductVariationDetailID)
-                    orderDetailQtys.push(dataDetails.ProductQuantity)
-                })
-            })
+    // UpdateOrderStatus() {
+    //     if (this.state.isOrderUpdated === false) {
+    //         let orderVariationDetailIDs = []
+    //         let orderDetailQtys = []
+    //         this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata.map((data) => {
+    //             data.OrderProductDetail !== undefined && JSON.parse(data.OrderProductDetail).map((dataDetails) => {
+    //                 orderVariationDetailIDs.push(dataDetails.ProductVariationDetailID)
+    //                 orderDetailQtys.push(dataDetails.ProductQuantity)
+    //             })
+    //         })
 
-            console.log("UpdateOrderStatus")
-            this.props.CallUpdateOrderStatus({
-                Transactionuuid: this.props.transactionuuid,
-                TrackingStatusID: 1,
-                OrderPaidAmount: this.props.amount,
-                TxnID: parseInt(this.props.type) === 2 ? this.props.reference : "-",
-                orderVariationDetailIDs: orderVariationDetailIDs,
-                orderDetailQtys: orderDetailQtys
-            })
-            this.setState({ isOrderUpdated: true })
-        }
-
-    }
+    //         console.log("UpdateOrderStatus")
+    //         this.props.CallUpdateOrderStatus({
+    //             Transactionuuid: this.props.transactionuuid,
+    //             OrderPaidAmount: this.props.amount,
+    //             TxnID: parseInt(this.props.type) === 2 ? this.props.reference : "-",
+    //             PaymentType:"FPX",
+    //             orderVariationDetailIDs: orderVariationDetailIDs,
+    //             orderDetailQtys: orderDetailQtys
+    //         })
+    //         this.setState({ isOrderUpdated: true })
+    //     }
+    // }
 
     checkFPXResponse() {
         let responseMsg = ""
@@ -106,17 +109,17 @@ class ShopPageReceipt extends Component {
     }
 
 
-    successPage() {
+    successPage(propsData) {
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Receipt', url: '' },
         ];
+        const receiptTextStyle = { color: "midnightblue", fontWeight: "bold", fontSize: "18px" }
 
         return (
             <div className="cart block container_" >
                 <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> <PageHeader />
                 <div className="container">
-                    {this.UpdateOrderStatus()}
                     <div className="block" style={{ backgroundColor: "white", height: "500px" }} >
                         <div style={{ textAlign: "center", margin: 2, paddingTop: "2%" }}>
                             <CheckCircleOutlineIcon style={{ color: "green", width: "15%", height: "50%" }} />
@@ -124,15 +127,18 @@ class ShopPageReceipt extends Component {
                                 <label style={{ color: "green", fontWeight: "bold", fontSize: "28px" }}>Order Confirmed</label>
                             </div>
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Order Number: {this.props.transactionuuid}</label>
+                                <label style={receiptTextStyle}>Order Number: {propsData.OrderID}</label>
+                            </div>
+                            <div style={{ textAlign: "center", margin: 2 }}>
+                                <label style={receiptTextStyle}>Transaction Id: {this.props.transactionuuid}</label>
                             </div>
                             <div style={{ textAlign: "center" }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Transaction Amount: {this.props.amount}</label>
+                                <label style={receiptTextStyle}>Transaction Amount: RM {parseFloat(propsData.OrderTotalAmount).toFixed(2)}</label>
                             </div>
                         </div>
                         <div style={{ textAlign: "center", margin: 5 }}>
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Your payment had been processed successfully</label>
+                                <label style={receiptTextStyle}>Your payment had been processed successfully</label>
                             </div>
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <label >Page will be automatically redirected to the main page or click button below</label>
@@ -155,11 +161,12 @@ class ShopPageReceipt extends Component {
     }
 
 
-    pendingPage() {
+    pendingPage(propsData) {
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Error Page', url: '' },
         ];
+        const receiptTextStyle = { color: "midnightblue", fontWeight: "bold", fontSize: "18px" }
 
         return (
             <div className="cart block container_" >
@@ -173,16 +180,19 @@ class ShopPageReceipt extends Component {
                                 <label style={{ color: "blue", fontWeight: "bold", fontSize: "28px" }}>Pending Approval</label>
                             </div>
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Order Number: {this.props.transactionuuid}</label>
+                                <label style={receiptTextStyle}>Order Number: {propsData.OrderID}</label>
+                            </div>
+                            <div style={{ textAlign: "center", margin: 2 }}>
+                                <label style={receiptTextStyle}>Transaction Id: {this.props.transactionuuid}</label>
                             </div>
                             <div style={{ textAlign: "center" }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Transaction Amount: {this.props.amount}</label>
+                                <label style={receiptTextStyle}>Order Amount: RM {parseFloat(propsData.OrderTotalAmount).toFixed(2)}</label>
                             </div>
                         </div>
                         <div style={{ textAlign: "center", margin: 5 }}>
 
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Your request has been sent. Pending for authorizer Approval</label>
+                                <label style={receiptTextStyle}>Your request has been sent. Pending for authorizer Approval</label>
                             </div>
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <label >Page will be automatically redirected to the main page or click button below</label>
@@ -204,11 +214,12 @@ class ShopPageReceipt extends Component {
         );
     }
 
-    errorPage() {
+    errorPage(propsData) {
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Error Page', url: '' },
         ];
+        const receiptTextStyle = { color: "midnightblue", fontWeight: "bold", fontSize: "18px" }
 
         return (
             <div className="cart block container_" >
@@ -221,21 +232,34 @@ class ShopPageReceipt extends Component {
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <label style={{ color: "red", fontWeight: "bold", fontSize: "28px" }}>Transaction Failed</label>
                             </div>
+                            {
+                                propsData !== undefined &&
+                                <div style={{ textAlign: "center", margin: 2 }}>
+                                    <label style={receiptTextStyle}>Order Number: {propsData.OrderID}</label>
+                                </div>
+                            }
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Order Number: {this.props.transactionuuid}</label>
+                                <label style={receiptTextStyle}>Transaction Id: {this.props.transactionuuid}</label>
                             </div>
-                            <div style={{ textAlign: "center" }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Transaction Amount: {this.props.amount}</label>
-                            </div>
+                            {
+                                propsData !== undefined ?
+                                    <div style={{ textAlign: "center" }}>
+                                        <label style={receiptTextStyle}>Transaction Amount: RM {parseFloat(propsData.OrderTotalAmount).toFixed(2)}</label>
+                                    </div>
+                                    :
+                                    <div style={{ textAlign: "center" }}>
+                                        <label style={receiptTextStyle}>Transaction Id is Not Found</label>
+                                    </div>
+                            }
                         </div>
                         <div style={{ textAlign: "center", margin: 5 }}>
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "18px" }}>Unfortunately payment was unsuccessful
+                                <label style={receiptTextStyle}>Unfortunately payment was unsuccessful
                                     {parseInt(this.props.type) === 2 && this.props.amount > 30000 ? ". Maximum Transaction Limit Exceeded RM30000.00" : parseInt(this.props.type) === 2 && this.props.amount < 1 ? ". Transaction Amount is Lower than the Minimum Limit RM1.00" : ""}
                                 </label>
                             </div>
                             {
-                                parseInt(this.props.type) === 2 &&
+                                parseInt(this.props.type) === 2 && propsData !== undefined &&
                                 <div style={{ textAlign: "center", margin: 2 }}>
                                     <label style={{ color: "midnightblue", fontWeight: "bold", fontSize: "16px" }}>Reject Reason :   {this.checkFPXResponse()}  </label>
                                 </div>
@@ -270,7 +294,6 @@ class ShopPageReceipt extends Component {
     }
 
     render() {
-
         const checkEmptyData = (data) => {
             if (data === "-")
                 return ""
@@ -279,7 +302,7 @@ class ShopPageReceipt extends Component {
         }
 
         const CreateCheckSum = () => {
-            let FPXData = this.props.orderfpxstatus[0]
+            let FPXData = this.props.orderstatusdata[0]
             let bankingdata = checkEmptyData(FPXData.fpx_buyerAccNo) + "|" + checkEmptyData(FPXData.fpx_buyerBankBranch) + "|" + checkEmptyData(FPXData.fpx_buyerBankId) + "|" + checkEmptyData(FPXData.fpx_buyerEmail) + "|" + checkEmptyData(FPXData.fpx_buyerIban)
                 + "|" + checkEmptyData(FPXData.fpx_buyerId) + "|" + checkEmptyData(FPXData.fpx_buyerName) + "|" + checkEmptyData(FPXData.fpx_makerName) + "|" + checkEmptyData(FPXData.fpx_msgToken) + "|" + this.state.fpx_msgType + "|" + checkEmptyData(FPXData.fpx_productDesc)
                 + "|" + checkEmptyData(FPXData.fpx_sellerBankCode) + "|" + this.state.fpx_sellerExId + "|" + checkEmptyData(FPXData.fpx_sellerExOrderNo) + "|" + this.state.fpx_sellerId + "|" + checkEmptyData(FPXData.fpx_sellerOrderNo) + "|" + checkEmptyData(FPXData.fpx_sellerTxnTime) + "|" + parseFloat(FPXData.OrderTotalAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + checkEmptyData(FPXData.fpx_version)
@@ -339,46 +362,56 @@ class ShopPageReceipt extends Component {
         }
 
 
-        if (this.props.orderfpxstatus.length > 0 && this.state.isProduceChecksum === false)
+        if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.state.isProduceChecksum === false)
             CreateCheckSum()
 
+        console.log("this.props.orderstatusdata", this.props.orderstatusdata)
 
-        if (this.props.orderfpxstatus.length > 0 && this.state.isStatusCheck === false) {
-            this.props.orderfpxstatus.map((data) => {
+        if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.state.isStatusCheck === false) {
+            this.props.orderstatusdata.map((data) => {
                 checkFPXStatus(data)
             })
         }
 
         const returnPage = (type) => {
+            console.log("returnPage", type)
 
             switch (type) {
                 case "bank":
-                    if (this.state.responseCode === "00")
-                        return (this.successPage())
-                    else {
-                        if (this.state.responseCode === "99")
-                            return (this.pendingPage())
-                        else
-                            return (this.errorPage())
+                    console.log("BANK", this.props.orderstatusdata)
+                    if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata[0].ReturnVal !== 1 && this.props.orderstatusdata[0].ReturnVal !== '0') {
+                        if (this.state.responseCode === "00")
+                            return (this.successPage(this.props.orderstatusdata[0]))
+                        else {
+                            if (this.state.responseCode === "99")
+                                return (this.pendingPage(this.props.orderstatusdata[0]))
+                            else
+                                return (this.errorPage(this.props.orderstatusdata[0]))
+                        }
                     }
+                    else
+                        return (this.errorPage())
+
 
                 case "card":
-                    if (this.props.reference === "ACCEPT")
-                        return (this.successPage())
+                    if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata[0].ReturnVal !== 1) {
+                        if (this.props.orderstatusdata[0].TrackingStatusID === 1)
+                            return (this.successPage(this.props.orderstatusdata[0]))
+                        else
+                            return (this.errorPage(this.props.orderstatusdata[0]))
+                    }
                     else
                         return (this.errorPage())
 
                 default:
                     break;
             }
-
         }
-        console.log("this.props", this.props)
-        console.log("this.state", this.state)
 
         return (
             <React.Fragment>
-                {parseInt(this.props.type) === 2 ? this.state.isStatusCheck && returnPage("bank") : returnPage("card")}
+                {console.log("sadasdad", this.state.isStatusCheck)}
+                {parseInt(this.props.type) === 2 ? this.state.isStatusCheck ? returnPage("bank") : this.errorPage() : returnPage("card")}
             </React.Fragment>
         );
     }
@@ -387,14 +420,14 @@ class ShopPageReceipt extends Component {
 
 const mapStateToProps = (state) => ({
     orderstatus: state.counterReducer.orderstatus,
-    orderfpxstatus: state.counterReducer.orderfpxstatus,
+    orderstatusdata: state.counterReducer.orderstatusdata,
     fpxResponseList: state.counterReducer.fpxResponseList
 });
 
 const mapDispatchToProps = (dispatch) => {
     return {
         CallUpdateOrderStatus: (prodData) => dispatch(GitAction.CallUpdateOrderStatus(prodData)),
-        CallViewFPXStatus: (prodData) => dispatch(GitAction.CallViewFPXStatus(prodData)),
+        CallViewOrderStatus: (prodData) => dispatch(GitAction.CallViewOrderStatus(prodData)),
         CallClearOrderStatus: () => dispatch(GitAction.CallClearOrderStatus()),
         CallGetFPXResponseList: () => dispatch(GitAction.CallGetFPXResponseList()),
     }

@@ -127,11 +127,11 @@ class PagePayment extends Component {
     this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
 
 
-    if (this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.state.setAddress === false) {
+    if (this.props.addressID !== undefined && this.props.addressID !== undefined && this.state.setAddress === false) {
 
-      if (this.props.addresss.state.address !== 0) {
+      if (this.props.addressID !== 0) {
         this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
-          parseInt(x.UserAddressBookID) === parseInt(this.props.addresss.state.address)).map((address) => {
+          parseInt(x.UserAddressBookID) === parseInt(this.props.addressID)).map((address) => {
             let Userdetails = []
 
             Userdetails = {
@@ -175,10 +175,12 @@ class PagePayment extends Component {
   }
 
   componentDidMount() {
+
+    console.log("COMPONENTDIDMOUNT", this.props)
     if (this.props.data !== undefined && this.props.data.length > 0) {
       this.setDetails(this.props.data)
     }
-    this.props.handleGetPaymentId(null, 0, 0)
+    // this.props.handleGetPaymentId(null, 0, 0)
 
     let URL2 = "https://myemporia.my/payment/06_fpx_bankListRequest.php"
     const config = { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -277,45 +279,45 @@ class PagePayment extends Component {
     this.setState({ focus: e.target.name });
   };
 
-  handleInputChange = (e) => {
-    switch (e.target.name) {
-      case "newnumber":
+  // handleInputChange = (e) => {
+  //   switch (e.target.name) {
+  //     case "newnumber":
 
-        if (e.target.value.length > 1) {
-          e.target.value = formatCreditCardNumber(e.target.value)[1].replace(
-            /\s+/g,
-            ""
-          );
-        }
-        if (formatCreditCardNumber(e.target.value)[0] !== undefined) {
-          this.setState({ issuer: formatCreditCardNumber(e.target.value)[0] });
-        } else {
-          toast.error("Card Number's format is incorrect");
-        }
-        break;
+  //       if (e.target.value.length > 1) {
+  //         e.target.value = formatCreditCardNumber(e.target.value)[1].replace(
+  //           /\s+/g,
+  //           ""
+  //         );
+  //       }
+  //       if (formatCreditCardNumber(e.target.value)[0] !== undefined) {
+  //         this.setState({ issuer: formatCreditCardNumber(e.target.value)[0] });
+  //       } else {
+  //         toast.error("Card Number's format is incorrect");
+  //       }
+  //       break;
 
-      case "newexpiry":
-        e.target.value = formatExpirationDate(e.target.value);
-        break;
+  //     case "newexpiry":
+  //       e.target.value = formatExpirationDate(e.target.value);
+  //       break;
 
-      case "cvc":
-        e.target.value = formatCVC(e.target.value);
-        if (formatCVC(e.target.value).length === 3) {
-          this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
-        }
+  //     case "cvc":
+  //       e.target.value = formatCVC(e.target.value);
+  //       if (formatCVC(e.target.value).length === 3) {
+  //         this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
+  //       }
 
-        break;
+  //       break;
 
-      default:
-        this.setState({ [e.target.name]: e.target.value })
-    }
-    this.setState({ [e.target.name]: e.target.value });
-  };
+  //     default:
+  //       this.setState({ [e.target.name]: e.target.value })
+  //   }
+  //   this.setState({ [e.target.name]: e.target.value });
+  // };
 
-  handlePaymentChange = (value, typeid, typevalue) => {
-    this.setState({ paymentMethods: value.PaymentMethod })
-    this.props.handleGetPaymentId(value, typeid, typevalue)
-  };
+  // handlePaymentChange = (value, typeid, typevalue) => {
+  //   this.setState({ paymentMethods: value.PaymentMethod })
+  //   this.props.handleGetPaymentId(value, typeid, typevalue)
+  // };
 
   handleAddNewCard = () => {
     this.setState({ isAddNewCard: !this.state.isAddNewCard })
@@ -378,6 +380,12 @@ class PagePayment extends Component {
             <th style={{ textAlign: "right" }}>Tax</th>
             <td>
               <Currency value={this.state.tax} />
+            </td>
+          </tr>
+          <tr>
+            <th style={{ textAlign: "right" }}>Final Total</th>
+            <td>
+              <Currency value={this.state.total} />
             </td>
           </tr>
         </tbody>
@@ -469,14 +477,14 @@ class PagePayment extends Component {
     var m = String.fromCharCode(n) + k;
 
     let totalPrice = parseFloat(this.state.total).toFixed(2)
-    let lastname = this.props.addresss.state.address === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia" : this.state.Userdetails.addressName
-    let firstname = this.props.addresss.state.address === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia" : this.state.Userdetails.addressName
-    let email = this.props.addresss.state.address === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com" : this.state.Userdetails.email
-    let addressLine1 = this.props.addresss.state.address === 0 ? "SELFCOLECT" : this.state.Userdetails.addressLine1
-    let city = this.props.addresss.state.address === 0 ? "SELFCOLECT" : this.state.Userdetails.city
-    let state = this.props.addresss.state.address === 0 ? "SELFCOLECT" : this.state.Userdetails.state
-    let poscode = this.props.addresss.state.address === 0 ? "94300" : this.state.Userdetails.poscode
-    let PickUpIndicator = this.props.addresss.state.address === 0 ? 1 : 0
+    let lastname = this.props.addressID === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia" : this.state.Userdetails.addressName
+    let firstname = this.props.addressID === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia" : this.state.Userdetails.addressName
+    let email = this.props.addressID === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com" : this.state.Userdetails.email
+    let addressLine1 = this.props.addressID === 0 ? "SELFCOLECT" : this.state.Userdetails.addressLine1
+    let city = this.props.addressID === 0 ? "SELFCOLECT" : this.state.Userdetails.city
+    let state = this.props.addressID === 0 ? "SELFCOLECT" : this.state.Userdetails.state
+    let poscode = this.props.addressID === 0 ? "94300" : this.state.Userdetails.poscode
+    let PickUpIndicator = this.props.addressID === 0 ? 1 : 0
 
     const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
 
@@ -504,7 +512,7 @@ class PagePayment extends Component {
     let signed_field_names = ""
 
     if (this.state.isSetDetail === false && this.state.Userdetails.length !== 0) {
-      if (this.props.addresss.state.address === 0) {
+      if (this.props.addressID === 0) {
         if (parseInt(totalPrice) > 30000)
           this.setState({ isLimitAlert: true, limitMsg: "Maximum Transaction Limit Exceeded" })
         else if (parseInt(totalPrice) < 1)
@@ -561,7 +569,7 @@ class PagePayment extends Component {
         .digest('base64');
     }
     // Emporia Account
-    // const signature = "access_key=fb2033f6e3fe3bb29fa96ebc01c911ae,profile_id=FCC3E6E0-639C-4A4E-B58B-9C759897778F,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=authorization,reference_number=" + time + ",amount=" + totalPrice + ",currency=MYR,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
+    // const signature = "access_key=fb2033f6e3fe3bb29fa96ebc01c911ae,profile_id=FCC3E6E0-639C-4A4E-B58B-9C759897778F,transaction_uuid=" + (time + '123') + ",signed_field_names=access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country,signed_date_time=" + now + ",locale=en,transaction_type=sale,reference_number=" + time + ",amount=" + totalPrice + ",currency=MYR,bill_to_surname=" + lastname + ",bill_to_forename=" + firstname + ",bill_to_email=" + email + ",bill_to_address_line1=" + addressLine1 + ",bill_to_address_city=" + city + ",bill_to_address_postal_code=" + poscode + ",bill_to_address_state=" + state + ",bill_to_address_country=MY"
     // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
 
 
@@ -597,7 +605,7 @@ class PagePayment extends Component {
         ProductID: ProductID,
         ProductQuantity: ProductQuantity,
         UserCartID: UserCartID,
-        UserAddressID: this.props.addresss.state.address,
+        UserAddressID: this.props.addressID,
         PaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
         UserPaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
         OrderTotalAmount: totalPrice,
@@ -607,18 +615,18 @@ class PagePayment extends Component {
         PickUpInd: Ind,
         TRANSACTIONUUID: checkFPXdata(this.state.fpx_sellerOrderNo),
 
-        fpx_msgType: checkFPXdata(this.state.fpx_msgType),
+        // fpx_msgType: checkFPXdata(this.state.fpx_msgType),
         fpx_msgToken: checkFPXdata(this.state.fpx_msgToken),
-        fpx_sellerExId: checkFPXdata(this.state.fpx_sellerExId),
+        // fpx_sellerExId: checkFPXdata(this.state.fpx_sellerExId),
         fpx_sellerExOrderNo: checkFPXdata(this.state.fpx_sellerExOrderNo),
         fpx_sellerTxnTime: checkFPXdata(this.state.fpx_sellerTxnTime),
         fpx_sellerOrderNo: checkFPXdata(this.state.fpx_sellerOrderNo),
-        fpx_sellerId: checkFPXdata(this.state.fpx_sellerId),
+        // fpx_sellerId: checkFPXdata(this.state.fpx_sellerId),
         fpx_sellerBankCode: checkFPXdata(this.state.fpx_sellerBankCode),
-        fpx_txnCurrency: checkFPXdata(this.state.fpx_txnCurrency),
+        // fpx_txnCurrency: checkFPXdata(this.state.fpx_txnCurrency),
         fpx_txnAmount: checkFPXdata(this.state.fpx_txnAmount),
         fpx_buyerEmail: checkFPXdata(this.state.fpx_buyerEmail),
-        fpx_checkSum: checkFPXdata(this.state.fpx_checkSum),
+        // fpx_checkSum: checkFPXdata(this.state.fpx_checkSum),
         fpx_buyerName: checkFPXdata(this.state.fpx_buyerName),
 
         fpx_buyerBankId: checkFPXdata(this.state.fpx_buyerBankId),
@@ -650,7 +658,7 @@ class PagePayment extends Component {
         ProductID: ProductID,
         ProductQuantity: ProductQuantity,
         UserCartID: UserCartID,
-        UserAddressID: this.props.addresss.state.address,
+        UserAddressID: this.props.addressID,
         PaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
         UserPaymentMethodID: this.state.paymentMethodsID === 1 ? 2 : 1,
         OrderTotalAmount: totalPrice,
@@ -703,7 +711,6 @@ class PagePayment extends Component {
     return (
       <div className="checkout">
         <div className="container" style={{ textAlign: "left" }}>
-          <hr />
           <h5>Payment Method</h5>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
@@ -755,6 +762,7 @@ class PagePayment extends Component {
                 <div>
                   {
                     <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
+
                       <input type="hidden" value={this.state.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
                       <input type="hidden" value={this.state.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
                       <input type="hidden" value={this.state.fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
@@ -784,7 +792,9 @@ class PagePayment extends Component {
                           fontSize: "14px",
                           textDecoration: "none",
                         }} id="submit" name="submit" value="Proceed" onClick={() => onSubmit(PickUpIndicator, this.state.fpx_sellerOrderNo)} />
+
                     </form>
+
                   }
                 </div>
               </React.Fragment>
@@ -841,7 +851,7 @@ class PagePayment extends Component {
                 <h5 className="card-title">Emporia</h5>
                 {/* <h5 className="card-title">Pharmacy</h5> */}
                 {
-                  this.props.addresss.state.address !== 0 ?
+                  this.props.addressID !== 0 ?
                     <div style={{ textAlign: "left" }}>
                       <h6>
                         Receiver Name: {this.state.Userdetails.addressName} <br />
