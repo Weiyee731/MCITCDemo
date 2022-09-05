@@ -21,6 +21,7 @@ import { browserHistory } from "react-router";
 import Logo from "../../assets/Emporia.png"
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { toast } from "react-toastify";
+import LoadingPanel from "./loadingPanel";
 
 class Product extends Component {
   constructor(props) {
@@ -35,7 +36,8 @@ class Product extends Component {
       productVariationDetailID: "",
       selectedVariation: "",
       isVariationSet: false,
-      productVariationType: ""
+      productVariationType: "",
+      isProductSet: false,
     };
     this.addCart = this.addCart.bind(this)
     this.handleWishlist = this.handleWishlist.bind(this)
@@ -48,21 +50,50 @@ class Product extends Component {
   componentDidMount() {
     const { product } = this.props
     // this.props.CallProductReviewByProductID({ ProductID: product.ProductID, ParentProductReviewID: 0 })
-
-
     window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
+    let productID = ""
+    if (window.location.pathname !== undefined) {
+      let length = window.location.pathname.split("/").length
+      productID = window.location.pathname.split("/")[length - 1]
+    }
 
-    product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
-      console.log("PRODUCT VARIATION", variation)
-      variation.ProductVariationValue === "-" &&
-        this.setState({
-          productVariation: variation.ProductVariationValue,
-          productQuantity: variation.ProductStockAmount,
-          productVariationDetailID: variation.ProductVariationDetailID,
-          productVariationType: variation.ProductVariation,
-        })
-    })
-    this.setState({ productPrice: product.ProductPrice })
+    if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID)) {
+      product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
+        variation.ProductVariationValue === "-" &&
+          this.setState({
+            productVariation: variation.ProductVariationValue,
+            productQuantity: variation.ProductStockAmount,
+            productVariationDetailID: variation.ProductVariationDetailID,
+            productVariationType: variation.ProductVariation,
+          })
+          console.log("variation", variation)
+      })
+      this.setState({ productPrice: product.ProductPrice, isProductSet: true })
+    } else {
+      this.setState({ isProductSet: false })
+    }
+  }
+  componentDidUpdate(props) {
+    const { product } = this.props
+    let productID = ""
+    if (window.location.pathname !== undefined) {
+      let length = window.location.pathname.split("/").length
+      productID = window.location.pathname.split("/")[length - 1]
+    }
+
+    if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && this.state.isProductSet === false) {
+      product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
+        variation.ProductVariationValue === "-" &&
+          this.setState({
+            productVariation: variation.ProductVariationValue,
+            productQuantity: variation.ProductStockAmount,
+            productVariationDetailID: variation.ProductVariationDetailID,
+            productVariationType: variation.ProductVariation,
+          })
+          console.log("variation2", variation)
+      })
+      this.setState({ productPrice: product.ProductPrice, isProductSet: true })
+    }
   }
 
   checkCart(product, quantity) {
@@ -168,14 +199,14 @@ class Product extends Component {
   }
 
   render() {
-
-    console.log("PRODUCT tab product")
     const {
       product,
       layout,
     } = this.props;
     const { quantity } = this.state;
     let prices;
+
+    console.log("productproductproduct", product)
 
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
 
@@ -185,232 +216,239 @@ class Product extends Component {
     return (
       <div className="block" >
         {/* Product info */}
-        <div
-          style={{ backgroundColor: "white", padding: "20px" }}
-          className={`product product--layout--${layout}`}
-        >
-          <div className="product__content">
-            <ProductGallery
-              layout={layout}
-              images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : [Logo]}
-            />
-            <div className="product__info">
-              <div className="product__wishlist-compare">
-                {this.wishlisting(product)}
-              </div>
-              <h1 className="product__name">{product.ProductName}</h1>
-              <div className="product__rating">
-                <div className="product__rating-stars">
-                  <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
-                </div>
-                <div className="product__rating-legend">
-                  <HashLink
-                    onClick={this.changeCurrentTab.bind(this, "reviews")}
-                    to="#reviews"
-                  >
-                    {`${product.ProductRating !== null
-                      ? parseFloat(product.ProductRating).toFixed(1)
-                      : "0"
-                      }/5 (`}{`${product.ProductReviewCount !== null
-                        ? product.ProductReviewCount
-                        : "0"
-                        } Reviews)`}
-                  </HashLink>
-                  <span>/</span>
-                  <HashLink
-                    onClick={this.changeCurrentTab.bind(this, "reviews")}
-                    to="#writeReviews"
-                  >
-                    Write A Review
-                  </HashLink>
-                </div>
-              </div>
-              <ul className="product__meta">
-                <li className="product__meta-availability">
-                  Availability: {" "}
-                  {
-                    this.state.isVariationSet === true ?
-                      this.state.productQuantity > 0 ?
-                        <span className="text-success">In Stock</span> :
-                        <span className="text-danger">Out of Stock</span>
-                      :
-                      product.ProductStockAmount !== null && product.ProductStockAmount > 0 ?
-                        <span className="text-success">In Stock</span> :
-                        <span className="text-danger">Out of Stock</span>
-                  }
-                  &nbsp;
-                  ({this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0})
-                </li>
-                <li>
-                  Brand:{" "}
-                  <Link to="/">{product.Brand}</Link>
-                </li>
-                <li>SKU:{" "}{product.SKU}</li>
-                <li className="product__seller">
-                  Seller:{" "}
-                  {
-                    product.MerchantDetail !== null && JSON.parse(product.MerchantDetail).map((merchantDetails) => {
-                      return (
-                        <>
-                          <Link to={{ pathname: url.merchant(merchantDetails), state: { id: merchantDetails.UserID, merchantDetails: merchantDetails } }}>
-                            {merchantDetails.ShopName !== null && merchantDetails.ShopName}</Link>
-                          <span className="product__seller-info">
-                            <div className="row">
-                              <div className="col-4">
-                                <img
-                                  className="product__seller-info-image"
-                                  src={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo}
-                                  alt="Emporia"
-                                  onError={(e) => {
-                                    e.target.onerror = null; e.target.src = Logo
-                                  }}
-                                />
-                              </div>
-                              <div className="col-4">
-                                Seller:{" "}
-                                {merchantDetails.ShopName !== null && merchantDetails.ShopName}
-                                <br />
-                                State:{" "}
-                                {merchantDetails.ShopState !== null && merchantDetails.ShopState}
-                                <br />
-                                Shop Rating:{" "}
-                                <div className="product__rating-stars">
-                                  <Rating value={merchantDetails.length > 0 && merchantDetails.ShopRating !== null ? merchantDetails.ShopRating : 0} />
-                                  {merchantDetails.length > 0 && merchantDetails.ShopRating}
-                                </div>
-                              </div>
-                              <div className="col-4">
-                                Products:{" "}
-                                {merchantDetails.MerchantTotalProduct !== null && merchantDetails.MerchantTotalProduct}
-                                <br />
-                                Last Joined:{" "}
-                                {merchantDetails.LastJoined !== null && merchantDetails.LastJoined}
-                              </div>
-                            </div>
-                          </span>
-                        </>
+        {
+          this.state.isProductSet === true ?
+            <>
+              <div
+                style={{ backgroundColor: "white", padding: "20px" }}
+                className={`product product--layout--${layout}`}
+              >
+                <div className="product__content">
+                  <ProductGallery
+                    layout={layout}
+                    images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : [Logo]}
+                  />
+                  <div className="product__info">
+                    <div className="product__wishlist-compare">
+                      {this.wishlisting(product)}
+                    </div>
+                    <h1 className="product__name">{product.ProductName}</h1>
+                    <div className="product__rating">
+                      <div className="product__rating-stars">
+                        <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
+                      </div>
+                      <div className="product__rating-legend">
+                        <HashLink
+                          onClick={this.changeCurrentTab.bind(this, "reviews")}
+                          to="#reviews"
+                        >
+                          {`${product.ProductRating !== null
+                            ? parseFloat(product.ProductRating).toFixed(1)
+                            : "0"
+                            }/5 (`}{`${product.ProductReviewCount !== null
+                              ? product.ProductReviewCount
+                              : "0"
+                              } Reviews)`}
+                        </HashLink>
+                        <span>/</span>
+                        <HashLink
+                          onClick={this.changeCurrentTab.bind(this, "reviews")}
+                          to="#writeReviews"
+                        >
+                          Write A Review
+                        </HashLink>
+                      </div>
+                    </div>
+                    <ul className="product__meta">
+                      <li className="product__meta-availability">
+                        Availability: {" "}
+                        {
+                          this.state.isVariationSet === true ?
+                            this.state.productQuantity > 0 ?
+                              <span className="text-success">In Stock</span> :
+                              <span className="text-danger">Out of Stock</span>
+                            :
+                            product.ProductStockAmount !== null && product.ProductStockAmount > 0 ?
+                              <span className="text-success">In Stock</span> :
+                              <span className="text-danger">Out of Stock</span>
+                        }
+                        &nbsp;
+                        ({this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0})
+                      </li>
+                      <li>
+                        Brand:{" "}
+                        <Link to="/">{product.Brand}</Link>
+                      </li>
+                      <li>SKU:{" "}{product.SKU}</li>
+                      <li className="product__seller">
+                        Seller:{" "}
+                        {
+                          product.MerchantDetail !== null && JSON.parse(product.MerchantDetail).map((merchantDetails) => {
+                            return (
+                              <>
+                                <Link to={{ pathname: url.merchant(merchantDetails), state: { id: merchantDetails.UserID, merchantDetails: merchantDetails } }}>
+                                  {merchantDetails.ShopName !== null && merchantDetails.ShopName}</Link>
+                                <span className="product__seller-info">
+                                  <div className="row">
+                                    <div className="col-4">
+                                      <img
+                                        className="product__seller-info-image"
+                                        src={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo}
+                                        alt="Emporia"
+                                        onError={(e) => {
+                                          e.target.onerror = null; e.target.src = Logo
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="col-4">
+                                      Seller:{" "}
+                                      {merchantDetails.ShopName !== null && merchantDetails.ShopName}
+                                      <br />
+                                      State:{" "}
+                                      {merchantDetails.ShopState !== null && merchantDetails.ShopState}
+                                      <br />
+                                      Shop Rating:{" "}
+                                      <div className="product__rating-stars">
+                                        <Rating value={merchantDetails.length > 0 && merchantDetails.ShopRating !== null ? merchantDetails.ShopRating : 0} />
+                                        {merchantDetails.length > 0 && merchantDetails.ShopRating}
+                                      </div>
+                                    </div>
+                                    <div className="col-4">
+                                      Products:{" "}
+                                      {merchantDetails.MerchantTotalProduct !== null && merchantDetails.MerchantTotalProduct}
+                                      <br />
+                                      Last Joined:{" "}
+                                      {merchantDetails.LastJoined !== null && merchantDetails.LastJoined}
+                                    </div>
+                                  </div>
+                                </span>
+                              </>
+                            )
+                          })
+                        }
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="product__sidebar">
+                    <div className="product__prices">{prices}</div>
+                    {
+                      variation !== null && variation !== "" && variation.ProductVariation !== "None" &&
+                      (
+                        <div className="product__option">
+                          <label
+                            className="product__option-label"
+                          >
+                            {variation.ProductVariation}
+                          </label>
+
+                          <div className="product__variation">
+                            {
+                              variation !== null &&
+                              JSON.parse(product.ProductVariation).map((variation, index) => {
+                                return (
+                                  <button
+                                    key={index}
+                                    type="button"
+                                    className={
+                                      variation.ProductVariationDetailID === this.state.productVariationDetailID ?
+                                        'btn product__variation-button--selected'
+                                        : 'btn product__variation-button'
+                                    }
+                                    onClick={() => this.setState({
+                                      productVariation: variation.ProductVariationValue,
+                                      productQuantity: variation.ProductStockAmount,
+                                      productPrice: variation.ProductVariationPrice,
+                                      productVariationDetailID: variation.ProductVariationDetailID,
+                                      selectedVariation: variation,
+                                      isVariationSet: true
+                                    })}
+                                  >
+                                    {variation.ProductVariationValue}
+                                  </button>
+                                )
+                              })
+                            }
+                          </div>
+                        </div>
                       )
-                    })
-                  }
-                </li>
-              </ul>
-            </div>
+                    }
 
-            <div className="product__sidebar">
-              <div className="product__prices">{prices}</div>
-              {
-                variation !== null && variation !== "" && variation.ProductVariation !== "None" &&
-                (
-                  <div className="product__option">
-                    <label
-                      className="product__option-label"
-                    >
-                      {variation.ProductVariation}
-                    </label>
+                    <div className="product__option">
+                      <div className="row form-group product__option d-flex align-items-center">
+                        <div className="col-3">
+                          <label
+                            htmlFor="product-quantity"
+                            className="product__option-label"
+                          >
+                            Quantity
+                          </label>
+                        </div>
+                        <div className="col-2 product__actions-item">
+                          <InputNumber
+                            id="product-quantity"
+                            aria-label="Quantity"
+                            className="product__quantity"
+                            size="lg"
+                            min={1}
+                            value={quantity}
+                            onChange={this.handleChangeQuantity}
+                          />
+                        </div>
+                      </div>
 
-                    <div className="product__variation">
-                      {
-                        variation !== null &&
-                        JSON.parse(product.ProductVariation).map((variation, index) => {
-                          return (
+                      <div className="form-group product__option product__add-to-cart" >
+                        <div className="product__actions">
+                          <div className="product__actions-item product__actions-item--addtocart mx-1">
                             <button
-                              key={index}
                               type="button"
-                              className={
-                                variation.ProductVariationDetailID === this.state.productVariationDetailID ?
-                                  'btn product__variation-button--selected'
-                                  : 'btn product__variation-button'
+                              disabled={this.state.isVariationSet === true ?
+                                (this.state.productQuantity > 0 ? false : true) :
+                                (product.ProductStockAmount > 0 ? false : true)
                               }
-                              onClick={() => this.setState({
-                                productVariation: variation.ProductVariationValue,
-                                productQuantity: variation.ProductStockAmount,
-                                productPrice: variation.ProductVariationPrice,
-                                productVariationDetailID: variation.ProductVariationDetailID,
-                                selectedVariation: variation,
-                                isVariationSet: true
-                              })}
+                              onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
+                              className="btn btn-primary product-card__addtocart"
                             >
-                              {variation.ProductVariationValue}
+                              Add To Cart
                             </button>
-                          )
-                        })
-                      }
+                          </div>
+                          <div className="product__actions-item product__actions-item--wishlist mx-1">
+                            {this.wishlisting(product)}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {
+                this.props.version === "1" ? (
+                  <ProductTabs
+                    withSidebar
+                    currentTab={this.state}
+                    setCurrentTab={this.changeCurrentTab}
+                  />
+                ) : (
+                  <ProductTabs
+                    product={product}
+                    currentTab={this.state}
+                    setCurrentTab={this.changeCurrentTab}
+                  />
                 )
               }
 
-              <div className="product__option">
-                <div className="row form-group product__option d-flex align-items-center">
-                  <div className="col-3">
-                    <label
-                      htmlFor="product-quantity"
-                      className="product__option-label"
-                    >
-                      Quantity
-                    </label>
-                  </div>
-                  <div className="col-2 product__actions-item">
-                    <InputNumber
-                      id="product-quantity"
-                      aria-label="Quantity"
-                      className="product__quantity"
-                      size="lg"
-                      min={1}
-                      value={quantity}
-                      onChange={this.handleChangeQuantity}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group product__option product__add-to-cart" >
-                  <div className="product__actions">
-                    <div className="product__actions-item product__actions-item--addtocart mx-1">
-                      <button
-                        type="button"
-                        disabled={this.state.isVariationSet === true ?
-                          (this.state.productQuantity > 0 ? false : true) :
-                          (product.ProductStockAmount > 0 ? false : true)
-                        }
-                        onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
-                        className="btn btn-primary product-card__addtocart"
-                      >
-                        Add To Cart
-                      </button>
-                    </div>
-                    <div className="product__actions-item product__actions-item--wishlist mx-1">
-                      {this.wishlisting(product)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {
-          this.props.version === "1" ? (
-            <ProductTabs
-              withSidebar
-              currentTab={this.state}
-              setCurrentTab={this.changeCurrentTab}
-            />
-          ) : (
-            <ProductTabs
-              product={product}
-              currentTab={this.state}
-              setCurrentTab={this.changeCurrentTab}
-            />
-          )
+              <BlockProductsCarousel
+                title="Recommended Product"
+                layout="grid-4"
+                rows={1}
+                products={product.ProductRecommendation !== null && product.ProductRecommendation !== undefined
+                  ? JSON.parse(product.ProductRecommendation) : []}
+              />
+            </>
+            :
+            <LoadingPanel />
         }
-
-        <BlockProductsCarousel
-          title="Recommended Product"
-          layout="grid-4"
-          rows={1}
-          products={product.ProductRecommendation !== null && product.ProductRecommendation !== undefined
-            ? JSON.parse(product.ProductRecommendation) : []}
-        />
       </div >
     );
   }

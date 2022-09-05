@@ -15,16 +15,16 @@ export default function BlockProducts(props) {
   let large;
   let smalls;
 
-  if (featuredProduct) {
-    large = (
+  // if (featuredProduct) {
+  //   large = (
       
-      <div className="block-products__featured">
-        <div className="block-products__featured-item">
-          <ProductCard product={featuredProduct} />
-        </div>
-      </div>
-    );
-  }
+  //     <div className="block-products__featured">
+  //       <div className="block-products__featured-item">
+  //         <ProductCard product={featuredProduct} />
+  //       </div>
+  //     </div>
+  //   );
+  // }
   if (products.length > 0) {
     const blockClasses = classNames("block-products__list-item", {
       "block-products-carousel--loading": loading,

@@ -159,7 +159,7 @@ $local-suggestion-transition: .2s;
         }
         &.search--has-suggestions.search--suggestions-open {
             .search__suggestions {
-                width: 103%;
+                width: 100%;
                 transition-delay: 0s, 0s;
                 opacity: 1;
                 visibility: visible;

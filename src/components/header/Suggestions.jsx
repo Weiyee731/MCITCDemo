@@ -30,26 +30,25 @@ function Suggestions(props) {
 
     const handleCart = (product) => {
         let found = false
-
         if (props.productcart !== undefined) {
-            props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
+            props.productcart.filter(x => x.ProductID === product.data.ProductID).map((x) => {
                 found = true
                 props.CallUpdateProductCart({
                     userID: localStorage.getItem("id"),
                     userCartID: x.UserCartID,
                     productQuantity: parseInt(x.ProductQuantity) + 1,
-                    productName: product.ProductName
+                    productName: product.data.ProductName
                 })
             })
 
             if (found === false) {
                 props.CallAddProductCart({
                     userID: window.localStorage.getItem("id"),
-                    productID: product.ProductID,
+                    productID: product.data.ProductID,
                     productQuantity: 1,
-                    productVariationDetailID: 1,
+                    productVariationDetailID: product.variation.ProductVariationDetailID,
                     applyingPromoCode: 0,
-                    productName: product.ProductName
+                    productName: product.data.ProductName
                 })
             }
         }
@@ -58,27 +57,27 @@ function Suggestions(props) {
     const rootClasses = classNames(`suggestions suggestions--location--${context}`, className);
 
     const list = (products && products.map((product) => {
-        let images = JSON.parse(product.ProductImages)
+        let images = product.data.ProductImage
         return (
 
-            <li key={product.ProductID} className="suggestions__item">
+            <li key={product.data.ProductID} className="suggestions__item">
                 {images && images.length > 0 && (
                     <div className="suggestions__item-image product-image">
                         <div className="product-image__body">
-                            <img className="product-image__img" alt="" src={images[0].ProductMediaUrl ? images[0].ProductMediaUrl : Logo} onError={e => (e.target.src = Logo)} />
-
-                            {/* <img className="product-image__img" src={images[0].ProductMediaUrl} alt={images[0].ProductMediaDesc} /> */}
+                            <img className="product-image__img" alt="" src={images ? images : Logo} onError={e => (e.target.src = Logo)} />
                         </div>
                     </div>
                 )}
                 <div className="suggestions__item-info">
-                    <Link className="suggestions__item-name" to={url.product(product)}>
-                        {product.ProductName}
+                    <Link className="suggestions__item-name" to={url.product(product.data)}>
+                        {product.data.ProductName}
                     </Link>
-                    <div className="suggestions__item-meta">SKU: 83690/32</div>
+                    <div className="suggestions__item-meta">Merchant: {product.data.MerchantShopName}</div>
+                    <div className="suggestions__item-meta">Variation: {product.variation.ProductVariationValue}</div>
+                    {/* <div className="suggestions__item-meta">SKU: 83690/32</div> */}
                 </div>
-                <div className="suggestions__item-price">
-                    <Currency value={product.ProductSellingPrice} />
+                <div className="suggestions__item-price" style={{margin:"auto"}}>
+                    <Currency value={product.variation.ProductVariationPrice} />
                 </div>
                 {context === 'header' && (
                     <div className="suggestions__item-actions">
@@ -113,7 +112,7 @@ function Suggestions(props) {
     ));
 
     return (
-        <div className={rootClasses}>
+        <div className={rootClasses} style={{top:"50px", padding:"10px", marginLeft:"10px"}}>
             <ul className="suggestions__list">
                 {list}
             </ul>

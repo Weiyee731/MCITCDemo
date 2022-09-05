@@ -125,13 +125,24 @@ function Search(props) {
 
         let filteredProduct = []
 
-        JSON.parse(props.products).filter(el => el.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_').toLowerCase().trim().includes(query.toLowerCase().trim()))
-          .map((x) => {
-            filteredProduct.push(x)
+        if (props.products.length > 0) {
+          props.products.filter(el => el.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_').toLowerCase().trim().includes(query.toLowerCase().trim())).map((data)=>{
+            if(data.ProductVariation !== null)
+            {
+              JSON.parse(data.ProductVariation).map((x)=>{
+                filteredProduct.push({
+                  data: data,
+                  variation: x
+                })
+              })
+            }
           })
-        setSuggestedProducts(JSON.parse(filteredProduct).slice(0, 5));
-        setHasSuggestions(JSON.parse(filteredProduct).length > 0);
-        setSuggestionsOpen(true);
+        }
+        if (filteredProduct.length > 0) {
+          setSuggestedProducts(filteredProduct.slice(0, 5));
+          setHasSuggestions(filteredProduct.length > 0);
+          setSuggestionsOpen(true);
+        }
 
         if (canceled) {
           return;
@@ -158,7 +169,6 @@ function Search(props) {
   const handleKeyDown = (event) => {
     // Escape.
 
-    console.log("event", event.key)
     if (event.which === 27) {
       close();
     }

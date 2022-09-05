@@ -65,7 +65,6 @@ function ShopPageProduct(props) {
     props.CallProductReviewByProductID({ ProductID: productId, ParentProductReviewID: 0 })
 
     // props.CallProductDetail({ productId: productId, userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id") })
-    console.log("HAHAHA REVIEW")
     return () => {
       canceled = true;
     };

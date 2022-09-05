@@ -6,6 +6,8 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import CloseButton from 'react-bootstrap/CloseButton'
+import ClearIcon from '@mui/icons-material/Clear';
+import CheckIcon from '@mui/icons-material/Check';
 import { Row, Col } from "reactstrap";
 
 const HandleAddress = (props) => {
@@ -24,8 +26,6 @@ const HandleAddress = (props) => {
         // handleChangeCardType
     } = props
 
-    console.log("ADDRESS", address)
-
     return (
         <Modal
             className="modal-dialog-centered"
@@ -33,18 +33,10 @@ const HandleAddress = (props) => {
             onClosed={handleClose}
         >
             <ModalHeader>
-                <div className='row'>
-                    <div className='col-10'>
-                        Edit Address Details
-                    </div>
-                    <div className='col-1'>
-                        <CloseButton onClick={handleClose}/>
-                    </div>
-                </div>
+                {addressState.AddressBookNo === "" ? "Add New Address" : "Edit Address Details"}
             </ModalHeader>
 
             <ModalBody>
-
                 <div className="card-body">
                     <div className="row no-gutters">
                         <div className="col-12 col-lg-12 col-xl-12">
@@ -171,8 +163,6 @@ const HandleAddress = (props) => {
                                     )}
                                 </div>
                             </div>
-                            {console.log(addressState.USERSTATE)}
-                            {console.log(isStringNullOrEmpty(addressState.USERSTATE))}
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <TextField
@@ -222,27 +212,21 @@ const HandleAddress = (props) => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* <div className="form-group mt-3 mb-0">
-                            <button
-                                className="btn btn-primary"
-                                type="button"
-                                onClick={() => this.editAddress()}
-                            >
-                                Save
-                            </button>
-                        </div> */}
                     </div>
                 </div>
 
-
-                <button
-                    onClick={() => handleSaveAddress()}
-                    className="btn btn-primary btn-block mt-3"
-                    type="button"
-                >
-                    Save Changes
-                </button>
+                <div className='row'>
+                    <div className='col'>
+                        <button onClick={() => handleClose()}
+                            className="btn btn-secodary btn-block mt-3" style={{ backgroundColor: "dimgray", color: "white" }}
+                            type="button"> <ClearIcon /> CANCEL</button>
+                    </div>
+                    <div className='col'>
+                        <button onClick={() => handleSaveAddress()}
+                            className="btn btn-primary btn-block mt-3"
+                            type="button"><CheckIcon /> SUBMIT</button>
+                    </div>
+                </div>
             </ModalBody>
         </Modal>
     )
