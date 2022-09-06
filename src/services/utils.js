@@ -19,6 +19,7 @@ export const url = {
   // product: (product) => `/shop/products/${product.slug}`,
 
   productcateogory: (category) => category.ProductName !== null ? `/shop/ProductCategory/${category.ProductName}` : `/shop/ProductCategory/`,
+  productByCategory: (product) => product.ProductCategoryID !== null ? `/shop/ProductListing/type:Category&typevalue:${product.ProductCategoryID}` : `/shop/ProductListing/`,
 };
 
 export function getCategoryParents(category) {

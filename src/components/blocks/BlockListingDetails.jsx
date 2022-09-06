@@ -108,17 +108,7 @@ const sortingOption = [
 class BlockListingDetails extends Component {
     constructor(props) {
         super(props);
-
         this.state = initialState;
-
-        this.props.CallAllProductsListing({
-            type: this.props.match.params.selectedtype !== undefined && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
-            typeValue: this.props.match.params.selectedtypevalue !== undefined && this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
-            userId: localStorage.getItem("isLogin") !== false ? 0 : localStorage.getItem("id"),
-            productPage: 999,
-            page: 1
-        })
-
         this.handleFilterOption = this.handleFilterOption.bind(this)
         this.processUrl = this.processUrl.bind(this)
         this.handleShipFilter = this.handleShipFilter.bind(this)
@@ -136,6 +126,20 @@ class BlockListingDetails extends Component {
 
     componentDidMount() {
         this.props.CallAllProductCategoryListing();
+
+        console.log("CallAllProductsListing", this.props.match.params.selectedtype)
+        this.props.CallAllProductsListing({
+            type: this.props.match.params.selectedtype !== undefined && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
+            typeValue: this.props.match.params.selectedtypevalue !== undefined && this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
+            userId: localStorage.getItem("isLogin") !== false ? 0 : localStorage.getItem("id"),
+            productPage: 999,
+            page: 1
+        })
+
+
+        if (this.props.productsListing !== undefined) {
+            console.log("    this.props.productsListing", JSON.parse(this.props.productsListing))
+        }
         this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined &&
             this.state.productList.push(JSON.parse(this.props.productsListing))
 
@@ -393,7 +397,7 @@ class BlockListingDetails extends Component {
                 case "low-to-high":
 
                     list.sort((a, b) => (a.ProductPrice - b.ProductPrice))
-           
+
                     // if (tempList.length > 0) {
                     //     tempList.map((x) => {
                     //         console.log(x.ProductPrice.split("-")[0])

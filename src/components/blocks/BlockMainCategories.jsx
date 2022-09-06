@@ -80,20 +80,13 @@ class BlockMainCategories extends Component {
         {/* <div style={categoryStyle} className="row mb-4"> */}
         <div style={categoryStyle}>
           {this.props.productCategories.map((data, index) => {
-          // {this.state.categoriesDummy.map((data, index) => {
+            // {this.state.categoriesDummy.map((data, index) => {
             return (
               // <div key={index} style={categoryGrid} className="col-2 col-xs-2 p-3"
-              <div key={index} style={categoryGrid} className="col-2p-3"
-                onMouseDown={(e) => {
-                  window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
-                }}
-                onClick={(e) => {
-                  window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID
-                }}
-              >
+              <div key={index} style={categoryGrid} className="col-2p-3">
                 <div>
-                  {/* <img src={data.ProductCategoryImage} alt={data.ProductCategory} style={{height:"5vw", width:"7vw", margin:"0.5vw"}}/> */}
-                  <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="50%" height="50%" />
+                  <Link to={url.productByCategory(data)}> <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="50%" height="50%" /></Link>
+
                   <br />
                   <label style={{ fontSize: "13px" }}>{data.ProductCategory}</label>
                 </div>
