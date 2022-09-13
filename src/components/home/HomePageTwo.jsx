@@ -49,10 +49,11 @@ function HomePageTwo(props) {
   let tempArray = []
 
   const loopWithSlice = () => {
-    console.log("props.products", props.products)
-    console.log("postsToShow", postsToShow)
-    tempArray = [...postsToShow, ...props.products];
-    setPostsToShow(tempArray)
+    if (props.products.length > 0 && props.products[0].ReturnVal !== '0') {
+      tempArray = [...postsToShow, ...props.products];
+      setPostsToShow(tempArray)
+    }
+
   };
 
   const handleShowMorePosts = () => {
@@ -151,6 +152,7 @@ function HomePageTwo(props) {
           rows={2}
           products={props.products.length > 0 ? props.products : []}
         /> */}
+        {console.log("postsToShowpostsToShow", postsToShow)}
         <BlockProducts
           title="Featured Products"
           layout="large-first"
@@ -158,13 +160,30 @@ function HomePageTwo(props) {
           rows={2}
         />
         {
+          props.products.length > 0 && props.products[0].ReturnVal !== '0' ?
+            <div className="my-4">
+              <BlockMoreButton viewMore={handleShowMorePosts} />
+            </div>
+            :
+            // <div className="my-4">
+              <h2 style={{
+                width: "100%",
+                textalign: "center",
+                borderbottom: "1px solid #000",
+                lineheight: "0.1em",
+                margin: "10px 0 20px",
+              }}><span style={{ background: "#fff", padding: "0 10px" }}>There is no more products</span></h2>
+            // </div>
+
+        }
+        {/* {
           typeof props.products.ReturnVal !== 'undefined' && props.products.ReturnVal !== 1 ? "" :
             (
               <div className="my-4">
                 <BlockMoreButton viewMore={handleShowMorePosts} />
               </div>
             )
-        }
+        } */}
 
       </div>
     </React.Fragment>

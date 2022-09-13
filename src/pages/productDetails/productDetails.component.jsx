@@ -3371,18 +3371,18 @@ class ProductDetailsComponent extends Component {
       let object = {
         ProductID: this.state.ProductID,
         productSupplier: this.state.productSupplier,
-        name: encodeURIComponent(this.state.name),
-        description: encodeURIComponent(this.state.description),
+        name: encodeURIComponent(this.state.name) !== "" ? encodeURIComponent(this.state.name) : "-",
+        description: encodeURIComponent(this.state.description) !== "" ? encodeURIComponent(this.state.description) : "-",
         productCategory: this.state.productCategory,
         // productSupplier: this.state.productSupplier,
         height: this.state.height,
         width: this.state.width,
         depth: this.state.depth,
         weight: this.state.weight,
-        sku: encodeURIComponent(this.state.sku),
-        brand: encodeURIComponent(this.state.brand),
-        model: encodeURIComponent(this.state.model),
-        tags: encodeURIComponent(this.state.tags),
+        sku: encodeURIComponent(this.state.sku) !== "" ? encodeURIComponent(this.state.sku) : "-",
+        brand: encodeURIComponent(this.state.brand) !== "" ? encodeURIComponent(this.state.brand) : "-",
+        model: encodeURIComponent(this.state.model) !== "" ? encodeURIComponent(this.state.model) : "-",
+        tags: encodeURIComponent(this.state.tags) !== "" ? encodeURIComponent(this.state.tags) : "-",
       }
 
       this.props.CallUpdateProduct(object)
@@ -3628,7 +3628,7 @@ class ProductDetailsComponent extends Component {
         typeof this.props.addProductVariationResult !== "undefined" && this.props.addProductVariationResult.length === 0 &&
         typeof this.props.variationResult !== "undefined" && this.props.variationResult.length === 0 &&
         typeof this.props.productMediaResult !== "undefined" && this.props.productMediaResult.length === 0) {
- 
+
         setTimeout(() => {
           toast.success("Product details successfully updated")
           browserHistory.push("/viewProduct");

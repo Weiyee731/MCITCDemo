@@ -137,9 +137,7 @@ class BlockListingDetails extends Component {
         })
 
 
-        if (this.props.productsListing !== undefined) {
-            console.log("    this.props.productsListing", JSON.parse(this.props.productsListing))
-        }
+        console.log("this.props.productsListing ", this.props.productsListing)
         this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined &&
             this.state.productList.push(JSON.parse(this.props.productsListing))
 

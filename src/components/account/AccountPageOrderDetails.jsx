@@ -179,59 +179,52 @@ export default function AccountPageOrderDetails(props) {
   let addressListing = (addresspreview, data) => {
 
     return (
-      <div className="row mt-3 no-gutters mx-n2">
-        <div className="col-sm-6 col-12 px-2">
-          <div className="card address-card address-card--featured">
-            <div className="address-card__body">
-              <div className="address-card__badge address-card__badge--muted">
-                Shipping Address
-              </div>
-              <div className="address-card__name">
-                {
-                  data === "addressBook" ?
-                    addresspreview.UserAddressName !== null ? (addresspreview.UserAddressName).toUpperCase() : ""
-                    :
-                    addresspreview.UserFullName === null ? (addresspreview.FirstName).toUpperCase() : (addresspreview.FirstName).toUpperCase()
-                }
-              </div>
-              <div className="address-card__row">
-                <div className="address-card__row-title">Shipping Address</div>
-                {addresspreview.UserAddressLine1 !== null ? (addresspreview.UserAddressLine1).toUpperCase() : ""}
-                <br />
-                {addresspreview.UserAddressLine2 !== null ? (addresspreview.UserAddressLine2).toUpperCase() : ""}
-                <br />
-                {addresspreview.UserCity !== null ? (addresspreview.UserCity).toUpperCase() : ""}
-                {addresspreview.UserPoscode}{" "}
-                {addresspreview.UserState !== null ? (addresspreview.UserState).toUpperCase() : ""}
-              </div>
-              <div className="address-card__row">
-                <div className="address-card__row-title">Phone Number</div>
-                <div className="address-card__row-content">
-                  {addresspreview.UserContactNo}
-                </div>
-              </div>
-              <div className="address-card__row">
-                <div className="address-card__row-title">Email Address</div>
-                <div className="address-card__row-content">
-                  {
-                    data === "addressBook" ?
-                      addresspreview.UserEmail !== null ? (addresspreview.UserEmail).toLowerCase() : ""
-                      :
-                      addresspreview.UserEmailAddress !== null ? (addresspreview.UserEmailAddress).toLowerCase() : ""
-                  }
-                </div>
-              </div>
+      <div className="card address-card address-card--featured">
+        <div className="address-card__body">
+          <div className="address-card__badge address-card__badge--muted">
+            Shipping Address
+          </div>
+          <div className="address-card__name">
+            {
+              data === "addressBook" ?
+                addresspreview.UserAddressName !== null ? (addresspreview.UserAddressName).toUpperCase() : ""
+                :
+                addresspreview.UserFullName === null ? (addresspreview.FirstName).toUpperCase() : (addresspreview.FirstName).toUpperCase()
+            }
+          </div>
+          <div className="address-card__row">
+            <div className="address-card__row-title">Shipping Address</div>
+            {addresspreview.UserAddressLine1 !== null ? (addresspreview.UserAddressLine1).toUpperCase() : ""}
+            <br />
+            {addresspreview.UserAddressLine2 !== null ? (addresspreview.UserAddressLine2).toUpperCase() : ""}
+            <br />
+            {addresspreview.UserCity !== null ? (addresspreview.UserCity).toUpperCase() : ""}
+            {addresspreview.UserPoscode}{" "}
+            {addresspreview.UserState !== null ? (addresspreview.UserState).toUpperCase() : ""}
+          </div>
+          <div className="address-card__row">
+            <div className="address-card__row-title">Phone Number</div>
+            <div className="address-card__row-content">
+              {addresspreview.UserContactNo}
+            </div>
+          </div>
+          <div className="address-card__row">
+            <div className="address-card__row-title">Email Address</div>
+            <div className="address-card__row-content">
+              {
+                data === "addressBook" ?
+                  addresspreview.UserEmail !== null ? (addresspreview.UserEmail).toLowerCase() : ""
+                  :
+                  addresspreview.UserEmailAddress !== null ? (addresspreview.UserEmailAddress).toLowerCase() : ""
+              }
             </div>
           </div>
         </div>
       </div>
     )
   }
-  console.log("orderDetail orderDetail", orderDetail)
-  console.log("orderDetail orderDetail props", filteredMerchant)
 
   return (
-
     <React.Fragment>
       {
         isProceedPayment === true ?
@@ -248,14 +241,6 @@ export default function AccountPageOrderDetails(props) {
                     BACK TO LIST
                   </Button>
                 </div>
-                {
-                  orderDetail.TrackingStatusID === 2 &&
-                  <div className="order-header__actions">
-                    <Button onClick={() => setProceedPayment(true)} style={{ backgroundColor: "forestgreen", color: "white", borderWidth: 0 }}>
-                      Proceed Payment
-                    </Button>
-                  </div>
-                }
                 <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
                 <div className="order-header__subtitle">
                   Was placed on{" "}
@@ -387,17 +372,17 @@ export default function AccountPageOrderDetails(props) {
                 </div>
               </div>
             </div>
-            {
-              orderDetail.PickUpInd === 0 ?
-                orderDetail.UserAddresID !== 0 && orderDetail.UserAddressLine1 === null ?
-                  address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
-                    addressListing(addresspreview, "addressBook")
-                  ))
-                  :
-                  addressListing(orderDetail, "newAddress")
-                :
-                <div className="row mt-3 no-gutters mx-n2">
-                  <div className="col-sm-6 col-12 px-2">
+            <div className="row mt-3 no-gutters mx-n2">
+              <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
+                {
+                  orderDetail.PickUpInd === 0 ?
+                    orderDetail.UserAddresID !== 0 && orderDetail.UserAddressLine1 === null ?
+                      address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
+                        addressListing(addresspreview, "addressBook")
+                      ))
+                      :
+                      addressListing(orderDetail, "newAddress")
+                    :
                     <div className="card address-card address-card--featured">
                       <div className="address-card__body">
                         <div className="address-card__badge address-card__badge--muted">
@@ -414,150 +399,97 @@ export default function AccountPageOrderDetails(props) {
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-            }
-            {/* {
-        orderDetail.UserAddresID !== 0 ?
-          address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
-            addressListing(addresspreview)
-          ))
-          :
-          <div className="row mt-3 no-gutters mx-n2">
-            <div className="col-sm-6 col-12 px-2">
-              <div className="card address-card address-card--featured">
-                <div className="address-card__body">
-                  <div className="address-card__badge address-card__badge--muted">
-                    Self Pick Up
-                  </div>
-                  <div className="address-card__name">
-                    User Self Pick Up
-                  </div>
-                  <div className="address-card__name">
-                    {orderDetail.UserFullName}
-                  </div>
-                  <div className="address-card__row">
-                    {orderDetail.UserContactNo}
-                  </div>
-                </div>
+                }
               </div>
-            </div>
-          </div>
-      } */}
-
-            <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
-              {
-                orderDetail.TrackingStatus === "In Purchasing" ?
-                  <div className="card address-card address-card--featured">
-                    <div className="address-card__body">
-                      <div className="address-card__badge address-card__badge--muted">
-                        Pending Payment
-                      </div>
-                      <div className="address-card__row">
-                        <div className="address-card__name">
-                          Waiting for payment to complete the order
+              <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
+                {
+                  orderDetail.TrackingStatus === "In Purchasing" ?
+                    <div className="card address-card address-card--featured">
+                      <div className="address-card__body">
+                        <div className="address-card__badge address-card__badge--muted">
+                          Pending Payment
                         </div>
+                        <div className="address-card__row">
+                          <div className="address-card__name">
+                            Waiting for payment to complete the order
+                          </div>
+                        </div>
+                        <div style={{ textAlign: "center" }}>
+                          <Button onClick={() => setProceedPayment(true)} style={{ backgroundColor: "forestgreen", color: "white", borderWidth: 0 }}>
+                            Proceed Payment
+                          </Button>
+                        </div>
+
                       </div>
                     </div>
-                  </div>
-                  :
-                  <>
-                    {
-                      orderDetail.PaymentMethodID === 1 ?
-                        <div className="card address-card address-card--featured">
-                          <div className="address-card__body">
-                            <div className="address-card__badge address-card__badge--muted">
-                              CREDIT / DEBIT CARD
-                            </div>
-                            <div className="address-card__row">
-                              <div className="address-card__name">
-                                CREDIT / DEBIT CARD PAYMENT
+                    :
+                    <>
+                      {
+                        orderDetail.PaymentMethodID === 1 ?
+                          <div className="card address-card address-card--featured">
+                            <div className="address-card__body">
+                              <div className="address-card__badge address-card__badge--muted">
+                                CREDIT / DEBIT CARD
+                              </div>
+                              <div className="address-card__row">
+                                <div className="address-card__name">
+                                  CREDIT / DEBIT CARD PAYMENT
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        // creditcard.filter((x) => x.UserPaymentMethodID === orderDetail.UserPaymentMethodID).map((paymentcard) => (
-                        //   <div className="card address-card address-card--featured">
-                        //     <div className="address-card__body">
-                        //       <div className="address-card__badge address-card__badge--muted">
-                        //         Credit Card
-                        //       </div>
-                        //       <div className="address-card__name">
-                        //         {paymentcard.UserCardName}
-                        //       </div>
-                        //       <div className="address-card__row">
-                        //         <div className="address-card__row-title">
-                        //           User Card Number
-                        //         </div>
-                        //         {paymentcard.UserCardNo}
-                        //       </div>
-                        //       <div className="address-card__row">
-                        //         <div className="address-card__row-title">Expiry Date</div>
-                        //         <div className="address-card__row-content">
-                        //           {paymentcard.UserCardExpireDate}
-                        //         </div>
-                        //       </div>
-                        //       <div className="address-card__row">
-                        //         <div className="address-card__row-title">Card Type</div>
-                        //         <div className="address-card__row-content">
-                        //           {paymentcard.UserCardType}
-                        //         </div>
-                        //       </div>
-                        //     </div>
-                        //   </div>
-                        // ))
-                        :
-                        <>
-                          {
-                            orderDetail.PaymentMethodID === 3 &&
-                            <div className="card address-card address-card--featured">
-                              <div className="address-card__body">
-                                <div className="address-card__badge address-card__badge--muted">
-                                  E-WALLET
-                                </div>
-                                <div className="address-card__row">
-                                  <div className="address-card__name">
-                                    E-WALLET PAYMENT
+                          :
+                          <>
+                            {
+                              orderDetail.PaymentMethodID === 3 &&
+                              <div className="card address-card address-card--featured">
+                                <div className="address-card__body">
+                                  <div className="address-card__badge address-card__badge--muted">
+                                    E-WALLET
+                                  </div>
+                                  <div className="address-card__row">
+                                    <div className="address-card__name">
+                                      E-WALLET PAYMENT
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          }
-                          {
-                            orderDetail.PaymentMethodID === 2 &&
-                            <div className="card address-card address-card--featured">
-                              <div className="address-card__body">
-                                <div className="address-card__badge address-card__badge--muted">
-                                  FPX
-                                </div>
-                                <div className="address-card__row">
-                                  <div className="address-card__name">
-                                    FPX PAYMENT
+                            }
+                            {
+                              orderDetail.PaymentMethodID === 2 &&
+                              <div className="card address-card address-card--featured">
+                                <div className="address-card__body">
+                                  <div className="address-card__badge address-card__badge--muted">
+                                    FPX
+                                  </div>
+                                  <div className="address-card__row">
+                                    <div className="address-card__name">
+                                      FPX PAYMENT
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          }
-                          {
-                            orderDetail.PaymentMethodID === 4 &&
-                            <div className="card address-card address-card--featured">
-                              <div className="address-card__body">
-                                <div className="address-card__badge address-card__badge--muted">
-                                  PAYPAL
-                                </div>
-                                <div className="address-card__row">
-                                  <div className="address-card__name">
-                                    PAYPAL PAYMENT
+                            }
+                            {
+                              orderDetail.PaymentMethodID === 4 &&
+                              <div className="card address-card address-card--featured">
+                                <div className="address-card__body">
+                                  <div className="address-card__badge address-card__badge--muted">
+                                    PAYPAL
+                                  </div>
+                                  <div className="address-card__row">
+                                    <div className="address-card__name">
+                                      PAYPAL PAYMENT
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          }
-
-                        </>
-                    }
-                  </>
-              }
+                            }
+                          </>
+                      }
+                    </>
+                }
+              </div>
             </div>
           </>
       }

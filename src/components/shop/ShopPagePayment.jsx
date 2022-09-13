@@ -175,12 +175,9 @@ class PagePayment extends Component {
   }
 
   componentDidMount() {
-
-    console.log("COMPONENTDIDMOUNT", this.props)
     if (this.props.data !== undefined && this.props.data.length > 0) {
       this.setDetails(this.props.data)
     }
-    // this.props.handleGetPaymentId(null, 0, 0)
 
     let URL2 = "https://myemporia.my/payment/06_fpx_bankListRequest.php"
     const config = { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -278,46 +275,6 @@ class PagePayment extends Component {
   handleInputFocus = (e) => {
     this.setState({ focus: e.target.name });
   };
-
-  // handleInputChange = (e) => {
-  //   switch (e.target.name) {
-  //     case "newnumber":
-
-  //       if (e.target.value.length > 1) {
-  //         e.target.value = formatCreditCardNumber(e.target.value)[1].replace(
-  //           /\s+/g,
-  //           ""
-  //         );
-  //       }
-  //       if (formatCreditCardNumber(e.target.value)[0] !== undefined) {
-  //         this.setState({ issuer: formatCreditCardNumber(e.target.value)[0] });
-  //       } else {
-  //         toast.error("Card Number's format is incorrect");
-  //       }
-  //       break;
-
-  //     case "newexpiry":
-  //       e.target.value = formatExpirationDate(e.target.value);
-  //       break;
-
-  //     case "cvc":
-  //       e.target.value = formatCVC(e.target.value);
-  //       if (formatCVC(e.target.value).length === 3) {
-  //         this.props.handleGetPaymentId(this.state.cardList[0], 1, "Credit Card")
-  //       }
-
-  //       break;
-
-  //     default:
-  //       this.setState({ [e.target.name]: e.target.value })
-  //   }
-  //   this.setState({ [e.target.name]: e.target.value });
-  // };
-
-  // handlePaymentChange = (value, typeid, typevalue) => {
-  //   this.setState({ paymentMethods: value.PaymentMethod })
-  //   this.props.handleGetPaymentId(value, typeid, typevalue)
-  // };
 
   handleAddNewCard = () => {
     this.setState({ isAddNewCard: !this.state.isAddNewCard })
@@ -487,7 +444,8 @@ class PagePayment extends Component {
     let PickUpIndicator = this.props.addressID === 0 ? 1 : 0
 
     const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
-
+    // live credit card
+    // const APIKey = "2c57e2f0161a450ebe5fb67ffbdd51fc196b0256ed1940158f54990b57f4ec3c1e08823fa84c4596bea898bb2b53e6d124414d118b954914806c182092123d4008ba628a8eaf403faa7e3c1adb470ee9d6044313451442d2acd532b47d42e00a2fdecfa996334065a94e0d46d32b7534b3fb4016198047568afd83c99823f6ed"
     let access_key = ""
     let profile_id = ""
     let transaction_uuid = ""
@@ -543,6 +501,8 @@ class PagePayment extends Component {
     else {
       access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
       profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
+      // access_key = "51f40be210ff34cba0079b19efd3ab42"  //live credit card
+      // profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4"  //live credit card
       transaction_uuid = time + '123'
       signed_date_time = now
       locale = "en"
@@ -802,6 +762,7 @@ class PagePayment extends Component {
               <React.Fragment>
                 <div>
                   <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+                    {/* <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post"> */}
                     <input type="hidden" id="access_key" name="access_key" value={access_key}></input>
                     <input type="hidden" id="profile_id" name="profile_id" value={profile_id}></input>
                     <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={transaction_uuid}></input>

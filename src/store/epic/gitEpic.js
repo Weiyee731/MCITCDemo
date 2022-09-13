@@ -1341,8 +1341,6 @@ export class GitEpic {
   getProductsListing = (action$) =>
     action$.ofType(GitAction.GetProductListing).switchMap(async ({ payload }) => {
       try {
-
-
         const response = await fetch(
           url +
           "Product_ItemListByType?Type=" +
@@ -2043,7 +2041,8 @@ export class GitEpic {
 
   getAllCategoriesListing = (action$) =>
     action$.ofType(GitAction.GetProductCategoryListing).switchMap(async () => {
-
+      console.log(url +
+        "Product_CategoryListing")
       try {
         const response = await fetch(
           url +
