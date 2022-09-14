@@ -553,7 +553,6 @@ class DisplayTable extends Component {
             </Paper>
           </div>
         </div>
-        )
       </div>
     );
   }
@@ -743,7 +742,7 @@ class UserDetailsComponent extends Component {
                 />
               </FormControl>
             </div>
-            <h5 style={{ marginTop: "15px", marginBottom: "15px" }}>Purchase Order History</h5>
+            <h5 style={{ marginTop: "15px", marginBottom: "15px" }}>11Purchase Order History</h5>
             <div style={{ width: "100%" }}>
               {!this.state.detailsShown ? (
                 <AppBar position="static" color="default">

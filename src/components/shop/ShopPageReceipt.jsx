@@ -15,6 +15,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import axios from "axios";
 import { toast } from "react-toastify";
+import LoadingPanel from '../shared/loadingPanel';
 
 class ShopPageReceipt extends Component {
     constructor(props) {
@@ -57,6 +58,12 @@ class ShopPageReceipt extends Component {
         if (this.props !== undefined && this.props.transactionuuid !== undefined && this.state.isOrderStatusCall === false) {
             this.props.CallViewOrderStatus({ Transactionuuid: this.props.transactionuuid, paymentType: this.props.type })
             this.setState({ isOrderStatusCall: true })
+        }
+
+        if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.state.isOrderStatusCall === true &&
+            this.props.orderstatusdata[0].ReturnVal !== '0' && this.props.orderstatusdata[0].Transactionuuid !== undefined
+            && this.props.orderstatusdata[0].Transactionuuid !== this.props.transactionuuid) {
+            this.props.CallViewOrderStatus({ Transactionuuid: this.props.transactionuuid, paymentType: this.props.type })
         }
 
 
@@ -362,16 +369,18 @@ class ShopPageReceipt extends Component {
         }
 
 
-        if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.state.isProduceChecksum === false)
-            CreateCheckSum()
+        if (parseInt(this.props.type) === 2 && this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0) {
+            if (this.state.isProduceChecksum === false)
+                CreateCheckSum()
 
-        console.log("this.props.orderstatusdata", this.props.orderstatusdata)
+            if (this.state.isStatusCheck === false) {
+                this.props.orderstatusdata.map((data) => {
+                    checkFPXStatus(data)
+                })
+            }
 
-        if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.state.isStatusCheck === false) {
-            this.props.orderstatusdata.map((data) => {
-                checkFPXStatus(data)
-            })
         }
+
 
         const returnPage = (type) => {
             console.log("returnPage", type)
@@ -379,7 +388,7 @@ class ShopPageReceipt extends Component {
             switch (type) {
                 case "bank":
                     console.log("BANK", this.props.orderstatusdata)
-                    if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata[0].ReturnVal !== 1 && this.props.orderstatusdata[0].ReturnVal !== '0') {
+                    if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata[0].ReturnVal !== 1 && this.props.orderstatusdata[0].ReturnVal !== '0') {
                         if (this.state.responseCode === "00")
                             return (this.successPage(this.props.orderstatusdata[0]))
                         else {
@@ -394,7 +403,8 @@ class ShopPageReceipt extends Component {
 
 
                 case "card":
-                    if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata[0].ReturnVal !== 1) {
+                    console.log("CREDIT CARD")
+                    if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata[0].ReturnVal !== 1) {
                         if (this.props.orderstatusdata[0].TrackingStatusID === 1)
                             return (this.successPage(this.props.orderstatusdata[0]))
                         else
@@ -408,10 +418,29 @@ class ShopPageReceipt extends Component {
             }
         }
 
+        const checkPropsData = (data) => {
+            if (data !== undefined && data.length > 0 && data[0].Transactionuuid === this.props.transactionuuid)
+                return true
+            else {
+                if (data[0].Transactionuuid === undefined && this.props.orderstatusdata[0].ReturnVal === '0')
+                    return true
+                else
+                    return false
+            }
+        }
+
         return (
             <React.Fragment>
-                {console.log("sadasdad", this.state.isStatusCheck)}
-                {parseInt(this.props.type) === 2 ? this.state.isStatusCheck ? returnPage("bank") : this.errorPage() : returnPage("card")}
+                {console.log("check state", this.state)}
+                {console.log("check props", this.props)}
+                {console.log("check propsData", checkPropsData(this.props.orderstatusdata))}
+                {
+                    this.state.isOrderStatusCall === true && checkPropsData(this.props.orderstatusdata) === true ?
+                        parseInt(this.props.type) === 2 ? this.state.isStatusCheck ? returnPage("bank") : this.errorPage() : returnPage("card")
+                        :
+                        <LoadingPanel />
+                }
+
             </React.Fragment>
         );
     }

@@ -165,15 +165,15 @@ function HomePageTwo(props) {
               <BlockMoreButton viewMore={handleShowMorePosts} />
             </div>
             :
-            // <div className="my-4">
-              <h2 style={{
-                width: "100%",
-                textalign: "center",
-                borderbottom: "1px solid #000",
-                lineheight: "0.1em",
-                margin: "10px 0 20px",
-              }}><span style={{ background: "#fff", padding: "0 10px" }}>There is no more products</span></h2>
-            // </div>
+            <div className="my-4">
+              {/* // <h2 style={{ */}
+              {/* //   width: "100%",
+              //   textalign: "center",
+              //   borderbottom: "1px solid #000",
+              //   lineheight: "0.1em",
+              //   margin: "10px 0 20px",
+              // }}><span style={{ background: "#fff", padding: "0 10px" }}>There is no more products</span></h2> */}
+            </div>
 
         }
         {/* {

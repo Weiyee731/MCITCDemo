@@ -34,6 +34,8 @@ import { toast } from "react-toastify";
 import classNames from "classnames";
 import { findAllByDisplayValue } from "@testing-library/dom";
 
+import LoadingPanel from '../shared/loadingPanel';
+
 function mapStateToProps(state) {
     return {
         productCategories: state.counterReducer["productCategories"], // with sub hierarchy item
@@ -75,6 +77,7 @@ const initialState = {
     CategoryHierachyListing: [],
     ParentCategory: [],
     categoryName: "",
+    isCheckDataBind: false,
 
     breadcrumb: [
         { title: "Home", url: "" },
@@ -136,8 +139,6 @@ class BlockListingDetails extends Component {
             page: 1
         })
 
-
-        console.log("this.props.productsListing ", this.props.productsListing)
         this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined &&
             this.state.productList.push(JSON.parse(this.props.productsListing))
 
@@ -218,11 +219,21 @@ class BlockListingDetails extends Component {
             this.setState({ products: this.props.products, isDataBind: true })
         }
 
+        console.log("productsListing prevProps", prevProps.productsListing)
+        console.log("productsListing", this.props.productsListing)
         if (prevProps.productsListing !== this.props.productsListing) {
             if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
                 this.state.productList.splice(0, this.state.productList.length)
                 this.state.productList.push(JSON.parse(this.props.productsListing))
+                this.setState({ isCheckDataBind: true })
             }
+            else {
+                this.state.productList.splice(0, this.state.productList.length)
+                this.setState({ isCheckDataBind: true })
+            }
+        } else {
+            if (this.state.isCheckDataBind === false)
+                this.setState({ isCheckDataBind: true })
         }
 
         if (prevProps.location.pathname !== this.props.location.pathname)
@@ -554,7 +565,7 @@ class BlockListingDetails extends Component {
                                 {
                                     this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
                                     <div>
-                                        <label onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID}>
+                                        <label onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID; this.setState({ isCheckDataBind: false }) }}>
                                             {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
                                         </label>
                                     </div>
@@ -579,9 +590,9 @@ class BlockListingDetails extends Component {
                                                                                     this.state.categoryHierachy === 1 || this.state.categoryHierachy === 2 ?
                                                                                         <div key={items.ProductCategory} className="sub-category-items " style={{ fontWeight: "200", paddingLeft: "30px" }}>
                                                                                             <FiberManualRecordOutlinedIcon
-                                                                                                onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                                onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                                                                                             />
-                                                                                            <label className="sub-label" onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID}
+                                                                                            <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                                                                                             >{items.ProductCategory}</label>
                                                                                         </div>
                                                                                         : ""
@@ -593,9 +604,9 @@ class BlockListingDetails extends Component {
                                                             </> :
                                                             <>
                                                                 <FiberManualRecordOutlinedIcon
-                                                                    onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                                    onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                                                                 />
-                                                                <label className="sub-label" onClick={() => window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID}
+                                                                <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                                                                 >{category.ProductCategory}</label>
                                                             </>
                                                     }
@@ -763,36 +774,38 @@ class BlockListingDetails extends Component {
                                 </div>
                             </div>
 
-                            {/* <div className="product-list container-fluid">
-                                <div className="row pl-2"> */}
-
-
                             <div className="container">
                                 <div className="row">
                                     {
-                                        this.state.productList.length > 0 ?
-                                            this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?
-                                                this.state.productList[0].map((products, index) => {
+                                        this.state.isCheckDataBind === true ?
 
-                                                    return (
-                                                        <div key={index} className="block-products__list-item">
-                                                            <ProductCard product={products}></ProductCard>
-                                                        </div>
+                                            this.state.productList.length > 0 ?
+                                                this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?
+                                                    this.state.productList[0].map((products, index) => {
 
-                                                    )
-                                                })
+                                                        return (
+                                                            <div key={index} className="block-products__list-item">
+                                                                <ProductCard product={products}></ProductCard>
+                                                            </div>
+
+                                                        )
+                                                    })
+                                                    :
+                                                    <div className="ml-2"><i>No products for this section</i></div>
                                                 :
                                                 <div className="ml-2"><i>No products for this section</i></div>
+
                                             :
-                                            <div className="ml-2"><i>No products for this section</i></div>
+                                            <LoadingPanel />
                                     }
+
 
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div >
-            </React.Fragment>
+            </React.Fragment >
         )
     }
 }
