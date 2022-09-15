@@ -113,7 +113,7 @@ const rootEpic = combineEpics(
   gitEpic.UpdateOrder_AccountOrderCreditCard,
   gitEpic.UpdateOrder_AccountOrder,
   gitEpic.Order_ViewPaymentDetailsByUUID,
-  gitEpic.UpdateOrderStatus,
+  gitEpic.UpdateOrderStock,
   gitEpic.UpdateOrderUserDetails,
   gitEpic.updateOrderTrackingNumber,
   gitEpic.getProductStockByStatus,

@@ -78,6 +78,7 @@ const initialState = {
     ParentCategory: [],
     categoryName: "",
     isCheckDataBind: false,
+    isCategorySet: false,
 
     breadcrumb: [
         { title: "Home", url: "" },
@@ -129,8 +130,6 @@ class BlockListingDetails extends Component {
 
     componentDidMount() {
         this.props.CallAllProductCategoryListing();
-
-        console.log("CallAllProductsListing", this.props.match.params.selectedtype)
         this.props.CallAllProductsListing({
             type: this.props.match.params.selectedtype !== undefined && this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
             typeValue: this.props.match.params.selectedtypevalue !== undefined && this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''),
@@ -142,10 +141,45 @@ class BlockListingDetails extends Component {
         this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined &&
             this.state.productList.push(JSON.parse(this.props.productsListing))
 
+        if (this.props.productCategories !== undefined && this.props.productCategories.length > 0)
+            this.handleCategory()
+    }
+
+
+    componentDidUpdate(prevProps) {
+        if (!this.state.isDataBind) {
+            this.setState({ products: this.props.products, isDataBind: true })
+        }
+
+        if (prevProps.productsListing !== this.props.productsListing) {
+            if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+                this.state.productList.splice(0, this.state.productList.length)
+                this.state.productList.push(JSON.parse(this.props.productsListing))
+                this.setState({ isCheckDataBind: true })
+            }
+            else {
+                this.state.productList.splice(0, this.state.productList.length)
+                this.setState({ isCheckDataBind: true })
+            }
+        } else {
+            if (this.state.isCheckDataBind === false)
+                this.setState({ isCheckDataBind: true })
+        }
+
+        if (prevProps.location.pathname !== this.props.location.pathname)
+            window.location.href = this.props.location.pathname
+
+        if (this.props.productCategories !== undefined && this.props.productCategories.length > 0)
+            if (this.state.isCategorySet === false)
+                this.handleCategory()
+            else
+                this.props.CallAllProductCategoryListing();
+    }
+
+    handleCategory() {
         let tempCategoryHierachy = 0
         let breadcrumb = this.state.breadcrumb
         if (this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == "Category" && this.state.categoryHierachy === 0) {
-
             this.props.productCategories.map((category) => {
                 if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
                     this.setState({
@@ -212,34 +246,7 @@ class BlockListingDetails extends Component {
                 })
             }
         }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (!this.state.isDataBind) {
-            this.setState({ products: this.props.products, isDataBind: true })
-        }
-
-        console.log("productsListing prevProps", prevProps.productsListing)
-        console.log("productsListing", this.props.productsListing)
-        if (prevProps.productsListing !== this.props.productsListing) {
-            if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
-                this.state.productList.splice(0, this.state.productList.length)
-                this.state.productList.push(JSON.parse(this.props.productsListing))
-                this.setState({ isCheckDataBind: true })
-            }
-            else {
-                this.state.productList.splice(0, this.state.productList.length)
-                this.setState({ isCheckDataBind: true })
-            }
-        } else {
-            if (this.state.isCheckDataBind === false)
-                this.setState({ isCheckDataBind: true })
-        }
-
-        if (prevProps.location.pathname !== this.props.location.pathname)
-            window.location.href = this.props.location.pathname
-
-
+        this.setState({ isCategorySet: true })
     }
 
     handleFilterOption(e) {
@@ -391,8 +398,6 @@ class BlockListingDetails extends Component {
     handleSorting(options) {
         if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
             let list = JSON.parse(this.props.productsListing)
-            // let list = JSON.parse(this.props.productsListing).filter((x) => !x.ProductPrice.includes("-"))
-            // let tempList = JSON.parse(this.props.productsListing).filter((x) => x.ProductPrice.includes("-"))
 
             switch (options.target.value) {
                 case "latest":
@@ -400,18 +405,12 @@ class BlockListingDetails extends Component {
                     this.setListing(list)
                     break;
                 case "top-sales":
-                    list.sort((a, b) => (a.ProductSold - b.ProductSold))
+                    list.sort((a, b) => (parseInt(a.ProductSold) > parseInt(b.ProductSold) ? -1 : 1))
                     this.setListing(list)
                     break;
                 case "low-to-high":
 
                     list.sort((a, b) => (a.ProductPrice - b.ProductPrice))
-
-                    // if (tempList.length > 0) {
-                    //     tempList.map((x) => {
-                    //         console.log(x.ProductPrice.split("-")[0])
-                    //     })
-                    // }
                     this.setListing(list)
                     break;
                 case "high-to-low":
@@ -434,8 +433,6 @@ class BlockListingDetails extends Component {
     handleShipFilter(value) {
 
         if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
-            let list = JSON.parse(this.props.productsListing)
-
             switch (value) {
                 case "WM":
                     this.checkFilterStatus(0)
@@ -494,20 +491,20 @@ class BlockListingDetails extends Component {
             if (shipped === true) {
                 switch (index) {
                     case 0:
-                        tempFilterList = oriList.filter(el => el.ProductWestMalaysiaInd === 1 && el.ProductLocalInd === 0)
+                        tempFilterList = oriList.filter(el => el.ProductWestMalaysiaInd === 1 && el.ProductLocalInd === 1)
                         Listing.push(tempFilterList)
                         Listing = [...Listing, tempFilterList]
                         break;
                     case 1:
-                        tempFilterList = oriList.filter(el => el.ProductWestMalaysiaInd === 0 && el.ProductLocalInd === 0)
+                        tempFilterList = oriList.filter(el => el.ProductWestMalaysiaInd === 0 && el.ProductLocalInd === 1)
                         Listing = [...Listing, tempFilterList]
                         break;
                     case 2:
-                        tempFilterList = oriList.filter(el => el.ProductLocalInd === 0)
+                        tempFilterList = oriList.filter(el => el.ProductLocalInd === 1)
                         Listing = [...Listing, tempFilterList]
                         break;
                     case 3:
-                        tempFilterList = oriList.filter(el => el.ProductLocalInd === 1)
+                        tempFilterList = oriList.filter(el => el.ProductLocalInd === 0)
                         Listing = [...Listing, tempFilterList]
                         break;
 
@@ -777,7 +774,7 @@ class BlockListingDetails extends Component {
                             <div className="container">
                                 <div className="row">
                                     {
-                                        this.state.isCheckDataBind === true ?
+                                        this.state.isCheckDataBind === true && this.props.productCategories !== undefined && this.props.productCategories.length > 0 ?
 
                                             this.state.productList.length > 0 ?
                                                 this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?

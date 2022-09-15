@@ -24,7 +24,6 @@ class ShopPageReceipt extends Component {
         this.state = {
 
             isProduceChecksum: false,
-            fpx_checkSum: "",
 
             fpx_msgType: "AE",
             fpx_sellerExId: "EX00013776",
@@ -35,6 +34,8 @@ class ShopPageReceipt extends Component {
             isStatusCheck: false,
             isOrderStatusCall: false,
             isOrderUpdated: false,
+            fpxResult: null,
+            isCheckSum: false
         };
     }
 
@@ -51,9 +52,10 @@ class ShopPageReceipt extends Component {
             })
         }
 
+
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
 
         if (this.props !== undefined && this.props.transactionuuid !== undefined && this.state.isOrderStatusCall === false) {
             this.props.CallViewOrderStatus({ Transactionuuid: this.props.transactionuuid, paymentType: this.props.type })
@@ -64,46 +66,51 @@ class ShopPageReceipt extends Component {
             this.props.orderstatusdata[0].ReturnVal !== '0' && this.props.orderstatusdata[0].Transactionuuid !== undefined
             && this.props.orderstatusdata[0].Transactionuuid !== this.props.transactionuuid) {
             this.props.CallViewOrderStatus({ Transactionuuid: this.props.transactionuuid, paymentType: this.props.type })
+        } else {
+            if (parseInt(this.props.type) === 2 && this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0
+                && this.props.orderstatusdata[0].Transactionuuid !== undefined && this.props.orderstatusdata[0].Transactionuuid === this.props.transactionuuid && this.state.isCheckSum === false)
+                this.CreateCheckSum()
         }
 
+        // }
+        // if (prevProps.orderstatus !== this.props.orderstatus) {
+        //     if (this.props.orderstatus.length > 0 && this.props.orderstatus[0].ReturnVal === 1) {
+        //         this.props.CallClearOrderStatus()
+        //     }
+        //     // else {
+        //     //     setTimeout(() => {
+        //     //         window.location.href = "/"
+        //     //         window.reload(false)
+        //     //     }, 4000);
+        //     // }
+        // }
 
-
-        if (prevProps.orderstatus !== this.props.orderstatus) {
-            if (this.props.orderstatus.length > 0 && this.props.orderstatus[0].ReturnVal === 1) {
-                this.props.CallClearOrderStatus()
+        if (prevState.fpxResult !== this.state.fpxResult) {
+            if (parseInt(this.props.type) === 2 && this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0) {
+                this.props.orderstatusdata.map((data) => {
+                    this.checkFPXStatus(data)
+                })
             }
-            // else {
-            //     setTimeout(() => {
-            //         window.location.href = "/"
-            //         window.reload(false)
-            //     }, 4000);
-            // }
         }
     }
 
-    // UpdateOrderStatus() {
-    //     if (this.state.isOrderUpdated === false) {
-    //         let orderVariationDetailIDs = []
-    //         let orderDetailQtys = []
-    //         this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata.map((data) => {
-    //             data.OrderProductDetail !== undefined && JSON.parse(data.OrderProductDetail).map((dataDetails) => {
-    //                 orderVariationDetailIDs.push(dataDetails.ProductVariationDetailID)
-    //                 orderDetailQtys.push(dataDetails.ProductQuantity)
-    //             })
-    //         })
-
-    //         console.log("UpdateOrderStatus")
-    //         this.props.CallUpdateOrderStatus({
-    //             Transactionuuid: this.props.transactionuuid,
-    //             OrderPaidAmount: this.props.amount,
-    //             TxnID: parseInt(this.props.type) === 2 ? this.props.reference : "-",
-    //             PaymentType:"FPX",
-    //             orderVariationDetailIDs: orderVariationDetailIDs,
-    //             orderDetailQtys: orderDetailQtys
-    //         })
-    //         this.setState({ isOrderUpdated: true })
-    //     }
-    // }
+    UpdateOrderStock() {
+        if (this.state.isOrderUpdated === false) {
+            let orderVariationDetailIDs = []
+            let orderDetailQtys = []
+            this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata.map((data) => {
+                data.OrderProductDetail !== undefined && JSON.parse(data.OrderProductDetail).map((dataDetails) => {
+                    orderVariationDetailIDs.push(dataDetails.ProductVariationDetailID)
+                    orderDetailQtys.push(dataDetails.ProductQuantity)
+                })
+            })
+            this.props.CallUpdateOrderStock({
+                orderVariationDetailIDs: orderVariationDetailIDs,
+                orderDetailQtys: orderDetailQtys
+            })
+            this.setState({ isOrderUpdated: true })
+        }
+    }
 
     checkFPXResponse() {
         let responseMsg = ""
@@ -122,7 +129,7 @@ class ShopPageReceipt extends Component {
             { title: 'Receipt', url: '' },
         ];
         const receiptTextStyle = { color: "midnightblue", fontWeight: "bold", fontSize: "18px" }
-
+        this.UpdateOrderStock()
         return (
             <div className="cart block container_" >
                 <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> <PageHeader />
@@ -300,94 +307,103 @@ class ShopPageReceipt extends Component {
         );
     }
 
-    render() {
-        const checkEmptyData = (data) => {
-            if (data === "-")
-                return ""
-            else
-                return data
-        }
 
-        const CreateCheckSum = () => {
-            let FPXData = this.props.orderstatusdata[0]
-            let bankingdata = checkEmptyData(FPXData.fpx_buyerAccNo) + "|" + checkEmptyData(FPXData.fpx_buyerBankBranch) + "|" + checkEmptyData(FPXData.fpx_buyerBankId) + "|" + checkEmptyData(FPXData.fpx_buyerEmail) + "|" + checkEmptyData(FPXData.fpx_buyerIban)
-                + "|" + checkEmptyData(FPXData.fpx_buyerId) + "|" + checkEmptyData(FPXData.fpx_buyerName) + "|" + checkEmptyData(FPXData.fpx_makerName) + "|" + checkEmptyData(FPXData.fpx_msgToken) + "|" + this.state.fpx_msgType + "|" + checkEmptyData(FPXData.fpx_productDesc)
-                + "|" + checkEmptyData(FPXData.fpx_sellerBankCode) + "|" + this.state.fpx_sellerExId + "|" + checkEmptyData(FPXData.fpx_sellerExOrderNo) + "|" + this.state.fpx_sellerId + "|" + checkEmptyData(FPXData.fpx_sellerOrderNo) + "|" + checkEmptyData(FPXData.fpx_sellerTxnTime) + "|" + parseFloat(FPXData.OrderTotalAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + checkEmptyData(FPXData.fpx_version)
+    checkEmptyData = (data) => {
+        if (data === "-")
+            return ""
+        else
+            return data
+    }
 
-            let URL = "https://myemporia.my/payment/check.php"
-            const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-            const formData = new FormData()
-            formData.append("bankingdata", bankingdata);
-            axios.post(URL, formData, config).then((res) => {
-                if (res.status === 200) {
-                    this.setState({
-                        fpx_checkSum: res.data.split('"')[1],
-                    })
-                }
-                else {
-                    toast.error("There is something wrong with uploading images. Please try again.")
-                }
-            }).catch(e => {
-                toast.error("There is something wrong with uploading images. Please try again.")
+    CreateCheckSum = async () => {
+        let FPXData = this.props.orderstatusdata[0]
+        let bankingdata = this.checkEmptyData(FPXData.fpx_buyerAccNo) + "|" + this.checkEmptyData(FPXData.fpx_buyerBankBranch) + "|" + this.checkEmptyData(FPXData.fpx_buyerBankId) + "|" + this.checkEmptyData(FPXData.fpx_buyerEmail) + "|" + this.checkEmptyData(FPXData.fpx_buyerIban)
+            + "|" + this.checkEmptyData(FPXData.fpx_buyerId) + "|" + this.checkEmptyData(FPXData.fpx_buyerName) + "|" + this.checkEmptyData(FPXData.fpx_makerName) + "|" + this.checkEmptyData(FPXData.fpx_msgToken) + "|" + this.state.fpx_msgType + "|" + this.checkEmptyData(FPXData.fpx_productDesc)
+            + "|" + this.checkEmptyData(FPXData.fpx_sellerBankCode) + "|" + this.state.fpx_sellerExId + "|" + this.checkEmptyData(FPXData.fpx_sellerExOrderNo) + "|" + this.state.fpx_sellerId + "|" + this.checkEmptyData(FPXData.fpx_sellerOrderNo) + "|" + this.checkEmptyData(FPXData.fpx_sellerTxnTime) + "|" + parseFloat(FPXData.OrderTotalAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.checkEmptyData(FPXData.fpx_version)
+
+        let URL = "https://myemporia.my/payment/check.php"
+        const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+        const formData = new FormData()
+        formData.append("bankingdata", bankingdata);
+        const res = await axios.post(URL, formData, config)
+        if (res.status === 200) {
+            this.setState({
+                fpxResult: res.data.split('"')[1],
+                isCheckSum: true
             })
-            this.setState({ isProduceChecksum: true })
         }
+        // .then((res) => {
+        //     if (res.status === 200) {
+        //         this.setState({
+        //             fpxResult: res.data.split('"')[1]
+        //         })
+        //         // return res.data.split('"')[1]
+        //     }
+        //     else {
+        //         toast.error("There is something wrong with uploading images. Please try again.")
+        //     }
+        // })
+        // .catch(e => {
+        //     toast.error("There is something wrong with uploading images. Please try again.")
+        // })
 
-        const checkFPXStatus = (data) => {
-            const formData = new FormData();
-            formData.append("fpx_sellerExId", this.state.fpx_sellerExId);
-            formData.append("fpx_sellerExOrderNo", checkEmptyData(data.fpx_sellerExOrderNo));
-            formData.append("fpx_sellerTxnTime", checkEmptyData(data.fpx_sellerTxnTime));
-            formData.append("fpx_sellerOrderNo", checkEmptyData(data.fpx_sellerOrderNo));
-            formData.append("fpx_sellerBankCode", checkEmptyData(data.fpx_sellerBankCode));
-            formData.append("fpx_txnAmount", parseFloat(data.OrderTotalAmount).toFixed(2));
-            formData.append("fpx_buyerEmail", checkEmptyData(data.fpx_buyerEmail));
-            formData.append("fpx_checkSum", this.state.fpx_checkSum);
-            formData.append("fpx_buyerName", checkEmptyData(data.fpx_buyerName));
-            formData.append("fpx_buyerBankId", checkEmptyData(data.fpx_buyerBankId));
-            formData.append("fpx_buyerBankBranch", checkEmptyData(data.fpx_buyerBankBranch));
-            formData.append("fpx_buyerAccNo", checkEmptyData(data.fpx_buyerAccNo));
-            formData.append("fpx_buyerId", checkEmptyData(data.fpx_buyerId));
-            formData.append("fpx_makerName", checkEmptyData(data.fpx_makerName));
-            formData.append("fpx_buyerIban", checkEmptyData(data.fpx_buyerIban));
-            formData.append("fpx_version", checkEmptyData(data.fpx_version));
-            formData.append("fpx_productDesc", checkEmptyData(data.fpx_productDesc));
-            axios
-                .post(
-                    "https://myemporia.my/payment/statusTracking.php",
-                    formData,
-                    {}
-                )
-                .then((res) => {
-                    if (res.data !== "" && res.data.split("=").length === 2) {
-                        let responseCode = res.data.split("=")
-                        if (responseCode.length > 0) {
-                            this.setState({ responseCode: responseCode[1].replace(/[\r\n]/gm, ''), isStatusCheck: true })
-                        }
+    }
+
+    checkFPXStatus = (data) => {
+        const formData = new FormData();
+        formData.append("fpx_sellerExId", this.state.fpx_sellerExId);
+        formData.append("fpx_sellerExOrderNo", this.checkEmptyData(data.fpx_sellerExOrderNo));
+        formData.append("fpx_sellerTxnTime", this.checkEmptyData(data.fpx_sellerTxnTime));
+        formData.append("fpx_sellerOrderNo", this.checkEmptyData(data.fpx_sellerOrderNo));
+        formData.append("fpx_sellerBankCode", this.checkEmptyData(data.fpx_sellerBankCode));
+        formData.append("fpx_txnAmount", parseFloat(data.OrderTotalAmount).toFixed(2));
+        formData.append("fpx_buyerEmail", this.checkEmptyData(data.fpx_buyerEmail));
+        formData.append("fpx_checkSum", this.state.fpxResult);
+        formData.append("fpx_buyerName", this.checkEmptyData(data.fpx_buyerName));
+        formData.append("fpx_buyerBankId", this.checkEmptyData(data.fpx_buyerBankId));
+        formData.append("fpx_buyerBankBranch", this.checkEmptyData(data.fpx_buyerBankBranch));
+        formData.append("fpx_buyerAccNo", this.checkEmptyData(data.fpx_buyerAccNo));
+        formData.append("fpx_buyerId", this.checkEmptyData(data.fpx_buyerId));
+        formData.append("fpx_makerName", this.checkEmptyData(data.fpx_makerName));
+        formData.append("fpx_buyerIban", this.checkEmptyData(data.fpx_buyerIban));
+        formData.append("fpx_version", this.checkEmptyData(data.fpx_version));
+        formData.append("fpx_productDesc", this.checkEmptyData(data.fpx_productDesc));
+        axios
+            .post(
+                "https://myemporia.my/payment/statusTracking.php",
+                formData,
+                {}
+            )
+            .then((res) => {
+                if (res.data !== "" && res.data.split("=").length === 2) {
+                    let responseCode = res.data.split("=")
+                    if (responseCode.length > 0) {
+                        this.setState({ responseCode: responseCode[1].replace(/[\r\n]/gm, '') })
                     }
-                });
-        }
+                }
+            });
+        this.setState({ isStatusCheck: true })
+    }
 
 
-        if (parseInt(this.props.type) === 2 && this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0) {
-            if (this.state.isProduceChecksum === false)
-                CreateCheckSum()
 
-            if (this.state.isStatusCheck === false) {
-                this.props.orderstatusdata.map((data) => {
-                    checkFPXStatus(data)
-                })
+
+    render() {
+
+        const checkPropsData = (data) => {
+            if (data !== undefined && data.length > 0 && data[0].Transactionuuid === this.props.transactionuuid)
+                return true
+            else {
+                if (data !== undefined && data.length > 0 && data[0].Transactionuuid === undefined && this.props.orderstatusdata[0].ReturnVal === '0')
+                    return true
+                else
+                    return false
             }
-
         }
-
 
         const returnPage = (type) => {
-            console.log("returnPage", type)
-
             switch (type) {
                 case "bank":
-                    console.log("BANK", this.props.orderstatusdata)
                     if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata[0].ReturnVal !== 1 && this.props.orderstatusdata[0].ReturnVal !== '0') {
                         if (this.state.responseCode === "00")
                             return (this.successPage(this.props.orderstatusdata[0]))
@@ -401,9 +417,7 @@ class ShopPageReceipt extends Component {
                     else
                         return (this.errorPage())
 
-
                 case "card":
-                    console.log("CREDIT CARD")
                     if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata[0].ReturnVal !== 1) {
                         if (this.props.orderstatusdata[0].TrackingStatusID === 1)
                             return (this.successPage(this.props.orderstatusdata[0]))
@@ -418,25 +432,11 @@ class ShopPageReceipt extends Component {
             }
         }
 
-        const checkPropsData = (data) => {
-            if (data !== undefined && data.length > 0 && data[0].Transactionuuid === this.props.transactionuuid)
-                return true
-            else {
-                if (data[0].Transactionuuid === undefined && this.props.orderstatusdata[0].ReturnVal === '0')
-                    return true
-                else
-                    return false
-            }
-        }
-
         return (
             <React.Fragment>
-                {console.log("check state", this.state)}
-                {console.log("check props", this.props)}
-                {console.log("check propsData", checkPropsData(this.props.orderstatusdata))}
                 {
                     this.state.isOrderStatusCall === true && checkPropsData(this.props.orderstatusdata) === true ?
-                        parseInt(this.props.type) === 2 ? this.state.isStatusCheck ? returnPage("bank") : this.errorPage() : returnPage("card")
+                        parseInt(this.props.type) === 2 ? returnPage("bank") : returnPage("card")
                         :
                         <LoadingPanel />
                 }
@@ -455,7 +455,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        CallUpdateOrderStatus: (prodData) => dispatch(GitAction.CallUpdateOrderStatus(prodData)),
+        CallUpdateOrderStock: (prodData) => dispatch(GitAction.CallUpdateOrderStock(prodData)),
         CallViewOrderStatus: (prodData) => dispatch(GitAction.CallViewOrderStatus(prodData)),
         CallClearOrderStatus: () => dispatch(GitAction.CallClearOrderStatus()),
         CallGetFPXResponseList: () => dispatch(GitAction.CallGetFPXResponseList()),

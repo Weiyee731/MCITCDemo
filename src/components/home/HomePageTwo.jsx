@@ -113,8 +113,6 @@ function HomePageTwo(props) {
     })
   }, [])
 
-  localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? console.log("LOGIN") : console.log("LOGOUT")
-
   useEffect(() => {
     props.CallMerchants({
       type: "Status",
@@ -152,7 +150,6 @@ function HomePageTwo(props) {
           rows={2}
           products={props.products.length > 0 ? props.products : []}
         /> */}
-        {console.log("postsToShowpostsToShow", postsToShow)}
         <BlockProducts
           title="Featured Products"
           layout="large-first"

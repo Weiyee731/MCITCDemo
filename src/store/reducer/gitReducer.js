@@ -954,9 +954,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
       });
 
 
-    case GitAction.OrderStatusUpdate:
+    case GitAction.OrderStockUpdate:
       return Object.assign({}, state, { loading: true });
-    case GitAction.OrderStatusUpdated:
+    case GitAction.OrderStockUpdated:
       return Object.assign({}, state, {
         loading: false,
         orderstatus: action.payload,

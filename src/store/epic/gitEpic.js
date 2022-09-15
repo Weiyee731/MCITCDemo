@@ -2042,7 +2042,7 @@ export class GitEpic {
           payload: json,
         };
       } catch (error) {
-        alert('getAllCategories: ' + error);
+        // alert('getAllCategories: ' + error);
         return {
           type: GitAction.GotProductCategory,
           payload: [],
@@ -2052,13 +2052,12 @@ export class GitEpic {
 
   getAllCategoriesListing = (action$) =>
     action$.ofType(GitAction.GetProductCategoryListing).switchMap(async () => {
-      console.log(url +
-        "Product_CategoryListing")
       try {
         const response = await fetch(
           url +
           "Product_CategoryListing"
         );
+      
         let json = await response.json();
         json = JSON.parse(json);
         return {
@@ -2066,7 +2065,6 @@ export class GitEpic {
           payload: json,
         };
       } catch (error) {
-        alert('getAllCategoriesListing: ' + error);
         return {
           type: GitAction.GotProductCategoryListing,
           payload: [],
@@ -2755,50 +2753,28 @@ export class GitEpic {
 
 
   // Update Order Details - User Details
-  UpdateOrderStatus = (action$) =>
-    action$.ofType(GitAction.OrderStatusUpdate).switchMap(async ({ payload }) => {
+  UpdateOrderStock = (action$) =>
+    action$.ofType(GitAction.OrderStockUpdate).switchMap(async ({ payload }) => {
       console.log(url +
-        "Order_UpdateOrderStatus?Transactionuuid=" + payload.Transactionuuid +
-        "&PaymentType=" + payload.PaymentType +
-        "&OrderPaidAmounte=" + payload.OrderPaidAmount +
-        "&TxnID=" + payload.TxnID)
+        "Order_UpdateOrderStockVariation?ProductVariationDetailID=" + payload.orderVariationDetailIDs +
+        "&ProductQty=" + payload.orderDetailQtys)
       try {
         const response = await fetch(
           url +
-          "Order_UpdateOrderStatus?Transactionuuid=" + payload.Transactionuuid +
-          "&TrackingStatusID=" + payload.TrackingStatusID +
-          "&OrderPaidAmounte=" + payload.OrderPaidAmount +
-          "&TxnID=" + payload.TxnID
+          "Order_UpdateOrderStockVariation?ProductVariationDetailID=" + payload.orderVariationDetailIDs +
+          "&ProductQty=" + payload.orderDetailQtys
         );
         let json = await response.json();
         json = JSON.parse(json);
-
-        if (json[0].ReturnVal === 1) {
-          toast.success("Status for ORDERID : " + json[0].OrderID + "is updated");
-        }
-        try {
-          const response_1 = await fetch(
-            url +
-            "Order_UpdateOrderStockVariation?ProductVariationDetailID=" + payload.orderVariationDetailIDs +
-            "&ProductQty=" + payload.orderDetailQtys
-          );
-          let json_1 = await response_1.json();
-          return {
-            type: GitAction.OrderStatusUpdated,
-            payload: json_1,
-          };
-        } catch (error) {
-          alert('deleteProductCart: ' + error);
-          return {
-            type: GitAction.OrderStatusUpdated,
-            payload: json,
-          };
-        }
+        return {
+          type: GitAction.OrderStockUpdated,
+          payload: json,
+        };
       }
       catch (error) {
-        alert('OrderStatusUpdated: ' + error);
+        alert('OrderStockUpdated: ' + error);
         return {
-          type: GitAction.OrderStatusUpdated,
+          type: GitAction.OrderStockUpdated,
           payload: [],
         };
       }

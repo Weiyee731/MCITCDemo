@@ -1013,8 +1013,8 @@ export class GitAction {
   static ClearedOrder = "CLEARED-ORDER";
   static GetProductStockByStatus = "GET-PRODUCTSTOCKBYSTATUS";
   static GotProductStockByStatus = "GOT-PRODUCTSTOCKBYSTATUS";
-  static OrderStatusUpdate = "UPDATE-ORDER-STATUS";
-  static OrderStatusUpdated = "UPDATED-ORDER-STATUS";
+  static OrderStockUpdate = "UPDATE-ORDER-STATUS";
+  static OrderStockUpdated = "UPDATED-ORDER-STATUS";
   static ViewOrderStatus = "VIEW-ORDER-FPX-STATUS";
   static ViewedOrderStatus = "VIEWED-ORDER-FPX-STATUS";
   static ClearOrderStatus = "CLEAR-ORDER-STATUS";
@@ -1058,9 +1058,9 @@ export class GitAction {
     };
   }
 
-  static CallUpdateOrderStatus(prodData) {
+  static CallUpdateOrderStock(prodData) {
     return {
-      type: GitAction.OrderStatusUpdate,
+      type: GitAction.OrderStockUpdate,
       payload: prodData,
     };
   }
