@@ -59,6 +59,7 @@ class AccountPageEditCreditCard extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleUpdateCreditCard = this.handleUpdateCreditCard.bind(this);
+    this.validateData = this.validateData.bind(this);
   }
 
 
@@ -132,6 +133,24 @@ class AccountPageEditCreditCard extends Component {
       window.location.reload();
   }
 
+  validateData() {
+    const { expiry, name, number, cardtype } = this.state
+    if (expiry.length < 5)
+      return true
+
+    if (name === "")
+      return true
+
+    if (number.length !== 16)
+      return true
+
+    if (cardtype === "")
+      return true
+
+    else
+      return false
+  }
+
   render() {
     return (
       <div id="PaymentForm">
@@ -154,7 +173,7 @@ class AccountPageEditCreditCard extends Component {
               className="form-control"
               placeholder="Card Number"
               pattern="[\d| ]{16,22}"
-              maxLength="16"
+              inputProps={{ maxLength: 16 }}
               value={this.state.number}
               required
               onChange={this.handleInputChange}
@@ -220,6 +239,7 @@ class AccountPageEditCreditCard extends Component {
               onClick={this.handleUpdateCreditCard}
               className="btn btn-primary btn-block"
               type="button"
+              disabled={this.validateData() ? true : false}
             >
               Save changes
             </button>

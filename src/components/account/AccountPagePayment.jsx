@@ -360,12 +360,14 @@ class AccountPagePayment extends Component {
     }
 
     handleBanking = (bankid) => {
-        let date = moment(new Date()).format("YYYYMMDDHHmm").toString()
-        let fpx_sellerExOrderNo = date + "12"
-        let fpx_sellerTxnTime = date + "12"
-        let fpx_sellerOrderNo = date + "12"
+        let date = moment(new Date()).format("YYYYMMDDHHmmss").toString()
+        let fpx_sellerExOrderNo = date 
+        let fpx_sellerTxnTime = date 
+        let fpx_sellerOrderNo = date 
+        console.log("date11", fpx_sellerExOrderNo)
 
         let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
+        console.log("date22", bankingdata)
         let URL = "https://myemporia.my/payment/check.php"
         const config = { headers: { 'Content-Type': 'multipart/form-data' } }
         const formData = new FormData()
@@ -591,6 +593,8 @@ class AccountPagePayment extends Component {
                 </FormControl>
             )
         }
+
+        console.log("dateeee", this.state)
 
         return (
             <div className="checkout">

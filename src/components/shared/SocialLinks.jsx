@@ -17,11 +17,11 @@ function SocialLinks(props) {
     });
 
     const items = [
-        { type: 'facebook', url: theme.author.profile_url, icon: 'fab fa-facebook-f' },
-        { type: 'twitter', url: theme.author.profile_url, icon: 'fab fa-twitter' },
-        { type: 'youtube', url: theme.author.profile_url, icon: 'fab fa-youtube' },
-        { type: 'instagram', url: theme.author.profile_url, icon: 'fab fa-instagram' },
-        { type: 'rss', url: theme.author.profile_url, icon: 'fas fa-rss' },
+        { type: 'facebook', url: theme.author.facebook, icon: 'fab fa-facebook-f' },
+        { type: 'twitter', url: theme.author.twitter, icon: 'fab fa-twitter' },
+        { type: 'youtube', url: theme.author.youtube, icon: 'fab fa-youtube' },
+        { type: 'instagram', url: theme.author.instagram, icon: 'fab fa-instagram' },
+        { type: 'rss', url: theme.author.rss, icon: 'fas fa-rss' },
     ].map((item) => (
         <li key={item.type} className="social-links__item">
             <a

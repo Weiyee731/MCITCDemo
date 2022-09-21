@@ -13,8 +13,8 @@ class InputNumber extends Component {
             if (event.target.value.trim() === '') {
                 onChange('');
             } else {
+             
                 const value = parseFloat(event.target.value);
-
                 onChange(Number.isNaN(value) ? (min || 0) : value);
             }
         }
@@ -94,7 +94,7 @@ class InputNumber extends Component {
             <div className={classes}>
                 <input
                     className={formControlClasses}
-                    type="number"
+                    type="text"
                     onChange={this.handleChange}
                     {...otherProps}
                 />

@@ -696,6 +696,8 @@ class ViewProductGeneralInfo extends Component {
                             </Button>
                           </div> */}
                         </div>
+                        {console.log("this.props", this.props)}
+                        {console.log("this.state", this.state)}
 
                         <div style={{ minHeight: "332px" }}>
                           <div style={{ minHeight: "320px" }}>

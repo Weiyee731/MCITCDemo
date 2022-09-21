@@ -5,7 +5,11 @@ export default {
     "https://www.propsocial.my/developments/malaysia-china-international-trade-centre-9730",
   author: {
     name: "Kos",
-    profile_url: "https://www.facebook.com/PCCDemak/",
+    facebook: "https://www.facebook.com/MyEmporia.Shopping",
+    // twitter: "./",
+    // youtube: "./",
+    // instagram: "./",
+    // rss: "./",
   },
   contacts: {
     address: "",

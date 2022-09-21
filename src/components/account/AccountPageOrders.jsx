@@ -141,7 +141,7 @@ class AccountPageOrders extends Component {
       filteredList: [],
 
       trackingNumber: "",
-      selectedDate: new Date(),
+      selectedDate: null,
     };
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleChangeTabIndex = this.handleChangeTabIndex.bind(this);
@@ -223,22 +223,26 @@ class AccountPageOrders extends Component {
     let listing = this.props.allmerchantorders
     let filtered = []
 
-    listing.length > 0 && listing.filter(searchedItem =>
-      moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
-    ).map(filteredItem => {
-      filtered.push(filteredItem);
-    });
+    if (value === "" && date === null) {
+      this.setState({ isFiltered: true, filteredList: listing })
+    } else {
+      listing.length > 0 && listing.filter(searchedItem =>
+        moment(searchedItem.CreatedDate, "DD/MM/YYYY").format("YYYYMMDD").includes(moment(date, "DD/MM/YYYY").format("YYYYMMDD"))
+      ).map(filteredItem => {
+        filtered.push(filteredItem);
+      });
 
+      listing.length > 0 && listing.map((list) => {
+        value !== "" && list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter(x => x.TrackingNumber !== null
+          && x.TrackingNumber.toLowerCase().includes(value.toLowerCase())).map(filteredItem => {
+            filtered.push(list);
+          });
+      })
 
-    listing.length > 0 && listing.map((list) => {
-      value !== "" && list.OrderProductDetail !== null && JSON.parse(list.OrderProductDetail).filter(x => x.TrackingNumber !== null
-        && x.TrackingNumber.toLowerCase().includes(value.toLowerCase())).map(filteredItem => {
-          filtered.push(list);
-        });
-    })
+      let removeDeplicate = filtered.filter((ele, ind) => ind === filtered.findIndex(elem => elem.OrderID === ele.OrderID))
+      this.setState({ isFiltered: true, filteredList: removeDeplicate })
+    }
 
-    let removeDeplicate = filtered.filter((ele, ind) => ind === filtered.findIndex(elem => elem.OrderID === ele.OrderID))
-    this.setState({ isFiltered: true, filteredList: removeDeplicate })
   }
 
   clearFilter = () => {
@@ -252,6 +256,8 @@ class AccountPageOrders extends Component {
   render() {
     const { page } = this.state;
     let ordersList;
+
+    console.log("hahahah", this.state)
 
     let orderDetailListing = (listing) => (
       <>

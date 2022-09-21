@@ -1,5 +1,5 @@
 // react
-import React from "react";
+import React, { useEffect, useState } from 'react';
 
 // third-party
 import { Helmet } from "react-helmet-async";
@@ -16,10 +16,30 @@ import theme from "../../data/theme";
 import TextField from '@material-ui/core/TextField';
 
 function SitePageContactUs() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+
   const breadcrumb = [
     { title: "Home", url: "" },
     { title: "Contact Us", url: "" },
   ];
+
+  const isEmailValid = (email) => { return (typeof email === 'undefined' || email === '' || !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) ? false : true }
+
+  const checkValidity = () => {
+    if (name === "")
+      return false
+    if (email === "" || !isEmailValid(email))
+      return false
+    if (subject === "")
+      return false
+    if (message === "")
+      return false
+    else
+      return true
+  }
 
   return (
     <React.Fragment>
@@ -38,17 +58,9 @@ function SitePageContactUs() {
                     <h4 className="contact-us__header card-title" style={{ textAlign: "left", paddingLeft: "50pt" }}>
                       Send us a Message
                     </h4>
-                    {/* <hr  style={{ textAlign: "left", paddingLeft: "50pt" }}></hr> */}
                     <form>
                       <div className="form-row">
                         <div className="form-group col-md-6">
-                          {/* <label htmlFor="form-name">Your Name</label> */}
-                          {/* <input
-                            type="text"
-                            id="form-name"
-                            className="form-control"
-                            placeholder="Your Name"
-                          /> */}
                           <TextField
                             id="form-name"
                             className="form-control"
@@ -56,34 +68,26 @@ function SitePageContactUs() {
                             multiline
                             variant="outlined"
                             placeholder="Your Name"
+                            onChange={(x) => setName(x.target.value)}
                           />
                         </div>
                         <div className="form-group col-md-6">
-                          {/* <label htmlFor="form-email">Email</label> */}
-                          {/* <input
-                            type="email"
-                            id="form-email"
-                            className="form-control"
-                            placeholder="Email Address"
-                          /> */}
                           <TextField
                             id="form-email"
                             className="form-control"
                             label="Email Address"
                             multiline
+                            type="email"
                             variant="outlined"
                             placeholder="Email Address"
+                            onChange={(x) => setEmail(x.target.value)}
                           />
+                          {
+                            !isEmailValid(email) && email.length > 0 && <p style={{ color: "red" }}>Invalid Email</p>
+                          }
                         </div>
                       </div>
                       <div className="form-group">
-                        {/* <label htmlFor="form-subject">Subject</label> */}
-                        {/* <input
-                          type="text"
-                          id="form-subject"
-                          className="form-control"
-                          placeholder="Subject"
-                        /> */}
                         <TextField
                           id="form-subject"
                           className="form-control"
@@ -92,16 +96,10 @@ function SitePageContactUs() {
                           variant="outlined"
                           type="text"
                           placeholder="Subject"
+                          onChange={(x) => setSubject(x.target.value)}
                         />
                       </div>
                       <div className="form-group">
-                        {/* <label htmlFor="form-message">Message</label> */}
-                        {/* <textarea
-                          id="form-message"
-                          className="form-control"
-                          rows="4"
-                          placeholder="Type Your Message Here ..."
-                        /> */}
                         <TextField
                           id="form-message"
                           className="form-control"
@@ -110,10 +108,11 @@ function SitePageContactUs() {
                           variant="outlined"
                           rows="4"
                           placeholder="Type Your Message Here ..."
+                          onChange={(x) => setMessage(x.target.value)}
                         />
                       </div>
                       <div className="pt-5">
-                        <button type="submit" className="btn btn-primary">
+                        <button type="submit" className="btn btn-primary" disabled={checkValidity() ? false : true}>
                           Send Message
                         </button>
                       </div>
@@ -124,36 +123,8 @@ function SitePageContactUs() {
                     <h4 className="contact-us__header card-title" style={{ textAlign: "left" }}>
                       Our Address
                     </h4>
-                    {/* <strong className="contact-us__header card-title">
-                      Our Address
-                    </strong> */}
-
                     <div className="contact-us__address">
-                      {/* <p>
-                        <h5>
-                          Malaysia-China International Trading Centre <br />
-                          // Sejingkat, 93050 Kuching, Sarawak
-                          <br />
-                          Email: MCITC@MCITC.asia
-                          <br />
-                          Phone Number: (60) 12-850 9198
-                        </h5>
-                      </p> */}
-                      {/* <br /> */}
                       <p style={{ textAlign: "left" }}>
-                        {/* <label>
-                          OPENING HOURS: <br />
-                          Monday to Saturday: 10.00am - 07.00pm
-                          <br />
-                          EMAIL US:
-                          <br />
-                          info@emporia.com
-                          <br />
-                          MAILING ADDRESS:
-                          <br />
-                          Penview Convention Centre Kuching Sejingkat, 93050 Kuching, Sarawak
-                        </label> */}
-
                         <label>OPENING HOURS</label>
                         <label>Monday to Saturday: 10.00am - 07.00pm</label><br />
 
@@ -162,23 +133,8 @@ function SitePageContactUs() {
 
                         <label className="mt-3">MAILING ADDRESS:</label><br />
                         <label>Penview Convention Centre Kuching</label><br /><label>Sejingkat, 93050 Kuching, Sarawak</label>
-                        {/* <strong>Opening Hours</strong>
-                        <br />
-                        <h5> Monday to Saturday: 10.00am - 07.00pm</h5>
-                        {/* <br />
-                                                Saturday: 8am-6pm
-                                                <br />
-                                                Sunday: 10am-4pm */}
+
                       </p>
-                      {/* 
-                                            <p>
-                                                <strong>Comment</strong>
-                                                <br />
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                elit. Curabitur suscipit suscipit mi, non tempor
-                                                nulla finibus eget. Lorem ipsum dolor sit amet,
-                                                consectetur adipiscing elit.
-                                            </p> */}
                     </div>
                   </div>
                 </div>

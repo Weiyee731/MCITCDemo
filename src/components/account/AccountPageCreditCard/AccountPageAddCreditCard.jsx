@@ -58,6 +58,7 @@ class AccountPageAddCreditCard extends Component {
     this.handleInputFocus = this.handleInputFocus.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.validateData = this.validateData.bind(this);
   }
 
   handleInputFocus = (e) => {
@@ -115,6 +116,23 @@ class AccountPageAddCreditCard extends Component {
       window.location.reload();
     }
   }
+  validateData() {
+    const { expiry, name, number, cardtype } = this.state
+    if (expiry.length < 5)
+      return true
+
+    if (name === "")
+      return true
+
+    if (number.length !== 16)
+      return true
+
+    if (cardtype === "")
+      return true
+
+    else
+      return false
+  }
 
   render() {
     return (
@@ -137,7 +155,7 @@ class AccountPageAddCreditCard extends Component {
               className="form-control"
               placeholder="Card Number"
               pattern="[\d| ]{16,22}"
-              maxLength="16"
+              inputProps={{ maxLength: 16 }}
               required
               onChange={this.handleInputChange}
               onFocus={this.handleInputFocus}
@@ -205,6 +223,7 @@ class AccountPageAddCreditCard extends Component {
               onClick={this.handleAddCreditCard}
               className="btn btn-primary btn-block"
               type="button"
+              disabled={this.validateData() ? true : false}
             >
               Add this Credit Card to your account
             </button>

@@ -49,9 +49,9 @@ const AccountDropdown = (props) => {
             <li>
               <Link to="/account/addresses">My Addresses</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/account/creditcard">My Credit Cards</Link>
-            </li>
+            </li> */}
 
             <li>
               <Link to="/account/orders">Order History</Link>

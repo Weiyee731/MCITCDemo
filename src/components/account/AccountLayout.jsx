@@ -50,7 +50,7 @@ export default function AccountLayout(props) {
     // { title: "Dashboard", url: "dashboard" },
     { title: "My Profile", url: "profile", icons: <AccountCircleOutlinedIcon className="titleicon" /> },
     { title: "My Address", url: "addresses", icons: <LocationOnOutlinedIcon className="titleicon" /> },
-    { title: "My Credit Cards", url: "creditcard", icons: <CreditCardOutlinedIcon className="titleicon" /> },
+    // { title: "My Credit Cards", url: "creditcard", icons: <CreditCardOutlinedIcon className="titleicon" /> },
     { title: "Order History", url: "orders", icons: <HistoryOutlinedIcon className="titleicon" /> },
     { title: "Change Password", url: "password", icons: <PasswordIcon className="titleicon" /> },
     // { title: "My Shop", url: "editShopProfile", icons: <StorefrontOutlinedIcon className="titleicon" /> },
