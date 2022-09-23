@@ -126,7 +126,7 @@ const productLayouts = [
 const Access = () => {
   if (localStorage.getItem("isLogin") === false || localStorage.getItem("isLogin") === null) {
     return (
-      <Router basename={"/"}>
+      <Router basename={"/Emporia/"}>
         <div className="App">
           <nav className="navbar navbar-expand-lg navbar-light fixed-top">
             <div className="container">
@@ -178,7 +178,7 @@ const Access = () => {
     );
   } else {
     return (
-      <Router basename={"/"}>
+      <Router basename={"/Emporia/"}>
         <div
           className={"app"}
           style={{ overflow: "hidden", position: "relative" }}
@@ -384,10 +384,12 @@ function Layout(props) {
       <ToastContainer autoClose={5000} hideProgressBar />
       <Quickview />
       <MobileMenu />
-      {localStorage.getItem("management") === "true" ? (
-        Access()
-      ) : (
-        <Router basename={"/"}>
+      {
+      // localStorage.getItem("management") === "true" ? (
+      //   Access()
+      // ) :
+       (
+        <Router basename={"/Emporia/"}>
           <div className="site">
             <header className="site__header d-lg-none">
               <MobileHeader />

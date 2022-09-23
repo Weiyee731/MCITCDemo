@@ -332,7 +332,7 @@ class AccountPagePassword extends Component {
       this.stopTimer(60);
     }
     // if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-    //   browserHistory.push("account/profile");
+    //   browserHistory.push(".account/profile");
     //   window.location.reload(false);
     // } else {
     // }

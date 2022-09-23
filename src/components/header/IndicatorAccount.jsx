@@ -33,6 +33,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Divider from '@material-ui/core/Divider';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+var CryptoJS = require("crypto-js");
 
 const cookies = new Cookies();
 function mapStateToProps(state) {
@@ -193,10 +194,15 @@ class IndicatorAccount extends Component {
             <div className="account-menu__divider" />
             <ul className="account-menu__links">
               {localStorage.getItem("roleid") <= 16 && (
-                <li onClick={() => backtoinventory("Dashboard")}>
-                  {/* <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a> */}
-                  <a href="/viewProduct" onClick={() => window.location.reload()}>Inventory</a>
-                </li>
+                // <li onClick={() => backtoinventory("Dashboard")}>
+                //   {/* <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a> */}
+                //   <a href="/viewProduct" onClick={() => window.location.reload()}>Inventory</a>
+                // </li>
+                // <a href="http://localhost:3002/CMS.myemporia.MY" >Inventory2</a>
+                window.location.hostname === "localhost" ?
+                  <li onClick={() => window.location.href = "http://localhost:3002/cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory2</a></li>
+                  :
+                  <li onClick={() => window.location.href = "https://cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory2</a></li>
               )}
               <li>
                 <Link to="/account/profile">My Profile</Link>

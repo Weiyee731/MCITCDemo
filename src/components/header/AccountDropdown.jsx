@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import userImage from "../../assets/user.jpg";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
+var CryptoJS = require("crypto-js");
 
 const AccountDropdown = (props) => {
   const backtoinventory = (e) => {
@@ -36,12 +37,22 @@ const AccountDropdown = (props) => {
           <div className="account-menu__divider" />
           <ul className="account-menu__links">
             {localStorage.getItem("roleid") <= 15 && (
-              <li onClick={() => backtoinventory("Dashboard")}>
-                <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a>
-              </li>
+              // <li onClick={() => backtoinventory("Dashboard")}>
+              //   <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a>
+              // </li>
+              // <li onClick={() => backtoinventory("Dashboard")}>
+              // `${match.path}/address/:addressId`
+              // <a href="http://localhost:3002/CMS.myemporia.MY/" >Inventory1</a>
+              // </li>
+              // <li onClick={() => window.location.href = "http://localhost:3002/CMS.myemporia.MY/" + localStorage.getItem("userName") + "|" + localStorage.getItem("password") }><a>Inventory1</a></li>
+
+              window.location.hostname === "localhost" ?
+                <li onClick={() => window.location.href = "http://localhost:3002/cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory1</a></li>
+                :
+                <li onClick={() => window.location.href = "https://cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory1</a></li>
             )}
             <li>
-              <Link to="/account/profile">My Profile</Link>
+              <Link to="/account/profile">My Profile11</Link>
             </li>
             {/* <li>
               <Link to="/account/companyprofile">Company Profile</Link>

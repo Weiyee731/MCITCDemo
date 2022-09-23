@@ -53,13 +53,13 @@ class App extends Component {
       : window.localStorage.setItem("theme", "light");
     this.state.theme === "light"
       ? window.localStorage.setItem(
-          "themebackground",
-          JSON.stringify(darkTheme)
-        )
+        "themebackground",
+        JSON.stringify(darkTheme)
+      )
       : window.localStorage.setItem(
-          "themebackground",
-          JSON.stringify(lightTheme)
-        );
+        "themebackground",
+        JSON.stringify(lightTheme)
+      );
     this.setState((prevState, props) => {
       return {
         theme: prevState.theme === "light" ? "dark" : "light",

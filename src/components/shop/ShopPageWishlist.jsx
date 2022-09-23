@@ -78,52 +78,55 @@ function ShopPageWishlist(props) {
 
     if (props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0') {
         const itemsList = wishlist.map((item) => {
-            let image;
+            if (item.DelInd === 0) {
+                let image;
 
-            if (item.ProductImage !== null && item.ProductImage !== undefined && item.ProductImage.length > 0) {
-                image = (
-                    <div className="product-image">
-                        <Link to={url.product(item)} className="product-image__body">
-                            <img className="product-image__img" src={item.ProductImage !== null ? item.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
-                        </Link>
-                    </div>
-                );
-            } else {
-                image = (
-                    <div className="product-image">
-                        <Link to={url.product(item)} className="product-image__body">
-                            <img className="product-image__img" src={Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
-                        </Link>
-                    </div>
+                if (item.ProductImage !== null && item.ProductImage !== undefined && item.ProductImage.length > 0) {
+                    image = (
+                        <div className="product-image">
+                            <Link to={url.product(item)} className="product-image__body">
+                                <img className="product-image__img" src={item.ProductImage !== null ? item.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                            </Link>
+                        </div>
+                    );
+                } else {
+                    image = (
+                        <div className="product-image">
+                            <Link to={url.product(item)} className="product-image__body">
+                                <img className="product-image__img" src={Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                            </Link>
+                        </div>
+                    );
+                }
+
+                return (
+                    <tr key={item.id} className="wishlist__row">
+                        <td className="wishlist__column wishlist__column--image">
+                            {image}
+                        </td>
+                        <td className="wishlist__column wishlist__column--product">
+                            <Link to={url.product(item)} className="wishlist__product-name">{item.ProductName}</Link>
+                            <div className="wishlist__product-rating">
+                                <Rating value={item.ProductRating} />
+
+                                <div className="wishlist__product-rating-legend">{item.ProductRating !== null ? parseFloat(item.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
+                            </div>
+                        </td>
+                        <td className="wishlist__column wishlist__column--stock">
+                            <div className="badge badge-success">Samajaya Sdn Bdh</div>
+                        </td>
+                        <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? item.ProductPrice : 0} currency={"RM"} /></td>
+                        <td className="wishlist__column wishlist__column--tocart">
+                            <button className={'btn btn-primary btn-sm'}><Link to={url.product(item)} className="wishlist__product-name">View Product</Link></button>
+                        </td>
+                        <td className="wishlist__column wishlist__column--remove">
+                            <button type="button" onClick={() => deleteWishlist(item)} className={'btn btn-light btn-sm btn-svg-icon'} aria-label="Remove"><Cross12Svg /></button>
+
+                        </td>
+                    </tr>
                 );
             }
 
-            return (
-                <tr key={item.id} className="wishlist__row">
-                    <td className="wishlist__column wishlist__column--image">
-                        {image}
-                    </td>
-                    <td className="wishlist__column wishlist__column--product">
-                        <Link to={url.product(item)} className="wishlist__product-name">{item.ProductName}</Link>
-                        <div className="wishlist__product-rating">
-                            <Rating value={item.ProductRating} />
-
-                            <div className="wishlist__product-rating-legend">{item.ProductRating !== null ? parseFloat(item.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
-                        </div>
-                    </td>
-                    <td className="wishlist__column wishlist__column--stock">
-                        <div className="badge badge-success">Samajaya Sdn Bdh</div>
-                    </td>
-                    <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? item.ProductPrice : 0} currency={"RM"} /></td>
-                    <td className="wishlist__column wishlist__column--tocart">
-                        <button className={'btn btn-primary btn-sm'}><Link to={url.product(item)} className="wishlist__product-name">View Product</Link></button>
-                    </td>
-                    <td className="wishlist__column wishlist__column--remove">
-                        <button type="button" onClick={() => deleteWishlist(item)} className={'btn btn-light btn-sm btn-svg-icon'} aria-label="Remove"><Cross12Svg /></button>
-
-                    </td>
-                </tr>
-            );
         });
 
         content = (

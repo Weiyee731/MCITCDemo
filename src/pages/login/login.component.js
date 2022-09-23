@@ -33,6 +33,7 @@ import emailjs from "emailjs-com"
 import { toast } from "react-toastify";
 import OtpInput from "react-otp-input";
 import { Link } from "react-router-dom";
+var CryptoJS = require("crypto-js");
 
 function mapStateToProps(state) {
   return {
@@ -117,6 +118,17 @@ class LoginComponent extends Component {
     this.props.loginUser(this.state);
   }
 
+  encryptData(data){
+    var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace('+','xMl3Jk').replace('/','Por21Ld').replace('=','Ml32');;
+    return ciphertext
+    // console.log("ciphertext", ciphertext)
+
+    // var bytes = CryptoJS.AES.decrypt(ciphertext, 'my-secret-key@123');
+    // console.log("ciphertext bytes", bytes)
+    // var decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+    // console.log("ciphertext decryptedData", decryptedData)
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.currentUser !== this.props.currentUser) {
       if (this.props.currentUser !== undefined && this.props.currentUser[0].ReturnVal !== "0") {
@@ -127,6 +139,8 @@ class LoginComponent extends Component {
         localStorage.setItem("role", this.props.currentUser[0].UserType);
         localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
         localStorage.setItem("userName", this.state.username);
+        localStorage.setItem("password", this.encryptData(this.state.password));
+        localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
         localStorage.setItem(
           "productEndorsementBadge",
           this.props.currentUser[0].productEndorsementBadge
@@ -143,6 +157,8 @@ class LoginComponent extends Component {
 
           cookies.set("rememberMe", this.state.rememberMe);
           localStorage.setItem("userName", this.state.username);
+          localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
+          localStorage.setItem("password", this.encryptData(this.state.password));
           localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
           cookies.set("firstname", this.props.currentUser[0].FirstName);
           localStorage.setItem("lastname", this.props.currentUser[0].LastName);
@@ -157,13 +173,14 @@ class LoginComponent extends Component {
         } else {
           let date = new Date();
           date.setTime(date.getTime() + 60 * 60 * 24 * 1000);
-          const options = { path: "/", expires: date };
+          const options = { path: "./", expires: date };
           localStorage.setItem("isLogin", true);
           cookies.set("isLogin", true, options);
-
           cookies.set("rememberMe", this.state.rememberMe, options);
           localStorage.setItem("id", this.props.currentUser[0].UserID);
           localStorage.setItem("userName", this.state.username);
+          localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
+          localStorage.setItem("password", this.encryptData(this.state.password));
           localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
           cookies.set("firstname", this.props.currentUser[0].FirstName, options);
           localStorage.setItem("lastname", this.props.currentUser[0].LastName);
@@ -182,7 +199,7 @@ class LoginComponent extends Component {
         // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
         // }
 
-        browserHistory.push("/");
+        browserHistory.push("/Emporia");
         window.location.reload(false);
       } else {
         toast.error("The username and password does not match.")
@@ -203,7 +220,7 @@ class LoginComponent extends Component {
       if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
         toast.success("Your password has been updated, try to login with new password");
         setTimeout(() => {
-          browserHistory.push("/login");
+          browserHistory.push("/Emporia/login");
           window.location.reload(false);
         }, 3000)
 
@@ -361,6 +378,7 @@ class LoginComponent extends Component {
 
 
   render() {
+
     return (
       <div>
         <form onSubmit={this.OnSubmitLogin} className="container block block--margin-top">

@@ -3,7 +3,13 @@ import { ActionsObservable } from "redux-observable";
 import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 
-const url = "https://myemporia.my/emporiaApi/api/emporia/"
+const url = "https://triviix.com/emporiaApi/api/emporia/"
+// const url = "https://myemporia.my/emporiaApi/api/emporia/"
+
+
+
+
+// Triviix\Emporia\EmporiaApi
 // const url = "http://tourism.denoo.my/emporiaApi/api/emporia/"
 // const url = "localhost/emporia/api/emporia/"
 export class GitEpic {
@@ -39,7 +45,7 @@ export class GitEpic {
           payload.username +
           "&password=" +
           payload.password +
-          "&ProjectID=2"
+          "&ProjectID=2&ProjectDomain=myemporia"
         );
         let json = await response.json();
         json = JSON.parse(json)
@@ -2057,7 +2063,7 @@ export class GitEpic {
           url +
           "Product_CategoryListing"
         );
-      
+
         let json = await response.json();
         json = JSON.parse(json);
         return {

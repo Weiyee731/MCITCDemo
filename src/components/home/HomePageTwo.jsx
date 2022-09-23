@@ -134,14 +134,14 @@ function HomePageTwo(props) {
 
         <BlockMainCategories />
 
-        <BlockMerchant
+        {/* <BlockMerchant
           title="Top Merchants"
           // title="Best Sellers"
           layout="grid-4"
           rows={1}
           merchants={props.merchant}
         // onGroupClick={testing}
-        />
+        /> */}
 
         {/* <BlockFeatures layout="boxed" /> */}
         {/* <BlockProductsCarousel

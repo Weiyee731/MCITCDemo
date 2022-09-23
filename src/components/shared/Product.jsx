@@ -144,7 +144,7 @@ class Product extends Component {
   }
 
   login() {
-    browserHistory.push("/login");
+    browserHistory.push("/Emporia/login");
     window.location.reload(false);
   }
 
@@ -210,8 +210,8 @@ class Product extends Component {
 
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
 
-    let merchant = product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
-    let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
+    let merchant = product.ReturnVal !== "0" && product.MerchantDetail !== null? JSON.parse(product.MerchantDetail)[0] : ""
+    let variation =  product.ReturnVal !== "0" && product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
 
     return (
       <div className="block" >

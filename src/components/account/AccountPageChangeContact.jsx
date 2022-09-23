@@ -220,7 +220,7 @@ class PageChangeContact extends Component {
       this.setState({
         UpdatedValue: e,
       });
-      if (e.length > 0 && e.match(phoneno)) {
+      if (e!== undefined && e.length > 0 && e.match(phoneno)) {
         this.setState({ validContact: true });
       } else {
         this.setState({ validContact: false });

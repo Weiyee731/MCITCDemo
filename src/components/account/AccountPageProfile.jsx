@@ -120,7 +120,7 @@ class AccountPageProfile extends Component {
         }
       }
     } else {
-      browserHistory.push("login");
+      browserHistory.push("/login");
       window.location.reload(false);
     }
 

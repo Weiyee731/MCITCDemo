@@ -43,7 +43,7 @@ function Header(props) {
             <img
               src={Logo}
               alt=""
-              style={{height:"6vw"}}
+              style={{ height: "6vw" }}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = Logo;
@@ -56,7 +56,7 @@ function Header(props) {
         </div>
         <div className="nav-panel__indicators">
           {localStorage.getItem("isLogin") === 'true' && <Indicator url="/shop/wishlist"
-            value={props.wishlist !== undefined && props.wishlist[0] !== undefined && props.wishlist[0].ReturnVal === undefined ? props.wishlist.length : 0}
+            value={props.wishlist !== undefined && props.wishlist[0] !== undefined && props.wishlist[0].ReturnVal === undefined ? props.wishlist.filter((x) => x.DelInd === 0).length : 0}
             icon={<Heart20Svg />} />}
           <IndicatorCart />
           <IndicatorAccount />

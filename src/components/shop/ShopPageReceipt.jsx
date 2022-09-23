@@ -79,7 +79,7 @@ class ShopPageReceipt extends Component {
         //     }
         //     // else {
         //     //     setTimeout(() => {
-        //     //         window.location.href = "/"
+        //     //         window.location.href = "//"
         //     //         window.reload(false)
         //     //     }, 4000);
         //     // }
@@ -160,7 +160,7 @@ class ShopPageReceipt extends Component {
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <button onClick={() =>
                                     <>
-                                        {window.location.href = "/"}
+                                        {window.location.href = "//"}
                                         {window.reload(false)}
                                     </>
                                 } className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
@@ -214,7 +214,7 @@ class ShopPageReceipt extends Component {
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <button onClick={() =>
                                     <>
-                                        {window.location.href = "/"}
+                                        {window.location.href = "//"}
                                         {window.reload(false)}
                                     </>
                                 } className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
@@ -284,7 +284,7 @@ class ShopPageReceipt extends Component {
                             <div style={{ textAlign: "center", margin: 2 }}>
                                 <button onClick={() =>
                                     <>
-                                        {window.location.href = "/"}
+                                        {window.location.href = "//"}
                                         {window.reload(false)}
                                     </>
                                 } className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
@@ -297,7 +297,7 @@ class ShopPageReceipt extends Component {
                 {/* {
                     setTimeout(
                         function () {
-                            window.location.href = "/"
+                            window.location.href = "//"
                             window.reload(false);
                         }.bind(this),
                         500
