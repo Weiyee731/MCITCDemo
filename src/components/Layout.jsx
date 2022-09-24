@@ -29,7 +29,7 @@ import BlogPagePost from "./blog/BlogPagePost";
 import PageCart from "./shop/ShopPageCart";
 import ShopPageReceipt from "./shop/ShopPageReceipt";
 
-
+import DeliveryFee from "./shop/ShopPageDeliveryFee";
 import CheckPaymentStatus from "./shop/CheckPaymentStatus";
 import PageCheckout from "./shop/ShopPageCheckout";
 import ShopPageCheckOut from "./shop/CheckOut";
@@ -495,6 +495,7 @@ function Layout(props) {
 
                 <Route exact path="/shop/checkPaymentStatus" component={CheckPaymentStatus} />
                 <Route exact path="/shop/checkout" component={PageCheckout} />
+                <Route exact path="/shop/deliveryfee" component={DeliveryFee} />
                 <Route exact path="/shop/checkout2" component={ShopPageCheckOut} />
                 <Route
                   exact

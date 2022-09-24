@@ -39,6 +39,7 @@ import {
 import moment from "moment";
 import FPX from '../../assets/fpx-logo.png';
 import { Image } from 'react-bootstrap';
+import DeliveryFee from "./ShopPageDeliveryFee";
 const crypto = require('crypto');
 
 const initialState = {
@@ -48,7 +49,8 @@ const initialState = {
   cardList: [],
   subtotal: 1,
   total: 0,
-  shipping: 1,
+  // shipping: 1,
+  shipping: "",
   tax: 0,
   tabvalue: 0,
   cvcVisible: false,
@@ -113,11 +115,19 @@ class PagePayment extends Component {
     super(props);
 
     this.state = initialState
+    // this.handleShipping = this.handleShipping.bind(this)
     this.setDetails = this.setDetails.bind(this)
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.props.CallAllPaymentMethod();
     this.handleBanking = this.handleBanking.bind(this)
   }
+
+  // handleShipping (address, state) {
+  //   // console.log(address)
+  //   // console.log(address[0].UserPoscode)
+  //   // <DeliveryFee address={address} />
+  //   this.props.history.push("/DeliveryFee", state={address})
+  // }
 
   setDetails(productcart) {
     this.setState({
@@ -230,6 +240,10 @@ class PagePayment extends Component {
     }).catch(e => {
       toast.error("There is something wrong with 111. Please try again.")
     })
+
+    // const selectedAddress = this.props.addresses.filter((x) => parseInt(x.UserAddressBookID) === parseInt(this.props.addressID))
+    // this.handleShipping(selectedAddress)
+    // console.log(selectedAddress, "selectedAddress")
   }
 
   getItemList(FilteredList) {
@@ -800,6 +814,7 @@ class PagePayment extends Component {
 
 
   render() {
+    console.log(this.props)
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }

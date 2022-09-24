@@ -77,6 +77,7 @@ const INITIAL_STATE = {
   orderstatusdata: [],
   fpxResponseList: [],
   creditCardOrder: [],
+  postcodes: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -1396,6 +1397,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         bankList: action.payload,
+      });
+
+      //================= POSTCODES ================//
+    case GitAction.GetPostcodes:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotPostcodes:
+      return Object.assign({}, state, {
+        loading: false,
+        postcodes: action.payload,
       });
 
     /////////////////////////////////////////////////// Default /////////////////////////////////////////////////// 

@@ -1569,4 +1569,13 @@ export class GitAction {
     };
   }
 
+  //============= POSTCODES ================//
+  static GetPostcodes = "GET-POSTCODES";
+  static GotPostcodes = "GOT-POSTCODES";
+  static CallRetrievePostcodesList() {
+    return {
+      type: GitAction.GetPostcodes,
+    };
+  }
+
 }

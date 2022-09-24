@@ -25,6 +25,7 @@ import { stringToBytes } from 'convert-string-bytes'
 import { Crypto } from 'crypto-js'
 import { createBrowserHistory } from 'history';
 import { runInThisContext } from "vm";
+import DeliveryFee from "./ShopPageDeliveryFee";
 
 const crypto = require('crypto');
 
@@ -66,6 +67,8 @@ class PageCheckout extends Component {
       PaymentMethodType: "",
       OrderTotalAmount: 0,
       submit: false,
+      shipping: 0,
+      isShipping: false,
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
@@ -93,7 +96,7 @@ class PageCheckout extends Component {
       .update(signature)
       .digest('base64');
 
-      
+
 
     return (
       <React.Fragment>
@@ -143,6 +146,11 @@ class PageCheckout extends Component {
         this.setState({ address: value })
     }
 
+    const handleGetPostcode = (value) => {
+      if (value.length !== 0)
+        this.setState({ shipping: value, })
+    }
+
     const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
 
       if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0) {
@@ -160,9 +168,15 @@ class PageCheckout extends Component {
 
 
     if (this.state.submit === true) {
-      return (
-        <PagePayment addressID={this.state.address} data={this.props.data} merchant={this.props.merchant}  />
-      )
+      if (this.state.isShipping !== true) {
+        return (
+          <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={this.state.address} data={this.props.data}/>
+        )
+      }
+      else
+        return (
+          <PagePayment addressID={this.state.address} data={this.props.data} merchant={this.props.merchant} shippingfee={this.state.shipping} />
+        )
     }
 
     const handleGetTotal = (total) => {

@@ -158,6 +158,8 @@ const rootEpic = combineEpics(
   //====================== PAYMENT ====================//
   gitEpic.Payment_Send,
   gitEpic.BankList_View,
+  //====================== POSTCODES ====================//
+  gitEpic.ViewPostcodesList,
 );
 
 // const rootReducerCombine = rootReducer;

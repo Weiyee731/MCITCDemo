@@ -244,6 +244,7 @@ class PageCheckOrder extends Component {
   handleClick = (e, data) => {
     this.setState({ defaultAddress: data });
     this.props.handleGetAddressId(data.UserAddressBookID)
+    console.log(data)
   };
 
   handleRemoveClick = (e, AddressBookNo) => {

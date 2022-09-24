@@ -3588,6 +3588,28 @@ export class GitEpic {
         .catch(error => alert('ViewBankList: ' + error));
     });
 
+  // =============================== Postcode ======================================
+  ViewPostcodesList = (action$) =>
+    action$.ofType(GitAction.GetPostcodes).switchMap(async () => {
+      try {
+        const response = await fetch(
+          url +
+          "General_PoscodeList"
+        );
+        let json = await response.json();
+        json = JSON.parse(json);
+        return {
+          type: GitAction.GotPostcodes,
+          payload: json,
+        };
+      } catch (error) {
+        alert('GetPostcodes: ' + error);
+        return {
+          type: GitAction.GotPostcodes,
+          payload: [],
+        };
+      }
+    });
 
 }
 export let gitEpic = new GitEpic();

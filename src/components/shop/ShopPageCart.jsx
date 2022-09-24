@@ -75,7 +75,7 @@ class ShopPageCart extends Component {
                     total: x.ProductQuantity * x.ProductPrice,
                     quantity: x.ProductQuantity,
                     MerchantShopName: x.MerchantShopName,
-                    MerchantID: x.MerchantID
+                    MerchantID: x.MerchantID,
                 }
             )
         })
