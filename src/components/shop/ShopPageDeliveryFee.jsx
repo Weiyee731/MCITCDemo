@@ -33,11 +33,15 @@ class DeliveryFee extends Component {
     this.state = {
       shippingFee: "",
       dummyRate: [
-        { id: 1, isWestMalaysia: 1, shippingRateFirstKG: 13.50, shippingRatesubKG: 5.00, isSarawak: "no" },
+        { id: 1, isWestMalaysia: 1, shippingRateFirstKG: 13.50, shippingRatesubKG: 5.00, isSarawak: "KUL" },
         { id: 2, isWestMalaysia: 0, shippingRateFirstKG: 7.00, shippingRatesubKG: 3.50, isSarawak: "SRW" },
         { id: 3, isWestMalaysia: 0, shippingRateFirstKG: 9.00, shippingRatesubKG: 4.50, isSarawak: "SBH" },
       ],
       selectedAddress: [],
+      selectedPostcode: [],
+      postcodeList: [],
+      currentPostcode: [],
+      finalWeight: [],
     };
   }
 
@@ -45,54 +49,49 @@ class DeliveryFee extends Component {
     this.props.CallRetrievePostcodesList()
     if (this.props.addressID !== undefined && this.props.addresses.filter((x) => x.UserAddressBookID === this.props.addressID)) {
       const selectedAddress = this.props.addresses.filter((x) => x.UserAddressBookID === this.props.addressID).map((x) => { return (x) })
-      // console.log(selectedAddress[0])
-      this.setState({ selectedAddress: selectedAddress[0] })
+      this.setState({ selectedAddress: selectedAddress[0], currentPostcode: selectedAddress[0].UserPoscode })
+
+      const filteredPostcode = this.props.postcodes.filter((x) => x.Poscode === selectedAddress[0].UserPoscode)
+      this.setState({ selectedPostcode: filteredPostcode[0] })
+
+      const productDetails = this.props.data[0].product
+      if (productDetails !== undefined) {
+        const actualProductWeight = productDetails.ProductWeight
+        const volumetricWeight = (productDetails.ProductDimensionVolume) / 6000
+        console.log(actualProductWeight)
+        console.log(volumetricWeight)
+        actualProductWeight > volumetricWeight ? this.handleCalculation(filteredPostcode[0], (actualProductWeight).toFixed(2)) : this.handleCalculation(filteredPostcode[0], (volumetricWeight).toFixed(2))
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
   }
 
-  handleCalculation(selectedAddress) {
-    const currentPostcode = selectedAddress.UserPoscode;
-    const currentDummyRate = this.state.dummyRate.map((y) => y);
-    const filteredPostcode = this.props.postcodes.filter((x) => x.Poscode === currentPostcode).map((y) => {return(y)})
-    let selectedPostcode = filteredPostcode[0]
-    const productDetails = this.props.data[0].product
+  handleCalculation(filteredPostcode, finalWeight) {
+    console.log(finalWeight)
+    if (this.state.dummyRate.filter((x) => x.isWestMalaysia === filteredPostcode.isWestMalaysia && x.isSarawak === filteredPostcode.CityAlias)) {
+      const firstWeight = 1
+      const subWeight = finalWeight - firstWeight
 
-    console.log("productDetails", selectedPostcode)
-    // console.log("productDetails", selectedPostcode.isWestMalaysia)
-
-    // console.log("currentDummyRate", currentDummyRate)
-
-    // if (selectedPostcode.isWestMalaysia === currentDummyRate.map((y) => y.isWestMalaysia)
-    //   ) {
-    //   console.log("shippingFee", selectedPostcode.isWestMalaysia === currentDummyRate.map((y) => y.isWestMalaysia))
-
-    //   // const actualProductWeight = productDetails.ProductWeight
-    //   // const volumetricWeight = (productDetails.ProductDimensionVolume) / 6000
-    //   // actualProductWeight > volumetricWeight ? this.setState({ finalWeight: actualProductWeight }) : this.setState({ finalWeight: volumetricWeight })
-
-    //   // const firstWeight = 1
-    //   // const subWeight = this.state.finalWeight - firstWeight
-
-    //   // const shippingCost = firstWeight * (currentDummyRate.shippingRateFirstKG) + subWeight * (currentDummyRate.shippingRatesubKG)
-    //   // this.setState({ shippingFee: shippingCost, })
-    //   // console.log("shippingFee", this.state.shippingFee)
-
-    //   // this.props.handleGetPostcode(this.state.shippingFee)
-    // }
+      const rate = this.state.dummyRate.filter((x) => x.isWestMalaysia === filteredPostcode.isWestMalaysia && x.isSarawak === filteredPostcode.CityAlias).map((y) => { return (y) })
+      console.log(rate[0].shippingRateFirstKG)
+      console.log(rate[0].shippingRatesubKG)
+      console.log(firstWeight)
+      console.log(subWeight)
+      const shippingCost = firstWeight * (rate[0].shippingRateFirstKG) + subWeight * (rate[0].shippingRatesubKG)
+      this.setState({ shippingFee: shippingCost, })
+      console.log(shippingCost)
+    }
   }
 
   render() {
     const postcodes = this.props.postcodes
 
-    console.log("delivery", this.props)
-    console.log("delivery", this.props.data[0])
     return (
       <>
         <LoadingPanel postcodes={postcodes} />
-        {this.handleCalculation(this.state.selectedAddress)}
+        {/* {this.props.handleGetPostcode(this.state.shippingFee)} */}
       </>
     )
   }
