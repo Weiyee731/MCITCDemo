@@ -11,6 +11,7 @@ import PageHeader from "../shared/PageHeader";
 import { GitAction } from "../../store/action/gitAction";
 import "react-step-progress/dist/index.css";
 import LoadingPanel from '../shared/loadingPanel';
+import { toast } from "react-toastify";
 
 
 function mapStateToProps(state) {
@@ -29,59 +30,82 @@ function mapDispatchToProps(dispatch) {
 class DeliveryFee extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      shippingFee: "",
       dummyRate: [
         { id: 1, isWestMalaysia: 1, shippingRateFirstKG: 13.50, shippingRatesubKG: 5.00, isSarawak: "KUL" },
         { id: 2, isWestMalaysia: 0, shippingRateFirstKG: 7.00, shippingRatesubKG: 3.50, isSarawak: "SRW" },
         { id: 3, isWestMalaysia: 0, shippingRateFirstKG: 9.00, shippingRatesubKG: 4.50, isSarawak: "SBH" },
       ],
-      selectedAddress: [],
-      selectedPostcode: [],
-      postcodeList: [],
-      currentPostcode: [],
-      finalWeight: [],
     };
   }
 
   componentDidMount() {
     this.props.CallRetrievePostcodesList()
-    if (this.props.addressID !== undefined && this.props.addresses.filter((x) => x.UserAddressBookID === this.props.addressID)) {
-      const selectedAddress = this.props.addresses.filter((x) => x.UserAddressBookID === this.props.addressID).map((x) => { return (x) })
-      this.setState({ selectedAddress: selectedAddress[0], currentPostcode: selectedAddress[0].UserPoscode })
+    if (this.props.addressID !== undefined && this.props.addressID !== 0 && this.props.postcodes !== undefined && this.props.postcodes.length > 0 && this.props.data !== undefined && this.props.data.length > 0) {
 
-      const filteredPostcode = this.props.postcodes.filter((x) => x.Poscode === selectedAddress[0].UserPoscode)
-      this.setState({ selectedPostcode: filteredPostcode[0] })
+      let selectedAddress = []
+      let filteredPostcode = []
+      let productWeight = 0
 
-      const productDetails = this.props.data[0].product
-      if (productDetails !== undefined) {
-        const actualProductWeight = productDetails.ProductWeight
-        const volumetricWeight = (productDetails.ProductDimensionVolume) / 6000
-        console.log(actualProductWeight)
-        console.log(volumetricWeight)
-        actualProductWeight > volumetricWeight ? this.handleCalculation(filteredPostcode[0], (actualProductWeight).toFixed(2)) : this.handleCalculation(filteredPostcode[0], (volumetricWeight).toFixed(2))
+      if (this.props.addresses !== undefined && this.props.addresses.length > 0) {
+        selectedAddress = this.props.addresses.filter((x) => x.UserAddressBookID === this.props.addressID)
+
+        if (selectedAddress.length > 0) {
+          filteredPostcode = this.props.postcodes.filter((x) => x.Poscode === selectedAddress[0].UserPoscode)
+          if (filteredPostcode.length > 0) {
+            productWeight = this.handleProductWeight(this.props.data)
+            this.handleCalculation(filteredPostcode[0], productWeight)
+          }
+          else {
+            toast.warning("The poscode is incorrect. Please cross check the selected address poscode")
+            setTimeout(() => {
+              window.location.href = "/account/addresses/"
+            }, 3000);
+          }
+        }
       }
     }
+    if (this.props.addressID !== undefined && this.props.addressID === 0)
+      this.props.handleGetPostcode(0)
   }
 
   componentDidUpdate(prevProps) {
   }
 
+  handleProductWeight(productData) {
+    let volumetricWeight = 0
+    let actualWeight = 0
+
+    productData.map((details) => {
+      if (details.product !== undefined) {
+        volumetricWeight = volumetricWeight + ((details.product.ProductDimensionVolume * 1000000) / 6000)
+        actualWeight = actualWeight + details.product.ProductWeight
+      }
+    })
+
+    if (volumetricWeight > actualWeight)
+      return volumetricWeight
+    else
+      return actualWeight
+
+  }
+
   handleCalculation(filteredPostcode, finalWeight) {
-    console.log(finalWeight)
-    if (this.state.dummyRate.filter((x) => x.isWestMalaysia === filteredPostcode.isWestMalaysia && x.isSarawak === filteredPostcode.CityAlias)) {
+    let shippingRate = this.state.dummyRate
+
+    if (shippingRate !== undefined && shippingRate.length > 0) {
       const firstWeight = 1
       const subWeight = finalWeight - firstWeight
+      let shippingCost = 0
 
-      const rate = this.state.dummyRate.filter((x) => x.isWestMalaysia === filteredPostcode.isWestMalaysia && x.isSarawak === filteredPostcode.CityAlias).map((y) => { return (y) })
-      console.log(rate[0].shippingRateFirstKG)
-      console.log(rate[0].shippingRatesubKG)
-      console.log(firstWeight)
-      console.log(subWeight)
-      const shippingCost = firstWeight * (rate[0].shippingRateFirstKG) + subWeight * (rate[0].shippingRatesubKG)
-      this.setState({ shippingFee: shippingCost, })
-      console.log(shippingCost)
+      const rate = shippingRate.filter((x) => x.isWestMalaysia === filteredPostcode.isWestMalaysia && x.isSarawak === filteredPostcode.CityAlias).map((y) => { return (y) })
+      if (rate !== undefined && rate.length > 0) {
+        if (finalWeight > 1)
+          shippingCost = (firstWeight * rate[0].shippingRateFirstKG) + (Math.ceil(subWeight) * rate[0].shippingRatesubKG)
+        else
+          shippingCost = firstWeight * rate[0].shippingRateFirstKG
+      }
+      this.props.handleGetPostcode(shippingCost)
     }
   }
 
@@ -91,7 +115,6 @@ class DeliveryFee extends Component {
     return (
       <>
         <LoadingPanel postcodes={postcodes} />
-        {/* {this.props.handleGetPostcode(this.state.shippingFee)} */}
       </>
     )
   }

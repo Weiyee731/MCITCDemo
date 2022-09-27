@@ -69,6 +69,7 @@ class PageCheckout extends Component {
       submit: false,
       shipping: 0,
       isShipping: false,
+      isErrorPoscode: false
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
@@ -147,8 +148,8 @@ class PageCheckout extends Component {
     }
 
     const handleGetPostcode = (value) => {
-      if (value.length !== 0)
-        this.setState({ shipping: value, })
+      if (!isNaN(value))
+        this.setState({ shipping: value, isShipping: true })
     }
 
     const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
@@ -168,9 +169,9 @@ class PageCheckout extends Component {
 
 
     if (this.state.submit === true) {
-      if (this.state.isShipping !== true) {
+      if (this.state.isShipping === false && this.state.isErrorPoscode === false) {
         return (
-          <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={this.state.address} data={this.props.data}/>
+          <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={this.state.address} data={this.props.data} />
         )
       }
       else
@@ -192,13 +193,6 @@ class PageCheckout extends Component {
       <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} merchant={this.props.merchant} />
     );
 
-    // const step3Content = (
-    //   <PagePayment handleGetPaymentId={handleGetPaymentId} addresss={this} data={this.props.data} merchant={this.props.merchant} handleUserData={handleUserData} />
-    // );
-
-    // const step4Content = (
-    //   <PageCompleted handleGetTotal={handleGetTotal} addresss={this} data={this.props.data} merchant={this.props.merchant} />
-    // );
     return (
       <React.Fragment>
         <Helmet>

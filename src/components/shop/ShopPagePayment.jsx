@@ -50,7 +50,7 @@ const initialState = {
   subtotal: 1,
   total: 0,
   // shipping: 1,
-  shipping: "",
+  shipping: 0,
   tax: 0,
   tabvalue: 0,
   cvcVisible: false,
@@ -130,11 +130,17 @@ class PagePayment extends Component {
   // }
 
   setDetails(productcart) {
+    let shippingFee = 0
     this.setState({
       cart: productcart
     })
+
+    console.log("sddsaa", this.props)
+    if (!isNaN(this.props.shippingfee))
+      shippingFee = parseFloat(this.props.shippingfee.toFixed(2))
+
     this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
-    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping })
+    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee, shipping: shippingFee })
 
 
     if (this.props.addressID !== undefined && this.props.addressID !== undefined && this.state.setAddress === false) {
@@ -154,7 +160,7 @@ class PagePayment extends Component {
               city: address.UserCity,
               state: address.UserState,
               contact: address.UserContactNo,
-              total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping
+              total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee
             }
             this.setState({
               Userdetails: Userdetails,
@@ -174,7 +180,7 @@ class PagePayment extends Component {
           city: "Self Collect",
           state: "Self Collect",
           contact: localStorage.getItem("contact"),
-          total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + this.state.shipping
+          total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee
         }
         this.setState({
           Userdetails: Userdetails,
@@ -398,7 +404,7 @@ class PagePayment extends Component {
 
   handleBanking = (bankid) => {
     let date = moment(new Date()).format("YYYYMMDDHHmmss").toString()
-    let fpx_sellerExOrderNo = date 
+    let fpx_sellerExOrderNo = date
     let fpx_sellerTxnTime = date
     let fpx_sellerOrderNo = date
 
