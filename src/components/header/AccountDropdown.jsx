@@ -36,20 +36,12 @@ const AccountDropdown = (props) => {
           </Link>
           <div className="account-menu__divider" />
           <ul className="account-menu__links">
+  
             {localStorage.getItem("roleid") <= 15 && (
-              // <li onClick={() => backtoinventory("Dashboard")}>
-              //   <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a>
-              // </li>
-              // <li onClick={() => backtoinventory("Dashboard")}>
-              // `${match.path}/address/:addressId`
-              // <a href="http://localhost:3002/CMS.myemporia.MY/" >Inventory1</a>
-              // </li>
-              // <li onClick={() => window.location.href = "http://localhost:3002/CMS.myemporia.MY/" + localStorage.getItem("userName") + "|" + localStorage.getItem("password") }><a>Inventory1</a></li>
-
               window.location.hostname === "localhost" ?
-                <li onClick={() => window.location.href = "http://localhost:3002/cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory1</a></li>
+                <li onClick={() => window.location.href = "http://localhost:3002/cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory</a></li>
                 :
-                <li onClick={() => window.location.href = "https://cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory1</a></li>
+                <li onClick={() => window.location.href = "https://cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory</a></li>
             )}
             <li>
               <Link to="/account/profile">My Profile11</Link>

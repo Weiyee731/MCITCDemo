@@ -1,7 +1,7 @@
 {
   "name": "Emporia",
   "version": "1.1.1",
-  "homepage": "/Emporia/",
+  "homepage": "/",
   "private": true,
   "dependencies": {
     "@atlaskit/css-reset": "^6.0.4",

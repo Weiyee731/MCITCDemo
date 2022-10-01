@@ -126,7 +126,7 @@ const productLayouts = [
 const Access = () => {
   if (localStorage.getItem("isLogin") === false || localStorage.getItem("isLogin") === null) {
     return (
-      <Router basename={"/Emporia/"}>
+      <Router basename={"/"}>
         <div className="App">
           <nav className="navbar navbar-expand-lg navbar-light fixed-top">
             <div className="container">
@@ -178,7 +178,7 @@ const Access = () => {
     );
   } else {
     return (
-      <Router basename={"/Emporia/"}>
+      <Router basename={"/"}>
         <div
           className={"app"}
           style={{ overflow: "hidden", position: "relative" }}
@@ -389,7 +389,7 @@ function Layout(props) {
       //   Access()
       // ) :
        (
-        <Router basename={"/Emporia/"}>
+        <Router basename={"/"}>
           <div className="site">
             <header className="site__header d-lg-none">
               <MobileHeader />

@@ -194,15 +194,12 @@ class IndicatorAccount extends Component {
             <div className="account-menu__divider" />
             <ul className="account-menu__links">
               {localStorage.getItem("roleid") <= 16 && (
-                // <li onClick={() => backtoinventory("Dashboard")}>
-                //   {/* <a href="/dashboard" onClick={() => window.location.reload()}>Inventory</a> */}
-                //   <a href="/viewProduct" onClick={() => window.location.reload()}>Inventory</a>
-                // </li>
-                // <a href="http://localhost:3002/CMS.myemporia.MY" >Inventory2</a>
                 window.location.hostname === "localhost" ?
-                  <li onClick={() => window.location.href = "http://localhost:3002/cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory2</a></li>
+                  <li onClick={() => window.location.href = "http://localhost:3001/cms.myemporia.my/" + localStorage.getItem("username_encrypt").replace('+', 'xMl3Jk').replace('/', 'Por21Ld').replace('=', 'Ml32')
+                    + "_" + localStorage.getItem("password").replace('+', 'xMl3Jk').replace('/', 'Por21Ld').replace('=', 'Ml32')}><a>Inventory</a></li>
                   :
-                  <li onClick={() => window.location.href = "https://cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "_" + localStorage.getItem("password")}><a>Inventory2</a></li>
+                  <li onClick={() => window.location.href = "https://cms.myemporia.my/" + localStorage.getItem("username_encrypt").replace('+', 'xMl3Jk').replace('/', 'Por21Ld').replace('=', 'Ml32')
+                    + "_" + localStorage.getItem("password").replace('+', 'xMl3Jk').replace('/', 'Por21Ld').replace('=', 'Ml32')}><a>Inventory</a></li>
               )}
               <li>
                 <Link to="/account/profile">My Profile</Link>

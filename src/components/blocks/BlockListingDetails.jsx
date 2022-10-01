@@ -82,7 +82,7 @@ const initialState = {
 
     breadcrumb: [
         { title: "Home", url: "" },
-        { title: "Main Category", url: "/Emporia/shop/AllProductCategory/" },
+        { title: "Main Category", url: "/shop/AllProductCategory/" },
     ]
 }
 
@@ -124,7 +124,7 @@ class BlockListingDetails extends Component {
     }
 
     processUrl(ProductCategoryID) {
-        return ("/Emporia/Emporia/shop/ProductListing/type:Category&typevalue:" + ProductCategoryID)
+        return ("//shop/ProductListing/type:Category&typevalue:" + ProductCategoryID)
     }
 
 
@@ -545,24 +545,24 @@ class BlockListingDetails extends Component {
                                 style={{ cursor: "pointer", fontWeight: 600 }}
                                 onMouseDown={(e) => {
                                     if (e.button === 1) {
-                                        window.open("/Emporia/shop/AllProductCategory/")
+                                        window.open("/shop/AllProductCategory/")
                                     }
                                 }}
                                 onClick={(e) => {
-                                    window.location.href = "/Emporia/shop/AllProductCategory/"
+                                    window.location.href = "/shop/AllProductCategory/"
                                 }}
                             >
                                 <FormatListBulletedIcon /> {" "} All Categories
                             </div> */}
                                 <div className="sub-title" >
-                                    <Link to="/Emporia/shop/AllProductCategory/">
+                                    <Link to="/shop/AllProductCategory/">
                                         <FormatListBulletedIcon /> All Categories
                                     </Link>
                                 </div>
                                 {
                                     this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
                                     <div>
-                                        <label onClick={() => { window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID; this.setState({ isCheckDataBind: false }) }}>
+                                        <label onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID; this.setState({ isCheckDataBind: false }) }}>
                                             {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
                                         </label>
                                     </div>
@@ -587,9 +587,9 @@ class BlockListingDetails extends Component {
                                                                                     this.state.categoryHierachy === 1 || this.state.categoryHierachy === 2 ?
                                                                                         <div key={items.ProductCategory} className="sub-category-items " style={{ fontWeight: "200", paddingLeft: "30px" }}>
                                                                                             <FiberManualRecordOutlinedIcon
-                                                                                                onClick={() => { window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                                                                onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                                                                                             />
-                                                                                            <label className="sub-label" onClick={() => { window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                                                            <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + items.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                                                                                             >{items.ProductCategory}</label>
                                                                                         </div>
                                                                                         : ""
@@ -601,9 +601,9 @@ class BlockListingDetails extends Component {
                                                             </> :
                                                             <>
                                                                 <FiberManualRecordOutlinedIcon
-                                                                    onClick={() => { window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                                    onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                                                                 />
-                                                                <label className="sub-label" onClick={() => { window.location.href = "/Emporia/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                                <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + category.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                                                                 >{category.ProductCategory}</label>
                                                             </>
                                                     }

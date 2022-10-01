@@ -84,54 +84,54 @@ class BlockSlideShow extends Component {
 
   slides = [
     {
-      title: "11.11<br>Hardware products Sale",
-      text: "11.11 Big Show will also be held during the big sale.",
+      title: "",
+      text: "",
       image_classic: {
-        ltr: "images/slides/slide_1.jpg",
-        rtl: "images/slides/slide_1.jpg",
+        ltr: "https://myemporia.my/images/slides/slide_4.png",
+        rtl: "https://myemporia.my/images/slides/slide_4.png",
       },
       image_full: {
-        ltr: "images/slides/slide_1_full.jpg",
-        rtl: "images/slides/slide_1_full.jpg",
+        ltr: "https://myemporia.my/images/slides/slide_4.png",
+        rtl: "https://myemporia.my/images/slides/slide_4.png",
       },
       image_mobile: {
-        ltr: "images/slides/slide_1_mobile.jpg",
-        rtl: "images/slides/slide_1_mobile.jpg",
+        ltr: "https://myemporia.my/images/slides/slide_4.png",
+        rtl: "https://myemporia.my/images/slides/slide_4.png",
       },
     },
-    {
-      title: "Furniture<br>MEGA SALES",
-      text:
-        "Enjoy huge savings on home furnishing products. While stocks last. Hurry shop now! Delivery To Your Home. 0% Instalment Plan. 365 Days Return Policy",
-      image_classic: {
-        ltr: "images/slides/slide_2.jpg",
-        rtl: "images/slides/slide_2.jpg",
-      },
-      image_full: {
-        ltr: "images/slides/slide_2_full.jpg",
-        rtl: "images/slides/slide_2_full.jpg",
-      },
-      image_mobile: {
-        ltr: "images/slides/slide_2_mobile.jpg",
-        rtl: "images/slides/slide_2_mobile.jpg",
-      },
-    },
-    {
-      title: 'One more<br>Unique header',
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
-      image_classic: {
-        ltr: 'images/slides/slide_3.jpg',
-        rtl: 'images/slides/slide_3.jpg',
-      },
-      image_full: {
-        ltr: 'images/slides/slide_3_full.jpg',
-        rtl: 'images/slides/slide_3_full.jpg',
-      },
-      image_mobile: {
-        ltr: 'images/slides/slide_3_mobile.jpg',
-        rtl: 'images/slides/slide_3_mobile.jpg',
-      },
-    },
+    // {
+    //   title: "",
+    //   text:
+    //     "",
+    //   image_classic: {
+    //     ltr: "images/slides/slide_2.jpg",
+    //     rtl: "images/slides/slide_2.jpg",
+    //   },
+    //   image_full: {
+    //     ltr: "images/slides/slide_2_full.jpg",
+    //     rtl: "images/slides/slide_2_full.jpg",
+    //   },
+    //   image_mobile: {
+    //     ltr: "images/slides/slide_2_mobile.jpg",
+    //     rtl: "images/slides/slide_2_mobile.jpg",
+    //   },
+    // },
+    // {
+    //   title: '',
+    //   text: '',
+    //   image_classic: {
+    //     ltr: 'images/slides/slide_3.jpg',
+    //     rtl: 'images/slides/slide_3.jpg',
+    //   },
+    //   image_full: {
+    //     ltr: 'images/slides/slide_3_full.jpg',
+    //     rtl: 'images/slides/slide_3_full.jpg',
+    //   },
+    //   image_mobile: {
+    //     ltr: 'images/slides/slide_3_mobile.jpg',
+    //     rtl: 'images/slides/slide_3_mobile.jpg',
+    //   },
+    // },
   ];
 
   componentDidMount() {

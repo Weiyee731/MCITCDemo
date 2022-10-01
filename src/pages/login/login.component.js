@@ -118,8 +118,19 @@ class LoginComponent extends Component {
     this.props.loginUser(this.state);
   }
 
-  encryptData(data){
-    var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace('+','xMl3Jk').replace('/','Por21Ld').replace('=','Ml32');;
+  encryptData(data) {
+
+    console.log("data", data)
+    var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace(/\+/g,'p1L2u3S').replace(/\//g,'s1L2a3S4h').replace(/=/g,'e1Q2u3A4l');
+    // console.log("data ciphertext", ciphertext)
+    // console.log("data ciphertext222", ciphertext2)
+
+
+    // var xx = ciphertext.replace(/p1L2u3S/g, '+' ).replace(/s1L2a3S4h/g, '/').replace(/e1Q2u3A4l/g, '=');
+    // var bytes = CryptoJS.AES.decrypt(xx, 'myemporia@123');
+    // var decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+    // console.log("ciphertext decryptedData", decryptedData)
+
     return ciphertext
     // console.log("ciphertext", ciphertext)
 
@@ -199,7 +210,7 @@ class LoginComponent extends Component {
         // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
         // }
 
-        browserHistory.push("/Emporia");
+        browserHistory.push("/");
         window.location.reload(false);
       } else {
         toast.error("The username and password does not match.")
@@ -220,7 +231,7 @@ class LoginComponent extends Component {
       if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
         toast.success("Your password has been updated, try to login with new password");
         setTimeout(() => {
-          browserHistory.push("/Emporia/login");
+          browserHistory.push("/login");
           window.location.reload(false);
         }, 3000)
 

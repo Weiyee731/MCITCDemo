@@ -80,11 +80,13 @@ const initialState = {
     // FPX Online Banking
     fpx_msgType: "AR",
     fpx_msgToken: "01",
-    fpx_sellerExId: "EX00013776",
+    // fpx_sellerExId: "EX00013776",
+    fpx_sellerExId: "EX00012067", // live FPX
     fpx_sellerExOrderNo: "",
     fpx_sellerTxnTime: "",
     fpx_sellerOrderNo: "",
-    fpx_sellerId: "SE00015397",
+    // fpx_sellerId: "SE00015397",
+    fpx_sellerId: "SE00055564",  // live FPX
     fpx_sellerBankCode: "01",
     fpx_txnCurrency: "MYR",
     fpx_txnAmount: "",
@@ -361,9 +363,9 @@ class AccountPagePayment extends Component {
 
     handleBanking = (bankid) => {
         let date = moment(new Date()).format("YYYYMMDDHHmmss").toString()
-        let fpx_sellerExOrderNo = date 
-        let fpx_sellerTxnTime = date 
-        let fpx_sellerOrderNo = date 
+        let fpx_sellerExOrderNo = date
+        let fpx_sellerTxnTime = date
+        let fpx_sellerOrderNo = date
         console.log("date11", fpx_sellerExOrderNo)
 
         let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
@@ -422,7 +424,9 @@ class AccountPagePayment extends Component {
         let poscode = this.props.addressID === 0 ? "94300" : this.state.Userdetails.poscode
         let PickUpIndicator = this.props.addressID === 0 ? 1 : 0
 
-        const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
+        // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e";
+        // live credit card
+        const APIKey = "2c57e2f0161a450ebe5fb67ffbdd51fc196b0256ed1940158f54990b57f4ec3c1e08823fa84c4596bea898bb2b53e6d124414d118b954914806c182092123d4008ba628a8eaf403faa7e3c1adb470ee9d6044313451442d2acd532b47d42e00a2fdecfa996334065a94e0d46d32b7534b3fb4016198047568afd83c99823f6ed"
 
         let access_key = ""
         let profile_id = ""
@@ -477,8 +481,10 @@ class AccountPagePayment extends Component {
             }
         }
         else {
-            access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
-            profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
+            // access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
+            // profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
+            access_key = "51f40be210ff34cba0079b19efd3ab42"  //live credit card
+            profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4"  //live credit card
             transaction_uuid = time + '123'
             signed_date_time = now
             locale = "en"
@@ -649,7 +655,8 @@ class AccountPagePayment extends Component {
                                 <label style={{ fontSize: "14px" }}>By Clicking on the "Proceed" button , you hereby agree with <a href={"https://www.mepsfpx.com.my/FPXMain/termsAndConditions.jsp"} style={{ color: "blue" }} >FPX's Terms & Conditions</a> </label>
                                 <div>
                                     {
-                                        <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
+                                        // <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
+                                        <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
                                             <input type="hidden" value={this.state.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
                                             <input type="hidden" value={this.state.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
                                             <input type="hidden" value={this.state.fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
@@ -686,7 +693,8 @@ class AccountPagePayment extends Component {
                             :
                             <React.Fragment>
                                 <div>
-                                    <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+                                    {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
+                                    <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post">
                                         <input type="hidden" id="access_key" name="access_key" value={access_key}></input>
                                         <input type="hidden" id="profile_id" name="profile_id" value={profile_id}></input>
                                         <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={transaction_uuid}></input>
