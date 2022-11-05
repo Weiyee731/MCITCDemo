@@ -36,40 +36,53 @@ class DeliveryFee extends Component {
         { id: 2, isWestMalaysia: 0, shippingRateFirstKG: 7.00, shippingRatesubKG: 3.50, isSarawak: "SRW" },
         { id: 3, isWestMalaysia: 0, shippingRateFirstKG: 9.00, shippingRatesubKG: 4.50, isSarawak: "SBH" },
       ],
+      isDeliverySet: false
     };
   }
 
   componentDidMount() {
     this.props.CallRetrievePostcodesList()
-    if (this.props.addressID !== undefined && this.props.addressID !== 0 && this.props.postcodes !== undefined && this.props.postcodes.length > 0 && this.props.data !== undefined && this.props.data.length > 0) {
+    if (this.props.addressID !== undefined && this.props.addressID !== 0 && this.props.postcodes !== undefined && this.props.postcodes.length > 0 && this.props.data !== undefined && this.props.data.length > 0)
+      this.handleData()
 
-      let selectedAddress = []
-      let filteredPostcode = []
-      let productWeight = 0
 
-      if (this.props.addresses !== undefined && this.props.addresses.length > 0) {
-        selectedAddress = this.props.addresses.filter((x) => x.UserAddressBookID === this.props.addressID)
-
-        if (selectedAddress.length > 0) {
-          filteredPostcode = this.props.postcodes.filter((x) => x.Poscode === selectedAddress[0].UserPoscode)
-          if (filteredPostcode.length > 0) {
-            productWeight = this.handleProductWeight(this.props.data)
-            this.handleCalculation(filteredPostcode[0], productWeight)
-          }
-          else {
-            toast.warning("The poscode is incorrect. Please cross check the selected address poscode")
-            setTimeout(() => {
-              window.location.href = "/account/addresses/"
-            }, 3000);
-          }
-        }
-      }
-    }
-    if (this.props.addressID !== undefined && this.props.addressID === 0)
-      this.props.handleGetPostcode(0)
   }
 
   componentDidUpdate(prevProps) {
+    if (this.props.addressID !== undefined && this.props.addressID !== 0 && this.props.postcodes !== undefined && this.props.postcodes.length > 0
+      && this.props.data !== undefined && this.props.data.length > 0 && this.state.isDeliverySet === false)
+      this.handleData()
+
+  }
+
+  handleData() {
+    let selectedAddress = []
+    let filteredPostcode = []
+    let productWeight = 0
+
+    if (this.props.addresses !== undefined && this.props.addresses.length > 0) {
+      selectedAddress = this.props.addresses.filter((x) => x.UserAddressBookID === this.props.addressID)
+
+      if (selectedAddress.length > 0) {
+        filteredPostcode = this.props.postcodes.filter((x) => x.Poscode === selectedAddress[0].UserPoscode)
+        if (filteredPostcode.length > 0) {
+          productWeight = this.handleProductWeight(this.props.data)
+          this.handleCalculation(filteredPostcode[0], productWeight)
+        }
+        else {
+          toast.warning("The poscode is incorrect. Please cross check the selected address poscode")
+          setTimeout(() => {
+            window.location.href = "/account/addresses/"
+          }, 3000);
+        }
+      }
+    }
+
+    if (this.props.addressID !== undefined && this.props.addressID === 0) {
+      this.setState({ isDeliverySet: true })
+      this.props.handleGetPostcode(0)
+    }
+
   }
 
   handleProductWeight(productData) {
@@ -111,6 +124,8 @@ class DeliveryFee extends Component {
 
   render() {
     const postcodes = this.props.postcodes
+
+    console.log("IN DELIVER", this.props)
 
     return (
       <>

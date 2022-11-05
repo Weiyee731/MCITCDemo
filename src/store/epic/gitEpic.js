@@ -3,8 +3,8 @@ import { ActionsObservable } from "redux-observable";
 import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 
-const url = "https://triviix.com/emporiaApi/api/emporia/"
-// const url = "https://myemporia.my/emporiaApi/api/emporia/"
+// const url = "https://triviix.com/emporiaApi/api/emporia/"
+const url = "https://myemporia.my/emporiaApi/api/emporia/"
 
 
 
@@ -945,7 +945,7 @@ export class GitEpic {
           payload: json,
         };
       } catch (error) {
-        alert("viewProductCartList123: " + error)
+        alert("viewProductCartList: " + error)
         return {
           type: GitAction.ViewedProductCart,
           payload: [],
@@ -2393,6 +2393,7 @@ export class GitEpic {
 
   AddOrder = (action$) =>
     action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
+      console.log("payload", payload)
       try {
         const response = await fetch(
           url + "Order_AddOrder"

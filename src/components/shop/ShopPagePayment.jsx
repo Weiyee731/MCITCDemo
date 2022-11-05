@@ -99,7 +99,7 @@ const initialState = {
   fpx_buyerId: "",
   fpx_makerName: "",
   fpx_buyerIban: "",
-  fpx_productDesc: "EmporiaHardware",
+  fpx_productDesc: "Emporia Hardware",
   fpx_version: "6.0",
   bankingdata: "",
 
@@ -749,9 +749,11 @@ class PagePayment extends Component {
                 <div>
 
 
-                  {/* <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
+
                   {
                     <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
+                    {/* // <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
+
                       <input type="hidden" value={this.state.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
                       <input type="hidden" value={this.state.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
                       <input type="hidden" value={this.state.fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
@@ -788,8 +790,9 @@ class PagePayment extends Component {
               :
               <React.Fragment>
                 <div>
-                  {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
+                  {/* */}
                   <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post">
+                  {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
                     <input type="hidden" id="access_key" name="access_key" value={access_key}></input>
                     <input type="hidden" id="profile_id" name="profile_id" value={profile_id}></input>
                     <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={transaction_uuid}></input>

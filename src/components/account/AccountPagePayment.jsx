@@ -98,7 +98,7 @@ const initialState = {
     fpx_buyerId: "",
     fpx_makerName: "",
     fpx_buyerIban: "",
-    fpx_productDesc: "EmporiaHardware",
+    fpx_productDesc: "Emporia Hardware",
     fpx_version: "6.0",
     bankingdata: "",
 

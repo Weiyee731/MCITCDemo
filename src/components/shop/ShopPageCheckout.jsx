@@ -148,6 +148,8 @@ class PageCheckout extends Component {
     }
 
     const handleGetPostcode = (value) => {
+
+      console.log("handleGetPostcode", value)
       if (!isNaN(value))
         this.setState({ shipping: value, isShipping: true })
     }
@@ -169,7 +171,9 @@ class PageCheckout extends Component {
 
 
     if (this.state.submit === true) {
+      console.log("HERE11", this.state)
       if (this.state.isShipping === false && this.state.isErrorPoscode === false) {
+        console.log("HERE22", this.state)
         return (
           <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={this.state.address} data={this.props.data} />
         )

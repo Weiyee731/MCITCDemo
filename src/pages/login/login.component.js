@@ -122,22 +122,8 @@ class LoginComponent extends Component {
 
     console.log("data", data)
     var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace(/\+/g,'p1L2u3S').replace(/\//g,'s1L2a3S4h').replace(/=/g,'e1Q2u3A4l');
-    // console.log("data ciphertext", ciphertext)
-    // console.log("data ciphertext222", ciphertext2)
-
-
-    // var xx = ciphertext.replace(/p1L2u3S/g, '+' ).replace(/s1L2a3S4h/g, '/').replace(/e1Q2u3A4l/g, '=');
-    // var bytes = CryptoJS.AES.decrypt(xx, 'myemporia@123');
-    // var decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-    // console.log("ciphertext decryptedData", decryptedData)
 
     return ciphertext
-    // console.log("ciphertext", ciphertext)
-
-    // var bytes = CryptoJS.AES.decrypt(ciphertext, 'my-secret-key@123');
-    // console.log("ciphertext bytes", bytes)
-    // var decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-    // console.log("ciphertext decryptedData", decryptedData)
   }
 
   componentDidUpdate(prevProps) {

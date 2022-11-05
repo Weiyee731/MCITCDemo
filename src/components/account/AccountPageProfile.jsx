@@ -104,18 +104,18 @@ class AccountPageProfile extends Component {
         let userDetails = this.props.currentUser[0];
         if (userDetails !== undefined) {
           this.setState({
-            USERFIRSTNAME: userDetails.FirstName !== undefined ? userDetails.FirstName : "-",
-            USERLASTNAME: userDetails.LastName !== undefined ? userDetails.LastName : "-",
-            USERCONTACTNO: userDetails.UserContactNo !== undefined ? userDetails.UserContactNo : "-",
-            USERDATEBIRTH: userDetails.UserDOB !== undefined ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
-            USEREMAIL: userDetails.UserEmailAddress !== undefined ? userDetails.UserEmailAddress : "-",
-            USERGENDER: userDetails.UserGender !== undefined ? userDetails.UserGender : "-",
-            validfirstName: userDetails.FirstName !== undefined ? true : false,
-            validlastName: userDetails.LastName !== undefined ? true : false,
-            validDOB: userDetails.UserDOB !== undefined ? true : false,
-            validGender: userDetails.UserGender !== undefined ? true : false,
-            validContact: userDetails.UserContactNo !== undefined ? true : false,
-            validEmail: userDetails.UserEmailAddress !== undefined ? true : false,
+            USERFIRSTNAME: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? userDetails.FirstName : "-",
+            USERLASTNAME: userDetails.LastName !== undefined && userDetails.LastName !== null ? userDetails.LastName : "-",
+            USERCONTACTNO: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
+            USERDATEBIRTH: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
+            USEREMAIL: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
+            USERGENDER: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? userDetails.UserGender : "-",
+            validfirstName: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? true : false,
+            validlastName: userDetails.LastName !== undefined && userDetails.LastName !== null ? true : false,
+            validDOB: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? true : false,
+            validGender: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? true : false,
+            validContact: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? true : false,
+            validEmail: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? true : false,
           })
         }
       }
@@ -283,8 +283,6 @@ class AccountPageProfile extends Component {
   /////////////////CALL API TO UPDATE PROFILE INFO///////////////////////////////////////////
   updateProfile() {
 
-
-
     // if (
     // //   !isStringNullOrEmpty(this.state.Name) &&
     // //   isContactValid(this.state.ContactNo) &&
@@ -295,16 +293,14 @@ class AccountPageProfile extends Component {
     // //   !isStringNullOrEmpty(this.state.USERCITY) &&
     // //   !isStringNullOrEmpty(this.state.USERCOUNTRYID)
     // // )
-
-    console.log("CALL")
     this.props.CallUpdateUserProfile({
       USERID: this.state.USERID,
-      USERFIRSTNAME: this.state.USERFIRSTNAME,
-      USERLASTNAME: this.state.USERLASTNAME,
-      USERCONTACTNO: this.state.USERLUSERCONTACTNOASTNAME,
-      USERDATEBIRTH: moment(this.state.USERDATEBIRTH).format('YYYYMMDD'),
-      USEREMAIL: this.state.USEREMAIL,
-      USERGENDER: this.state.USERGENDER,
+      USERFIRSTNAME: this.state.USERFIRSTNAME === "" ? "-" : this.state.USERFIRSTNAME,
+      USERLASTNAME: this.state.USERLASTNAME === "" ? "-" : this.state.USERLASTNAME,
+      USERCONTACTNO: this.state.USERCONTACTNO === "" ? "-" : this.state.USERCONTACTNO,
+      USERDATEBIRTH: this.state.USERDATEBIRTH === "" ? "-" : moment(this.state.USERDATEBIRTH).format('YYYYMMDD'),
+      USEREMAIL: this.state.USEREMAIL === "" ? "-" : this.state.USEREMAIL,
+      USERGENDER: this.state.USERGENDER === "" ? "-" : this.state.USERGENDER,
       TYPE: "UserProfile",
       TYPEVALUE: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
       USERROLEID: "0",
@@ -463,7 +459,7 @@ class AccountPageProfile extends Component {
                         {/* {
                         this.state.editContact === false ? */}
                         <>
-                          {row.UserContactNo !== null && row.UserContactNo !== undefined ? censorContact(row.UserContactNo) : "-"}
+                          {row.UserContactNo !== null && row.UserContactNo !== undefined && row.UserContactNo !== "-" ? censorContact(row.UserContactNo) : "-"}
                           <Link to={{ pathname: "/account/changeContact" }}>
                             {/* <Link to="/account/changeContact" > */}
                             <div className="change-contact-mail" >Change Contact</div>
