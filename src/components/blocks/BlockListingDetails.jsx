@@ -774,7 +774,7 @@ class BlockListingDetails extends Component {
                             <div className="container">
                                 <div className="row">
                                     {
-                                        this.state.isCheckDataBind === true && this.props.productCategories !== undefined && this.props.productCategories.length > 0 ?
+                                        this.state.isCategorySet === true && this.state.isCheckDataBind === true && this.props.productCategories !== undefined && this.props.productCategories.length > 0 ?
 
                                             this.state.productList.length > 0 ?
                                                 this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?
@@ -791,11 +791,9 @@ class BlockListingDetails extends Component {
                                                     <div className="ml-2"><i>No products for this section</i></div>
                                                 :
                                                 <div className="ml-2"><i>No products for this section</i></div>
-
                                             :
                                             <LoadingPanel />
                                     }
-
 
                                 </div>
                             </div>

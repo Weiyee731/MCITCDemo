@@ -137,13 +137,12 @@ class PagePayment extends Component {
       cart: productcart
     })
 
-    console.log("sddsaa", this.props)
     if (!isNaN(this.props.shippingfee))
       shippingFee = parseFloat(this.props.shippingfee.toFixed(2))
 
-    // this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
-    // this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee, shipping: shippingFee })
-    this.setState({ total: 1 })
+    this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
+    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee, shipping: shippingFee })
+    // this.setState({ total: 1 })
 
 
     if (this.props.addressID !== undefined && this.props.addressID !== undefined && this.state.setAddress === false) {
@@ -247,7 +246,7 @@ class PagePayment extends Component {
         this.setState({ finalAllBankDetails: bankFinalList, BankID: "0" })
       }
     }).catch(e => {
-      toast.error("There is something wrong with 111. Please try again.")
+      toast.error("There is something wrong for bank retrieve. Please try again.")
     })
 
     // const selectedAddress = this.props.addresses.filter((x) => parseInt(x.UserAddressBookID) === parseInt(this.props.addressID))
@@ -413,15 +412,12 @@ class PagePayment extends Component {
 
     let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
 
-    console.log("bankingdata", bankingdata)
     let URL = "https://myemporia.my/payment/check.php"
     const config = { headers: { 'Content-Type': 'multipart/form-data' } }
     const formData = new FormData()
     formData.append("bankingdata", bankingdata);
     axios.post(URL, formData, config).then((res) => {
       if (res.status === 200) {
-
-        console.log("bankingdata res", res.data.split('"')[1])
         this.setState({
           fpx_checkSum: res.data.split('"')[1],
           fpx_buyerBankId: bankid,
@@ -685,7 +681,6 @@ class PagePayment extends Component {
             {
               this.state.finalAllBankDetails !== null && this.state.finalAllBankDetails.filter((x) => x.BankType === type).map((details) =>
                 <option disabled={details.BankStatus === "B" ? true : false} value={details.BankID} key={details.BankID}  >
-                  {console.log("BANKBANK", details)}
                   {details.PaymentMethod}{details.BankStatus === "B" ? " (Offline)" : ""}
                 </option>
               )
@@ -752,7 +747,7 @@ class PagePayment extends Component {
 
                   {
                     <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
-                    {/* // <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
+                      {/* // <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
 
                       <input type="hidden" value={this.state.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
                       <input type="hidden" value={this.state.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
@@ -792,7 +787,7 @@ class PagePayment extends Component {
                 <div>
                   {/* */}
                   <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post">
-                  {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
+                    {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
                     <input type="hidden" id="access_key" name="access_key" value={access_key}></input>
                     <input type="hidden" id="profile_id" name="profile_id" value={profile_id}></input>
                     <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={transaction_uuid}></input>
@@ -830,7 +825,6 @@ class PagePayment extends Component {
 
 
   render() {
-    console.log(this.props)
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
