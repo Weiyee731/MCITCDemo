@@ -68,7 +68,7 @@ function Header(props) {
   }
   return (
     <div className="site-header w-100" style={backgroundColor}>
-      <div style={{ background: "#CAA520", height: "1.2vw", opacity: 0.75, }}>
+      <div className="helpdeskBar">
         {/* background:"#4B895A" */}
         <div className="container" style={{ display: "flex", justifyContent: "flex-end", alignItems:"center", padding:"0.1vw" }}>
           <SocialLinks className="footer-newsletter__social-links" shape="circle" />

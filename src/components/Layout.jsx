@@ -393,8 +393,6 @@ function Layout(props) {
             <header className="site__header d-lg-none">
               <MobileHeader />
             </header>
-
-          
             <header className="site__header d-lg-block d-none">
               <Header layout={headerLayout} />
             </header>
