@@ -382,7 +382,7 @@ class LoginComponent extends Component {
           <div className="text-center">
             <img
               src={Logo}
-              alt="Emporia"
+              alt="MyEmporia"
               height="250px"
               width="auto"
               className="mx-auto"
@@ -443,7 +443,7 @@ class LoginComponent extends Component {
               <div className="row">
                 <div className="col-6">
                   <p className=" text-left" style={{ fontSize: "13px", paddingTop: "10px" }}>
-                    New to Emporia?
+                    New to MyEmporia?
                     {/* <Link className="nav-link" to={"/signup"}>
                       Sign Up
                     </Link> */}
@@ -488,7 +488,7 @@ class LoginComponent extends Component {
                 />
                 <hr />
                 <div>
-                  New to Emporia? <a href="/signup"><b>Sign Up</b></a>
+                  New to MyEmporia? <a href="/signup"><b>Sign Up</b></a>
                 </div>
               </div>
             </Col> */}

@@ -737,7 +737,7 @@ class AccountPagePayment extends Component {
                     <div className="container">
                         <div className="card mt-3">
                             <div className="card-body">
-                                <h5 className="card-title">Emporia</h5>
+                                <h5 className="card-title">MyEmporia</h5>
                                 {
                                     this.props.data.UserAddresID !== 0 && this.state.Userdetails.length > 0 ?
                                         <div style={{ textAlign: "left" }}>

@@ -180,7 +180,7 @@ const ResetPasswordComponent = (props) => {
       <div className="text-center">
         <img
           src={Logo}
-          alt="Emporia"
+          alt="MyEmporia"
           height="250px"
           width="auto"
           className="mx-auto"

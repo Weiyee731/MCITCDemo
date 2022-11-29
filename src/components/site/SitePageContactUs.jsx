@@ -126,13 +126,17 @@ function SitePageContactUs() {
                     <div className="contact-us__address">
                       <p style={{ textAlign: "left" }}>
                         <label>OPENING HOURS</label>
-                        <label>Monday to Saturday: 10.00am - 07.00pm</label><br />
+                        <label>Monday to Saturday: 10.00am - 06.00pm</label><br />
 
                         <label className="mt-3">EMAIL US:</label><br />
-                        <label>myemporia.helpdesk@gmail.com</label><br />
+                        <label>helpdesk.myemporia@gmail.com</label><br />
 
                         <label className="mt-3">MAILING ADDRESS:</label><br />
-                        <label>Penview Convention Centre Kuching</label><br /><label>Sejingkat, 93050 Kuching, Sarawak</label>
+                        <label>SUITE 3, 2ND FLOOR, SUBLOT 25,</label>
+                        <br />
+                        <label>TABUAN COMMERCIAL CENTRE, JALAN CANNA</label>
+                        <br />
+                        <label>93350, KUCHING SARAWAK</label>
 
                       </p>
                     </div>

@@ -157,7 +157,7 @@ class PageCompleted extends Component {
           <div className="container">
             <div className="card mt-3">
               <div className="card-body">
-                <h5 className="card-title">Emporia</h5>
+                <h5 className="card-title">MyEmporia</h5>
                 {
                   this.props.addresss !== undefined && this.props.addresss.state !== undefined && this.props.addresss.state.address !== 0 ?
                     this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>

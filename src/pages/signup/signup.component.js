@@ -289,7 +289,7 @@ const SignUp = (props) => {
                 {console.log("AHDJJDHJAHDJAHD")}
                 <img
                     src={Logo}
-                    alt="Emporia"
+                    alt="MyEmporia"
                     height="250px"
                     width="auto"
                     className="mx-auto"
@@ -298,7 +298,7 @@ const SignUp = (props) => {
             </div>
             <div className="container" style={{ width: "100%" }}>
                 <div className="text-center">
-                    <h4>Create a new Emporia's account</h4>
+                    <h4>Create a new MyEmporia's account</h4>
                 </div>
                 <Row className="justify-content-center">
                     <Col lg="5" md="5">

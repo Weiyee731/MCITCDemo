@@ -28,14 +28,14 @@ function SitePageAffiliate() {
         <div className="container">
           <div className="document">
             <div className="document__header">
-              <h1 className="document__title">Emporia Affiliate Program</h1>
+              <h1 className="document__title">MyEmporia Affiliate Program</h1>
               <div className="document__subtitle">
                 Join us to earn extra income.
               </div>
             </div>
             <div className="document__content typography">
               <p>
-              Emporia offer everyone a fair way to legitimate your app or
+              MyEmporia offer everyone a fair way to legitimate your app or
                 website through affiliate program.
               </p>
 

@@ -103,7 +103,6 @@ import EditShopProfile from "../pages/editShopProfile/editShopProfile.component"
 
 
 
-
 const productLayouts = [
   ["/shop/product-standard", { layout: "standard" }],
   ["/shop/product-columnar", { layout: "columnar" }],
@@ -131,7 +130,7 @@ const Access = () => {
           <nav className="navbar navbar-expand-lg navbar-light fixed-top">
             <div className="container">
               <Link className="navbar-brand" to={"/login"}>
-                Emporia
+                MyEmporia
               </Link>
               <div
                 className="collapse navbar-collapse"
@@ -395,6 +394,7 @@ function Layout(props) {
               <MobileHeader />
             </header>
 
+          
             <header className="site__header d-lg-block d-none">
               <Header layout={headerLayout} />
             </header>

@@ -205,7 +205,7 @@ function Search(props) {
             value={query}
             className="search__input"
             name="search"
-            placeholder="Search in Emporia"
+            placeholder="Search in MyEmporia"
             aria-label="Site search"
             type="text"
             autoComplete="off"

@@ -294,7 +294,7 @@ class Product extends Component {
                                       <img
                                         className="product__seller-info-image"
                                         src={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo}
-                                        alt="Emporia"
+                                        alt="MyEmporia"
                                         onError={(e) => {
                                           e.target.onerror = null; e.target.src = Logo
                                         }}

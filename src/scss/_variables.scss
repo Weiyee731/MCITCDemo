@@ -132,7 +132,7 @@ $font-weight-bold: 700 !default;
 $font-weight-extra-bold: 800 !default;
 $font-weight-black: 900 !default;
 // breakpoints
-$breakpoints: ( xs-start: 0px, xs-end: 575px, sm-start: 576px, sm-end: 767px, md-start: 768px, md-end: 991px, lg-start: 992px, lg-end: 1199px, xl-start: 1200px);
+$breakpoints: ( xs-start: 0px, xs-end: 575px, sm-start: 576px, sm-end: 767px, md-start: 768px, md-end: 991px, lg-start: 992px, lg-end: 1199px, xl-start: 1200px, xl-end: 1399px, xxl-start: 1400px, xxl-end: 2559px);
 // ----------------------------------------
 // -- body
 // ----------------------------------------
@@ -699,7 +699,7 @@ $share-links-counter-shadow: inset 0 0 0 1px rgba(#000, .2) !default;
 // -- .social-links
 // ----------------------------------------
 $social-links: () !default;
-$social-links: map_merge(( facebook: (bg-color: #3c5a99, font-color: #fff), twitter: (bg-color: #00a2e8, font-color: #fff), youtube: (bg-color: #e52e2e, font-color: #fff), instagram: (bg-color: #815dc7, font-color: #fff), rss: (bg-color: #ffc338, font-color: #3d464d), ), $social-links);
+$social-links: map_merge(( facebook: (bg-color: #3c5a99, font-color: #fff), twitter: (bg-color: #00a2e8, font-color: #fff), youtube: (bg-color: #e52e2e, font-color: #fff), instagram: (bg-color: #f308e1, font-color: #fff), rss: (bg-color: #ffc338, font-color: #3d464d), ), $social-links);
 $social-links-bg-color: #000 !default;
 $social-links-font-color: #fff !default;
 // ----------------------------------------
