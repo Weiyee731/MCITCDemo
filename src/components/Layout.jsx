@@ -103,7 +103,6 @@ import EditShopProfile from "../pages/editShopProfile/editShopProfile.component"
 
 
 
-
 const productLayouts = [
   ["/shop/product-standard", { layout: "standard" }],
   ["/shop/product-columnar", { layout: "columnar" }],
@@ -395,6 +394,7 @@ function Layout(props) {
               <MobileHeader />
             </header>
 
+          
             <header className="site__header d-lg-block d-none">
               <Header layout={headerLayout} />
             </header>

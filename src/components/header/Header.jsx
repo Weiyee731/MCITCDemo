@@ -16,11 +16,13 @@ import Indicator from "./Indicator";
 import IndicatorCart from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
 import { Cart20Svg, Cross10Svg } from "../../svg";
+import SocialLinks from '../shared/SocialLinks';
 
 import Logo from "../../assets/Emporia.png";
 
 // import { wishlistListItem } from "../../store/wishlist";
 import { mobileMenuOpen } from '../../store/mobile-menu';
+import { Button } from "react-bootstrap";
 
 function Header(props) {
   const { layout } = props;
@@ -66,6 +68,15 @@ function Header(props) {
   }
   return (
     <div className="site-header w-100" style={backgroundColor}>
+      <div style={{ background: "#CAA520", height: "1.2vw", opacity: 0.75, }}>
+        {/* background:"#4B895A" */}
+        <div className="container" style={{ display: "flex", justifyContent: "flex-end", alignItems:"center", padding:"0.1vw" }}>
+          <SocialLinks className="footer-newsletter__social-links" shape="circle" />
+          <Button style={{ fontSize: "9pt", background: "inherit", border: "transparent", color: "black", height: "1vw", display: "flex", alignItems: "center", fontFamily: 'Helvetica' }}>
+            Customer Care
+          </Button>
+        </div>
+      </div>
       {/* <Topbar /> */}
       {bannerSection}
       {/* <div className="site-header__nav-panel">
