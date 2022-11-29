@@ -132,7 +132,7 @@ function HomePageTwo(props) {
         </Helmet>
         <BlockSlideShow />
 
-        <BlockMainCategories />
+        {/* <BlockMainCategories /> */}
 
         {/* <BlockMerchant
           title="Top Merchants"

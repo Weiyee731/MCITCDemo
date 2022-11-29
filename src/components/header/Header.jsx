@@ -43,6 +43,7 @@ function Header(props) {
           <Link to="/">
             {/* <LogoSvg /> */}
             <img
+              className="site-header__logo_img"
               src={Logo}
               alt=""
               style={{ height: "6vw" }}
@@ -52,6 +53,7 @@ function Header(props) {
               }}
             />
           </Link>
+          {/* </div> */}
         </div>
         <div className="site-header__search" style={{ margin: "0 16px" }}>
           <Search context="header" />

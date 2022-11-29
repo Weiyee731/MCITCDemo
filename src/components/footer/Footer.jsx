@@ -15,7 +15,7 @@ import appstore from "../../assets/appstore.png";
 
 export default function Footer() {
   const informationLinks = [
-    { title: "About Emporia", url: "/site/about-us" },
+    { title: "About MyEmporia", url: "/site/about-us" },
     // { title: "Afﬁliate Program", url: "/site/affiliate" },
     // { title: "Careers", url: "/site/careers" },
     { title: "Terms & Conditions", url: "/site/terms" },
@@ -43,7 +43,7 @@ export default function Footer() {
           <div className="row">
             <div className="col-12 col-md-3 col-lg-2">
               {/* <FooterContacts /> */}
-              <FooterLinks title="Emporia"  items={informationLinks} />
+              <FooterLinks title="MyEmporia" items={informationLinks} />
             </div>
             <div className="col-12 col-md-3 col-lg-2">
               <FooterLinks title="Information" items={otherInformationLinks} />
