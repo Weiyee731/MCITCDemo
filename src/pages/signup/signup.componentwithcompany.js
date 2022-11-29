@@ -954,6 +954,7 @@ const SignUp = (props) => {
               name="repConfirmPassword"
               ref={register({ required: true })}
               type="password"
+              label="Confirm Password" 
               value={companyDetail.repConfirmPassword}
               onChange={handleChangeData.bind(this, "confirmPassword")}
             />

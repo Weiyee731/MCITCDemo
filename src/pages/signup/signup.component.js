@@ -360,7 +360,7 @@ const SignUp = (props) => {
                                 <InputLabel htmlFor="outlined-adornment-password">Confirm Password</InputLabel>
                                 <OutlinedInput
                                     id="ConfirmPassword"
-                                    label="Password"
+                                    label="Confirm Password" 
                                     value={userDetail.ConfirmPassword}
                                     type={confirmPasswordHidden ? 'password' : 'text'}
                                     onChange={handleChangeData.bind(this, "confirmPassword")}

@@ -435,6 +435,7 @@ class AccountPagePassword extends Component {
                           size="small"
                           className="font"
                           variant="outlined"
+                          label="Confirm Password" 
                           error={this.state.passwordErr}
                           type={this.state.hidden ? "password" : "text"}
                           value={this.state.Confirmpassword}

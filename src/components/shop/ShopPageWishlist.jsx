@@ -18,6 +18,7 @@ import { url } from '../../services/utils';
 import { wishlistRemoveItem } from '../../store/wishlist';
 import { GitAction } from "../../store/action/gitAction";
 import Logo from "../../assets/Emporia.png";
+import { isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 
 
 // data stubs
@@ -74,13 +75,10 @@ function ShopPageWishlist(props) {
 
     let content;
 
-    console.log("wishlist", props.wishlist)
-
     if (props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0') {
         const itemsList = wishlist.map((item) => {
             if (item.DelInd === 0) {
                 let image;
-
                 if (item.ProductImage !== null && item.ProductImage !== undefined && item.ProductImage.length > 0) {
                     image = (
                         <div className="product-image">
@@ -113,7 +111,7 @@ function ShopPageWishlist(props) {
                             </div>
                         </td>
                         <td className="wishlist__column wishlist__column--stock">
-                            <div className="badge badge-success">Samajaya Sdn Bdh</div>
+                            <div className="badge badge-success">{isStringNullOrEmpty(item.Brand) ? "No Brand" : item.Brand}</div>
                         </td>
                         <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? item.ProductPrice : 0} currency={"RM"} /></td>
                         <td className="wishlist__column wishlist__column--tocart">

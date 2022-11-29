@@ -49,7 +49,7 @@ const initialState = {
     cardList: [],
     subtotal: 0,
     total: 0,
-    shipping: 25,
+    shipping: 0,
     tax: 0,
     tabvalue: 0,
     cvcVisible: false,
@@ -128,7 +128,7 @@ class AccountPagePayment extends Component {
             cart: productcart
         })
         this.setState({ subtotal: productcart.reduce((subtotal, item) => subtotal + (item.ProductVariationPrice * item.ProductQuantity), 0) })
-        this.setState({ total: productcart.reduce((subtotal, item) => subtotal + (item.ProductVariationPrice * item.ProductQuantity), 0) + this.state.shipping })
+        this.setState({ total: productcart.reduce((subtotal, item) => subtotal + (item.ProductVariationPrice * item.ProductQuantity), 0) + parseFloat(this.props.shippingFees) })
 
         let merchantListing = []
 
@@ -161,7 +161,7 @@ class AccountPagePayment extends Component {
                             city: address.UserCity,
                             state: address.UserState,
                             contact: address.UserContactNo,
-                            total: productcart.reduce((subtotal, item) => subtotal + (item.ProductVariationPrice * item.ProductQuantity), 0) + this.state.shipping
+                            total: productcart.reduce((subtotal, item) => subtotal + (item.ProductVariationPrice * item.ProductQuantity), 0) + parseFloat(this.state.shippingFees)
                         }
                         this.setState({
                             Userdetails: Userdetails,
@@ -182,7 +182,7 @@ class AccountPagePayment extends Component {
                     city: "Self Collect",
                     state: "Self Collect",
                     contact: localStorage.getItem("contact"),
-                    total: productcart.reduce((subtotal, item) => subtotal + (item.ProductVariationPrice * item.ProductQuantity), 0) + this.state.shipping
+                    total: productcart.reduce((subtotal, item) => subtotal + (item.ProductVariationPrice * item.ProductQuantity), 0) + parseFloat(this.state.shippingFees)
                 }
                 this.setState({
                     Userdetails: Userdetails,
@@ -309,7 +309,7 @@ class AccountPagePayment extends Component {
                     <tr>
                         <th style={{ textAlign: "right" }}>Shipping</th>
                         <td>
-                            <Currency value={this.state.shipping} />
+                            <Currency value={this.props.shippingFees} />
                         </td>
                     </tr>
                     <tr>
@@ -340,9 +340,10 @@ class AccountPagePayment extends Component {
                 </thead>
                 {
                     this.state.merchantList.length > 0 && this.state.merchantList.map((shop, i) => {
+                        let MerchantShopName = shop.MerchantShopName != null ? shop.MerchantShopName : "MyEmporia"
                         return (
                             <>
-                                <div style={{ textAlign: "left", fontSize: "13px", fontWeight: "bold" }}>{"Order " + parseInt(i + 1) + " : " + shop.MerchantID}</div>
+                                <div style={{ textAlign: "left", fontSize: "13px", fontWeight: "bold" }}>{"Order " + parseInt(i + 1) + " : " + MerchantShopName}</div>
                                 <tbody className="checkout__totals-products">{this.getItemList(this.state.cart.filter((x) => x.MerchantID === shop.MerchantID))}</tbody>
                             </>
                         )
@@ -366,10 +367,8 @@ class AccountPagePayment extends Component {
         let fpx_sellerExOrderNo = date
         let fpx_sellerTxnTime = date
         let fpx_sellerOrderNo = date
-        console.log("date11", fpx_sellerExOrderNo)
 
         let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
-        console.log("date22", bankingdata)
         let URL = "https://myemporia.my/payment/check.php"
         const config = { headers: { 'Content-Type': 'multipart/form-data' } }
         const formData = new FormData()

@@ -31,7 +31,7 @@ export default function Footer() {
     { title: "Shipping & Delivery", url: "/site/shippingdelivery" },
     // { title: "International Product Policy", url: "" },
     // { title: "How to Return", url: "/site/howtoreturn" },
-    { title: "Question?", url: "/site/contact-us" },
+    { title: "Question?", url: "/site/faq" },
     // { title: "Contact Us", url: "/site/contact-us" },
   ];
 
@@ -43,7 +43,7 @@ export default function Footer() {
           <div className="row">
             <div className="col-12 col-md-3 col-lg-2">
               {/* <FooterContacts /> */}
-              <FooterLinks title="Emporia" items={informationLinks} />
+              <FooterLinks title="Emporia"  items={informationLinks} />
             </div>
             <div className="col-12 col-md-3 col-lg-2">
               <FooterLinks title="Information" items={otherInformationLinks} />

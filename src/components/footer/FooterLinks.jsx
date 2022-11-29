@@ -18,9 +18,9 @@ export default function FooterLinks(props) {
 
     return (
         <div className="site-footer__widget footer-links">
-            <h5 className="footer-links__title">{title}</h5>
-            <ul className="footer-links__list">
-                {linksList}
+            <h5 className="footer-links__title" style={{ fontFamily: "Helvetica" }}>{title}</h5>
+            <ul className="footer-links__list" style={{ fontFamily: "Helvetica" }}>
+               <strong>{linksList}</strong> 
             </ul>
         </div>
     );

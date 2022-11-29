@@ -383,10 +383,11 @@ class PagePayment extends Component {
         </thead>
         {
           this.props.merchant.map((shop, i) => {
+            let MerchantShopName = shop.MerchantShopName != null ? shop.MerchantShopName : "MyEmporia"
             return (
               <>
-                <div style={{ textAlign: "left", fontSize: "13px" }}>{"Order " + parseInt(i + 1) + " : " + shop.MerchantShopName}</div>
-                <tbody className="checkout__totals-products">{this.getItemList(this.state.cart.filter((x) => x.MerchantShopName === shop.MerchantShopName))}</tbody>
+                <div style={{ textAlign: "left", fontSize: "13px" }}>{"Order " + parseInt(i + 1) + " : " + MerchantShopName}</div>
+                <tbody className="checkout__totals-products">{this.getItemList(this.state.cart.filter((x) => x.MerchantID === shop.MerchantID))}</tbody>
               </>
             )
           })

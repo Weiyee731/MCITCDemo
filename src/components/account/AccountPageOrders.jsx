@@ -13,7 +13,7 @@ import dataOrders from "../../data/accountOrders";
 import theme from "../../data/theme";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
-
+import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 
 //Tab
 import Box from '@mui/material/Box';
@@ -308,7 +308,8 @@ class AccountPageOrders extends Component {
                 }
 
                 if (price.length > 0 && subtotal.length > 0) {
-                  totalOverall = subtotalPrice + parseInt(this.state.shipping + this.state.tax)
+                  totalOverall = isStringNullOrEmpty(order) ? parseFloat(0).toFixed(2) : parseFloat(order.totalAmount).toFixed(2)
+                  // totalOverall = subtotalPrice + parseInt(this.state.shipping + this.state.tax)
                 }
 
                 const pageItem = {

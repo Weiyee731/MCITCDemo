@@ -30,6 +30,8 @@ import StepContent from '@mui/material/StepContent';
 import Box from '@mui/material/Box';
 
 import AccountPagePayment from "./AccountPagePayment";
+import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
+import DeliveryFee from "../shop/ShopPageDeliveryFee";
 
 
 //stepper content
@@ -64,6 +66,8 @@ export default function AccountPageOrderDetails(props) {
   //dialog
   const [open, setOpen] = React.useState(false);
   const [isProceedPayment, setProceedPayment] = React.useState(false);
+  const [isDeliverySet, setDelivery] = React.useState(false);
+  const [shippingFees, setShippingFees] = React.useState(0);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -72,31 +76,12 @@ export default function AccountPageOrderDetails(props) {
     setOpen(false);
   };
 
-  //Stepper
-  // const [activeStep, setActiveStep] = React.useState(0);
-
-  // const handleNext = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  // };
-
-  // const handleBack = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  // };
-
-  // const handleReset = () => {
-  //   setActiveStep(0);
-  // };
-
-  //display Image for Delivery Proof
-  // const [display, setDisplay] = React.useState(false);
-
-  // const handleOpenImg = () => {
-  //   setDisplay(true);
-  // };
-
-  // const handleCloseImg = () => {
-  //   setDisplay(false);
-  // };
+  const handleGetPostcode = (value) => {
+    if (!isNaN(value)) {
+      setShippingFees(value)
+      setDelivery(true)
+    }
+  }
 
   const orderDetail = props.location.orderdetails;
   if (orderDetail === undefined) {
@@ -121,17 +106,19 @@ export default function AccountPageOrderDetails(props) {
   ) : "";
   var subtotalPrice = 0;
   var totalOverall = 0;
-  var shipping = 25;
+  var shipping = 0;
   var tax = 0;
   var storecredit = 0;
 
   if (subtotal.length > 0) {
-    subtotalPrice = subtotal.reduce((previous, current) => previous + current, 0);
+    subtotalPrice = parseFloat(subtotal.reduce((previous, current) => previous + current, 0)).toFixed(2);
   } else {
-    subtotalPrice = subtotal;
+    subtotalPrice = parseFloat(subtotal).toFixed(2);
   }
 
-  totalOverall = subtotalPrice + parseInt(shipping + tax - storecredit)
+  totalOverall = isStringNullOrEmpty(orderDetail) ? parseFloat(0).toFixed(2) : parseFloat(orderDetail.totalAmount).toFixed(2)
+  shipping = parseFloat(totalOverall - subtotalPrice).toFixed(2)
+
 
   let trackingDetail = (index) => (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -189,7 +176,7 @@ export default function AccountPageOrderDetails(props) {
               data === "addressBook" ?
                 addresspreview.UserAddressName !== null ? (addresspreview.UserAddressName).toUpperCase() : ""
                 :
-                addresspreview.UserFullName === null ? (addresspreview.FirstName).toUpperCase() : (addresspreview.FirstName).toUpperCase()
+                addresspreview.UserAddressName === null ? (addresspreview.FirstName).toUpperCase() : (addresspreview.UserAddressName).toUpperCase()
             }
           </div>
           <div className="address-card__row">
@@ -228,8 +215,11 @@ export default function AccountPageOrderDetails(props) {
     <React.Fragment>
       {
         isProceedPayment === true ?
-          <AccountPagePayment data={orderDetail} />
+          // isDeliverySet === true ?
+          <AccountPagePayment data={orderDetail} shippingFees={shipping} />
           :
+          //   <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={address !== 0 ? address[0].UserAddressBookID : address} data={JSON.parse(orderDetail.OrderProductDetail)} orderHistory={true} />
+          // :
           <>
             <Helmet>
               <title>{`Order Details — ${theme.name}`}</title>
@@ -310,9 +300,10 @@ export default function AccountPageOrderDetails(props) {
                                             <div style={{ fontSize: "11px" }}>  Dimension : {orders.ProductDimensionWidth}m (W) X {orders.ProductDimensionHeight}m (H) X {orders.ProductDimensionDeep}m (L) </div>
                                             <div style={{ fontSize: "11px" }}>  Weight : {orders.ProductWeight} kg   </div>
                                           </td>
-                                          <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice}</td>
+
+                                          <td style={{ width: "15%" }}>RM {parseFloat(orders.ProductVariationPrice).toFixed(2)}</td>
                                           <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
-                                          <td style={{ width: "15%" }}>RM{orders.ProductVariationPrice * orders.ProductQuantity}</td>
+                                          <td style={{ width: "15%" }}>RM {parseFloat(orders.ProductVariationPrice * orders.ProductQuantity).toFixed(2)}</td>
                                           {
                                             orders.LogisticID !== null && orders.LogisticID !== 0 ?
                                               <>
@@ -346,18 +337,18 @@ export default function AccountPageOrderDetails(props) {
                       <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
                         <div className="row">
                           <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Subtotal </div>
-                          <div className="col-2" >RM{subtotalPrice}</div>
+                          <div className="col-2" >RM {subtotalPrice}</div>
                         </div>
                         <div className="row" >
                           <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Shipping </div>
-                          <div className="col-2" >RM{shipping}</div>
+                          <div className="col-2" >RM {shipping}</div>
                         </div>
                       </div>
                       <Divider light />
                       <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
                         <div className="row">
                           <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Total </div>
-                          <div className="col-2" >RM{totalOverall}</div>
+                          <div className="col-2" >RM {totalOverall}</div>
                         </div>
                       </div>
                     </>

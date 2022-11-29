@@ -396,6 +396,7 @@ class LoginComponent extends Component {
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <OutlinedInput
                   id="password"
+                  label="Password" 
                   error={this.state.passwordErr}
                   type={this.state.hidden ? 'password' : 'text'}
                   value={this.state.password}

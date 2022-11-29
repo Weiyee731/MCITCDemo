@@ -32,9 +32,9 @@ class DeliveryFee extends Component {
     super(props);
     this.state = {
       dummyRate: [
-        { id: 1, isWestMalaysia: 1, shippingRateFirstKG: 13.50, shippingRatesubKG: 5.00, isSarawak: "KUL" },
-        { id: 2, isWestMalaysia: 0, shippingRateFirstKG: 7.00, shippingRatesubKG: 3.50, isSarawak: "SRW" },
-        { id: 3, isWestMalaysia: 0, shippingRateFirstKG: 9.00, shippingRatesubKG: 4.50, isSarawak: "SBH" },
+        { id: 1, isWestMalaysia: 1, shippingRateFirstKG: 9.00, shippingRatesubKG: 8.00, shippingRateFirst5KG: 9.00, shippingRatesub5KG: 8.00, isSarawak: "KUL" },
+        { id: 2, isWestMalaysia: 0, shippingRateFirstKG: 4.00, shippingRatesubKG: 2.00, shippingRateFirst5KG: 10.00, shippingRatesub5KG: 2.00, isSarawak: "SRW" },
+        { id: 3, isWestMalaysia: 0, shippingRateFirstKG: 9.00, shippingRatesubKG: 8.00, shippingRateFirst5KG: 9.00, shippingRatesub5KG: 8.00, isSarawak: "SBH" },
       ],
       isDeliverySet: false
     };
@@ -42,14 +42,12 @@ class DeliveryFee extends Component {
 
   componentDidMount() {
     this.props.CallRetrievePostcodesList()
-    if (this.props.addressID !== undefined && this.props.addressID !== 0 && this.props.postcodes !== undefined && this.props.postcodes.length > 0 && this.props.data !== undefined && this.props.data.length > 0)
+    if (this.props.addressID !== undefined && this.props.postcodes !== undefined && this.props.postcodes.length > 0 && this.props.data !== undefined && this.props.data.length > 0)
       this.handleData()
-
-
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.addressID !== undefined && this.props.addressID !== 0 && this.props.postcodes !== undefined && this.props.postcodes.length > 0
+    if (this.props.addressID !== undefined && this.props.postcodes !== undefined && this.props.postcodes.length > 0
       && this.props.data !== undefined && this.props.data.length > 0 && this.state.isDeliverySet === false)
       this.handleData()
 
@@ -66,7 +64,7 @@ class DeliveryFee extends Component {
       if (selectedAddress.length > 0) {
         filteredPostcode = this.props.postcodes.filter((x) => x.Poscode === selectedAddress[0].UserPoscode)
         if (filteredPostcode.length > 0) {
-          productWeight = this.handleProductWeight(this.props.data)
+          productWeight = this.handleProductWeight(this.props.data, filteredPostcode[0])
           this.handleCalculation(filteredPostcode[0], productWeight)
         }
         else {
@@ -82,41 +80,58 @@ class DeliveryFee extends Component {
       this.setState({ isDeliverySet: true })
       this.props.handleGetPostcode(0)
     }
-
   }
 
-  handleProductWeight(productData) {
+  handleProductWeight(productData, poscodeData) {
     let volumetricWeight = 0
     let actualWeight = 0
 
-    productData.map((details) => {
-      if (details.product !== undefined) {
-        volumetricWeight = volumetricWeight + ((details.product.ProductDimensionVolume * 1000000) / 6000)
-        actualWeight = actualWeight + details.product.ProductWeight
+    if (this.props.orderHistory !== undefined) {
+      for (let i = 0; i < productData.length; i++) {
+          volumetricWeight = volumetricWeight + (((productData[i].ProductDimensionDeep * productData[i].ProductDimensionHeight  * productData[i].ProductDimensionWidth ) / 5000) * productData[i].ProductQuantity)
+          actualWeight = actualWeight + (productData[i].ProductWeight * productData[i].ProductQuantity)
+        }
+    }
+    else {
+      for (let i = 0; i < productData.length; i++) {
+        if (productData[i].product !== undefined) {
+          volumetricWeight = volumetricWeight + (((productData[i].product.ProductDimensionVolume * 1000000) / 5000) * productData[i].quantity)
+          actualWeight = actualWeight + (productData[i].product.ProductWeight * productData[i].quantity)
+        }
       }
-    })
+    }
 
-    if (volumetricWeight > actualWeight)
-      return volumetricWeight
+    if (poscodeData.CityAlias !== "SRW") {
+      if (volumetricWeight > actualWeight)
+        return volumetricWeight
+      else
+        return actualWeight
+    }
     else
       return actualWeight
-
   }
 
   handleCalculation(filteredPostcode, finalWeight) {
     let shippingRate = this.state.dummyRate
-
     if (shippingRate !== undefined && shippingRate.length > 0) {
-      const firstWeight = 1
+      let firstWeight = 1
+      if (filteredPostcode.CityAlias === "SRW")
+        firstWeight = 2
+
       const subWeight = finalWeight - firstWeight
       let shippingCost = 0
 
       const rate = shippingRate.filter((x) => x.isWestMalaysia === filteredPostcode.isWestMalaysia && x.isSarawak === filteredPostcode.CityAlias).map((y) => { return (y) })
       if (rate !== undefined && rate.length > 0) {
-        if (finalWeight > 1)
-          shippingCost = (firstWeight * rate[0].shippingRateFirstKG) + (Math.ceil(subWeight) * rate[0].shippingRatesubKG)
-        else
-          shippingCost = firstWeight * rate[0].shippingRateFirstKG
+        if (finalWeight > 5 && filteredPostcode.CityAlias === "SRW") {
+          shippingCost = (rate[0].shippingRateFirst5KG) + (Math.ceil(finalWeight - 5) * rate[0].shippingRatesub5KG)
+        }
+        else {
+          if (finalWeight > 1)
+            shippingCost = (rate[0].shippingRateFirstKG) + (Math.ceil(subWeight) * rate[0].shippingRatesubKG)
+          else
+            shippingCost = rate[0].shippingRateFirstKG
+        }
       }
       this.props.handleGetPostcode(shippingCost)
     }
