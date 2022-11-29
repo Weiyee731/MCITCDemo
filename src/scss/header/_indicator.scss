@@ -6,6 +6,7 @@
 @import '../functions';
 @import '../mixins/direction';
 $local-open-transition-duration: .2s;
+
 .indicator {
     display: flex;
     color: $indicator-default-font-color;
@@ -20,9 +21,11 @@ $local-open-transition-duration: .2s;
     padding: 0;
     color: inherit;
     fill: currentColor;
+
     &:focus {
         outline: none;
     }
+
     &:hover {
         color: inherit;
     }
@@ -48,6 +51,7 @@ $local-open-transition-duration: .2s;
     background: $indicator-default-counter-bg;
     color: $indicator-default-counter-font-color;
     font-weight: $font-weight-bold;
+
     @include direction {
         #{$margin-inline-start}: -5px;
         #{$margin-inline-end}: -8px;
@@ -62,6 +66,7 @@ $local-open-transition-duration: .2s;
     transform: rotateX(60deg);
     opacity: 0;
     transition: transform $local-open-transition-duration, opacity $local-open-transition-duration, visibility 0s $local-open-transition-duration;
+
     @include direction {
         #{$inset-inline-end}: 0;
     }
@@ -72,10 +77,12 @@ $local-open-transition-duration: .2s;
     .indicator__button {
         color: $indicator-hover-font-color;
     }
+
     .indicator__area {
         background: $indicator-hover-bg;
         transition-duration: .1s;
     }
+
     .indicator__value {
         background: $indicator-hover-counter-bg;
         color: $indicator-hover-counter-font-color;
@@ -90,7 +97,7 @@ $local-open-transition-duration: .2s;
         opacity: 1;
         visibility: visible;
         transform: rotateX(0deg);
-        right:7.5%;
+        right: 7.5%;
     }
 }
 
@@ -126,5 +133,145 @@ $local-open-transition-duration: .2s;
 @media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(lg-end)) {
     .indicator__area {
         padding: 0 12px;
+    }
+
+    .indicator--trigger--click.indicator--opened,
+    .indicator--trigger--hover:hover {
+        .indicator__dropdown {
+            z-index: 20;
+            transition-delay: 0s, 0s, 0s;
+            opacity: 1;
+            visibility: visible;
+            transform: rotateX(0deg);
+            right: 3.5%;
+        }
+    }
+}
+
+@media (min-width: breakpoint(xl-start)) and (max-width: breakpoint(xl-end)) {
+    .indicator__area {
+        padding: 0 12px;
+    }
+
+    .indicator__dropdown {
+        top: 62px;
+        position: fixed;
+        visibility: hidden;
+        transform-origin: top;
+        transform: rotateX(60deg);
+        opacity: 0;
+        transition: transform $local-open-transition-duration, opacity $local-open-transition-duration, visibility 0s $local-open-transition-duration;
+
+        @include direction {
+            #{$inset-inline-end}: 0;
+        }
+    }
+
+    .indicator--trigger--click.indicator--opened,
+    .indicator--trigger--hover:hover {
+        .indicator__dropdown {
+            z-index: 20;
+            transition-delay: 0s, 0s, 0s;
+            opacity: 1;
+            visibility: visible;
+            transform: rotateX(0deg);
+            right: 4.5%;
+        }
+    }
+}
+
+@media (min-width: breakpoint(xxl-start)) and (max-width: breakpoint(xxl-end)) {
+    .indicator__area {
+        padding: 0 12px;
+    }
+
+    .indicator__dropdown {
+        top: 62px;
+        position: fixed;
+        visibility: hidden;
+        transform-origin: top;
+        transform: rotateX(60deg);
+        opacity: 0;
+        transition: transform $local-open-transition-duration, opacity $local-open-transition-duration, visibility 0s $local-open-transition-duration;
+
+        @include direction {
+            #{$inset-inline-end}: 0;
+        }
+    }
+
+    .indicator--trigger--click.indicator--opened,
+    .indicator--trigger--hover:hover {
+        .indicator__dropdown {
+            z-index: 20;
+            transition-delay: 0s, 0s, 0s;
+            opacity: 1;
+            visibility: visible;
+            transform: rotateX(0deg);
+            right: 11.5%;
+        }
+    }
+}
+
+@media (min-width: 1920px) {
+    .indicator__area {
+        padding: 0 12px;
+    }
+
+    .indicator__dropdown {
+        top: 62px;
+        position: fixed;
+        visibility: hidden;
+        transform-origin: top;
+        transform: rotateX(60deg);
+        opacity: 0;
+        transition: transform $local-open-transition-duration, opacity $local-open-transition-duration, visibility 0s $local-open-transition-duration;
+
+        @include direction {
+            #{$inset-inline-end}: 0;
+        }
+    }
+
+    .indicator--trigger--click.indicator--opened,
+    .indicator--trigger--hover:hover {
+        .indicator__dropdown {
+            z-index: 20;
+            transition-delay: 0s, 0s, 0s;
+            opacity: 1;
+            visibility: visible;
+            transform: rotateX(0deg);
+            right: 20.5%;
+        }
+    }
+}
+
+@media (min-width: 2560px) {
+    .indicator__area {
+        padding: 0 12px;
+    }
+
+    .indicator__dropdown {
+        top: 62px;
+        position: fixed;
+        visibility: hidden;
+        transform-origin: top;
+        transform: rotateX(60deg);
+        opacity: 0;
+        transition: transform $local-open-transition-duration, opacity $local-open-transition-duration, visibility 0s $local-open-transition-duration;
+
+        @include direction {
+            #{$inset-inline-end}: 0;
+        }
+    }
+
+    .indicator--trigger--click.indicator--opened,
+    .indicator--trigger--hover:hover {
+        .indicator__dropdown {
+            z-index: 20;
+            transition-delay: 0s, 0s, 0s;
+            opacity: 1;
+            visibility: visible;
+            transform: rotateX(0deg);
+            right: 28.5%;
+        }
     }
 }
