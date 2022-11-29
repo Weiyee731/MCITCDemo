@@ -85,7 +85,7 @@ function ShopPageWishlist(props) {
                     image = (
                         <div className="product-image">
                             <Link to={url.product(item)} className="product-image__body">
-                                <img className="product-image__img" src={item.ProductImage !== null ? item.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                                <img className="product-image__img" src={item.ProductImage !== null ? item.ProductImage : Logo} alt="MyEmporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                             </Link>
                         </div>
                     );
@@ -93,7 +93,7 @@ function ShopPageWishlist(props) {
                     image = (
                         <div className="product-image">
                             <Link to={url.product(item)} className="product-image__body">
-                                <img className="product-image__img" src={Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                                <img className="product-image__img" src={Logo} alt="MyEmporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                             </Link>
                         </div>
                     );

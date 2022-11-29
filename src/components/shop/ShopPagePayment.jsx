@@ -834,7 +834,7 @@ class PagePayment extends Component {
           <div className="container">
             <div className="card mt-3">
               <div className="card-body">
-                <h5 className="card-title">Emporia</h5>
+                <h5 className="card-title">MyEmporia</h5>
                 {/* <h5 className="card-title">Pharmacy</h5> */}
                 {
                   this.props.addressID !== 0 ?

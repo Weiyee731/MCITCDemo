@@ -58,7 +58,7 @@ function SitePageAboutUs() {
               <h1 className="about-us__title">About Us</h1>
               <div className="about-us__text typography">
                 <p>
-                  Founded in 2020, Emporia is an online platform that focusing on retails in hardwares and tools in Kuching, Sarawak, Malaysia. 
+                  Founded in 2020, MyEmporia is an online platform that focusing on retails in hardwares and tools in Kuching, Sarawak, Malaysia. 
                   With our great experience in providing retail services on our top quality of hardwares and tools around the whole Sarawak, and
                   we are proud to announcing our online platform to serve better.  
                 </p>

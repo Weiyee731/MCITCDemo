@@ -67,7 +67,7 @@ function SitePageHowToBuy() {
                                 </div>
                             </div>
                             <div>
-                                Welcome to Emporia. Here we strive to provide buyers the best deals in town to bring more value for the price you pay. Have a look at below to know how to buy on Emporia.
+                                Welcome to MyEmporia. Here we strive to provide buyers the best deals in town to bring more value for the price you pay. Have a look at below to know how to buy on Emporia.
                                 <br />
                                 <u> <b> Add To Cart </b> </u>
                                 <br />  
