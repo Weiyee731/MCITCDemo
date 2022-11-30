@@ -135,7 +135,7 @@ function ShopPageWishlist(props) {
                             <tr className="wishlist__row">
                                 <th className="wishlist__column wishlist__column--image">Image</th>
                                 <th className="wishlist__column wishlist__column--product">Product</th>
-                                <th className="wishlist__column wishlist__column--stock">Shop Name</th>
+                                <th className="wishlist__column wishlist__column--stock">Brand</th>
                                 <th className="wishlist__column wishlist__column--price">Price</th>
                                 <th className="wishlist__column wishlist__column--tocart" aria-label="Add to cart" />
                                 <th className="wishlist__column wishlist__column--remove" aria-label="Remove" />

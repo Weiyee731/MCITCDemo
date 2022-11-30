@@ -25,7 +25,7 @@ export default function FooterNewsletter() {
             </form> */}
 
             <div className="footer-newsletter__text footer-newsletter__text--social">
-                Follow us on social networks
+                <strong>Follow us on social networks</strong>
             </div>
 
             <SocialLinks className="footer-newsletter__social-links" shape="circle" />
