@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 // application
 import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
+import { Card, } from "@mui/material";
 
 export default function BlockProducts(props) {
   const { title, layout, featuredProduct, products, loading, withSidebar } = props;
@@ -30,9 +31,9 @@ export default function BlockProducts(props) {
       "block-products-carousel--loading": loading,
     });
     const productsList = products.map((product, index) => (
-      <div key={index} className={blockClasses}>
+      <Card elevation={2} key={index} className={blockClasses}>
         <ProductCard product={product} />
-      </div>
+      </Card>
     ));
 
     smalls = <div className="block-products__list">{productsList}</div>;

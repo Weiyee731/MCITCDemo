@@ -22,6 +22,10 @@ import Logo from "../../assets/Emporia.png"
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { toast } from "react-toastify";
 import LoadingPanel from "./loadingPanel";
+import { Typography, Card, CardContent, CardHeader } from "@mui/material";
+import Chip from '@mui/material/Chip';
+import ReactTooltip from "react-tooltip";
+import SocialLinks from '../shared/SocialLinks';
 
 class Product extends Component {
   constructor(props) {
@@ -66,7 +70,7 @@ class Product extends Component {
             productVariationDetailID: variation.ProductVariationDetailID,
             productVariationType: variation.ProductVariation,
           })
-          console.log("variation", variation)
+        console.log("variation", variation)
       })
       this.setState({ productPrice: product.ProductPrice, isProductSet: true })
     } else {
@@ -90,7 +94,7 @@ class Product extends Component {
             productVariationDetailID: variation.ProductVariationDetailID,
             productVariationType: variation.ProductVariation,
           })
-          console.log("variation2", variation)
+        console.log("variation2", variation)
       })
       this.setState({ productPrice: product.ProductPrice, isProductSet: true })
     }
@@ -210,8 +214,8 @@ class Product extends Component {
 
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
 
-    let merchant = product.ReturnVal !== "0" && product.MerchantDetail !== null? JSON.parse(product.MerchantDetail)[0] : ""
-    let variation =  product.ReturnVal !== "0" && product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
+    let merchant = product.ReturnVal !== "0" && product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
+    let variation = product.ReturnVal !== "0" && product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
 
     return (
       <div className="block" >
@@ -219,7 +223,7 @@ class Product extends Component {
         {
           this.state.isProductSet === true ?
             <>
-              <div
+              <Card elevation={2}
                 style={{ backgroundColor: "white", padding: "20px" }}
                 className={`product product--layout--${layout}`}
               >
@@ -232,7 +236,26 @@ class Product extends Component {
                     <div className="product__wishlist-compare">
                       {this.wishlisting(product)}
                     </div>
-                    <h1 className="product__name">{product.ProductName}</h1>
+                    <div className="row" style={{ display: "flex", flexDirection: "row", }}>
+                      <h1 className="col-11 product__name">{product.ProductName}</h1>
+                      <div className="col-1">
+                        {/* <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
+                          style={{ cursor: "pointer" }}
+                        /> */}
+                        <a data-tip data-event='click focus'>
+                          <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
+                            style={{ cursor: "pointer" }}
+                          /></a>
+                        <ReactTooltip globalEventOff='click' place="right" type="dark" effect="solid" clickable={true} zIndex={10}>
+                          {/* <SocialLinks className="footer-newsletter__social-links" shape="circle" /> */}
+                          <a 
+                          href="https://web.whatsapp.com://send?text=Check This Out BLIMAX 12V CORDLESS DRILL at MyEmporia, Get it now! http://localhost:3000/shop/products/1298" data-action="share/whatsapp/share"
+                            target="_blank"
+                            // onclick="window.open('https://web.whatsapp.com://send?text=This is whatsapp sharing example using button')"
+                            > Share to WhatsApp </a>
+                        </ReactTooltip>
+                      </div>
+                    </div>
                     <div className="product__rating">
                       <div className="product__rating-stars">
                         <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
@@ -260,74 +283,80 @@ class Product extends Component {
                       </div>
                     </div>
                     <ul className="product__meta">
-                      <li className="product__meta-availability">
-                        Availability: {" "}
-                        {
-                          this.state.isVariationSet === true ?
-                            this.state.productQuantity > 0 ?
-                              <span className="text-success">In Stock</span> :
-                              <span className="text-danger">Out of Stock</span>
+                      {/* <li className="product__meta-availability">
+                        Availability: {" "} */}
+                      {
+                        this.state.isVariationSet === true ?
+                          this.state.productQuantity > 0 ?
+                            <Chip size="small" variant="outlined" color="success" label={"In Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
+                            // <span className="text-success"></span> 
                             :
-                            product.ProductStockAmount !== null && product.ProductStockAmount > 0 ?
-                              <span className="text-success">In Stock</span> :
-                              <span className="text-danger">Out of Stock</span>
-                        }
-                        &nbsp;
-                        ({this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0})
-                      </li>
-                      <li>
-                        Brand:{" "}
-                        <Link to="/">{product.Brand}</Link>
-                      </li>
+                            <Chip size="small" variant="outlined" color="success" label={"Out of Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
+                          // <span className="text-danger">Out of Stock</span>
+                          :
+                          product.ProductStockAmount !== null && product.ProductStockAmount > 0 ?
+                            // <span className="text-success">In Stock</span> 
+                            <Chip size="small" variant="outlined" color="success" label={"In Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
+                            :
+                            <Chip size="small" variant="outlined" color="success" label={"Out of Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
+                        // <span className="text-danger">Out of Stock</span>
+                      }
+                      &nbsp;
+                      {/* ({this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0})
+                      </li> */}
+                      {/* <li> Brand:{" "} <Link to="/">{product.Brand}</Link> </li> 
                       <li>SKU:{" "}{product.SKU}</li>
-                      <li className="product__seller">
-                        Seller:{" "}
-                        {
-                          product.MerchantDetail !== null && JSON.parse(product.MerchantDetail).map((merchantDetails) => {
-                            return (
-                              <>
-                                <Link to={{ pathname: url.merchant(merchantDetails), state: { id: merchantDetails.UserID, merchantDetails: merchantDetails } }}>
-                                  {merchantDetails.ShopName !== null && merchantDetails.ShopName}</Link>
-                                <span className="product__seller-info">
-                                  <div className="row">
-                                    <div className="col-4">
-                                      <img
-                                        className="product__seller-info-image"
-                                        src={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo}
-                                        alt="MyEmporia"
-                                        onError={(e) => {
-                                          e.target.onerror = null; e.target.src = Logo
-                                        }}
-                                      />
-                                    </div>
-                                    <div className="col-4">
-                                      Seller:{" "}
-                                      {merchantDetails.ShopName !== null && merchantDetails.ShopName}
-                                      <br />
-                                      State:{" "}
-                                      {merchantDetails.ShopState !== null && merchantDetails.ShopState}
-                                      <br />
-                                      Shop Rating:{" "}
-                                      <div className="product__rating-stars">
-                                        <Rating value={merchantDetails.length > 0 && merchantDetails.ShopRating !== null ? merchantDetails.ShopRating : 0} />
-                                        {merchantDetails.length > 0 && merchantDetails.ShopRating}
-                                      </div>
-                                    </div>
-                                    <div className="col-4">
-                                      Products:{" "}
-                                      {merchantDetails.MerchantTotalProduct !== null && merchantDetails.MerchantTotalProduct}
-                                      <br />
-                                      Last Joined:{" "}
-                                      {merchantDetails.LastJoined !== null && merchantDetails.LastJoined}
+                      */}
+                      <Chip variant="outlined" color="secondary" label="Brand: " size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
+                      <Chip variant="outlined" color="info" label={"SKU: " + product.SKU} size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
+                    </ul>
+                    <div className="product__seller">
+                      <Typography variant="caption">Seller:{" "}</Typography>
+                      {
+                        product.MerchantDetail !== null && JSON.parse(product.MerchantDetail).map((merchantDetails) => {
+                          return (
+                            <>
+                              <Link to={{ pathname: url.merchant(merchantDetails), state: { id: merchantDetails.UserID, merchantDetails: merchantDetails } }}>
+                                {merchantDetails.ShopName !== null && merchantDetails.ShopName}</Link>
+                              <span className="product__seller-info">
+                                <div className="row">
+                                  <div className="col-4">
+                                    <img
+                                      className="product__seller-info-image"
+                                      src={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo}
+                                      alt="MyEmporia"
+                                      onError={(e) => {
+                                        e.target.onerror = null; e.target.src = Logo
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="col-4">
+                                    Seller:{" "}
+                                    {merchantDetails.ShopName !== null && merchantDetails.ShopName}
+                                    <br />
+                                    State:{" "}
+                                    {merchantDetails.ShopState !== null && merchantDetails.ShopState}
+                                    <br />
+                                    Shop Rating:{" "}
+                                    <div className="product__rating-stars">
+                                      <Rating value={merchantDetails.length > 0 && merchantDetails.ShopRating !== null ? merchantDetails.ShopRating : 0} />
+                                      {merchantDetails.length > 0 && merchantDetails.ShopRating}
                                     </div>
                                   </div>
-                                </span>
-                              </>
-                            )
-                          })
-                        }
-                      </li>
-                    </ul>
+                                  <div className="col-4">
+                                    Products:{" "}
+                                    {merchantDetails.MerchantTotalProduct !== null && merchantDetails.MerchantTotalProduct}
+                                    <br />
+                                    Last Joined:{" "}
+                                    {merchantDetails.LastJoined !== null && merchantDetails.LastJoined}
+                                  </div>
+                                </div>
+                              </span>
+                            </>
+                          )
+                        })
+                      }
+                    </div>
                   </div>
 
                   <div className="product__sidebar">
@@ -417,10 +446,11 @@ class Product extends Component {
                           </div>
                         </div>
                       </div>
+
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
 
               {
                 this.props.version === "1" ? (

@@ -9,6 +9,8 @@ import PropTypes from "prop-types";
 import ProductTabDescription from "./ProductTabDescription";
 import ProductTabSpecification from "./ProductTabSpecification";
 import ProductTabReviews from "./ProductTabReviews";
+import { Card,  } from "@mui/material";
+
 
 class ProductTabs extends Component {
   constructor(props) {
@@ -83,10 +85,10 @@ class ProductTabs extends Component {
     });
 
     return (
-      <div className={classes}>
+      <Card elevation={2} className={classes}>
         <div className="product-tabs__list">{tabsButtons}</div>
         <div className="product-tabs__content">{tabsContent}</div>
-      </div>
+      </Card>
     );
   }
 }

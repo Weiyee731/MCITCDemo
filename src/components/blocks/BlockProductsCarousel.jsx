@@ -10,6 +10,8 @@ import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
 import StroykaSlick from "../shared/StroykaSlick";
 import { Button } from "@material-ui/core";
+import { Card, } from "@mui/material";
+
 
 const slickSettings = {
   "grid-4": {
@@ -197,9 +199,9 @@ export default class BlockProductsCarousel extends Component {
       ));
 
       return (
-        <div key={index} className="block-products-carousel__column">
+        <Card elevation={2} key={index} className="block-products-carousel__column">
           {products}
-        </div>
+        </Card>
       );
     });
 
