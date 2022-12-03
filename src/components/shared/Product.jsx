@@ -22,10 +22,11 @@ import Logo from "../../assets/Emporia.png"
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { toast } from "react-toastify";
 import LoadingPanel from "./loadingPanel";
-import { Typography, Card, CardContent, CardHeader } from "@mui/material";
+import { Typography, Card, } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import ReactTooltip from "react-tooltip";
-import SocialLinks from '../shared/SocialLinks';
+import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
+
 
 class Product extends Component {
   constructor(props) {
@@ -247,12 +248,32 @@ class Product extends Component {
                             style={{ cursor: "pointer" }}
                           /></a>
                         <ReactTooltip globalEventOff='click' place="right" type="dark" effect="solid" clickable={true} zIndex={10}>
-                          {/* <SocialLinks className="footer-newsletter__social-links" shape="circle" /> */}
-                          <a 
-                          href="https://web.whatsapp.com://send?text=Check This Out BLIMAX 12V CORDLESS DRILL at MyEmporia, Get it now! http://localhost:3000/shop/products/1298" data-action="share/whatsapp/share"
-                            target="_blank"
-                            // onclick="window.open('https://web.whatsapp.com://send?text=This is whatsapp sharing example using button')"
-                            > Share to WhatsApp </a>
+                          <FacebookShareButton
+                            // style={{ border: "1px solid", width: "40px", height: "40px", transition: ".3s box-shadow ease", padding: "0.25em", borderRadius:"50%" }}
+                            openShareDialogOnClick
+                            url={"https://myemporia.my/shop/products/" + product.ProductID}
+                            quote="Check this out at MyEmporia, Get it now!"
+                            hashtag={"#MyEmporia"}>
+                            <FacebookIcon size={30} round={true} />
+                          </FacebookShareButton>
+                          <TelegramShareButton
+                            openShareDialogOnClick
+                            title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                            url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                            <TelegramIcon size={30} round={true} />
+                          </TelegramShareButton>
+                          <TwitterShareButton
+                            openShareDialogOnClick
+                            url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                            <TwitterIcon size={30} round={true} />
+                          </TwitterShareButton>
+                          <WhatsappShareButton
+                            openShareDialogOnClick
+                            title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                            separator={"/n "}
+                            url={"https://myemporia.my/shop/products/" + product.ProductID}>
+                            <WhatsappIcon size={30} round={true} />
+                          </WhatsappShareButton>
                         </ReactTooltip>
                       </div>
                     </div>
