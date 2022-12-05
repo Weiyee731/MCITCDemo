@@ -9,8 +9,9 @@ import PropTypes from "prop-types";
 import ProductTabDescription from "./ProductTabDescription";
 import ProductTabSpecification from "./ProductTabSpecification";
 import ProductTabReviews from "./ProductTabReviews";
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { Card,  } from "@mui/material";
 
 
 class ProductTabs extends Component {
@@ -95,10 +96,10 @@ class ProductTabs extends Component {
     });
 
     return (
-      <div className={classes}>
+      <Card elevation={2} className={classes}>
         <div className="product-tabs__list">{tabsButtons}</div>
         <div className="product-tabs__content">{tabsContent}</div>
-      </div>
+      </Card>
     );
   }
 }

@@ -10,8 +10,10 @@ import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
 import StroykaSlick from "../shared/StroykaSlick";
 import { Button } from "@material-ui/core";
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { Card, } from "@mui/material";
+
 
 const slickSettings = {
   "grid-4": {
@@ -199,9 +201,9 @@ export default class BlockProductsCarousel extends Component {
       ));
 
       return (
-        <div key={index} className="block-products-carousel__column">
+        <Card elevation={2} key={index} className="block-products-carousel__column">
           {products}
-        </div>
+        </Card>
       );
     });
 

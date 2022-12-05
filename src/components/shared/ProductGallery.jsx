@@ -14,7 +14,7 @@ import StroykaSlick from "./StroykaSlick";
 import { ZoomIn24Svg } from "../../svg";
 import Logo from "../../assets/Emporia.png";
 
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 

@@ -23,8 +23,13 @@ import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { toast } from "react-toastify";
 import LoadingPanel from "./loadingPanel";
 import ProductSkeleton from "./ProductSkeleton";
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { Typography, Card, } from "@mui/material";
+import Chip from '@mui/material/Chip';
+import ReactTooltip from "react-tooltip";
+import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
+
 
 class Product extends Component {
   constructor(props) {
@@ -225,78 +230,125 @@ class Product extends Component {
     return (
       <div className="block" >
 
-        <div
-          style={{ backgroundColor: "white", padding: "20px" }}
-          className={`product product--layout--${layout}`}
-        >
-          <div className="product__content">
-            {
-              this.state.isProductSet === true &&
-              <ProductGallery
-                layout={layout}
-                currentData={this.state}
-                images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : [Logo]}
-                baseColor={baseColor}
-                highlightColor={highlightColor}
-              />
-            }
-            {
-              this.state.isTimerEnd === true && this.state.isProductSet === true ?
-                <div>
-                  <div className="product__info">
-                    <div className="product__wishlist-compare">
-                      {this.wishlisting(product)}
-                    </div>
-                    <h1 className="product__name">{product.ProductName}</h1>
-                    <div className="product__rating">
-                      <div className="product__rating-stars">
-                        <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
+        <>
+          <Card elevation={2}
+            style={{ backgroundColor: "white", padding: "20px" }}
+            className={`product product--layout--${layout}`}
+          >
+            <div className="product__content">
+              {
+                this.state.isProductSet === true &&
+                <ProductGallery
+                  layout={layout}
+                  currentData={this.state}
+                  images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : [Logo]}
+                  baseColor={baseColor}
+                  highlightColor={highlightColor}
+                />
+              }
+              {
+                this.state.isTimerEnd === true && this.state.isProductSet === true ?
+                  <div>
+                    <div className="product__info">
+                      <div className="product__wishlist-compare">
+                        {this.wishlisting(product)}
                       </div>
-                      <div className="product__rating-legend">
-                        <HashLink
-                          onClick={this.changeCurrentTab.bind(this, "reviews")}
-                          to="#reviews"
-                        >
-                          {`${product.ProductRating !== null
-                            ? parseFloat(product.ProductRating).toFixed(1)
-                            : "0"
-                            }/5 (`}{`${product.ProductReviewCount !== null
-                              ? product.ProductReviewCount
+                      <div className="row" style={{ display: "flex", flexDirection: "row", }}>
+                        <h1 className="col-11 product__name">{product.ProductName}</h1>
+                        <div className="col-1">
+                          {/* <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
+                          style={{ cursor: "pointer" }}
+                        /> */}
+                          <a data-tip data-event='click focus'>
+                            <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
+                              style={{ cursor: "pointer" }}
+                            /></a>
+                          <ReactTooltip globalEventOff='click' place="right" type="dark" effect="solid" clickable={true} zIndex={10}>
+                            <FacebookShareButton
+                              // style={{ border: "1px solid", width: "40px", height: "40px", transition: ".3s box-shadow ease", padding: "0.25em", borderRadius:"50%" }}
+                              openShareDialogOnClick
+                              url={"https://myemporia.my/shop/products/" + product.ProductID}
+                              quote="Check this out at MyEmporia, Get it now!"
+                              hashtag={"#MyEmporia"}>
+                              <FacebookIcon size={30} round={true} />
+                            </FacebookShareButton>
+                            <TelegramShareButton
+                              openShareDialogOnClick
+                              title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                              url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                              <TelegramIcon size={30} round={true} />
+                            </TelegramShareButton>
+                            <TwitterShareButton
+                              openShareDialogOnClick
+                              url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                              <TwitterIcon size={30} round={true} />
+                            </TwitterShareButton>
+                            <WhatsappShareButton
+                              openShareDialogOnClick
+                              title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                              separator={"/n "}
+                              url={"https://myemporia.my/shop/products/" + product.ProductID}>
+                              <WhatsappIcon size={30} round={true} />
+                            </WhatsappShareButton>
+                          </ReactTooltip>
+                        </div>
+                      </div>
+                      <div className="product__rating">
+                        <div className="product__rating-stars">
+                          <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
+                        </div>
+                        <div className="product__rating-legend">
+                          <HashLink
+                            onClick={this.changeCurrentTab.bind(this, "reviews")}
+                            to="#reviews"
+                          >
+                            {`${product.ProductRating !== null
+                              ? parseFloat(product.ProductRating).toFixed(1)
                               : "0"
-                              } Reviews)`}
-                        </HashLink>
-                        <span>/</span>
-                        <HashLink
-                          onClick={this.changeCurrentTab.bind(this, "reviews")}
-                          to="#writeReviews"
-                        >
-                          Write A Review
-                        </HashLink>
+                              }/5 (`}{`${product.ProductReviewCount !== null
+                                ? product.ProductReviewCount
+                                : "0"
+                                } Reviews)`}
+                          </HashLink>
+                          <span>/</span>
+                          <HashLink
+                            onClick={this.changeCurrentTab.bind(this, "reviews")}
+                            to="#writeReviews"
+                          >
+                            Write A Review
+                          </HashLink>
+                        </div>
                       </div>
-                    </div>
-                    <ul className="product__meta">
-                      <li className="product__meta-availability">
-                        Availability: {" "}
+                      <ul className="product__meta">
+                        {/* <li className="product__meta-availability">
+                        Availability: {" "} */}
                         {
                           this.state.isVariationSet === true ?
                             this.state.productQuantity > 0 ?
-                              <span className="text-success">In Stock</span> :
-                              <span className="text-danger">Out of Stock</span>
+                              <Chip size="small" variant="outlined" color="success" label={"In Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
+                              // <span className="text-success"></span> 
+                              :
+                              <Chip size="small" variant="outlined" color="success" label={"Out of Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
+                            // <span className="text-danger">Out of Stock</span>
                             :
                             product.ProductStockAmount !== null && product.ProductStockAmount > 0 ?
-                              <span className="text-success">In Stock</span> :
-                              <span className="text-danger">Out of Stock</span>
+                              // <span className="text-success">In Stock</span> 
+                              <Chip size="small" variant="outlined" color="success" label={"In Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
+                              :
+                              <Chip size="small" variant="outlined" color="success" label={"Out of Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
+                          // <span className="text-danger">Out of Stock</span>
                         }
                         &nbsp;
-                        ({this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0})
-                      </li>
-                      <li>
-                        Brand:{" "}
-                        <Link to="/">{product.Brand}</Link>
-                      </li>
+                        {/* ({this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0})
+                      </li> */}
+                        {/* <li> Brand:{" "} <Link to="/">{product.Brand}</Link> </li> 
                       <li>SKU:{" "}{product.SKU}</li>
-                      <li className="product__seller">
-                        Seller:{" "}
+                      */}
+                        <Chip variant="outlined" color="secondary" label="Brand: " size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
+                        <Chip variant="outlined" color="info" label={"SKU: " + product.SKU} size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
+                      </ul>
+                      <div className="product__seller">
+                        <Typography variant="caption">Seller:{" "}</Typography>
                         {
                           product.MerchantDetail !== null && JSON.parse(product.MerchantDetail).map((merchantDetails) => {
                             return (
@@ -341,107 +393,109 @@ class Product extends Component {
                             )
                           })
                         }
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="product__sidebar">
-                    <div className="product__prices">{prices}</div>
-                    {
-                      variation !== null && variation !== "" && variation.ProductVariation !== "None" &&
-                      (
-                        <div className="product__option">
-                          <label
-                            className="product__option-label"
-                          >
-                            {variation.ProductVariation}
-                          </label>
-
-                          <div className="product__variation">
-                            {
-                              variation !== null &&
-                              JSON.parse(product.ProductVariation).map((variation, index) => {
-                                return (
-                                  <button
-                                    key={index}
-                                    type="button"
-                                    className={
-                                      variation.ProductVariationDetailID === this.state.productVariationDetailID ?
-                                        'btn product__variation-button--selected'
-                                        : 'btn product__variation-button'
-                                    }
-                                    onClick={() => this.setState({
-                                      productVariation: variation.ProductVariationValue,
-                                      productQuantity: variation.ProductStockAmount,
-                                      productPrice: variation.ProductVariationPrice,
-                                      productVariationDetailID: variation.ProductVariationDetailID,
-                                      selectedVariation: variation,
-                                      isVariationSet: true
-                                    })}
-                                  >
-                                    {variation.ProductVariationValue}
-                                  </button>
-                                )
-                              })
-                            }
-                          </div>
-                        </div>
-                      )
-                    }
-
-                    <div className="product__option">
-                      <div className="row form-group product__option d-flex align-items-center">
-                        <div className="col-3">
-                          <label
-                            htmlFor="product-quantity"
-                            className="product__option-label"
-                          >
-                            Quantity
-                          </label>
-                        </div>
-                        <div className="col-2 product__actions-item">
-                          <InputNumber
-                            id="product-quantity"
-                            aria-label="Quantity"
-                            className="product__quantity"
-                            size="lg"
-                            min={1}
-                            value={quantity}
-                            onChange={this.handleChangeQuantity}
-                          />
-                        </div>
                       </div>
-
-                      <div className="form-group product__option product__add-to-cart" >
-                        <div className="product__actions">
-                          <div className="product__actions-item product__actions-item--addtocart mx-1">
-                            <button
-                              type="button"
-                              disabled={this.state.isVariationSet === true ?
-                                (this.state.productQuantity > 0 ? false : true) :
-                                (product.ProductStockAmount > 0 ? false : true)
-                              }
-                              onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
-                              className="btn btn-primary product-card__addtocart"
+                    </div>
+                    <div className="product__sidebar">
+                      <div className="product__prices">{prices}</div>
+                      {
+                        variation !== null && variation !== "" && variation.ProductVariation !== "None" &&
+                        (
+                          <div className="product__option">
+                            <label
+                              className="product__option-label"
                             >
-                              Add To Cart
-                            </button>
+                              {variation.ProductVariation}
+                            </label>
+
+                            <div className="product__variation">
+                              {
+                                variation !== null &&
+                                JSON.parse(product.ProductVariation).map((variation, index) => {
+                                  return (
+                                    <button
+                                      key={index}
+                                      type="button"
+                                      className={
+                                        variation.ProductVariationDetailID === this.state.productVariationDetailID ?
+                                          'btn product__variation-button--selected'
+                                          : 'btn product__variation-button'
+                                      }
+                                      onClick={() => this.setState({
+                                        productVariation: variation.ProductVariationValue,
+                                        productQuantity: variation.ProductStockAmount,
+                                        productPrice: variation.ProductVariationPrice,
+                                        productVariationDetailID: variation.ProductVariationDetailID,
+                                        selectedVariation: variation,
+                                        isVariationSet: true
+                                      })}
+                                    >
+                                      {variation.ProductVariationValue}
+                                    </button>
+                                  )
+                                })
+                              }
+                            </div>
                           </div>
-                          <div className="product__actions-item product__actions-item--wishlist mx-1">
-                            {this.wishlisting(product)}
+                        )
+                      }
+
+                      <div className="product__option">
+                        <div className="row form-group product__option d-flex align-items-center">
+                          <div className="col-3">
+                            <label
+                              htmlFor="product-quantity"
+                              className="product__option-label"
+                            >
+                              Quantity
+                            </label>
+                          </div>
+                          <div className="col-2 product__actions-item">
+                            <InputNumber
+                              id="product-quantity"
+                              aria-label="Quantity"
+                              className="product__quantity"
+                              size="lg"
+                              min={1}
+                              value={quantity}
+                              onChange={this.handleChangeQuantity}
+                            />
                           </div>
                         </div>
+
+                        <div className="form-group product__option product__add-to-cart" >
+                          <div className="product__actions">
+                            <div className="product__actions-item product__actions-item--addtocart mx-1">
+                              <button
+                                type="button"
+                                disabled={this.state.isVariationSet === true ?
+                                  (this.state.productQuantity > 0 ? false : true) :
+                                  (product.ProductStockAmount > 0 ? false : true)
+                                }
+                                onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
+                                className="btn btn-primary product-card__addtocart"
+                              >
+                                Add To Cart
+                              </button>
+                            </div>
+                            <div className="product__actions-item product__actions-item--wishlist mx-1">
+                              {this.wishlisting(product)}
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
-                </div>
-                :
-                <ProductSkeleton
-                  highlightColor={highlightColor}
-                  baseColor={baseColor} />
-            }
-          </div>
-        </div>
+                  :
+                  <ProductSkeleton
+                    highlightColor={highlightColor}
+                    baseColor={baseColor} />
 
+              }
+
+            </div>
+          </Card>
+        </>
         {
           this.props.version === "1" ? (
             <ProductTabs

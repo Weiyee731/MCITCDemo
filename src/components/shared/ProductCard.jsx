@@ -24,7 +24,7 @@ import {
   Divider, Button
 } from "@material-ui/core";
 
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 function ProductCard(props) {
