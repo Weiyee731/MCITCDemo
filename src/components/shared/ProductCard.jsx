@@ -24,6 +24,8 @@ import {
   Divider, Button
 } from "@material-ui/core";
 
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 function ProductCard(props) {
   const {
@@ -38,6 +40,11 @@ function ProductCard(props) {
     "product-card--layout--list": layout === "list",
     "product-card--layout--horizontal": layout === "horizontal",
   });
+
+
+  const baseColor = props !== undefined && props.baseColor
+  const highlightColor = props !== undefined && props.highlightColor
+
 
   let badges = [];
   let image;
@@ -174,57 +181,74 @@ function ProductCard(props) {
         )
     );
 
-  return (
-    <div className={containerClasses}>
-      {badges}
-      <Link to={url.product(product)}>{image}</Link>
-      <div className="product-card__info">
-        <div className="product-card__name">
-          <Link to={url.product(product)}>{product.ProductName}</Link>
+  const ProductCardlayout = () => {
+
+    return (
+      <>
+        {badges}
+        <Link to={url.product(product)}>{image}</Link>
+
+        <div className="product-card__info">
+          <div className="product-card__name">
+            <Link to={url.product(product)}>{product.ProductName}</Link>
+          </div>
+          <div className="product-card__rating">
+            <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
+            <div className="product-card__rating-legend">{product.ProductRating !== null ? parseFloat(product.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
+          </div>
+          {
+            product.ProductSold !== "0" && product.ProductSold !== null &&
+            <div
+              className="product-card__rating-legend mt-1"
+              style={{
+                marginLeft: '0px'
+              }}
+            >
+              {`(${product.ProductSold} Sold)`}
+            </div>
+          }
+          {features}
         </div>
-        <div className="product-card__rating">
-          <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
-          <div className="product-card__rating-legend">{product.ProductRating !== null ? parseFloat(product.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
-        </div>
-        {
-          product.ProductSold !== "0" && product.ProductSold !== null &&
+
+        <div className="product-card__actions">
+          <div className="product-card__availability">
+            Availability:{" "}
+            <span style={{ color: "#3d464d" }}>In Stock</span>
+          </div>
           <div
-            className="product-card__rating-legend mt-1"
             style={{
-              marginLeft: '0px'
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}
           >
-            {`(${product.ProductSold} Sold)`}
+            <label style={{ fontSize: "20px" }}>{price}</label>
+            {wishlistView}
           </div>
-        }
-        {features}
-      </div>
+          {
+            product.ShopState !== null &&
+            <div style={{ textAlign: "right", paddingRight: "10px" }}>
+              <label style={{ color: "#2b535e" }}>
+                {product.ShopState}
+              </label>
+            </div>
+          }
+        </div>
+      </>
+    )
+  }
+  return (
+    <div className={containerClasses}>
+      {props.currentData !== undefined ?
+        props.currentData.isProductSet === true && props.currentData.isTimerEnd === true ?
+          ProductCardlayout() :
+          <Skeleton height={300} baseColor={baseColor} highlightColor={highlightColor} />
+        :
+        ProductCardlayout()
+      }
 
-      <div className="product-card__actions">
-        <div className="product-card__availability">
-          Availability:{" "}
-          <span style={{ color: "#3d464d" }}>In Stock</span>
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}
-        >
-          <label style={{ fontSize: "20px" }}>{price}</label>
-          {wishlistView}
-        </div>
-        {
-          product.ShopState !== null &&
-          <div style={{ textAlign: "right", paddingRight: "10px" }}>
-            <label style={{ color: "#2b535e" }}>
-              {product.ShopState}
-            </label>
-          </div>
-        }
-      </div>
+
     </div>
   );
 

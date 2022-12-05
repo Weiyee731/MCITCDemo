@@ -22,6 +22,9 @@ import Logo from "../../assets/Emporia.png"
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { toast } from "react-toastify";
 import LoadingPanel from "./loadingPanel";
+import ProductSkeleton from "./ProductSkeleton";
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 class Product extends Component {
   constructor(props) {
@@ -38,6 +41,8 @@ class Product extends Component {
       isVariationSet: false,
       productVariationType: "",
       isProductSet: false,
+      isTimerEnd: false
+
     };
     this.addCart = this.addCart.bind(this)
     this.handleWishlist = this.handleWishlist.bind(this)
@@ -66,7 +71,6 @@ class Product extends Component {
             productVariationDetailID: variation.ProductVariationDetailID,
             productVariationType: variation.ProductVariation,
           })
-          console.log("variation", variation)
       })
       this.setState({ productPrice: product.ProductPrice, isProductSet: true })
     } else {
@@ -90,7 +94,6 @@ class Product extends Component {
             productVariationDetailID: variation.ProductVariationDetailID,
             productVariationType: variation.ProductVariation,
           })
-          console.log("variation2", variation)
       })
       this.setState({ productPrice: product.ProductPrice, isProductSet: true })
     }
@@ -206,28 +209,40 @@ class Product extends Component {
     const { quantity } = this.state;
     let prices;
 
-    console.log("productproductproduct", product)
+    const baseColor = "#c4c4c4"
+    const highlightColor = "#ffffff"
+
+    if (this.state.isTimerEnd === false)
+      setInterval(() => {
+        this.setState({ isTimerEnd: true })
+      }, 2000)
 
     prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
 
-    let merchant = product.ReturnVal !== "0" && product.MerchantDetail !== null? JSON.parse(product.MerchantDetail)[0] : ""
-    let variation =  product.ReturnVal !== "0" && product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
+    let merchant = product.ReturnVal !== "0" && product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
+    let variation = product.ReturnVal !== "0" && product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
 
     return (
       <div className="block" >
-        {/* Product info */}
-        {
-          this.state.isProductSet === true ?
-            <>
-              <div
-                style={{ backgroundColor: "white", padding: "20px" }}
-                className={`product product--layout--${layout}`}
-              >
-                <div className="product__content">
-                  <ProductGallery
-                    layout={layout}
-                    images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : [Logo]}
-                  />
+
+        <div
+          style={{ backgroundColor: "white", padding: "20px" }}
+          className={`product product--layout--${layout}`}
+        >
+          <div className="product__content">
+            {
+              this.state.isProductSet === true &&
+              <ProductGallery
+                layout={layout}
+                currentData={this.state}
+                images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : [Logo]}
+                baseColor={baseColor}
+                highlightColor={highlightColor}
+              />
+            }
+            {
+              this.state.isTimerEnd === true && this.state.isProductSet === true ?
+                <div>
                   <div className="product__info">
                     <div className="product__wishlist-compare">
                       {this.wishlisting(product)}
@@ -329,7 +344,6 @@ class Product extends Component {
                       </li>
                     </ul>
                   </div>
-
                   <div className="product__sidebar">
                     <div className="product__prices">{prices}</div>
                     {
@@ -420,35 +434,41 @@ class Product extends Component {
                     </div>
                   </div>
                 </div>
-              </div>
+                :
+                <ProductSkeleton
+                  highlightColor={highlightColor}
+                  baseColor={baseColor} />
+            }
+          </div>
+        </div>
 
-              {
-                this.props.version === "1" ? (
-                  <ProductTabs
-                    withSidebar
-                    currentTab={this.state}
-                    setCurrentTab={this.changeCurrentTab}
-                  />
-                ) : (
-                  <ProductTabs
-                    product={product}
-                    currentTab={this.state}
-                    setCurrentTab={this.changeCurrentTab}
-                  />
-                )
-              }
-
-              <BlockProductsCarousel
-                title="Recommended Product"
-                layout="grid-4"
-                rows={1}
-                products={product.ProductRecommendation !== null && product.ProductRecommendation !== undefined
-                  ? JSON.parse(product.ProductRecommendation) : []}
-              />
-            </>
-            :
-            <LoadingPanel />
+        {
+          this.props.version === "1" ? (
+            <ProductTabs
+              withSidebar
+              currentTab={this.state}
+              setCurrentTab={this.changeCurrentTab}
+            />
+          ) : (
+            <ProductTabs
+              product={product}
+              currentTab={this.state}
+              setCurrentTab={this.changeCurrentTab}
+            />
+          )
         }
+
+        <BlockProductsCarousel
+          title="Recommended Product"
+          layout="grid-4"
+          rows={1}
+          currentData={this.state}
+          highlightColor={highlightColor}
+          baseColor={baseColor}
+          products={product.ProductRecommendation !== null && product.ProductRecommendation !== undefined
+            ? JSON.parse(product.ProductRecommendation) : []}
+        />
+
       </div >
     );
   }

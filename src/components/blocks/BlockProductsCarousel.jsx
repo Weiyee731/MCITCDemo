@@ -10,6 +10,8 @@ import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
 import StroykaSlick from "../shared/StroykaSlick";
 import { Button } from "@material-ui/core";
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const slickSettings = {
   "grid-4": {
@@ -192,7 +194,7 @@ export default class BlockProductsCarousel extends Component {
     const columns = this.productsColumns().map((column, index) => {
       const products = column.map((product) => (
         <div key={product.id} className="block-products-carousel__cell">
-          <ProductCard product={product} />
+          <ProductCard product={product} currentData={this.props.currentData} highlightColor={this.props.highlightColor} baseColor={this.props.baseColor} />
         </div>
       ));
 
@@ -228,6 +230,7 @@ export default class BlockProductsCarousel extends Component {
             ) :
             (
               <div className={containerClasses}>
+
                 <BlockHeader
                   title={title}
                   groups={groups}
@@ -237,17 +240,6 @@ export default class BlockProductsCarousel extends Component {
                   onGroupClick={onGroupClick}
                   showAll={"/shop/ProductListing/type:Merchant&typevalue:" + 0}
                 />
-
-                {/* <div style={{ textAlign: "right", marginBottom: '5px' }}>
-                  <Button
-                    onClick={(e) => {
-                      window.location.href = "/shop/ProductListing/type:Merchant&typevalue:" + 0
-                    }}
-                  >
-                    View All
-                  </Button>
-                </div> */}
-
                 <div className="block-products-carousel__slider">
                   <div className="block-products-carousel__preloader" />
                   <StroykaSlick ref={this.setSlickRef} {...slickSettings[layout]}>
