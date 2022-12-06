@@ -481,6 +481,7 @@ class ProductDetails extends Component {
                                                         }
                                                         onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
                                                         className="btn btn-primary product-card__addtocart"
+                                                        style={{borderRadius:"5px"}}
                                                     >
                                                         Add To Cart
                                                     </button>
