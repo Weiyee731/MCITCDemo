@@ -10,6 +10,9 @@ import Dropdown from "./Dropdown";
 import DropdownCurrency from "./DropdownCurrency";
 import DropdownLanguage from "./DropdownLanguage";
 
+import SocialLinks from '../shared/SocialLinks';
+import { Button } from "react-bootstrap";
+
 function Topbar() {
   const links = [
     {
@@ -56,10 +59,14 @@ function Topbar() {
                         />
                     </div> */}
           <div className="topbar__item">
-            <DropdownCurrency />
+            {/* <DropdownCurrency /> */}
+            <SocialLinks className="footer-newsletter__social-links" shape="circle" />
           </div>
           <div className="topbar__item">
-            <DropdownLanguage />
+            {/* <DropdownLanguage /> */}
+            <Button style={{ fontSize: "9pt", background: "inherit", border: "transparent", color: "white", height: "1vw", display: "flex", alignItems: "center", fontFamily: 'Helvetica' }}>
+              Customer Care
+            </Button>
           </div>
         </div>
       </div>

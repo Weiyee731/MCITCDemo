@@ -1,6 +1,7 @@
 // react
 import React from 'react';
 import { Image } from 'react-bootstrap';
+import { Typography } from '@material-ui/core';
 
 // application
 import SocialLinks from '../shared/SocialLinks';
@@ -27,70 +28,37 @@ import citibank from '../../assets/citibank.png';
 
 
 export default function PaymentFooter() {
+    const payment = [
+        { paymentID: 1, paymentImg: VISA },
+        { paymentID: 2, paymentImg: MASTER },
+        { paymentID: 3, paymentImg: FPX },
+        { paymentID: 4, paymentImg: rhb },
+        { paymentID: 5, paymentImg: affinbank },
+        { paymentID: 6, paymentImg: ambank },
+        { paymentID: 7, paymentImg: bankrakyat },
+        { paymentID: 8, paymentImg: bankislam },
+        { paymentID: 9, paymentImg: citibank },
+        { paymentID: 10, paymentImg: cimb },
+        { paymentID: 11, paymentImg: hlb },
+        { paymentID: 12, paymentImg: hsbc },
+        { paymentID: 13, paymentImg: maybank },
+        { paymentID: 14, paymentImg: pbb },
+        { paymentID: 15, paymentImg: ocbc },
+        { paymentID: 16, paymentImg: uob },
+    ]
+
     return (
         <div className="site-footer__widget footer-links">
-            <h5 style={{ fontFamily: "Helvetica" }}>Payment</h5>
+            <Typography variant='caption' style={{fontWeight:"700", color: "#2b535e"}}>PAYMENT</Typography>
             <div className='row' style={{ alignItems: "center" }}>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={VISA} />
-                </div>
-                <div className="col-3">
-                    <Image width="90%" height="auto" src={MASTER} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={FPX} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={rhb} />
-                </div>
+                {
+                    payment.map((x) => {
+                        return (
+                            <Image width="12%" src={x.paymentImg} style={{padding:"0.5vw"}}/>
+                        )
+                    })
+                }
             </div>
-
-            <div className='row' style={{ alignItems: "center", paddingTop: "10pt" }}>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={affinbank} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={ambank} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={bankrakyat} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={bankislam} />
-                </div>
-            </div>
-
-            <div className='row' style={{ alignItems: "center" }}>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={citibank} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={cimb} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={hlb} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={hsbc} />
-                </div>
-            </div>
-            <div className='row' style={{ alignItems: "center" }}>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={maybank} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={pbb} />
-                </div>
-
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={ocbc} />
-                </div>
-                <div className="col-3">
-                    <Image width="100%" height="auto" src={uob} />
-                </div>
-
-            </div>
-
         </div>
     );
 }

@@ -121,7 +121,6 @@ const productLayouts = [
     )}
   />
 ));
-
 const Access = () => {
   if (localStorage.getItem("isLogin") === false || localStorage.getItem("isLogin") === null) {
     return (
@@ -384,273 +383,274 @@ function Layout(props) {
       <Quickview />
       <MobileMenu />
       {
-      // localStorage.getItem("management") === "true" ? (
-      //   Access()
-      // ) :
-       (
-        <Router basename={"/"}>
-          <div className="site">
-            <header className="site__header d-lg-none">
-              <MobileHeader />
-            </header>
-            <header className="site__header d-lg-block d-none">
-              <Header layout={headerLayout} />
-            </header>
+        // localStorage.getItem("management") === "true" ? (
+        //   Access()
+        // ) :
+        (
+          <Router basename={"/"}>
+            <div className="site">
+              <header className="site__header d-lg-none">
+                <MobileHeader />
+              </header>
+              <header className="site__header d-lg-block d-none">
+              
+                <Header layout={headerLayout} location={props.location.pathname}/>
+              </header>
 
-            <div className="site__body" style={{ backgroundColor: "#f5f5f5" }}>
-              <Switch>
-                <Route exact path={`${match.path}`} component={homeComponent} />
-                <Redirect exact from="/shop" to="/shop/catalog" />
-                <Route
-                  exact
-                  path="/shop/catalog"
-                  render={(props) => (
-                    <ShopPageCategory
-                      {...props}
-                      columns={3}
-                      viewMode="grid"
-                      sidebarPosition="start"
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/shop/catalog/:categorySlug"
-                  render={(props) => (
-                    <ShopPageCategory
-                      {...props}
-                      columns={3}
-                      viewMode="grid"
-                      sidebarPosition="start"
-                      categorySlug={props.match.params.categorySlug}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/viewProductDetail/:productId"
-                  render={(props) => (
-                    <>
-                      {console.log("HERE PROPS", props)}
-                      {console.log("HERE PROPS", props.match.params)}
-                      <ViewProductGeneralInfo
+              <div className="site__body" style={{ backgroundColor: "#f5f5f5" }}>
+                <Switch>
+                  <Route exact path={`${match.path}`} component={homeComponent} />
+                  <Redirect exact from="/shop" to="/shop/catalog" />
+                  <Route
+                    exact
+                    path="/shop/catalog"
+                    render={(props) => (
+                      <ShopPageCategory
                         {...props}
-                        layout="standard"
-                        productId={props.match.params.productId}
+                        columns={3}
+                        viewMode="grid"
+                        sidebarPosition="start"
                       />
-                    </>
-                  )}
-                />
-                <Route
-                  exact
-                  path="/merchant/:merchantID"
-                  render={(props) => (
-                    <MerchantPage
-                      {...props}
-                      layout="standard"
-                      merchantID={props.match.params.merchantID}
-                    />
-                  )}
-                />
-
-                {/* {categoryLayouts} */}
-                <Route
-                  exact
-                  path="/shop/products/:productId"
-                  render={(props) => (
-                    <>
-                      {console.log("props1234", props)}
-                      <ShopPageProduct
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/shop/catalog/:categorySlug"
+                    render={(props) => (
+                      <ShopPageCategory
                         {...props}
-                        layout="standard"
-                        productId={props.match.params.productId}
+                        columns={3}
+                        viewMode="grid"
+                        sidebarPosition="start"
+                        categorySlug={props.match.params.categorySlug}
                       />
-                    </>
-                  )}
-                />
-                {productLayouts}
-                <Route exact path="/shop/cart" component={PageCart} />
-                {/* <Route exact path="/shop/ShopPageReceipt" component={ShopPageReceipt} /> */}
-
-                <Route
-                  exact
-                  // path="/shop/ShopPageReceipt/:type/:reference/:transactionuuid/:amount"
-                  path="/shop/ShopPageReceipt/:type/:transactionuuid/"
-                  render={(props) => (
-                    <>
-                      {console.log("props1234", props)}
-                      <ShopPageReceipt
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/viewProductDetail/:productId"
+                    render={(props) => (
+                      <>
+                        {console.log("HERE PROPS", props)}
+                        {console.log("HERE PROPS", props.match.params)}
+                        <ViewProductGeneralInfo
+                          {...props}
+                          layout="standard"
+                          productId={props.match.params.productId}
+                        />
+                      </>
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/merchant/:merchantID"
+                    render={(props) => (
+                      <MerchantPage
                         {...props}
                         layout="standard"
-                        type={props.match.params.type}
-                        // reference={props.match.params.reference}
-                        transactionuuid={props.match.params.transactionuuid}
+                        merchantID={props.match.params.merchantID}
+                      />
+                    )}
+                  />
+
+                  {/* {categoryLayouts} */}
+                  <Route
+                    exact
+                    path="/shop/products/:productId"
+                    render={(props) => (
+                      <>
+                        {console.log("props1234", props)}
+                        <ShopPageProduct
+                          {...props}
+                          layout="standard"
+                          productId={props.match.params.productId}
+                        />
+                      </>
+                    )}
+                  />
+                  {productLayouts}
+                  <Route exact path="/shop/cart" component={PageCart} />
+                  {/* <Route exact path="/shop/ShopPageReceipt" component={ShopPageReceipt} /> */}
+
+                  <Route
+                    exact
+                    // path="/shop/ShopPageReceipt/:type/:reference/:transactionuuid/:amount"
+                    path="/shop/ShopPageReceipt/:type/:transactionuuid/"
+                    render={(props) => (
+                      <>
+                        {console.log("props1234", props)}
+                        <ShopPageReceipt
+                          {...props}
+                          layout="standard"
+                          type={props.match.params.type}
+                          // reference={props.match.params.reference}
+                          transactionuuid={props.match.params.transactionuuid}
                         // amount={props.match.params.amount}
-                      />
-                    </>
-                  )}
-                />
+                        />
+                      </>
+                    )}
+                  />
 
-                <Route exact path="/shop/checkPaymentStatus" component={CheckPaymentStatus} />
-                <Route exact path="/shop/checkout" component={PageCheckout} />
-                <Route exact path="/shop/deliveryfee" component={DeliveryFee} />
-                <Route exact path="/shop/checkout2" component={ShopPageCheckOut} />
-                <Route
-                  exact
-                  path="/shop/checkout/success"
-                  component={ShopPageOrderSuccess}
-                />
-                <Route exact path="/shop/wishlist" component={PageWishlist} />
-                <Route exact path="/shop/compare" component={PageCompare} />
-                <Route
-                  exact
-                  path="/shop/track-order"
-                  component={ShopPageTrackOrder}
-                />
-                <Redirect exact from="/blog" to="/blog/category-classic" />
-                <Route
-                  exact
-                  path="/blog/category-classic"
-                  render={(props) => (
-                    <BlogPageCategory
-                      {...props}
-                      layout="classic"
-                      sidebarPosition="end"
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/blog/category-grid"
-                  render={(props) => (
-                    <BlogPageCategory
-                      {...props}
-                      layout="grid"
-                      sidebarPosition="end"
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/blog/category-list"
-                  render={(props) => (
-                    <BlogPageCategory
-                      {...props}
-                      layout="list"
-                      sidebarPosition="end"
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/blog/category-left-sidebar"
-                  render={(props) => (
-                    <BlogPageCategory
-                      {...props}
-                      layout="classic"
-                      sidebarPosition="start"
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/blog/post-classic"
-                  render={(props) => (
-                    <BlogPagePost
-                      {...props}
-                      layout="classic"
-                      sidebarPosition="end"
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/blog/post-full"
-                  render={(props) => <BlogPagePost {...props} layout="full" />}
-                />
-                <Route exact path="/login" component={Login} />
-                <Route
-                  exact
-                  path="/resetPassword/:resetPasswordID"
-                  render={(props) => (
-                    <ResetPassword
-                      {...props}
-                      resetPasswordID={props.match.params.resetPasswordID}
-                    />
-                  )}
-                />
-                {/* <Route path="/resetPassword" component={ResetPassword}/> */}
-                <Route exact path="/signup" component={SignUp} />
-                <Route path="/account" component={AccountLayout} />
-                <Redirect exact from="/site" to="/site/about-us" />
-                <Route exact path="/site/about-us" component={SitePageAboutUs} />
-                <Route exact path="/site/policy" component={SitePagePolicy} />
-                <Route
-                  exact
-                  path="/site/campaigncondition"
-                  component={SitePageCampaignCondition}
-                />
-                <Route exact path="/site/Form" component={SitePageTicketForm} />
-
-                <Route
-                  exact
-                  path="/site/components"
-                  component={SitePageComponents}
-                />
-                <Route
-                  exact
-                  path="/site/affiliate"
-                  component={SitePageAffiliate}
-                />
-                <Route exact path="/site/careers" component={SitePageCareers} />
-                <Route
-                  exact
-                  path="/site/contact-us"
-                  component={SitePageContactUs}
-                />
-                <Route
-                  exact
-                  path="/site/contact-us-alt"
-                  component={SitePageContactUsAlt}
-                />
-                <Route
-                  exact
-                  path="/site/not-found"
-                  component={SitePageNotFound}
-                />
-                <Route exact path="/site/howtobuy" component={SitePageHowToBuy} />
-                <Route exact path="/site/faq" component={SitePageFaq} />
-                <Route
-                  exact
-                  path="/site/howtoreturn"
-                  component={SitePageHowToReturn}
-                />
-                <Route exact path="/site/terms" component={SitePageTerms} />
-                <Route
-                  exact
-                  path="/site/shippingdelivery"
-                  component={SitePageShippingDelivery}
-                />
-                <Route
-                  exact
-                  path="/site/typography"
-                  component={SitePageTypography}
-                />
-                <Route
-                  exact
-                  path="/shop/ProductListing/type:selectedtype&typevalue:selectedtypevalue"
-                  render={(props) => (
-                    <>
-                      <BlockListingDetails
+                  <Route exact path="/shop/checkPaymentStatus" component={CheckPaymentStatus} />
+                  <Route exact path="/shop/checkout" component={PageCheckout} />
+                  <Route exact path="/shop/deliveryfee" component={DeliveryFee} />
+                  <Route exact path="/shop/checkout2" component={ShopPageCheckOut} />
+                  <Route
+                    exact
+                    path="/shop/checkout/success"
+                    component={ShopPageOrderSuccess}
+                  />
+                  <Route exact path="/shop/wishlist" component={PageWishlist} />
+                  <Route exact path="/shop/compare" component={PageCompare} />
+                  <Route
+                    exact
+                    path="/shop/track-order"
+                    component={ShopPageTrackOrder}
+                  />
+                  <Redirect exact from="/blog" to="/blog/category-classic" />
+                  <Route
+                    exact
+                    path="/blog/category-classic"
+                    render={(props) => (
+                      <BlogPageCategory
                         {...props}
-                        layout="standard"
-                        selectedtype={props.match.params.type}
-                        selectedtypevalue={props.match.params.typevalue}
+                        layout="classic"
+                        sidebarPosition="end"
                       />
-                    </>
-                  )}
-                />
-                {/* <Route
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/blog/category-grid"
+                    render={(props) => (
+                      <BlogPageCategory
+                        {...props}
+                        layout="grid"
+                        sidebarPosition="end"
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/blog/category-list"
+                    render={(props) => (
+                      <BlogPageCategory
+                        {...props}
+                        layout="list"
+                        sidebarPosition="end"
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/blog/category-left-sidebar"
+                    render={(props) => (
+                      <BlogPageCategory
+                        {...props}
+                        layout="classic"
+                        sidebarPosition="start"
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/blog/post-classic"
+                    render={(props) => (
+                      <BlogPagePost
+                        {...props}
+                        layout="classic"
+                        sidebarPosition="end"
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/blog/post-full"
+                    render={(props) => <BlogPagePost {...props} layout="full" />}
+                  />
+                  <Route exact path="/login" component={Login} />
+                  <Route
+                    exact
+                    path="/resetPassword/:resetPasswordID"
+                    render={(props) => (
+                      <ResetPassword
+                        {...props}
+                        resetPasswordID={props.match.params.resetPasswordID}
+                      />
+                    )}
+                  />
+                  {/* <Route path="/resetPassword" component={ResetPassword}/> */}
+                  <Route exact path="/signup" component={SignUp} />
+                  <Route path="/account" component={AccountLayout} />
+                  <Redirect exact from="/site" to="/site/about-us" />
+                  <Route exact path="/site/about-us" component={SitePageAboutUs} />
+                  <Route exact path="/site/policy" component={SitePagePolicy} />
+                  <Route
+                    exact
+                    path="/site/campaigncondition"
+                    component={SitePageCampaignCondition}
+                  />
+                  <Route exact path="/site/Form" component={SitePageTicketForm} />
+
+                  <Route
+                    exact
+                    path="/site/components"
+                    component={SitePageComponents}
+                  />
+                  <Route
+                    exact
+                    path="/site/affiliate"
+                    component={SitePageAffiliate}
+                  />
+                  <Route exact path="/site/careers" component={SitePageCareers} />
+                  <Route
+                    exact
+                    path="/site/contact-us"
+                    component={SitePageContactUs}
+                  />
+                  <Route
+                    exact
+                    path="/site/contact-us-alt"
+                    component={SitePageContactUsAlt}
+                  />
+                  <Route
+                    exact
+                    path="/site/not-found"
+                    component={SitePageNotFound}
+                  />
+                  <Route exact path="/site/howtobuy" component={SitePageHowToBuy} />
+                  <Route exact path="/site/faq" component={SitePageFaq} />
+                  <Route
+                    exact
+                    path="/site/howtoreturn"
+                    component={SitePageHowToReturn}
+                  />
+                  <Route exact path="/site/terms" component={SitePageTerms} />
+                  <Route
+                    exact
+                    path="/site/shippingdelivery"
+                    component={SitePageShippingDelivery}
+                  />
+                  <Route
+                    exact
+                    path="/site/typography"
+                    component={SitePageTypography}
+                  />
+                  <Route
+                    exact
+                    path="/shop/ProductListing/type:selectedtype&typevalue:selectedtypevalue"
+                    render={(props) => (
+                      <>
+                        <BlockListingDetails
+                          {...props}
+                          layout="standard"
+                          selectedtype={props.match.params.type}
+                          selectedtypevalue={props.match.params.typevalue}
+                        />
+                      </>
+                    )}
+                  />
+                  {/* <Route
                 exact
                 path="/shop/ProductListing/:parentCategoryID/:categorySlug/:categoryID/:childcategorySlug"
                 render={(props) => (
@@ -664,25 +664,25 @@ function Layout(props) {
                   />
                 )}
               /> */}
-                <Route
-                  exact
-                  path="/shop/AllProductCategory/"
-                  render={(props) => (
-                    <BlockAllProductCategory
-                      {...props}
-                      layout="standard"
-                    />
-                  )}
-                />
-                <Route component={SitePageNotFound} />
-              </Switch>
+                  <Route
+                    exact
+                    path="/shop/AllProductCategory/"
+                    render={(props) => (
+                      <BlockAllProductCategory
+                        {...props}
+                        layout="standard"
+                      />
+                    )}
+                  />
+                  <Route component={SitePageNotFound} />
+                </Switch>
+              </div>
+              <footer className="site__footer">
+                <Footer />
+              </footer>
             </div>
-            <footer className="site__footer">
-              <Footer />
-            </footer>
-          </div>
-        </Router>
-      )}
+          </Router>
+        )}
     </React.Fragment>
   );
 }
