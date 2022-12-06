@@ -31,6 +31,8 @@ import {
 import ProductDetails from './ProductDetails'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 import Chip from '@mui/material/Chip';
 import ReactTooltip from "react-tooltip";
 import { HashLink } from "react-router-hash-link";
@@ -199,14 +201,32 @@ function ProductCard(props) {
       setQuickView(true)
       setProduct(product)
     }
+
+    const colourList = [
+      { id: 1, color: "secondary" },
+      { id: 2, color: "primary" },
+    ]
+
+    const sampleTag = [
+      { id: 1, tag: "- 42%" },
+      { id: 2, tag: "free shipping" }
+    ]
     return (
       <>
         <button
-          type="button"
-          onClick={() => QuickView()}
           className={classNames("product-card__quickview")}
+          style={{ textAlign: "right" }}
         >
-          <Quickview16Svg />
+          {
+            sampleTag.length > 0 &&
+            sampleTag.map((x, index) => {
+              return (
+                <label ><Chip size="small" variant="filled" color={colourList[index].color} label={x.tag} /></label>
+              )
+            })
+          }
+          <br />
+          <VisibilityIcon onClick={() => QuickView()} />
         </button>
         {badges}
         <Link to={url.product(product)}>{image}</Link>
@@ -276,13 +296,8 @@ function ProductCard(props) {
           <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
             <Cross20Svg />
           </button>
-          {/* <div className="block" >
-            <div className="product__content"> */}
-          {/* <Link to={url.product(product)}>{image}</Link> */}
           <ProductDetails product={product} />
         </div>
-        {/* </div>
-        </div> */}
       </Modal>
 
     </div>
