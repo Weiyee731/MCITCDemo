@@ -286,8 +286,8 @@ class ProductGallery extends Component {
       return data
     }
 
-    const baseColor = this.props.currentTab !== undefined && this.props.currentTab.baseColor
-    const highlightColor = this.props.currentTab !== undefined && this.props.currentTab.highlightColor
+    const baseColor = this.props !== undefined && this.props.baseColor
+    const highlightColor = this.props !== undefined && this.props.highlightColor
 
     const featured = images.map((image, index) => (
       <div

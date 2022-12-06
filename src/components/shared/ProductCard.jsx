@@ -8,9 +8,13 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // application
+import AsyncAction from "./AsyncAction";
+import { cartAddItem } from "../../store/cart";
+import { quickviewOpen } from "../../store/quickview";
+
 import Currency from "./Currency";
 import Rating from "./Rating";
-import { Wishlist16Svg } from "../../svg";
+import { Wishlist16Svg, Quickview16Svg, } from "../../svg";
 import { url } from "../../services/utils";
 import Logo from "../../assets/Emporia.png"
 import { GitAction } from "../../store/action/gitAction";
@@ -20,12 +24,19 @@ import { Modal, ModalBody, ModalFooter } from 'reactstrap';
 import Product from './Product';
 import { Cross20Svg } from '../../svg';
 import { browserHistory } from "react-router";
+import { Typography, Card, } from "@mui/material";
 import {
   Divider, Button
 } from "@material-ui/core";
-
+import ProductDetails from './ProductDetails'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import Chip from '@mui/material/Chip';
+import ReactTooltip from "react-tooltip";
+import { HashLink } from "react-router-hash-link";
+import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
+
+
 
 function ProductCard(props) {
   const {
@@ -44,7 +55,8 @@ function ProductCard(props) {
 
   const baseColor = props !== undefined && props.baseColor
   const highlightColor = props !== undefined && props.highlightColor
-
+  const [isQuickViewOpen, setQuickView] = useState(false);
+  const [productData, setProduct] = useState([]);
 
   let badges = [];
   let image;
@@ -183,8 +195,19 @@ function ProductCard(props) {
 
   const ProductCardlayout = () => {
 
+    const QuickView = () => {
+      setQuickView(true)
+      setProduct(product)
+    }
     return (
       <>
+        <button
+          type="button"
+          onClick={() => QuickView()}
+          className={classNames("product-card__quickview")}
+        >
+          <Quickview16Svg />
+        </button>
         {badges}
         <Link to={url.product(product)}>{image}</Link>
 
@@ -248,6 +271,19 @@ function ProductCard(props) {
         ProductCardlayout()
       }
 
+      <Modal isOpen={isQuickViewOpen} toggle={() => setQuickView(!isQuickViewOpen)} centered size="xl">
+        <div className="quickview">
+          <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
+            <Cross20Svg />
+          </button>
+          {/* <div className="block" >
+            <div className="product__content"> */}
+          {/* <Link to={url.product(product)}>{image}</Link> */}
+          <ProductDetails product={product} />
+        </div>
+        {/* </div>
+        </div> */}
+      </Modal>
 
     </div>
   );
