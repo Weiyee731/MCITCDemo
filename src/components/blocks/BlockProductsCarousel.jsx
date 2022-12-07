@@ -14,6 +14,11 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Card, } from "@mui/material";
 
+// import Swiper core and required modules
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.min.css'
+import 'swiper/swiper.min.css'
 
 const slickSettings = {
   "grid-4": {
@@ -195,9 +200,11 @@ export default class BlockProductsCarousel extends Component {
 
     const columns = this.productsColumns().map((column, index) => {
       const products = column.map((product) => (
-        <div key={product.id} className="block-products-carousel__cell">
+        // <div key={product.id} className="block-products-carousel__cell">
+        <SwiperSlide key={product.ProductID}>
           <ProductCard product={product} currentData={this.props.currentData} highlightColor={this.props.highlightColor} baseColor={this.props.baseColor} />
-        </div>
+        </SwiperSlide>
+        // </div>
       ));
 
       return (
@@ -235,23 +242,37 @@ export default class BlockProductsCarousel extends Component {
 
                 <BlockHeader
                   title={title}
-                  groups={groups}
-                  arrows
-                  onNext={this.handleNextClick}
-                  onPrev={this.handlePrevClick}
-                  onGroupClick={onGroupClick}
+                  // groups={groups}
+                  // arrows
+                  // onNext={this.handleNextClick}
+                  // onPrev={this.handlePrevClick}
+                  // onGroupClick={onGroupClick}
                   showAll={"/shop/ProductListing/type:Merchant&typevalue:" + 0}
                 />
-                <div className="block-products-carousel__slider">
+                {/* <div className="block-products-carousel__slider">
                   <div className="block-products-carousel__preloader" />
                   <StroykaSlick ref={this.setSlickRef} {...slickSettings[layout]}>
                     {columns}
                   </StroykaSlick>
-                </div>
+                </div> */}
+                <Swiper
+                  modules={[Navigation, Pagination, Scrollbar, A11y]}
+                  spaceBetween={50}
+                  slidesPerView={4}
+                  navigation={{
+                    prevEl: ".swiper-button-prev",
+                    nextEl: ".swiper-button-next",
+                  }}
+                // onSwiper={(swiper) => console.log(swiper)}
+                // onSlideChange={() => console.log('slide change')}
+                >
+                  {columns}
+                  <div className="btnBox swiper-button-prev"></div>
+                  <div className="btnBox swiper-button-next"></div>
+                </Swiper>
               </div>
             )
         }
-
       </div>
     );
   }

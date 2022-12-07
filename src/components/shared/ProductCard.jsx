@@ -39,7 +39,6 @@ import { HashLink } from "react-router-hash-link";
 import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
 
 
-
 function ProductCard(props) {
   const {
     product,
@@ -209,13 +208,13 @@ function ProductCard(props) {
 
     const sampleTag = [
       { id: 1, tag: "- 42%" },
-      { id: 2, tag: "free shipping" }
+      // { id: 2, tag: "free shipping" }
     ]
     return (
-      <>
+      <Card elevation={2}>
         <button
           className={classNames("product-card__quickview")}
-          style={{ textAlign: "right" }}
+          style={{ textAlign: "right", display: "flex"}}
         >
           {
             sampleTag.length > 0 &&
@@ -225,8 +224,8 @@ function ProductCard(props) {
               )
             })
           }
-          <br />
-          <VisibilityIcon onClick={() => QuickView()} />
+          {/* <br /> */}
+          <VisibilityIcon style={{paddingLeft:"3px"}} onClick={() => QuickView()} />
         </button>
         {badges}
         <Link to={url.product(product)}>{image}</Link>
@@ -278,7 +277,7 @@ function ProductCard(props) {
             </div>
           }
         </div>
-      </>
+      </Card>
     )
   }
   return (

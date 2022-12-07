@@ -281,11 +281,11 @@ class ProductDetails extends Component {
                                         <div className="col-1">
                                             <a data-tip data-event='click focus'>
                                                 <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
-                                                    style={{ cursor: "pointer" }}
-                                                /></a>
-                                            <ReactTooltip globalEventOff='click' place="right" type="dark" effect="solid" clickable={true} zIndex={10}>
+                                                    style={{ cursor: "pointer" }} />
+                                            </a>
+                                            <ReactTooltip globalEventOff='click' place="top" type="dark" effect="solid" clickable={true} zIndex={10}>
                                                 <FacebookShareButton
-                                                    // style={{ border: "1px solid", width: "40px", height: "40px", transition: ".3s box-shadow ease", padding: "0.25em", borderRadius:"50%" }}
+                                                    className="rollIn"
                                                     openShareDialogOnClick
                                                     url={"https://myemporia.my/shop/products/" + product.ProductID}
                                                     quote="Check this out at MyEmporia, Get it now!"
@@ -356,7 +356,7 @@ class ProductDetails extends Component {
                                         <Chip variant="outlined" color="secondary" label="Brand: " size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
                                         <Chip variant="outlined" color="info" label={"SKU: " + product.SKU} size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
                                     </ul>
-                                    <div className="product__seller">
+                                    {/* <div className="product__seller">
                                         <Typography variant="caption">Seller:{" "}</Typography>
                                         {
                                             product.MerchantDetail !== undefined && product.MerchantDetail !== null && JSON.parse(product.MerchantDetail).map((merchantDetails) => {
@@ -402,7 +402,7 @@ class ProductDetails extends Component {
                                                 )
                                             })
                                         }
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="product__sidebar">
                                     <div className="product__prices">{prices}</div>
@@ -481,7 +481,7 @@ class ProductDetails extends Component {
                                                         }
                                                         onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
                                                         className="btn btn-primary product-card__addtocart"
-                                                        style={{borderRadius:"5px"}}
+                                                        style={{ borderRadius: "5px" }}
                                                     >
                                                         Add To Cart
                                                     </button>

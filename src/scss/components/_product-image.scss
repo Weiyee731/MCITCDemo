@@ -9,7 +9,7 @@
 .product-image__body {
     display: block;
     position: relative;
-    padding-bottom: #{100% * (1 / $product-image-ratio)};
+    padding-bottom: #{85% * (1 / $product-image-ratio)};
     width: 100%;
 }
 .product-image__img {

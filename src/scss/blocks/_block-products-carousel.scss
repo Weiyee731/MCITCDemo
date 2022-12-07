@@ -89,7 +89,6 @@
     }
 }
 
-
 .block-products-carousel[data-layout^="grid-"] {
     .product-card {
         @include product-card-grid();
@@ -131,9 +130,68 @@
     }
 }
 
-
 .block-products-carousel[data-layout="horizontal"] {
     .product-card {
         @include product-card-horizontal();
     }
 }
+
+.swiper-button-prev {
+    content: url("https://img.icons8.com/ios/50/null/long-arrow-left.png");
+    position: absolute;
+    top: 50%;
+    left: 2px !important;
+    width: 22px;
+    height: 22px;
+    padding: 8px;
+    z-index: 1;
+    cursor: pointer;
+    -moz-background-size: 22px 22px;
+    -webkit-background-size: 22px 22px;
+    background-size: 22px 22px;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: "1px 1px 1px 1px #9E9E9E";
+    &:hover {
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+        }
+  }
+  
+  .swiper-button-next {
+    content: url("https://img.icons8.com/ios/50/null/long-arrow-right.png");
+    position: absolute;
+    top: 50%;
+    right: 2px !important;
+    width: 22px;
+    height: 22px;
+    padding: 8px;
+    z-index: 1;
+    cursor: pointer;
+    -moz-background-size: 22px 22px;
+    -webkit-background-size: 22px 22px;
+    background-size: 22px 22px;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: "1px 1px 1px 1px #9E9E9E";
+    &:hover {
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+        }
+  }
+  
+  .swiper-wrapper {
+    margin-left: 1vw !important;
+  }
+
+  .btnBox {
+    border: 1px solid;
+    border-color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    background: white;
+    box-shadow: 1px 1px 1px 1px #9e9e9e;
+  }
+
+  .swiper-slide {
+    width: 230px !important;
+  }

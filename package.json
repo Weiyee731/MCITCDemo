@@ -155,6 +155,7 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.2.1",
     "swipe-js-iso": "^2.1.5",
+    "swiper": "^8.4.5",
     "typescript": "^4.4.4",
     "universal-cookie": "^4.0.4",
     "utf8-bytes": "^0.0.1",

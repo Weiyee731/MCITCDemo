@@ -15,10 +15,10 @@ import BlockProducts from '../blocks/BlockProducts';
 import BlockSlideShow from '../blocks/BlockSlideShow';
 import BlockMainCategories from '../blocks/BlockMainCategories';
 import BlockMoreButton from '../blocks/BlockMoreButton';
+import BlockProductsCarousel from "../blocks/BlockProductsCarousel";
 
 // data stubs
 import theme from '../../data/theme';
-
 
 function mapStateToProps(state) {
   return {
@@ -144,12 +144,12 @@ function HomePageTwo(props) {
         /> */}
 
         {/* <BlockFeatures layout="boxed" /> */}
-        {/* <BlockProductsCarousel
+        <BlockProductsCarousel
           title="New Arrivals"
-          layout="grid-4"
-          rows={2}
+          // layout="grid-4"
+          // rows={2}
           products={props.products.length > 0 ? props.products : []}
-        /> */}
+        />
         <BlockProducts
           title="Featured Products"
           layout="large-first"
