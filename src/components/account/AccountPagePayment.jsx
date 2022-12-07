@@ -110,6 +110,9 @@ const initialState = {
     isLimitCheck: false,
 
     merchantList: [],
+    totalDeduction: 0,
+    isVoucherApply: false
+
 }
 class AccountPagePayment extends Component {
     payments = payments;
@@ -318,6 +321,15 @@ class AccountPagePayment extends Component {
                             <Currency value={this.state.tax} />
                         </td>
                     </tr>
+                    {
+                        this.state.isVoucherApply === true &&
+                        <tr>
+                            <th style={{ textAlign: "right" }}>Discount</th>
+                            <td style={{ color: "red" }}>
+                                - <Currency value={this.state.totalDeduction} />
+                            </td>
+                        </tr>
+                    }
                     <tr>
                         <th style={{ textAlign: "right" }}>Final Total</th>
                         <td>
