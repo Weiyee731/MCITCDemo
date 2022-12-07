@@ -846,8 +846,11 @@ export class GitEpic {
         );
         let json = await response.json();
         json = JSON.parse(json);
+
         if (json[0].ReturnVal !== 1) {
           toast.error("Product " + payload.productName + " is NOT updated! Please try again.");
+        } else {
+          toast.success("Product " + payload.productName + " is updated quantity in cart!");
         }
         try {
           const response_1 = await fetch(
@@ -1315,7 +1318,6 @@ export class GitEpic {
   getAllProducts = (action$) =>
     action$.ofType(GitAction.GetProduct).switchMap(async ({ payload }) => {
       try {
-
         const response = await fetch(
           url +
           "Product_ItemListByType?Type=" +
@@ -2063,7 +2065,7 @@ export class GitEpic {
           url +
           "Product_CategoryListing"
         );
-         // wow
+        // wow
 
         let json = await response.json();
         json = JSON.parse(json);

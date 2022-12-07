@@ -9,6 +9,8 @@ import PropTypes from "prop-types";
 import ProductTabDescription from "./ProductTabDescription";
 import ProductTabSpecification from "./ProductTabSpecification";
 import ProductTabReviews from "./ProductTabReviews";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { Card,  } from "@mui/material";
 
 
@@ -24,9 +26,11 @@ class ProductTabs extends Component {
 
   render() {
 
-    console.log("PRODUCT TAB")
     const { withSidebar } = this.props;
     let { product } = this.props;
+    const baseColor = this.props.currentTab !== undefined && this.props.currentTab.baseColor
+    const highlightColor = this.props.currentTab !== undefined && this.props.currentTab.highlightColor
+
 
     const classes = classNames("product-tabs", {
       "product-tabs--layout--sidebar": withSidebar,
@@ -50,7 +54,7 @@ class ProductTabs extends Component {
         content: <ProductTabReviews product={product} />,
       },
     ];
-    
+
 
     const tabsButtons = tabs.map((tab) => {
       const classes = classNames("product-tabs__item", {
@@ -66,8 +70,11 @@ class ProductTabs extends Component {
           onClick={() => this.props.setCurrentTab(tab.key)}
           className={classes}
         >
-          {tab.title}
+          {this.props.currentTab !== undefined && this.props.currentTab.isTimerEnd === true && this.props.currentTab.isProductSet === true &&
+            tab.title
+          }
         </button>
+
       );
     });
 
@@ -79,7 +86,11 @@ class ProductTabs extends Component {
 
       return (
         <div key={tab.key} className={classes}>
-          {tab.content}
+          {
+            this.props.currentTab !== undefined && this.props.currentTab.isTimerEnd === true && this.props.currentTab.isProductSet === true ?
+              tab.content :
+              <Skeleton height={20} count={5} baseColor={baseColor} highlightColor={highlightColor} />
+          }
         </div>
       );
     });

@@ -10,6 +10,9 @@ import LogisticsFooter from "./LogisticsFooter";
 import ToTop from "./ToTop";
 import googleplaystore from "../../assets/googleplay.png";
 import appstore from "../../assets/appstore.png";
+import Logo from "../../assets/Emporia.png";
+import { Link } from "react-router-dom";
+import { Typography } from '@material-ui/core';
 // data stubs
 // import theme from "../../data/theme";
 
@@ -41,17 +44,33 @@ export default function Footer() {
       <div className="container">
         <div className="site-footer__widgets">
           <div className="row">
+            <div className="col-12 col-md-3 col-lg-5">
+              <h6 className='footer-links__title'>ABOUT US</h6>
+              <Link to="/">
+                <img
+                  className="site-header__logo_img"
+                  src={Logo}
+                  alt=""
+                  style={{ height: "3.5vw" }}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = Logo;
+                  }}
+                />
+              </Link>
+              <p>MyEmporia is a virtual shopping mall where you can get your goods with QUALITY GUARANTEE and 99.99% Satisfaction Guarantee.</p>
+            </div>
             <div className="col-12 col-md-3 col-lg-2">
               {/* <FooterContacts /> */}
-              <FooterLinks title="MyEmporia" items={informationLinks} />
+              <FooterLinks title="MYEMPORIA" items={informationLinks} />
             </div>
             <div className="col-12 col-md-3 col-lg-2">
-              <FooterLinks title="Information" items={otherInformationLinks} />
+              <FooterLinks title="INFORMATION" items={otherInformationLinks} />
             </div>
-            <div className="col-12 col-md-3 col-lg-4">
+            {/* <div className="col-12 col-md-3 col-lg-4">
               <PaymentFooter />
               <LogisticsFooter />
-            </div>
+            </div> */}
             {/* <div className="lzd-footer-app-downloads">
               <div>
                 <div className="title">Go where your heart beats</div>
@@ -64,8 +83,20 @@ export default function Footer() {
                 <img width="200" src={appstore} alt="App Store"></img>
               </div>
             </div> */}
-            <div className="col-12 col-md-3 col-lg-4">
+            <div className="col-12 col-md-3 col-lg-3">
               <FooterNewsletter />
+            </div>
+          </div>
+          <hr width="100%" />
+          <div className="row">
+            <div className="col-12 col-md-4 col-lg-4">
+              <Typography variant='caption'>© 2022 MyEmporia Sdn. Bhd. (1422486-P)</Typography>
+            </div>
+            <div className="col-12 col-md-3 col-lg-3">
+              <LogisticsFooter />
+            </div>
+            <div className="col-12 col-md-5 col-lg-5">
+              <PaymentFooter />
             </div>
           </div>
         </div>

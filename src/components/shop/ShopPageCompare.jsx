@@ -119,7 +119,7 @@ function ShopPageCompare(props) {
         });
 
         return (
-          <button type="button" onClick={run} className={classes}>
+          <button type="button" onClick={run} className={classes} style={{borderRadius:"5px"}}>
             Add To Cart
           </button>
         );

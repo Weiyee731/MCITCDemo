@@ -1,4 +1,5 @@
 // react
+import { Typography } from '@material-ui/core';
 import React from 'react';
 
 // application
@@ -7,7 +8,7 @@ import SocialLinks from '../shared/SocialLinks';
 export default function FooterNewsletter() {
     return (
         <div className="site-footer__widget footer-links">
-            <h5>Social Network</h5>
+            <h6 className='footer-links__title'>SOCIAL NETWORKS</h6>
             {/* <h5>Newsletter</h5> */}
             {/* <div className="footer-newsletter__text">
                 Sign up our newsletter to get the shocking deals and latest news!!
@@ -24,8 +25,8 @@ export default function FooterNewsletter() {
                 <button className="footer-newsletter__form-button btn btn-primary">Subscribe</button>
             </form> */}
 
-            <div className="footer-newsletter__text footer-newsletter__text--social">
-                <strong>Follow us on social networks</strong>
+            <div className="footer-newsletter__text footer-newsletter__text--social" style={{color:"#2b535e"}}>
+                <Typography variant='body1'>Follow us on social networks</Typography>
             </div>
 
             <SocialLinks className="footer-newsletter__social-links" shape="circle" />

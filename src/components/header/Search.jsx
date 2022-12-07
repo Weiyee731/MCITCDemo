@@ -209,6 +209,7 @@ function Search(props) {
             aria-label="Site search"
             type="text"
             autoComplete="off"
+            style={{borderRadius:"5px"}}
           />
 
           <button className="search__button search__button--type--submit" type="submit"
@@ -218,7 +219,7 @@ function Search(props) {
             <Search20Svg />
           </button>
           {closeButton}
-          <div className="search__border" />
+          <div className="search__border"style={{borderRadius:"5px"}} />
         </div>
         <Suggestions className="search__suggestions" context={context} products={suggestedProducts} />
       </div>

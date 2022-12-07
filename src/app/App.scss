@@ -1,7 +1,7 @@
 @import "../styles/main.scss";
 @import "../styles/sidebar-themes.scss";
 
-@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Helvetica&display=swap");
 @import "../styles/main.scss";
 @import "../styles/sidebar-themes.scss";
 $sidebar-bg-color: #1d1d1d;
@@ -17,7 +17,8 @@ body {
   margin: 0;
   height: 100vh;
   color: #353535;
-  font-family: "Roboto", sans-serif;
+  // font-family: "Roboto", sans-serif;
+  font-family: "Helvetica";
 }
 
 #root {

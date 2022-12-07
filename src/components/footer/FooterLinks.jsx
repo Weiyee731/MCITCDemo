@@ -4,6 +4,7 @@ import React from 'react';
 // third-party
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Typography } from '@material-ui/core';
 
 export default function FooterLinks(props) {
     const { title, items } = props;
@@ -18,9 +19,9 @@ export default function FooterLinks(props) {
 
     return (
         <div className="site-footer__widget footer-links">
-            <h5 className="footer-links__title" style={{ fontFamily: "Helvetica" }}>{title}</h5>
-            <ul className="footer-links__list" style={{ fontFamily: "Helvetica" }}>
-               <strong>{linksList}</strong> 
+            <h6 className="footer-links__title">{title}</h6>
+            <ul className="footer-links__list" >
+               <Typography variant='body1'>{linksList}</Typography> 
             </ul>
         </div>
     );

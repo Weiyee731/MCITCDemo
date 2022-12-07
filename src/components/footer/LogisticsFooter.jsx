@@ -6,16 +6,15 @@ import { Image } from 'react-bootstrap';
 import SocialLinks from '../shared/SocialLinks';
 import JNT from '../../assets/J&TExpress.jpg';
 import CityLink from '../../assets/citylink.png';
+import { Typography } from '@material-ui/core';
 
 
 export default function LogisticsFooter() {
     return (
         <div className="site-footer__widget footer-links">
-            <h5 style={{ fontFamily: "Helvetica" }}>Logistics</h5>
+            <Typography variant='caption' style={{fontWeight:"700", color: "#2b535e"}}>LOGISTICS</Typography>
             <div className='row'>
-                <div className="col-4">
-                    <Image width="100%" height="auto" src={CityLink} />
-                </div>
+                <Image width="25%" src={CityLink} style={{padding:"0.5vw"}} />
             </div>
         </div>
     );

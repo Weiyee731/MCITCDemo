@@ -13,6 +13,11 @@ import languages from "../../i18n";
 import StroykaSlick from "./StroykaSlick";
 import { ZoomIn24Svg } from "../../svg";
 import Logo from "../../assets/Emporia.png";
+
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
+
 const slickSettingsFeatured = {
   dots: false,
   arrows: false,
@@ -273,6 +278,17 @@ class ProductGallery extends Component {
     const { layout, images } = this.props;
     const { currentIndex } = this.state;
 
+
+    const checkReturn = () => {
+      let data = false
+      if (this.props.currentData !== undefined && this.props.currentData.isTimerEnd === true && this.props.currentData.isProductSet === true)
+        data = true
+      return data
+    }
+
+    const baseColor = this.props !== undefined && this.props.baseColor
+    const highlightColor = this.props !== undefined && this.props.highlightColor
+
     const featured = images.map((image, index) => (
       <div
         key={index}
@@ -339,16 +355,18 @@ class ProductGallery extends Component {
         </button>
       );
     });
-
     return (
       <div className="product__gallery">
         <div className="product-gallery">
           <div className="product-gallery__featured">
+
+
             {layout !== "quickview" && (
               <button
                 type="button"
                 className="product-gallery__zoom"
                 onClick={this.handleZoomButtonClick}
+                disabled={checkReturn() ? false : true}
               >
                 <ZoomIn24Svg />
               </button>
@@ -359,12 +377,20 @@ class ProductGallery extends Component {
               beforeChange={this.handleFeaturedBeforeChange}
               afterChange={this.handleFeaturedAfterChange}
             >
-              {featured}
+              {checkReturn() ?
+                featured
+                :
+                <Skeleton height={350} baseColor={baseColor} highlightColor={highlightColor} />
+              }
             </StroykaSlick>
           </div>
           <div className="product-gallery__carousel">
             <StroykaSlick {...slickSettingsThumbnails[layout]}>
-              {thumbnails}
+              {checkReturn() ?
+                thumbnails
+                :
+                <Skeleton height={50} width={50} baseColor={baseColor} highlightColor={highlightColor} />
+              }
             </StroykaSlick>
           </div>
         </div>

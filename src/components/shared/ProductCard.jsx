@@ -8,9 +8,13 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // application
+import AsyncAction from "./AsyncAction";
+import { cartAddItem } from "../../store/cart";
+import { quickviewOpen } from "../../store/quickview";
+
 import Currency from "./Currency";
 import Rating from "./Rating";
-import { Wishlist16Svg } from "../../svg";
+import { Wishlist16Svg, Quickview16Svg, } from "../../svg";
 import { url } from "../../services/utils";
 import Logo from "../../assets/Emporia.png"
 import { GitAction } from "../../store/action/gitAction";
@@ -20,9 +24,20 @@ import { Modal, ModalBody, ModalFooter } from 'reactstrap';
 import Product from './Product';
 import { Cross20Svg } from '../../svg';
 import { browserHistory } from "react-router";
+import { Typography, Card, } from "@mui/material";
 import {
   Divider, Button
 } from "@material-ui/core";
+import ProductDetails from './ProductDetails'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
+import Chip from '@mui/material/Chip';
+import ReactTooltip from "react-tooltip";
+import { HashLink } from "react-router-hash-link";
+import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
+
 
 
 function ProductCard(props) {
@@ -38,6 +53,12 @@ function ProductCard(props) {
     "product-card--layout--list": layout === "list",
     "product-card--layout--horizontal": layout === "horizontal",
   });
+
+
+  const baseColor = props !== undefined && props.baseColor
+  const highlightColor = props !== undefined && props.highlightColor
+  const [isQuickViewOpen, setQuickView] = useState(false);
+  const [productData, setProduct] = useState([]);
 
   let badges = [];
   let image;
@@ -174,57 +195,111 @@ function ProductCard(props) {
         )
     );
 
-  return (
-    <div className={containerClasses}>
-      {badges}
-      <Link to={url.product(product)}>{image}</Link>
-      <div className="product-card__info">
-        <div className="product-card__name">
-          <Link to={url.product(product)}>{product.ProductName}</Link>
+  const ProductCardlayout = () => {
+
+    const QuickView = () => {
+      setQuickView(true)
+      setProduct(product)
+    }
+
+    const colourList = [
+      { id: 1, color: "secondary" },
+      { id: 2, color: "primary" },
+    ]
+
+    const sampleTag = [
+      { id: 1, tag: "- 42%" },
+      { id: 2, tag: "free shipping" }
+    ]
+    return (
+      <>
+        <button
+          className={classNames("product-card__quickview")}
+          style={{ textAlign: "right" }}
+        >
+          {
+            sampleTag.length > 0 &&
+            sampleTag.map((x, index) => {
+              return (
+                <label ><Chip size="small" variant="filled" color={colourList[index].color} label={x.tag} /></label>
+              )
+            })
+          }
+          <br />
+          <VisibilityIcon onClick={() => QuickView()} />
+        </button>
+        {badges}
+        <Link to={url.product(product)}>{image}</Link>
+
+        <div className="product-card__info">
+          <div className="product-card__name">
+            <Link to={url.product(product)}>{product.ProductName}</Link>
+          </div>
+          <div className="product-card__rating">
+            <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
+            <div className="product-card__rating-legend">{product.ProductRating !== null ? parseFloat(product.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
+          </div>
+          {
+            product.ProductSold !== "0" && product.ProductSold !== null &&
+            <div
+              className="product-card__rating-legend mt-1"
+              style={{
+                marginLeft: '0px'
+              }}
+            >
+              {`(${product.ProductSold} Sold)`}
+            </div>
+          }
+          {features}
         </div>
-        <div className="product-card__rating">
-          <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
-          <div className="product-card__rating-legend">{product.ProductRating !== null ? parseFloat(product.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
-        </div>
-        {
-          product.ProductSold !== "0" && product.ProductSold !== null &&
+
+        <div className="product-card__actions">
+          <div className="product-card__availability">
+            Availability:{" "}
+            <span style={{ color: "#3d464d" }}>In Stock</span>
+          </div>
           <div
-            className="product-card__rating-legend mt-1"
             style={{
-              marginLeft: '0px'
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}
           >
-            {`(${product.ProductSold} Sold)`}
+            <label style={{ fontSize: "20px" }}>{price}</label>
+            {wishlistView}
           </div>
-        }
-        {features}
-      </div>
+          {
+            product.ShopState !== null &&
+            <div style={{ textAlign: "right", paddingRight: "10px" }}>
+              <label style={{ color: "#2b535e" }}>
+                {product.ShopState}
+              </label>
+            </div>
+          }
+        </div>
+      </>
+    )
+  }
+  return (
+    <div className={containerClasses}>
+      {props.currentData !== undefined ?
+        props.currentData.isProductSet === true && props.currentData.isTimerEnd === true ?
+          ProductCardlayout() :
+          <Skeleton height={300} baseColor={baseColor} highlightColor={highlightColor} />
+        :
+        ProductCardlayout()
+      }
 
-      <div className="product-card__actions">
-        <div className="product-card__availability">
-          Availability:{" "}
-          <span style={{ color: "#3d464d" }}>In Stock</span>
+      <Modal isOpen={isQuickViewOpen} toggle={() => setQuickView(!isQuickViewOpen)} centered size="xl">
+        <div className="quickview">
+          <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
+            <Cross20Svg />
+          </button>
+          <ProductDetails product={product} />
         </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}
-        >
-          <label style={{ fontSize: "20px" }}>{price}</label>
-          {wishlistView}
-        </div>
-        {
-          product.ShopState !== null &&
-          <div style={{ textAlign: "right", paddingRight: "10px" }}>
-            <label style={{ color: "#2b535e" }}>
-              {product.ShopState}
-            </label>
-          </div>
-        }
-      </div>
+      </Modal>
+
     </div>
   );
 

@@ -399,7 +399,7 @@ class ShopPageCart extends Component {
                                     <div className="col-2" ><Currency value={this.state.total}></Currency></div>
                                 </div> */}
                     <div className="mt-5">
-                        <button className="btn btn-primary" variant="outlined" color="primary"
+                        <button className="btn btn-primary" variant="outlined" color="primary" style={{borderRadius:"5px"}}
                             onClick={() => this.CheckOutOnClick(this.state.selectedProductDetailList)}
                         > Checkout
                         </button>

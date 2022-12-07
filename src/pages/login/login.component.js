@@ -435,6 +435,7 @@ class LoginComponent extends Component {
                   type="submit"
                   variant="contained"
                   className="btn btn-primary w-100"
+                  style={{borderRadius:"5px"}}
                   disabled={this.state.username !== '' && this.state.password !== '' ? false : true}
                 >
                   Sign In
