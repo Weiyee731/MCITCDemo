@@ -277,7 +277,7 @@ class ProductDetails extends Component {
                                         {this.wishlisting(product)}
                                     </div>
                                     <div className="row" style={{ display: "flex", flexDirection: "row", }}>
-                                        <h1 className="col-11 product__name">{product.ProductName}</h1>
+                                        <h3 className="col-11 product__name">{product.ProductName}</h3>
                                         <div className="col-1">
                                             <a data-tip data-event='click focus'>
                                                 <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
@@ -293,17 +293,20 @@ class ProductDetails extends Component {
                                                     <FacebookIcon size={30} round={true} />
                                                 </FacebookShareButton>
                                                 <TelegramShareButton
+                                                    className="fadeInDown"
                                                     openShareDialogOnClick
                                                     title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
                                                     url={"https://myemporia.my/shop/products/" + product.ProductID} >
                                                     <TelegramIcon size={30} round={true} />
                                                 </TelegramShareButton>
                                                 <TwitterShareButton
+                                                    className="fadeInUp"
                                                     openShareDialogOnClick
                                                     url={"https://myemporia.my/shop/products/" + product.ProductID} >
                                                     <TwitterIcon size={30} round={true} />
                                                 </TwitterShareButton>
                                                 <WhatsappShareButton
+                                                    className="fadeInRight"
                                                     openShareDialogOnClick
                                                     title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
                                                     separator={"/n "}

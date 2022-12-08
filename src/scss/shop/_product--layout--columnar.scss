@@ -199,11 +199,10 @@
     }
 }
 
-
 .rollIn {
     position: relative;
-    animation: rollIn 5s;
-    animation-duration: 5s;
+    animation: rollIn 2s;
+    animation-duration: 2s;
     animation-fill-mode: both;
 }
 
@@ -218,3 +217,79 @@
         transform: translateX(0px) rotate(0deg);
     }
 }
+
+.fadeInLeft {
+    position: relative;
+    animation: fadeInLeft 2s;
+    animation-duration: 2s;
+    animation-fill-mode: both;
+  }
+  
+  @keyframes fadeInLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(-100px);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .fadeInUp {
+    position: relative;
+    animation: fadeInUp 2s;
+    animation-duration: 2s;
+    animation-fill-mode: both;
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(100px);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fadeInDown {
+    position: relative;
+    animation: fadeInDown 2s;
+    animation-duration: 2s;
+    animation-fill-mode: both;
+  }
+  
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-100px);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fadeInRight {
+    position: relative;
+    animation: fadeInRight 2s;
+    animation-duration: 2s;
+    animation-fill-mode: both;
+  }
+  
+  @keyframes fadeInRight {
+    0% {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }

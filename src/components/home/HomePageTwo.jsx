@@ -144,6 +144,12 @@ function HomePageTwo(props) {
         /> */}
 
         {/* <BlockFeatures layout="boxed" /> */}
+        {/* <BlockProductsCarousel
+          title="Top Sellings"
+          // layout="grid-4"
+          // rows={2}
+          products={props.products.length > 0 ? props.products : []}
+        /> */}
         <BlockProductsCarousel
           title="New Arrivals"
           // layout="grid-4"
