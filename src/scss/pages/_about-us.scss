@@ -11,23 +11,42 @@
     background-size: cover;
     background-position: bottom center;
     height: 500px;
+    display: flex;
+    justify-content: center;
+    color: white;
 }
 .about-us__body {
-    background: $body-bg;
+    background: #eeebe5;
     min-height: 380px;
-    margin-top: -380px;
+    // margin-top: -380px;
     border-radius: 4px 4px 0 0;
-    padding: 75px 92px 45px;
+    padding: 45px 92px 45px;
 }
 .about-us__title {
     text-align: center;
     margin-bottom: 50px;
+    font-size: 4vw;
+}
+.about-us__title_container {
+    height: calc(35.75rem + 2px);
+    display: flex;
+    align-items: center;
+    position: absolute;
 }
 .about-us__text {
     text-align: center;
 }
+.about-us-text-title {
+    color:#7ea339;
+    text-transform: uppercase;
+    
+}
+.about-us__line {
+    border-top: 1px solid black;
+    width: 5rem;
+}
 .about-us__team {
-    margin-top: 75px;
+    // margin-top: 75px;
     text-align: center;
 }
 .about-us__team-subtitle {
@@ -123,7 +142,7 @@
         padding: 50px;
     }
     .about-us__team {
-        margin-top: 75px;
+        // margin-top: 75px;
     }
 }
 @media (max-width: breakpoint(sm-end)) and (min-width: breakpoint(sm-start)) {
@@ -135,11 +154,11 @@
     }
     .about-us__body {
         min-height: 290px;
-        margin-top: -290px;
+        // margin-top: -290px;
         padding: 40px;
     }
     .about-us__team {
-        margin-top: 50px;
+        // margin-top: 50px;
     }
 }
 @media (max-width: breakpoint(sm-end)) {
@@ -148,13 +167,13 @@
     }
     .about-us__body {
         min-height: 290px;
-        margin-top: -290px;
+        // margin-top: -290px;
         padding: 30px 24px;
     }
     .about-us__title {
         margin-bottom: 20px;
     }
     .about-us__team {
-        margin-top: 50px;
+        // margin-top: 50px;
     }
 }
