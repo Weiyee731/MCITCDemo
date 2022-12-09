@@ -6,12 +6,15 @@
 
 
 .product-image {}
+
 .product-image__body {
     display: block;
     position: relative;
     padding-bottom: #{85% * (1 / $product-image-ratio)};
     width: 100%;
+    
 }
+
 .product-image__img {
     display: block;
     position: absolute;
@@ -32,6 +35,7 @@
         }
     }
 }
+
 .product-image--location--gallery {
     .owl-carousel .owl-item & .product-image__img {
         max-width: 100%;

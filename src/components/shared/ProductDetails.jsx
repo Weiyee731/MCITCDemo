@@ -30,7 +30,6 @@ import Chip from '@mui/material/Chip';
 import ReactTooltip from "react-tooltip";
 import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
 
-
 class ProductDetails extends Component {
     constructor(props) {
         super(props);
@@ -279,41 +278,58 @@ class ProductDetails extends Component {
                                     <div className="row" style={{ display: "flex", flexDirection: "row", }}>
                                         <h3 className="col-11 product__name">{product.ProductName}</h3>
                                         <div className="col-1">
-                                            <a data-tip data-event='click focus'>
+                                            {/* <a data-tip data-event='click focus'>
                                                 <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
                                                     style={{ cursor: "pointer" }} />
                                             </a>
-                                            <ReactTooltip globalEventOff='click' place="top" type="dark" effect="solid" clickable={true} zIndex={10}>
-                                                <FacebookShareButton
-                                                    className="rollIn"
-                                                    openShareDialogOnClick
-                                                    url={"https://myemporia.my/shop/products/" + product.ProductID}
-                                                    quote="Check this out at MyEmporia, Get it now!"
-                                                    hashtag={"#MyEmporia"}>
-                                                    <FacebookIcon size={30} round={true} />
-                                                </FacebookShareButton>
-                                                <TelegramShareButton
-                                                    className="fadeInDown"
-                                                    openShareDialogOnClick
-                                                    title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
-                                                    url={"https://myemporia.my/shop/products/" + product.ProductID} >
-                                                    <TelegramIcon size={30} round={true} />
-                                                </TelegramShareButton>
-                                                <TwitterShareButton
-                                                    className="fadeInUp"
-                                                    openShareDialogOnClick
-                                                    url={"https://myemporia.my/shop/products/" + product.ProductID} >
-                                                    <TwitterIcon size={30} round={true} />
-                                                </TwitterShareButton>
-                                                <WhatsappShareButton
-                                                    className="fadeInRight"
-                                                    openShareDialogOnClick
-                                                    title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
-                                                    separator={"/n "}
-                                                    url={"https://myemporia.my/shop/products/" + product.ProductID}>
-                                                    <WhatsappIcon size={30} round={true} />
-                                                </WhatsappShareButton>
-                                            </ReactTooltip>
+                                            <ReactTooltip globalEventOff='click' place="top" type="dark" effect="solid" clickable={true} zIndex={10}> */}
+                                            <div class="sticky_share_btn">
+                                                <div class="fixed_share">
+                                                    <ul class="listing">
+                                                        <li class="facebook">
+                                                            <FacebookShareButton
+                                                                className="fadeInUp"
+                                                                openShareDialogOnClick
+                                                                url={"https://myemporia.my/shop/products/" + product.ProductID}
+                                                                quote="Check this out at MyEmporia, Get it now!"
+                                                                hashtag={"#MyEmporia"}>
+                                                                <FacebookIcon size={30} round={true} />
+                                                            </FacebookShareButton>
+                                                        </li>
+                                                        <li class="pinterest">
+                                                            <TelegramShareButton
+                                                                className="fadeInUp"
+                                                                openShareDialogOnClick
+                                                                title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                                                                url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                                                                <TelegramIcon size={30} round={true} />
+                                                            </TelegramShareButton>
+                                                        </li>
+                                                        <li class="twitter">
+                                                            <TwitterShareButton
+                                                                className="fadeInUp"
+                                                                openShareDialogOnClick
+                                                                url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                                                                <TwitterIcon size={30} round={true} />
+                                                            </TwitterShareButton>
+                                                        </li>
+                                                        <li class="whatsapp">
+                                                            <WhatsappShareButton
+                                                                className="fadeInUp"
+                                                                openShareDialogOnClick
+                                                                title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                                                                separator={"/n "}
+                                                                url={"https://myemporia.my/shop/products/" + product.ProductID}>
+                                                                <WhatsappIcon size={30} round={true} />
+                                                            </WhatsappShareButton>
+                                                        </li>
+                                                    </ul>
+                                                    <span class="share-toggle">
+                                                        <i class="fa fa-share-alt"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {/* </ReactTooltip> */}
                                         </div>
                                     </div>
                                     <div className="product__rating">

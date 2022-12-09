@@ -16,6 +16,7 @@ import BlockSlideShow from '../blocks/BlockSlideShow';
 import BlockMainCategories from '../blocks/BlockMainCategories';
 import BlockMoreButton from '../blocks/BlockMoreButton';
 import BlockProductsCarousel from "../blocks/BlockProductsCarousel";
+import BlockTopBrands from "../blocks/BlockTopBrands";
 
 // data stubs
 import theme from '../../data/theme';
@@ -131,7 +132,7 @@ function HomePageTwo(props) {
           <title>{theme.name}</title>
         </Helmet>
         <BlockSlideShow />
-
+        <BlockTopBrands />
         {/* <BlockMainCategories /> */}
 
         {/* <BlockMerchant
@@ -144,12 +145,6 @@ function HomePageTwo(props) {
         /> */}
 
         {/* <BlockFeatures layout="boxed" /> */}
-        {/* <BlockProductsCarousel
-          title="Top Sellings"
-          // layout="grid-4"
-          // rows={2}
-          products={props.products.length > 0 ? props.products : []}
-        /> */}
         <BlockProductsCarousel
           title="New Arrivals"
           // layout="grid-4"
