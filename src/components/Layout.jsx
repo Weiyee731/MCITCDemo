@@ -218,8 +218,8 @@ function Layout(props) {
     <React.Fragment>
       <Helmet></Helmet>
       <ToastContainer autoClose={5000} hideProgressBar />
-      <Quickview />
-      <MobileMenu />
+      {/* <Quickview /> */}
+      {/* <MobileMenu /> */}
       {
         // localStorage.getItem("management") === "true" ? (
         //   Access()

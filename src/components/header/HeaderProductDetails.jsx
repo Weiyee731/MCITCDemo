@@ -11,10 +11,9 @@ import { Wishlist16Svg } from "../../svg";
 
 // application;
 import 'react-loading-skeleton/dist/skeleton.css'
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography } from "@mui/material";
 import { browserHistory } from "react-router";
 import { toast } from "react-toastify";
-import zIndex from "@material-ui/core/styles/zIndex";
 
 class HeaderProductDetails extends Component {
   constructor(props) {

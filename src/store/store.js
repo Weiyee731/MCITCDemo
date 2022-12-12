@@ -3,12 +3,14 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { createEpicMiddleware, combineEpics } from 'redux-observable'
 import { counterReducer } from "./reducer/gitReducer"; //reducers
+import cartReducer from "./cart/cartReducer"; //reducers
 import { gitEpic } from "./epic/gitEpic"; //epics
+import rootReducer from './rootReducer';
 
 const rootEpic = combineEpics(
   //==================USER==========================//
   // gitEpic.getAllUserByTypeId,
-  gitEpic.LoginUser,
+  gitEpic.User_Login,
   gitEpic.LogoutUser,
   gitEpic.RegisterUser,
   gitEpic.getUserPage,
@@ -49,7 +51,6 @@ const rootEpic = combineEpics(
   gitEpic.getAllProductVariationByCategoryID,
   gitEpic.getAllCategories,
   gitEpic.getAllCategoriesListing,
-  gitEpic.AddProductMedia,
   //=================SUPPLIER=============================//
   gitEpic.getAllSupplierByUserStatus,
   gitEpic.registerSupplier,
@@ -106,7 +107,7 @@ const rootEpic = combineEpics(
 );
 
 const epicMiddleware = createEpicMiddleware();
-const rootReducer = combineReducers({ counterReducer });
+
 const middleware = [
   thunk,
   epicMiddleware
