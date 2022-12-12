@@ -9,46 +9,29 @@ import { GitEpic, gitEpic } from "./epic/gitEpic";
 
 const rootEpic = combineEpics(
   //==================USER==========================//
-  gitEpic.getAllUserByTypeId,
   gitEpic.LoginUser,
   gitEpic.LogoutUser,
   gitEpic.getUserProfile,
   // gitEpic.updateUserProfile,
   //==================PRODUCT==========================//
   gitEpic.getAllProducts,
-  gitEpic.getAllProductsByStatus,
   gitEpic.addProduct,
   gitEpic.updateProduct,
   gitEpic.deleteProduct,
   gitEpic.endorseProduct,
   gitEpic.addProductVariationDetail,
   gitEpic.getAllProductVariation,
-  gitEpic.addProductVariation,
   gitEpic.getAllProductVariationByCategoryID,
-  gitEpic.updateProductVariation,
-  gitEpic.deleteProductVariation,
   gitEpic.getAllCategories,
   gitEpic.getAllCategoriesListing,
-  gitEpic.addProductCategory,
-  gitEpic.updateProductCategory,
-  gitEpic.deleteProductCategory,
   //=================QUOTATION=============================//
-  gitEpic.AddProductQuotation,
-  gitEpic.AddedProductQuotation,
-  gitEpic.ViewProductQuotation,
+
   //=================SUPPLIER=============================//
   gitEpic.getAllSupplierByUserStatus,
   gitEpic.registerSupplier,
   gitEpic.endorseSupplier,
   //==================STORAGE==========================//
-  gitEpic.getAllShoplots,
-  gitEpic.addShoplot,
-  gitEpic.updateShoplot,
-  gitEpic.deleteShoplot,
-  gitEpic.getAllGridStorages,
-  gitEpic.addGridStorages,
-  gitEpic.updateGridStorages,
-  gitEpic.deleteGridStorages,
+
   //==================REVIEW==========================//
 
   gitEpic.viewProductReviewByProductID,
@@ -57,13 +40,6 @@ const rootEpic = combineEpics(
 
   gitEpic.getNotification,
   //==================REPORT==========================//
-  gitEpic.viewOverallSummary,
-
-  //==================COLOR==========================//
-  gitEpic.getAllColor,
-  gitEpic.addColor,
-  gitEpic.updateColor,
-  gitEpic.deleteColor,
   //==================PROMOTIONS=========================//
   gitEpic.getAllProductPromos,
   gitEpic.getAllPromoCodes,

@@ -62,44 +62,11 @@ import SideBarMenu from "../components/navigationsidebar/SideBarMenu";
 import Login from "../pages/login/login.component";
 import ResetPassword from "../pages/login/resetPassword.component";
 import SignUp from "../pages/signup/signup.component";
-import ProductDetailsComponent from "../pages/productDetails/productDetails.component";
-import AddProductComponent from "../pages/addProduct/addProduct.component";
-import AddSuppliersComponent from "../pages/addSuppliers/addSuppliers.component";
 import ViewProductComponent from "../pages/viewProduct/viewProduct.component";
 import ViewProductGeneralInfo from "../pages/viewProduct/viewProductGeneralInfo.component";
-import ViewSupplierComponent from "../pages/viewSupplier/viewSupplier.component";
 import DashboardComponent from "../pages/dashboard/dashboard.component";
-import viewProductEndorsementComponent from "../pages/viewProductEndorsement/viewProductEndorsement.component";
-import ViewSupplierEndorsementComponent from "../pages/viewSupplierEndorsement/viewSupplierEndorsement.component";
-import ColorPickerComponent from "../pages/ColorPicker/ColorPicker.component";
-import ViewProductCategoryComponent from "../pages/viewProductCategories/viewProductCategories.component";
-import AddProductCategoryComponent from "../pages/addProductCategory/addProductCategory.component";
-import ViewProductVariationComponent from "../pages/viewProductVariation/viewProductVariation.component";
-import ViewReviewComponent from "../pages/viewReview/viewReview.component";
-import ProductStockInComponent from "../pages/productStockIn/productStockIn.component";
 import userProfile from "../pages/userProfile/userProfile.component";
-import addPromotionBannerComponent from "../pages/addPromotionBanner/addPromotionBanner";
-import ViewProductPromotionComponent from "../pages/viewProductPromotion/viewProductPromotion.component";
-import ViewSettingsComponent from "../pages/viewSettings/viewSettings.component";
-import addPromoCodeComponent from "../pages/addPromoCode/addPromoCode.component";
-import ViewTransactionsComponent from "../pages/viewTransactions/viewTransactions.component";
-import ViewPromoCodes from "../pages/viewPromoCodes/viewPromoCodes.component";
-import ViewPromoCodesDetails from "../pages/promoCodeDetails/promoCodeDetails.component";
-import TransactionDetailsComponent from "../pages/transactionDetails/transactionDetails.component";
-import viewUserComponent from "../pages/viewUser/viewUser.component";
-import AddManualStockInComponent from "../pages/addManualStockIn/addManualStockIn.component";
-import ViewProductOrders from "../pages/viewProductOrders/viewProductOrders.component";
-import ViewStockInEndorsementComponent from "../pages/viewStockInEndorsement/viewStockInEndorsement.component";
-import ViewPromotionBanner from "../pages/viewPromotionBanners/viewPromotionBanner.component";
-import addPromotion from "../pages/addPromotion/addPromotion.component";
-import supplierResponse from "../pages/supplierResponse/supplierResponse.component";
-import ViewProductStockOutComponent from "../pages/viewProductStockOut/viewProductStockOut.component";
-import ViewStockOutDetailsComponent from "../pages/viewStockOutDetails/viewStockOutDetails.component";
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
-import ViewMerchantsComponent from "../pages/viewMerchant/viewMerchants.component";
-// import viewUserMail from "../pages/viewUserMail/viewUserMail.component";
-import AddProductAllInOne from "../pages/addProduct/addProductAllInOne.component";
-import EditShopProfile from "../pages/editShopProfile/editShopProfile.component";
 
 
 
@@ -199,34 +166,11 @@ const Access = () => {
             }}
           >
             <Switch>
-              {/* <Route path="/productDetails" component={ProductDetailsComponent} /> */}
               <Route path="/dashboard" component={DashboardComponent} />
               <Route path="/viewTrend" component={DashboardComponent} />
-              <Route path="/ColorPicker" component={ColorPickerComponent} />
+
               <Route path="/viewProduct" component={ViewProductComponent} />
-
-              {/* <Route
-                exact
-                path="/shop/ProductListing/type:selectedtype&typevalue:selectedtypevalue"
-                render={(props) => (
-                  <>
-                    <BlockListingDetails
-                      {...props}
-                      layout="standard"
-                      selectedtype={props.match.params.type}
-                      selectedtypevalue={props.match.params.typevalue}
-                    />
-                  </>
-                )}
-              /> */}
-
               <Route path="/viewOrder" component={ViewProductComponent} />
-              <Route
-                path="/viewTransactioDetails"
-                component={TransactionDetailsComponent}
-              />
-              <Route path="/addProduct" component={AddProductComponent} />
-              <Route path="/addSuppliers" component={AddSuppliersComponent} />
               <Route path="/login" component={Login} />
               <Route
                 exact
@@ -238,10 +182,8 @@ const Access = () => {
                   />
                 )}
               />
-              {/* <Route path="/resetPassword" component={ResetPassword}/> */}
               <Route path="/signup" component={SignUp} />
               <Route path="/viewSaleByProduct" component={ViewProductComponent} />
-              <Route path="/viewSettings" component={ViewSettingsComponent} />
               <Route
                 path="/viewTargetCustomer"
                 component={ViewProductComponent}
@@ -261,111 +203,7 @@ const Access = () => {
               />
               <Route path="/viewSales" component={ViewProductComponent} />
               <Route path="/viewWishlist" component={ViewProductComponent} />
-              <Route path="/viewSupplier" component={ViewSupplierComponent} />
-              <Route
-                path="/viewSupplierEndorsement"
-                component={ViewSupplierEndorsementComponent}
-              />
-              <Route
-                path="/viewProductCategories"
-                component={ViewProductCategoryComponent}
-              />
-              <Route
-                path="/addProductCategory"
-                component={AddProductCategoryComponent}
-              />
-              <Route
-                path="/viewProductEndorsement"
-                component={viewProductEndorsementComponent}
-              />
-              <Route
-                path="/viewProductVariation"
-                component={ViewProductVariationComponent}
-              />
-              <Route path="/viewReviews" component={ViewReviewComponent} />
               <Route path="/viewProfile" component={userProfile} />
-              <Route
-                path="/productStocksIn"
-                component={ProductStockInComponent}
-              />
-              <Route
-                path="/manualproductStocksIn"
-                component={AddManualStockInComponent}
-              />
-              <Route
-                path="/viewProductStockOut"
-                component={ViewProductStockOutComponent}
-              />
-              <Route
-                path="/viewStockOutDetail"
-                component={ViewStockOutDetailsComponent}
-              />
-              <Route
-                path="/viewProductPromotion"
-                component={ViewProductPromotionComponent}
-              />
-              <Route
-                path="/addPromotionBanner"
-                component={addPromotionBannerComponent}
-              />
-              <Route path="/addPromoCode" component={addPromoCodeComponent} />
-              <Route path="/viewTransactions" component={ViewTransactionsComponent} />
-              <Route path="/viewPromoCodes" component={ViewPromoCodes} />
-              <Route
-                path="/viewPromoCodesDetails"
-                component={ViewPromoCodesDetails}
-              />
-              <Route path="/viewUser" component={viewUserComponent} />
-              <Route path="/viewMerchants" component={ViewMerchantsComponent} />
-              <Route path="/viewProductOrders" component={ViewProductOrders} />
-              <Route
-                path="/viewStockEndorsement"
-                component={ViewStockInEndorsementComponent}
-              />
-              <Route
-                path="/viewPromotionBanner"
-                component={ViewPromotionBanner}
-              />
-              <Route path="/addPromotion" component={addPromotion} />
-              <Route path="/supplierResponse" component={supplierResponse} />
-
-              <Route path="/addProductsAllIn" component={AddProductAllInOne} />
-              <Route path="/editShopProfile" component={EditShopProfile} />
-              {/* <Route path="/viewUserMail" component={viewUserMail} /> */}
-              {/* <Route path="/sendUserMail" component={sendUserMail} /> */}
-
-              <Route
-                exact
-                path="/viewProductDetail/:productId"
-                render={(props) => (
-                  <>
-                    {console.log("HERE PROPS", props)}
-                    {console.log("HERE PROPS", props.match.params)}
-                    <ViewProductGeneralInfo
-                      {...props}
-                      layout="standard"
-                      productId={props.match.params.productId}
-                    />
-                  </>
-                )}
-              />
-
-              <Route
-                exact
-                path="/viewProductDetailList/:productId"
-                render={(props) => (
-                  <>
-                    {console.log("HERE PROPS", props)}
-                    {console.log("HERE PROPS", props.match.params)}
-                    <ProductDetailsComponent
-                      {...props}
-                      layout="standard"
-                      productId={props.match.params.productId}
-                    />
-                  </>
-                )}
-              />
-
             </Switch>
           </div>
         </div>

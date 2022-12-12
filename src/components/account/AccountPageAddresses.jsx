@@ -11,26 +11,21 @@ import { GitAction } from "../../store/action/gitAction";
 import AccountPageAddAddress from "../../components/account/AccountPageAddAddress";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
-import TableContainer from "@material-ui/core/TableContainer";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/Add";
-import EditIcon from "@material-ui/icons/Edit";
-import CardActions from "@material-ui/core/CardActions";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import CardActions from "@mui/material/CardActions";
 import AccountPageEditAddress from "../../components/account/AccountPageEditAddress";
 import {
   CardContent,
@@ -41,14 +36,13 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import { Row } from "@material-ui/data-grid";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
-import PhoneOutlinedIcon from "@material-ui/icons/PhoneOutlined";
-import EmailOutlinedIcon from "@material-ui/icons/EmailOutlined";
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
+} from "@mui/material";
+import Button from "@mui/material/Button";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
 function mapStateToProps(state) {
   return {

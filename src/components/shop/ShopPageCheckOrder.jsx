@@ -5,7 +5,7 @@ import { browserHistory } from "react-router";
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { Link, Redirect } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 // application
 import Currency from "../shared/Currency";
 // data stubs
@@ -15,7 +15,7 @@ import { GitAction } from "../../store/action/gitAction";
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import { toast } from "react-toastify";
 import HandleAddress from '../shared/HandleAddress'
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 
 class PageCheckOrder extends Component {
   payments = payments;

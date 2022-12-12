@@ -15,9 +15,9 @@ import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
 import Logo from "../../assets/Emporia.png";
 import PageCheckout from "./ShopPageCheckout";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 
-import Checkbox from "@material-ui/core/Checkbox";
+import Checkbox from "@mui/material/Checkbox";
 import styled from 'styled-components';
 
 import { StyleSheet, css } from "aphrodite";

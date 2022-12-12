@@ -12,15 +12,8 @@ import {
   Row,
   Col,
 } from "reactstrap";
-// core components
-import {
-  dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart,
-} from "./variables/charts.js";
-import MaterialTable from "material-table";
-import HouseIcon from '@material-ui/icons/House';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import HouseIcon from '@mui/icons-material/House';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 function mapStateToProps(state) {
   return {
@@ -221,7 +214,7 @@ class Dashboard extends Component {
           <Col md="4">
             <div className="row" style={{ fontSize: 12, width: '100%', height: "40vh", overflowY: 'auto' }} >
               <div className="col-12">
-                <MaterialTable
+                {/* <MaterialTable
                   title="Current Stock "
                   columns={[
                     {
@@ -253,7 +246,7 @@ class Dashboard extends Component {
                       padding: '5px'
                     }
                   }}
-                />
+                /> */}
               </div>
 
             </div>
@@ -263,7 +256,7 @@ class Dashboard extends Component {
         <Row>
           <Col md="4">
             <div>
-              <MaterialTable
+              {/* <MaterialTable
                 title="Customer Reviews"
                 columns={[
                   {
@@ -287,12 +280,12 @@ class Dashboard extends Component {
                     padding: '0'
                   }
                 }}
-              />
+              /> */}
             </div>
           </Col>
           <Col md="4">
             <div>
-              <MaterialTable
+              {/* <MaterialTable
                 title="Hot Sales Items"
                 columns={[
                   {
@@ -324,12 +317,12 @@ class Dashboard extends Component {
                     padding: '5px'
                   }
                 }}
-              />
+              /> */}
             </div>
           </Col>
           <Col md="4">
             <div>
-              <MaterialTable
+              {/* <MaterialTable
                 title="Cold Sales Items"
                 columns={[
                   {
@@ -361,7 +354,7 @@ class Dashboard extends Component {
                     padding: '5px'
                   }
                 }}
-              />
+              /> */}
             </div>
           </Col>
         </Row>

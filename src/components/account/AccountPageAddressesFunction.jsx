@@ -9,7 +9,7 @@
 // // data stubs
 // import dataAddresses from "../../data/accountAddresses";
 // import theme from "../../data/theme";
-// import Table from "@material-ui/core/Table";
+// import Table from "@mui/material/Table";
 // import {
 //   Button,
 //   TableCell,
@@ -17,8 +17,8 @@
 //   TableHead,
 //   Typography,
 //   TableBody,
-// } from "@material-ui/core";
-// import { DataGrid } from '@material-ui/data-grid';
+// } from "@mui/material";
+// import { DataGrid } from '@mui/x-data-grid';
 
 // // function AccountPageAddress(props) {
 // //   const columns = [

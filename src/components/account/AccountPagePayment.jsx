@@ -5,20 +5,20 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import {
     Select
-} from "@material-ui/core";
+} from "@mui/material";
 // application
 import Currency from "../shared/Currency";
 // data stubs
 import payments from "../../data/shopPayments";
 import { GitAction } from "../../store/action/gitAction";
-import IconButton from "@material-ui/core/IconButton";
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import IconButton from "@mui/material/IconButton";
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import { toast } from "react-toastify";
 import TextField from '@mui/material/TextField';
 // import text from './EX00013776.key'; // Relative path to your File
 import axios from "axios";
-import FormControl from "@material-ui/core/FormControl";
+import FormControl from "@mui/material/FormControl";
 
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';

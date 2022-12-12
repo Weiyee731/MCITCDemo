@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import "./userProfile.component.css";
-import { Card, CardMedia, Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import CardContent from "@material-ui/core/CardContent";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import { Card, CardMedia, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import CardContent from "@mui/material/CardContent";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 // import classes from '*.module.css';
 
 function createData(Column1, Column2) {

@@ -13,19 +13,19 @@ import theme from "../../data/theme";
 import { GitAction } from "../../store/action/gitAction";
 import "react-step-progress/dist/index.css";
 import { toast } from "react-toastify";
-import { Card, Divider } from "@material-ui/core";
-import CardContent from "@material-ui/core/CardContent";
+import { Card, Divider } from "@mui/material";
+import CardContent from "@mui/material/CardContent";
 import {
   OutlinedInput,
   InputAdornment,
   IconButton,
   TextField,
-} from "@material-ui/core";
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import FormControl from "@mui/material/FormControl";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import FormHelperText from "@mui/material/FormHelperText";
 import OtpInput from "react-otp-input";
 import PhoneInput, {
   formatPhoneNumber,

@@ -25,7 +25,7 @@ import {
     Card,
     CardMedia,
     CardContent,
-} from "@material-ui/core";
+} from "@mui/material";
 
 function mapStateToProps(state) {
     return {

@@ -24,7 +24,7 @@ import { sha256, sha224 } from 'js-sha256';
 import { stringToBytes } from 'convert-string-bytes'
 import { Crypto } from 'crypto-js'
 import { createBrowserHistory } from 'history';
-import { runInThisContext } from "vm";
+// import { runInThisContext } from "vm";
 import DeliveryFee from "./ShopPageDeliveryFee";
 
 const crypto = require('crypto');

@@ -6,7 +6,7 @@ import { Image } from 'react-bootstrap';
 import SocialLinks from '../shared/SocialLinks';
 import JNT from '../../assets/J&TExpress.jpg';
 import CityLink from '../../assets/citylink.png';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 
 export default function LogisticsFooter() {

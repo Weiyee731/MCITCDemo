@@ -7,8 +7,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+} from "@mui/material";
+import Button from "@mui/material/Button";
 import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import "react-table/react-table.css";
@@ -16,23 +16,23 @@ import ProductPurchaseOrderComponent from "../productPurchaseOrder/productPurcha
 import ProductPurchaseOrderDetailsComponent from "../productPurchaseOrderDetails/productPurchaseOrderDetails.component";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
-import TableContainer from "@material-ui/core/TableContainer";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import AppBar from "@material-ui/core/AppBar";
-import Box from "@material-ui/core/Box";
+import { lighten, makeStyles } from "@mui/styles";
+import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
 
 function mapStateToProps(state) {
   return {

@@ -7,20 +7,20 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+} from "@mui/material";
+import Button from "@mui/material/Button";
 import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import "react-table/react-table.css";
 import DeliverableTransactionDetails from "../deliverableTransactionDetails/deliverableTransactionDetails.component";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
-import TableContainer from "@material-ui/core/TableContainer";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Paper from "@material-ui/core/Paper";
+import { lighten, makeStyles } from "@mui/styles";
+import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Paper from "@mui/material/Paper";
 import SearchBox from "../../components/SearchBox/SearchBox";
 
 function mapStateToProps(state) {

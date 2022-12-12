@@ -1,6 +1,6 @@
 import React from "react";
 import Cookies from "universal-cookie";
-// import Button from "@material-ui/core/Button";
+// import Button from "@mui/material/Button";
 
 const cookies = new Cookies();
 

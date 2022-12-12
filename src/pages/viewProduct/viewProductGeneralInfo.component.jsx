@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { GitAction } from "../../store/action/gitAction";
 import { Card, CardText, CardBody } from 'reactstrap'
 import { Accordion } from 'react-bootstrap-accordion'
 import 'react-bootstrap-accordion/dist/index.css'
 import "../../app/App.scss";
 import "react-table/react-table.css";
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 
 
 // Share components
@@ -21,14 +21,14 @@ import Logo from "../../assets/Emporia.png";
 import LoadingPanel from "../../components/shared/loadingPanel";
 import InputNumber from '../../components/shared/InputNumber';
 import { minHeight } from "@mui/system";
-import ViewReviewDetails from '../viewReview/viewReviewDetails'
+// import ViewReviewDetails from '../viewReview/viewReviewDetails'
 
 
 // import CancelIcon from '@mui/icons-material/Cancel';
 import CancelIcon from '@mui/icons-material/HighlightOffTwoTone';
 import CheckCircleIcon from '@mui/icons-material/CheckCircleTwoTone';
 import { toast } from "react-toastify";
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 // import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
@@ -727,7 +727,7 @@ class ViewProductGeneralInfo extends Component {
                               </div>
                             }
                           </div>
-                          <ViewReviewDetails
+                          {/* <ViewReviewDetails
                             isOpen={this.state.isViewReviewDetails}
                             handleOpen={this.handleReview}
                             handleComment={this.handleReply}
@@ -736,7 +736,7 @@ class ViewProductGeneralInfo extends Component {
 
                             state={this.state.selectedReviews}
                             data={this.state}
-                          />
+                          /> */}
                           <div style={{ marginTop: "15px" }}>
                             <Pagination
                               current={this.state.page}

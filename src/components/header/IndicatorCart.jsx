@@ -14,7 +14,7 @@ import Indicator from "./Indicator";
 import { Cart20Svg, Cross10Svg } from "../../svg";
 import { url } from "../../services/utils";
 import Logo from "../../assets/Emporia.png";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { GitAction } from "../../store/action/gitAction";
 
 class IndicatorCart extends React.Component {

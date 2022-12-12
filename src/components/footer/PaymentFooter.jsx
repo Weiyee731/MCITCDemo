@@ -1,7 +1,7 @@
 // react
 import React from 'react';
 import { Image } from 'react-bootstrap';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 // application
 import SocialLinks from '../shared/SocialLinks';

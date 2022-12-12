@@ -1,3619 +1,2975 @@
-import { Observable } from "rxjs";
-import { ActionsObservable } from "redux-observable";
+import 'rxjs'
+
 import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
-
-// const url = "https://triviix.com/emporiaApi/api/emporia/"
+import axios from "axios";
+const { filter, map } = require('rxjs/operators');
 const url = "https://myemporia.my/emporiaApi/api/emporia/"
-
-
-
-
-// Triviix\Emporia\EmporiaApi
-// const url = "http://tourism.denoo.my/emporiaApi/api/emporia/"
-// const url = "localhost/emporia/api/emporia/"
 export class GitEpic {
-
-  // USER
-
-  // getAllUserByTypeId = (action$) =>
-  //   action$.ofType(GitAction.GetUser).switchMap(async () => {
-  //     try {
-  //       const response = await fetch(url +
-  //         "User_ProfileListByUserType?UserTypeID=17"
-  //       );
-  //       let json = await response.json();
-  //       json = JSON.parse(json)
-  //       return {
-  //         type: GitAction.GotUser,
-  //         payload: json,
-  //       };
-  //     } catch (error) {
-  //       alert('getAllUserByTypeId: ' + error);
-  //       return {
-  //         type: GitAction.GotUser,
-  //         payload: [],
-  //       };
-  //     }
-  //   });
-
-  LoginUser = (action$) =>
-    action$.ofType(GitAction.Login).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(url +
-          "User_Login?username=" +
-          payload.username +
-          "&password=" +
-          payload.password +
-          "&ProjectID=2&ProjectDomain=myemporia"
-        );
-        let json = await response.json();
-        json = JSON.parse(json)
-        return {
-          type: GitAction.UserLoggedInWithData,
-          payload: json,
-        };
-      } catch (error) {
-        alert('LoginUser: ' + error);
-        return {
-          type: GitAction.UserLoggedInWithData,
-          payload: [],
-        };
+  User_Login = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.Login), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_Login?username=" +
+            action.payload.username +
+            "&password=" +
+            action.payload.password +
+            "&ProjectID=2&ProjectDomain=myemporia")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UserLoggedInWithData, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UserLoggedInWithData, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: User_Login. Please check on URL")
+          return dispatch({ type: GitAction.UserLoggedInWithData, payload: [] });
+        }
       }
-    });
-
+    }));
 
   LogoutUser = action$ =>
-    action$.ofType(GitAction.Logout).switchMap(({ payload }) => {
-      return fetch(url +
-        "Audit_AddUserLogout?USERID=" +
-        payload.UserID)
-        .then(response => response.json())
-        .then(json => {
-          if (JSON.parse(json)[0].LoginAuditID !== "undefined") {
-            json = json
-          } else {
-            json = [];
-          }
-          return {
-            type: GitAction.UserLoggedOut,
-            payload: JSON.parse(json)
-          };
-        })
-        .catch(error => toast.error("Error code: 8001"));
-    });
-
-  RegisterUser = (action$) =>
-    action$.ofType(GitAction.Register).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "User_RegisterSimplified?userEmail=" +
-          payload.Email +
-          "&password=" +
-          payload.Password +
-          "&ProjectID=2"
-        );
-
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        if (json[0].ReturnVal !== '0') {
-          toast.success("Successfully Registered")
+    action$.pipe(filter(action => action.type === GitAction.Logout), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Audit_AddUserLogout?USERID=" +
+            action.payload.UserID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UserLoggedOut, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UserLoggedOut, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: LogoutUser. Please check on URL")
+          return dispatch({ type: GitAction.UserLoggedOut, payload: [] });
         }
-
-        return {
-          type: GitAction.UserRegistered,
-          payload: json,
-        };
-      } catch (error) {
-        alert('RegisterUser: ' + error);
-        return {
-          type: GitAction.UserRegistered,
-          payload: [],
-        };
       }
-    });
+    }));
 
-
-  checkUser = (action$) =>
-    action$.ofType(GitAction.CheckUser).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_CheckDuplicate?email=" +
-          payload.Email +
-          "&ProjectID=2"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        if (json[0].ReturnVal !== '0' && payload.Value !== "forgetPassword") {
-          toast.error("This email has been register before. Please try another email.")
+  RegisterUser = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.Register), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_RegisterSimplified?userEmail=" +
+            action.payload.Email +
+            "&password=" +
+            action.payload.Password +
+            "&ProjectID=2")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UserRegistered, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UserRegistered, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: RegisterUser. Please check on URL")
+          return dispatch({ type: GitAction.UserRegistered, payload: [] });
         }
-
-
-        return {
-          type: GitAction.CheckedUser,
-          payload: json,
-        };
-      } catch (error) {
-        alert('checkUser: ' + error);
-        return {
-          type: GitAction.CheckedUser,
-          payload: [],
-        };
       }
-    });
+    }));
 
-  verifyPassword = (action$) =>
-    action$.ofType(GitAction.VerifyPassword).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ValidationByType?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.VerifyType +
-          "&VALIDATIONFIELD=" +
-          payload.password
-
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.VerifiedPassword,
-          payload: json,
-        };
-      } catch (error) {
-        alert('VerifiedPassword: ' + error);
-        return {
-          type: GitAction.VerifiedPassword,
-          payload: [],
-        };
+  checkUser = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.CheckUser), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_CheckDuplicate?email=" +
+            action.payload.Email +
+            "&ProjectID=2")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.CheckedUser, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.CheckedUser, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: RegisterUser. Please check on URL")
+          return dispatch({ type: GitAction.CheckedUser, payload: [] });
+        }
       }
-    });
+    }));
 
-  sentOTPVerification = (action$) =>
-    action$.ofType(GitAction.SendOTPVerification).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "User_SentOTPVerification?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.GETOTPTYPE +
-          "&VALIDATIONFIELD=" +
-          payload.UpdatedValue
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.SentOTPVerification,
-          payload: json,
-        };
-      } catch (error) {
-        alert('SentOTPVerification: ' + error);
-        return {
-          type: GitAction.SentOTPVerification,
-          payload: [],
-        };
+  verifyPassword = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.VerifyPassword), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_ValidationByType?USERID=" +
+            action.payload.USERID +
+            "&TYPE=" +
+            action.payload.VerifyType +
+            "&VALIDATIONFIELD=" +
+            action.payload.password)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.VerifiedPassword, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.VerifiedPassword, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: RegisterUser. Please check on URL")
+          return dispatch({ type: GitAction.VerifiedPassword, payload: [] });
+        }
       }
-    });
+    }));
 
-  updateContact = (action$) =>
-    action$.ofType(GitAction.UpdateContact).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "User_UpdateProfileSpecificField?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.UPDATETYPE +
-          "&OTP=" +
-          payload.otp +
-          "&UPDATEDFIELD=" +
-          payload.UpdatedValue
-
-        );
-        let json = await response.json();
-
-        json = JSON.parse(json);
-        return {
-          type: GitAction.UpdatedContact,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdatedContact: ' + error);
-        return {
-          type: GitAction.UpdatedContact,
-          payload: [],
-        };
+  sentOTPVerification = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.SendOTPVerification), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_SentOTPVerification?USERID=" +
+            action.payload.USERID +
+            "&TYPE=" +
+            action.payload.GETOTPTYPE +
+            "&VALIDATIONFIELD=" +
+            action.payload.UpdatedValue)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.SentOTPVerification, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.SentOTPVerification, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: RegisterUser. Please check on URL")
+          return dispatch({ type: GitAction.SentOTPVerification, payload: [] });
+        }
       }
-    });
+    }));
 
-  updateEmail = (action$) =>
-    action$.ofType(GitAction.UpdateEmail).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_UpdateProfileSpecificField?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.UPDATETYPE +
-          "&OTP=" +
-          payload.otp +
-          "&UPDATEDFIELD=" +
-          payload.UpdatedValue
-
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.UpdatedEmail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdatedContact: ' + error);
-        return {
-          type: GitAction.UpdatedEmail,
-          payload: [],
-        };
+  updateContact = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateContact), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_UpdateProfileSpecificField?USERID=" +
+            action.payload.USERID +
+            "&TYPE=" +
+            action.payload.UPDATETYPE +
+            "&OTP=" +
+            action.payload.otp +
+            "&UPDATEDFIELD=" +
+            action.payload.UpdatedValue)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedContact, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedContact, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: RegisterUser. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedContact, payload: [] });
+        }
       }
-    });
+    }));
 
-  updatePassword = (action$) =>
-    action$.ofType(GitAction.UpdatePassword).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_UpdateProfileSpecificField?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.UPDATETYPE +
-          "&OTP=" +
-          payload.otp +
-          "&UPDATEDFIELD=" +
-          payload.UpdatedValue
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.UpdatedPassword,
-          payload: json,
-        };
-      } catch (error) {
-        alert('updatePassword: ' + error);
-        return {
-          type: GitAction.UpdatedPassword,
-          payload: [],
-        };
+  updateEmail = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateEmail), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_UpdateProfileSpecificField?USERID=" +
+            action.payload.USERID +
+            "&TYPE=" +
+            action.payload.UPDATETYPE +
+            "&OTP=" +
+            action.payload.otp +
+            "&UPDATEDFIELD=" +
+            action.payload.UpdatedValue)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedEmail, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedEmail, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: RegisterUser. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedEmail, payload: [] });
+        }
       }
-    });
-  // updatePassword = (action$) =>
-  //   action$.ofType(GitAction.UpdatePassword).switchMap(async ({ payload }) => {
+    }));
+
+  updatePassword = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.updatePassword), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_UpdateProfileSpecificField?USERID=" +
+            action.payload.USERID +
+            "&TYPE=" +
+            action.payload.UPDATETYPE +
+            "&OTP=" +
+            action.payload.otp +
+            "&UPDATEDFIELD=" +
+            action.payload.UpdatedValue)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedPassword, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedPassword, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: updatePassword. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedPassword, payload: [] });
+        }
+      }
+    }));
+
+  getUserPage = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetPages), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_ViewPage?ROLEGROUPID=" +
+            action.payload)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotPages, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotPages, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getUserPage. Please check on URL")
+          return dispatch({ type: GitAction.GotPages, payload: [] });
+        }
+      }
+    }));
+
+  getUserProfile = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetUserProfile), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_ProfileListByType?TYPE=" + action.payload.TYPE +
+            "&TYPEVALUE=" + action.payload.TYPEVALUE +
+            "&USERID=" + action.payload.USERID +
+            "&UserRoleID=" + action.payload.USERROLEID +
+            "&LISTPERPAGE=" + action.payload.LISTPERPAGE +
+            "&PAGE=" + action.payload.PAGE)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotUserProfile, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotUserProfile, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getUserProfile. Please check on URL")
+          return dispatch({ type: GitAction.GotUserProfile, payload: [] });
+        }
+      }
+    }));
+
+  updateUserProfile = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.EditUserProfile), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_UpdateProfile?USERID=" + action.payload.USERID +
+            "&FIRSTNAME=" + action.payload.USERFIRSTNAME +
+            "&LASTNAME=" + action.payload.USERLASTNAME +
+            "&USERCONTACTNO=" + action.payload.USERCONTACTNO +
+            "&USERDOB=" + action.payload.USERDATEBIRTH +
+            "&USEREMAIL=" + action.payload.USEREMAIL +
+            "&USERGENDER=" + action.payload.USERGENDER)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.EditedUserProfile, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.EditedUserProfile, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: EditUserProfile. Please check on URL")
+          return dispatch({ type: GitAction.EditedUserProfile, payload: [] });
+        }
+      }
+    }));
+
+  // updateUserProfile = (action$) =>
+  //   action$.ofType(GitAction.EditUserProfile).switchMap(async ({ payload }) => {
   //     try {
+
   //       const response = await fetch(
   //         url +
-  //         "User_UpdatePassword?USERID=" +
-  //         payload.userId +
-  //         "&USERPREVPASSWORD=" +
-  //         payload.oldPassword +
-  //         "&USERNEWPASSWORD=" +
-  //         payload.newPassword
+  //         "User_UpdateProfile?USERID=" +
+  //         payload.USERID +
+  //         "&FIRSTNAME=" +
+  //         payload.USERFIRSTNAME +
+  //         "&LASTNAME=" +
+  //         payload.USERLASTNAME +
+  //         "&USERCONTACTNO=" +
+  //         payload.USERCONTACTNO +
+  //         "&USERDOB=" +
+  //         payload.USERDATEBIRTH +
+  //         "&USEREMAIL=" +
+  //         payload.USEREMAIL +
+  //         "&USERGENDER=" +
+  //         payload.USERGENDER
   //       );
   //       let json = await response.json();
-  //       json = JSON.parse(json);
-  //       return {
-  //         type: GitAction.UpdatedPassword,
-  //         payload: json,
-  //       };
+  //       if (JSON.parse(json)[0].ReturnVal === 1) {
+  //         toast.success("User Profile is updated successfully");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "User_ProfileListByType?TYPE=" + payload.TYPE +
+  //           "&TYPEVALUE=" + payload.TYPEVALUE +
+  //           "&USERID=" + payload.USERID +
+  //           "&UserRoleID=" + payload.USERROLEID +
+  //           "&LISTPERPAGE=" + payload.LISTPERPAGE +
+  //           "&PAGE=" + payload.PAGE
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.EditedUserProfile,
+  //           payload: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('getUserProfile: ' + error);
+  //         return {
+  //           type: GitAction.EditedUserProfile,
+  //           payload: [],
+  //         };
+  //       }
   //     } catch (error) {
-  //       alert('updatePassword: ' + error);
+  //       alert('updateUserProfile: ' + error);
   //       return {
-  //         type: GitAction.UpdatedPassword,
+  //         type: GitAction.EditedUserProfile,
   //         payload: [],
   //       };
   //     }
   //   });
-  getUserPage = (action$) =>
-    action$.ofType(GitAction.GetPages).switchMap(async ({ payload }) => {
-      try {
 
-        const response = await fetch(
-          url +
-          "User_ViewPage?ROLEGROUPID=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotPages,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getUserPage: ' + error);
-        return {
-          type: GitAction.GotPages,
-          payload: [],
-        };
-      }
-    });
-
-  getUserProfile = (action$) =>
-    action$.ofType(GitAction.GetUserProfile).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ProfileListByType?TYPE=" + payload.TYPE +
-          "&TYPEVALUE=" + payload.TYPEVALUE +
-          "&USERID=" + payload.USERID +
-          "&UserRoleID=" + payload.USERROLEID +
-          "&LISTPERPAGE=" + payload.LISTPERPAGE +
-          "&PAGE=" + payload.PAGE
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotUserProfile,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getUserProfile: ' + error);
-        return {
-          type: GitAction.GotUserProfile,
-          payload: [],
-        };
-      }
-    });
-
-  updateUserProfile = (action$) =>
-    action$.ofType(GitAction.EditUserProfile).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "User_UpdateProfile?USERID=" +
-          payload.USERID +
-          "&FIRSTNAME=" +
-          payload.USERFIRSTNAME +
-          "&LASTNAME=" +
-          payload.USERLASTNAME +
-          "&USERCONTACTNO=" +
-          payload.USERCONTACTNO +
-          "&USERDOB=" +
-          payload.USERDATEBIRTH +
-          "&USEREMAIL=" +
-          payload.USEREMAIL +
-          "&USERGENDER=" +
-          payload.USERGENDER
-        );
-        let json = await response.json();
-        if (JSON.parse(json)[0].ReturnVal === 1) {
-          toast.success("User Profile is updated successfully");
-        }
+  UpdateUserProfileStatus = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateUserStatus), map(action => {
+      return dispatch => {
         try {
-          const response_1 = await fetch(
-            url +
-            "User_ProfileListByType?TYPE=" + payload.TYPE +
-            "&TYPEVALUE=" + payload.TYPEVALUE +
-            "&USERID=" + payload.USERID +
-            "&UserRoleID=" + payload.USERROLEID +
-            "&LISTPERPAGE=" + payload.LISTPERPAGE +
-            "&PAGE=" + payload.PAGE
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.EditedUserProfile,
-            payload: json_1,
-          };
+          return fetch(url +
+            "User_UpdateProfileStatus?USERID=" + action.payload.USERID +
+            "&USERSTATUS=" + action.payload.USERSTATUS)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedUserStatus, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedUserStatus, payload: [] });
+              }
+            });
         } catch (error) {
-          alert('getUserProfile: ' + error);
-          return {
-            type: GitAction.EditedUserProfile,
-            payload: [],
-          };
+          toast.error("Error Code: UpdateUserProfileStatus. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedUserStatus, payload: [] });
         }
-      } catch (error) {
-        alert('updateUserProfile: ' + error);
-        return {
-          type: GitAction.EditedUserProfile,
-          payload: [],
-        };
       }
-    });
+    }));
 
-  UpdateUserProfileStatus = (action$) =>
-    action$.ofType(GitAction.UpdateUserStatus).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "User_UpdateProfileStatus?USERID=" +
-          payload.USERID +
-          "&USERSTATUS=" +
-          payload.USERSTATUS
-        );
-
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json.map((val) => val.ReturnVal === 1)) {
-          toast.success("Updated Successful");
+  UpdateShopDetail = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateShopDetail), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_UpdateShopDetail?USERID=" + action.payload.USERID +
+            "&SHOPNAME=" + action.payload.SHOPNAME +
+            "&SHOPDESC=" + action.payload.SHOPDESC +
+            "&SHOPPOSCODE=" + action.payload.SHOPPOSCODE +
+            "&SHOPCITY=" + action.payload.SHOPCITY +
+            "&SHOPSTATE=" + action.payload.SHOPSTATE +
+            "&SHOPCOUNTRYID=" + action.payload.SHOPCOUNTRYID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedShopDetail, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedShopDetail, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: UpdateShopDetail. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedShopDetail, payload: [] });
         }
-        return {
-          type: GitAction.UpdatedUserStatus,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdateUserProfileStatus: ' + error);
-        return {
-          type: GitAction.UpdatedUserStatus,
-          payload: [],
-        };
       }
-    });
+    }));
 
-  UpdateShopDetail = (action$) =>
-    action$.ofType(GitAction.UpdateShopDetail).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "User_UpdateShopDetail?USERID=" +
-          payload.USERID +
-          "&SHOPNAME=" +
-          payload.SHOPNAME +
-          "&SHOPDESC=" +
-          payload.SHOPDESC +
-          "&SHOPPOSCODE=" +
-          payload.SHOPPOSCODE +
-          "&SHOPCITY=" +
-          payload.SHOPCITY +
-          "&SHOPSTATE=" +
-          payload.SHOPSTATE +
-          "&SHOPCOUNTRYID=" +
-          payload.SHOPCOUNTRYID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json.map((val) => val.ReturnVal === 1)) {
-          toast.success("Upload Successful");
+  updateProfileImage = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateProfileImage), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_UserUpdatePhoto?USERID=" + action.payload.USERID +
+            "&TYPE=" + action.payload.TYPE +
+            "&USERPROFILEIMAGE=" + action.payload.USERPROFILEIMAGE)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedProfileImage, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedProfileImage, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: updateProfileImage. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedProfileImage, payload: [] });
         }
-        return {
-          type: GitAction.UpdatedShopDetail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdatedShopDetail: ' + error);
-        return {
-          type: GitAction.UpdatedShopDetail,
-          payload: [],
-        };
       }
-    });
-
-  updateProfileImage = (action$) =>
-    action$.ofType(GitAction.UpdateProfileImage).switchMap(async ({ payload }) => {
-
-      try {
-        const response = await fetch(
-          url +
-          "User_UserUpdatePhoto?USERID=" +
-          payload.USERID +
-          "&TYPE=" +
-          payload.TYPE +
-          "&USERPROFILEIMAGE=" +
-          payload.USERPROFILEIMAGE
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        if (json.map((val) => val.ReturnVal === 1)) {
-          toast.success("Upload Successful");
-        }
-        return {
-          type: GitAction.UpdatedProfileImage,
-          payload: json,
-        };
-      } catch (error) {
-        alert('updateProfileImage: ' + error);
-        return {
-          type: GitAction.UpdatedProfileImage,
-          payload: [],
-        };
-      }
-    });
+    }));
 
   // USER ADDRESS
 
-  ViewAddress = (action$) =>
-    action$.ofType(GitAction.GetAddress).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ViewAddressBook?USERID=" +
-          payload.USERID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotAddress,
-          payload: json,
-        };
-      } catch (error) {
-        alert('Err code 1901: ' + error);
-        return {
-          type: GitAction.GotAddress,
-          payload: [],
-        };
-      }
-    });
 
-
-  ViewAllAddress = (action$) =>
-    action$.ofType(GitAction.GetAllAddress).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ViewAllAddressBook"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotAllAddress,
-          payload: json,
-        };
-      } catch (error) {
-        alert('Err code GotAllAddress: ' + error);
-        return {
-          type: GitAction.GotAllAddress,
-          payload: [],
-        };
-      }
-    });
-
-  addAddress = (action$) =>
-    action$.ofType(GitAction.AddAddress).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "User_AddAddressBook?USERADDRESSNAME=" +
-          payload.Name +
-          "&USERID=" +
-          payload.USERID +
-          "&USERCONTACTNO=" +
-          payload.ContactNo +
-          "&USEREMAIL=" +
-          payload.email +
-          "&USERADDRESSLINE1=" +
-          payload.USERADDRESSLINE1 +
-          "&USERADDRESSLINE2=" +
-          payload.USERADDRESSLINE2 +
-          "&USERPOSCODE=" +
-          payload.USERPOSCODE +
-          "&USERSTATE=" +
-          payload.USERSTATE +
-          "&USERCITY=" +
-          payload.USERCITY +
-          "&COUNTRYID=" +
-          payload.COUNTRYID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Address successfully added");
-        }
+  ViewAddress = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetAddress), map(action => {
+      return dispatch => {
         try {
-          const response_1 = await fetch(
-            url +
-            "User_ViewAddressBook?USERID=" +
-            payload.USERID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-
-
-          return {
-            type: GitAction.AddedAddress,
-            payloadCondition: json,
-            payloadValue: json_1,
-          };
+          return fetch(url +
+            "User_ViewAddressBook?USERID=" + action.payload.USERID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotAddress, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotAddress, payload: [] });
+              }
+            });
         } catch (error) {
-          alert('Err code 1901: ' + error);
-          return {
-            type: GitAction.GotAddress,
-            payload: [],
-          };
+          toast.error("Error Code: ViewAddress. Please check on URL")
+          return dispatch({ type: GitAction.GotAddress, payload: [] });
         }
-      } catch (error) {
-        alert('Err code 1902: ' + error);
-        return {
-          type: GitAction.GotAddress,
-          payloadCondition: [],
-          payloadValue: [],
-        };
       }
-    });
+    }));
 
-  updateAddress = (action$) =>
-    action$.ofType(GitAction.UpdateAddress).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_UpdateAddressBook?USERADDRESSBOOKID=" +
-          payload.AddressBookNo +
-          "&USERADDRESSNAME=" +
-          payload.Name +
-          "&USERID=" +
-          payload.USERID +
-          "&USERCONTACTNO=" +
-          payload.ContactNo +
-          "&USEREMAIL=" +
-          payload.email +
-          "&USERADDRESSLINE1=" +
-          payload.USERADDRESSLINE1 +
-          "&USERADDRESSLINE2=" +
-          payload.USERADDRESSLINE2 +
-          "&USERPOSCODE=" +
-          payload.USERPOSCODE +
-          "&USERSTATE=" +
-          payload.USERSTATE +
-          "&USERCITY=" +
-          payload.USERCITY +
-          "&COUNTRYID=" +
-          payload.COUNTRYID
-        );
-        const json = await response.json();
-
-        if (JSON.parse(json)[0].ReturnVal == 1) {
-          toast.success("Address successfully updated");
-        }
+  ViewAllAddress = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetAllAddress), map(action => {
+      return dispatch => {
         try {
-          const response_1 = await fetch(
-            url +
-            "User_ViewAddressBook?USERID=" +
-            payload.USERID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.UpdatedAddress,
-            payloadCondition: json,
-            payloadValue: json_1,
-          };
+          return fetch(url + "User_ViewAllAddressBook")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotAllAddress, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotAllAddress, payload: [] });
+              }
+            });
         } catch (error) {
-          alert('Err code 1901: ' + error);
-          return {
-            type: GitAction.GotAddress,
-            payload: [],
-          };
+          toast.error("Error Code: ViewAllAddress. Please check on URL")
+          return dispatch({ type: GitAction.GotAllAddress, payload: [] });
         }
-      } catch (error) {
-        alert('Err code 1903: ' + error);
-        return {
-          type: GitAction.UpdatedAddress,
-          payloadCondition: [],
-          payloadValue: [],
-        };
       }
-    });
+    }));
 
-  updateDefaultAddress = (action$) =>
-    action$.ofType(GitAction.UpdateDefaultAddress).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "User_UpdateDefaultAddress?USERADDRESSBOOKID=" +
-          payload.AddressBookNo +
-          "&USEROLDADDRESSBOOKID=" +
-          payload.OldAddressBookNo
-        );
-        const json = await response.json();
-
-        if (JSON.parse(json)[0].ReturnVal == 1) {
-          toast.success("Default Address successfully updated");
-        }
+  addAddress = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.AddAddress), map(action => {
+      return dispatch => {
         try {
-          const response_1 = await fetch(
-            url +
-            "User_ViewAddressBook?USERID=" +
-            payload.USERID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.UpdatedAddress,
-            payloadCondition: json,
-            payloadValue: json_1,
-          };
+          return fetch(url +
+            "User_AddAddressBook?USERADDRESSNAME=" + action.payload.Name +
+            "&USERID=" + action.payload.USERID +
+            "&USERCONTACTNO=" + action.payload.ContactNo +
+            "&USEREMAIL=" + action.payload.email +
+            "&USERADDRESSLINE1=" + action.payload.USERADDRESSLINE1 +
+            "&USERADDRESSLINE2=" + action.payload.USERADDRESSLINE2 +
+            "&USERPOSCODE=" + action.payload.USERPOSCODE +
+            "&USERSTATE=" + action.payload.USERSTATE +
+            "&USERCITY=" + action.payload.USERCITY +
+            "&COUNTRYID=" + action.payload.COUNTRYID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.AddedAddress, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedAddress, payload: [] });
+              }
+            });
         } catch (error) {
-          alert('Err code 1901: ' + error);
-          return {
-            type: GitAction.GotAddress,
-            payload: [],
-          };
+          toast.error("Error Code: addAddress. Please check on URL")
+          return dispatch({ type: GitAction.AddedAddress, payload: [] });
         }
-      } catch (error) {
-        alert('Err code 1903: ' + error);
-        return {
-          type: GitAction.UpdatedDefaultAddress,
-          payloadCondition: [],
-          payloadValue: [],
-        };
       }
-    });
+    }));
 
-  deleteAddress = (action$) =>
-    action$.ofType(GitAction.DeleteAddress).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_DeleteAddressBook?USERADDRESSBOOKID=" +
-          payload.AddressBookNo
-        );
-        const json = await response.json();
-        if (JSON.parse(json)[0].ReturnVal == 1) {
-          toast.success("Address successfully deleted");
-        }
+  // addAddress = (action$) =>
+  //   action$.ofType(GitAction.AddAddress).switchMap(async ({ payload }) => {
+  //     try {
+
+  //       const response = await fetch(
+  //         url +
+  //         "User_AddAddressBook?USERADDRESSNAME=" +
+  //         payload.Name +
+  //         "&USERID=" +
+  //         payload.USERID +
+  //         "&USERCONTACTNO=" +
+  //         payload.ContactNo +
+  //         "&USEREMAIL=" +
+  //         payload.email +
+  //         "&USERADDRESSLINE1=" +
+  //         payload.USERADDRESSLINE1 +
+  //         "&USERADDRESSLINE2=" +
+  //         payload.USERADDRESSLINE2 +
+  //         "&USERPOSCODE=" +
+  //         payload.USERPOSCODE +
+  //         "&USERSTATE=" +
+  //         payload.USERSTATE +
+  //         "&USERCITY=" +
+  //         payload.USERCITY +
+  //         "&COUNTRYID=" +
+  //         payload.COUNTRYID
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Address successfully added");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "User_ViewAddressBook?USERID=" +
+  //           payload.USERID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+
+
+  //         return {
+  //           type: GitAction.AddedAddress,
+  //           payloadCondition: json,
+  //           payloadValue: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('Err code 1901: ' + error);
+  //         return {
+  //           type: GitAction.GotAddress,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert('Err code 1902: ' + error);
+  //       return {
+  //         type: GitAction.GotAddress,
+  //         payloadCondition: [],
+  //         payloadValue: [],
+  //       };
+  //     }
+  //   });
+
+  updateAddress = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetAllAddress), map(action => {
+      return dispatch => {
         try {
-          const response_1 = await fetch(
-            url +
-            "User_ViewAddressBook?USERID=" +
-            payload.USERID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.DeletedAddress,
-            payloadCondition: json,
-            payloadValue: json_1,
-          };
+          return fetch(url +
+            "User_UpdateAddressBook?USERADDRESSBOOKID=" + action.payload.AddressBookNo +
+            "&USERADDRESSNAME=" + action.payload.Name +
+            "&USERID=" + action.payload.USERID +
+            "&USERCONTACTNO=" + action.payload.ContactNo +
+            "&USEREMAIL=" + action.payload.email +
+            "&USERADDRESSLINE1=" + action.payload.USERADDRESSLINE1 +
+            "&USERADDRESSLINE2=" + action.payload.USERADDRESSLINE2 +
+            "&USERPOSCODE=" + action.payload.USERPOSCODE +
+            "&USERSTATE=" + action.payload.USERSTATE +
+            "&USERCITY=" + action.payload.USERCITY +
+            "&COUNTRYID=" + action.payload.COUNTRYID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedAddress, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedAddress, payload: [] });
+              }
+            });
         } catch (error) {
-          alert('Err code 1901: ' + error);
-          return {
-            type: GitAction.GotAddress,
-            payload: [],
-          };
+          toast.error("Error Code: updateAddress. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedAddress, payload: [] });
         }
-      } catch (error) {
-        alert('Err code 1904: ' + error);
-        return {
-          type: GitAction.DeletedAddress,
-          payloadCondition: [],
-          payloadValue: [],
-        };
       }
-    });
+    }));
 
-  // PRODUCT CART
-
-  deleteProductCart = (action$) =>
-    action$.ofType(GitAction.DeleteProductCart).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_DeleteProductCart?USERCARTID=" +
-          payload.userCartID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal !== '1') {
-          toast.error("Product " + payload.productName + " is NOT deleted! Please try again.");
-        }
-        try {
-          const response_1 = await fetch(
-            url +
-            "Product_ItemListInCartByUserID?USERID=" +
-            payload.userID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.DeletedProductCart,
-            payload: json_1,
-          };
-        } catch (error) {
-          alert("viewProductCartList: " + error)
-          return {
-            type: GitAction.ViewedProductCart,
-            payload: [],
-          };
-        }
-      } catch (error) {
-        alert("deleteProductCart: " + error)
-        return {
-          type: GitAction.DeletedProductCart,
-          payload: [],
-        };
-      }
-    });
-
-  updateProductCart = (action$) =>
-    action$.ofType(GitAction.UpdateProductCart).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_UpdateProductCart?USERCARTID=" +
-          payload.userCartID +
-          "&PRODUCTQUANTITY=" +
-          payload.productQuantity
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        if (json[0].ReturnVal !== 1) {
-          toast.error("Product " + payload.productName + " is NOT updated! Please try again.");
-        } else {
-          toast.success("Product " + payload.productName + " is updated quantity in cart!");
-        }
-        try {
-          const response_1 = await fetch(
-            url +
-            "Product_ItemListInCartByUserID?USERID=" +
-            payload.userID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.UpdatedProductCart,
-            payload: json_1,
-          };
-        } catch (error) {
-          alert("viewProductCartList: " + error)
-          return {
-            type: GitAction.ViewedProductCart,
-            payload: [],
-          };
-        }
-      } catch (error) {
-        alert("updateProductCart: " + error)
-        return {
-          type: GitAction.UpdatedProductCart,
-          payload: [],
-        };
-      }
-    });
-
-  addProductCart = (action$) =>
-    action$.ofType(GitAction.AddProductCart).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_AddProductCart?USERID=" +
-          payload.userID +
-          "&PRODUCTID=" +
-          payload.productID +
-          "&PRODUCTQUANTITY=" +
-          payload.productQuantity +
-          "&PRODUCTVARIATIONDETAILID=" +
-          payload.productVariationDetailID +
-          "&APPLYINGPROMOCODE=" +
-          payload.applyingPromoCode
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Product " + payload.productName + " is added to cart!");
-        } else {
-          toast.error("Product " + payload.productName + " is NOT added to cart! Please try again.");
-        }
-        try {
-          const response_1 = await fetch(
-            url +
-            "Product_ItemListInCartByUserID?USERID=" +
-            payload.userID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.AddedProductCart,
-            payload: json_1,
-          };
-        } catch (error) {
-          alert("viewProductCartList: " + error)
-          return {
-            type: GitAction.ViewedProductCart,
-            payload: [],
-          };
-        }
-      } catch (error) {
-        alert("addProductCart: " + error)
-        return {
-          type: GitAction.AddedProductCart,
-          payload: [],
-        };
-      }
-    });
-
-  viewProductCartList = (action$) =>
-    action$.ofType(GitAction.ViewProductCart).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "Product_ItemListInCartByUserID?USERID=" +
-          payload.userID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        return {
-          type: GitAction.ViewedProductCart,
-          payload: json,
-        };
-      } catch (error) {
-        alert("viewProductCartList: " + error)
-        return {
-          type: GitAction.ViewedProductCart,
-          payload: [],
-        };
-      }
-    });
-
-  // PRODUCT WISHLIST
-
-  viewProductWishlist = (action$) =>
-    action$.ofType(GitAction.ViewProductWishlist).switchMap(async ({ payload }) => {
-
-      try {
-        const response = await fetch(
-          url +
-          "Product_ItemListInWishlistByUserID?USERID=" +
-          payload.userID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        return {
-          type: GitAction.ViewedProductWishlist,
-          payload: json,
-        };
-      } catch (error) {
-        alert("viewProductWishlist: " + error)
-        return {
-          type: GitAction.ViewedProductWishlist,
-          payload: [],
-        };
-      }
-    });
-
-  addProductWishlist = (action$) =>
-    action$.ofType(GitAction.AddProductWishlist).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_AddProductWishlist?USERID=" +
-          payload.userID +
-          "&PRODUCTID=" +
-          payload.productID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Product " + payload.productName + " is added to wishlist!");
-        }
-        try {
-          const response = await fetch(
-            url +
-            "Product_ItemListInWishlistByUserID?USERID=" +
-            payload.userID
-          );
-          let json = await response.json();
-          json = JSON.parse(json);
-          return {
-            type: GitAction.AddedProductWishlist,
-            payload: json,
-          };
-        } catch (error) {
-          alert("viewProductWishlist: " + error)
-          return {
-            type: GitAction.ViewedProductWishlist,
-            payload: [],
-          };
-        }
-      } catch (error) {
-        alert("addProductWishlist: " + error)
-        return {
-          type: GitAction.AddedProductWishlist,
-          payload: [],
-        };
-      }
-    });
-
-  deleteProductWishlist = (action$) =>
-    action$.ofType(GitAction.DeleteProductWishlist).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_DeleteProductWishlist?USERWISHLISTID=" +
-          payload.userWishlistID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Product " + payload.productName + " is removed from wishlist!");
-        }
-        try {
-          const response = await fetch(
-            url +
-            "Product_ItemListInWishlistByUserID?USERID=" +
-            payload.userID
-          );
-          let json = await response.json();
-          json = JSON.parse(json);
-          return {
-            type: GitAction.DeletedProductWishlist,
-            payload: json,
-          };
-        } catch (error) {
-          alert("viewProductWishlist: " + error)
-          return {
-            type: GitAction.ViewedProductWishlist,
-            payload: [],
-          };
-        }
-      } catch (error) {
-        alert("deleteProductWishlist: " + error)
-        return {
-          type: GitAction.DeletedProductWishlist,
-          payload: [],
-        };
-      }
-    });
-
-  // COUNTRY
-
-  getCountry = (action$) =>
-    action$.ofType(GitAction.GetCountry).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "General_CountryList"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotCountry,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getCountry: ' + error);
-        return {
-          type: GitAction.GotCountry,
-          payload: [],
-        };
-      }
-    });
-
-  // All Courier Service
-  getAllCourierService = (action$) =>
-    action$.ofType(GitAction.GetCourierService).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ViewCourierService"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotCourierService,
-          payload: json,
-        };
-
-      } catch (error) {
-        alert('getAllCourierService: ' + error);
-        return {
-          type: GitAction.GotCourierService,
-          payload: [],
-        };
-      }
-    });
-
-  // All Payment Method
-  getAllPaymentMethod = (action$) =>
-    action$.ofType(GitAction.GetPaymentMethod).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "General_ViewPaymentMethod"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotPaymentMethod,
-          payload: json,
-        };
-
-      } catch (error) {
-        alert('getAllPaymentMethod: ' + error);
-        return {
-          type: GitAction.GotPaymentMethod,
-          payload: [],
-        };
-      }
-    });
-
-  // CREDIT CARD
-
-  getAllCreditCard = (action$) =>
-    action$.ofType(GitAction.GetCreditCard).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ViewUserPaymentMethod?USERID=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotCreditCard,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllCreditCard: ' + error);
-        return {
-          type: GitAction.GotCreditCard,
-          payload: [],
-        };
-      }
-    });
-
-  addCreditCard = (action$) =>
-    action$.ofType(GitAction.AddCreditCard).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_AddPaymentMethod?USERID=" +
-          payload.USERID +
-          "&USERCARDNAME=" +
-          payload.name +
-          "&USERCARDNO=" +
-          payload.number +
-          "&USERCARDEXPIREDATE=" +
-          payload.expiry +
-          "&USERCARDTYPE=" +
-          payload.cardtype
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Credit Card successfully added");
-        }
-        try {
-          const response_1 = await fetch(
-            url +
-            "User_ViewUserPaymentMethod?USERID=" +
-            payload.USERID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.AddedCreditCard,
-            payloadCondition: json,
-            payloadValue: json_1,
-          };
-        } catch (error) {
-          alert('getAllCreditCard: ' + error);
-          return {
-            type: GitAction.AddedCreditCard,
-            payloadCondition: [],
-            payloadValue: [],
-          };
-        }
-      } catch (error) {
-        alert('addCreditCard: ' + error);
-        return {
-          type: GitAction.GotCreditCard,
-          payloadCondition: [],
-          payloadValue: [],
-        };
-      }
-    });
-
-  updateCreditCard = (action$) =>
-    action$.ofType(GitAction.UpdateCreditCard).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
-          payload.USERPAYMENTMETHODID +
-          "&USERID=" +
-          payload.USERID +
-          "&USERCARDNAME=" +
-          payload.name +
-          "&USERCARDNO=" +
-          payload.number +
-          "&USERCARDEXPIREDATE=" +
-          payload.expiry +
-          "&USERCARDTYPE=" +
-          payload.cardtype
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Credit Card successfully updated");
-        }
-        try {
-          const response_1 = await fetch(
-            url +
-            "User_ViewUserPaymentMethod?USERID=" +
-            payload.USERID
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-          return {
-            type: GitAction.UpdatedCreditCard,
-            payloadCondition: json,
-            payloadValue: json_1,
-          };
-        } catch (error) {
-          alert('getAllCreditCard: ' + error);
-          return {
-            type: GitAction.GotCreditCard,
-            payload: [],
-          };
-        }
-      } catch (error) {
-        alert('updateCreditCard: ' + error);
-        return {
-          type: GitAction.UpdatedCreditCard,
-          payloadCondition: [],
-          payloadValue: [],
-        };
-      }
-    });
-
-  deleteCreditCard = (action$) =>
-    action$.ofType(GitAction.DeleteCreditCard).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_DeletePaymentMethod?USERPAYMENTMETHODID=" +
-          payload.cardId
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Credit Card selected successfully deleted");
-        }
-        try {
-          const response_1 = await fetch(
-            url +
-            "User_ViewUserPaymentMethod?USERID=" +
-            payload.userId
-          );
-          let json_1 = await response_1.json();
-          json_1 = JSON.parse(json_1);
-
-          return {
-            type: GitAction.DeletedCreditCard,
-            payloadCondition: json,
-            payloadValue: json_1,
-          };
-        } catch (error) {
-          alert('getAllCreditCard: ' + error);
-          return {
-            type: GitAction.GotCreditCard,
-            payload: [],
-          };
-        }
-      } catch (error) {
-        alert('deleteCreditCard: ' + error);
-        return {
-          type: GitAction.DeletedCreditCard,
-          payloadCondition: [],
-          payloadValue: [],
-        };
-      }
-    });
-
-  // PRODUCT
-
-  getAllProducts = (action$) =>
-    action$.ofType(GitAction.GetProduct).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_ItemListByType?Type=" +
-          payload.type +
-          "&TypeValue=" +
-          payload.typeValue +
-          "&USERID=" +
-          payload.userId +
-          "&PRODUCTPERPAGE=" +
-          payload.productPage +
-          "&PAGE=" +
-          payload.page
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProduct,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllProducts: ' + error);
-        return {
-          type: GitAction.GotProduct,
-          payload: [],
-        };
-      }
-    });
-
-  getProductsListing = (action$) =>
-    action$.ofType(GitAction.GetProductListing).switchMap(async ({ payload }) => {
-      console.log(url +
-        "Product_ItemListByType?Type=" +
-        payload.type +
-        "&TypeValue=" +
-        payload.typeValue +
-        "&USERID=" +
-        payload.userId +
-        "&PRODUCTPERPAGE=" +
-        payload.productPage +
-        "&PAGE=" +
-        payload.page)
-      try {
-        const response = await fetch(
-          url +
-          "Product_ItemListByType?Type=" +
-          payload.type +
-          "&TypeValue=" +
-          payload.typeValue +
-          "&USERID=" +
-          payload.userId +
-          "&PRODUCTPERPAGE=" +
-          payload.productPage +
-          "&PAGE=" +
-          payload.page
-        );
-        const json = await response.json();
-        return {
-          type: GitAction.GotProductListing,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getProductsListing: ' + error);
-        return {
-          type: GitAction.GotProductListing,
-          payload: [],
-        };
-      }
-    });
-
-  getProductDetail = (action$) =>
-    action$.ofType(GitAction.GetProductDetail).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_ItemDetailByProductID?ProductID=" +
-          payload.productId +
-          "&USERID=" +
-          payload.userId
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductDetail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getProductDetail: ' + error);
-        return {
-          type: GitAction.GotProductDetail,
-          payload: [],
-        };
-      }
-    });
-
-  // getAllProductsByStatus = (action$) =>
-  //   action$.ofType(GitAction.GetProductByProductStatus).switchMap(async ({ payload }) => {
-
+  // updateAddress = (action$) =>
+  //   action$.ofType(GitAction.UpdateAddress).switchMap(async ({ payload }) => {
   //     try {
   //       const response = await fetch(
   //         url +
-  //         "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
-  //         payload.ProductStatus +
+  //         "User_UpdateAddressBook?USERADDRESSBOOKID=" +
+  //         payload.AddressBookNo +
+  //         "&USERADDRESSNAME=" +
+  //         payload.Name +
   //         "&USERID=" +
-  //         payload.UserID
+  //         payload.USERID +
+  //         "&USERCONTACTNO=" +
+  //         payload.ContactNo +
+  //         "&USEREMAIL=" +
+  //         payload.email +
+  //         "&USERADDRESSLINE1=" +
+  //         payload.USERADDRESSLINE1 +
+  //         "&USERADDRESSLINE2=" +
+  //         payload.USERADDRESSLINE2 +
+  //         "&USERPOSCODE=" +
+  //         payload.USERPOSCODE +
+  //         "&USERSTATE=" +
+  //         payload.USERSTATE +
+  //         "&USERCITY=" +
+  //         payload.USERCITY +
+  //         "&COUNTRYID=" +
+  //         payload.COUNTRYID
+  //       );
+  //       const json = await response.json();
+
+  //       if (JSON.parse(json)[0].ReturnVal == 1) {
+  //         toast.success("Address successfully updated");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "User_ViewAddressBook?USERID=" +
+  //           payload.USERID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.UpdatedAddress,
+  //           payloadCondition: json,
+  //           payloadValue: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('Err code 1901: ' + error);
+  //         return {
+  //           type: GitAction.GotAddress,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert('Err code 1903: ' + error);
+  //       return {
+  //         type: GitAction.UpdatedAddress,
+  //         payloadCondition: [],
+  //         payloadValue: [],
+  //       };
+  //     }
+  //   });
+
+  updateDefaultAddress = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateDefaultAddress), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_UpdateDefaultAddress?USERADDRESSBOOKID=" + action.payload.AddressBookNo +
+            "&USEROLDADDRESSBOOKID=" + action.payload.OldAddressBookNo)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedDefaultAddress, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedDefaultAddress, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: updateDefaultAddress. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedDefaultAddress, payload: [] });
+        }
+      }
+    }));
+
+  // updateDefaultAddress = (action$) =>
+  //   action$.ofType(GitAction.UpdateDefaultAddress).switchMap(async ({ payload }) => {
+  //     try {
+
+  //       const response = await fetch(
+  //         url +
+  //         "User_UpdateDefaultAddress?USERADDRESSBOOKID=" +
+  //         payload.AddressBookNo +
+  //         "&USEROLDADDRESSBOOKID=" +
+  //         payload.OldAddressBookNo
+  //       );
+  //       const json = await response.json();
+
+  //       if (JSON.parse(json)[0].ReturnVal == 1) {
+  //         toast.success("Default Address successfully updated");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "User_ViewAddressBook?USERID=" +
+  //           payload.USERID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.UpdatedAddress,
+  //           payloadCondition: json,
+  //           payloadValue: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('Err code 1901: ' + error);
+  //         return {
+  //           type: GitAction.GotAddress,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert('Err code 1903: ' + error);
+  //       return {
+  //         type: GitAction.UpdatedDefaultAddress,
+  //         payloadCondition: [],
+  //         payloadValue: [],
+  //       };
+  //     }
+  //   });
+
+  deleteAddress = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.DeleteAddress), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_DeleteAddressBook?USERADDRESSBOOKID=" + action.payload.AddressBookNo)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.DeletedAddress, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.DeletedAddress, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: deleteAddress. Please check on URL")
+          return dispatch({ type: GitAction.DeletedAddress, payload: [] });
+        }
+      }
+    }));
+
+  // deleteAddress = (action$) =>
+  //   action$.ofType(GitAction.DeleteAddress).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "User_DeleteAddressBook?USERADDRESSBOOKID=" +
+  //         payload.AddressBookNo
+  //       );
+  //       const json = await response.json();
+  //       if (JSON.parse(json)[0].ReturnVal == 1) {
+  //         toast.success("Address successfully deleted");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "User_ViewAddressBook?USERID=" +
+  //           payload.USERID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.DeletedAddress,
+  //           payloadCondition: json,
+  //           payloadValue: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('Err code 1901: ' + error);
+  //         return {
+  //           type: GitAction.GotAddress,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert('Err code 1904: ' + error);
+  //       return {
+  //         type: GitAction.DeletedAddress,
+  //         payloadCondition: [],
+  //         payloadValue: [],
+  //       };
+  //     }
+  //   });
+
+  // PRODUCT CART
+
+  deleteProductCart = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.DeleteProductCart), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_DeleteProductCart?USERCARTID=" + action.payload.userCartID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.DeletedProductCart, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.DeletedProductCart, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: deleteProductCart. Please check on URL")
+          return dispatch({ type: GitAction.DeletedProductCart, payload: [] });
+        }
+      }
+    }));
+
+  // deleteProductCart = (action$) =>
+  //   action$.ofType(GitAction.DeleteProductCart).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "Product_DeleteProductCart?USERCARTID=" +
+  //         payload.userCartID
   //       );
   //       let json = await response.json();
-  //       json = json;
-  //       return {
-  //         type: GitAction.GotProductByProductStatus,
-  //         payload: json,
-  //       };
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal !== '1') {
+  //         toast.error("Product " + payload.productName + " is NOT deleted! Please try again.");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "Product_ItemListInCartByUserID?USERID=" +
+  //           payload.userID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.DeletedProductCart,
+  //           payload: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert("viewProductCartList: " + error)
+  //         return {
+  //           type: GitAction.ViewedProductCart,
+  //           payload: [],
+  //         };
+  //       }
   //     } catch (error) {
-  //       alert('getAllProductsByStatus: ' + error);
+  //       alert("deleteProductCart: " + error)
   //       return {
-  //         type: GitAction.GotProductByProductStatus,
+  //         type: GitAction.DeletedProductCart,
   //         payload: [],
   //       };
   //     }
   //   });
 
-  addProduct = (action$) =>
-    action$.ofType(GitAction.AddProduct).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_AddProduct?PRODUCTNAME=" +
-          payload.name +
-          "&PRODUCTDESC=" +
-          payload.description +
-          "&PRODUCTCATEGORYID=" +
-          payload.productCategory +
-          "&MERCHANTID=" +
-          payload.productSupplier +
-          "&PRODUCTHEIGHT=" +
-          payload.height +
-          "&PRODUCTWIDTH=" +
-          payload.width +
-          "&PRODUCTDEPTH=" +
-          payload.depth +
-          "&PRODUCTWEIGHT=" +
-          payload.weight +
-          "&PRODUCTSKU=" +
-          payload.sku +
-          "&PRODUCTBRAND=" +
-          payload.brand +
-          "&PRODUCTMODEL=" +
-          payload.model +
-          "&PRODUCTTAG=" +
-          payload.tags +
-          "&ProjectID=2"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.AddedProduct,
-          payload: json,
-        };
-      } catch (error) {
-        alert('addProduct: ' + error);
-        return {
-          type: GitAction.AddedProduct,
-          payload: [],
-        };
-      }
-    });
-
-  updateProduct = (action$) =>
-    action$.ofType(GitAction.UpdateProduct).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_UpdateProduct?PRODUCTID=" +
-          payload.ProductID +
-          "&name=" +
-          payload.name +
-          "&manufacturer=1" +
-          // payload.manufacturer +
-          "&description=" +
-          payload.description +
-          "&productCategory=" +
-          payload.productCategory +
-          "&productSupplier=" +
-          payload.productSupplier +
-          "&productShoplot=1&productGrid=1&height=" +
-          payload.height +
-          "&width=" +
-          payload.width +
-          "&depth=" +
-          payload.depth +
-          "&weight=" +
-          payload.weight +
-          "&sku=" +
-          payload.sku +
-          "&brand=" +
-          payload.brand +
-          "&model=" +
-          payload.model +
-          "&tags=" +
-          payload.tags
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        // if (json[0].ReturnVal === 1) {
-        //   toast.success("Product is successfully submitted to Admin for endorsement. Estimated 3 - 5 days for admin to revise your added product.")
-        // } else {
-        //   json = [];
-        // }
-
-        return {
-          type: GitAction.UpdatedProduct,
-          payload: json,
-        };
-      } catch (error) {
-        alert('updateProduct: ' + error);
-        return {
-          type: GitAction.UpdatedProduct,
-          payload: [],
-        };
-      }
-    });
-
-  deleteProduct = (action$) =>
-    action$.ofType(GitAction.DeleteProduct).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_DeleteProducts?ProductIDs=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.ProductDeleted,
-          payload: json,
-        };
-      } catch (error) {
-        alert('deleteProduct: ' + error);
-        return {
-          type: GitAction.ProductDeleted,
-          payload: [],
-        };
-      }
-    });
-
-  endorseProduct = (action$) =>
-    action$.ofType(GitAction.EndorseProduct).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(url + "Product_EndorseProducts?ProductIDs=" + payload.ProductID);
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.ProductEndorsed,
-          payload: json,
-        };
-
-      } catch (error) {
-        alert('endorseProduct: ' + error);
-        return {
-          type: GitAction.ProductEndorsed,
-          payload: [],
-        };
-      }
-    });
-
-  checkProduct = (action$) =>
-    action$.ofType(GitAction.CheckProduct).switchMap(async ({ payload }) => {
-      try {
-        const resposne = await fetch(
-          url +
-          "Product_CheckDuplication?PRODUCTNAME=" +
-          payload
-        );
-        const json = await resposne.json();
-        if (json !== "fail") {
-          json = JSON.parse(json);
-        } else {
-          json = [];
+  updateProductCart = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateProductCart), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_UpdateProductCart?USERCARTID=" + action.payload.userCartID +
+            "&PRODUCTQUANTITY=" + action.payload.productQuantity)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedProductCart, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: updateProductCart. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
         }
-        return {
-          type: GitAction.ProductChecked,
-          payload: json,
-        };
-      } catch (error) {
-        alert('checkProduct: ' + error);
-        return {
-          type: GitAction.ProductChecked,
-          payload: [],
-        };
       }
-    });
+    }));
 
-  AddProductMedia = (action$) =>
-    action$.ofType(GitAction.AddProductMedia).switchMap(async ({ payload }) => {
-      try {
+  // updateProductCart = (action$) =>
+  //   action$.ofType(GitAction.UpdateProductCart).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "Product_UpdateProductCart?USERCARTID=" +
+  //         payload.userCartID +
+  //         "&PRODUCTQUANTITY=" +
+  //         payload.productQuantity
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
 
-        const resposne = await fetch(
-          url +
-          "Product_AddProductMedia?" +
-          "PRODUCTID=" + payload.ProductID +
-          "&PRODUCTVARIATIONDETAILID=" + payload.variationID +
-          "&PRODUCTSLIDEORDER=" + payload.sliderOrder +
-          "&TYPE=" + payload.mediaType +
-          "&WIDTH=" + payload.imageWidth +
-          "&HEIGHT=" + payload.imageHeight +
-          "&IMAGENAME=" + payload.imageName
-        );
-        let json = await resposne.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.ProductMediaAdded,
-          payload: json,
-        };
-      } catch (error) {
-        alert('AddProductMedia: ' + error);
-        return {
-          type: GitAction.ProductMediaAdded,
-          payload: [],
-        };
+  //       if (json[0].ReturnVal !== 1) {
+  //         toast.error("Product " + payload.productName + " is NOT updated! Please try again.");
+  //       } else {
+  //         toast.success("Product " + payload.productName + " is updated quantity in cart!");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "Product_ItemListInCartByUserID?USERID=" +
+  //           payload.userID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.UpdatedProductCart,
+  //           payload: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert("viewProductCartList: " + error)
+  //         return {
+  //           type: GitAction.ViewedProductCart,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert("updateProductCart: " + error)
+  //       return {
+  //         type: GitAction.UpdatedProductCart,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
+
+  addProductCart = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.AddProductCart), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_AddProductCart?USERID=" + action.payload.userID +
+            "&PRODUCTID=" + action.payload.productID +
+            "&PRODUCTQUANTITY=" + action.payload.productQuantity +
+            "&PRODUCTVARIATIONDETAILID=" + action.payload.productVariationDetailID +
+            "&APPLYINGPROMOCODE=" + action.payload.applyingPromoCode)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.AddedProductCart, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedProductCart, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: addProductCart. Please check on URL")
+          return dispatch({ type: GitAction.AddedProductCart, payload: [] });
+        }
       }
-    });
+    }));
 
-  DeleteProductMedia = (action$) =>
-    action$.ofType(GitAction.deleteProductMedia).switchMap(async ({ payload }) => {
-      try {
+  // addProductCart = (action$) =>
+  //   action$.ofType(GitAction.AddProductCart).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "Product_AddProductCart?USERID=" +
+  //         payload.userID +
+  //         "&PRODUCTID=" +
+  //         payload.productID +
+  //         "&PRODUCTQUANTITY=" +
+  //         payload.productQuantity +
+  //         "&PRODUCTVARIATIONDETAILID=" +
+  //         payload.productVariationDetailID +
+  //         "&APPLYINGPROMOCODE=" +
+  //         payload.applyingPromoCode
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Product " + payload.productName + " is added to cart!");
+  //       } else {
+  //         toast.error("Product " + payload.productName + " is NOT added to cart! Please try again.");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "Product_ItemListInCartByUserID?USERID=" +
+  //           payload.userID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.AddedProductCart,
+  //           payload: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert("viewProductCartList: " + error)
+  //         return {
+  //           type: GitAction.ViewedProductCart,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert("addProductCart: " + error)
+  //       return {
+  //         type: GitAction.AddedProductCart,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
 
-        const resposne = await fetch(
-          url +
-          "Product_DeleteProductMedia?" +
-          "PRODUCTMEDIAID=" + payload.imageID);
-
-        let json = await resposne.json();
-        json = JSON.parse(json);
-
-        return {
-          type: GitAction.deletedProductMedia,
-          payload: json,
-        };
-
-      } catch (error) {
-        return {
-          type: GitAction.deletedProductMedia,
-          payload: [],
-        };
+  viewProductCartList = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.ViewProductCart), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_ItemListInCartByUserID?USERID=" + action.payload.userID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.ViewedProductCart, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.ViewedProductCart, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: viewProductCartList. Please check on URL")
+          return dispatch({ type: GitAction.ViewedProductCart, payload: [] });
+        }
       }
-    });
+    }));
+
+  // viewProductCartList = (action$) =>
+  //   action$.ofType(GitAction.ViewProductCart).switchMap(async ({ payload }) => {
+  //     try {
+
+  //       const response = await fetch(
+  //         url +
+  //         "Product_ItemListInCartByUserID?USERID=" +
+  //         payload.userID
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+
+  //       return {
+  //         type: GitAction.ViewedProductCart,
+  //         payload: json,
+  //       };
+  //     } catch (error) {
+  //       alert("viewProductCartList: " + error)
+  //       return {
+  //         type: GitAction.ViewedProductCart,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
+
+  // PRODUCT WISHLIST
+
+  viewProductWishlist = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.ViewProductWishlist), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_ItemListInWishlistByUserID?USERID=" + action.payload.userID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.ViewedProductWishlist, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.ViewedProductWishlist, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: viewProductWishlist. Please check on URL")
+          return dispatch({ type: GitAction.ViewedProductWishlist, payload: [] });
+        }
+      }
+    }));
+
+  addProductWishlist = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.AddProductWishlist), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_AddProductWishlist?USERID=" + action.payload.userID +
+            "&PRODUCTID=" + action.payload.productID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.AddedProductWishlist, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedProductWishlist, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: AddProductWishlist. Please check on URL")
+          return dispatch({ type: GitAction.AddedProductWishlist, payload: [] });
+        }
+      }
+    }));
+
+  // addProductWishlist = (action$) =>
+  //   action$.ofType(GitAction.AddProductWishlist).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "Product_AddProductWishlist?USERID=" +
+  //         payload.userID +
+  //         "&PRODUCTID=" +
+  //         payload.productID
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Product " + payload.productName + " is added to wishlist!");
+  //       }
+  //       try {
+  //         const response = await fetch(
+  //           url +
+  //           "Product_ItemListInWishlistByUserID?USERID=" +
+  //           payload.userID
+  //         );
+  //         let json = await response.json();
+  //         json = JSON.parse(json);
+  //         return {
+  //           type: GitAction.AddedProductWishlist,
+  //           payload: json,
+  //         };
+  //       } catch (error) {
+  //         alert("viewProductWishlist: " + error)
+  //         return {
+  //           type: GitAction.ViewedProductWishlist,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert("addProductWishlist: " + error)
+  //       return {
+  //         type: GitAction.AddedProductWishlist,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
+
+  deleteProductWishlist = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.DeleteProductWishlist), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_DeleteProductWishlist?USERWISHLISTID=" + action.payload.userWishlistID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.DeletedProductWishlist, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.DeletedProductWishlist, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: DeleteProductWishlist. Please check on URL")
+          return dispatch({ type: GitAction.DeletedProductWishlist, payload: [] });
+        }
+      }
+    }));
+
+  // deleteProductWishlist = (action$) =>
+  //   action$.ofType(GitAction.DeleteProductWishlist).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "Product_DeleteProductWishlist?USERWISHLISTID=" +
+  //         payload.userWishlistID
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Product " + payload.productName + " is removed from wishlist!");
+  //       }
+  //       try {
+  //         const response = await fetch(
+  //           url +
+  //           "Product_ItemListInWishlistByUserID?USERID=" +
+  //           payload.userID
+  //         );
+  //         let json = await response.json();
+  //         json = JSON.parse(json);
+  //         return {
+  //           type: GitAction.DeletedProductWishlist,
+  //           payload: json,
+  //         };
+  //       } catch (error) {
+  //         alert("viewProductWishlist: " + error)
+  //         return {
+  //           type: GitAction.ViewedProductWishlist,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert("deleteProductWishlist: " + error)
+  //       return {
+  //         type: GitAction.DeletedProductWishlist,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
+
+  // COUNTRY
+
+  getCountry = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetCountry), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "General_CountryList")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotCountry, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotCountry, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: GetCountry. Please check on URL")
+          return dispatch({ type: GitAction.GotCountry, payload: [] });
+        }
+      }
+    }));
+
+  // All Courier Service
+
+  getAllCourierService = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetCourierService), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "User_ViewCourierService")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotCourierService, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotCourierService, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllCourierService. Please check on URL")
+          return dispatch({ type: GitAction.GotCourierService, payload: [] });
+        }
+      }
+    }));
+
+  // All Payment Method
+
+  getAllPaymentMethod = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetPaymentMethod), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "User_ViewUserPaymentMethod?USERID=" + action.payload)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotPaymentMethod, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotPaymentMethod, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllPaymentMethod. Please check on URL")
+          return dispatch({ type: GitAction.GotPaymentMethod, payload: [] });
+        }
+      }
+    }));
+
+  // CREDIT CARD
+
+  getAllCreditCard = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetCreditCard), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "User_ViewUserPaymentMethod?USERID=" + action.payload)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotCreditCard, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotCreditCard, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllCreditCard. Please check on URL")
+          return dispatch({ type: GitAction.GotCreditCard, payload: [] });
+        }
+      }
+    }));
+
+  addCreditCard = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.AddCreditCard), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_AddPaymentMethod?USERID=" + action.payload.USERID +
+            "&USERCARDNAME=" + action.payload.name +
+            "&USERCARDNO=" + action.payload.number +
+            "&USERCARDEXPIREDATE=" + action.payload.expiry +
+            "&USERCARDTYPE=" + action.payload.cardtype)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.AddedCreditCard, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedCreditCard, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: addCreditCard. Please check on URL")
+          return dispatch({ type: GitAction.AddedCreditCard, payload: [] });
+        }
+      }
+    }));
+
+  // addCreditCard = (action$) =>
+  //   action$.ofType(GitAction.AddCreditCard).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "User_AddPaymentMethod?USERID=" +
+  //         payload.USERID +
+  //         "&USERCARDNAME=" +
+  //         payload.name +
+  //         "&USERCARDNO=" +
+  //         payload.number +
+  //         "&USERCARDEXPIREDATE=" +
+  //         payload.expiry +
+  //         "&USERCARDTYPE=" +
+  //         payload.cardtype
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Credit Card successfully added");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "User_ViewUserPaymentMethod?USERID=" +
+  //           payload.USERID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.AddedCreditCard,
+  //           payloadCondition: json,
+  //           payloadValue: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('getAllCreditCard: ' + error);
+  //         return {
+  //           type: GitAction.AddedCreditCard,
+  //           payloadCondition: [],
+  //           payloadValue: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert('addCreditCard: ' + error);
+  //       return {
+  //         type: GitAction.GotCreditCard,
+  //         payloadCondition: [],
+  //         payloadValue: [],
+  //       };
+  //     }
+  //   });
+
+  updateCreditCard = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateCreditCard), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" + action.payload.USERPAYMENTMETHODID +
+            "&USERID=" + action.payload.USERID +
+            "&USERCARDNAME=" + action.payload.name +
+            "&USERCARDNO=" + action.payload.number +
+            "&USERCARDEXPIREDATE=" + action.payload.expiry +
+            "&USERCARDTYPE=" + action.payload.cardtype)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedCreditCard, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedCreditCard, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: UpdateCreditCard. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedCreditCard, payload: [] });
+        }
+      }
+    }));
+
+  // updateCreditCard = (action$) =>
+  //   action$.ofType(GitAction.UpdateCreditCard).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "User_UpdatePaymentMethod?USERPAYMENTMETHODID=" +
+  //         payload.USERPAYMENTMETHODID +
+  //         "&USERID=" +
+  //         payload.USERID +
+  //         "&USERCARDNAME=" +
+  //         payload.name +
+  //         "&USERCARDNO=" +
+  //         payload.number +
+  //         "&USERCARDEXPIREDATE=" +
+  //         payload.expiry +
+  //         "&USERCARDTYPE=" +
+  //         payload.cardtype
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Credit Card successfully updated");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "User_ViewUserPaymentMethod?USERID=" +
+  //           payload.USERID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+  //         return {
+  //           type: GitAction.UpdatedCreditCard,
+  //           payloadCondition: json,
+  //           payloadValue: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('getAllCreditCard: ' + error);
+  //         return {
+  //           type: GitAction.GotCreditCard,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert('updateCreditCard: ' + error);
+  //       return {
+  //         type: GitAction.UpdatedCreditCard,
+  //         payloadCondition: [],
+  //         payloadValue: [],
+  //       };
+  //     }
+  //   });
+
+  deleteCreditCard = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.DeleteCreditCard), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_DeletePaymentMethod?USERPAYMENTMETHODID=" + action.payload.cardId)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.DeletedCreditCard, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.DeletedCreditCard, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: deleteCreditCard. Please check on URL")
+          return dispatch({ type: GitAction.DeletedCreditCard, payload: [] });
+        }
+      }
+    }));
+
+  // deleteCreditCard = (action$) =>
+  //   action$.ofType(GitAction.DeleteCreditCard).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "User_DeletePaymentMethod?USERPAYMENTMETHODID=" +
+  //         payload.cardId
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Credit Card selected successfully deleted");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "User_ViewUserPaymentMethod?USERID=" +
+  //           payload.userId
+  //         );
+  //         let json_1 = await response_1.json();
+  //         json_1 = JSON.parse(json_1);
+
+  //         return {
+  //           type: GitAction.DeletedCreditCard,
+  //           payloadCondition: json,
+  //           payloadValue: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('getAllCreditCard: ' + error);
+  //         return {
+  //           type: GitAction.GotCreditCard,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert('deleteCreditCard: ' + error);
+  //       return {
+  //         type: GitAction.DeletedCreditCard,
+  //         payloadCondition: [],
+  //         payloadValue: [],
+  //       };
+  //     }
+  //   });
+
+  // PRODUCT
+
+  getAllProducts = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProduct), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_ItemListByType?Type=" + action.payload.type +
+            "&TypeValue=" + action.payload.typeValue +
+            "&USERID=" + action.payload.userId +
+            "&PRODUCTPERPAGE=" + action.payload.productPage +
+            "&PAGE=" + action.payload.page)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProduct, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProduct, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllProducts. Please check on URL")
+          return dispatch({ type: GitAction.GotProduct, payload: [] });
+        }
+      }
+    }));
+
+  getProductsListing = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductListing), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_ItemListByType?Type=" + action.payload.type +
+            "&TypeValue=" + action.payload.typeValue +
+            "&USERID=" + action.payload.userId +
+            "&PRODUCTPERPAGE=" + action.payload.productPage +
+            "&PAGE=" + action.payload.page)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductListing, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductListing, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getProductsListing. Please check on URL")
+          return dispatch({ type: GitAction.GotProductListing, payload: [] });
+        }
+      }
+    }));
+
+  getProductDetail = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductDetail), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_ItemDetailByProductID?ProductID=" + action.payload.productId +
+            "&USERID=" + action.payload.userId)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductDetail, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductDetail, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getProductDetail. Please check on URL")
+          return dispatch({ type: GitAction.GotProductDetail, payload: [] });
+        }
+      }
+    }));
+
+  checkProduct = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.CheckProduct), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_CheckDuplication?PRODUCTNAME=" + action.payload)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.ProductChecked, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.ProductChecked, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: checkProduct. Please check on URL")
+          return dispatch({ type: GitAction.ProductChecked, payload: [] });
+        }
+      }
+    }));
 
   // PRODUCT VARIATION DETAIL
-  addProductVariationDetail = (action$) =>
-    action$.ofType(GitAction.AddProductVariationDetail).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_AddProductVariationDetail?PRODUCTVARIATIONID=" + payload.ProductVariation +
-          "&PRODUCTID=" + payload.ProductID +
-          "&CUSTOMIZABLE=" + payload.Customizable +
-          "&VALUE=" + payload.Value +
-          "&PRODUCTSTOCK=" + payload.stock +
-          "&PRODUCTVARIATIONSKU=" + payload.sku +
-          "&PRODUCTVARIATIONPRICE=" + payload.price
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
 
-        return {
-          type: GitAction.AddedProductVariationDetail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('addProductVariationDetail: ' + error);
-        return {
-          type: GitAction.AddedProductVariationDetail,
-          payload: [],
-        };
-      }
-    });
-
-  updateProductVariationDetail = (action$) =>
-    action$.ofType(GitAction.UpdateProductVariationDetail).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "Product_UpdateProductVariationDetails?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID +
-          "&CUSTOMIZABLE=" + payload.Customizable +
-          "&VALUE=" + payload.Value +
-          "&PRODUCTSTOCK=" + payload.stock +
-          "&PRODUCTVARIATIONSKU=" + payload.sku +
-          "&PRODUCTVARIATIONPRICE=" + payload.price
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        return {
-          type: GitAction.UpdatedProductVariationDetail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdateProductVariationDetail: ' + error);
-        return {
-          type: GitAction.UpdatedProductVariationDetail,
-          payload: [],
-        };
-      }
-    });
-
-  deleteProductVariationDetail = (action$) =>
-    action$.ofType(GitAction.DeleteProductVariationDetail).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "Product_DeleteProductVariationDetails?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.DeletedProductVariationDetail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('deleteProductVariationDetail: ' + error);
-        return {
-          type: GitAction.DeletedProductVariationDetail,
-          payload: [],
-        };
-      }
-    });
-
-
-  // Product Variation Stock
-  updateProductVariationStock = (action$) =>
-    action$.ofType(GitAction.UpdateProductVariationStock).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_UpdateProductStockVariation?PRODUCTVARIATIONDETAILID=" + payload.ProductVariationDetailID +
-          "&PRODUCTSTOCK=" + payload.stock
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1)
-          toast.success("Variation stock updated successfully")
-
+  addProductVariationDetail = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.AddProductVariationDetail), map(action => {
+      return dispatch => {
         try {
-          const response = await fetch(
-            url +
-            "Product_ItemDetailByProductID?ProductID=" +
-            payload.productId +
-            "&USERID=" +
-            payload.userId
-          );
-          let json2 = await response.json();
-          json2 = JSON.parse(json2);
-          return {
-            type: GitAction.UpdatedProductVariationStock,
-            payloadProduct: json2,
-            payload: json,
-          };
+          return fetch(url +
+            "Product_AddProductVariationDetail?PRODUCTVARIATIONID=" + action.payload.ProductVariation +
+            "&PRODUCTID=" + action.payload.ProductID +
+            "&CUSTOMIZABLE=" + action.payload.Customizable +
+            "&VALUE=" + action.payload.Value +
+            "&PRODUCTSTOCK=" + action.payload.stock +
+            "&PRODUCTVARIATIONSKU=" + action.payload.sku +
+            "&PRODUCTVARIATIONPRICE=" + action.payload.price)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.AddedProductVariationDetail, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedProductVariationDetail, payload: [] });
+              }
+            });
         } catch (error) {
-          alert('UpdatedProductVariationStock: ' + error);
-          return {
-            type: GitAction.UpdatedProductVariationStock,
-            payload: [],
-          };
+          toast.error("Error Code: checkProduct. Please check on URL")
+          return dispatch({ type: GitAction.AddedProductVariationDetail, payload: [] });
         }
-
-      } catch (error) {
-        alert('updateProductVariationStock: ' + error);
-        return {
-          type: GitAction.UpdatedProductVariationStock,
-          payload: [],
-        };
       }
-    });
+    }));
 
-  // Product Specification
-
-  addProductSpecsDetail = (action$) =>
-    action$.ofType(GitAction.AddProductSpecsDetail).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "Product_AddProductSpecificationDetail?PRODUCTVARIATIONID=" +
-          payload.ProductVariation +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&PRODUCTSPECIFICATIONVALUE=" +
-          payload.value
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        return {
-          type: GitAction.AddedProductSpecsDetail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('addProductSpecsDetail: ' + error);
-        return {
-          type: GitAction.AddedProductSpecsDetail,
-          payload: [],
-        };
+  updateProductVariationDetail = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateProductVariationDetail), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_UpdateProductVariationDetails?PRODUCTVARIATIONDETAILID=" + action.payload.ProductVariationDetailID +
+            "&CUSTOMIZABLE=" + action.payload.Customizable +
+            "&VALUE=" + action.payload.Value +
+            "&PRODUCTSTOCK=" + action.payload.stock +
+            "&PRODUCTVARIATIONSKU=" + action.payload.sku +
+            "&PRODUCTVARIATIONPRICE=" + action.payload.price)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedProductVariationDetail, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedProductVariationDetail, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: updateProductVariationDetail. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedProductVariationDetail, payload: [] });
+        }
       }
-    });
-
-  updateProductSpecsDetail = (action$) =>
-    action$.ofType(GitAction.UpdateProductSpecsDetail).switchMap(async ({ payload }) => {
-      try {
-
-        const response = await fetch(
-          url +
-          "Product_UpdateProductSpecificationDetail?PRODUCTVARIATIONID=" +
-          payload.ProductVariation +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&PRODUCTSPECIFICATIONVALUE=" +
-          payload.value +
-          "&PRODUCTSPECIFICATIONDETAILID=" +
-          payload.specificationDetailID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        return {
-          type: GitAction.UpdatedProductSpecsDetail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdateProductSpecsDetail: ' + error);
-        return {
-          type: GitAction.UpdatedProductSpecsDetail,
-          payload: [],
-        };
-      }
-    });
-
-  deleteProductSpecsDetail = (action$) =>
-    action$.ofType(GitAction.DeleteProductSpecsDetail).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_DeleteProductSpecificationDetail?PRODUCTSPECIFICATIONDETAILID=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        return {
-          type: GitAction.DeletedProductSpecsDetail,
-          payload: json,
-        };
-      } catch (error) {
-        alert('DeleteProductSpecsDetail: ' + error);
-        return {
-          type: GitAction.DeletedProductSpecsDetail,
-          payload: [],
-        };
-      }
-    });
+    }));
 
   // PRODUCT VARIATION
 
-  getAllProductVariation = (action$) =>
-    action$.ofType(GitAction.GetProductVariation).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_ViewProductVariation"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductVariation,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllProductVariation: ' + error);
-        return {
-          type: GitAction.GotProductVariation,
-          payload: [],
-        };
+  getAllProductVariation = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductVariation), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "Product_ViewProductVariation")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductVariation, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductVariation, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllProductVariation. Please check on URL")
+          return dispatch({ type: GitAction.GotProductVariation, payload: [] });
+        }
       }
-    });
+    }));
 
-  getAllProductVariationByCategoryID = (action$) =>
-    action$.ofType(GitAction.GetProductVariationByCategoryID).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url + "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" + payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductVariationByCategoryID,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllProductVariationByCategoryID: ' + error);
-        return {
-          type: GitAction.GotProductVariationByCategoryID,
-          payload: [],
-        };
+  getAllProductVariationByCategoryID = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductVariationByCategoryID), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "Product_ViewProductVariationByCategoryID?PRODUCTCATEGORYID=" + action.payload)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductVariationByCategoryID, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductVariationByCategoryID, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllProductVariationByCategoryID. Please check on URL")
+          return dispatch({ type: GitAction.GotProductVariationByCategoryID, payload: [] });
+        }
       }
-    });
-
-  addProductVariation = (action$) => action$.ofType(GitAction.AddProductVariation).switchMap(async ({ payload }) => {
-    try {
-      const response = await fetch(
-        url +
-        "Product_AddProductVariation?PRODUCTVARIATION=" +
-        payload.ProductVariation +
-        "&PRODUCTCATEGORYID=" +
-        payload.ProductCategoryID +
-        "&CUSTOMIZABLE=" +
-        payload.CustomizableIndicator
-      );
-      const json = await response.json();
-      if (json !== "fail") {
-        json = JSON.parse(json);
-      } else {
-        json = [];
-      }
-      return {
-        type: GitAction.AddedProductVariation,
-        payload: json,
-      };
-    } catch (error) {
-      alert('addProductVariation: ' + error);
-      return {
-        type: GitAction.AddedProductVariation,
-        payload: [],
-      };
-    }
-  });
-
-  updateProductVariation = (action$) => action$.ofType(GitAction.UpdateProductVariation).switchMap(async ({ payload }) => {
-    try {
-      const response = await fetch(
-        url +
-        "Product_UpdateProductVariation?PRODUCTVARIATIONID=" +
-        payload.ProductVariationID +
-        "&PRODUCTVARIATION=" +
-        payload.ProductVariation +
-        "&PRODUCTCATEGORYID=" +
-        payload.ProductCategoryID +
-        "&CUSTOMIZABLE=" +
-        payload.Customizable
-      );
-      let json = await response.json();
-      json = JSON.parse(json);
-      return {
-        type: GitAction.UpdatedProductVariation,
-        payload: json,
-      };
-    } catch (error) {
-      alert('updateProductVariation: ' + error);
-      return {
-        type: GitAction.UpdatedProductVariation,
-        payload: [],
-      };
-    }
-  });
-
-  deleteProductVariation = (action$) => action$.ofType(GitAction.DeleteProductVariation).switchMap(async ({ payload }) => {
-    try {
-      const response = await fetch(url + "Product_DeleteProductVariation?PRODUCTVARIATIONID=" + payload.ProductVariationID
-      );
-      let json = await response.json();
-      json = JSON.parse(json);
-      if (json !== "fail") {
-      } else {
-        json = [];
-      }
-      return {
-        type: GitAction.DeletedProductVariation,
-        payload: json,
-      };
-    } catch (error) {
-      alert('deleteProductVariation: ' + error);
-      return {
-        type: GitAction.DeletedProductVariation,
-        payload: [],
-      };
-    }
-  });
-
-  addProductPurchaseOrder = (action$) =>
-    action$.ofType(GitAction.AddProductPurchaseOrder).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_AddPurchaseOrder?PRODUCTIDS=" +
-          payload.ProductID +
-          "&PRODUCTQUANTITYS=" +
-          payload.ProductStock +
-          "&SUPPLIERID=" +
-          payload.SupplierID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.AddedProductPurchaseOrder,
-          payload: json,
-        };
-      } catch (error) {
-        alert('addProductPurchaseOrder: ' + error);
-        return {
-          type: GitAction.AddedProductPurchaseOrder,
-          payload: [],
-        };
-      }
-    });
-
-
+    }));
 
   // PRODUCT CATEGORY
 
-  getAllCategories = (action$) =>
-    action$.ofType(GitAction.GetProductCategory).switchMap(async () => {
-      try {
-        const response = await fetch(url +
-          "Product_CategoryListByAll"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductCategory,
-          payload: json,
-        };
-      } catch (error) {
-        // alert('getAllCategories: ' + error);
-        return {
-          type: GitAction.GotProductCategory,
-          payload: [],
-        };
+  getAllCategories = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductCategory), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "Product_CategoryListByAll")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductCategory, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductCategory, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllProductVariationByCategoryID. Please check on URL")
+          return dispatch({ type: GitAction.GotProductCategory, payload: [] });
+        }
       }
-    });
+    }));
 
-  getAllCategoriesListing = (action$) =>
-    action$.ofType(GitAction.GetProductCategoryListing).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_CategoryListing"
-        );
-        // wow
-
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductCategoryListing,
-          payload: json,
-        };
-      } catch (error) {
-        return {
-          type: GitAction.GotProductCategoryListing,
-          payload: [],
-        };
+    getAllCategoriesListing = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductCategoryListing), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "Product_CategoryListing")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductCategoryListing, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductCategoryListing, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllCategories. Please check on URL")
+          return dispatch({ type: GitAction.GotProductCategoryListing, payload: [] });
+        }
       }
-    });
-
-  addProductCategory = (action$) =>
-    action$.ofType(GitAction.AddProductCategory).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_AddProductCategory?PRODUCTCATEGORY=" +
-          payload.ProductCategory +
-          "&PRODUCTCATEGORYIMAGE=" +
-          payload.ProductCategoryImage +
-          "&HIERARCHYID=" +
-          payload.HierarchyID +
-          "&PARENTPRODUCTCATEGORYID=" +
-          payload.ParentProductCategoryID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.AddedProductCategory,
-          payload: json,
-        };
-      } catch (error) {
-        alert('addProductCategory: ' + error);
-        return {
-          type: GitAction.AddedProductCategory,
-          payload: [],
-        };
-      }
-    });
-
-  updateProductCategory = (action$) =>
-    action$.ofType(GitAction.UpdateProductCategory).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_UpdateProductCategory?PRODUCTCATEGORYID=" +
-          payload.ProductCategoryID +
-          "&PRODUCTCATEGORY=" +
-          payload.ProductCategory
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.UpdatedProductCategory,
-          payload: json,
-        };
-      } catch (error) {
-        alert('updateProductCategory: ' + error);
-        return {
-          type: GitAction.UpdatedProductCategory,
-          payload: [],
-        };
-      }
-    });
-
-  deleteProductCategory = (action$) =>
-    action$.ofType(GitAction.DeleteProductCategory).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_DeleteProductCategory?PRODUCTCATEGORYID=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.DeletedProductCategory,
-          payload: json,
-        };
-      } catch (error) {
-        alert('deleteProductCategory: ' + error);
-        return {
-          type: GitAction.DeletedProductCategory,
-          payload: [],
-        };
-      }
-    });
+    }));
 
   // NOTIFICATION
 
-  getNotification = (action$) =>
-    action$.ofType(GitAction.GetNotification).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ViewNotification?UserID=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotNotification,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getNotification: ' + error);
-        return {
-          type: GitAction.GotNotification,
-          payload: [],
-        };
+  getNotification = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetNotification), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "Product_CategoryListing")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotNotification, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotNotification, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getNotification. Please check on URL")
+          return dispatch({ type: GitAction.GotNotification, payload: [] });
+        }
       }
-    });
+    }));
 
   // SUPPLIER
 
-  getAllSupplierByUserStatus = (action$) =>
-    action$.ofType(GitAction.GetSupplierByUserStatus).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_ProfileListByUserStatus?UserStatus=" +
-          payload +
-          "&UserRoleID=15"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json !== "fail") {
-        } else {
-          json = [];
+  getAllSupplierByUserStatus = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetSupplierByUserStatus), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "User_ProfileListByUserStatus?UserStatus=" +
+            action.payload +
+            "&UserRoleID=15")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotSupplierByUserStatus, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotSupplierByUserStatus, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllSupplierByUserStatus. Please check on URL")
+          return dispatch({ type: GitAction.GotSupplierByUserStatus, payload: [] });
         }
-        return {
-          type: GitAction.GotSupplierByUserStatus,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllSupplierByUserStatus: ' + error);
-        return {
-          type: GitAction.GotSupplierByUserStatus,
-          payload: [],
-        };
       }
-    });
+    }));
 
-  registerSupplier = (action$) =>
-    action$.ofType(GitAction.RegisterSupplier).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_SupplierRegister?USERNAME=" +
-          payload.repUsername +
-          "&USERPASSWORD=" +
-          payload.repPassword +
-          "&USERFIRSTNAME=" +
-          payload.repFirstName +
-          "&USERLASTNAME=" +
-          payload.repLastName +
-          "&USERCONTACTNO=" +
-          payload.repContact +
-          "&USERDATEBIRTH=" +
-          payload.repDOB +
-          "&USEREMAIL=" +
-          payload.repEmail +
-          "&SUPPLIERNAME=" +
-          payload.supplierName +
-          "&SUPPLIERCONTACTNUMBER=" +
-          payload.supplierContact +
-          "&SUPPLIERWEBSITE=" +
-          payload.supplierWebsite +
-          "&SUPPLIERADDRESSLINE1=" +
-          payload.supplierAddress1 +
-          "&SUPPLIERADDRESSLINE2=" +
-          payload.supplierAddress2 +
-          "&SUPPLIERPOSCODE=" +
-          payload.supplierPostal +
-          "&SUPPLIERCITY=" +
-          payload.supplierCity +
-          "&SUPPLIERSTATE=" +
-          payload.supplierState +
-          "&SUPPLIERCOUNTRYID=2"
-          // payload.supplierCountry
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.RegisteredSupplier,
-          payload: json,
-        };
-      } catch (error) {
-        alert('registerSupplier: ' + error);
-        return {
-          type: GitAction.RegisteredSupplier,
-          payload: [],
-        };
+  registerSupplier = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.RegisterSupplier), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_SupplierRegister?USERNAME=" +
+            action.payload.repUsername +
+            "&USERPASSWORD=" +
+            action.payload.repPassword +
+            "&USERFIRSTNAME=" +
+            action.payload.repFirstName +
+            "&USERLASTNAME=" +
+            action.payload.repLastName +
+            "&USERCONTACTNO=" +
+            action.payload.repContact +
+            "&USERDATEBIRTH=" +
+            action.payload.repDOB +
+            "&USEREMAIL=" +
+            action.payload.repEmail +
+            "&SUPPLIERNAME=" +
+            action.payload.supplierName +
+            "&SUPPLIERCONTACTNUMBER=" +
+            action.payload.supplierContact +
+            "&SUPPLIERWEBSITE=" +
+            action.payload.supplierWebsite +
+            "&SUPPLIERADDRESSLINE1=" +
+            action.payload.supplierAddress1 +
+            "&SUPPLIERADDRESSLINE2=" +
+            action.payload.supplierAddress2 +
+            "&SUPPLIERPOSCODE=" +
+            action.payload.supplierPostal +
+            "&SUPPLIERCITY=" +
+            action.payload.supplierCity +
+            "&SUPPLIERSTATE=" +
+            action.payload.supplierState +
+            "&SUPPLIERCOUNTRYID=2")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.RegisteredSupplier, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.RegisteredSupplier, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: registerSupplier. Please check on URL")
+          return dispatch({ type: GitAction.RegisteredSupplier, payload: [] });
+        }
       }
-    });
+    }));
 
-  endorseSupplier = (action$) =>
-    action$.ofType(GitAction.EndorseSupplier).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "User_EndorseSupplier?USERIDS=" +
-          payload.selectedData +
-          "&USERSTATUS=" +
-          payload.status
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.EndorsedSupplier,
-          payload: json,
-        };
-      } catch (error) {
-        alert('endorseSupplier: ' + error);
-        return {
-          type: GitAction.EndorsedSupplier,
-          payload: [],
-        };
+  endorseSupplier = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.EndorseSupplier), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_EndorseSupplier?USERIDS=" + action.payload.selectedData +
+            "&USERSTATUS=" + action.payload.status)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.EndorsedSupplier, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.EndorsedSupplier, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: endorseSupplier. Please check on URL")
+          return dispatch({ type: GitAction.EndorsedSupplier, payload: [] });
+        }
       }
-    });
+    }));
 
   // REVIEW
 
-  viewProductReviewByProductID = (action$) =>
-    action$.ofType(GitAction.GetProductReviewByProductID).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_ViewReviewByProductID?PRODUCTID=" +
-          payload.ProductID +
-          "&PARENTPRODUCTREVIEWID=" +
-          payload.ParentProductReviewID
-        );
-        let json = await response.json();
-        return {
-          type: GitAction.GotProductReviewByProductID,
-          payload: json,
-        };
-      } catch (error) {
-        alert('viewProductReviewByProductID: ' + error);
-        return {
-          type: GitAction.GotProductReviewByProductID,
-          payload: [],
-        };
-      }
-    });
-
-  viewProductReview = (action$) =>
-    action$.ofType(GitAction.GetProductReview).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_ViewProductReview?USERID=" +
-          payload.UserID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductReview,
-          payload: json,
-        };
-      } catch (error) {
-        alert('viewProductReview: ' + error);
-        return {
-          type: GitAction.GotProductReview,
-          payload: [],
-        };
-      }
-    });
-
-  addProductReview = (action$) =>
-    action$.ofType(GitAction.addProductReview).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Product_AddReview?PARENTPRODUCTREVIEWID=" +
-          payload.parentProductReviewID
-          + "&PRODUCTID=" +
-          payload.productID
-          + "&USERID=" +
-          payload.UserID
-          + "&PRODUCTREVIEWRATING=" +
-          payload.productReviewRating
-          + "&PRODUCTREVIEWCOMMENT=" +
-          payload.productReviewComment
-          + "&REPLYPARENTID=" +
-          payload.replyParentID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1) {
-          toast.success("Sucessfully send a review");
-        }
+  viewProductReviewByProductID = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductReviewByProductID), map(action => {
+      return dispatch => {
         try {
-          const response_1 = await fetch(
-            url +
-            "Product_ViewReviewByProductID?PRODUCTID=" +
-            payload.productID +
-            "&PARENTPRODUCTREVIEWID=0"
-          );
-          let json_1 = await response_1.json();
-          return {
-            type: GitAction.addedProductReview,
-            payload: json_1,
-            payload2: json,
-          };
+          return fetch(url +
+            "Product_ViewReviewByProductID?PRODUCTID=" + action.payload.ProductID +
+            "&PARENTPRODUCTREVIEWID=" + action.payload.ParentProductReviewID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductReviewByProductID, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductReviewByProductID, payload: [] });
+              }
+            });
         } catch (error) {
-          alert('viewProductReviewByProductID: ' + error);
-          return {
-            type: GitAction.addedProductReview,
-            payload: [],
-          };
+          toast.error("Error Code: viewProductReviewByProductID. Please check on URL")
+          return dispatch({ type: GitAction.GotProductReviewByProductID, payload: [] });
         }
-      } catch (error) {
-        alert('addProductReview: ' + error);
-        return {
-          type: GitAction.addedProductReview,
-          payload: [],
-        };
       }
-    });
+    }));
+
+  viewProductReview = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductReview), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_ViewProductReview?USERID=" + action.payload.UserID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductReview, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductReview, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: viewProductReview. Please check on URL")
+          return dispatch({ type: GitAction.GotProductReview, payload: [] });
+        }
+      }
+    }));
+
+  addProductReview = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.addProductReview), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Product_AddReview?PARENTPRODUCTREVIEWID=" + action.payload.parentProductReviewID
+            + "&PRODUCTID=" + action.payload.productID
+            + "&USERID=" + action.payload.UserID
+            + "&PRODUCTREVIEWRATING=" + action.payload.productReviewRating
+            + "&PRODUCTREVIEWCOMMENT=" + action.payload.productReviewComment
+            + "&REPLYPARENTID=" + action.payload.replyParentID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.addedProductReview, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.addedProductReview, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: viewProductReview. Please check on URL")
+          return dispatch({ type: GitAction.addedProductReview, payload: [] });
+        }
+      }
+    }));
+
+  // addProductReview = (action$) =>
+  //   action$.ofType(GitAction.addProductReview).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url +
+  //         "Product_AddReview?PARENTPRODUCTREVIEWID=" +
+  //         payload.parentProductReviewID
+  //         + "&PRODUCTID=" +
+  //         payload.productID
+  //         + "&USERID=" +
+  //         payload.UserID
+  //         + "&PRODUCTREVIEWRATING=" +
+  //         payload.productReviewRating
+  //         + "&PRODUCTREVIEWCOMMENT=" +
+  //         payload.productReviewComment
+  //         + "&REPLYPARENTID=" +
+  //         payload.replyParentID
+  //       );
+  //       let json = await response.json();
+  //       json = JSON.parse(json);
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Sucessfully send a review");
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "Product_ViewReviewByProductID?PRODUCTID=" +
+  //           payload.productID +
+  //           "&PARENTPRODUCTREVIEWID=0"
+  //         );
+  //         let json_1 = await response_1.json();
+  //         return {
+  //           type: GitAction.addedProductReview,
+  //           payload: json_1,
+  //           payload2: json,
+  //         };
+  //       } catch (error) {
+  //         alert('viewProductReviewByProductID: ' + error);
+  //         return {
+  //           type: GitAction.addedProductReview,
+  //           payload: [],
+  //         };
+  //       }
+  //     } catch (error) {
+  //       alert('addProductReview: ' + error);
+  //       return {
+  //         type: GitAction.addedProductReview,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
 
   // ORDER
 
-  AddOrder = (action$) =>
-    action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
-      console.log("payload", payload)
-      try {
-        const response = await fetch(
-          url + "Order_AddOrder"
-          , {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              USERID: payload.UserID,
-              USERADDRESSID: payload.UserAddressID,
-              PROMOTIONID: 0,
-              PROMOTIONCODEID: 0,
-              PAYMENTMETHODID: payload.PaymentMethodID,
-              USERPAYMENTMETHODID: payload.UserPaymentMethodID,
-              ORDERTOTALAMOUNT: payload.OrderTotalAmount,
-              ORDERPAIDAMOUNT: payload.OrderPaidAmount,
-              PRODUCTID: payload.ProductID,
-              PRODUCTQUANTITY: payload.ProductQuantity,
-              PRODUCTVARIATIONDETAILID: payload.ProductVariationDetailID,
-              TRACKINGSTATUSID: payload.TrackingStatusID,
-              PickUpInd: payload.PickUpInd,
-              TRANSACTIONUUID: payload.TRANSACTIONUUID,
-              ProjectID: 2,
-
-              // fpx_msgType: payload.fpx_msgType,
-              fpx_msgToken: payload.fpx_msgToken,
-              // fpx_sellerExId: payload.fpx_sellerExId,
-              fpx_sellerExOrderNo: payload.fpx_sellerExOrderNo,
-              fpx_sellerTxnTime: payload.fpx_sellerTxnTime,
-              fpx_sellerOrderNo: payload.fpx_sellerOrderNo,
-              // fpx_sellerId: payload.fpx_sellerId,
-              fpx_sellerBankCode: payload.fpx_sellerBankCode,
-              // fpx_txnCurrency: payload.fpx_txnCurrency,
-              fpx_buyerEmail: payload.fpx_buyerEmail,
-              // fpx_checkSum: payload.fpx_checkSum,
-
-              fpx_buyerName: payload.fpx_buyerName,
-              fpx_buyerBankId: payload.fpx_buyerBankId,
-              fpx_buyerBankBranch: payload.fpx_buyerBankBranch,
-              fpx_buyerAccNo: payload.fpx_buyerAccNo,
-              fpx_buyerId: payload.fpx_buyerId,
-              fpx_makerName: payload.fpx_makerName,
-              fpx_buyerIban: payload.fpx_buyerIban,
-              fpx_version: payload.fpx_version,
-              fpx_productDesc: payload.fpx_productDesc
-            })
-          }
-        )
-        let json = await response.json();
-        if (json[0].ReturnVal === 1) {
-          toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
-        }
+  AddOrder = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.AddOrder), map(action => {
+      return dispatch => {
         try {
-          console.log(url +
-            "Product_DeleteProductCart?USERCARTID=" +
-            payload.UserCartID)
-          const response_1 = await fetch(
-            url +
-            "Product_DeleteProductCart?USERCARTID=" +
-            payload.UserCartID
-          );
-          let json_1 = await response_1.json();
-          return {
-            type: GitAction.AddedOrder,
-            payload: json_1,
-          };
-        } catch (error) {
-          alert('deleteProductCart: ' + error);
-          return {
-            type: GitAction.AddedOrder,
-            payload: [],
-          };
-        }
-      }
-      catch (error) {
-        alert('Order_AddOrder: ' + error);
-        return {
-          type: GitAction.AddedOrder,
-          payload: [],
-        };
-      }
-    });
-
-  AddOrder_CreditCard = (action$) =>
-    action$.ofType(GitAction.AddOrderCreditCard).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url + "Order_AddCreditCardOrder"
-          , {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              USERID: payload.UserID,
-              USERADDRESSID: payload.UserAddressID,
-              PROMOTIONID: 0,
-              PROMOTIONCODEID: 0,
-              PAYMENTMETHODID: payload.PaymentMethodID,
-              USERPAYMENTMETHODID: payload.UserPaymentMethodID,
-              ORDERTOTALAMOUNT: payload.OrderTotalAmount,
-              ORDERPAIDAMOUNT: payload.OrderPaidAmount,
-              PRODUCTID: payload.ProductID,
-              PRODUCTQUANTITY: payload.ProductQuantity,
-              PRODUCTVARIATIONDETAILID: payload.ProductVariationDetailID,
-              TRACKINGSTATUSID: payload.TrackingStatusID,
-              PickUpInd: payload.PickUpInd,
-              TRANSACTIONUUID: payload.TRANSACTIONUUID,
-              ProjectID: 2,
-
-              signed_field_names: payload.signed_field_names,
-              signed_date_time: payload.signed_date_time,
-              locale: payload.locale,
-              reference_number: payload.reference_number,
-              currency: payload.currency,
-              bill_to_surname: payload.bill_to_surname,
-              bill_to_forename: payload.bill_to_forename,
-              bill_to_email: payload.bill_to_email,
-              bill_to_address_line1: payload.bill_to_address_line1,
-              bill_to_address_city: payload.bill_to_address_city,
-              bill_to_address_country: payload.bill_to_address_country
+          return fetch(url + "Order_AddOrder"
+            , {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                USERID: action.payload.UserID,
+                USERADDRESSID: action.payload.UserAddressID,
+                PROMOTIONID: 0,
+                PROMOTIONCODEID: 0,
+                PAYMENTMETHODID: action.payload.PaymentMethodID,
+                USERPAYMENTMETHODID: action.payload.UserPaymentMethodID,
+                ORDERTOTALAMOUNT: action.payload.OrderTotalAmount,
+                ORDERPAIDAMOUNT: action.payload.OrderPaidAmount,
+                PRODUCTID: action.payload.ProductID,
+                PRODUCTQUANTITY: action.payload.ProductQuantity,
+                PRODUCTVARIATIONDETAILID: action.payload.ProductVariationDetailID,
+                TRACKINGSTATUSID: action.payload.TrackingStatusID,
+                PickUpInd: action.payload.PickUpInd,
+                TRANSACTIONUUID: action.payload.TRANSACTIONUUID,
+                ProjectID: 2,
+                fpx_msgToken: action.payload.fpx_msgToken,
+                fpx_sellerExOrderNo: action.payload.fpx_sellerExOrderNo,
+                fpx_sellerTxnTime: action.payload.fpx_sellerTxnTime,
+                fpx_sellerOrderNo: action.payload.fpx_sellerOrderNo,
+                fpx_sellerBankCode: action.payload.fpx_sellerBankCode,
+                fpx_buyerEmail: action.payload.fpx_buyerEmail,
+                fpx_buyerName: action.payload.fpx_buyerName,
+                fpx_buyerBankId: action.payload.fpx_buyerBankId,
+                fpx_buyerBankBranch: action.payload.fpx_buyerBankBranch,
+                fpx_buyerAccNo: action.payload.fpx_buyerAccNo,
+                fpx_buyerId: action.payload.fpx_buyerId,
+                fpx_makerName: action.payload.fpx_makerName,
+                fpx_buyerIban: action.payload.fpx_buyerIban,
+                fpx_version: action.payload.fpx_version,
+                fpx_productDesc: action.payload.fpx_productDesc
+              })
             })
-          }
-        )
-        let json = await response.json();
-        if (json[0].ReturnVal === 1) {
-          toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
-        }
-        try {
-          const response_1 = await fetch(
-            url +
-            "Product_DeleteProductCart?USERCARTID=" +
-            payload.UserCartID
-          );
-          let json_1 = await response_1.json();
-          return {
-            type: GitAction.AddedOrderCreditCard,
-            payload: json_1,
-          };
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.AddedOrder, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedOrder, payload: [] });
+              }
+            });
         } catch (error) {
-          alert('deleteProductCart: ' + error);
-          return {
-            type: GitAction.AddedOrderCreditCard,
-            payload: [],
-          };
+          toast.error("Error Code: AddOrder. Please check on URL")
+          return dispatch({ type: GitAction.AddedOrder, payload: [] });
         }
       }
-      catch (error) {
-        alert('deleteProductCart: ' + error);
-        return {
-          type: GitAction.AddedOrderCreditCard,
-          payload: [],
-        };
-      }
-    });
+    }));
 
-  UpdateOrder_AccountOrder = (action$) =>
-    action$.ofType(GitAction.UpdateOrder).switchMap(async ({ payload }) => {
-      console.log(url +
-        "Order_UpdateOrder?OrderID=" +
-        payload.OrderID +
-        "&PaymentMethodID=" +
-        payload.PaymentMethodID +
-        "&UserPaymentMethodID=" +
-        payload.UserPaymentMethodID +
-        "&OrderTotalAmount=" +
-        payload.OrderTotalAmount +
-        "&OrderPaidAmount=" +
-        payload.OrderPaidAmount +
-        "&TRANSACTIONUUID=" +
-        payload.TRANSACTIONUUID +
-        "&fpx_msgToken=" +
-        payload.fpx_msgToken +
-        "&fpx_sellerExOrderNo=" +
-        payload.fpx_sellerExOrderNo +
-        "&fpx_sellerTxnTime=" +
-        payload.fpx_sellerTxnTime +
+  // AddOrder = (action$) =>
+  //   action$.ofType(GitAction.AddOrder).switchMap(async ({ payload }) => {
+  //     console.log("payload", payload)
+  //     try {
+  //       const response = await fetch(
+  //         url + "Order_AddOrder"
+  //         , {
+  //           method: 'POST',
+  //           headers: {
+  //             'Accept': 'application/json',
+  //             'Content-Type': 'application/json'
+  //           },
+  //           body: JSON.stringify({
+  //             USERID: payload.UserID,
+  //             USERADDRESSID: payload.UserAddressID,
+  //             PROMOTIONID: 0,
+  //             PROMOTIONCODEID: 0,
+  //             PAYMENTMETHODID: payload.PaymentMethodID,
+  //             USERPAYMENTMETHODID: payload.UserPaymentMethodID,
+  //             ORDERTOTALAMOUNT: payload.OrderTotalAmount,
+  //             ORDERPAIDAMOUNT: payload.OrderPaidAmount,
+  //             PRODUCTID: payload.ProductID,
+  //             PRODUCTQUANTITY: payload.ProductQuantity,
+  //             PRODUCTVARIATIONDETAILID: payload.ProductVariationDetailID,
+  //             TRACKINGSTATUSID: payload.TrackingStatusID,
+  //             PickUpInd: payload.PickUpInd,
+  //             TRANSACTIONUUID: payload.TRANSACTIONUUID,
+  //             ProjectID: 2,
 
-        "&fpx_sellerOrderNo=" +
-        payload.fpx_sellerOrderNo +
-        "&fpx_sellerBankCode=" +
-        payload.fpx_sellerBankCode +
-        "&fpx_buyerEmail=" +
-        payload.fpx_buyerEmail +
-        "&fpx_buyerName=" +
-        payload.fpx_buyerName +
+  //             // fpx_msgType: payload.fpx_msgType,
+  //             fpx_msgToken: payload.fpx_msgToken,
+  //             // fpx_sellerExId: payload.fpx_sellerExId,
+  //             fpx_sellerExOrderNo: payload.fpx_sellerExOrderNo,
+  //             fpx_sellerTxnTime: payload.fpx_sellerTxnTime,
+  //             fpx_sellerOrderNo: payload.fpx_sellerOrderNo,
+  //             // fpx_sellerId: payload.fpx_sellerId,
+  //             fpx_sellerBankCode: payload.fpx_sellerBankCode,
+  //             // fpx_txnCurrency: payload.fpx_txnCurrency,
+  //             fpx_buyerEmail: payload.fpx_buyerEmail,
+  //             // fpx_checkSum: payload.fpx_checkSum,
 
-        "&fpx_buyerBankId=" +
-        payload.fpx_buyerBankId +
-        "&fpx_buyerBankBranch=" +
-        payload.fpx_buyerBankBranch +
-        "&fpx_buyerAccNo=" +
-        payload.fpx_buyerAccNo +
-        "&fpx_buyerId=" +
-        payload.fpx_buyerId +
-        "&fpx_makerName=" +
-        payload.fpx_makerName +
+  //             fpx_buyerName: payload.fpx_buyerName,
+  //             fpx_buyerBankId: payload.fpx_buyerBankId,
+  //             fpx_buyerBankBranch: payload.fpx_buyerBankBranch,
+  //             fpx_buyerAccNo: payload.fpx_buyerAccNo,
+  //             fpx_buyerId: payload.fpx_buyerId,
+  //             fpx_makerName: payload.fpx_makerName,
+  //             fpx_buyerIban: payload.fpx_buyerIban,
+  //             fpx_version: payload.fpx_version,
+  //             fpx_productDesc: payload.fpx_productDesc
+  //           })
+  //         }
+  //       )
+  //       let json = await response.json();
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
+  //       }
+  //       try {
+  //         console.log(url +
+  //           "Product_DeleteProductCart?USERCARTID=" +
+  //           payload.UserCartID)
+  //         const response_1 = await fetch(
+  //           url +
+  //           "Product_DeleteProductCart?USERCARTID=" +
+  //           payload.UserCartID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         return {
+  //           type: GitAction.AddedOrder,
+  //           payload: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('deleteProductCart: ' + error);
+  //         return {
+  //           type: GitAction.AddedOrder,
+  //           payload: [],
+  //         };
+  //       }
+  //     }
+  //     catch (error) {
+  //       alert('Order_AddOrder: ' + error);
+  //       return {
+  //         type: GitAction.AddedOrder,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
 
-        "&fpx_buyerIban=" +
-        payload.fpx_buyerIban +
-        "&fpx_version=" +
-        payload.fpx_version +
-        "&fpx_productDesc=" +
-        payload.fpx_productDesc)
-      try {
-        const response = await fetch(url +
-          "Order_UpdateOrder?OrderID=" +
-          payload.OrderID +
-          "&PaymentMethodID=" +
-          payload.PaymentMethodID +
-          "&UserPaymentMethodID=" +
-          payload.UserPaymentMethodID +
-          "&OrderTotalAmount=" +
-          payload.OrderTotalAmount +
-          "&OrderPaidAmount=" +
-          payload.OrderPaidAmount +
-          "&TRANSACTIONUUID=" +
-          payload.TRANSACTIONUUID +
-          "&fpx_msgToken=" +
-          payload.fpx_msgToken +
-          "&fpx_sellerExOrderNo=" +
-          payload.fpx_sellerExOrderNo +
-          "&fpx_sellerTxnTime=" +
-          payload.fpx_sellerTxnTime +
-
-          "&fpx_sellerOrderNo=" +
-          payload.fpx_sellerOrderNo +
-          "&fpx_sellerBankCode=" +
-          payload.fpx_sellerBankCode +
-          "&fpx_buyerEmail=" +
-          payload.fpx_buyerEmail +
-          "&fpx_buyerName=" +
-          payload.fpx_buyerName +
-
-          "&fpx_buyerBankId=" +
-          payload.fpx_buyerBankId +
-          "&fpx_buyerBankBranch=" +
-          payload.fpx_buyerBankBranch +
-          "&fpx_buyerAccNo=" +
-          payload.fpx_buyerAccNo +
-          "&fpx_buyerId=" +
-          payload.fpx_buyerId +
-          "&fpx_makerName=" +
-          payload.fpx_makerName +
-
-          "&fpx_buyerIban=" +
-          payload.fpx_buyerIban +
-          "&fpx_version=" +
-          payload.fpx_version +
-          "&fpx_productDesc=" +
-          payload.fpx_productDesc
-        );
-        let json = await response.json();
-        json = JSON.parse(json)
-        if (json[0].ReturnVal === 1) {
-          toast.success("Order is successfully updated ORDERID : " + json[0].OrderID);
+  AddOrder_CreditCard = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.AddOrderCreditCard), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "Order_AddCreditCardOrder"
+            , {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                USERID: action.payload.UserID,
+                USERADDRESSID: action.payload.UserAddressID,
+                PROMOTIONID: 0,
+                PROMOTIONCODEID: 0,
+                PAYMENTMETHODID: action.payload.PaymentMethodID,
+                USERPAYMENTMETHODID: action.payload.UserPaymentMethodID,
+                ORDERTOTALAMOUNT: action.payload.OrderTotalAmount,
+                ORDERPAIDAMOUNT: action.payload.OrderPaidAmount,
+                PRODUCTID: action.payload.ProductID,
+                PRODUCTQUANTITY: action.payload.ProductQuantity,
+                PRODUCTVARIATIONDETAILID: action.payload.ProductVariationDetailID,
+                TRACKINGSTATUSID: action.payload.TrackingStatusID,
+                PickUpInd: action.payload.PickUpInd,
+                TRANSACTIONUUID: action.payload.TRANSACTIONUUID,
+                ProjectID: 2,
+                signed_field_names: action.payload.signed_field_names,
+                signed_date_time: action.payload.signed_date_time,
+                locale: action.payload.locale,
+                reference_number: action.payload.reference_number,
+                currency: action.payload.currency,
+                bill_to_surname: action.payload.bill_to_surname,
+                bill_to_forename: action.payload.bill_to_forename,
+                bill_to_email: action.payload.bill_to_email,
+                bill_to_address_line1: action.payload.bill_to_address_line1,
+                bill_to_address_city: action.payload.bill_to_address_city,
+                bill_to_address_country: action.payload.bill_to_address_country
+              })
+            })
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.AddedOrderCreditCard, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedOrderCreditCard, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: viewProductReview. Please check on URL")
+          return dispatch({ type: GitAction.AddedOrderCreditCard, payload: [] });
         }
-        return {
-          type: GitAction.UpdatedOrder,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdatedOrder: ' + error);
-        return {
-          type: GitAction.UpdatedOrder,
-          payload: []
-        };
       }
-    });
+    }));
 
+  // AddOrder_CreditCard = (action$) =>
+  //   action$.ofType(GitAction.AddOrderCreditCard).switchMap(async ({ payload }) => {
+  //     try {
+  //       const response = await fetch(
+  //         url + "Order_AddCreditCardOrder"
+  //         , {
+  //           method: 'POST',
+  //           headers: {
+  //             'Accept': 'application/json',
+  //             'Content-Type': 'application/json'
+  //           },
+  //           body: JSON.stringify({
+  //             USERID: payload.UserID,
+  //             USERADDRESSID: payload.UserAddressID,
+  //             PROMOTIONID: 0,
+  //             PROMOTIONCODEID: 0,
+  //             PAYMENTMETHODID: payload.PaymentMethodID,
+  //             USERPAYMENTMETHODID: payload.UserPaymentMethodID,
+  //             ORDERTOTALAMOUNT: payload.OrderTotalAmount,
+  //             ORDERPAIDAMOUNT: payload.OrderPaidAmount,
+  //             PRODUCTID: payload.ProductID,
+  //             PRODUCTQUANTITY: payload.ProductQuantity,
+  //             PRODUCTVARIATIONDETAILID: payload.ProductVariationDetailID,
+  //             TRACKINGSTATUSID: payload.TrackingStatusID,
+  //             PickUpInd: payload.PickUpInd,
+  //             TRANSACTIONUUID: payload.TRANSACTIONUUID,
+  //             ProjectID: 2,
 
-  UpdateOrder_AccountOrderCreditCard = (action$) =>
-    action$.ofType(GitAction.UpdateOrder_CreditCard).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(url +
-          "Order_UpdateOrder_CreditCard?OrderID=" +
-          payload.OrderID +
-          "&PaymentMethodID=" +
-          payload.PaymentMethodID +
-          "&UserPaymentMethodID=" +
-          payload.UserPaymentMethodID +
-          "&OrderTotalAmount=" +
-          payload.OrderTotalAmount +
-          "&OrderPaidAmount=" +
-          payload.OrderPaidAmount +
-          "&TRANSACTIONUUID=" +
-          payload.TRANSACTIONUUID +
-          "&signed_field_names=" +
-          payload.signed_field_names +
-          "&signed_date_time=" +
-          payload.signed_date_time +
-          "&locale=" +
-          payload.locale +
+  //             signed_field_names: payload.signed_field_names,
+  //             signed_date_time: payload.signed_date_time,
+  //             locale: payload.locale,
+  //             reference_number: payload.reference_number,
+  //             currency: payload.currency,
+  //             bill_to_surname: payload.bill_to_surname,
+  //             bill_to_forename: payload.bill_to_forename,
+  //             bill_to_email: payload.bill_to_email,
+  //             bill_to_address_line1: payload.bill_to_address_line1,
+  //             bill_to_address_city: payload.bill_to_address_city,
+  //             bill_to_address_country: payload.bill_to_address_country
+  //           })
+  //         }
+  //       )
+  //       let json = await response.json();
+  //       if (json[0].ReturnVal === 1) {
+  //         toast.success("Order is successfully created ORDERID : " + json[0].OrderID);
+  //       }
+  //       try {
+  //         const response_1 = await fetch(
+  //           url +
+  //           "Product_DeleteProductCart?USERCARTID=" +
+  //           payload.UserCartID
+  //         );
+  //         let json_1 = await response_1.json();
+  //         return {
+  //           type: GitAction.AddedOrderCreditCard,
+  //           payload: json_1,
+  //         };
+  //       } catch (error) {
+  //         alert('deleteProductCart: ' + error);
+  //         return {
+  //           type: GitAction.AddedOrderCreditCard,
+  //           payload: [],
+  //         };
+  //       }
+  //     }
+  //     catch (error) {
+  //       alert('deleteProductCart: ' + error);
+  //       return {
+  //         type: GitAction.AddedOrderCreditCard,
+  //         payload: [],
+  //       };
+  //     }
+  //   });
 
-          "&reference_number=" +
-          payload.reference_number +
-          "&currency=" +
-          payload.currency +
-          "&bill_to_surname=" +
-          payload.bill_to_surname +
-          "&bill_to_forename=" +
-          payload.bill_to_forename +
-          "&bill_to_email=" +
-          payload.bill_to_email +
-
-          "&bill_to_address_line1=" +
-          payload.bill_to_address_line1 +
-          "&bill_to_address_city=" +
-          payload.bill_to_address_city +
-          "&bill_to_address_country=" +
-          payload.bill_to_address_country
-        );
-        let json = await response.json();
-        console.log("json", json)
-        json = JSON.parse(json)
-        if (json[0].ReturnVal === 1) {
-          toast.success("Order is successfully updated ORDERID : " + json[0].OrderID);
+  UpdateOrder_AccountOrder = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateOrder), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_UpdateOrder?OrderID=" + action.payload.OrderID +
+            "&PaymentMethodID=" + action.payload.PaymentMethodID +
+            "&UserPaymentMethodID=" + action.payload.UserPaymentMethodID +
+            "&OrderTotalAmount=" + action.payload.OrderTotalAmount +
+            "&OrderPaidAmount=" + action.payload.OrderPaidAmount +
+            "&TRANSACTIONUUID=" + action.payload.TRANSACTIONUUID +
+            "&fpx_msgToken=" + action.payload.fpx_msgToken +
+            "&fpx_sellerExOrderNo=" + action.payload.fpx_sellerExOrderNo +
+            "&fpx_sellerTxnTime=" + action.payload.fpx_sellerTxnTime +
+            "&fpx_sellerOrderNo=" + action.payload.fpx_sellerOrderNo +
+            "&fpx_sellerBankCode=" + action.payload.fpx_sellerBankCode +
+            "&fpx_buyerEmail=" + action.payload.fpx_buyerEmail +
+            "&fpx_buyerName=" + action.payload.fpx_buyerName +
+            "&fpx_buyerBankId=" + action.payload.fpx_buyerBankId +
+            "&fpx_buyerBankBranch=" + action.payload.fpx_buyerBankBranch +
+            "&fpx_buyerAccNo=" + action.payload.fpx_buyerAccNo +
+            "&fpx_buyerId=" + action.payload.fpx_buyerId +
+            "&fpx_makerName=" + action.payload.fpx_makerName +
+            "&fpx_buyerIban=" + action.payload.fpx_buyerIban +
+            "&fpx_version=" + action.payload.fpx_version +
+            "&fpx_productDesc=" + action.payload.fpx_productDesc)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedOrder, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedOrder, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: UpdateOrder_AccountOrder. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedOrder, payload: [] });
         }
-        return {
-          type: GitAction.UpdatedOrder_CreditCard,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdatedOrder_CreditCard: ' + error);
-        return {
-          type: GitAction.UpdatedOrder_CreditCard,
-          payload: []
-        };
       }
-    });
+    }));
 
+  UpdateOrder_AccountOrderCreditCard = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.UpdateOrder_CreditCard), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_UpdateOrder_CreditCard?OrderID=" + action.payload.OrderID +
+            "&PaymentMethodID=" + action.payload.PaymentMethodID +
+            "&UserPaymentMethodID=" + action.payload.UserPaymentMethodID +
+            "&OrderTotalAmount=" + action.payload.OrderTotalAmount +
+            "&OrderPaidAmount=" + action.payload.OrderPaidAmount +
+            "&TRANSACTIONUUID=" + action.payload.TRANSACTIONUUID +
+            "&signed_field_names=" + action.payload.signed_field_names +
+            "&signed_date_time=" + action.payload.signed_date_time +
+            "&locale=" + action.payload.locale +
+            "&reference_number=" + action.payload.reference_number +
+            "&currency=" + action.payload.currency +
+            "&bill_to_surname=" + action.payload.bill_to_surname +
+            "&bill_to_forename=" + action.payload.bill_to_forename +
+            "&bill_to_email=" + action.payload.bill_to_email +
+            "&bill_to_address_line1=" + action.payload.bill_to_address_line1 +
+            "&bill_to_address_city=" + action.payload.bill_to_address_city +
+            "&bill_to_address_country=" + action.payload.bill_to_address_country)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedOrder_CreditCard, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UpdatedOrder_CreditCard, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: UpdateOrder_AccountOrderCreditCard. Please check on URL")
+          return dispatch({ type: GitAction.UpdatedOrder_CreditCard, payload: [] });
+        }
+      }
+    }));
 
   // View Order Payment Details - Get FPX status
-  Order_ViewPaymentDetailsByUUID = (action$) =>
-    action$.ofType(GitAction.ViewOrderStatus).switchMap(async ({ payload }) => {
-      console.log(url +
-        "Order_ViewPaymentDetailsByUUID?Transactionuuid=" + payload.Transactionuuid +
-        "&ProjectID=2" + "&PaymentType=" + payload.paymentType)
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewPaymentDetailsByUUID?Transactionuuid=" + payload.Transactionuuid +
-          "&ProjectID=2" + "&PaymentType=" + payload.paymentType
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        console.log("json", json)
-        return {
-          type: GitAction.ViewedOrderStatus,
-          payload: json,
-        };
+  Order_ViewPaymentDetailsByUUID = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.ViewOrderStatus), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_ViewPaymentDetailsByUUID?Transactionuuid=" + action.payload.Transactionuuid +
+            "&ProjectID=2" + "&PaymentType=" + action.payload.paymentType)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.ViewedOrderStatus, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.ViewedOrderStatus, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: Order_ViewPaymentDetailsByUUID. Please check on URL")
+          return dispatch({ type: GitAction.ViewedOrderStatus, payload: [] });
+        }
       }
-      catch (error) {
-        alert('ViewOrderStatus: ' + error);
-        return {
-          type: GitAction.ViewedOrderStatus,
-          payload: [],
-        };
-      }
-    });
-
-
-  // Update Order Details - User Details
-  UpdateOrderStock = (action$) =>
-    action$.ofType(GitAction.OrderStockUpdate).switchMap(async ({ payload }) => {
-      console.log(url +
-        "Order_UpdateOrderStockVariation?ProductVariationDetailID=" + payload.orderVariationDetailIDs +
-        "&ProductQty=" + payload.orderDetailQtys)
-      try {
-        const response = await fetch(
-          url +
-          "Order_UpdateOrderStockVariation?ProductVariationDetailID=" + payload.orderVariationDetailIDs +
-          "&ProductQty=" + payload.orderDetailQtys
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.OrderStockUpdated,
-          payload: json,
-        };
-      }
-      catch (error) {
-        alert('OrderStockUpdated: ' + error);
-        return {
-          type: GitAction.OrderStockUpdated,
-          payload: [],
-        };
-      }
-    });
-
-  // Update Order Details - User Details
-  UpdateOrderUserDetails = (action$) =>
-    action$.ofType(GitAction.OrderUserDetailsUpdate).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_UpdateOrderUserDetails?OrderID=" + payload.OrderID +
-          "&FirstName=" + payload.FirstName +
-          "&LastName=" + payload.LastName +
-          "&UserContactNo=" + payload.UserContactNo +
-          "&PickUpInd=" + payload.PickUpInd +
-          "&UserEmailAddress=" + payload.UserEmailAddress +
-          "&UserAddressLine1=" + payload.UserAddressLine1 +
-          "&UserAddressLine2=" + payload.UserAddressLine2 +
-          "&UserPoscode=" + payload.UserPoscode +
-          "&UserState=" + payload.UserState +
-          "&UserCity=" + payload.UserCity +
-          "&CountryID=" + payload.CountryID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-
-        return {
-          type: GitAction.OrderUserDetailsUpdated,
-          payload: json,
-        };
-      }
-      catch (error) {
-        alert('OrderUserDetailsUpdate: ' + error);
-        return {
-          type: GitAction.OrderUserDetailsUpdated,
-          payload: [],
-        };
-      }
-    });
+    }));
 
   // UPDATE TRACKING
-  updateOrderTrackingNumber = (action$) =>
-    action$.ofType(GitAction.updateTrackingNumber).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_UpdateTrackingNumber?ORDERTRACKINGNUMBER=" + payload.ORDERTRACKINGNUMBER +
-          "&LOGISTICID=" + payload.LOGISTICID +
-          "&ORDERPRODUCTDETAILSID=" + payload.ORDERPRODUCTDETAILSID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json[0].ReturnVal === 1)
-          toast.success("Logistic Data is successfully Updated")
-        return {
-          type: GitAction.updatedTrackingNumber,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getDeliverableList: ' + error);
-        return {
-          type: GitAction.updatedTrackingNumber,
-          payload: [],
-        };
+
+  updateOrderTrackingNumber = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.updateTrackingNumber), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_UpdateTrackingNumber?ORDERTRACKINGNUMBER=" + action.payload.ORDERTRACKINGNUMBER +
+            "&LOGISTICID=" + action.payload.LOGISTICID +
+            "&ORDERPRODUCTDETAILSID=" + action.payload.ORDERPRODUCTDETAILSID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.updatedTrackingNumber, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.updatedTrackingNumber, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: Order_ViewPaymentDetailsByUUID. Please check on URL")
+          return dispatch({ type: GitAction.updatedTrackingNumber, payload: [] });
+        }
       }
-    });
+    }));
 
   // DELIVERY
 
-  getDeliverableList = (action$) =>
-    action$.ofType(GitAction.GetDeliverableList).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewOrderByIncomplete"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotDeliverableList,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getDeliverableList: ' + error);
-        return {
-          type: GitAction.GotDeliverableList,
-          payload: [],
-        };
+  getDeliverableList = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetDeliverableList), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "Order_ViewOrderByIncomplete")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotDeliverableList, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotDeliverableList, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: Order_ViewPaymentDetailsByUUID. Please check on URL")
+          return dispatch({ type: GitAction.GotDeliverableList, payload: [] });
+        }
       }
-    });
+    }));
 
-  getOrderListByID = (action$) =>
-    action$.ofType(GitAction.GetOrderListByOrderID).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewOrderByOrderID?ORDERID=" +
-          payload.OrderID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotOrderListByOrderID,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getOrderListByID: ' + error);
-        return {
-          type: GitAction.GotOrderListByOrderID,
-          payload: [],
-        };
+  getOrderListByID = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetOrderListByOrderID), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_ViewOrderByOrderID?ORDERID=" + action.payload.OrderID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotOrderListByOrderID, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotOrderListByOrderID, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getOrderListByID. Please check on URL")
+          return dispatch({ type: GitAction.GotOrderListByOrderID, payload: [] });
+        }
       }
-    });
+    }));
 
   // PROMOTION
 
-  getAllPromotion = (action$) =>
-    action$.ofType(GitAction.GetPromotion).switchMap(async () => {
-
-      try {
-        const response = await fetch(url +
-          "Promo_ViewPromotion?ACTIVEIND"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotPromotion,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllPromotion: ' + error);
-        return {
-          type: GitAction.GotPromotion,
-          payload: [],
-        };
+  getAllPromotion = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetPromotion), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Promo_ViewPromotion?ACTIVEIND")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotPromotion, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotPromotion, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllPromotion. Please check on URL")
+          return dispatch({ type: GitAction.GotPromotion, payload: [] });
+        }
       }
-    });
+    }));
 
-  AddPromotion = (action$) =>
-    action$.ofType(GitAction.AddPromotion).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Promo_AddPromotion?PROMOTIONTITLE=" +
-          payload.PromotionTitle +
-          "&PROMOTIONDESC=" +
-          payload.PromotionDesc +
-          "&PROMOTIONSTARTDATE=" +
-          payload.PromotionStartDate +
-          "&PROMOTIONDISCOUNTPERCENTAGE=" +
-          payload.DiscountPercentage +
-          "&BANNERIMAGE=" +
-          payload.BannerImage +
-          "&SLIDEORDER=" +
-          payload.SlideOrder +
-          "&PROMOTIONENDDATE=" +
-          payload.PromotionEndDate +
-          "&PRODUCTID=" +
-          payload.ProductID +
-          "&ProjectID=2"
-        );
-
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.AddedPromotion,
-          payload: json,
-        };
-      } catch (error) {
-        alert('AddPromotion: ' + error);
-        return {
-          type: GitAction.AddedPromotion,
-          payload: []
-        };
+  getAllProductPromos = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetPromo), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Promo_ViewPromotion?ACTIVEIND=0")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotPromo, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotPromo, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllProductPromos. Please check on URL")
+          return dispatch({ type: GitAction.GotPromo, payload: [] });
+        }
       }
-    });
+    }));
 
-  UpdatePromotion = (action$) =>
-    action$.ofType(GitAction.UpdatePromotion).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(url +
-          "Promo_UpdatePromotion?PROMOTIONID=" +
-          payload.PromotionID +
-          "&PROMOTIONTITLE=" +
-          payload.PromotionTitle +
-          "&PROMOTIONDESC=" +
-          payload.PromotionDesc +
-          "&BANNERIMAGE=" +
-          payload.BannerImage +
-          "&SLIDEORDER=" +
-          payload.SlideOrder +
-          "&PROMOTIONSTARTDATE=" +
-          payload.promoStart +
-          "&PROMOTIONENDDATE=" +
-          payload.promoEnd +
-          "&PROMOTIONITEMID=" +
-          payload.ProductID +
-          "&PROMOTIONDISCOUNTPERCENTAGE=" +
-          payload.DiscountPercentage // {98,99,100}
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.UpdatedPromotion,
-          payload: json,
-        };
-      } catch (error) {
-        alert('UpdatePromotion: ' + error);
-        return {
-          type: GitAction.UpdatedPromotion,
-          payload: []
-        };
+  getAllPromoCodes = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetPromoCode), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Promo_ViewPromoCode?ACTIVEIND=0")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotPromoCode, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotPromoCode, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllPromoCodes. Please check on URL")
+          return dispatch({ type: GitAction.GotPromoCode, payload: [] });
+        }
       }
-    });
-
-  DeletePromotion = (action$) =>
-    action$.ofType(GitAction.DeletePromotion).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Promo_DeletePromotion?PROMOTIONID=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.DeletedPromotion,
-          payload: json,
-        };
-      } catch (error) {
-        alert('DeletePromotion: ' + error);
-        return {
-          type: GitAction.DeletedPromotion,
-          payload: []
-        };
-      }
-    });
-
-  getAllProductPromos = (action$) =>
-    action$.ofType(GitAction.GetPromo).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "Promo_ViewPromotion?ACTIVEIND=0"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotPromo,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllProductPromos: ' + error);
-        return {
-          type: GitAction.GotPromo,
-          payload: []
-        };
-      }
-    });
-
-  getAllPromoCodes = (action$) =>
-    action$.ofType(GitAction.GetPromoCode).switchMap(async () => {
-      try {
-        const response = await fetch(url +
-          "Promo_ViewPromoCode?ACTIVEIND=0"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotPromoCode,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllPromoCodes: ' + error);
-        return {
-          type: GitAction.GotPromoCode,
-          payload: []
-        };
-      }
-    });
-
-  addPromoCode = (action$) =>
-    action$.ofType(GitAction.AddPromoCode).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Promo_AddPromoCode?PROMOTIONID=" +
-          payload.promo +
-          "&PROMOCODE=" +
-          payload.promoCode +
-          "&PROMOCODESTARTDATE=" +
-          payload.promoStart +
-          "&PROMOCODEENDDATE=" +
-          payload.promoEnd +
-          "&PRODUCTID=" +
-          payload.productID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.AddedPromoCode,
-          payload: json,
-        };
-      } catch (error) {
-        alert('addPromoCode: ' + error);
-        return {
-          type: GitAction.AddedPromoCode,
-          payload: []
-        };
-      }
-    });
-
-  updatePromoCode = (action$) =>
-    action$.ofType(GitAction.UpdatePromoCode).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Promo_UpdatePromoCode?PROMOCODEID=" +
-          payload.promoCodeId +
-          "&PROMOTIONID=" +
-          payload.promo +
-          "&PROMOCODE=" +
-          payload.promoCode +
-          "&PROMOCODESTARTDATE=" +
-          payload.promoStart +
-          "&PROMOCODEENDDATE=" +
-          payload.promoEnd +
-          "&PRODUCTID=" +
-          payload.productID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.UpdatedPromoCode,
-          payload: json,
-        };
-      } catch (error) {
-        alert('updatePromoCode: ' + error);
-        return {
-          type: GitAction.UpdatedPromoCode,
-          payload: []
-        };
-      }
-    });
-
-  deletePromoCode = (action$) =>
-    action$.ofType(GitAction.DeletePromoCode).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Promo_DeletePromoCode?PROMOCODEID=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.DeletedPromoCode,
-          payload: json,
-        };
-      } catch (error) {
-        alert('deletePromoCode: ' + error);
-        return {
-          type: GitAction.DeletedPromoCode,
-          payload: []
-        };
-      }
-    });
+    }));
 
   // TRANSACTION
 
-  getAllTransactions = (action$) =>
-    action$.ofType(GitAction.GetTransactions).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewOrder?TRACKINGSTATUS=" +
-          payload
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotTransactions,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllTransactions: ' + error);
-        return {
-          type: GitAction.GotTransactions,
-          payload: []
-        };
+  getAllTransactions = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetTransactions), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_ViewOrder?TRACKINGSTATUS=" + action.payload)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotTransactions, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotTransactions, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllTransactions. Please check on URL")
+          return dispatch({ type: GitAction.GotTransactions, payload: [] });
+        }
       }
-    });
+    }));
 
-  getAllDeliveryList = (action$) =>
-    action$.ofType(GitAction.GetTransactionsWithDelivery).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewOrderByDelivery"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotTransactionsWithDelivery,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllDeliveryList: ' + error);
-        return {
-          type: GitAction.GotTransactionsWithDelivery,
-          payload: []
-        };
+  getAllDeliveryList = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetTransactionsWithDelivery), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_ViewOrderByDelivery")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotTransactionsWithDelivery, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotTransactionsWithDelivery, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllDeliveryList. Please check on URL")
+          return dispatch({ type: GitAction.GotTransactionsWithDelivery, payload: [] });
+        }
       }
-    });
+    }));
 
-  getAllTransactionStatus = (action$) =>
-    action$.ofType(GitAction.GetTransactionStatus).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewOrderStatus"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotTransactionStatus,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllTransactionStatus: ' + error);
-        return {
-          type: GitAction.GotTransactionStatus,
-          payload: []
-        };
+  getAllTransactionStatus = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetTransactionStatus), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_ViewOrderStatus")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotTransactionStatus, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotTransactionStatus, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllTransactionStatus. Please check on URL")
+          return dispatch({ type: GitAction.GotTransactionStatus, payload: [] });
+        }
       }
-    });
+    }));
 
   // INVENTORY
 
-  updateProductStock = (action$) =>
-    action$.ofType(GitAction.UpdateInventory).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Inventory_UpdateProductStock?PRODUCTIDS=" +
-          payload.SelectedProductID +
-          "&PRODUCTSTOCK=" +
-          payload.SelectedProductStock
-        )
-        let json = await response.json()
-        json = JSON.parse(json)
-
-        return {
-          type: GitAction.UpdatedInventory,
-          payload: json,
-        };
-        // try {
-
-
-        //   const response = await fetch(
-        //     url +
-        //     "Product_ItemListByProductStatus?PRODUCTSTATUS=" +
-        //     payload.ProductStatus +
-        //     "&USERID=" +
-        //     payload.UserID
-        //   );
-        //   let json = await response.json();
-        //   json = JSON.parse(json);
-        //   return {
-        //     type: GitAction.UpdatedInventory,
-        //     payload: json,
-        //   };
-        // } 
-        // catch (error) {
-        //   alert('getAllProductsByStatus: ' + error);
-        //   return {
-        //     type: GitAction.GotProductByProductStatus,
-        //     payload: [],
-        //   };
-        // }
-      } catch (error) {
-        alert('updateProductStock: ' + error);
-        return {
-          type: GitAction.UpdatedInventory,
-          payload: []
-        };
-      }
-    });
-
   // EMAIL SUBSCRIBE
 
-  getAllSubs = (action$) =>
-    action$.ofType(GitAction.GetSubs).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "Subcriber_ViewSubcriber"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotSubs,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllSubs: ' + error);
-        return {
-          type: GitAction.GotSubs,
-          payload: []
-        };
-      }
-    });
-
-  AddSubs = (action$) =>
-    action$.ofType(GitAction.AddSubcs).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Subcriber_AddNew?SUBSCRIBEREMAIL=" +
-          payload.SubsMail +
-          "&ProjectID=2"
-        );
-        const json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.AddedSubcs,
-          payload: json,
-        };
-      } catch (error) {
-        alert('AddSubs: ' + error);
-        return {
-          type: GitAction.AddedSubcs,
-          payload: []
-        };
-      }
-    });
-
-
-  getAllMerchants = (action$) =>
-    action$.ofType(GitAction.GetMerchants).switchMap(async ({ payload }) => {
-
-      try {
-        const response = await fetch(
-          url + "User_ProfileListByType?TYPE=" + payload.type +
-          "&TYPEVALUE=" + payload.typeValue +
-          "&USERID=" + payload.USERID +
-          "&UserRoleID=" + payload.userRoleID +
-          "&LISTPERPAGE=" + payload.productPage +
-          "&PAGE=" + payload.page
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        if (json !== "fail") {
-        } else {
-          json = [];
+  getAllSubs = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetSubs), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Subcriber_ViewSubcriber")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotSubs, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotSubs, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllSubs. Please check on URL")
+          return dispatch({ type: GitAction.GotSubs, payload: [] });
         }
-        return {
-          type: GitAction.GotMerchants,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllMerchants: ' + error);
-        return {
-          type: GitAction.GotMerchants,
-          payload: [],
-        };
       }
-    });
+    }));
+
+  AddSubs = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.AddSubcs), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Subcriber_AddNew?SUBSCRIBEREMAIL=" + action.payload.SubsMail +
+            "&ProjectID=2")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.AddedSubcs, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedSubcs, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: AddSubs. Please check on URL")
+          return dispatch({ type: GitAction.AddedSubcs, payload: [] });
+        }
+      }
+    }));
 
 
-  getAllMerchantOrders = (action$) =>
-    action$.ofType(GitAction.GetMerchantOrders).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewOrderByUserID?TRACKINGSTATUS=" +
-          payload.trackingStatus +
-          "&USERID=" +
-          payload.UserID
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotMerchantOrders,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllMerchantOrders: ' + error);
-        return {
-          type: GitAction.GotMerchantOrders,
-          payload: [],
-        };
+  getAllMerchants = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetMerchants), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "User_ProfileListByType?TYPE=" + action.payload.type +
+            "&TYPEVALUE=" + action.payload.typeValue +
+            "&USERID=" + action.payload.USERID +
+            "&UserRoleID=" + action.payload.userRoleID +
+            "&LISTPERPAGE=" + action.payload.productPage +
+            "&PAGE=" + action.payload.page)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotMerchants, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotMerchants, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllMerchants. Please check on URL")
+          return dispatch({ type: GitAction.GotMerchants, payload: [] });
+        }
       }
-    });
+    }));
+
+  getAllMerchantOrders = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetMerchantOrders), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_ViewOrderByUserID?TRACKINGSTATUS=" + action.payload.trackingStatus +
+            "&USERID=" + action.payload.UserID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotMerchantOrders, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotMerchantOrders, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getAllMerchants. Please check on URL")
+          return dispatch({ type: GitAction.GotMerchantOrders, payload: [] });
+        }
+      }
+    }));
 
   // PRODUCT ORDERS
 
-  getAllProductOrders = (action$) =>
-    action$.ofType(GitAction.GetProductOrders).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewSummaryOrderProduct"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductOrders,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getAllProductOrders: ' + error);
-        return {
-          type: GitAction.GotProductOrders,
-          payload: [],
-        };
-      }
-    });
-
-  getProductStockByStatus = (action$) =>
-    action$.ofType(GitAction.GetProductStockByStatus).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" +
-          payload.ProductStockStatus +
-          "&USERID=" +
-          payload.UserID
-        );
-        const json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotProductStockByStatus,
-          payload: json,
-        };
-      } catch (error) {
-        alert('getProductStockByStatus: ' + error);
-        return {
-          type: GitAction.GotProductStockByStatus,
-          payload: [],
-        };
-      }
-    });
-
-  updateProductStatus = (action$) =>
-    action$.ofType(GitAction.UpdateProductStatus).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          url +
-          "Order_UpdateProductDetailStatus?ORDERPRODUCTDETAILID=" +
-          payload.orderProductID +
-          "&PRODUCTSTATUS=" +
-          payload.productStatus
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: "DELETED-PURCHASEORDER",
-          payload: json,
-        };
-      } catch (error) {
-        return toast.error(error);
-      }
-    });
-
-  //=================================== PROMOTION BANNER ===================================//
-
-  AddPromotionBannerByIds = action$ =>
-    action$.ofType(GitAction.addPromotionBanner).switchMap(async ({ payload }) => {
-      try {
-        const response = await fetch(
-          this.url +
-          "AddPostMedia?POSTID=" +
-          payload.postId +
-          "&MEDIATYPE=" +
-          payload.mediaType +
-          "&MEDIATITLE=" +
-          payload.mediaTitle +
-          "&MEDIAURL=" +
-          payload.mediaUrl +
-          "&MEDIADESC=" +
-          payload.mediaDesc +
-          "&SLIDEORDER=" +
-          payload.slideOrder +
-          "&MEDIASOURCE=" +
-          payload.mediaSource
-        );
-        let json = await response.json();
-        if (json !== "fail") {
-          json = JSON.parse(json);
-        } else {
-          json = [];
-        }
+  getAllProductOrders = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductOrders), map(action => {
+      return dispatch => {
         try {
-          const response_1 = await fetch(this.url + "viewPost?POSTTYPE=1");
-          let json2 = await response_1.json();
-          return {
-            type: GitAction.addedPromotionBanner,
-            payload: json,
-            payload2: json2
-          };
+          return fetch(url +
+            "Order_ViewSummaryOrderProduct")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductOrders, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductOrders, payload: [] });
+              }
+            });
         } catch (error) {
-          return console.log("Add promotion banner error code: 4002.1", error);
+          toast.error("Error Code: getAllProductOrders. Please check on URL")
+          return dispatch({ type: GitAction.GotProductOrders, payload: [] });
         }
-      } catch (error_1) {
-        return console.log("Add promotion banner error code: 4002.2", error_1);
       }
-    });
+    }));
+
+  getProductStockByStatus = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductOrders), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_ViewSummaryOrderProductByStatus?PRODUCTSTOCKSTATUS=" + action.payload.ProductStockStatus +
+            "&USERID=" + action.payload.UserID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotProductStockByStatus, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotProductStockByStatus, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: getProductStockByStatus. Please check on URL")
+          return dispatch({ type: GitAction.GotProductStockByStatus, payload: [] });
+        }
+      }
+    }));
 
   //=================================== PAYMENT ===================================//
 
-  Payment_Send = (action$) =>
-    action$.ofType(GitAction.SendPayment).switchMap(async ({ payload }) => {
-      return fetch(
-        "https://apitest.cybersource.com/pts/v2/payments"
-        , {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Signature': 'keyid="08c94330-f618-42a3-b09d-e1e43be5efda", algorithm="HmacSHA256", headers="host (request-target) digest v-c-merchant-id", signature="ldqJNbiFZ0ZhOHzhejvuAaNomlFmXv1xykNAEq7irn4="',
-            'Host': 'apitest.cybersource.com',
-            'v-c-merchant-id': 'emporiatest',
-            'Date': 'Fri, 12 Jul 201900:44:13 GMT'
+  Payment_Send = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.SendPayment), map(action => {
+      return dispatch => {
+        try {
+          return fetch("https://apitest.cybersource.com/pts/v2/payments"
+            , {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Signature': 'keyid="08c94330-f618-42a3-b09d-e1e43be5efda", algorithm="HmacSHA256", headers="host (request-target) digest v-c-merchant-id", signature="ldqJNbiFZ0ZhOHzhejvuAaNomlFmXv1xykNAEq7irn4="',
+                'Host': 'apitest.cybersource.com',
+                'v-c-merchant-id': 'emporiatest',
+                'Date': 'Fri, 12 Jul 201900:44:13 GMT'
 
-          },
-          body: JSON.stringify({
-            // PRODUCTNAME: payload.name,
-            // PROJECTID: payload.ProjectID,
-            // MERCHANTID: payload.productSupplier,
-            // PRODUCTDESC: payload.description,
-            // PRODUCTCATEGORYID: payload.productCategory,
-            // PRODUCTHEIGHT: payload.height,
-            // PRODUCTWIDTH: payload.width,
-            // PRODUCTDEPTH: payload.depth,
-            // PRODUCTWEIGHT: payload.weight,
-            // PRODUCTSKU: payload.sku,
-            // PRODUCTBRAND: payload.brand,
-
-            // PRODUCTMODEL: payload.model,
-            // PRODUCTTAG: payload.tags,
-            // USERID: payload.UserID
-            clientReferenceInformation: payload.clientReferenceInformation,
-            paymentInformation: payload.paymentInformation,
-            orderInformation: payload.orderInformation
-          })
+              },
+              body: JSON.stringify({
+                clientReferenceInformation: action.payload.clientReferenceInformation,
+                paymentInformation: action.payload.paymentInformation,
+                orderInformation: action.payload.orderInformation
+              })
+            })
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.SentPayment, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.SentPayment, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: Payment_Send. Please check on URL")
+          return dispatch({ type: GitAction.SentPayment, payload: [] });
         }
-      )
-        .then(response => response.json())
-        .then(json => {
-          json = json;
-          return {
-            type: GitAction.SentPayment,
-            payload: json,
-          };
-        })
-        .catch(error => alert('SentPayment: ' + error));
-    });
-
-  FPXResponseList_View = (action$) =>
-    action$.ofType(GitAction.getFPXResponseList).switchMap(async ({ payload }) => {
-
-      console.log("YES " + url + "General_FPXResponseList")
-      try {
-        const response = await fetch(
-          url + "General_FPXResponseList"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.gotFPXResponseList,
-          payload: json,
-        };
-      } catch (error) {
-        alert('gotFPXResponseList: ' + error);
-        return {
-          type: GitAction.gotFPXResponseList,
-          payload: [],
-        };
       }
-    });
+    }));
 
-  BankList_View = (action$) =>
-    action$.ofType(GitAction.ViewBankList).switchMap(async ({ payload }) => {
-      return fetch(
-        "https://uat.mepsfpx.com.my/FPXMain/RetrieveBankList"
-        , {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: {}
+  FPXResponseList_View = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetProductOrders), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "General_FPXResponseList")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.gotFPXResponseList, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.gotFPXResponseList, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: FPXResponseList_View. Please check on URL")
+          return dispatch({ type: GitAction.gotFPXResponseList, payload: [] });
         }
-      )
-        .then(response => response.json())
-        .then(json => {
-          json = json;
-          return {
-            type: GitAction.ViewedBankList,
-            payload: json,
-          };
-        })
-        .catch(error => alert('ViewBankList: ' + error));
-    });
+      }
+    }));
+
+  BankList_View = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.ViewBankList), map(action => {
+      return dispatch => {
+        try {
+          return fetch("https://uat.mepsfpx.com.my/FPXMain/RetrieveBankList"
+            , {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: {}
+            })
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.ViewedBankList, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.ViewedBankList, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: BankList_View. Please check on URL")
+          return dispatch({ type: GitAction.ViewedBankList, payload: [] });
+        }
+      }
+    }));
+
 
   // =============================== Postcode ======================================
-  ViewPostcodesList = (action$) =>
-    action$.ofType(GitAction.GetPostcodes).switchMap(async () => {
-      try {
-        const response = await fetch(
-          url +
-          "General_PoscodeList"
-        );
-        let json = await response.json();
-        json = JSON.parse(json);
-        return {
-          type: GitAction.GotPostcodes,
-          payload: json,
-        };
-      } catch (error) {
-        alert('GetPostcodes: ' + error);
-        return {
-          type: GitAction.GotPostcodes,
-          payload: [],
-        };
-      }
-    });
 
+  ViewPostcodesList = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetPostcodes), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "General_PoscodeList")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotPostcodes, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotPostcodes, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: BankList_View. Please check on URL")
+          return dispatch({ type: GitAction.GotPostcodes, payload: [] });
+        }
+      }
+    }));
 }
 export let gitEpic = new GitEpic();

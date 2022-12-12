@@ -11,19 +11,19 @@ import PageHeader from "../shared/PageHeader";
 // data stubs
 import theme from "../../data/theme";
 import bg from "../../assets/bg.jpg";
-import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import { makeStyles } from "@mui/styles";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
-import MenuIcon from "@material-ui/icons/Menu";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
+import MenuIcon from "@mui/icons-material/Menu";
+// import GridList from "@mui/material/GridList";
+// import GridListTile from "@mui/material/GridListTile";
+// import GridListTileBar from "@mui/material/GridListTileBar";
+import ListSubheader from "@mui/material/ListSubheader";
+import IconButton from "@mui/material/IconButton";
+import InfoIcon from "@mui/icons-material/Info";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -113,7 +113,7 @@ function SitePageCareers() {
                 Join us to enter new level of your life
               </div>
               <div className={classes.root}>
-                <GridList
+                {/* <GridList
                   cellHeight={250}
                   spacing={30}
                   className={classes.gridList}
@@ -141,7 +141,7 @@ function SitePageCareers() {
                       />
                     </GridListTile>
                   ))}
-                </GridList>
+                </GridList> */}
               </div>
             </div>
 

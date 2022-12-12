@@ -1,18 +1,18 @@
 // react
 import React, { Component } from "react";
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@mui/material";
 // third-party
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { Link, Redirect } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 // application
 import Collapse from "../shared/Collapse";
 import Currency from "../shared/Currency";
 import PageHeader from "../shared/PageHeader";
 import { Check9x7Svg } from "../../svg";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import SwipeableViews from "react-swipeable-views";
 // data stubs
 import payments from "../../data/shopPayments";

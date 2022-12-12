@@ -12,9 +12,9 @@ import StroykaSlick from "../shared/StroykaSlick";
 import theme from "../../data/theme";
 import bg from "../../assets/bg.jpg";
 // import logo from "../../assets/Emporia.png";
-import LocalMallIcon from '@material-ui/icons/LocalMall';
-import DriveEtaIcon from '@material-ui/icons/DriveEta';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import DriveEtaIcon from '@mui/icons-material/DriveEta';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 const slickSettings = {
   dots: true,

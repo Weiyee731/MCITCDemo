@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { browserHistory } from "react-router";
-import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
 
 import { GitAction } from "../../store/action/gitAction";
 import "./home.component.css";

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import userImage from "../../assets/user.jpg";
 import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 var CryptoJS = require("crypto-js");
 
 const AccountDropdown = (props) => {

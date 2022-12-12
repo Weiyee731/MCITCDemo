@@ -12,7 +12,7 @@ import googleplaystore from "../../assets/googleplay.png";
 import appstore from "../../assets/appstore.png";
 import Logo from "../../assets/Emporia.png";
 import { Link } from "react-router-dom";
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 // data stubs
 // import theme from "../../data/theme";
 

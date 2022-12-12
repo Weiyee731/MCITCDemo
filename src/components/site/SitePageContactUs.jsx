@@ -13,7 +13,7 @@ import BlockMap from "../blocks/BlockMap";
 // data stubs
 import theme from "../../data/theme";
 
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 function SitePageContactUs() {
   const [name, setName] = useState("");

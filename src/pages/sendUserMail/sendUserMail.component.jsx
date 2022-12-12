@@ -7,22 +7,22 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from "@material-ui/core";
+} from "@mui/material";
 import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
-import Button from "@material-ui/core/Button";
-import { Card, CardContent } from "@material-ui/core";
+import Button from "@mui/material/Button";
+import { Card, CardContent } from "@mui/material";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
-import Checkbox from "@material-ui/core/Checkbox";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import TextField from "@material-ui/core/TextField";
-import Select from '@material-ui/core/Select';
-import InputLabel from "@material-ui/core/InputLabel";
-import { DataGrid } from '@material-ui/data-grid';
+import Checkbox from "@mui/material/Checkbox";
+import TablePagination from "@mui/material/TablePagination";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import TextField from "@mui/material/TextField";
+import Select from '@mui/material/Select';
+import InputLabel from "@mui/material/InputLabel";
+import { DataGrid } from '@mui/x-data-grid';
 import EmailEditor from 'react-email-editor'
 
 

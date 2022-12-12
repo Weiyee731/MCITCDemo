@@ -9,25 +9,25 @@ import { GitAction } from "../../store/action/gitAction";
 import Logo from "../../assets/Emporia.png";
 
 // Third-party
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import Cookies from "universal-cookie";
 import { Row, Col } from "react-bootstrap"
-import Divider from '@material-ui/core/Divider';
-import IconButton from "@material-ui/core/IconButton";
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Divider from '@mui/material/Divider';
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import Button from "@material-ui/core/Button";
-import DialogContentText from '@material-ui/core/DialogContentText';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import Button from "@mui/material/Button";
+import DialogContentText from '@mui/material/DialogContentText';
 import { isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import emailjs from "emailjs-com"
 import { toast } from "react-toastify";

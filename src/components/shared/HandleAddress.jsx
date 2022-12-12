@@ -1,9 +1,9 @@
 import React from 'react'
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import CloseButton from 'react-bootstrap/CloseButton'
 import ClearIcon from '@mui/icons-material/Clear';

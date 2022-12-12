@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
 import StroykaSlick from "../shared/StroykaSlick";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Card, } from "@mui/material";

@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@mui/material";
 import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import FormHelperText from "@mui/material/FormHelperText";
 import { GitAction } from "../../store/action/gitAction";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Fade from "@material-ui/core/Fade";
-import NestedMenuItem from "material-ui-nested-menu-item";
-import RestoreIcon from '@material-ui/icons/Restore';
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Fade from "@mui/material/Fade";
+// import NestedMenuItem from "material-ui-nested-menu-item";
+import RestoreIcon from '@mui/icons-material/Restore';
 import "../../app/App.scss";
 function mapStateToProps(state) {
   return {
@@ -137,18 +137,18 @@ class ProductCatogoryDetailComponent extends Component {
       hierarchyList.map((d, i) => {
         if(d.HierarchyID < 4){
           if (d.HierarchyItem) {
-            let menuitem = (
-              <NestedMenuItem
-                label={(d.ProductCategoryID, d.ProductCategory)}
-                onClick={() =>
-                  this.selectCategory(d.ProductCategoryID, d.ProductCategory, d.HierarchyID)
-                }
-                parentMenuOpen={!!this.state.menuPosition}
-              >
-                {subMenu(d.HierarchyItem)}
-              </NestedMenuItem>
-            );
-            elemList.push(menuitem);
+            // let menuitem = (
+            //   // <NestedMenuItem
+            //   //   label={(d.ProductCategoryID, d.ProductCategory)}
+            //   //   onClick={() =>
+            //   //     this.selectCategory(d.ProductCategoryID, d.ProductCategory, d.HierarchyID)
+            //   //   }
+            //   //   parentMenuOpen={!!this.state.menuPosition}
+            //   // >
+            //   //   {subMenu(d.HierarchyItem)}
+            //   // </NestedMenuItem>
+            // );
+            // elemList.push(menuitem);
           } else {
             let menuitem = (
               <MenuItem

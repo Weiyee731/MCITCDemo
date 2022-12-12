@@ -27,7 +27,7 @@ import { browserHistory } from "react-router";
 import { Typography, Card, } from "@mui/material";
 import {
   Divider, Button
-} from "@material-ui/core";
+} from "@mui/material";
 import ProductDetails from './ProductDetails'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'

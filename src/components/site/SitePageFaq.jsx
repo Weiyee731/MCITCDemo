@@ -5,7 +5,7 @@ import React from 'react';
 // third-party
 import { Helmet } from 'react-helmet-async';
 import { Link } from "react-router-dom";
-import Fab from '@material-ui/core/Fab';
+import Fab from '@mui/material/Fab';
 import Popup from 'reactjs-popup';
 
 // application

@@ -4,21 +4,21 @@ import React, { Component } from "react";
 // application
 import Pagination from "../shared/Pagination";
 import Rating from "../shared/Rating";
-import Box from "@material-ui/core/Box";
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import Box from "@mui/material/Box";
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import USER from "../../assets/user.jpg";
-import ReactPaginate from 'react-paginate';
+
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 
 // data stubs
 import reviews from "../../data/shopProductReviews";
-import ReviewRating from "@material-ui/lab/Rating";
+import ReviewRating from "@mui/lab/Rating";
 import LoadingPanel from "../shared/loadingPanel";
 import { browserHistory } from "react-router";
 
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
+import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
 import { Card, CardText, CardBody } from 'reactstrap'
 
 

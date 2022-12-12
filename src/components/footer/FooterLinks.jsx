@@ -4,7 +4,7 @@ import React from 'react';
 // third-party
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 export default function FooterLinks(props) {
     const { title, items } = props;

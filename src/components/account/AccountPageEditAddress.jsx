@@ -8,14 +8,14 @@ import { connect } from "react-redux";
 import "react-step-progress/dist/index.css";
 import { GitAction } from "../../store/action/gitAction";
 import theme from "../../data/theme";
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@mui/material";
 import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import FormHelperText from "@mui/material/FormHelperText";
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
-import FormControl from "@material-ui/core/FormControl";
+import FormControl from "@mui/material/FormControl";
 import { toast } from "react-toastify";
 
 function mapStateToProps(state) {

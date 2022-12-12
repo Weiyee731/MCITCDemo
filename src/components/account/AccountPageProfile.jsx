@@ -14,13 +14,13 @@ import "./AccountPageProfile.component.css";
 import {
   Card,
   Divider,
-} from "@material-ui/core";
-import CardContent from "@material-ui/core/CardContent";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
+} from "@mui/material";
+import CardContent from "@mui/material/CardContent";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
 import axios from "axios";
 import "./AccountPageProfile.css";
 import moment from 'moment';

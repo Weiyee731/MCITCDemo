@@ -8,28 +8,27 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+} from "@mui/material";
+import Button from "@mui/material/Button";
 import { GitAction } from "../../store/action/gitAction";
 import "../../app/App.scss";
 import "react-table/react-table.css";
-import ProductDetailsComponent from "../../pages/productDetails/productDetails.component";
-import ProductDetailComponent from "../../pages/addProduct/addProductAllInOne.component";
+
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
-import TableContainer from "@material-ui/core/TableContainer";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { lighten, makeStyles } from "@mui/styles";
+import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Logo from "../../assets/Emporia.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { toast } from "react-toastify";
@@ -37,7 +36,7 @@ import { connectableObservableDescriptor } from "rxjs/observable/ConnectableObse
 import { url } from "../../services/utils";
 import { browserHistory } from "react-router";
 
-import FormControl from "@material-ui/core/FormControl";
+import FormControl from "@mui/material/FormControl";
 import { ConstructionOutlined } from "@mui/icons-material";
 
 function mapStateToProps(state) {
@@ -743,7 +742,7 @@ class DisplayTable extends Component {
     return (
       <div style={{ margin: "2%" }}>
         {this.state.detailsShown ? (
-          <ProductDetailsComponent ProductID={this.state.productID} ProductName={this.state.name} isOnViewState={true} backToList={this.handleSetDetailShown} />
+<></>
         ) : this.state.deleteActive ? (
           <div>
             <div className="row">

@@ -4,7 +4,7 @@ import React, { Component } from "react";
 // third-party
 
 // data stubs
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 import { connect } from "react-redux";
 import { GitAction } from "../../../store/action/gitAction";
 import Cards from "react-credit-cards";
@@ -19,14 +19,14 @@ import {
 } from "./utils.jsx";
 import AccountPageAddCreditCard from "./AccountPageAddCreditCard";
 import AccountPageEditCreditCard from "./AccountPageEditCreditCard";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/Add";
-import EditIcon from "@material-ui/icons/Edit";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from '@mui/icons-material/Close';
-import Card from "@material-ui/core/Card";
-import { CardContent, Divider, Typography } from "@material-ui/core";
+import Card from "@mui/material/Card";
+import { CardContent, Divider, Typography } from "@mui/material";
 
 
 

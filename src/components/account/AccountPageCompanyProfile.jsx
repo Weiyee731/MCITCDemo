@@ -6,21 +6,21 @@ import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 
 import "./AccountPageProfile.component.css";
-import { Card, CardMedia, Typography } from "@material-ui/core";
-import CardContent from "@material-ui/core/CardContent";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import MuiTableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Divider from "@material-ui/core/Divider";
-import TextField from "@material-ui/core/TextField";
+import { Card, CardMedia, Typography } from "@mui/material";
+import CardContent from "@mui/material/CardContent";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import MuiTableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import { withStyles } from "@mui/styles";
+import Divider from "@mui/material/Divider";
+import TextField from "@mui/material/TextField";
 import { toast } from "react-toastify";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 // address
-import Select from "@material-ui/core/Select";
-import FormControl from '@material-ui/core/FormControl';
+import Select from "@mui/material/Select";
+import FormControl from '@mui/material/FormControl';
 
 
 const TableCell = withStyles({

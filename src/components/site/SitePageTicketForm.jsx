@@ -10,12 +10,12 @@ import PageHeader from '../shared/PageHeader';
 
 // data stubs
 import theme from '../../data/theme';
-import { makeStyles } from '@material-ui/core/styles';
-import { FormLabel, InputLabel, Select, Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button'
-import FormControl from '@material-ui/core/FormControl'
-import MenuItem from '@material-ui/core/MenuItem'
-import TextField from '@material-ui/core/TextField'
+import { makeStyles } from '@mui/styles';
+import { FormLabel, InputLabel, Select, Typography } from '@mui/material';
+import Button from '@mui/material/Button'
+import FormControl from '@mui/material/FormControl'
+import MenuItem from '@mui/material/MenuItem'
+import TextField from '@mui/material/TextField'
 
 const useStyles = makeStyles((theme) => ({
     form: {

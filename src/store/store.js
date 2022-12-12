@@ -1,34 +1,30 @@
-// third-party
-import { createStore, applyMiddleware, compose, combineReducers } from "redux";
-import thunk from "redux-thunk";
-import { combineEpics, createEpicMiddleware } from "redux-observable";
-// reducer
-import rootReducer from "./rootReducer";
-import version from "./version";
+import 'rxjs'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import { createEpicMiddleware, combineEpics } from 'redux-observable'
+import { counterReducer } from "./reducer/gitReducer"; //reducers
+import { gitEpic } from "./epic/gitEpic"; //epics
 
-//epics
-import { gitEpic } from "./epic/gitEpic";
-import { toast } from "react-toastify";
-function load() {
-  let state;
+// function load() {
+//   let state;
 
-  try {
-    state = localStorage.getItem("state");
+//   try {
+//     state = localStorage.getItem("state");
 
-    if (typeof state === "string") {
-      state = JSON.parse(state);
-    }
+//     if (typeof state === "string") {
+//       state = JSON.parse(state);
+//     }
 
-    if (state && state.version !== version) {
-      state = undefined;
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    // toast.error( "error: " + error);
-  }
+//     if (state && state.version !== version) {
+//       state = undefined;
+//     }
+//   } catch (error) {
+//     // eslint-disable-next-line no-console
+//     // toast.error( "error: " + error);
+//   }
 
-  return state || undefined;
-}
+//   return state || undefined;
+// }
 
 const rootEpic = combineEpics(
   //==================USER==========================//
@@ -49,7 +45,6 @@ const rootEpic = combineEpics(
   gitEpic.updateUserProfile,
   gitEpic.UpdateUserProfileStatus,
   gitEpic.updateProfileImage,
-  // gitEpic.UpdateProfileSpecificField,
   gitEpic.UpdateShopDetail,
   gitEpic.verifyPassword,
   gitEpic.sentOTPVerification,
@@ -70,30 +65,11 @@ const rootEpic = combineEpics(
   gitEpic.getAllProducts,
   gitEpic.getProductsListing,
   gitEpic.getProductDetail,
-  gitEpic.DeleteProductMedia,
-  // gitEpic.getAllProductsByStatus,
-  gitEpic.addProduct,
-  gitEpic.updateProduct,
-  gitEpic.deleteProduct,
-  gitEpic.endorseProduct,
-  gitEpic.addProductSpecsDetail,
-  gitEpic.updateProductSpecsDetail,
-  gitEpic.deleteProductSpecsDetail,
-  gitEpic.getAllProductVariation,
-  gitEpic.addProductVariation,
   gitEpic.addProductVariationDetail,
-  gitEpic.deleteProductVariationDetail,
   gitEpic.updateProductVariationDetail,
   gitEpic.getAllProductVariationByCategoryID,
-  gitEpic.updateProductVariation,
-  gitEpic.deleteProductVariation,
-  gitEpic.updateProductVariationStock,
   gitEpic.getAllCategories,
   gitEpic.getAllCategoriesListing,
-  gitEpic.addProductCategory,
-  gitEpic.updateProductCategory,
-  gitEpic.deleteProductCategory,
-  gitEpic.addProductPurchaseOrder,
   gitEpic.AddProductMedia,
   //=================SUPPLIER=============================//
   gitEpic.getAllSupplierByUserStatus,
@@ -113,8 +89,6 @@ const rootEpic = combineEpics(
   gitEpic.UpdateOrder_AccountOrderCreditCard,
   gitEpic.UpdateOrder_AccountOrder,
   gitEpic.Order_ViewPaymentDetailsByUUID,
-  gitEpic.UpdateOrderStock,
-  gitEpic.UpdateOrderUserDetails,
   gitEpic.updateOrderTrackingNumber,
   gitEpic.getProductStockByStatus,
   gitEpic.getAllDeliveryList,
@@ -122,24 +96,16 @@ const rootEpic = combineEpics(
   //==================PROMOTIONS=========================//
   gitEpic.getAllProductPromos,
   gitEpic.getAllPromoCodes,
-  gitEpic.addPromoCode,
-  gitEpic.updatePromoCode,
-  gitEpic.deletePromoCode,
   gitEpic.getAllPromotion,
-  gitEpic.AddPromotion,
-  gitEpic.UpdatePromotion,
-  gitEpic.DeletePromotion,
   //==================TRANSACTIONS========================//
   gitEpic.getAllTransactions,
   gitEpic.getAllTransactionStatus,
   //==================INVENTORY========================//
-  gitEpic.updateProductStock,
   //=====================MERCHANTS========================//
   gitEpic.getAllMerchants,
   gitEpic.getAllMerchantOrders,
   //======================PRODUCT ORDERS====================//
   gitEpic.getAllProductOrders,
-  gitEpic.updateProductStatus,
   gitEpic.getOrderListByID,
   //====================== EMAIL ====================//
   gitEpic.getAllSubs,
@@ -153,8 +119,6 @@ const rootEpic = combineEpics(
   gitEpic.viewProductWishlist,
   gitEpic.addProductWishlist,
   gitEpic.deleteProductWishlist,
-  //====================== PROMOTION BANNER ====================//
-  gitEpic.AddPromotionBannerByIds,
   //====================== PAYMENT ====================//
   gitEpic.Payment_Send,
   gitEpic.BankList_View,
@@ -162,35 +126,13 @@ const rootEpic = combineEpics(
   gitEpic.ViewPostcodesList,
 );
 
-// const rootReducerCombine = rootReducer;
-
-const epicMiddleware = createEpicMiddleware(rootEpic);
-
-// const createStoreWithMiddleware = applyMiddleware(epicMiddleware)(createStore);
-
-// export default createStoreWithMiddleware(rootReducerCombine);
-const middleware = epicMiddleware;
-const store = createStore(
-  rootReducer,
-  load(),
-  compose(
-    applyMiddleware(middleware),
-    applyMiddleware(thunk)
-    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
-);
-
-function save() {
-  try {
-    // console.log(JSON.stringify(store.getState()));
-    // JSON.stringify(store.getState());
-    localStorage.setItem("state", JSON.stringify(store.getState()));
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    // toast.error("error:1 " + error);
-  }
-}
-
-store.subscribe(() => save());
-
-export default store;
+const epicMiddleware = createEpicMiddleware();
+const rootReducer = combineReducers({ counterReducer });
+const middleware = [
+  thunk,
+  epicMiddleware
+]
+const initialState = {};
+const store = createStore(rootReducer,initialState, applyMiddleware(...middleware))
+epicMiddleware.run(rootEpic);
+export default store

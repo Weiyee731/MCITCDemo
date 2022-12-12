@@ -8,10 +8,10 @@ import { connect } from "react-redux";
 import "react-step-progress/dist/index.css";
 import { GitAction } from "../../store/action/gitAction";
 import theme from "../../data/theme";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import "react-phone-number-input/style.css";
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import "../../app/App.scss";

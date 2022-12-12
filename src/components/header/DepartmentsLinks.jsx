@@ -14,9 +14,7 @@ import { ArrowRoundedRight6x9Svg } from "../../svg";
 // data stubs
 import departments from "../../data/headerDepartments";
 
-// material-ui
-import MenuItem from "@material-ui/core/MenuItem";
-import NestedMenuItem from "material-ui-nested-menu-item";
+
 
 function mapStateToProps(state) {
   return {

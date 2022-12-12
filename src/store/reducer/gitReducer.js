@@ -469,7 +469,6 @@ export function counterReducer(state = INITIAL_STATE, action) {
         returnUpdateProduct: action.payload,
         loading: false
       });
-      // newProdObj.loading = false;
       return newProdObj;
 
     case GitAction.ResetUpdateProduct:
