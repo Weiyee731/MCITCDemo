@@ -15,7 +15,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { lighten, makeStyles } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 import Paper from "@mui/material/Paper";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import TableSortLabel from "@mui/material/TableSortLabel";
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
     theme.palette.type === "light"
       ? {
         color: theme.palette.secondary.main,
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        backgroundColor: theme.palette.secondary.light,
       }
       : {
         color: theme.palette.text.primary,

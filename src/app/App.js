@@ -74,14 +74,14 @@ class App extends Component {
 
   render() {
     const { locale } = this.props;
-    const { messages, direction } = languages[locale];
+    // const { direction } = languages[0];
     return (
       <ThemeProvider theme={lightTheme}>
         <GlobalStyles />
-        <IntlProvider locale={locale} messages={messages}>
+        {/* <IntlProvider locale={locale} messages={messages}> */}
           <BrowserRouter basename="">
             <HelmetProvider>
-              <Helmet htmlAttributes={{ lang: locale, dir: direction }} />
+              <Helmet htmlAttributes={{ lang: locale, dir: 'ltr' }} />
               <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}>
                 <Switch>
                   <Route
@@ -99,7 +99,7 @@ class App extends Component {
               </ScrollContext>
             </HelmetProvider>
           </BrowserRouter>
-        </IntlProvider>
+        {/* </IntlProvider> */}
       </ThemeProvider>
     );
   }

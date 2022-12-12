@@ -13,7 +13,7 @@ import "react-table/react-table.css";
 import MerchantDetails from "./merchantDetails.component";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
     theme.palette.type === "light"
       ? {
         color: theme.palette.secondary.main,
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        backgroundColor: theme.palette.secondary.light,
       }
       : {
         color: theme.palette.text.primary,

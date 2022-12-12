@@ -5,27 +5,6 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable'
 import { counterReducer } from "./reducer/gitReducer"; //reducers
 import { gitEpic } from "./epic/gitEpic"; //epics
 
-// function load() {
-//   let state;
-
-//   try {
-//     state = localStorage.getItem("state");
-
-//     if (typeof state === "string") {
-//       state = JSON.parse(state);
-//     }
-
-//     if (state && state.version !== version) {
-//       state = undefined;
-//     }
-//   } catch (error) {
-//     // eslint-disable-next-line no-console
-//     // toast.error( "error: " + error);
-//   }
-
-//   return state || undefined;
-// }
-
 const rootEpic = combineEpics(
   //==================USER==========================//
   // gitEpic.getAllUserByTypeId,
