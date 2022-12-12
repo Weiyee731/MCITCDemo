@@ -4,7 +4,7 @@ import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 import axios from "axios";
 const { filter, map } = require('rxjs/operators');
-const url = "https://myemporia.my/emporiaApi/api/emporia/"
+const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/"
 export class GitEpic {
   User_Login = action$ =>
     action$.pipe(filter(action => action.type === GitAction.Login), map(action => {
@@ -1597,6 +1597,7 @@ export class GitEpic {
             "Product_ItemListByType?Type=" + action.payload.type +
             "&TypeValue=" + action.payload.typeValue +
             "&USERID=" + action.payload.userId +
+            "&PROJECTID=2"+
             "&PRODUCTPERPAGE=" + action.payload.productPage +
             "&PAGE=" + action.payload.page)
             .then(response => response.json())
@@ -1649,7 +1650,8 @@ export class GitEpic {
         try {
           return fetch(url +
             "Product_ItemDetailByProductID?ProductID=" + action.payload.productId +
-            "&USERID=" + action.payload.userId)
+            "&USERID=" + action.payload.userId + 
+            "&PROJECTID=2")
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
@@ -2761,6 +2763,7 @@ export class GitEpic {
           return fetch(url + "User_ProfileListByType?TYPE=" + action.payload.type +
             "&TYPEVALUE=" + action.payload.typeValue +
             "&USERID=" + action.payload.USERID +
+            "&PROJECTID=2" +
             "&UserRoleID=" + action.payload.userRoleID +
             "&LISTPERPAGE=" + action.payload.productPage +
             "&PAGE=" + action.payload.page)
