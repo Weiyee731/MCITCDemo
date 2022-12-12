@@ -54,7 +54,7 @@ export default function PaymentFooter() {
                 {
                     payment.map((x) => {
                         return (
-                            <Image width="12%" src={x.paymentImg} style={{padding:"0.5vw"}}/>
+                            <Image key={x.paymentID} width="12%" src={x.paymentImg} style={{padding:"0.5vw"}}/>
                         )
                     })
                 }

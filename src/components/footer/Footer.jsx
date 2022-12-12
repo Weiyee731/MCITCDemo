@@ -46,7 +46,7 @@ export default function Footer() {
           <div className="row">
             <div className="col-12 col-md-3 col-lg-5">
               <h6 className='footer-links__title'>ABOUT US</h6>
-              <Link to="/">
+              <Link to="/" onClick={() => window.scrollTo(0,0)}>
                 <img
                   className="site-header__logo_img"
                   src={Logo}

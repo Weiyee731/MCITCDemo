@@ -49,8 +49,11 @@ const initialState = {
   cardList: [],
   subtotal: 1,
   total: 0,
+  totalApplyPromo: 0,
+  totalDeduction: 0,
   // shipping: 1,
   shipping: 0,
+  isShippingPromo: false,
   tax: 0,
   tabvalue: 0,
   cvcVisible: false,
@@ -109,6 +112,16 @@ const initialState = {
   isLimitAlert: false,
   limitMsg: "",
   isLimitCheck: false,
+
+  promoVoucher: "",
+  isVoucherApply: false,
+  applyPromo: [],
+  promoError: "",
+  promoData: [
+    { id: 1, promoCode: "PROMO2022", discount: "10", startDate: "2022-12-01", endDate: "2022-12-12", type: "percent" },
+    { id: 2, promoCode: "PROMO0101", discount: "15", startDate: "2022-12-01", endDate: "2022-12-27", type: "cash" },
+    { id: 3, promoCode: "PROMO1212", discount: "20", startDate: "2022-12-01", endDate: "2022-12-30", type: "shipping" }
+  ]
 }
 class PagePayment extends Component {
   payments = payments;
@@ -361,15 +374,96 @@ class PagePayment extends Component {
               <Currency value={this.state.tax} />
             </td>
           </tr>
-          <tr>
-            <th style={{ textAlign: "right" }}>Final Total</th>
-            <td>
-              <Currency value={this.state.total} />
-            </td>
-          </tr>
+
+          {
+            this.state.isVoucherApply === true &&
+            <tr>
+              <th style={{ textAlign: "right" }}>Discount</th>
+              <td style={{ color: "red" }}>
+                - <Currency value={this.state.totalDeduction} />
+              </td>
+            </tr>
+          }
         </tbody>
       </React.Fragment>
     );
+  }
+
+  verifyPromoCode() {
+    let promoListing = this.state.promoData
+    let verify = false
+    let deduction = 0
+    let totalAfterPromo = 0
+    let isShippingPromo = false
+    let todayDate = moment(new Date()).format("YYYY-MM-DD")
+
+    const promoDeduction = (data) => {
+      if (data.length > 0) {
+        let discount = parseFloat(data[0].discount)
+        let originalTotal = this.state.total
+        let originalShipping = this.state.shipping
+
+        switch (data[0].type) {
+          case "percent":
+            deduction = originalTotal * (discount / 100)
+            if (deduction > originalTotal)
+              totalAfterPromo = 0
+            else
+              totalAfterPromo = originalTotal - deduction
+
+            break;
+
+          case "cash":
+            deduction = discount
+            if (deduction > originalTotal)
+              totalAfterPromo = 0
+            else
+              totalAfterPromo = originalTotal - deduction
+
+            break;
+
+          case "shipping":
+            if (originalShipping > discount)
+              deduction = discount
+            else
+              deduction = originalShipping
+
+            totalAfterPromo = originalTotal - deduction
+            isShippingPromo = true
+            break;
+
+          default:
+            break;
+        }
+      }
+    }
+
+    let promoError = ""
+    let applyPromo = []
+
+    if (promoListing.length > 0) {
+      let data = promoListing.filter((x) => x.promoCode === this.state.promoVoucher)
+      if (data.length > 0) {
+        if (data[0].startDate < todayDate && data[0].endDate > todayDate) {
+          promoDeduction(data)
+          applyPromo = data
+          promoError = ""
+          verify = true
+        }
+        else {
+          if (data[0].startDate > todayDate)
+            promoError = "Promotion will start on " + data[0].startDate
+          if (data[0].endDate < todayDate)
+            promoError = "Promo Voucher Expired"
+        }
+      }
+      else
+        promoError = "Invalid Promo Code"
+    } else
+      promoError = "Invalid Promo Code"
+
+    this.setState({ applyPromo: applyPromo, promoError: promoError, isVoucherApply: verify, totalApplyPromo: totalAfterPromo, totalDeduction: deduction, isShippingPromo: isShippingPromo })
+    return verify
   }
 
   renderCart() {
@@ -392,12 +486,34 @@ class PagePayment extends Component {
             )
           })
         }
+
+        <tr style={{ borderBottom: "1px solid lightgray" }}>
+          <th style={{ textAlign: "right" }}>Platform Voucher</th>
+          <td>
+            <TextField
+              hiddenLabel
+              sx={{
+                width: "80%"
+              }}
+              id="filled-hidden-label-small"
+              defaultValue={this.state.promoVoucher}
+              onChange={(e) => this.setState({ promoVoucher: e.target.value })}
+              variant="filled"
+              size="small"
+            />
+            <label style={{ paddingLeft: "10px" }}><Button variant="contained" color="primary" onClick={() => this.verifyPromoCode()}>Apply</Button></label>
+            <br />
+            <label style={{ color: "red" }}>{this.state.promoError.length !== "" && this.state.promoError} </label>
+          </td>
+        </tr>
         {this.renderTotals()}
         <tfoot className="checkout__totals-footer">
           <tr>
-            <th style={{ textAlign: "right" }}>Total</th>
+            <th style={{ textAlign: "right" }}>Final Total</th>
             <td>
-              <Currency value={this.state.total} />
+              <label style={{ textDecoration: this.state.isVoucherApply ? "line-through" : "none" }}><Currency value={this.state.total} /></label>
+              <br />
+              {this.state.isVoucherApply && <Currency value={this.state.totalApplyPromo} />}
             </td>
           </tr>
         </tfoot>
@@ -413,6 +529,7 @@ class PagePayment extends Component {
 
     let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
 
+    console.log("dadasdsada", bankingdata)
     let URL = "https://myemporia.my/payment/check.php"
     const config = { headers: { 'Content-Type': 'multipart/form-data' } }
     const formData = new FormData()
@@ -438,7 +555,6 @@ class PagePayment extends Component {
 
 
   renderPaymentsList = () => {
-
     const paymentMethod = [{ id: 1, method: "Online Banking", image: { FPX } }, { id: 2, method: "Debit/Credit Card", image: "" }]
     if (this.props.paymentmethod.length > 0 && this.state.isAllBankSet === false) {
       this.props.paymentmethod !== null && this.props.paymentmethod.filter((x) => parseInt(x.PaymentMethodTypeID) === 2).map((bank) => {
@@ -457,7 +573,9 @@ class PagePayment extends Component {
     var k = Math.floor(Math.random() * 1000000);
     var m = String.fromCharCode(n) + k;
 
-    let totalPrice = parseFloat(this.state.total).toFixed(2)
+    {/* this.setState({ applyPromo: applyPromo, promoError: promoError, isVoucherApply: verify, totalApplyPromo: totalAfterPromo, totalDeduction: deduction, isShippingPromo: isShippingPromo }) */ }
+
+    let totalPrice = this.state.isVoucherApply ? parseFloat(this.state.totalApplyPromo).toFixed(2) : parseFloat(this.state.total).toFixed(2)
     let lastname = this.props.addressID === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia" : this.state.Userdetails.addressName
     let firstname = this.props.addressID === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia" : this.state.Userdetails.addressName
     let email = this.props.addressID === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com" : this.state.Userdetails.email
@@ -829,6 +947,8 @@ class PagePayment extends Component {
     if (this.props.data.length < 1) {
       return <Redirect to="cart" />;
     }
+
+    console.log("dddasdas", this.state)
     return (
       <React.Fragment>
         <div className="cart">

@@ -6,15 +6,15 @@
 @import '../functions';
 @import '../mixins/direction';
 .not-found {
-    margin-top: $block-margin-top;
+    margin-top: 70px;
     text-align: center;
 }
 
 .not-found__404 {
-    font-size: 80px;
+    font-size: 5vw;
     font-weight: $font-weight-bold;
-    color: $body-divider-color;
-    padding: 40px 0 20px;
+    color: grey;
+    padding: 0 0 20px;
 }
 
 .not-found__content {

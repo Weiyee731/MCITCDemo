@@ -73,7 +73,8 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
     left: 0;
     right: 0;
     width: 100%;
-    height: 100%;
+    height: auto;
+    opacity: 0.9;
     background-repeat: no-repeat;
     object-fit: cover;
 }
@@ -124,10 +125,12 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
 }
 
 .block-slideshow--layout--full {
-    margin-top: 20px;
+    // margin-top: 20px;
     @media (min-width: breakpoint(md-start)) {
         .block-slideshow__body, .block-slideshow__slide {
-            height: 440px;
+            // height: 440px;
+            height: 31vw;
+            background-color: black;
         }
         .block-slideshow__slide-content {
             bottom: 54px;

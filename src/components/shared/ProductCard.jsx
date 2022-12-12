@@ -39,7 +39,6 @@ import { HashLink } from "react-router-hash-link";
 import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
 
 
-
 function ProductCard(props) {
   const {
     product,
@@ -203,30 +202,30 @@ function ProductCard(props) {
     }
 
     const colourList = [
-      { id: 1, color: "secondary" },
+      { id: 1, color: "red" },
       { id: 2, color: "primary" },
     ]
 
     const sampleTag = [
-      { id: 1, tag: "- 42%" },
-      { id: 2, tag: "free shipping" }
+      { id: 1, tag: "- 42%", color: "#d23f57" },
+      // { id: 2, tag: "free shipping", color: "#41924B" }
     ]
     return (
-      <>
+      <Card elevation={2}>
         <button
           className={classNames("product-card__quickview")}
-          style={{ textAlign: "right" }}
+          style={{ textAlign: "right", display: "flex"}}
         >
           {
             sampleTag.length > 0 &&
             sampleTag.map((x, index) => {
               return (
-                <label ><Chip size="small" variant="filled" color={colourList[index].color} label={x.tag} /></label>
+                <Chip size="small" variant="filled" label={x.tag} key={x.id} color='primary' style={{backgroundColor: x.color, boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px"}}/>
               )
             })
           }
-          <br />
-          <VisibilityIcon onClick={() => QuickView()} />
+          {/* <br /> */}
+          <VisibilityIcon style={{paddingLeft:"3px"}} onClick={() => QuickView()} />
         </button>
         {badges}
         <Link to={url.product(product)}>{image}</Link>
@@ -278,7 +277,7 @@ function ProductCard(props) {
             </div>
           }
         </div>
-      </>
+      </Card>
     )
   }
   return (

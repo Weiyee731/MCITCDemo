@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import departmentsAria from "../../services/departmentsArea";
 import languages from "../../i18n";
 import StroykaSlick from "../shared/StroykaSlick";
+import banner1 from "../../assets/banner1.jpeg";
 
 const slickSettings = {
   dots: true,
@@ -27,26 +28,26 @@ class BlockSlideShow extends Component {
   media = window.matchMedia("(min-width: 992px)");
 
   // slides = [
-    // {
-    //   // title: "11.11<br>Hardware products Sale",
-    //   // text: "11.11 Big Show will also be held during the big sale.",
-    //   image_classic: {
-    //     ltr: "images/slides/slide_1.jpg",
-    //     rtl: "images/slides/slide_1.jpg",
-    //     // ltr: "images/slides/pharmacy1.jpg",
-    //     // rtl: "images/slides/pharmacy1.jpg",
-    //   },
-    //   image_full: {
-    //     // ltr: "images/slides/slide_1_full.jpg",
-    //     // rtl: "images/slides/slide_1_full.jpg",
-    //     ltr: "images/slides/pharmacy2.png",
-    //     rtl: "images/slides/pharmacy2.png",
-    //   },
-    //   image_mobile: {
-    //     ltr: "images/slides/slide_1_mobile.jpg",
-    //     rtl: "images/slides/slide_1_mobile.jpg",
-    //   },
-    // },
+  // {
+  //   // title: "11.11<br>Hardware products Sale",
+  //   // text: "11.11 Big Show will also be held during the big sale.",
+  //   image_classic: {
+  //     ltr: "images/slides/slide_1.jpg",
+  //     rtl: "images/slides/slide_1.jpg",
+  //     // ltr: "images/slides/pharmacy1.jpg",
+  //     // rtl: "images/slides/pharmacy1.jpg",
+  //   },
+  //   image_full: {
+  //     // ltr: "images/slides/slide_1_full.jpg",
+  //     // rtl: "images/slides/slide_1_full.jpg",
+  //     ltr: "images/slides/pharmacy2.png",
+  //     rtl: "images/slides/pharmacy2.png",
+  //   },
+  //   image_mobile: {
+  //     ltr: "images/slides/slide_1_mobile.jpg",
+  //     rtl: "images/slides/slide_1_mobile.jpg",
+  //   },
+  // },
   //   {
   //     title: "Furniture<br>MEGA SALES",
   //     text:
@@ -93,6 +94,8 @@ class BlockSlideShow extends Component {
       image_full: {
         ltr: "https://myemporia.my/images/slides/slide_4.png",
         rtl: "https://myemporia.my/images/slides/slide_4.png",
+        // ltr: banner1,
+        // rtl: banner1,
       },
       image_mobile: {
         ltr: "https://myemporia.my/images/slides/slide_4.png",
@@ -188,56 +191,59 @@ class BlockSlideShow extends Component {
       ];
 
       return (
-        <div key={index} className="block-slideshow__slide">
-          {/* <div
+        <>
+          <div key={index} className="block-slideshow__slide">
+            {/* <div
             className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
             style={{
               backgroundImage: `url(${image})`,
             }}
           /> */}
-          <img
-            className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
-            // style={{
-            //   width: '100vw',
-            //   position: 'relative',
-            //   left: '50%',
-            //   right: '50%',
-            //   marginLeft: '-50vw',
-            //   marginRight: '-50vw'
-            // }}
-            src={image}
-            width={"100%"}
-            height={"auto"}
-          />
-          <div
-            className="block-slideshow__slide-image block-slideshow__slide-image--mobile"
-            style={{
-              backgroundImage: `url(${slide.image_mobile[direction]})`,
-            }}
-          />
-          <div className="block-slideshow__slide-content">
-            <div
-              className="block-slideshow__slide-title"
-              dangerouslySetInnerHTML={{ __html: slide.title }}
+            <img
+              className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
+              // style={{
+              //   width: '100vw',
+              //   position: 'relative',
+              //   left: '50%',
+              //   right: '50%',
+              //   marginLeft: '-50vw',
+              //   marginRight: '-50vw'
+              // }}
+              src={image}
+              width={"100%"}
+              height={"auto"}
             />
             <div
-              className="block-slideshow__slide-text"
-              dangerouslySetInnerHTML={{ __html: slide.text }}
+              className="block-slideshow__slide-image block-slideshow__slide-image--mobile"
+              style={{
+                backgroundImage: `url(${slide.image_mobile[direction]})`,
+              }}
             />
-            <div className="block-slideshow__slide-button" style={{marginLeft:"21vw", marginBottom:"1vw", }}>
-              <Link to={"/shop/ProductListing/type:Merchant&typevalue:" + 0} className="btn btn-primary btn-lg" style={{borderRadius:"5px"}}>
+            <div className="block-slideshow__slide-content">
+              <div
+                className="block-slideshow__slide-title"
+                dangerouslySetInnerHTML={{ __html: slide.title }}
+              />
+              <div
+                className="block-slideshow__slide-text"
+                dangerouslySetInnerHTML={{ __html: slide.text }}
+              />
+            </div>
+            <div className="block-slideshow__slide-button" style={{ position: "absolute", bottom:"2vw", left:"45%" }}>
+              <Link to={"/shop/ProductListing/type:Merchant&typevalue:" + 0} className="btn btn-primary btn-lg" style={{ borderRadius: "5px" }}>
                 Shop Now
               </Link>
             </div>
           </div>
-        </div>
+
+        </>
       );
     });
 
     return (
       <div className={blockClasses}>
-        <div className="container">
-          <div className="row">
+        <div className="">
+          <div className="row no-gutters">
             {/* col for the side-panel */}
             {withDepartments && (
               <div

@@ -30,7 +30,6 @@ import Chip from '@mui/material/Chip';
 import ReactTooltip from "react-tooltip";
 import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
 
-
 class ProductDetails extends Component {
     constructor(props) {
         super(props);
@@ -277,40 +276,60 @@ class ProductDetails extends Component {
                                         {this.wishlisting(product)}
                                     </div>
                                     <div className="row" style={{ display: "flex", flexDirection: "row", }}>
-                                        <h1 className="col-11 product__name">{product.ProductName}</h1>
+                                        <h3 className="col-11 product__name">{product.ProductName}</h3>
                                         <div className="col-1">
-                                            <a data-tip data-event='click focus'>
+                                            {/* <a data-tip data-event='click focus'>
                                                 <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
-                                                    style={{ cursor: "pointer" }}
-                                                /></a>
-                                            <ReactTooltip globalEventOff='click' place="right" type="dark" effect="solid" clickable={true} zIndex={10}>
-                                                <FacebookShareButton
-                                                    // style={{ border: "1px solid", width: "40px", height: "40px", transition: ".3s box-shadow ease", padding: "0.25em", borderRadius:"50%" }}
-                                                    openShareDialogOnClick
-                                                    url={"https://myemporia.my/shop/products/" + product.ProductID}
-                                                    quote="Check this out at MyEmporia, Get it now!"
-                                                    hashtag={"#MyEmporia"}>
-                                                    <FacebookIcon size={30} round={true} />
-                                                </FacebookShareButton>
-                                                <TelegramShareButton
-                                                    openShareDialogOnClick
-                                                    title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
-                                                    url={"https://myemporia.my/shop/products/" + product.ProductID} >
-                                                    <TelegramIcon size={30} round={true} />
-                                                </TelegramShareButton>
-                                                <TwitterShareButton
-                                                    openShareDialogOnClick
-                                                    url={"https://myemporia.my/shop/products/" + product.ProductID} >
-                                                    <TwitterIcon size={30} round={true} />
-                                                </TwitterShareButton>
-                                                <WhatsappShareButton
-                                                    openShareDialogOnClick
-                                                    title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
-                                                    separator={"/n "}
-                                                    url={"https://myemporia.my/shop/products/" + product.ProductID}>
-                                                    <WhatsappIcon size={30} round={true} />
-                                                </WhatsappShareButton>
-                                            </ReactTooltip>
+                                                    style={{ cursor: "pointer" }} />
+                                            </a>
+                                            <ReactTooltip globalEventOff='click' place="top" type="dark" effect="solid" clickable={true} zIndex={10}> */}
+                                            <div class="sticky_share_btn">
+                                                <div class="fixed_share">
+                                                    <ul class="listing">
+                                                        <li class="facebook">
+                                                            <FacebookShareButton
+                                                                className="fadeIn"
+                                                                openShareDialogOnClick
+                                                                url={"https://myemporia.my/shop/products/" + product.ProductID}
+                                                                quote="Check this out at MyEmporia, Get it now!"
+                                                                hashtag={"#MyEmporia"}>
+                                                                <FacebookIcon size={35} round={true} />
+                                                            </FacebookShareButton>
+                                                        </li>
+                                                        <li class="pinterest">
+                                                            <TelegramShareButton
+                                                                className="fadeIn"
+                                                                openShareDialogOnClick
+                                                                title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                                                                url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                                                                <TelegramIcon size={35} round={true} />
+                                                            </TelegramShareButton>
+                                                        </li>
+                                                        <li class="twitter">
+                                                            <TwitterShareButton
+                                                                className="fadeIn"
+                                                                openShareDialogOnClick
+                                                                url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                                                                <TwitterIcon size={35} round={true} />
+                                                            </TwitterShareButton>
+                                                        </li>
+                                                        <li class="whatsapp">
+                                                            <WhatsappShareButton
+                                                                className="fadeIn"
+                                                                openShareDialogOnClick
+                                                                title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                                                                separator={"/n "}
+                                                                url={"https://myemporia.my/shop/products/" + product.ProductID}>
+                                                                <WhatsappIcon size={35} round={true} />
+                                                            </WhatsappShareButton>
+                                                        </li>
+                                                    </ul>
+                                                    <span class="share-toggle">
+                                                        <i class="fa fa-share-alt"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {/* </ReactTooltip> */}
                                         </div>
                                     </div>
                                     <div className="product__rating">
@@ -356,7 +375,7 @@ class ProductDetails extends Component {
                                         <Chip variant="outlined" color="secondary" label="Brand: " size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
                                         <Chip variant="outlined" color="info" label={"SKU: " + product.SKU} size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
                                     </ul>
-                                    <div className="product__seller">
+                                    {/* <div className="product__seller">
                                         <Typography variant="caption">Seller:{" "}</Typography>
                                         {
                                             product.MerchantDetail !== undefined && product.MerchantDetail !== null && JSON.parse(product.MerchantDetail).map((merchantDetails) => {
@@ -402,7 +421,7 @@ class ProductDetails extends Component {
                                                 )
                                             })
                                         }
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="product__sidebar">
                                     <div className="product__prices">{prices}</div>
@@ -481,7 +500,7 @@ class ProductDetails extends Component {
                                                         }
                                                         onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
                                                         className="btn btn-primary product-card__addtocart"
-                                                        style={{borderRadius:"5px"}}
+                                                        style={{ borderRadius: "5px" }}
                                                     >
                                                         Add To Cart
                                                     </button>

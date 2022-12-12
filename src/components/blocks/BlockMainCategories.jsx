@@ -66,7 +66,7 @@ class BlockMainCategories extends Component {
 
 
     return (
-      <div className="container">
+      <div className="container mb-5">
         <BlockHeader
           title="Categories"
           showAll={"shop/AllProductCategory"}
