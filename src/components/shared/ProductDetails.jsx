@@ -288,39 +288,39 @@ class ProductDetails extends Component {
                                                     <ul class="listing">
                                                         <li class="facebook">
                                                             <FacebookShareButton
-                                                                className="fadeInUp"
+                                                                className="fadeIn"
                                                                 openShareDialogOnClick
                                                                 url={"https://myemporia.my/shop/products/" + product.ProductID}
                                                                 quote="Check this out at MyEmporia, Get it now!"
                                                                 hashtag={"#MyEmporia"}>
-                                                                <FacebookIcon size={30} round={true} />
+                                                                <FacebookIcon size={35} round={true} />
                                                             </FacebookShareButton>
                                                         </li>
                                                         <li class="pinterest">
                                                             <TelegramShareButton
-                                                                className="fadeInUp"
+                                                                className="fadeIn"
                                                                 openShareDialogOnClick
                                                                 title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
                                                                 url={"https://myemporia.my/shop/products/" + product.ProductID} >
-                                                                <TelegramIcon size={30} round={true} />
+                                                                <TelegramIcon size={35} round={true} />
                                                             </TelegramShareButton>
                                                         </li>
                                                         <li class="twitter">
                                                             <TwitterShareButton
-                                                                className="fadeInUp"
+                                                                className="fadeIn"
                                                                 openShareDialogOnClick
                                                                 url={"https://myemporia.my/shop/products/" + product.ProductID} >
-                                                                <TwitterIcon size={30} round={true} />
+                                                                <TwitterIcon size={35} round={true} />
                                                             </TwitterShareButton>
                                                         </li>
                                                         <li class="whatsapp">
                                                             <WhatsappShareButton
-                                                                className="fadeInUp"
+                                                                className="fadeIn"
                                                                 openShareDialogOnClick
                                                                 title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
                                                                 separator={"/n "}
                                                                 url={"https://myemporia.my/shop/products/" + product.ProductID}>
-                                                                <WhatsappIcon size={30} round={true} />
+                                                                <WhatsappIcon size={35} round={true} />
                                                             </WhatsappShareButton>
                                                         </li>
                                                     </ul>
