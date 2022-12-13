@@ -193,7 +193,7 @@
 //     //   baseURL: '/',
 //     //  })
 //     //  .then(response => {
-//     //     window.location.reload();
+//     //     // window.location.reload();
 //     //  })
 //     //  .catch(error => {
 //     //      console.log(error);
@@ -336,8 +336,8 @@
 //     // }
 
 
-//     // browserHistory.push("components/shop/payment_form.jsp");
-//     // // browserHistory.push("https://myemporia.my/php/web/payment_form.php");
+//     // this.props.history.push("components/shop/payment_form.jsp");
+//     // // this.props.history.push("https://myemporia.my/php/web/payment_form.php");
 //     // window.location.reload(false);
 
 //     // history.push({
@@ -355,7 +355,7 @@
 //     //   )
 //     //   .then((res) => {
 
-//     //     // browserHistory.push("https://myemporia.my/php/web/payment_form.php");
+//     //     // this.props.history.push("https://myemporia.my/php/web/payment_form.php");
 //     //     window.location.reload(false);
 //     //     console.log("RES", res)
 //     //     if (res.status === 200) {
@@ -483,7 +483,7 @@
 //     if (prevProps.order !== this.props.order) {
 //       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
 
-//         // browserHistory.push("/");
+//         // this.props.history.push("/");
 //         // window.location.reload(false);
 //       }
 //     }

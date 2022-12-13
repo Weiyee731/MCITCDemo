@@ -1,6 +1,5 @@
 // react
 import React, { Component } from "react";
-import { browserHistory } from "react-router";
 // third-party
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet-async";

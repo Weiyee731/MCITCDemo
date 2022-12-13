@@ -5,10 +5,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet-async";
 import {
-  Redirect,
   Route,
   Switch,
   Link,
+  Redirect,
   BrowserRouter as Router,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -88,157 +88,153 @@ const productLayouts = [
     )}
   />
 ));
-const Access = () => {
-  if (localStorage.getItem("isLogin") === false || localStorage.getItem("isLogin") === null) {
-    return (
-      <Router basename={"/"}>
-        <div className="App">
-          <nav className="navbar navbar-expand-lg navbar-light fixed-top">
-            <div className="container">
-              <Link className="navbar-brand" to={"/login"}>
-                MyEmporia
-              </Link>
-              <div
-                className="collapse navbar-collapse"
-                id="navbarTogglerDemo02"
-              >
-                <ul className="navbar-nav ml-auto">
-                  <li className="nav-item">
-                    <Link className="nav-link" to={"/login"}>
-                      Login
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" to={"/signup"}>
-                      Sign up
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
+// const Access = () => {
+//   if (localStorage.getItem("isLogin") === false || localStorage.getItem("isLogin") === null) {
+//     return (
+//       <Router basename={"/"}>
+//         <div className="App">
+//           <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+//             <div className="container">
+//               <Link className="navbar-brand" to={"/login"}>
+//                 MyEmporia
+//               </Link>
+//               <div
+//                 className="collapse navbar-collapse"
+//                 id="navbarTogglerDemo02"
+//               >
+//                 <ul className="navbar-nav ml-auto">
+//                   <li className="nav-item">
+//                     <Link className="nav-link" to={"/login"}>
+//                       Login
+//                     </Link>
+//                   </li>
+//                   <li className="nav-item">
+//                     <Link className="nav-link" to={"/signup"}>
+//                       Sign up
+//                     </Link>
+//                   </li>
+//                 </ul>
+//               </div>
+//             </div>
+//           </nav>
 
-          <div className="auth-wrapper">
-            <div className="auth-inner">
-              <Switch>
-                <Route path="/" component={Login} />
-                <Route
-                  exact
-                  path="/resetPassword/:resetPasswordID"
-                  render={(props) => (
-                    <ResetPassword
-                      {...props}
-                      resetPasswordID={props.match.params.resetPasswordID}
-                    />
-                  )}
-                />
-                <Route path="/login" component={Login} />
-                {/* <Route path="/resetPassword" component={ResetPassword}/> */}
-                <Route path="/signup" component={SignUp} />
-              </Switch>
-            </div>
-          </div>
-        </div>
-      </Router>
-    );
-  } else {
-    return (
-      <Router basename={"/"}>
-        <div
-          className={"app"}
-          style={{ overflow: "hidden", position: "relative" }}
-        >
-          <div className={"page-wrapper default-theme toggled"}>
-            <SideBarMenu
-              lang={"en"}
-              image={false}
-              collapsed={false}
-              rtl={false}
-              toggled={false}
-            />
-          </div>
-          <div
-            style={{
-              height: "100%",
-              overflow: "scroll",
-              boxSizing: "content-box",
-              width: "100%",
-            }}
-          >
-            <Switch>
-              <Route path="/dashboard" component={DashboardComponent} />
-              <Route path="/viewTrend" component={DashboardComponent} />
+//           <div className="auth-wrapper">
+//             <div className="auth-inner">
+//               <Switch>
+//                 <Route path="/" component={Login} />
+//                 <Route
+//                   exact
+//                   path="/resetPassword/:resetPasswordID"
+//                   render={(props) => (
+//                     <ResetPassword
+//                       {...props}
+//                       resetPasswordID={props.match.params.resetPasswordID}
+//                     />
+//                   )}
+//                 />
+//                 <Route path="/login" component={Login} />
+//                 {/* <Route path="/resetPassword" component={ResetPassword}/> */}
+//                 <Route path="/signup" component={SignUp} />
+//               </Switch>
+//             </div>
+//           </div>
+//         </div>
+//       </Router>
+//     );
+//   } else {
+//     return (
+//       <Router basename={"/"}>
+//         <div
+//           className={"app"}
+//           style={{ overflow: "hidden", position: "relative" }}
+//         >
+//           <div className={"page-wrapper default-theme toggled"}>
+//             <SideBarMenu
+//               lang={"en"}
+//               image={false}
+//               collapsed={false}
+//               rtl={false}
+//               toggled={false}
+//             />
+//           </div>
+//           <div
+//             style={{
+//               height: "100%",
+//               overflow: "scroll",
+//               boxSizing: "content-box",
+//               width: "100%",
+//             }}
+//           >
+//             <Switch>
+//               <Route path="/dashboard" component={DashboardComponent} />
+//               <Route path="/viewTrend" component={DashboardComponent} />
 
-              <Route path="/viewProduct" component={ViewProductComponent} />
-              <Route path="/viewOrder" component={ViewProductComponent} />
-              <Route path="/login" component={Login} />
-              <Route
-                exact
-                path="/resetPassword/:resetPasswordID"
-                render={(props) => (
-                  <ResetPassword
-                    {...props}
-                    resetPasswordID={props.match.params.resetPasswordID}
-                  />
-                )}
-              />
-              <Route path="/signup" component={SignUp} />
-              <Route path="/viewSaleByProduct" component={ViewProductComponent} />
-              <Route
-                path="/viewTargetCustomer"
-                component={ViewProductComponent}
-              />
-              <Route
-                path="/viewDeliverableTransaction"
-                component={ViewDeliverableComponent}
-              />
-              <Route path="/viewPriceAnalysis" component={ViewProductComponent} />
-              <Route
-                path="/viewProductAnalysis"
-                component={ViewProductComponent}
-              />
-              <Route
-                path="/viewSalesByCategory"
-                component={ViewProductComponent}
-              />
-              <Route path="/viewSales" component={ViewProductComponent} />
-              <Route path="/viewWishlist" component={ViewProductComponent} />
-              <Route path="/viewProfile" component={userProfile} />
-            </Switch>
-          </div>
-        </div>
-      </Router>
-    );
-  }
-};
+//               <Route path="/viewProduct" component={ViewProductComponent} />
+//               <Route path="/viewOrder" component={ViewProductComponent} />
+//               <Route path="/login" component={Login} />
+//               <Route
+//                 exact
+//                 path="/resetPassword/:resetPasswordID"
+//                 render={(props) => (
+//                   <ResetPassword
+//                     {...props}
+//                     resetPasswordID={props.match.params.resetPasswordID}
+//                   />
+//                 )}
+//               />
+//               <Route path="/signup" component={SignUp} />
+//               <Route path="/viewSaleByProduct" component={ViewProductComponent} />
+//               <Route
+//                 path="/viewTargetCustomer"
+//                 component={ViewProductComponent}
+//               />
+//               <Route
+//                 path="/viewDeliverableTransaction"
+//                 component={ViewDeliverableComponent}
+//               />
+//               <Route path="/viewPriceAnalysis" component={ViewProductComponent} />
+//               <Route
+//                 path="/viewProductAnalysis"
+//                 component={ViewProductComponent}
+//               />
+//               <Route
+//                 path="/viewSalesByCategory"
+//                 component={ViewProductComponent}
+//               />
+//               <Route path="/viewSales" component={ViewProductComponent} />
+//               <Route path="/viewWishlist" component={ViewProductComponent} />
+//               <Route path="/viewProfile" component={userProfile} />
+//             </Switch>
+//           </div>
+//         </div>
+//       </Router>
+//     );
+//   }
+// };
 
 function Layout(props) {
   const { match, headerLayout, homeComponent } = props;
+  console.log("layout")
   return (
     <React.Fragment>
       <Helmet></Helmet>
       <ToastContainer autoClose={5000} hideProgressBar />
-      {/* <Quickview /> */}
-      {/* <MobileMenu /> */}
-      {
-        // localStorage.getItem("management") === "true" ? (
-        //   Access()
-        // ) :
-        (
-          <Router basename={"/"}>
-            <div className="site">
-              <header className="site__header d-lg-none">
-                <MobileHeader />
-              </header>
-              <header className="site__header d-lg-block d-none">
-              
-                <Header layout={headerLayout} location={props.location.pathname}/>
-              </header>
+      {/* <Quickview />
+      <MobileMenu /> */}
+      <Router basename={"/"}>
+        <div className="site">
+          <header className="site__header d-lg-none">
+            <MobileHeader />
+          </header>
+          <header className="site__header d-lg-block d-none">
 
-              <div className="site__body" style={{ backgroundColor: "#f5f5f5" }}>
-                <Switch>
-                  <Route exact path={`${match.path}`} component={homeComponent} />
-                  <Redirect exact from="/shop" to="/shop/catalog" />
+            <Header layout={headerLayout} location={props.location.pathname} />
+          </header>
+
+          <div className="site__body" style={{ backgroundColor: "#f5f5f5" }}>
+            <Switch>
+              <Route exact path={`${match.path}`} component={homeComponent} />
+              <Redirect exact from="/shop" to="/shop/catalog" />
                   <Route
                     exact
                     path="/shop/catalog"
@@ -513,14 +509,14 @@ function Layout(props) {
                     )}
                   />
                   <Route component={SitePageNotFound} />
-                </Switch>
-              </div>
-              <footer className="site__footer">
-                <Footer />
-              </footer>
-            </div>
-          </Router>
-        )}
+            </Switch>
+          </div>
+          <footer className="site__footer">
+            <Footer />
+          </footer>
+        </div>
+      </Router>
+
     </React.Fragment>
   );
 }

@@ -9,7 +9,7 @@ import { DropzoneArea } from 'material-ui-dropzone'
 import Dropzone from "react-dropzone";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
-import { Link, matchPath, Redirect, Switch, Route } from "react-router-dom";
+import { Link, matchPath, Switch, Route } from "react-router-dom";
 
 import {
   Card,
@@ -159,26 +159,15 @@ class EditShopProfile extends Component {
         })
       }
       this.setState({ shopRating: parseFloat(ratingCount.reduce((subtotal, item) => subtotal + item, 0) / ratingCount.length).toFixed(2) })
-
-      // console.log("CHECK", parseFloat(ratingCount.reduce((subtotal, item) => subtotal + item, 0) / rating.length).toFixed(2))
-      // console.log("CHECK", rating.reduce((subtotal, item) => subtotal + item, 0))
-
     } else {
-      // browserHistory.push("/login");
-      // window.location.reload(false);
+
     }
   }
-  // {console.log("MERCHANT", this.p)}
+
   componentDidUpdate(prevProps) {
 
     if (prevProps.shopUpdated !== this.props.shopUpdated) {
-      // browserHistory.push("/");
-      // delete this.state;
 
-      // this.setState(group);
-
-      // clearImmediate(this.props.merchant);
-      // window.location.reload(false);
     }
 
     if (this.props.shopUpdated.length > 0) {
@@ -199,12 +188,6 @@ class EditShopProfile extends Component {
       this.modalClose()
     }
   }
-  // componentWillUnmount(){ 
-  //   this.setState(group); 
-  //   window.location.reload(false);
-  // }
-
-
   /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
   onFileUpload = () => {
     const formData = new FormData();
@@ -317,18 +300,7 @@ class EditShopProfile extends Component {
   }
 
   updateShop() {
-    // if (
-    //   this.state.SHOPPOSCODE.length !== 0 &&
-    //   this.state.SHOPSTATE.length !== 0 &&
-    //   this.state.SHOPCITY.length !== 0 &&
-    //   this.state.SHOPCOUNTRYID.length !== 0
-    // ) {
-    console.log("UPDATE", this.state)
     this.props.CallUpdateShopDetail(this.state);
-
-    // } else {
-    //   toast.error("Please fill in all required data");
-    // }
   }
 
   uploadHandler(e) {

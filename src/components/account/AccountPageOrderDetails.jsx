@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 // data stubs
 import theme from "../../data/theme";
 import Logo from "../../assets/Emporia.png";
-import { browserHistory } from "react-router";
+// import { browserHistory } from "react-router";
 
 //Display by Order Along with Tracking No
 import Typography from '@mui/material/Typography';
@@ -85,8 +85,9 @@ export default function AccountPageOrderDetails(props) {
 
   const orderDetail = props.location.orderdetails;
   if (orderDetail === undefined) {
-    browserHistory.push("/account/orders");
-    window.location.reload(false);
+    this.props.history.push("/account/orders")
+    // this.props.history.push("/account/orders");
+    // window.location.reload(false);
   }
 
   let filteredMerchant = [];

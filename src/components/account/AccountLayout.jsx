@@ -130,11 +130,11 @@ export default function AccountLayout(props) {
             </div>
             <div className="col-12 col-lg-9 mt-lg-0">
               <Switch>
-                <Redirect
+                {/* <Redirect
                   exact
                   from={match.path}
                   to={`${match.path}/profile`}
-                />
+                /> */}
                 <Route
                   exact
                   path={`${match.path}/profile`}

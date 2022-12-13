@@ -7,7 +7,7 @@ import "./index.css";
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import 'react-input-range/lib/css/index.css';
+// import 'react-input-range/lib/css/index.css';
 import './scss/style.scss';
 
 ReactDOM.render(

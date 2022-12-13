@@ -106,9 +106,9 @@ class ProductGallery extends Component {
   }
 
   componentDidMount() {
-    this.createGallery = import("../../photoswipe").then(
-      (module) => module.createGallery
-    );
+    // this.createGallery = import("../../photoswipe").then(
+    //   (module) => module.createGallery
+    // );
 
     // this is necessary to reset the transition state, because sometimes
     // react-slick does not trigger an afterChange event after a beforeChange event

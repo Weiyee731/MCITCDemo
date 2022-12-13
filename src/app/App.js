@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { IntlProvider } from "react-intl";
@@ -73,32 +73,29 @@ class App extends Component {
 
   render() {
     const { locale } = this.props;
-    // const { direction } = languages[0];
+    const { messages, direction } = languages[locale];
     return (
       <ThemeProvider theme={lightTheme}>
         <GlobalStyles />
-        {/* <IntlProvider locale={locale} messages={messages}> */}
-          <BrowserRouter basename="">
+        <IntlProvider locale={locale} messages={messages}>
+          <BrowserRouter>
             <HelmetProvider>
-              <Helmet htmlAttributes={{ lang: locale, dir: 'ltr' }} />
-              {/* <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}> */}
-                <Switch>
-                  <Route
-                    path="/"
-                    render={(props) => (
-                      <Layout
-                        {...props}
-                        headerLayout="default"
-                        homeComponent={HomePageTwo}
-                      />
-                    )}
-                  />
-                  <Redirect to="/" />
-                </Switch>
-              {/* </ScrollContext> */}
+              <Helmet htmlAttributes={{ lang: locale, dir: direction }} />
+              <Switch>
+                <Route
+                  path="/"
+                  render={(props) => (
+                    <Layout
+                      {...props}
+                      headerLayout="default"
+                      homeComponent={HomePageTwo}
+                    />
+                  )}
+                />
+              </Switch>
             </HelmetProvider>
           </BrowserRouter>
-        {/* </IntlProvider> */}
+        </IntlProvider>
       </ThemeProvider>
     );
   }

@@ -12,7 +12,7 @@ $highlight-color: #d8d8d8;
 $icon-bg-color: rgba(255, 255, 255, 0.05);
 $icon-size: 35px;
 
-@import "~react-pro-sidebar/dist/scss/styles.scss";
+
 body {
   margin: 0;
   height: 100vh;
@@ -169,17 +169,17 @@ body {
       }
     }
   }
-  @media (max-width: $breakpoint-md) {
-    .btn-toggle {
-      display: flex;
-    }
+  // @media (max-width: $breakpoint-md) {
+  //   .btn-toggle {
+  //     display: flex;
+  //   }
 
-    &.rtl {
-      .btn-toggle {
-        margin-left: auto;
-      }
-    }
-  }
+  //   &.rtl {
+  //     .btn-toggle {
+  //       margin-left: auto;
+  //     }
+  //   }
+  // }
 }
 
 .badge {

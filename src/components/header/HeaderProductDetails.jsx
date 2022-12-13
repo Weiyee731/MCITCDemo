@@ -129,7 +129,7 @@ class HeaderProductDetails extends Component {
   }
 
   login() {
-    browserHistory.push("/login");
+    this.props.history.push("/login");
     window.location.reload(false);
   }
 

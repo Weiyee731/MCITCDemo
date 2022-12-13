@@ -8,14 +8,13 @@ import { Modal, ModalBody } from "reactstrap";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
 import { GitAction } from "../../../store/action/gitAction";
-import Cards from "react-credit-cards";
+import Cards from 'react-credit-cards-2';
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import "react-credit-cards/es/styles-compiled.css";
-import "react-credit-cards/lib/styles.scss";
+
 import "./creditcardstyle.css";
 import { browserHistory } from "react-router";
 import TextField from "@mui/material/TextField";
@@ -112,8 +111,9 @@ class AccountPageAddCreditCard extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.creditcards !== this.props.creditcards && this.props.creditcards[0].ReturnVal === undefined) {
-      browserHistory.push("/account/creditcard");
-      window.location.reload();
+      this.props.history.push("/account/creditcard")
+      // this.props.history.push("/account/creditcard");
+      // // window.location.reload();
     }
   }
   validateData() {

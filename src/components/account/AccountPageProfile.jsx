@@ -28,7 +28,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import PageChangeContact from "./AccountPageChangeContact.jsx";
 import LoginComponent from "../../pages/login/login.component";
-import { browserHistory } from "react-router";
+// import { browserHistory } from "react-router";
 
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 
@@ -120,8 +120,9 @@ class AccountPageProfile extends Component {
         }
       }
     } else {
-      browserHistory.push("/login");
-      window.location.reload(false);
+      this.props.history.push("/login")
+      // this.props.history.push("/login");
+      // window.location.reload(false);
     }
 
   }

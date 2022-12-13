@@ -271,7 +271,7 @@
 //             );
 //             localStorage.setItem("id", props.currentUser[0].UserID);
 
-//             browserHistory.push("/");
+//             this.props.history.push("/");
 //             window.location.reload(false);
 //         }
 //     }, [props.currentUser], setSubmitRegisterForm);

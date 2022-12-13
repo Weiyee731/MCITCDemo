@@ -1,9 +1,5 @@
-// react
 import { Component } from "react";
-
-// third-party
 import PropTypes from "prop-types";
-import { browserHistory } from "react-router";
 
 class AsyncAction extends Component {
   canceled = false;
@@ -37,7 +33,7 @@ class AsyncAction extends Component {
       });
     }
     else {
-      browserHistory.push("/login");
+      this.props.history.push("/login")
       window.location.reload(false)
 
     }

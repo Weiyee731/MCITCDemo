@@ -1,7 +1,7 @@
 import 'photoswipe/dist/photoswipe.css';
 import 'photoswipe/dist/default-skin/default-skin.css';
 
-import _PhotoSwipe from 'photoswipe/dist/photoswipe';
+import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js';
 import _PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
 
 // noinspection CheckTagEmptyBody
@@ -52,5 +52,5 @@ document.body.appendChild(element);
 
 // eslint-disable-next-line import/prefer-default-export
 export function createGallery(images, options) {
-    return new _PhotoSwipe(element, _PhotoSwipeUIDefault, images, options);
+    return new PhotoSwipeLightbox(element, _PhotoSwipeUIDefault, images, options);
 }

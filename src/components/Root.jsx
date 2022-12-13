@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 // third-party
 import PropTypes from 'prop-types';
 import {
-    BrowserRouter,
     Route,
     Redirect,
     Switch,
@@ -70,7 +69,7 @@ class Root extends Component {
                                         <Layout {...props} headerLayout="default" homeComponent={HomePageOne} />
                                     )}
                                 />
-                                <Redirect to="/" />
+                                {/* <Redirect to="/" /> */}
                             </Switch>
                         {/* </ScrollContext> */}
                     </HelmetProvider>

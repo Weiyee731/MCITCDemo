@@ -4,7 +4,7 @@ import React, { Component, useState } from "react";
 // third-party
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet-async";
-import { browserHistory } from "react-router";
+// import { browserHistory } from "react-router";
 // application
 
 // data stubs
@@ -191,8 +191,9 @@ class AccountPagePassword extends Component {
     if (prevProps.updatePassword !== this.props.updatePassword) {
       if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
         toast.success("Your password has been updated");
-        browserHistory.push("/account/profile");
-        window.location.reload(false);
+        this.props.history.push("/account/profile")
+        // this.props.history.push("/account/profile");
+        // window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
       }
@@ -331,7 +332,7 @@ class AccountPagePassword extends Component {
       this.stopTimer(60);
     }
     // if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-    //   browserHistory.push(".account/profile");
+    //   this.props.history.push(".account/profile");
     //   window.location.reload(false);
     // } else {
     // }

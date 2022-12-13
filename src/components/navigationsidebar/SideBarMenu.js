@@ -6,7 +6,7 @@ import SimpleMenu from "../navigationsidebar/SimpleMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 import userImage from "../../assets/user.jpg";
 import logo from "../../assets/Emporia.png";
-import { ProSidebar, SidebarFooter, SidebarContent } from "react-pro-sidebar";
+import { Sidebar, Menu } from "react-pro-sidebar";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -111,7 +111,7 @@ const SideBarMenu = ({
 
   const logout = () => {
     propsData.callLogout({ UserID: localStorage.getItem("id") });
-    browserHistory.push("/");
+    this.props.history.push("/");
     localStorage.clear();
     cookies.set("isLogin", false);
     window.location.reload(false);
@@ -120,13 +120,13 @@ const SideBarMenu = ({
   return (
     <div style={{ height: "100%" }}>
       {/* {alert("" + theme)} */}
-      <ProSidebar
+      <Sidebar
         collapsed={collapsed}
         toggled={toggled}
         breakPoint="md"
         onToggle={handleToggleSidebar}
       >
-        <SidebarContent>
+        <Menu>
           <nav id="sidebar" className="sidebar-wrapper">
             <div className="sidebar-content">
               {/* <Scrollbars renderThumbVertical={renderCustomHorizontalThumb}> */}
@@ -340,9 +340,9 @@ const SideBarMenu = ({
               </div>
             </div>
           </nav>
-        </SidebarContent>
-        <SidebarFooter style={{ textAlign: "center" }}></SidebarFooter>
-      </ProSidebar>
+        </Menu>
+        {/* <SidebarFooter style={{ textAlign: "center" }}></SidebarFooter> */}
+      </Sidebar>
     </div>
   );
 };

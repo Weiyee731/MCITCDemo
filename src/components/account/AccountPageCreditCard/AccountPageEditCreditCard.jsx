@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
 import { GitAction } from "../../../store/action/gitAction";
-import Cards from "react-credit-cards";
+import Cards from "react-credit-cards-2";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -121,17 +121,17 @@ class AccountPageEditCreditCard extends Component {
       this.props.CallUpdateCreditCard(this.state);
       // this.props.parentCallback(false);
       // setTimeout(function () {
-      //   window.location.reload();
+      //   // window.location.reload();
       // }, 1000);
     } else {
       toast.error("Please fill in all required card data");
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.creditcard !== this.props.creditcard)
-      window.location.reload();
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.creditcard !== this.props.creditcard)
+  //     // window.location.reload();
+  // }
 
   validateData() {
     const { expiry, name, number, cardtype } = this.state

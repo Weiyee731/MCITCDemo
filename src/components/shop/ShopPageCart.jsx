@@ -194,7 +194,7 @@ class ShopPageCart extends Component {
             }
         }
         else {
-            browserHistory.push("/login");
+            this.props.history.push("/login");
             window.location.reload(false);
         }
     };

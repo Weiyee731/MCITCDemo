@@ -1,6 +1,6 @@
 import React /*, { useState } */ from "react";
-import { animated } from "react-spring";
-import { Spring } from "react-spring/renderprops";
+// import { animated } from "react-spring";
+// import { Spring } from "react-spring/renderprops";
 
 function DropdownMenu(props) {
   let closedStyle = {
@@ -51,15 +51,15 @@ function DropdownMenu(props) {
         </li>
       );
     });
-    subMenuContent = (
-      <Spring from={closedStyle} to={props.active ? openStyle : closedStyle}>
-        {(props) => (
-          <animated.div className="sidebar-submenu" style={props}>
-            <ul> {subMenus} </ul>
-          </animated.div>
-        )}
-      </Spring>
-    );
+    // subMenuContent = (
+    //   <Spring from={closedStyle} to={props.active ? openStyle : closedStyle}>
+    //     {/* {(props) => (
+    //       <animated.div className="sidebar-submenu" style={props}>
+    //         <ul> {subMenus} </ul>
+    //       </animated.div>
+    //     )} */}
+    //   </Spring>
+    // );
   }
   const linkMenu = (
     <a

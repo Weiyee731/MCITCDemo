@@ -136,7 +136,7 @@ class IndicatorAccount extends Component {
     cookies.set("isLogin", false);
     localStorage.setItem("isLogin", false);
 
-    browserHistory.push("/");
+    this.props.history.push("/");
     window.location.reload(false);
   };
 
@@ -145,7 +145,7 @@ class IndicatorAccount extends Component {
   //   if (prevProps.currentUser !== this.props.currentUser) {
   //     if (this.state.isLogout === true && this.props.currentUser.length === 0) {
   //       setTimeout(() => {
-  //         browserHistory.push("/");
+  //         this.props.history.push("/");
   //         window.location.reload(false);
   //       }, 1000);
   //     }

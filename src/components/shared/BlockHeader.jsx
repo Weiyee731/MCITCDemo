@@ -1,8 +1,7 @@
 // react
 import React from 'react';
 import {
-    Link,
-    BrowserRouter as Router,
+    Link
 } from "react-router-dom";
 // third-party
 import classNames from 'classnames';

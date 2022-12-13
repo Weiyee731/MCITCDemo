@@ -8,8 +8,7 @@ import React, {
 
 // third-party
 import classNames from 'classnames';
-import { withRouter } from 'react-router-dom';
-import { browserHistory } from "react-router";
+// import { browserHistory } from "react-router";
 
 // application
 import Suggestions from './Suggestions';
@@ -174,8 +173,9 @@ function Search(props) {
     }
 
     if (event.key === "Enter") {
-      browserHistory.push("/shop/ProductListing/type:Keyword&typevalue:" + searchquery);
-      window.location.reload(false);
+      this.props.history.push("/shop/ProductListing/type:Keyword&typevalue:" + searchquery)
+      // this.props.history.push("/shop/ProductListing/type:Keyword&typevalue:" + searchquery);
+      // window.location.reload(false);
     }
   };
 
@@ -227,4 +227,4 @@ function Search(props) {
   );
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Search));
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

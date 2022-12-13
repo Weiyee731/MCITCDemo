@@ -165,8 +165,9 @@ class PageChangeEmail extends Component {
     if (prevProps.emailUpdated !== this.props.emailUpdated) {
       if (this.props.emailUpdated && this.props.emailUpdated[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your email  has been updated");
-        browserHistory.push("/account/profile");
-        window.location.reload(false);
+        this.props.history.push("/account/profile")
+        // this.props.history.push("/account/profile");
+        // window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
       }
@@ -317,8 +318,9 @@ class PageChangeEmail extends Component {
       this.stopTimer(60);
     }
     if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-      browserHistory.push("/account/profile");
-      window.location.reload(false);
+      this.props.history.push("/account/profile")
+      // this.props.history.push("/account/profile");
+      // window.location.reload(false);
     } else {
     }
   };

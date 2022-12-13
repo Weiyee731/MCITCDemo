@@ -15,7 +15,7 @@ export class GitEpic {
             action.payload.username +
             "&password=" +
             action.payload.password +
-            "&ProjectID=2&ProjectDomain=myemporia")
+            "&ProjectDomainName=myemporia")
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)

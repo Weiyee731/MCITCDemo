@@ -61,7 +61,7 @@ class HomeComponent extends Component {
   render() {
     const buttonStyle = { width: "100%" };
     if (this.props.currentUser && this.props.currentUser.email) {
-      browserHistory.push("/complain");
+      this.props.history.push("/complain");
     }
     return (
       <div className="App">

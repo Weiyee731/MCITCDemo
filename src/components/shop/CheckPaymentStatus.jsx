@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 // third-party
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 import {
   Select
 } from "@mui/material";
