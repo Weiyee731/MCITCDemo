@@ -162,7 +162,6 @@ class ProductDetails extends Component {
 
     login() {
         this.props.history.push("/login");
-        window.location.reload(false);
     }
 
     handleWishlist = (product) => {

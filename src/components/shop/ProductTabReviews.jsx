@@ -64,7 +64,6 @@ class ProductTabReviews extends Component {
 
   login() {
     this.props.history.push("/login");
-    window.location.reload(false);
   }
 
   onSubmitReviewReply() {

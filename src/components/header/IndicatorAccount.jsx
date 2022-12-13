@@ -135,9 +135,7 @@ class IndicatorAccount extends Component {
     window.localStorage.clear()
     cookies.set("isLogin", false);
     localStorage.setItem("isLogin", false);
-
     this.props.history.push("/");
-    window.location.reload(false);
   };
 
 
@@ -157,16 +155,17 @@ class IndicatorAccount extends Component {
   }
 
   render() {
-    if (this.props.currentUser[0]) {
-      localStorage.setItem("isLogin", true);
-      localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
-      localStorage.setItem("lastname", this.props.currentUser[0].LastName);
-      localStorage.setItem("role", this.props.currentUser[0].UserType);
-      localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
-      localStorage.setItem("id", this.props.currentUser[0].UserID);
-    } else {
-      localStorage.setItem("isLogin", false);
-    }
+    // console.log(this.props.currentUser)
+    // if (this.props.currentUser[0]) {
+    //   localStorage.setItem("isLogin", true);
+    //   localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
+    //   localStorage.setItem("lastname", this.props.currentUser[0].LastName);
+    //   localStorage.setItem("role", this.props.currentUser[0].UserType);
+    //   localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
+    //   localStorage.setItem("id", this.props.currentUser[0].UserID);
+    // } else {
+    //   localStorage.setItem("isLogin", false);
+    // }
 
     const dropdown = (
       <div className="account-menu" style={{ zIndex: "10" }}>
@@ -204,22 +203,12 @@ class IndicatorAccount extends Component {
               <li>
                 <Link to="/account/profile">My Profile</Link>
               </li>
-              {/* <li>
-                <Link to="/account/companyprofile">Company Profile</Link>
-              </li> */}
               <li>
                 <Link to="/account/addresses">My Addresses</Link>
               </li>
-              {/* <li>
-                <Link to="/account/creditcard">My Credit Cards</Link>
-              </li> */}
-
               <li>
                 <Link to="/account/orders">Order History</Link>
               </li>
-              {/* <li>
-                <Link to="/account/addresses">Addresses</Link>
-              </li> */}
               <li>
                 <Link to="/account/password">Password</Link>
               </li>

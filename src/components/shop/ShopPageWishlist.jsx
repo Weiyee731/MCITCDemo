@@ -34,7 +34,6 @@ function ShopPageWishlist(props) {
 
     const login = () => {
         this.props.history.push("/login");
-        window.location.reload(false);
     }
 
     const deleteWishlist = (product) => {

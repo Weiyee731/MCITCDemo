@@ -194,7 +194,7 @@ class LoginComponent extends Component {
         // }
 
         this.props.history.push("/");
-        window.location.reload(false);
+        // window.location.reload(false);
       } else {
         toast.error("The username and password does not match.")
       }
@@ -215,7 +215,6 @@ class LoginComponent extends Component {
         toast.success("Your password has been updated, try to login with new password");
         setTimeout(() => {
           this.props.history.push("/login");
-          window.location.reload(false);
         }, 3000)
 
       } else {
@@ -448,7 +447,6 @@ class LoginComponent extends Component {
                     <label onClick={() =>
                       <>
                         {this.props.history.push("/signup")}
-                        {window.location.reload(false)}
                       </>
                     }>
                       Sign Up

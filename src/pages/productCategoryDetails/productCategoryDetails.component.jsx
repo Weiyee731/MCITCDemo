@@ -178,7 +178,8 @@ class ProductCatogoryDetailComponent extends Component {
     }
 
     const back = () => {
-      window.location.reload(false);
+
+      
     };
 
     const cardStyle = { width: "80%", margin: "1% auto" };

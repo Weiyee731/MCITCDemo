@@ -964,7 +964,6 @@ class PromoCodeDetailsComponent extends Component {
       setTimeout(
         function () {
           this.props.history.push("/viewPromoCodes");
-          window.location.reload(false);
         }.bind(this),
         500
       );

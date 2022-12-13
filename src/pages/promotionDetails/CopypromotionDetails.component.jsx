@@ -1103,7 +1103,6 @@ class PromotionDetailsComponent extends Component {
         function () {
           // this.props.history.push("/viewProductPromotion");
           this.props.history.push("/viewProductPromotion");
-          window.location.reload(false);
         }.bind(this),
         500
       );

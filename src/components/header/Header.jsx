@@ -18,6 +18,7 @@ import Indicator from "./Indicator";
 import IndicatorCart from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
 import { Cart20Svg, Cross10Svg } from "../../svg";
+
 import Logo from "../../assets/Emporia.png";
 
 // import { wishlistListItem } from "../../store/wishlist";

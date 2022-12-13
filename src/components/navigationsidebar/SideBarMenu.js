@@ -114,7 +114,6 @@ const SideBarMenu = ({
     this.props.history.push("/");
     localStorage.clear();
     cookies.set("isLogin", false);
-    window.location.reload(false);
   };
 
   return (

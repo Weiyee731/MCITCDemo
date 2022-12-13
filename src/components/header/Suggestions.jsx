@@ -25,7 +25,6 @@ function Suggestions(props) {
 
     const login = () => {
         this.props.history.push("/login");
-        window.location.reload(false);
     }
 
     const handleCart = (product) => {
