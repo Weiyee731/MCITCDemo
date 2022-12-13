@@ -21,7 +21,6 @@ import PageCompleted from "./ShopPageCompleted";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { sha256, sha224 } from 'js-sha256';
-import { stringToBytes } from 'convert-string-bytes'
 import { Crypto } from 'crypto-js'
 import { createBrowserHistory } from 'history';
 // import { runInThisContext } from "vm";
@@ -201,7 +200,7 @@ class PageCheckout extends Component {
         <PageHeader header="Checkout" breadcrumb={breadcrumb} />
         <div className="checkout block">
           <div className="container">
-            <StepProgressBar
+            {/* <StepProgressBar
               startingStep={0}
               primaryBtnClass="btn-lg"
               secondaryBtnClass="btn-lg"
@@ -231,7 +230,7 @@ class PageCheckout extends Component {
                 //   // validator: step3Validator
                 // },
               ]}
-            />
+            /> */}
           </div>
         </div>
       </React.Fragment>

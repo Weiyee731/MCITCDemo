@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./store/index";
 import App from "./app/App";
 import "./index.css";
-import 'slick-carousel/slick/slick.css';
+
 import 'react-toastify/dist/ReactToastify.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'react-input-range/lib/css/index.css';

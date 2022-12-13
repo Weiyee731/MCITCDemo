@@ -6,7 +6,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from "react-router-dom";
 import Fab from '@mui/material/Fab';
-import Popup from 'reactjs-popup';
+// import Popup from 'reactjs-popup';
 
 // application
 import PageHeader from '../shared/PageHeader';
@@ -15,30 +15,31 @@ import PageHeader from '../shared/PageHeader';
 import theme from '../../data/theme';
 
   const FAB = () => (
-    <Popup 
-        trigger={
-        <Fab className="button" ><span class="material-icons">contact_support</span></Fab>
-        }
-        position="top center"
-        on="hover"
-        closeOnDocumentClick
-    >
-        <Link to="/site/contact-us">
-        <button class="fabbtn1">
-            <span class="material-icons">call</span>
-        </button>
-        </Link>
-        <Link to="/">
-        <button class="fabbtn2">
-            <span class="material-icons">confirmation_number</span>
-        </button>
-        </Link>
-        <a href="http://mail.google.com" target="_blank">
-        <button class="fabbtn3">
-            <span class="material-icons">email</span>
-        </button>
-        </a>
-    </Popup>
+    <></>
+    // <Popup 
+    //     trigger={
+    //     <Fab className="button" ><span class="material-icons">contact_support</span></Fab>
+    //     }
+    //     position="top center"
+    //     on="hover"
+    //     closeOnDocumentClick
+    // >
+    //     <Link to="/site/contact-us">
+    //     <button class="fabbtn1">
+    //         <span class="material-icons">call</span>
+    //     </button>
+    //     </Link>
+    //     <Link to="/">
+    //     <button class="fabbtn2">
+    //         <span class="material-icons">confirmation_number</span>
+    //     </button>
+    //     </Link>
+    //     <a href="http://mail.google.com" target="_blank">
+    //     <button class="fabbtn3">
+    //         <span class="material-icons">email</span>
+    //     </button>
+    //     </a>
+    // </Popup>
     );
 
 function SitePageFaq() {

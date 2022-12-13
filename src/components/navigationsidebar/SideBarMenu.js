@@ -1,5 +1,4 @@
 import React, { useState, Component } from "react";
-import { Scrollbars } from "react-custom-scrollbars";
 import SideBarConfig from "../navigationsidebar/MenuConfig";
 import { browserHistory } from "react-router";
 import DropdownMenu from "../navigationsidebar/DropdownMenu";
@@ -130,7 +129,7 @@ const SideBarMenu = ({
         <SidebarContent>
           <nav id="sidebar" className="sidebar-wrapper">
             <div className="sidebar-content">
-              <Scrollbars renderThumbVertical={renderCustomHorizontalThumb}>
+              {/* <Scrollbars renderThumbVertical={renderCustomHorizontalThumb}> */}
                 <div
                   className="sidebar-item sidebar-brand"
                   style={{ height: "auto", textAlign: "center", backgroundColor: 'rgba(77, 77, 77, 1)' }}
@@ -181,7 +180,7 @@ const SideBarMenu = ({
                 <div className=" sidebar-item sidebar-menu">
                   <ul>{renderSideBarMenuItem()}</ul>
                 </div>
-              </Scrollbars>
+              {/* </Scrollbars> */}
             </div>
             <div className="sidebar-footer">
               <Dropdown>

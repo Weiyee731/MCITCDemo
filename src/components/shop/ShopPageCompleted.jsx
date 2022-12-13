@@ -13,7 +13,7 @@ import PageHeader from "../shared/PageHeader";
 import { Check9x7Svg } from "../../svg";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import SwipeableViews from "react-swipeable-views";
+// import SwipeableViews from "react-swipeable-views";
 // data stubs
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";

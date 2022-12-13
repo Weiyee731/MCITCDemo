@@ -21,17 +21,14 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import FacebookLogin from 'react-facebook-login';
-import GoogleLogin from 'react-google-login';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Button from "@mui/material/Button";
 import DialogContentText from '@mui/material/DialogContentText';
 import { isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
-import emailjs from "emailjs-com"
 import { toast } from "react-toastify";
-import OtpInput from "react-otp-input";
+// import OtpInput from "react-otp-input";
 import { Link } from "react-router-dom";
 var CryptoJS = require("crypto-js");
 
@@ -595,13 +592,13 @@ class LoginComponent extends Component {
                         </div>
                         <div className="row contactrowStyle">
                           <div className="col-6 font otp">
-                            <OtpInput
+                            {/* <OtpInput
                               value={this.state.otp}
                               onChange={this.handleChange}
                               numInputs={6}
                               separator={<span>-</span>}
                               inputStyle={inputstyle}
-                            />
+                            /> */}
                           </div>
                         </div>
                       </div>

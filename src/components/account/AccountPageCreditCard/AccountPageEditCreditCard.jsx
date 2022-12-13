@@ -10,8 +10,8 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import "react-credit-cards/es/styles-compiled.css";
-import "react-credit-cards/lib/styles.scss";
+// import "react-credit-cards/es/styles-compiled.css";
+// import "react-credit-cards/lib/styles.scss";
 import "./creditcardstyle.css";
 import TextField from "@mui/material/TextField";
 import {

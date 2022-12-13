@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 
 // third-party
-import InputRange from 'react-input-range';
+// import InputRange from 'react-input-range';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -84,13 +84,13 @@ function FilterRange(props) {
     return useMemo(() => (
         <div className="filter-price">
             <div className="filter-price__slider" dir="ltr">
-                <InputRange
+                {/* <InputRange
                     minValue={min}
                     maxValue={max}
                     value={{ min: from, max: to }}
                     step={1}
                     onChange={handleChange}
-                />
+                /> */}
             </div>
             <div className="filter-price__title">
                 Price:

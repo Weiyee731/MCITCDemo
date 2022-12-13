@@ -6,38 +6,20 @@ import { Redirect } from "react-router-dom";
 import {
   Select
 } from "@mui/material";
-// application
 import Currency from "../shared/Currency";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import input from "@mui/material"
-import SwipeableViews from "react-swipeable-views";
-// data stubs
 import payments from "../../data/shopPayments";
-import theme from "../../data/theme";
-
 import { GitAction } from "../../store/action/gitAction";
-import Cards from "react-credit-cards";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import { toast } from "react-toastify";
-import Logo from "../../assets/Emporia.png";
-import {
-  Link,
-} from "react-router-dom";
-// import text from './EX00013776.key'; // Relative path to your File
 import axios from "axios";
 import FormControl from "@mui/material/FormControl";
-
 import {
   formatCreditCardNumber,
   formatExpirationDate,
   formatCVC,
 } from "../account/AccountPageCreditCard/utils";
-import AddCreditCard from '../shared/AddCreditCard'
 import moment from "moment";
 import FPX from '../../assets/fpx-logo.png';
 import { Image } from 'react-bootstrap';

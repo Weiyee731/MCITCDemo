@@ -11,7 +11,6 @@ import { browserHistory } from "react-router";
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
 import { GitAction } from "../../store/action/gitAction";
-import "react-step-progress/dist/index.css";
 import { toast } from "react-toastify";
 import { Card, Divider } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
@@ -26,7 +25,7 @@ import FormControl from "@mui/material/FormControl";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
 import FormHelperText from "@mui/material/FormHelperText";
-import OtpInput from "react-otp-input";
+// import OtpInput from "react-otp-input";
 import PhoneInput, {
   formatPhoneNumber,
   formatPhoneNumberIntl,
@@ -506,13 +505,13 @@ class PageChangeEmail extends Component {
                       </div>
                       <div className="row contactrowStyle">
                         <div className="col-6 font otp">
-                          <OtpInput
+                          {/* <OtpInput
                             value={this.state.otp}
                             onChange={this.handleChange}
                             numInputs={6}
                             separator={<span>-</span>}
                             inputStyle={inputstyle}
-                          />
+                          /> */}
                         </div>
                       </div>
                     </div>

@@ -7,9 +7,9 @@ import React, { Component } from "react";
 import Grid from "@mui/material/Grid";
 import { connect } from "react-redux";
 import { GitAction } from "../../../store/action/gitAction";
-import Cards from "react-credit-cards";
-import "react-credit-cards/es/styles-compiled.css";
-import "react-credit-cards/lib/styles.scss";
+import Cards from 'react-credit-cards';
+// import "react-credit-cards/es/styles-compiled.css";
+// import "react-credit-cards/lib/styles.scss";
 import "./creditcardstyle.css";
 import {
   formatCreditCardNumber,

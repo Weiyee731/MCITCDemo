@@ -5,7 +5,6 @@ import React, { Component } from "react";
 import { Helmet } from "react-helmet-async";
 import { connect } from "react-redux";
 // data stubs
-import "react-step-progress/dist/index.css";
 import { GitAction } from "../../store/action/gitAction";
 import theme from "../../data/theme";
 import { Card, CardContent } from "@mui/material";

@@ -18,9 +18,6 @@ import PageCheckout from "./ShopPageCheckout";
 import { Button } from "@mui/material";
 
 import Checkbox from "@mui/material/Checkbox";
-import styled from 'styled-components';
-
-import { StyleSheet, css } from "aphrodite";
 
 
 

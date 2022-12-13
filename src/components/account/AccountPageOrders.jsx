@@ -22,25 +22,14 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
-import SwipeableViews from 'react-swipeable-views';
+// import SwipeableViews from 'react-swipeable-views';
 import TextField from '@mui/material/TextField';
-
-
-//DatePicker
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardDatePicker,
-// } from "@material-ui/pickers";
-
-//Filtering
 import DatePicker from 'react-date-picker'
 import moment from 'moment';
 import IconButton from '@mui/material/IconButton';
 import Button from "@mui/material/Button";
 import SearchIcon from '@mui/icons-material/Search';
 import { ThirteenMp } from "@mui/icons-material";
-
-// import DateFnsUtils from "@date-io/date-fns";
 
 function mapStateToProps(state) {
   return {
@@ -469,35 +458,33 @@ class AccountPageOrders extends Component {
                 <Tab label="Receive" {...a11yProps(4)} />
               </Tabs>
             </AppBar>
-            <SwipeableViews
+            {/* <SwipeableViews
               axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
               index={this.state.value}
               onChangeIndex={this.handleChangeTabIndex}
             >
-              {/* ---------------------------------------------------- All ----------------------------------------------------- */}
+
               <TabPanel value={this.state.value} index={0} dir={theme.direction}>
                 {this.state.value === 0 && orderListing(0)}
               </TabPanel>
-              {/* ---------------------------------------------------- In Cart ----------------------------------------------------- */}
+
               <TabPanel value={this.state.value} index={1} dir={theme.direction}>
                 {this.state.value === 1 && orderListing(1)}
               </TabPanel>
 
-              {/* ----------------------------------------- In Purchasing ----------------------------------------------------------- */}
+
               <TabPanel value={this.state.value} index={2} dir={theme.direction}>
                 {this.state.value === 2 && orderListing(2)}
               </TabPanel>
 
-              {/* -------------------------------------------- In Shipping -------------------------------------------------------- */}
               <TabPanel value={this.state.value} index={3} dir={theme.direction}>
                 {this.state.value === 3 && orderListing(3)}
               </TabPanel>
 
-              {/* -------------------------------------------- To Receive -------------------------------------------------------- */}
               <TabPanel value={this.state.value} index={3} dir={theme.direction}>
                 {this.state.value === 4 && orderListing(4)}
               </TabPanel>
-            </SwipeableViews>
+            </SwipeableViews> */}
           </Box>
         </div>
       </div >

@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { IntlProvider } from "react-intl";
-import { ScrollContext } from "react-router-scroll-4";
 import languages from "../i18n";
 import { localeChange } from "../store/locale";
 import Layout from "../components/Layout";
@@ -82,7 +81,7 @@ class App extends Component {
           <BrowserRouter basename="">
             <HelmetProvider>
               <Helmet htmlAttributes={{ lang: locale, dir: 'ltr' }} />
-              <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}>
+              {/* <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}> */}
                 <Switch>
                   <Route
                     path="/"
@@ -96,7 +95,7 @@ class App extends Component {
                   />
                   <Redirect to="/" />
                 </Switch>
-              </ScrollContext>
+              {/* </ScrollContext> */}
             </HelmetProvider>
           </BrowserRouter>
         {/* </IntlProvider> */}

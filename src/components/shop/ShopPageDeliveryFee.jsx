@@ -9,7 +9,6 @@ import PageHeader from "../shared/PageHeader";
 
 // data stubs
 import { GitAction } from "../../store/action/gitAction";
-import "react-step-progress/dist/index.css";
 import LoadingPanel from '../shared/loadingPanel';
 import { toast } from "react-toastify";
 

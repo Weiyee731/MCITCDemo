@@ -20,24 +20,15 @@ import Logo from "../../assets/Emporia.png"
 import { GitAction } from "../../store/action/gitAction";
 
 // application
-import { Modal, ModalBody, ModalFooter } from 'reactstrap';
-import Product from './Product';
+import { Modal } from 'reactstrap';
 import { Cross20Svg } from '../../svg';
 import { browserHistory } from "react-router";
-import { Typography, Card, } from "@mui/material";
-import {
-  Divider, Button
-} from "@mui/material";
+import { Card, } from "@mui/material";
 import ProductDetails from './ProductDetails'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
 import Chip from '@mui/material/Chip';
-import ReactTooltip from "react-tooltip";
-import { HashLink } from "react-router-hash-link";
-import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
-
 
 function ProductCard(props) {
   const {

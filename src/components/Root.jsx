@@ -12,12 +12,9 @@ import {
 import { connect } from 'react-redux';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { IntlProvider } from 'react-intl';
-import { ScrollContext } from 'react-router-scroll-4';
-
 // application
 import languages from '../i18n';
 import { localeChange } from '../store/locale';
-
 // pages
 import Layout from './Layout';
 import HomePageOne from './home/HomePageOne';
@@ -59,7 +56,7 @@ class Root extends Component {
                 <BrowserRouter basename={process.env.PUBLIC_URL}>
                     <HelmetProvider>
                         <Helmet htmlAttributes={{ lang: locale, dir: direction }} />
-                        <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}>
+                        {/* <ScrollContext shouldUpdateScroll={this.shouldUpdateScroll}> */}
                             <Switch>
                                 <Route
                                     path="/home-two"
@@ -75,7 +72,7 @@ class Root extends Component {
                                 />
                                 <Redirect to="/" />
                             </Switch>
-                        </ScrollContext>
+                        {/* </ScrollContext> */}
                     </HelmetProvider>
                 </BrowserRouter>
             </IntlProvider>
