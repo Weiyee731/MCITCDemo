@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link,withRouter } from "react-router-dom";
 import { url } from "../../services/utils";
 
 // application
@@ -17,7 +17,6 @@ import { Wishlist16Svg } from "../../svg";
 import { HashLink } from "react-router-hash-link";
 import ProductTabs from "../shop/ProductTabs";
 import { GitAction } from "../../store/action/gitAction";
-import { browserHistory } from "react-router";
 import Logo from "../../assets/Emporia.png"
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { toast } from "react-toastify";
@@ -161,6 +160,8 @@ class ProductDetails extends Component {
     }
 
     login() {
+        // browserHistory.push("/login");
+        // window.location.reload(false);
         this.props.history.push("/login");
     }
 
@@ -567,4 +568,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductDetails));

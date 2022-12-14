@@ -32,7 +32,7 @@ export default function BlockProducts(props) {
     });
     const productsList = products.map((product, index) => (
       <Card elevation={2} key={index} className={blockClasses}>
-        <ProductCard product={product} />
+        <ProductCard {...props} product={product} />
       </Card>
     ));
 

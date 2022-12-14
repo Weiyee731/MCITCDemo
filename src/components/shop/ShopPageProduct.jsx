@@ -127,7 +127,8 @@ function ShopPageProduct(props) {
           {sidebarPosition === "start" && sidebar}
           <div className=" shop-layout__content">
             <div className=" block">
-              <Product product={product} layout={layout} version="1" />
+              {console.log(props)}
+              {/* <Product {...props} product={product} layout={layout} version="1" /> */}
               {/* <ProductTabs withSidebar /> */}
             </div>
             {/* 
@@ -149,6 +150,7 @@ function ShopPageProduct(props) {
       <React.Fragment>
         <div className="block">
           <div className="container">
+            {console.log(props)}
             <Product product={product} layout={layout} version="2" />
             {/* <ProductTabs product={product} /> */}
           </div>

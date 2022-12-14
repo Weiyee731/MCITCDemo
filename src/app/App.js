@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Route, Switch, BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { IntlProvider } from "react-intl";
@@ -78,7 +78,7 @@ class App extends Component {
       <ThemeProvider theme={lightTheme}>
         <GlobalStyles />
         <IntlProvider locale={locale} messages={messages}>
-          <BrowserRouter>
+          <Router>
             <HelmetProvider>
               <Helmet htmlAttributes={{ lang: locale, dir: direction }} />
               <Switch>
@@ -94,7 +94,7 @@ class App extends Component {
                 />
               </Switch>
             </HelmetProvider>
-          </BrowserRouter>
+          </Router>
         </IntlProvider>
       </ThemeProvider>
     );

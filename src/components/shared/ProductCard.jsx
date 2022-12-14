@@ -35,7 +35,7 @@ function ProductCard(props) {
     product,
     layout,
   } = props;
-
+  
   const containerClasses = classNames("product-card", {
     "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
     "product-card--layout--grid product-card--size--nl": layout === "grid-nl",

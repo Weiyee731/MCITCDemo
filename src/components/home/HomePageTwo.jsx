@@ -147,11 +147,14 @@ function HomePageTwo(props) {
         {/* <BlockFeatures layout="boxed" /> */}
         <BlockProductsCarousel
           title="New Arrivals"
+          {...props}
           // layout="grid-4"
           // rows={2}
           products={props.products.length > 0 ? props.products : []}
         />
+        {/* {console.log(props)} */}
         <BlockProducts
+          {...props}
           title="Featured Products"
           layout="large-first"
           products={postsToShow.length > 0 ? postsToShow : []}

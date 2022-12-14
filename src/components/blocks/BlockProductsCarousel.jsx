@@ -195,14 +195,15 @@ export default class BlockProductsCarousel extends Component {
       onGroupClick,
       groups,
       loading,
-      products
+      products,
+      props
     } = this.props;
 
     const columns = this.productsColumns().map((column, index) => {
       const products = column.map((product) => (
         // <div key={product.id} className="block-products-carousel__cell">
         <SwiperSlide key={product.ProductID}>
-          <ProductCard product={product} currentData={this.props.currentData} highlightColor={this.props.highlightColor} baseColor={this.props.baseColor} />
+          <ProductCard {...props} product={product} currentData={this.props.currentData} highlightColor={this.props.highlightColor} baseColor={this.props.baseColor} />
         </SwiperSlide>
         // </div>
       ));

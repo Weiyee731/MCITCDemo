@@ -10,6 +10,7 @@ import {
   Link,
   Redirect,
   BrowserRouter as Router,
+  withRouter,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
@@ -530,4 +531,4 @@ Layout.defaultProps = {
   headerLayout: "default",
 };
 
-export default Layout;
+export default withRouter(Layout);

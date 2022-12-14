@@ -97,7 +97,7 @@ class Product extends Component {
 
     return (
       <div className="block" >
-
+        {console.log("product props", this.props)}
         <ProductDetails product={product} />
         {
           this.props.version === "1" ? (
