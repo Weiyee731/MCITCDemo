@@ -6,11 +6,13 @@
 
 
 .reviews-list {}
+
 .reviews-list__content {
     list-style: none;
     padding: 0;
     margin: 0;
 }
+
 .reviews-list__item {
     border-bottom: 1px solid $card-divider-color;
     padding-top: 28px;
@@ -20,6 +22,7 @@
         padding-top: 0;
     }
 }
+
 .reviews-list__pagination {
     margin-top: 36px;
 }
@@ -28,4 +31,16 @@
     .reviews-list__pagination {
         margin-top: 30px;
     }
+}
+
+.reviews-list__addReviewbtn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.reply_btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end !important;
 }

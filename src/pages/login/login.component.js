@@ -118,15 +118,15 @@ class LoginComponent extends Component {
   encryptData(data) {
 
     console.log("data", data)
-    var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace(/\+/g,'p1L2u3S').replace(/\//g,'s1L2a3S4h').replace(/=/g,'e1Q2u3A4l');
+    var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace(/\+/g, 'p1L2u3S').replace(/\//g, 's1L2a3S4h').replace(/=/g, 'e1Q2u3A4l');
 
     return ciphertext
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.currentUser !== this.props.currentUser) {
-      if (this.props.currentUser !== undefined && this.props.currentUser[0].ReturnVal !== "0") {
 
+      if (this.props.currentUser !== undefined && this.props.currentUser[0].UserID !== undefined) {
         localStorage.setItem("isLogin", true);
         localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
         localStorage.setItem("lastname", this.props.currentUser[0].LastName);
@@ -186,8 +186,6 @@ class LoginComponent extends Component {
           localStorage.setItem("email", this.props.currentUser[0].UserEmailAddress);
           localStorage.setItem("contact", this.props.currentUser[0].UserContactNo);
         }
-        console.log("this.props.currentUser[0]", this.props.currentUser[0])
-
         // if (localStorage.getItem("isLogin") === true) {
         // this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
         // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
@@ -392,7 +390,7 @@ class LoginComponent extends Component {
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <OutlinedInput
                   id="password"
-                  label="Password" 
+                  label="Password"
                   error={this.state.passwordErr}
                   type={this.state.hidden ? 'password' : 'text'}
                   value={this.state.password}
@@ -431,7 +429,7 @@ class LoginComponent extends Component {
                   type="submit"
                   variant="contained"
                   className="btn btn-primary w-100"
-                  style={{borderRadius:"5px"}}
+                  style={{ borderRadius: "5px" }}
                   disabled={this.state.username !== '' && this.state.password !== '' ? false : true}
                 >
                   Sign In

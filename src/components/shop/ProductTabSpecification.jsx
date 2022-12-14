@@ -32,42 +32,44 @@ class ProductTabSpecification extends Component {
     return (
       <div className="spec">
         <div className="spec__header">Specification</div>
-        <div className="spec__section">
-          <div className="spec__section-title">General</div>
+        <div className="row">
+          <div className="spec__section col-6">
+            <div className="spec__section-title">General</div>
 
-          <div className="spec__row">
-            <div className="spec__name">Brand</div>
-            <div className="spec__value">{this.props.product.Brand}</div>
-          </div>
+            <div className="spec__row">
+              <div className="spec__name">Brand</div>
+              <div className="spec__value">{this.props.product.Brand !== "" ? this.props.product.Brand : "Not Stated"}</div>
+            </div>
 
-          <div className="spec__row">
-            <div className="spec__name">Model</div>
-            <div className="spec__value">{this.props.product.Model}</div>
-          </div>
-        </div>
-        <div className="spec__section">
-          <div className="spec__section-title">Dimensions</div>
-          <div className="spec__row">
-            <div className="spec__name">Width</div>
-            <div className="spec__value">
-              {this.props.product.ProductDimensionWidth}
+            <div className="spec__row">
+              <div className="spec__name">Model</div>
+              <div className="spec__value">{this.props.product.Model !== "" ? this.props.product.Model : "Not Stated"}</div>
             </div>
           </div>
-          <div className="spec__row">
-            <div className="spec__name">Height</div>
-            <div className="spec__value">
-              {this.props.product.ProductDimensionHeight}
+          <div className="spec__section col-6">
+            <div className="spec__section-title">Dimensions</div>
+            <div className="spec__row">
+              <div className="spec__name">Width</div>
+              <div className="spec__value">
+                {this.props.product.ProductDimensionWidth}
+              </div>
             </div>
-          </div>
-          <div className="spec__row">
-            <div className="spec__name">Depth</div>
-            <div className="spec__value">
-              {this.props.product.ProductDimensionDeep}
+            <div className="spec__row">
+              <div className="spec__name">Height</div>
+              <div className="spec__value">
+                {this.props.product.ProductDimensionHeight}
+              </div>
             </div>
-          </div>
-          <div className="spec__row">
-            <div className="spec__name">Weigth</div>
-            <div className="spec__value">{this.props.product.ProductWeight}</div>
+            <div className="spec__row">
+              <div className="spec__name">Depth</div>
+              <div className="spec__value">
+                {this.props.product.ProductDimensionDeep}
+              </div>
+            </div>
+            <div className="spec__row">
+              <div className="spec__name">Weigth</div>
+              <div className="spec__value">{this.props.product.ProductWeight}</div>
+            </div>
           </div>
         </div>
         <div className="spec__disclaimer">

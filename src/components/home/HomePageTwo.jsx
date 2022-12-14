@@ -150,14 +150,14 @@ function HomePageTwo(props) {
           {...props}
           // layout="grid-4"
           // rows={2}
-          products={props.products.length > 0 ? props.products : []}
+          products={postsToShow.length === 0 ? props.products.length > 0 && props.products[0].ReturnVal !== '0' ? props.products : [] : postsToShow}
         />
         {/* {console.log(props)} */}
         <BlockProducts
           {...props}
           title="Featured Products"
           layout="large-first"
-          products={postsToShow.length > 0 ? postsToShow : []}
+          products={postsToShow.length > 0 ? postsToShow : props.products.length > 0 && props.products[0].ReturnVal !== '0' ? props.products : []}
           rows={2}
         />
         {

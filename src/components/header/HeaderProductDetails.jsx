@@ -11,9 +11,9 @@ import { Wishlist16Svg } from "../../svg";
 
 // application;
 import 'react-loading-skeleton/dist/skeleton.css'
-import { Button, Typography } from "@mui/material";
 import { browserHistory } from "react-router";
 import { toast } from "react-toastify";
+import { Typography, } from "@mui/material";
 
 class HeaderProductDetails extends Component {
   constructor(props) {
@@ -21,16 +21,9 @@ class HeaderProductDetails extends Component {
 
     this.state = {
       quantity: 1,
-      // currentTab: "description",
-      // productVariation: "",
-      // productPrice: "",
-      // productQuantity: 0,
       productVariationDetailID: "",
-      // selectedVariation: "",
       isVariationSet: false,
       productVariationType: "",
-      // isProductSet: false,
-      // isTimerEnd: false
     };
     this.addCart = this.addCart.bind(this)
     this.handleWishlist = this.handleWishlist.bind(this)
@@ -39,53 +32,6 @@ class HeaderProductDetails extends Component {
     this.checkCart = this.checkCart.bind(this)
 
   }
-
-  componentDidMount() {
-    const { productDetails } = this.props
-    // window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
-    // let productID = ""
-    // if (window.location.pathname !== undefined) {
-    //   let length = window.location.pathname.split("/").length
-    //   productID = window.location.pathname.split("/")[length - 1]
-    // }
-
-    // if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID)) {
-    //   product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
-    //     variation.ProductVariationValue === "-" &&
-    //       this.setState({
-    //         productVariation: variation.ProductVariationValue,
-    //         productQuantity: variation.ProductStockAmount,
-    //         productVariationDetailID: variation.ProductVariationDetailID,
-    //         productVariationType: variation.ProductVariation,
-    //       })
-    //   })
-    //   this.setState({ productPrice: product.ProductPrice, isProductSet: true })
-    // } else {
-    //   this.setState({ isProductSet: false })
-    // }
-  }
-  componentDidUpdate(props) {
-    const { productDetails } = this.props
-    // let productID = ""
-    // if (window.location.pathname !== undefined) {
-    //   let length = window.location.pathname.split("/").length
-    //   productID = window.location.pathname.split("/")[length - 1]
-    // }
-
-    // if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && this.state.isProductSet === false) {
-    //   product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
-    //     variation.ProductVariationValue === "-" &&
-    //       this.setState({
-    //         productVariation: variation.ProductVariationValue,
-    //         productQuantity: variation.ProductStockAmount,
-    //         productVariationDetailID: variation.ProductVariationDetailID,
-    //         productVariationType: variation.ProductVariation,
-    //       })
-    //   })
-    //   this.setState({ productPrice: product.ProductPrice, isProductSet: true })
-    // }
-  }
-
 
   checkCart(product, quantity) {
     if (this.state.productVariationDetailID === "" && this.state.productVariationType !== "None") {
@@ -190,7 +136,7 @@ class HeaderProductDetails extends Component {
 
     const dbVariation = []
     const dbVariationDetailID = []
-    productDetails[0].ProductVariation !== undefined && productDetails[0].ProductVariation !== null &&
+    productDetails !== null && productDetails !== undefined && productDetails.length > 0 && productDetails[0].ProductVariation !== undefined && productDetails[0].ProductVariation !== null &&
       JSON.parse(productDetails[0].ProductVariation).map((x) => {
         dbVariation.push(x.ProductVariation)
         dbVariationDetailID.push(x.ProductVariationDetailID)
@@ -203,13 +149,14 @@ class HeaderProductDetails extends Component {
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center", zIndex: 999 }}>
         {
           productDetails !== undefined && productDetails !== null && productDetails.map((product) => {
+            const productImage = JSON.parse(product.ProductImages).map((image) => { return (image.ProductMediaUrl) })
             return (
               <>
-                <div>
+                <div >
                   <img
                     className="site-header__logo_img"
                     style={{ height: "5vw" }}
-                    src={product.ProductImage !== null ? product.ProductImage : Logo}
+                    src={product.ProductImages !== null ? productImage : Logo}
                     onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
                     alt={product.ProductName}
                   />
@@ -277,7 +224,7 @@ class HeaderProductDetails extends Component {
 
 HeaderProductDetails.propTypes = {
   /** product object */
-  product: PropTypes.object.isRequired,
+  // product: PropTypes.object.isRequired,
   /** one of ['standard', 'sidebar', 'columnar', 'quickview'] (default: 'standard') */
   layout: PropTypes.oneOf(["standard", "sidebar", "columnar", "quickview"]),
 };

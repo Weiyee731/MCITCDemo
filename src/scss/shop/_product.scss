@@ -145,26 +145,43 @@
     width: 100%;
     text-align: center;
     margin: 0;
-    padding: 40px 0;
+    padding: 60px 0;
     background-image: linear-gradient(to bottom, transparent, white);
 }
 
 .product__description .read-more-text {
     position: absolute;
-    bottom: -10px;
+    bottom: 0px;
     left: 0;
     width: 100%;
     text-align: center;
     margin: 0;
     font-weight: 600;
+    color: #2b535e;
+    border: 1px solid #2b535e;
+    background: #ffffff;
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover {
+        opacity: 0.9;
+    }
 }
 
 .product__description_expand .read-more-text {
-
     width: 100%;
     text-align: center;
     margin: 0;
     font-weight: 600;
+    color: #2b535e;
+    border: 1px solid #2b535e;
+    background: #ffffff;
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover {
+        opacity: 0.9;
+    }
 }
 
 .product__features {

@@ -27,7 +27,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { Typography, Card, } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import ReactTooltip from "react-tooltip";
-import { FacebookIcon, InstapaperIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, InstapaperShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
+import { FacebookIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
 
 class ProductDetails extends Component {
     constructor(props) {

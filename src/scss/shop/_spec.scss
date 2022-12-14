@@ -15,11 +15,11 @@
     padding-bottom: 15px;
 }
 
-.spec__section {
-    &+& {
-        margin-top: 40px;
-    }
-}
+// .spec__section {
+//     &+& {
+//         margin-top: 40px;
+//     }
+// }
 
 .spec__section-title {
     font-weight: $font-weight-medium;

@@ -266,8 +266,6 @@ function Layout(props) {
                     path="/viewProductDetail/:productId"
                     render={(props) => (
                       <>
-                        {console.log("HERE PROPS", props)}
-                        {console.log("HERE PROPS", props.match.params)}
                         <ViewProductGeneralInfo
                           {...props}
                           layout="standard"
@@ -294,7 +292,6 @@ function Layout(props) {
                     path="/shop/products/:productId"
                     render={(props) => (
                       <>
-                        {console.log("props1234", props)}
                         <ShopPageProduct
                           {...props}
                           layout="standard"
@@ -313,7 +310,6 @@ function Layout(props) {
                     path="/shop/ShopPageReceipt/:type/:transactionuuid/"
                     render={(props) => (
                       <>
-                        {console.log("props1234", props)}
                         <ShopPageReceipt
                           {...props}
                           layout="standard"

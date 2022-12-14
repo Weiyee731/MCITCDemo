@@ -20,6 +20,7 @@ import { browserHistory } from "react-router";
 import ListItem from '@mui/material/ListItem';
 import List from '@mui/material/List';
 import { Card, CardText, CardBody } from 'reactstrap'
+import { Button, Typography } from "@mui/material";
 
 
 function mapStateToProps(state) {
@@ -51,9 +52,10 @@ class ProductTabReviews extends Component {
       reply: "",
       replyid: "",
       page: 1,
-      rowsPerPage: 5,
+      rowsPerPage: 3,
       setReview: false,
       isReviewSet: true,
+      addReview: false,
     }
 
     this.onSubmitReview = this.onSubmitReview.bind(this);
@@ -132,7 +134,6 @@ class ProductTabReviews extends Component {
 
 
   reviewsList = (reviewData, page) => {
-
     if (reviewData !== null) {
       return (
         reviewData.length > 0 && reviewData
@@ -159,8 +160,8 @@ class ProductTabReviews extends Component {
                     </div>
                     <div id="review_text" className=" review__text" style={{ display: "flex", width: "100%", justifyContent: "space-between", fontSize: "13px" }}>
                       <div id="review_comment">{review.ProductReviewComment}</div>
-                      <div id="comment" className="comment-reply">
-                        <a className="comment-btn" onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.setState({ reply: true, replyid: review.ProductReviewID })} >
+                      <div id="comment" className="comment-reply" style={{ cursor: "pointer" }}>
+                        <a className="comment-btn" onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.setState({ reply: !this.state.reply, replyid: review.ProductReviewID })} >
                           <i className="fas fa-reply" />{" "}
                           Reply
                         </a>
@@ -180,9 +181,7 @@ class ProductTabReviews extends Component {
                           (reviewReply, index) => (
                             <>
                               {
-
                                 reviewReply.replyParentID === 0 &&
-
                                 <div id="review_reply" className="review" style={{ paddingTop: "15pt" }}>
                                   <div id="review_reply_avatar" className="review__avatar">
                                     <img src={reviewReply.avatar ? reviewReply.avatar : USER} alt={reviewReply.avatar} onError={(e) => (e.target.src = USER)} />
@@ -208,23 +207,20 @@ class ProductTabReviews extends Component {
                                   return (this.ReplyReviewFormat(data, 0))
                                 })
                               }
-
                             </>
-
-
                           )) : ""
                     }
                     {
                       this.state.reply == true && review.ProductReviewID == this.state.replyid &&
-
-                      <div id="reply_content" className="pt-3">
-                        <div id="reply_msg" className="pt-3">
+                      <div id="reply_content" className="pt-3 row">
+                        <div id="reply_msg" className="pt-3 col-9">
                           <textarea className="form-control" placeholder="Tell us more about your comment on this review" id="review-text" rows="6"
+                            style={{ height: "70px" }}
                             value={this.state.productReplyReviewComment}
                             onChange={({ target }) => { this.setState({ productReplyReviewComment: target.value, productReviewRating: 0 }); }} required />
                         </div>
-                        <div id="reply_btn" className="pt-3" style={{ textAlign: "center" }} onClick={() => localStorage.getItem("isLogin") !== "true" ? this.login() : this.onSubmitReviewReply()} >
-                          <button className="btn btn-primary btn-lg">
+                        <div id="reply_btn" className="pt-3 col-3 reply_btn" onClick={() => localStorage.getItem("isLogin") !== "true" ? this.login() : this.onSubmitReviewReply()} >
+                          <button style={{ borderRadius: "5px" }} className="btn btn-primary btn-md">
                             Post Your Reply
                           </button>
                         </div>
@@ -261,56 +257,75 @@ class ProductTabReviews extends Component {
     const { page } = this.state;
     return (
       this.props.loading === false && this.state.isReviewSet === true ?
-        <div div className="reviews-view" id="reviews" >
-          <div className="reviews-view__list">
-            <div className="reviews-view__header">Customer Reviews</div>
-            <div className="reviews-list">
-              <ol className="reviews-list__content">{this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined
-                && this.reviewsList(JSON.parse(this.props.reviews), page)}</ol>
-              <div className="reviews-list__pagination">
-
-                <Pagination
-                  current={page}
-                  total={
-                    this.props.reviews.length > 0 && JSON.parse(this.props.reviews)[0].ReturnVal === undefined ?
-                      Math.ceil(Math.ceil(JSON.parse(this.props.reviews).length) / this.state.rowsPerPage)
-                      : 0
-                  }
-                  onPageChange={this.handlePageChange}
-                />
+        this.props.reviews.length > 0 ?
+          <div className="reviews-view" id="reviews" >
+            <div className="reviews-view__list">
+              <div className="reviews-view__header"> Customer Reviews </div>
+              <div className="reviews-list">
+                <ol className="reviews-list__content">
+                  {this.props.reviews.length > 0 && this.props.reviews[0].ProductID !== undefined
+                    && this.reviewsList(this.props.reviews, page)}
+                </ol>
+                <div className="reviews-list__pagination">
+                  <Pagination
+                    current={page}
+                    total={
+                      this.props.reviews.length > 0 && this.props.reviews[0].ReturnVal === undefined ?
+                        Math.ceil(Math.ceil(this.props.reviews.length) / this.state.rowsPerPage)
+                        : 0
+                    }
+                    onPageChange={this.handlePageChange}
+                  />
+                </div>
+                {/* <div className="reviews-list__addReviewbtn">
+                  <button style={{ borderRadius: "5px" }} className="btn btn-primary btn-md" onClick={() => this.setState({ addReview: !this.state.addReview })}>Add a Review</button>
+                </div> */}
               </div>
             </div>
+            {
+              this.state.addReview === true ?
+                <>
+                  <div className="reviews-view__header" >Write A Review</div>
+                  <div className="row">
+                    <div id="review_avatar" className="review__avatar">
+                      <img src={USER} alt="avatar" onError={(e) => (e.target.src = USER)} />
+                    </div>
+                    <div className="review__content col-10" style={{}} id="writeReviews">
+                      <div style={{ display: "inline-block" }}>
+                        <Box component="fieldset" mb={1} borderColor="transparent" >
+                          <ReviewRating
+                            size="medium"
+                            emptyIcon={<StarBorderIcon fontSize="medium" />}
+                            name="customized-empty"
+                            value={this.state.productReviewRating}
+                            onChange={({ target }) => {
+                              this.setState({
+                                productReviewRating: target.value,
+                              });
+                            }}
+                            required
+                          />
+                        </Box>
+                      </div>
+                      <div className="form-group mb-2">
+                        <textarea className="form-control" style={{ height: "80px" }} placeholder="Tell us more about your review on this product" id="review-text" rows="6" value={this.state.productReviewComment} onChange={({ target }) => { this.setState({ productReviewComment: target.value, }); }} required />
+                      </div>
+                      <div className="form-group mb-0">
+                        <button style={{ borderRadius: "5px" }} className="btn btn-primary btn-md" onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.onSubmitReview()} >
+                          Post Your Review
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+                :
+                ""
+            }
           </div>
-          <div className="reviews-view__header">Write A Review</div>
-          <div style={{ textAlign: "center" }} id="writeReviews">
-            <div style={{ display: "inline-block" }}>
-
-              <Box component="fieldset" mb={3} borderColor="transparent" >
-                <ReviewRating
-                  size="large"
-                  emptyIcon={<StarBorderIcon fontSize="large" />}
-                  name="customized-empty"
-                  value={this.state.productReviewRating}
-                  onChange={({ target }) => {
-                    this.setState({
-                      productReviewRating: target.value,
-                    });
-                  }}
-                  required
-                />
-              </Box>
-            </div>
-            <div className="form-group">
-              <textarea className="form-control" placeholder="Tell us more about your review on this product" id="review-text" rows="6" value={this.state.productReviewComment} onChange={({ target }) => { this.setState({ productReviewComment: target.value, }); }} required />
-            </div>
-            <div className="form-group mb-0">
-              <button className="btn btn-primary btn-lg" onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.onSubmitReview()} >
-                Post Your Review
-              </button>
-            </div>
-          </div>
-        </div> : <LoadingPanel></LoadingPanel>
-
+          :
+          <Typography variant="subtitle1" style={{ display: "flex", justifyContent: "center" }}>This item doesn't have review yet!</Typography>
+        :
+        <LoadingPanel></LoadingPanel>
     );
   }
 }

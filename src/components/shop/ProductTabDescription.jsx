@@ -19,11 +19,11 @@ class ProductTabDescription extends Component {
             <div className="typography">
                 <div className="product__description--title">Product Description</div>
 
-                {htmlString === "" || htmlString === null ?
+                {string === "" || string === null ?
                     <div className="product__description"><label>Temporary there is no description for this product</label></div>
                     :
                     <div className={this.state.isExpand ? "product__description_expand" : "product__description"}>
-                        <p style={{ fontSize: "14px" }} dangerouslySetInnerHTML={{ __html: htmlString }} />
+                        <p style={{ fontSize: "14px" }} dangerouslySetInnerHTML={{ __html: string }} />
                         <p class="read-more"></p>
                         <p class="read-more-text" onClick={() => this.setState({ isExpand: !this.state.isExpand })}>{this.state.isExpand ? "Read Less" : "Read More"} </p>
                     </div>

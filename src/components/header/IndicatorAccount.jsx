@@ -155,7 +155,6 @@ class IndicatorAccount extends Component {
   }
 
   render() {
-    // console.log(this.props.currentUser)
     // if (this.props.currentUser[0]) {
     //   localStorage.setItem("isLogin", true);
     //   localStorage.setItem("firstname", this.props.currentUser[0].FirstName);

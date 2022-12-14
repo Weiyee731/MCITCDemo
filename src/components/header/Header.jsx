@@ -1,6 +1,6 @@
 // react
 import React, { useEffect, useState } from "react";
-
+import { GitAction } from "../../store/action/gitAction";
 // third-party
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
@@ -17,8 +17,6 @@ import { Heart20Svg } from "../../svg";
 import Indicator from "./Indicator";
 import IndicatorCart from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
-import { Cart20Svg, Cross10Svg } from "../../svg";
-
 import Logo from "../../assets/Emporia.png";
 
 // import { wishlistListItem } from "../../store/wishlist";
@@ -66,15 +64,25 @@ function Header(props) {
   useEffect(() => {
   }, [show])
 
-
   let pathLength = window.location.pathname.split("/").length
   let currentProductID = window.location.pathname.split("/")[pathLength - 1]
-  const currentProductDetails = props.products.filter((x) => x.ProductID == currentProductID).map((y) => y)
+  const currentProductDetails = props.product !== null && props.product !== undefined && props.product.filter((x) => x.ProductID == currentProductID).map((y) => y)
+  
+  useEffect(() => {
+    let canceled = false;
+    if(localStorage.getItem("isLogin") === true)
+    props.CallProductDetail({
+      productId: currentProductID.length > 0 && currentProductID !== undefined ? currentProductID : currentProductID,
+      userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id")
+    })
+    return () => {
+      canceled = true;
+    };
+  }, [currentProductID]);
 
   let bannerSection;
 
   if (layout === "default") {
-
     bannerSection = (
       <>
         {
@@ -104,55 +112,17 @@ function Header(props) {
                 <IndicatorCart />
                 <IndicatorAccount />
               </div>
-
             </div>
-
             :
             <div>
               <div className="container" onClick={onClick}>
                 <HeaderProductDetails productDetails={currentProductDetails} />
-                {/* <div>
-                  <Link to="/">
-                    <img
-                      className="site-header__logo_img"
-                      src={Logo}
-                      alt=""
-                      style={{ height: "6vw" }}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = Logo;
-                      }}
-                    />
-                  </Link>
-                </div>
-                <div className="form-group product__option product__add-to-cart" >
-                  <div className="product__actions">
-                    <div className="product__actions-item product__actions-item--addtocart mx-1">
-                      <button
-                        type="button"
-                        // disabled={this.state.isVariationSet === true ?
-                        //   (this.state.productQuantity > 0 ? false : true) :
-                        //   (product.ProductStockAmount > 0 ? false : true)
-                        // }
-                        // onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
-                        className="btn btn-primary product-card__addtocart"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        Add To Cart
-                      </button>
-                    </div>
-                    <div className="product__actions-item product__actions-item--wishlist mx-1">
-                      {this.wishlisting(product)}
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
         }
       </>
     )
   }
-
   return (
     <div className="site-header w-100" style={backgroundColor}>
       <Topbar />
@@ -179,10 +149,15 @@ Header.defaultProps = {
 const mapStateToProps = (state) => ({
   wishlist: state.counterReducer.wishlist,
   products: state.counterReducer.products,
+  product: state.counterReducer["productsByID"],
 });
 
-const mapDispatchToProps = {
-  openMobileMenu: mobileMenuOpen,
+const mapDispatchToProps = (dispatch) => {
+  return {
+    openMobileMenu: mobileMenuOpen,
+    CallProductDetail: (propData) => dispatch(GitAction.CallProductDetail(propData)),
+  }
+
 };
 
 
