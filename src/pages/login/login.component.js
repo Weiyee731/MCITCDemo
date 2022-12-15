@@ -116,8 +116,6 @@ class LoginComponent extends Component {
   }
 
   encryptData(data) {
-
-    console.log("data", data)
     var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace(/\+/g, 'p1L2u3S').replace(/\//g, 's1L2a3S4h').replace(/=/g, 'e1Q2u3A4l');
 
     return ciphertext
@@ -125,8 +123,7 @@ class LoginComponent extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.currentUser !== this.props.currentUser) {
-
-      if (this.props.currentUser !== undefined && this.props.currentUser[0].UserID !== undefined) {
+      if (this.props.currentUser.length > 0 && this.props.currentUser !== [] && this.props.currentUser !== undefined && this.props.currentUser[0].UserID !== undefined) {
         localStorage.setItem("isLogin", true);
         localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
         localStorage.setItem("lastname", this.props.currentUser[0].LastName);
