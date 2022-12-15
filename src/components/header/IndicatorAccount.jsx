@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { browserHistory } from "react-router";
 
 // Application
@@ -235,4 +235,4 @@ class IndicatorAccount extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IndicatorAccount);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(IndicatorAccount));

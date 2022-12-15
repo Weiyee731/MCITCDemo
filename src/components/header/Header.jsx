@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { GitAction } from "../../store/action/gitAction";
 // third-party
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import classNames from 'classnames';
 
@@ -18,6 +18,8 @@ import Indicator from "./Indicator";
 import IndicatorCart from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
 import Logo from "../../assets/Emporia.png";
+
+import { Cart20Svg, Cross10Svg } from "../../svg";
 
 // import { wishlistListItem } from "../../store/wishlist";
 import { mobileMenuOpen } from '../../store/mobile-menu';
@@ -56,6 +58,9 @@ function Header(props) {
       if (!isproductPage) {
         setShow(newState);
       }
+    } else {
+      setisproductPage(false)
+      setShow(false)
     }
   };
 
@@ -67,14 +72,14 @@ function Header(props) {
   let pathLength = window.location.pathname.split("/").length
   let currentProductID = window.location.pathname.split("/")[pathLength - 1]
   const currentProductDetails = props.product !== null && props.product !== undefined && props.product.filter((x) => x.ProductID == currentProductID).map((y) => y)
-  
+
   useEffect(() => {
     let canceled = false;
-    if(localStorage.getItem("isLogin") === true)
-    props.CallProductDetail({
-      productId: currentProductID.length > 0 && currentProductID !== undefined ? currentProductID : currentProductID,
-      userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id")
-    })
+    if (localStorage.getItem("isLogin") === true)
+      props.CallProductDetail({
+        productId: currentProductID.length > 0 && currentProductID !== undefined ? currentProductID : currentProductID,
+        userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id")
+      })
     return () => {
       canceled = true;
     };
@@ -109,7 +114,15 @@ function Header(props) {
                 {localStorage.getItem("isLogin") === 'true' && <Indicator url="/shop/wishlist"
                   value={props.wishlist !== undefined && props.wishlist[0] !== undefined && props.wishlist[0].ReturnVal === undefined ? props.wishlist.filter((x) => x.DelInd === 0).length : 0}
                   icon={<Heart20Svg />} />}
-                <IndicatorCart />
+                {
+                  localStorage.getItem("isLogin") === "false" ?
+                    <Indicator
+                      url="/login"
+                      value={0}
+                      icon={<Cart20Svg />}
+                    />
+                    : <IndicatorCart />
+                }
                 <IndicatorAccount />
               </div>
             </div>
@@ -161,4 +174,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet-async';
 // application
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
+import { withRouter } from "react-router-dom";
 
 // blocks
 import BlockFeatures from '../blocks/BlockFeatures';
@@ -103,27 +104,27 @@ function HomePageTwo(props) {
     }
   }, [])
 
-  useEffect(() => {
-    props.CallMerchants({
-      type: "Status",
-      typeValue: "Endorsed",
-      USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
-      userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
-      productPage: 999,
-      page: 1,
-    })
-  }, [])
+  // useEffect(() => {
+  //   props.CallMerchants({
+  //     type: "Status",
+  //     typeValue: "Endorsed",
+  //     USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+  //     userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
+  //     productPage: 999,
+  //     page: 1,
+  //   })
+  // }, [])
 
-  useEffect(() => {
-    props.CallMerchants({
-      type: "Status",
-      typeValue: "Endorsed",
-      USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
-      userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
-      productPage: 999,
-      page: 1,
-    })
-  }, [])
+  // useEffect(() => {
+  //   props.CallMerchants({
+  //     type: "Status",
+  //     typeValue: "Endorsed",
+  //     USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+  //     userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
+  //     productPage: 999,
+  //     page: 1,
+  //   })
+  // }, [])
 
   return (
     <React.Fragment>
@@ -191,4 +192,4 @@ function HomePageTwo(props) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePageTwo);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HomePageTwo));

@@ -29,7 +29,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import { isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import { toast } from "react-toastify";
 // import OtpInput from "react-otp-input";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 var CryptoJS = require("crypto-js");
 
 function mapStateToProps(state) {

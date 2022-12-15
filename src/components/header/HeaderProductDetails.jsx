@@ -8,10 +8,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Logo from "../../assets/Emporia.png"
 import { Wishlist16Svg } from "../../svg";
+import { Link,withRouter } from "react-router-dom";
 
 // application;
 import 'react-loading-skeleton/dist/skeleton.css'
-import { browserHistory } from "react-router";
 import { toast } from "react-toastify";
 import { Typography, } from "@mui/material";
 
@@ -249,4 +249,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderProductDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HeaderProductDetails));

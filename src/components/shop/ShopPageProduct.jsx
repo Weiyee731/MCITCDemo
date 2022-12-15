@@ -39,7 +39,7 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAllProducts: (propData) => dispatch(GitAction.CallAllProducts(propData)),
     CallProductDetail: (propData) => dispatch(GitAction.CallProductDetail(propData)),
-    CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData))
+    // CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData))
   };
 }
 
@@ -60,16 +60,16 @@ function ShopPageProduct(props) {
   }, [productId]);
 
   // Load review.
-  useEffect(() => {
-    let canceled = false;
-    props.CallProductReviewByProductID({ ProductID: productId, ParentProductReviewID: 0 })
+  // useEffect(() => {
+  //   let canceled = false;
+  //   props.CallProductReviewByProductID({ ProductID: productId, ParentProductReviewID: 0 })
 
-    // props.CallProductDetail({ productId: productId, userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id") })
-    return () => {
-      canceled = true;
-    };
+  //   // props.CallProductDetail({ productId: productId, userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id") })
+  //   return () => {
+  //     canceled = true;
+  //   };
 
-  }, [productId], [props.reviews]);
+  // }, [productId], [props.reviews]);
 
   // Load related products.
   // useEffect(() => {
@@ -127,7 +127,6 @@ function ShopPageProduct(props) {
           {sidebarPosition === "start" && sidebar}
           <div className=" shop-layout__content">
             <div className=" block">
-              {console.log(props)}
               {/* <Product {...props} product={product} layout={layout} version="1" /> */}
               {/* <ProductTabs withSidebar /> */}
             </div>
@@ -150,7 +149,6 @@ function ShopPageProduct(props) {
       <React.Fragment>
         <div className="block">
           <div className="container">
-            {console.log(props)}
             <Product product={product} layout={layout} version="2" />
             {/* <ProductTabs product={product} /> */}
           </div>

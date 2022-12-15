@@ -126,34 +126,22 @@ class IndicatorCart extends React.Component {
       );
     });
 
-    if (localStorage.getItem("isLogin") === "false") {
+    if (this.props.productcart !== undefined && this.props.productcart[0] !== undefined && this.props.productcart[0].ReturnVal === undefined) {
       return (
         <Indicator
-          url="/login"
+          url="/shop/cart"
+          value={this.props.productcart.length}
+          icon={<Cart20Svg />}
+        />
+      );
+    } else {
+      return (
+        <Indicator
+          url="/shop/cart"
           value={0}
           icon={<Cart20Svg />}
         />
       );
-    }
-    else {
-
-      if (this.props.productcart !== undefined && this.props.productcart[0] !== undefined && this.props.productcart[0].ReturnVal === undefined) {
-        return (
-          <Indicator
-            url="/shop/cart"
-            value={this.props.productcart.length}
-            icon={<Cart20Svg />}
-          />
-        );
-      } else {
-        return (
-          <Indicator
-            url="/shop/cart"
-            value={0}
-            icon={<Cart20Svg />}
-          />
-        );
-      }
     }
   }
 }

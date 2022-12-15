@@ -564,7 +564,7 @@ const mapDispatchToProps = (dispatch) => {
         CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
         CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
         CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
-        CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
+        // CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
     }
 };
 

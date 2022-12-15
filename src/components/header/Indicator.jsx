@@ -91,6 +91,8 @@ class Indicator extends Component {
       value = <span className="indicator__value">{value}</span>;
     }
 
+    console.log("dsdsad", this.props)
+
     const title = (
       <span className="indicator__area">
         {icon}
