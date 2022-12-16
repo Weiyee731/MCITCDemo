@@ -104,27 +104,27 @@ function HomePageTwo(props) {
     }
   }, [])
 
-  // useEffect(() => {
-  //   props.CallMerchants({
-  //     type: "Status",
-  //     typeValue: "Endorsed",
-  //     USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
-  //     userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
-  //     productPage: 999,
-  //     page: 1,
-  //   })
-  // }, [])
+  useEffect(() => {
+    props.CallMerchants({
+      type: "Status",
+      typeValue: "Endorsed",
+      USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
+      productPage: 999,
+      page: 1,
+    })
+  }, [])
 
-  // useEffect(() => {
-  //   props.CallMerchants({
-  //     type: "Status",
-  //     typeValue: "Endorsed",
-  //     USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
-  //     userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
-  //     productPage: 999,
-  //     page: 1,
-  //   })
-  // }, [])
+  useEffect(() => {
+    props.CallMerchants({
+      type: "Status",
+      typeValue: "Endorsed",
+      USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+      userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
+      productPage: 999,
+      page: 1,
+    })
+  }, [])
 
   return (
     <React.Fragment>

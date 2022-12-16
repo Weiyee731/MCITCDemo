@@ -264,7 +264,6 @@ class AccountPageAddresses extends Component {
                                       , {this.props.countrylist.length > 0 && this.props.countrylist.filter((x) => x.CountryId === address.CountryID).map((country) => {
                                         return country.CountryName
                                       })}
-                                      {console.log(this.props.countrylist)}
                                       {/* {address.CountryID} */}
                                     </h6>
                                     <h6

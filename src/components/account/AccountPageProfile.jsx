@@ -98,7 +98,7 @@ class AccountPageProfile extends Component {
   componentDidMount() {
 
     if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.TYPEVALUE !== undefined) {
-      this.props.CallUserProfile(this.state);
+      // this.props.CallUserProfile(this.state);
       this.props.CallCountry();
       if (this.props.currentUser !== {} && this.props.currentUser !== null) {
         let userDetails = this.props.currentUser[0];

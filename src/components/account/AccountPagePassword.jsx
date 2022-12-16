@@ -142,7 +142,7 @@ class AccountPagePassword extends Component {
       this.state.USERID !== null &&
       this.state.TYPEVALUE !== undefined
     ) {
-      this.props.CallUserProfile(this.state);
+      // this.props.CallUserProfile(this.state);
       if (
         this.props.currentUser.length > 0 &&
         this.props.currentUser !== undefined

@@ -56,8 +56,8 @@ function mapDispatchToProps(dispatch) {
     CallAllCreditCard: (prodData) =>
       dispatch(GitAction.CallAllCreditCard(prodData)),
 
-    CallMerchants: (prodData) =>
-      dispatch(GitAction.CallMerchants(prodData)),
+    // CallMerchants: (prodData) =>
+    //   dispatch(GitAction.CallMerchants(prodData)),
 
     CallCourierService: () =>
       dispatch(GitAction.CallCourierService()),
@@ -99,6 +99,10 @@ function a11yProps(index) {
   };
 }
 
+const style = {
+  animation: "fadeIn 2s"
+}
+
 class AccountPageOrders extends Component {
   constructor(props) {
     super(props);
@@ -109,14 +113,14 @@ class AccountPageOrders extends Component {
     });
     this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
 
-    this.props.CallMerchants({
-      type: "Status",
-      typeValue: "Endorsed",
-      USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
-      userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
-      productPage: 999,
-      page: 1,
-    })
+    // this.props.CallMerchants({
+    //   type: "Status",
+    //   typeValue: "Endorsed",
+    //   USERID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("id") : 0,
+    //   userRoleID: localStorage.getItem("isLogin") === true && localStorage.getItem("id") !== undefined ? localStorage.getItem("roleid") : 0,
+    //   productPage: 999,
+    //   page: 1,
+    // })
     this.props.CallCourierService();
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.state = {
@@ -246,8 +250,6 @@ class AccountPageOrders extends Component {
     const { page } = this.state;
     let ordersList;
 
-    console.log("hahahah", this.state)
-
     let orderDetailListing = (listing) => (
       <>
         {
@@ -351,8 +353,8 @@ class AccountPageOrders extends Component {
                   <th>Total</th>
                 </tr>
               </thead>
-              {console.log("this.props.allmerchantorders", this.props.allmerchantorders)}
-              {console.log("this.props.allmerchantorders", this.state.TrackingStatuss)}
+              {/* {console.log("this.props.allmerchantorders", this.props.allmerchantorders)} */}
+              {/* {console.log("this.props.allmerchantorders", this.state.TrackingStatuss)} */}
               <tbody>
                 {this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
                   this.state.isFiltered === false ?
@@ -458,20 +460,13 @@ class AccountPageOrders extends Component {
                 <Tab label="Receive" {...a11yProps(4)} />
               </Tabs>
             </AppBar>
-            {/* <SwipeableViews
-              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-              index={this.state.value}
-              onChangeIndex={this.handleChangeTabIndex}
-            >
-
+            <div onChangeIndex={this.handleChangeTabIndex} >
               <TabPanel value={this.state.value} index={0} dir={theme.direction}>
                 {this.state.value === 0 && orderListing(0)}
               </TabPanel>
-
               <TabPanel value={this.state.value} index={1} dir={theme.direction}>
                 {this.state.value === 1 && orderListing(1)}
               </TabPanel>
-
 
               <TabPanel value={this.state.value} index={2} dir={theme.direction}>
                 {this.state.value === 2 && orderListing(2)}
@@ -484,6 +479,12 @@ class AccountPageOrders extends Component {
               <TabPanel value={this.state.value} index={3} dir={theme.direction}>
                 {this.state.value === 4 && orderListing(4)}
               </TabPanel>
+            </div>
+            {/* <SwipeableViews
+              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+              index={this.state.value}
+              onChangeIndex={this.handleChangeTabIndex}
+            >
             </SwipeableViews> */}
           </Box>
         </div>

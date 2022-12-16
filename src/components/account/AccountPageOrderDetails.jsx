@@ -63,6 +63,7 @@ const steps = [
 
 
 export default function AccountPageOrderDetails(props) {
+  console.log(props)
   //dialog
   const [open, setOpen] = React.useState(false);
   const [isProceedPayment, setProceedPayment] = React.useState(false);
@@ -212,6 +213,7 @@ export default function AccountPageOrderDetails(props) {
     )
   }
 
+
   return (
     <React.Fragment>
       {
@@ -228,9 +230,16 @@ export default function AccountPageOrderDetails(props) {
             <div className="card">
               <div className="order-header">
                 <div className="order-header__actions">
-                  <Button onClick={() => window.location.href = "/account/orders"} style={{ backgroundColor: "grey", color: "white", borderWidth: 0 }}>
-                    BACK TO LIST
-                  </Button>
+                  {/* {
+                    orderDetail.TrackingStatusID !== 4 ? */}
+                      <Button onClick={() => window.location.href = "/account/orders"} style={{ backgroundColor: "grey", color: "white", borderWidth: 0, margin: "3px" }}>
+                        BACK TO LIST
+                      </Button>
+                      {/* : */}
+                      {/* <Button style={{ backgroundColor: "#d23f57", color: "white", borderWidth: 0, margin: "3px" }}>
+                        RATE
+                      </Button> */}
+                  {/* } */}
                 </div>
                 <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
                 <div className="order-header__subtitle">
