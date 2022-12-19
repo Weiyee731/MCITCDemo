@@ -289,7 +289,9 @@ export class GitEpic {
             "&USERID=" + action.payload.USERID +
             "&UserRoleID=" + action.payload.USERROLEID +
             "&LISTPERPAGE=" + action.payload.LISTPERPAGE +
-            "&PAGE=" + action.payload.PAGE)
+            "&PAGE=" + action.payload.PAGE +
+            "&PROJECTID=2"
+            )
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)

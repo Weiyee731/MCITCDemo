@@ -34,7 +34,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     CallAddProductReview: (PropsData) => dispatch(GitAction.CallAddProductReview(PropsData)),
-    CallEmptyProductReview: () => dispatch(GitAction.CallEmptyProductReview())
+    CallEmptyProductReview: () => dispatch(GitAction.CallEmptyProductReview()),
+    CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData))
   };
 }
 
@@ -56,6 +57,7 @@ class ProductTabReviews extends Component {
       setReview: false,
       isReviewSet: true,
       addReview: false,
+      isdbReviews: false,
     }
 
     this.onSubmitReview = this.onSubmitReview.bind(this);
@@ -160,12 +162,12 @@ class ProductTabReviews extends Component {
                     </div>
                     <div id="review_text" className=" review__text" style={{ display: "flex", width: "100%", justifyContent: "space-between", fontSize: "13px" }}>
                       <div id="review_comment">{review.ProductReviewComment}</div>
-                      <div id="comment" className="comment-reply" style={{ cursor: "pointer" }}>
+                      {/* <div id="comment" className="comment-reply" style={{ cursor: "pointer" }}>
                         <a className="comment-btn" onClick={() => localStorage.getItem("isLogin") === "false" ? this.login() : this.setState({ reply: !this.state.reply, replyid: review.ProductReviewID })} >
                           <i className="fas fa-reply" />{" "}
                           Reply
                         </a>
-                      </div>
+                      </div> */}
                     </div>
                     {review.ProductReviewDetail !== null && review.ProductReviewDetail !== undefined &&
                       JSON.parse(review.ProductReviewDetail).map((reviewItem, index) => {
@@ -253,25 +255,25 @@ class ProductTabReviews extends Component {
 
 
   render() {
-
     const { page } = this.state;
+    const reviewsByProduct = JSON.parse(this.props.product.ProductReview).filter((x) => x.ProductID === this.props.product.ProductID).map((y) => y)
     return (
       this.props.loading === false && this.state.isReviewSet === true ?
-        this.props.reviews.length > 0 ?
+        reviewsByProduct.length > 0 ?
           <div className="reviews-view" id="reviews" >
             <div className="reviews-view__list">
               <div className="reviews-view__header"> Customer Reviews </div>
               <div className="reviews-list">
                 <ol className="reviews-list__content">
-                  {this.props.reviews.length > 0 && this.props.reviews[0].ProductID !== undefined
-                    && this.reviewsList(this.props.reviews, page)}
+                  {reviewsByProduct.length > 0 && reviewsByProduct[0].ProductID !== undefined
+                    && this.reviewsList(reviewsByProduct, page)}
                 </ol>
                 <div className="reviews-list__pagination">
                   <Pagination
                     current={page}
                     total={
-                      this.props.reviews.length > 0 && this.props.reviews[0].ReturnVal === undefined ?
-                        Math.ceil(Math.ceil(this.props.reviews.length) / this.state.rowsPerPage)
+                      reviewsByProduct.length > 0 && reviewsByProduct[0].ReturnVal === undefined ?
+                        Math.ceil(Math.ceil(reviewsByProduct.length) / this.state.rowsPerPage)
                         : 0
                     }
                     onPageChange={this.handlePageChange}

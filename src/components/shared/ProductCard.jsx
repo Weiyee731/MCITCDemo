@@ -23,7 +23,7 @@ import { GitAction } from "../../store/action/gitAction";
 import { Modal } from 'reactstrap';
 import { Cross20Svg } from '../../svg';
 import { browserHistory } from "react-router";
-import { Card, } from "@mui/material";
+import { Card, Typography, } from "@mui/material";
 import ProductDetails from './ProductDetails'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -35,7 +35,7 @@ function ProductCard(props) {
     product,
     layout,
   } = props;
-  
+
   const containerClasses = classNames("product-card", {
     "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
     "product-card--layout--grid product-card--size--nl": layout === "grid-nl",
@@ -204,18 +204,18 @@ function ProductCard(props) {
       <Card elevation={2}>
         <button
           className={classNames("product-card__quickview")}
-          style={{ textAlign: "right", display: "flex"}}
+          style={{ textAlign: "right", display: "flex" }}
         >
           {
             sampleTag.length > 0 &&
             sampleTag.map((x, index) => {
               return (
-                <Chip size="small" variant="filled" label={x.tag} key={x.id} color='primary' style={{backgroundColor: x.color, boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px"}}/>
+                <Chip size="small" variant="filled" label={x.tag} key={x.id} color='primary' style={{ backgroundColor: x.color, boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px" }} />
               )
             })
           }
           {/* <br /> */}
-          <VisibilityIcon style={{paddingLeft:"3px"}} onClick={() => QuickView()} />
+          <VisibilityIcon style={{ paddingLeft: "3px" }} onClick={() => QuickView()} />
         </button>
         {badges}
         <Link to={url.product(product)}>{image}</Link>
@@ -259,12 +259,18 @@ function ProductCard(props) {
             {wishlistView}
           </div>
           {
-            product.ShopState !== null &&
-            <div style={{ textAlign: "right", paddingRight: "10px" }}>
-              <label style={{ color: "#2b535e" }}>
-                {product.ShopState}
-              </label>
-            </div>
+            product.ShopState !== null ?
+              <div style={{ textAlign: "right", paddingRight: "10px" }}>
+                <label style={{ color: "#2b535e" }}>
+                  {product.ShopState}
+                </label>
+              </div>
+              :
+              <div style={{ textAlign: "right", paddingRight: "10px" }}>
+                <label style={{ color: "#2b535e" }}>
+                  -
+                </label>
+              </div>
           }
         </div>
       </Card>

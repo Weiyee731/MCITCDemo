@@ -135,6 +135,20 @@ $local-open-transition-duration: .2s;
         padding: 0 12px;
     }
 
+    .indicator__dropdown {
+        top: 95px;
+        position: fixed;
+        visibility: hidden;
+        transform-origin: top;
+        transform: rotateX(60deg);
+        opacity: 0;
+        transition: transform $local-open-transition-duration, opacity $local-open-transition-duration, visibility 0s $local-open-transition-duration;
+
+        @include direction {
+            #{$inset-inline-end}: 0;
+        }
+    }
+
     .indicator--trigger--click.indicator--opened,
     .indicator--trigger--hover:hover {
         .indicator__dropdown {
@@ -186,7 +200,7 @@ $local-open-transition-duration: .2s;
     }
 
     .indicator__dropdown {
-        top: 85px;
+        top: 95px;
         position: fixed;
         visibility: hidden;
         transform-origin: top;
@@ -218,7 +232,7 @@ $local-open-transition-duration: .2s;
     }
 
     .indicator__dropdown {
-        top: 88px;
+        top: 95px;
         position: fixed;
         visibility: hidden;
         transform-origin: top;

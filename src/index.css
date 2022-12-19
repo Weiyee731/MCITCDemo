@@ -8,7 +8,7 @@ body {
   min-height: 100vh;
   display: flex;
   font-weight: 400;
-  font-family: "Fira Sans", sans-serif;
+  font-family: "Helvetica" !important;
   overflow: hidden;
 }
 
@@ -30,7 +30,7 @@ h6,
 label,
 span {
   font-weight: 500;
-  font-family: "Fira Sans", sans-serif;
+  font-family: "Helvetica" !important;
 }
 
 body,

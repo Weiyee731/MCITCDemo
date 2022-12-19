@@ -1,9 +1,14 @@
 // react
-import React from "react";
+import React, { useEffect } from "react";
 
 // third-party
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+
+// application
+import { connect } from "react-redux";
+import { GitAction } from "../../store/action/gitAction";
+import { withRouter } from "react-router-dom";
 
 // data stubs
 import theme from "../../data/theme";
@@ -32,6 +37,12 @@ import Box from '@mui/material/Box';
 import AccountPagePayment from "./AccountPagePayment";
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 import DeliveryFee from "../shop/ShopPageDeliveryFee";
+import { Modal, ModalBody } from "reactstrap";
+import CloseIcon from '@mui/icons-material/Close';
+import USER from "../../assets/user.jpg";
+import ReviewRating from "@mui/lab/Rating";
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { toast } from "react-toastify";
 
 
 //stepper content
@@ -60,15 +71,32 @@ const steps = [
   },
 ];
 
+function mapStateToProps(state) {
+  return {
+    reviews: state.counterReducer["reviews"],
+    loading: state.counterReducer["loading"],
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    CallAddProductReview: (PropsData) => dispatch(GitAction.CallAddProductReview(PropsData)),
+  };
+}
 
 
-export default function AccountPageOrderDetails(props) {
-  console.log(props)
+function AccountPageOrderDetails(props) {
   //dialog
   const [open, setOpen] = React.useState(false);
   const [isProceedPayment, setProceedPayment] = React.useState(false);
   const [isDeliverySet, setDelivery] = React.useState(false);
   const [shippingFees, setShippingFees] = React.useState(0);
+  const [openRate, setopenRate] = React.useState(false);
+  const [productReviewRating, setproductReviewRating] = React.useState(0);
+  const [parentProductReviewID, setparentProductReviewID] = React.useState(0);
+  const [productReviewComment, setproductReviewComment] = React.useState("");
+  const [isReviewSet, setisReviewSet] = React.useState(false);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -120,7 +148,6 @@ export default function AccountPageOrderDetails(props) {
 
   totalOverall = isStringNullOrEmpty(orderDetail) ? parseFloat(0).toFixed(2) : parseFloat(orderDetail.totalAmount).toFixed(2)
   shipping = parseFloat(totalOverall - subtotalPrice).toFixed(2)
-
 
   let trackingDetail = (index) => (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -213,6 +240,35 @@ export default function AccountPageOrderDetails(props) {
     )
   }
 
+  const modalOpen = () => {
+    setopenRate(true)
+  }
+  const modalClose = () => {
+    setopenRate(false)
+  }
+
+  const OnSubmitReview = (productID) => {
+    props.CallAddProductReview({
+      parentProductReviewID: parentProductReviewID,
+      productID: productID,
+      UserID: localStorage.getItem("id"),
+      productReviewRating: productReviewRating,
+      productReviewComment: productReviewComment,
+      replyParentID: 0
+    })
+
+    setproductReviewRating(0)
+    setproductReviewComment("")
+    setisReviewSet(false)
+    setopenRate(false)
+    toast.success("Thank you for your review!")
+  }
+
+  const login = () => {
+    props.history.push("/login");
+  }
+
+  const productID = orderDetail !== null && JSON.parse(orderDetail.OrderProductDetail).map((x) => x.ProductID)
 
   return (
     <React.Fragment>
@@ -230,16 +286,16 @@ export default function AccountPageOrderDetails(props) {
             <div className="card">
               <div className="order-header">
                 <div className="order-header__actions">
-                  {/* {
-                    orderDetail.TrackingStatusID !== 4 ? */}
+                  {
+                    orderDetail.TrackingStatusID !== 4 ?
                       <Button onClick={() => window.location.href = "/account/orders"} style={{ backgroundColor: "grey", color: "white", borderWidth: 0, margin: "3px" }}>
                         BACK TO LIST
                       </Button>
-                      {/* : */}
-                      {/* <Button style={{ backgroundColor: "#d23f57", color: "white", borderWidth: 0, margin: "3px" }}>
+                      :
+                      <Button onClick={() => modalOpen()} style={{ backgroundColor: "#2b535e", color: "white", borderWidth: 0, margin: "3px" }}>
                         RATE
-                      </Button> */}
-                  {/* } */}
+                      </Button>
+                  }
                 </div>
                 <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
                 <div className="order-header__subtitle">
@@ -295,7 +351,7 @@ export default function AccountPageOrderDetails(props) {
                                           <td style={{ width: "15%" }}>
                                             <img
                                               className="product-image dropcart__product-image"
-                                              src={orders.ProductImages !== null ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
+                                              src={orders.ProductImages !== null && orders.ProductImages !== "[]" ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
                                               alt=""
                                               onError={(e) => {
                                                 e.target.onerror = null;
@@ -492,8 +548,60 @@ export default function AccountPageOrderDetails(props) {
                 }
               </div>
             </div>
+            <div style={{ textAlign: "center", padding: "inherit", }} >
+              <Modal
+                className="modal-dialog-centered"
+                isOpen={openRate}
+                toggle={() => modalClose()}
+              >
+                <ModalBody>
+                  <CloseIcon
+                    className="closeIcon"
+                    onClick={() => modalClose()}
+                    data-dismiss="modal" />
+                  <div
+                    align="center"
+                    className="form-content p-2"
+                  >
+                    <div className="reviews-view__header" >Write A Review</div>
+                    <div className="row justify-content-center" >
+                      <div id="review_avatar" className="review__avatar" style={{ marginLeft: "10px", marginRight: 0 }}>
+                        <img src={USER} alt="avatar" onError={(e) => (e.target.src = USER)} />
+                      </div>
+                      <div className="review__content col-10" style={{}} id="writeReviews">
+                        <div style={{ display: "flex" }}>
+                          <Box component="fieldset" mb={1} borderColor="transparent" >
+                            <ReviewRating
+                              size="medium"
+                              emptyIcon={<StarBorderIcon fontSize="medium" />}
+                              name="customized-empty"
+                              value={productReviewRating}
+                              onChange={({ target }) => {
+                                setproductReviewRating(target.value)
+                              }}
+                              required
+                            />
+                          </Box>
+                        </div>
+                        <div className="form-group mb-2">
+                          <textarea className="form-control" style={{ height: "80px" }} placeholder="Tell us more about your review on this product" id="review-text" rows="6" value={productReviewComment} onChange={({ target }) => { setproductReviewComment(target.value) }} required />
+                        </div>
+                      </div>
+                      <div className=" mb-0">
+                        <button style={{ borderRadius: "5px" }} className="btn btn-primary btn-md" onClick={() => localStorage.getItem("isLogin") === "false" ? login() : OnSubmitReview(productID[0])} >
+                          Post Your Review
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+                </ModalBody>
+              </Modal>
+            </div>
           </>
       }
     </React.Fragment>
   );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountPageOrderDetails));

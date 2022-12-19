@@ -14,6 +14,7 @@ import BlockMap from "../blocks/BlockMap";
 import theme from "../../data/theme";
 
 import TextField from '@mui/material/TextField';
+import { Typography } from '@mui/material';
 
 function SitePageContactUs() {
   const [name, setName] = useState("");
@@ -120,24 +121,19 @@ function SitePageContactUs() {
                   </div>
 
                   <div className="col-12 col-lg-4 pb-4 pb-lg-0">
-                    <h4 className="contact-us__header card-title" style={{ textAlign: "left" }}>
+                    <Typography variant='h5' style={{ textAlign: "left", fontWeight: "700" }}>
                       Our Address
-                    </h4>
-                    <div className="contact-us__address">
+                    </Typography>
+                    <div className="mt-4">
                       <p style={{ textAlign: "left" }}>
-                        <label>OPENING HOURS</label>
-                        <label>Monday to Saturday: 10.00am - 06.00pm</label><br />
-
-                        <label className="mt-3">EMAIL US:</label><br />
-                        <label>helpdesk.myemporia@gmail.com</label><br />
-
-                        <label className="mt-3">MAILING ADDRESS:</label><br />
-                        <label>SUITE 3, 2ND FLOOR, SUBLOT 25,</label>
-                        <br />
-                        <label>TABUAN COMMERCIAL CENTRE, JALAN CANNA</label>
-                        <br />
-                        <label>93350, KUCHING SARAWAK</label>
-
+                        <Typography variant='subtitle1'>OPENING HOURS</Typography>
+                        <Typography variant='subtitle2'>Monday to Saturday: 10.00am - 06.00pm</Typography>
+                        <Typography variant='subtitle1' className="mt-3">EMAIL US:</Typography>
+                        <Typography variant='subtitle2'>helpdesk.myemporia@gmail.com</Typography>
+                        <Typography variant='subtitle1' className="mt-3">MAILING ADDRESS:</Typography>
+                        <Typography variant='subtitle2'>SUITE 3, 2ND FLOOR, SUBLOT 25,</Typography>
+                        <Typography variant='subtitle2'>TABUAN COMMERCIAL CENTRE, JALAN CANNA</Typography>
+                        <Typography variant='subtitle2'>93350, KUCHING SARAWAK</Typography>
                       </p>
                     </div>
                   </div>

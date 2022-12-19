@@ -26,7 +26,7 @@ export default function FooterNewsletter() {
             </form> */}
 
             <div className="footer-newsletter__text footer-newsletter__text--social" style={{color:"#2b535e"}}>
-                <Typography variant='body1'>Follow us on social networks</Typography>
+                <Typography variant='body1' style={{fontFamily:"Helvetica"}}>Follow us on social networks</Typography>
             </div>
 
             <SocialLinks className="footer-newsletter__social-links" shape="circle" />
