@@ -18,13 +18,18 @@ import PageCheckout from "./ShopPageCheckout";
 import { Button } from "@mui/material";
 
 import Checkbox from "@mui/material/Checkbox";
-
+import { Typography } from '@mui/material';
 
 
 // data stubs
 import { toast } from 'react-toastify';
+import { red } from '@mui/material/colors';
 
-class ShopPageCart extends Component {
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+
+class ShopPageCart_side extends Component {
     constructor(props) {
         super(props);
 
@@ -92,8 +97,6 @@ class ShopPageCart extends Component {
     }
 
     filterShop(data) {
-
-        console.log("data", data)
         let filterList = []
         let filterShopName = []
         filterList = data.filter((ele, ind) => ind === data.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
@@ -109,7 +112,6 @@ class ShopPageCart extends Component {
         if (this.props.productcart !== undefined && this.props.productcart[0] !== undefined && this.props.productcart[0].ReturnVal === undefined) {
             this.setDetails(this.props.productcart)
         }
-        console.log("history", this.props.history)
         if (this.props.history !== undefined)
             this.filterShop(this.props.productcart)
         if (this.props.history === undefined)
@@ -220,25 +222,38 @@ class ShopPageCart extends Component {
     }
 
     handleAllProductSellect(shopName, selectedProductListing) {
-        const { cart, selectedProductDetailList } = this.state
-
-        let itemsWithShopname = selectedProductDetailList.filter(x => x.MerchantShopName === shopName)
+        const { cart } = this.state
         let tempList = []
 
-        if (itemsWithShopname.length > 0) {
-            tempList = selectedProductDetailList.filter(x => x.MerchantShopName !== shopName)
+        if (shopName === null) {
+
+            if (selectedProductListing.length > 0) {
+                selectedProductListing = []
+                tempList = []
+            } else {
+                selectedProductListing = []
+                tempList = [...selectedProductListing, ...cart]
+            }
         }
         else {
-            itemsWithShopname = cart.filter(x => x.MerchantShopName === shopName)
-            tempList = [...selectedProductDetailList, ...itemsWithShopname]
+            let itemsWithShopname = selectedProductListing.filter(x => x.MerchantShopName === shopName)
+
+            if (itemsWithShopname.length > 0) {
+                tempList = selectedProductListing.filter(x => x.MerchantShopName !== shopName)
+            }
+            else {
+                itemsWithShopname = cart.filter(x => x.MerchantShopName === shopName)
+                tempList = [...selectedProductListing, ...itemsWithShopname]
+            }
         }
+
         this.setState({ selectedProductDetailList: tempList, subtotal: tempList.reduce((subtotal, item) => subtotal + item.total, 0) })
     }
 
     renderItems(displayCart) {
         return displayCart.map((item, i) => {
             let image;
-
+            console.log("item", item)
             image = (
                 <div className="product-image">
                     <Link to={url.product(item.product)} className="product-image__body">
@@ -248,8 +263,8 @@ class ShopPageCart extends Component {
             );
 
             return (
-                <tr key={item.id} className="cart-table__row">
-                    <td className="cart-table__column cart-table__column--checkbox">
+                <Grid container key={item.id} className="cart-table__row">
+                    <Grid item className="cart-button">
                         {
                             this.props.history !== undefined &&
                             <Checkbox
@@ -262,12 +277,12 @@ class ShopPageCart extends Component {
                                 onClick={() => this.handleSelectedProduct(item, i)}
                             />
                         }
-                    </td>
-                    <td className="cart-table__column cart-table__column--image">
+                    </Grid>
+                    <Grid item className="cart-table__column--image">
                         {image}
-                    </td>
-                    <td className="cart-table__column cart-table__column--product">
-                        <div style={{ fontSize: "14px" }}>
+                    </Grid>
+                    <Grid item className="cart-table__column--product">
+                        <div style={{ fontSize: "14px" }} className="cart-fixNameLength">
                             <Link to={url.product(item.product)} className="cart-table__product-name">
                                 {item.product.ProductName}
                             </Link>
@@ -284,44 +299,40 @@ class ShopPageCart extends Component {
                         <div style={{ fontSize: "11px" }}>
                             Variation: {item.product.ProductVariationValue}
                         </div>
-                    </td>
-
-                    <td className="cart-table__column cart-table__column--price" data-title="Price">
-                        <Currency value={item.product.ProductPrice !== null ? item.product.ProductPrice : 0} currency={"RM"} />
-                    </td>
-
-                    <td className="cart-table__column cart-table__column--quantity" data-title="Quantity">
-                        {
-                            this.props.history !== undefined ?
-                                <InputNumber
-                                    onChange={(quantity) => this.handleChangeQuantity(item, quantity)}
-                                    value={this.getItemQuantity(item)}
-                                    min={1}
-                                /> :
-                                <label> {this.getItemQuantity(item)} </label>
-                        }
-
-                    </td>
-                    <td className="cart-table__column cart-table__column--total" data-title="Total">
-                        <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
-                    </td>
-
-                    <td className="cart-table__column cart-table__column--remove">
+                        <div>
+                            <Typography color="#2b535e" fontWeight="500">
+                                <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
+                            </Typography>
+                        </div>
+                        <div className='cart-fixinputNumber'>
+                            {
+                                this.props.history !== undefined ?
+                                    <InputNumber
+                                        onChange={(quantity) => this.handleChangeQuantity(item, quantity)}
+                                        value={this.getItemQuantity(item)}
+                                        min={1}
+                                        className="inputNumber-sm"
+                                        size="sm"
+                                    /> :
+                                    <label> {this.getItemQuantity(item)} </label>
+                            }
+                        </div>
+                    </Grid>
+                    <Grid item className="cart-button">
                         {
                             this.props.history !== undefined &&
                             <Button onClick={() => this.removeItem(item.product)} className={'btn btn-light btn-sm btn-svg-icon'} >
                                 <Cross12Svg />
                             </Button>
                         }
-                    </td>
-                </tr>
+                    </Grid>
+                </Grid>
             );
         });
     }
 
     renderCart() {
         const breadcrumb = [
-            { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },
         ];
 
@@ -332,77 +343,62 @@ class ShopPageCart extends Component {
 
         }
 
+
         return (
+
             <div className="cart block container_" >
-                {
+                {console.log("shopName", this.state.MerchantShopName)}
+                {/* {
                     this.props.history !== undefined ?
                         <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
+                } */}
+                {
+                    this.state.MerchantShopName.map((shopName) => {
+                        console.log("shopNameshopName", shopName)
+                        return (
+                            <>
+                                <table className="cart__table cart-table" size="small">
+                                    <div className='shopName'>
+                                        <Typography>
+                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>"Shop Name " + <KeyboardArrowRightIcon /></>}</Link>
+                                        </Typography>
+                                    </div>
+                                    <tbody className="cart-table__body">
+                                        {this.props.history !== undefined ? this.renderItems(this.state.cart.filter((X) => X.MerchantShopName === shopName)) : this.renderItems(this.props.data.filter((X) => X.MerchantShopName === shopName))}
+                                    </tbody>
+                                </table>
+                            </>
+                        )
+                    })
                 }
-                <div className="container" >
-                    {
-                        this.state.MerchantShopName.map((shopName) => {
-                            return (
-                                <>
-                                    <td><th>
-                                        <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName}</Link>
-                                    </th></td>
-                                    <table className="cart__table cart-table" size="small">
-                                        <thead className="cart-table__head">
-                                            <tr className="cart-table__row">
-                                                <th className="cart-table__column cart-table__column--checkbox">
-                                                    {this.props.history !== undefined ?
-                                                        <Checkbox
-                                                            checked={this.state.selectedProductDetailList.length === 0 ? false :
-                                                                this.state.cart.filter((x) => x.MerchantShopName === shopName).length === this.state.selectedProductDetailList.filter((x) => x.MerchantShopName === shopName).length ? true : false}
-                                                            onClick={() => this.handleAllProductSellect(shopName, this.state.selectedProductDetailList)}
-                                                        /> : ""
-                                                    }
-                                                </th>
-                                                <th className="cart-table__column cart-table__column--image">Image</th>
-                                                <th className="cart-table__column cart-table__column--product" >Product</th>
-                                                <th className="cart-table__column cart-table__column--price">Price</th>
-                                                <th className="cart-table__column cart-table__column--quantity">Quantity</th>
-                                                <th className="cart-table__column cart-table__column--total">Total</th>
-                                                <th className="cart-table__column cart-table__column--remove" aria-label="Remove" />
-                                            </tr>
-                                        </thead>
-                                        <tbody className="cart-table__body">
-                                            {this.props.history !== undefined ? this.renderItems(this.state.cart.filter((X) => X.MerchantShopName === shopName)) : this.renderItems(this.props.data.filter((X) => X.MerchantShopName === shopName))}
-                                        </tbody>
-                                    </table>
-                                </>
-                            )
-                        })
-                    }
-                    {
-                        this.props.history !== undefined &&
-                        <div style={{ textAlign: "right", padding: "30px 30px", backgroundColor: "white" }}>
-
-                            <div className="row">
-                                <div className="col-10" style={{ fontWeight: "bold" }}>  Subtotal </div>
-                                <div className="col-2" ><Currency value={this.state.subtotal}></Currency></div>
+                {
+                    this.props.history !== undefined &&
+                    <div className="cart-checkout">
+                        <div className='row'>
+                            <div className="col-4" >
+                                {this.props.history !== undefined ?
+                                    <>
+                                        <Checkbox
+                                            checked={this.state.selectedProductDetailList.length === 0 ? false :
+                                                this.state.cart.length === this.state.selectedProductDetailList.length ? true : false}
+                                            indeterminate={this.state.selectedProductDetailList.length === 0 ? false : this.state.cart.length === this.state.selectedProductDetailList.length ? false : true}
+                                            onClick={() => this.handleAllProductSellect(null, this.state.selectedProductDetailList)}
+                                        />
+                                        All
+                                    </> : ""
+                                }
                             </div>
-                            {/* <div className="row">
-                                    <div className="col-10" style={{ fontWeight: "bold" }}>  Shipping </div>
-                                    <div className="col-2" ><Currency value={this.state.shipping}></Currency></div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-10" style={{ fontWeight: "bold" }}>  Tax </div>
-                                    <div className="col-2" ><Currency value={this.state.tax}></Currency></div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-10" style={{ fontWeight: "bold" }}>  Total </div>
-                                    <div className="col-2" ><Currency value={this.state.total}></Currency></div>
-                                </div> */}
-                            <div className="mt-5">
+                            <div className="col-8 checkout-button">
                                 <button className="btn btn-primary" variant="outlined" color="primary" style={{ borderRadius: "5px" }}
-                                    onClick={() => this.CheckOutOnClick(this.state.selectedProductDetailList)}
-                                > Checkout
-                                </button>
+                                    onClick={() => this.CheckOutOnClick(this.state.selectedProductDetailList)}>
+                                    Checkout  ( <Currency value={this.state.subtotal}></Currency> )</button>
                             </div>
                         </div>
-                    }
-                </div >
+
+
+
+                    </div>
+                }
             </div >
         );
     }
@@ -468,4 +464,4 @@ const mapDispatchToProps = (dispatch) => {
 
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCart);
+export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCart_side);

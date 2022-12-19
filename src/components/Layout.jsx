@@ -28,6 +28,7 @@ import AccountLayout from "./account/AccountLayout";
 import BlogPageCategory from "./blog/BlogPageCategory";
 import BlogPagePost from "./blog/BlogPagePost";
 import PageCart from "./shop/ShopPageCart";
+import PageCart_side from "./shop/ShopPageCart_side";
 import ShopPageReceipt from "./shop/ShopPageReceipt";
 
 import DeliveryFee from "./shop/ShopPageDeliveryFee";
@@ -302,6 +303,7 @@ function Layout(props) {
                   />
                   {productLayouts}
                   <Route exact path="/shop/cart" component={PageCart} />
+                  <Route exact path="/shop/sidecart" component={PageCart_side} />
                   {/* <Route exact path="/shop/ShopPageReceipt" component={ShopPageReceipt} /> */}
 
                   <Route

@@ -25,10 +25,20 @@ import { Cart20Svg, Cross10Svg } from "../../svg";
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import HeaderProductDetails from "./HeaderProductDetails";
 
+
+
+import { Drawer } from '@mui/material';
+import { Button } from "@mui/material";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import PageCart_side from "../shop/ShopPageCart_side";
 function Header(props) {
   const { layout } = props;
   const [show, setShow] = useState(false);
   const [isproductPage, setisproductPage] = useState(false);
+
+
+  const [cartOpen, setCartOpen] = useState(false);
+
 
   const showFrom = 510;
   const classes = classNames('totop', {
@@ -120,8 +130,16 @@ function Header(props) {
                       url="/login"
                       value={0}
                       icon={<Cart20Svg />}
+                      onClick={() => {
+                        setCartOpen(true)
+                        console.log("hi")
+                      }}
                     />
-                    : <IndicatorCart />
+                    :
+                    <IndicatorCart 
+                    onClick={() => {
+                      setCartOpen(true)
+                    }} />
                 }
                 <IndicatorAccount />
               </div>
@@ -132,6 +150,17 @@ function Header(props) {
                 <HeaderProductDetails productDetails={currentProductDetails} />
               </div>
             </div>
+        }
+        {
+          <div >
+            <Drawer
+              PaperProps={{
+                sx: { width: "380px" },
+              }}
+              anchor='right' open={cartOpen} onClose={() => setCartOpen(false)}>
+              <PageCart_side history={"cart"} />
+            </Drawer>
+          </div>
         }
       </>
     )

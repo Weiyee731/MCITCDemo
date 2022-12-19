@@ -34,7 +34,9 @@ class IndicatorCart extends React.Component {
       this.props.CallViewProductWishlist({ userID: localStorage.getItem("id") })
     }
   }
-
+  setCartOpen(bool) {
+    console.log("click".bool);
+  }
   render() {
     var totals;
     if (this.props.cart.extraLines.length > 0) {
@@ -126,10 +128,12 @@ class IndicatorCart extends React.Component {
       );
     });
 
+
     if (this.props.productcart !== undefined && this.props.productcart[0] !== undefined && this.props.productcart[0].ReturnVal === undefined) {
       return (
         <Indicator
-          url="/shop/cart"
+          // url="/shop/cart"
+          onClick={() => this.props.onClick()}
           value={this.props.productcart.length}
           icon={<Cart20Svg />}
         />
@@ -137,7 +141,8 @@ class IndicatorCart extends React.Component {
     } else {
       return (
         <Indicator
-          url="/shop/cart"
+          // url="/shop/cart"
+          onClick={() => this.props.onClick()}
           value={0}
           icon={<Cart20Svg />}
         />

@@ -529,7 +529,6 @@ class PagePayment extends Component {
 
     let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
 
-    console.log("dadasdsada", bankingdata)
     let URL = "https://myemporia.my/payment/check.php"
     const config = { headers: { 'Content-Type': 'multipart/form-data' } }
     const formData = new FormData()
@@ -948,7 +947,6 @@ class PagePayment extends Component {
       return <Redirect to="cart" />;
     }
 
-    console.log("dddasdas", this.state)
     return (
       <React.Fragment>
         <div className="cart">

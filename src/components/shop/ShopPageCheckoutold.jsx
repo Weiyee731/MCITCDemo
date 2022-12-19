@@ -16,7 +16,7 @@
 // import { GitAction } from "../../store/action/gitAction";
 // import StepProgressBar from "react-step-progress";
 // import "react-step-progress/dist/index.css";
-// import PageCart from "./ShopPageCart";
+// import PageCart from "./ShopCodachi: New Pet";
 // import PageCompleted from "./ShopPageCompleted";
 // import { toast } from "react-toastify";
 // import axios from "axios";
