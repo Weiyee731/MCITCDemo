@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link,withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { url } from "../../services/utils";
 
 // application
@@ -142,6 +142,7 @@ class ProductDetails extends Component {
                         productQuantity: parseInt(x.ProductQuantity) + quantity,
                         productName: product.ProductName
                     })
+                    toast.success("The item is successfully added to the cart")
                 }
             })
 
@@ -154,6 +155,7 @@ class ProductDetails extends Component {
                     applyingPromoCode: 0,
                     productName: product.ProductName
                 })
+                toast.success("The item is successfully added to the cart")
             }
         } else
             this.login()
@@ -233,8 +235,7 @@ class ProductDetails extends Component {
 
         prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
         let merchant = product.ReturnVal !== undefined && product.ReturnVal !== "0" && product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
-        let variation = product.ReturnVal !== undefined && product.ReturnVal !== "0" && product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
-
+        let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
 
         const LayoutListing = () => {
             return (
@@ -426,7 +427,7 @@ class ProductDetails extends Component {
                                 <div className="product__sidebar">
                                     <div className="product__prices">{prices}</div>
                                     {
-                                        variation !== null && variation !== "" && variation.ProductVariation !== "None" &&
+                                        variation !== null && variation !== "" && variation !== undefined && variation.ProductVariation !== "None" &&
                                         (
                                             <div className="product__option">
                                                 <label
@@ -434,7 +435,6 @@ class ProductDetails extends Component {
                                                 >
                                                     {variation.ProductVariation}
                                                 </label>
-
                                                 <div className="product__variation">
                                                     {
                                                         variation !== null &&
@@ -494,9 +494,9 @@ class ProductDetails extends Component {
                                                 <div className="product__actions-item product__actions-item--addtocart mx-1">
                                                     <button
                                                         type="button"
-                                                        disabled={this.state.isVariationSet === true ?
-                                                            (this.state.productQuantity > 0 ? false : true) :
-                                                            (product.ProductStockAmount > 0 ? false : true)
+                                                        disabled={this.state.isVariationSet !== false ?
+                                                            (product.ProductStockAmount > 0 ? false : true) :
+                                                            (this.state.productQuantity > 0 ? false : true)
                                                         }
                                                         onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(product, quantity) : this.login()}
                                                         className="btn btn-primary product-card__addtocart"

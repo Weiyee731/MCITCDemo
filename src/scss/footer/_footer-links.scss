@@ -27,6 +27,10 @@
     }
 }
 
+.footer-logoImg {
+    height: 3.5vw;
+}
+
 
 @media (max-width: breakpoint(sm-end)) {
     .footer-links__title {
@@ -35,5 +39,14 @@
     .footer-links {
         margin-top: 42px;
         text-align: center;
+    }
+    .footer-logoImg {
+        height: 20.5vw;
+    }
+}
+
+@media (min-width: breakpoint(md-start)) and (max-width: breakpoint(lg-end)) {
+    .footer-logoImg {
+        height: 5.5vw;
     }
 }

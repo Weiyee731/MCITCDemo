@@ -44,21 +44,20 @@ export default function Footer() {
       <div className="container">
         <div className="site-footer__widgets">
           <div className="row">
-            <div className="col-12 col-md-3 col-lg-5">
+            <div className="col-12 col-md-3 col-lg-5 site-footer__widget footer-links">
               <h6 className='footer-links__title'>ABOUT US</h6>
               <Link to="/" onClick={() => window.scrollTo(0,0)}>
                 <img
-                  className="site-header__logo_img"
+                  className="footer-logoImg"
                   src={Logo}
                   alt=""
-                  style={{ height: "3.5vw" }}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = Logo;
                   }}
                 />
               </Link>
-              <p>MyEmporia is a virtual shopping mall where you can get your goods with QUALITY GUARANTEE and 99.99% Satisfaction Guarantee.</p>
+              <Typography variant="body1" className="footer-links__list">MyEmporia is a virtual shopping mall where you can get your goods with QUALITY GUARANTEE and 99.99% Satisfaction Guarantee.</Typography>
             </div>
             <div className="col-12 col-md-3 col-lg-2">
               {/* <FooterContacts /> */}

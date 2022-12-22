@@ -12,10 +12,12 @@ import theme from '../../data/theme';
 import picture1 from '../../components/site/Picture2_1.png'
 import picture2 from '../../components/site/Picture2_2.png'
 import picture3 from '../../components/site/Picture2_3.png'
+import { Typography } from '@mui/material';
+
 function SitePageHowToBuy() {
     const breadcrumb = [
         { title: 'Home', url: '' },
-        { title: 'Frequently Asked Questions', url: '' },
+        { title: 'How To Buy', url: '' },
     ];
 
     return (
@@ -28,74 +30,69 @@ function SitePageHowToBuy() {
 
             <div className="block faq">
                 <div className="container">
-
-
                     <div className="faq__section">
                         <div className="faq__section-title">
-                            <h3 class="fa fa-credit-card" style={{ fontSize: "36px" }} >Payment Information</h3>
+                            <Typography variant='h1' style={{ fontSize: "36px", display: 'flex', justifyContent: "center" }} >Payment Information</Typography>
                         </div>
                         <div className="faq__section-body">
                             <div className="row">
                                 <div className="faq__section-column col-12 col-lg-6">
-                                    <div className="typography">
-                                        <h6><u>What Payment Methods Are Available?</u></h6>
-
-                                        <p>
-                                            We are provided these payment methods
-                                            <ul>
-                                                {/* <li>E-Wallet</li> */}
-                                                <li>Credit / Debit Card</li>
-                                                <li>Online Banking</li>
-                                            </ul>
-                                        </p>
-                                    </div>
+                                    {/* <div className="typography"> */}
+                                    <h6><u>What Payment Methods Are Available?</u></h6>
+                                    <Typography variant='subtitle1'>
+                                        We are provided these payment methods
+                                        <ul style={{listStyleType: "lower-roman"}}>
+                                            {/* <li>E-Wallet</li> */}
+                                            <li>Credit / Debit Card</li>
+                                            <li>Online Banking</li>
+                                        </ul>
+                                    </Typography>
+                                    {/* </div> */}
                                 </div>
                                 <div className="faq__section-column col-12 col-lg-6">
-                                    <div className="typography">
-                                        <h6><u>What should I do if I made double payment?</u></h6>
-
-                                        <p>
-                                            In the event you have been issued double payment for a single amount owed, you may refer to the steps below in resolving this issue for the following payment methods:
-                                            <br />
-                                            <u>Credit / Debit Card</u>
-                                            <br />
-                                            your payment will be released as credit note in 7-14 working days. *TnC apply
-
-
-                                        </p>
-                                    </div>
+                                    {/* <div className="typography"> */}
+                                    <h6><u>What should I do if I made double payment?</u></h6>
+                                    <Typography variant='subtitle1'>
+                                        In the event you have been issued double payment for a single amount owed, you may refer to the steps below in resolving this issue for the following payment methods:
+                                        <br />
+                                        <u>Credit / Debit Card</u>
+                                        <br />
+                                        your payment will be released as credit note in 7-14 working days. *TnC apply
+                                    </Typography>
+                                    {/* </div> */}
                                 </div>
                             </div>
-                            <div>
+                            <br />
+                            <Typography variant='subtitle1'>
                                 Welcome to MyEmporia. Here we strive to provide buyers the best deals in town to bring more value for the price you pay. Have a look at below to know how to buy on Emporia.
-                                <br />
+                                <br /><br />
                                 <u> <b> Add To Cart </b> </u>
-                                <br />  
+                                <br />
                                 Browse throught our various categories or use the search bar to find what your favourite product.On the product page, you can click on  "<b>Add To Cart</b>" to place in your cart first.
-                                <br />  <br />
-                                <img
-                                    style={{ width: "100%", justifyContent: "center" }}
-                                    src={picture1} />
-                                <br />  <br />
+                                <br /><br />
+                                <div style={{ display: "flex", justifyContent: "center" }}>
+                                    <img style={{ width: "80%" }} src={picture1} />
+                                </div>
+                                <br /><br />
                                 <u> <b> Shopping Cart </b> </u>
-                                <ul>
-                                    <li>1) After you successful adding the product to your cart, the shopping cart button will show a notification badge with how many product in your Cart</li>
-                                    <br />  
-                                    <img
-                                        style={{ width: "100%", justifyContent: "center" }}
-                                        src={picture2} />
-                                    <br />  <br />
-                                    <li>2) Select the products you want and "<b>Check out</b>"</li>
-                                    <li>3) On the checkout page, check that your delivery address is complete and correct to avoid lost parcel.</li>
-                                    <li>4. Select your preferred payment method and tap on "Proceed" to proceed with payment! </li>
-                                    <br />  <br />
-                                    <img
-                                        style={{ width: "100%", justifyContent: "center" }}
-                                        src={picture3} />
-                                    <br />  <br />
+                                <ul style={{listStyleType: "lower-alpha"}}>
+                                    <li>After you successful adding the product to your cart, the shopping cart button will show a notification badge with how many product in your Cart</li>
+                                    <br />
+                                    <div style={{ display: "flex", justifyContent: "center" }}>
+                                        <img style={{ width: "80%" }} src={picture2} />
+                                    </div>
+                                    <br /><br />
+                                    <li>Select the products you want and "<b>Check out</b>"</li>
+                                    <li>On the checkout page, check that your delivery address is complete and correct to avoid lost parcel.</li>
+                                    <li>Select your preferred payment method and tap on "Proceed" to proceed with payment! </li>
+                                    <br /><br />
+                                    <div style={{ display: "flex", justifyContent: "center" }}>
+                                        <img style={{ width: "80%" }} src={picture3} />
+                                    </div>
+                                    <br /><br />
                                 </ul>
                                 Have other queries? Tell us more using the Chat bot.
-                            </div>
+                            </Typography>
                         </div>
                     </div>
                 </div>

@@ -229,7 +229,7 @@ class BlockSlideShow extends Component {
                 dangerouslySetInnerHTML={{ __html: slide.text }}
               />
             </div>
-            <div className="block-slideshow__slide-button" style={{ position: "absolute", bottom:"2vw", left:"45%" }}>
+            <div className="block-slideshow__slide-button">
               <Link to={"/shop/ProductListing/type:Merchant&typevalue:" + 0} className="btn btn-primary btn-lg" style={{ borderRadius: "5px" }}>
                 Shop Now
               </Link>

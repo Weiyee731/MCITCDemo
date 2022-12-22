@@ -1627,6 +1627,7 @@ export class GitEpic {
             "Product_ItemListByType?Type=" + action.payload.type +
             "&TypeValue=" + action.payload.typeValue +
             "&USERID=" + action.payload.userId +
+            // "&ProjectID=2" + 
             "&PRODUCTPERPAGE=" + action.payload.productPage +
             "&PAGE=" + action.payload.page)
             .then(response => response.json())
@@ -1827,7 +1828,7 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.GetProductCategoryListing), map(action => {
       return dispatch => {
         try {
-          return fetch(url + "Product_CategoryListing")
+          return fetch(url + "Product_CategoryListing?ProjectID=2")
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)

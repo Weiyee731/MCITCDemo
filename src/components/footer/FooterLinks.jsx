@@ -11,7 +11,7 @@ export default function FooterLinks(props) {
 
     const linksList = items.map((item, index) => (
         <li key={index} className="footer-links__item">
-            <Link to={item.url} className="footer-links__link">
+            <Link to={item.url} className="footer-links__link" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 {item.title}
             </Link>
         </li>
@@ -21,7 +21,7 @@ export default function FooterLinks(props) {
         <div className="site-footer__widget footer-links">
             <h6 className="footer-links__title">{title}</h6>
             <ul className="footer-links__list" >
-               <Typography variant='body1'>{linksList}</Typography> 
+                <Typography variant='body1'>{linksList}</Typography>
             </ul>
         </div>
     );

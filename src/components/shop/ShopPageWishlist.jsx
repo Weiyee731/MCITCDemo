@@ -114,7 +114,7 @@ function ShopPageWishlist(props) {
                         </td>
                         <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? item.ProductPrice : 0} currency={"RM"} /></td>
                         <td className="wishlist__column wishlist__column--tocart">
-                            <button className={'btn btn-primary btn-sm'} style={{borderRadius:"5px"}}><Link to={url.product(item)} className="wishlist__product-name">View Product</Link></button>
+                            <Link to={url.product(item)} className="wishlist__product-name"><button className={'btn btn-primary btn-sm'} style={{ borderRadius: "5px" }}>View Product</button></Link>
                         </td>
                         <td className="wishlist__column wishlist__column--remove">
                             <button type="button" onClick={() => deleteWishlist(item)} className={'btn btn-light btn-sm btn-svg-icon'} aria-label="Remove"><Cross12Svg /></button>

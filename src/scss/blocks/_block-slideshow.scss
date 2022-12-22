@@ -9,15 +9,19 @@
 $local-dots-height: 18px;
 $local-dots-padding: 4px;
 $local-dot-size: $local-dots-height - $local-dots-padding * 2;
+
 .block-slideshow {
     margin-bottom: $block-margin-bottom;
     position: relative;
+
     .slick-slide>div>div {
         vertical-align: middle;
+
         &:focus {
             outline: none;
         }
     }
+
     .slick-dots {
         width: auto;
         bottom: 16px;
@@ -28,13 +32,16 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
         font-size: 0;
         list-style: none;
         margin: 0;
+
         @include direction {
             transform: translateX(-50% * $transform-direction);
             #{$inset-inline-start}: 50%;
         }
+
         li {
             display: inline-block;
         }
+
         button {
             width: $local-dot-size;
             height: $local-dot-size;
@@ -42,16 +49,20 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
             border: none;
             border-radius: $local-dot-size / 2;
             background: $block-slideshow-dot-default-color;
+
             &:focus {
                 outline: none;
             }
+
             &:hover {
                 background: $block-slideshow-dot-hover-color;
             }
         }
+
         .slick-active button {
             background: $block-slideshow-dot-active-color;
         }
+
         li+li {
             margin-left: 6px;
         }
@@ -63,6 +74,7 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
     display: block;
     color: inherit;
     vertical-align: middle;
+
     &:hover {
         color: inherit;
     }
@@ -86,6 +98,7 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
 .block-slideshow__slide-content {
     position: absolute;
     bottom: 46px;
+
     @include direction {
         #{$inset-inline-start}: 46px;
     }
@@ -113,9 +126,13 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
     margin-top: 40px;
     opacity: 0;
     transition: all 1s .4s;
+    position: absolute;
+    bottom: 2vw;
+    left: 45%;
 }
 
 .block-slideshow .correct-slick-active {
+
     .block-slideshow__slide-title,
     .block-slideshow__slide-text,
     .block-slideshow__slide-button {
@@ -125,50 +142,64 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
 }
 
 .block-slideshow--layout--full {
+
     // margin-top: 20px;
     @media (min-width: breakpoint(md-start)) {
-        .block-slideshow__body, .block-slideshow__slide {
+
+        .block-slideshow__body,
+        .block-slideshow__slide {
             // height: 440px;
             height: 31vw;
             background-color: black;
         }
+
         .block-slideshow__slide-content {
             bottom: 54px;
+
             @include direction {
                 #{$inset-inline-start}: 72px;
             }
         }
+
         .block-slideshow__slide-title {
             margin-bottom: 16px;
             line-height: 36px;
         }
+
         .block-slideshow__slide-button {
             margin-top: 48px;
         }
     }
+
     @media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(lg-end)) {
         .block-slideshow__slide-image--desktop {
             background-position: -70px top;
         }
+
         .block-slideshow__slide-content {
             @include direction {
                 #{$inset-inline-start}: 56px;
             }
         }
     }
+
     @media (min-width: breakpoint(md-start)) and (max-width: breakpoint(md-end)) {
         .block-slideshow__slide-image--desktop {
             background-position: -190px top;
         }
+
         .block-slideshow__slide-content {
             bottom: 56px;
+
             @include direction {
                 #{$inset-inline-start}: 48px;
             }
         }
+
         .block-slideshow__slide-title {
             margin-bottom: 8px;
         }
+
         .block-slideshow__slide-button {
             margin-top: 40px;
         }
@@ -177,13 +208,16 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
 
 .block-slideshow--layout--with-departments {
     $local-margin: 15px;
+
     .block-slideshow__body {
         margin-top: $local-margin;
         height: 375px - $local-margin;
     }
+
     .block-slideshow__slide {
         height: 375px - $local-margin;
     }
+
     @media (min-width: breakpoint(lg-start)) {
         .block-slideshow__body {
             @include direction {
@@ -191,6 +225,7 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
             }
         }
     }
+
     @media (max-width: breakpoint(md-end)) {
         .block-slideshow__slide-button .btn {
             @include btn-sm();
@@ -199,33 +234,57 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
 }
 
 @media (max-width: breakpoint(sm-end)) {
+
     .block-slideshow__body,
     .block-slideshow__slide {
-        height: 395px;
+        height: 230px;
     }
-    .block-slideshow__slide-image--mobile {
-        background-position: top center;
-        display: block;
-    }
-    .block-slideshow__slide-content {
-        top: 30px;
-        text-align: center;
-        @include direction {
-            #{$inset-inline-start}: 5%;
-            #{$inset-inline-end}: 5%;
-        }
-    }
+
+    // .block-slideshow__slide-image--mobile {
+    //     background-position: top center;
+    //     display: block;
+    // }
+    // .block-slideshow__slide-content {
+    //     top: 30px;
+    //     text-align: center;
+    //     @include direction {
+    //         #{$inset-inline-start}: 5%;
+    //         #{$inset-inline-end}: 5%;
+    //     }
+    // }
     .block-slideshow__slide-title {
         font-size: 26px;
         line-height: 32px;
     }
+
     .block-slideshow__slide-text {
         display: none;
     }
+
     .block-slideshow__slide-button {
-        margin-top: 24px;
+        // margin-top: 24px;
+        position: absolute;
+        bottom: 2vw;
+        left: 40%;
     }
+
     .block-slideshow__slide-button .btn {
         @include btn-sm();
+    }
+
+    .block-slideshow__slide-image {
+        position: absolute;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 65vw;
+        opacity: 0.9;
+        background-repeat: repeat;
+        object-fit: contain;
+    }
+
+    .block-slideshow {
+        margin-bottom: 35px;
+        position: relative;
     }
 }
