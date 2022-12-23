@@ -22,7 +22,8 @@ class LoadingPanel extends Component {
             loadingObject: {
                 width: "100%",
                 height: "100%",
-                display: "flex"
+                display: "flex",
+                backgroundColor: this.props.backgroundColor ? this.props.backgroundColor : "white",
             },
             centerObject: {
                 margin: "auto"

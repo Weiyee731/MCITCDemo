@@ -3,7 +3,7 @@ import 'rxjs'
 import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 import axios from "axios";
-const { filter, map } = require('rxjs/operators');
+const { filter, map,switchMap  } = require('rxjs/operators');
 const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/"
 export class GitEpic {
   User_Login = action$ =>
@@ -291,7 +291,7 @@ export class GitEpic {
             "&LISTPERPAGE=" + action.payload.LISTPERPAGE +
             "&PAGE=" + action.payload.PAGE +
             "&PROJECTID=2"
-            )
+          )
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
@@ -914,30 +914,76 @@ export class GitEpic {
   //     }
   //   });
 
-  updateProductCart = action$ =>
-    action$.pipe(filter(action => action.type === GitAction.UpdateProductCart), map(action => {
-      return dispatch => {
-        try {
-          return fetch(url +
-            "Product_UpdateProductCart?USERCARTID=" + action.payload.userCartID +
-            "&PRODUCTQUANTITY=" + action.payload.productQuantity)
-            .then(response => response.json())
-            .then(json => {
-              json = JSON.parse(json)
-              if (json[0].ReturnVal === 1) {
-                return dispatch({ type: GitAction.UpdatedProductCart, payload: JSON.parse(json[0].ReturnData) });
-              } else {
-                toast.error(json[0].ReturnMsg)
-                return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
-              }
-            });
-        } catch (error) {
-          toast.error("Error Code: updateProductCart. Please check on URL")
-          return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
-        }
-      }
-    }));
+  // updateProductCart = action$ =>
+  //   action$.pipe(filter(action => action.type === GitAction.UpdateProductCart), map(action => {
+  //     return dispatch => {
+  //       try {
+  //         return fetch(url +
+  //           "Product_UpdateProductCart?USERCARTID=" + action.payload.userCartID +
+  //           "&PRODUCTQUANTITY=" + action.payload.productQuantity)
+  //           .then(response => response.json())
+  //           .then(json => {
+  //             json = JSON.parse(json)
+  //             if (json[0].ReturnVal === 1) {
+  //               switchMap(action => this.viewProductCartList({ userID: action.payload.userID }))
+                
+  //               // return dispatch({ type: GitAction.UpdatedProductCart, payload: JSON.parse(json[0].ReturnData) });
+  //             } else {
+  //               toast.error(json[0].ReturnMsg)
+  //               return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
+  //             }
+  //           });
+  //       } catch (error) {
+  //         toast.error("Error Code: updateProductCart. Please check on URL")
+  //         return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
+  //       }
+  //     }
+  //   }));
+    
+    updateProductCart = action$ =>
+    action$.pipe(
+      filter(action => action.type === GitAction.UpdateProductCart),
+      map(action => {
+        return dispatch => {
+          try {
+            return fetch(url +
+              "Product_UpdateProductCart?USERCARTID=" + action.payload.userCartID +
+              "&PRODUCTQUANTITY=" + action.payload.productQuantity)
+              .then(response => response.json())
+              .then(json => {
+                json = JSON.parse(json)
+                if (json[0].ReturnVal === 1) {
+                  try{
+                    fetch(url +
+                      "Product_ItemListInCartByUserID?USERID=" + action.payload.userID)
+                      .then(response => response.json())
+                      .then(json => {
+                        json = JSON.parse(json)
+                        if (json[0].ReturnVal === 1) {
+                          console.log("updateProductCart", json)
+                          return dispatch({ type: GitAction.UpdatedProductCart, payload: JSON.parse(json[0].ReturnData) });
 
+                        }
+                      else{
+                        return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
+                  }})
+                  }
+                  catch(e){console.log(e)}
+                 
+                } else {
+                  toast.error(json[0].ReturnMsg)
+                  return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
+                }
+              });
+          } catch (error) {
+            toast.error("Error Code: updateProductCart. Please check on URL")
+            return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
+          }
+        }
+      })
+      // ,
+      // switchMap(action => this.viewProductCartList({ userID: action.payload.userID }))
+    );
   // updateProductCart = (action$) =>
   //   action$.ofType(GitAction.UpdateProductCart).switchMap(async ({ payload }) => {
   //     try {
@@ -1066,6 +1112,7 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.ViewProductCart), map(action => {
       return dispatch => {
         try {
+          console.log("anyyy", "viewProductCartList")
           return fetch(url +
             "Product_ItemListInCartByUserID?USERID=" + action.payload.userID)
             .then(response => response.json())
@@ -1599,7 +1646,7 @@ export class GitEpic {
             "Product_ItemListByType?Type=" + action.payload.type +
             "&TypeValue=" + action.payload.typeValue +
             "&USERID=" + action.payload.userId +
-            "&PROJECTID=2"+
+            "&PROJECTID=2" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
             "&PAGE=" + action.payload.page)
             .then(response => response.json())
@@ -1653,7 +1700,7 @@ export class GitEpic {
         try {
           return fetch(url +
             "Product_ItemDetailByProductID?ProductID=" + action.payload.productId +
-            "&USERID=" + action.payload.userId + 
+            "&USERID=" + action.payload.userId +
             "&PROJECTID=2")
             .then(response => response.json())
             .then(json => {
@@ -1824,7 +1871,7 @@ export class GitEpic {
       }
     }));
 
-    getAllCategoriesListing = action$ =>
+  getAllCategoriesListing = action$ =>
     action$.pipe(filter(action => action.type === GitAction.GetProductCategoryListing), map(action => {
       return dispatch => {
         try {

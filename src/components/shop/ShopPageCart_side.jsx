@@ -28,7 +28,7 @@ import { red } from '@mui/material/colors';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-
+import LoadingPanel from '../shared/loadingPanel'
 class ShopPageCart_side extends Component {
     constructor(props) {
         super(props);
@@ -51,7 +51,8 @@ class ShopPageCart_side extends Component {
             // selectedList: [],
             selectedProductDetailList: [],
             isDataAccepted: false,
-            isCheckOutSubmit: false
+            isCheckOutSubmit: false,
+            loading: false
         };
         this.setDetails = this.setDetails.bind(this)
         this.filterShop = this.filterShop.bind(this)
@@ -120,15 +121,14 @@ class ShopPageCart_side extends Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.productcart !== this.props.productcart) {
-
             if (this.props.productcart.length > 0) {
                 this.state.cart.map((x, index) => {
                     this.state.cart.splice(0, this.state.cart.length)
                 })
                 this.filterShop(this.props.productcart)
                 this.setDetails(this.props.productcart)
+                this.setState({ loading: false })
             }
-
         }
     }
 
@@ -147,7 +147,7 @@ class ShopPageCart_side extends Component {
                 productName: item.product.ProductName
             })
         }
-        this.setState({ selectedIndex: item.id })
+        this.setState({ selectedIndex: item.id, loading: true })
     };
 
     // ---------------------------------------------------- Check Out ------------------------------------
@@ -347,7 +347,11 @@ class ShopPageCart_side extends Component {
         return (
 
             <div className="cart block container_" >
-                {console.log("shopName", this.state.MerchantShopName)}
+                {
+
+                    this.state.loading && <LoadingPanel backgroundColor="#bfbfbf94" />
+                }
+
                 {/* {
                     this.props.history !== undefined ?
                         <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
@@ -360,7 +364,7 @@ class ShopPageCart_side extends Component {
                                 <table className="cart__table cart-table" size="small">
                                     <div className='shopName'>
                                         <Typography>
-                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>"Shop Name " + <KeyboardArrowRightIcon /></>}</Link>
+                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>
                                         </Typography>
                                     </div>
                                     <tbody className="cart-table__body">
@@ -460,6 +464,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         CallDeleteProductCart: (prodData) => dispatch(GitAction.CallDeleteProductCart(prodData)),
         CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
+        CallViewProductCart: (prodData) => dispatch(GitAction.CallViewProductCart(prodData)),
     }
 
 };
