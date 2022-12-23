@@ -34,7 +34,7 @@ export default function Footer() {
     { title: "Shipping & Delivery", url: "/site/shippingdelivery" },
     // { title: "International Product Policy", url: "" },
     // { title: "How to Return", url: "/site/howtoreturn" },
-    { title: "Question?", url: "/site/faq" },
+    // { title: "Question?", url: "/site/faq" },
     // { title: "Contact Us", url: "/site/contact-us" },
   ];
 

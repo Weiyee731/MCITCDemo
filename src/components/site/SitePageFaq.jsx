@@ -13,6 +13,7 @@ import PageHeader from '../shared/PageHeader';
 
 // data stubs
 import theme from '../../data/theme';
+import { Typography } from '@mui/material';
 
   const FAB = () => (
     <></>
@@ -56,11 +57,12 @@ function SitePageFaq() {
            
             <PageHeader header="Frequently Asked Questions" breadcrumb={breadcrumb} />
 
+            
             <div className="block faq">
                 <div className="container">
                     <div className="faq__section">
-                        <div className="faq__section-title">
-                            <h3>Shipping Information</h3>
+                        <div className="faq__section-title" style={{ display: 'flex', justifyContent: "center", }}>
+                            <Typography variant='h6' style={{ fontSize: "28px", fontWeight:700 }} >Shipping Information</Typography>
                         </div>
                         <div className="faq__section-body">
                             <div className="row">

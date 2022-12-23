@@ -32,7 +32,7 @@ function SitePageHowToBuy() {
                 <div className="container">
                     <div className="faq__section">
                         <div className="faq__section-title">
-                            <Typography variant='h1' style={{ fontSize: "36px", display: 'flex', justifyContent: "center" }} >Payment Information</Typography>
+                            <Typography variant='h6' style={{ fontSize: "36px", display: 'flex', justifyContent: "center", fontWeight:700 }} >Payment Information</Typography>
                         </div>
                         <div className="faq__section-body">
                             <div className="row">
@@ -55,9 +55,9 @@ function SitePageHowToBuy() {
                                     <Typography variant='subtitle1'>
                                         In the event you have been issued double payment for a single amount owed, you may refer to the steps below in resolving this issue for the following payment methods:
                                         <br />
-                                        <u>Credit / Debit Card</u>
                                         <br />
-                                        your payment will be released as credit note in 7-14 working days. *TnC apply
+                                        <h6><u>Credit / Debit Card</u></h6>
+                                        your payment will be released as credit note in 7-14 working days. <Typography variant='caption'>*T&C apply</Typography>
                                     </Typography>
                                     {/* </div> */}
                                 </div>
@@ -91,7 +91,7 @@ function SitePageHowToBuy() {
                                     </div>
                                     <br /><br />
                                 </ul>
-                                Have other queries? Tell us more using the Chat bot.
+                                Have other queries? Tell us more using the <u style={{color:"blue", cursor: "pointer"}}>Chat bot</u>
                             </Typography>
                         </div>
                     </div>
