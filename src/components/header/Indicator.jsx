@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import LoginComponent from "../../pages/login/login.component";
 
 class Indicator extends Component {
   constructor(props) {
@@ -20,8 +21,8 @@ class Indicator extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { open } = this.state;
-    const { onOpen, onClose } = this.props;
+    const { open, openPopOutLogin } = this.state;
+    const { onOpen, onClose, onOpenPopOut, onClosePopOut } = this.props;
 
     if (open !== prevState.open) {
       if (open && onOpen) {
@@ -31,6 +32,15 @@ class Indicator extends Component {
         onClose();
       }
     }
+    // popOut for login
+    // if (openPopOutLogin !== prevState.open) {
+    //   if (openPopOutLogin && onOpenPopOut) {
+    //     onOpenPopOut();
+    //   }
+    //   if (!openPopOutLogin && onClosePopOut) {
+    //     onClosePopOut();
+    //   }
+    // }
   }
 
   componentWillUnmount() {
@@ -55,6 +65,10 @@ class Indicator extends Component {
     if (dropdown) {
       event.preventDefault();
     }
+
+    // if (popOut){
+    //   console.log("popOut")
+    // }
 
     this.toggle();
 
@@ -81,9 +95,14 @@ class Indicator extends Component {
     }));
   }
 
+  getpopOutState = (loginPopOut) => {
+    this.props.getIndPopOutState(loginPopOut)
+    // this.setState({loginPopOut: loginPopOut})
+  }
+
   render() {
     const { open } = this.state;
-    const { url, className, icon } = this.props;
+    const { url, className, icon, loginPopOut } = this.props;
     let { value, dropdown } = this.props;
     let button;
 
@@ -97,6 +116,16 @@ class Indicator extends Component {
         {value}
       </span>
     );
+
+    if (loginPopOut) {
+      <button
+        type="button"
+        className="indicator__button"
+        onClick={this.handleButtonClick}
+      >
+        {title}
+      </button>
+    }
 
     if (url) {
       button = (
@@ -134,6 +163,9 @@ class Indicator extends Component {
       <div className={classes} ref={this.setWrapperRef}>
         {button}
         {dropdown}
+        {loginPopOut !== undefined && loginPopOut !== false &&
+          <LoginComponent loginPopOut={loginPopOut} getpopOutState={this.getpopOutState} />
+        }
       </div>
     );
   }
@@ -156,6 +188,10 @@ Indicator.propTypes = {
   onOpen: PropTypes.func,
   /** callback function that is called when the dropdown is closed */
   onClose: PropTypes.func,
+  /** callback function that is called when the dropdown is opened */
+  onOpenPopOut: PropTypes.func,
+  /** callback function that is called when the dropdown is closed */
+  onClosePopOut: PropTypes.func,
 };
 
 export default Indicator;

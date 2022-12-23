@@ -14,6 +14,7 @@ import { Link,withRouter } from "react-router-dom";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { toast } from "react-toastify";
 import { Typography, } from "@mui/material";
+import LoginComponent from "../../pages/login/login.component";
 
 class HeaderProductDetails extends Component {
   constructor(props) {
@@ -75,7 +76,8 @@ class HeaderProductDetails extends Component {
   }
 
   login() {
-    this.props.history.push("/login");
+    // this.props.history.push("/login");
+    this.setState({loginPopOut:true})
   }
 
   handleWishlist = (product) => {
@@ -130,6 +132,11 @@ class HeaderProductDetails extends Component {
     )
   }
 
+  getpopOutState = (loginPopOut) => {
+    if (this.state.loginPopOut === true)
+    this.setState({ loginPopOut: false })
+}
+
   render() {
     const { productDetails, } = this.props;
     const { quantity, } = this.state;
@@ -147,6 +154,9 @@ class HeaderProductDetails extends Component {
 
     return (
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center", zIndex: 999 }}>
+        {this.state.loginPopOut !== undefined && this.state.loginPopOut !== false &&
+                        <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
+                    }
         {
           productDetails !== undefined && productDetails !== null && productDetails.map((product) => {
             const productImage = JSON.parse(product.ProductImages).map((image) => { return (image.ProductMediaUrl) })

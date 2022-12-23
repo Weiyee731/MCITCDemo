@@ -28,6 +28,8 @@ import { Typography, Card, } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import ReactTooltip from "react-tooltip";
 import { FacebookIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
+import IndicatorAccount from "../header/IndicatorAccount";
+import LoginComponent from "../../pages/login/login.component";
 
 class ProductDetails extends Component {
     constructor(props) {
@@ -164,7 +166,9 @@ class ProductDetails extends Component {
     login() {
         // browserHistory.push("/login");
         // window.location.reload(false);
-        this.props.history.push("/login");
+        // this.props.history.push({pathname: "/login", loginPopOut: true});
+        this.setState({loginPopOut:true})
+
     }
 
     handleWishlist = (product) => {
@@ -215,6 +219,11 @@ class ProductDetails extends Component {
                     </button>
                 )
         )
+    }
+
+    getpopOutState = (loginPopOut) => {
+        if (this.state.loginPopOut === true)
+        this.setState({ loginPopOut: false })
     }
 
     render() {
@@ -532,6 +541,9 @@ class ProductDetails extends Component {
                     >
                         {LayoutListing()}
                     </Card>
+                    {this.state.loginPopOut !== undefined && this.state.loginPopOut !== false &&
+                        <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
+                    }
                 </div >
                 :
                 <>

@@ -35,6 +35,7 @@ function Header(props) {
   const { layout } = props;
   const [show, setShow] = useState(false);
   const [isproductPage, setisproductPage] = useState(false);
+  const [openloginPopOut, setopenloginPopOut] = useState(false);
 
 
   const [cartOpen, setCartOpen] = useState(false);
@@ -127,7 +128,8 @@ function Header(props) {
                 {
                   localStorage.getItem("isLogin") === "false" ?
                     <Indicator
-                      url="/login"
+                      // url="/login"
+                      // loginPopOut={loginPopOut}
                       value={0}
                       icon={<Cart20Svg />}
                       onClick={() => {
@@ -141,7 +143,7 @@ function Header(props) {
                       setCartOpen(true)
                     }} />
                 }
-                <IndicatorAccount />
+                <IndicatorAccount/>
               </div>
             </div>
             :
@@ -150,6 +152,7 @@ function Header(props) {
                 <HeaderProductDetails productDetails={currentProductDetails} />
               </div>
             </div>
+            
         }
         {
           <div >

@@ -33,6 +33,7 @@ import FormControl from '@mui/material/FormControl';
 import Divider from '@mui/material/Divider';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import LoginComponent from "../../pages/login/login.component";
 var CryptoJS = require("crypto-js");
 
 const cookies = new Cookies();
@@ -93,8 +94,8 @@ class IndicatorAccount extends Component {
       rememberMe: false,
       isToLogin: false,
       hidden: true,
-
       isLogout: false,
+      openloginPopOut: false,
     };
 
     this.handleOnLogin = this.handleOnLogin.bind(this);
@@ -152,9 +153,17 @@ class IndicatorAccount extends Component {
 
   toggleShow() {
     this.setState({ hidden: !this.state.hidden });
+    this.setState({ openloginPopOut: !this.state.openloginPopOut })
   }
 
+
   render() {
+
+    const getIndPopOutState = (loginPopOut) => {
+
+      if (this.state.openloginPopOut === true)
+        this.setState({ openloginPopOut: false })
+    }
     // if (this.props.currentUser[0]) {
     //   localStorage.setItem("isLogin", true);
     //   localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
@@ -228,7 +237,10 @@ class IndicatorAccount extends Component {
         {localStorage.getItem("isLogin") !== "false" ? (
           <Indicator url="/account" dropdown={dropdown} icon={<Person20Svg />} />
         ) : (
-          <Indicator url="/login" icon={<Person20Svg />} />
+          <>
+            <Indicator onClick={(e) => this.setState({ openloginPopOut: !this.state.openloginPopOut })} loginPopOut={this.state.openloginPopOut} getIndPopOutState={getIndPopOutState} icon={<Person20Svg />} />
+          </>
+
         )}
       </>
     );

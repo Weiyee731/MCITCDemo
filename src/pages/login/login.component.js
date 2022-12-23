@@ -28,6 +28,8 @@ import Button from "@mui/material/Button";
 import DialogContentText from '@mui/material/DialogContentText';
 import { isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import { toast } from "react-toastify";
+import { Modal, ModalBody } from "reactstrap";
+import CloseIcon from '@mui/icons-material/Close';
 // import OtpInput from "react-otp-input";
 import { Link, withRouter } from "react-router-dom";
 var CryptoJS = require("crypto-js");
@@ -94,6 +96,8 @@ const initialState = {
   GETOTPTYPE: "EMAIL",
   UPDATETYPE: "PASSWORD",
   otp: "",
+
+  loginPopOut: false,
 }
 
 class LoginComponent extends Component {
@@ -121,7 +125,19 @@ class LoginComponent extends Component {
     return ciphertext
   }
 
+  componentDidMount() {
+    // if (this.props.location.pathname === '/')
+    // {
+      this.setState({ loginPopOut: this.props.loginPopOut })
+    // }
+    // else this.setState({ loginPopOut: this.props.location.loginPopOut })
+    
+  }
+
   componentDidUpdate(prevProps) {
+    if (prevProps.loginPopOut !== this.props.loginPopOut) {
+      this.setState({ loginPopOut: this.props.loginPopOut })
+    }
     if (prevProps.currentUser !== this.props.currentUser) {
       if (this.props.currentUser.length > 0 && this.props.currentUser !== [] && this.props.currentUser !== undefined && this.props.currentUser[0].UserID !== undefined) {
         localStorage.setItem("isLogin", true);
@@ -188,8 +204,8 @@ class LoginComponent extends Component {
         // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
         // }
 
-        this.props.history.push("/");
-        // window.location.reload(false);
+        // this.props.history.push("/");
+        window.location.reload(true);
       } else {
         toast.error("The username and password does not match.")
       }
@@ -209,7 +225,8 @@ class LoginComponent extends Component {
       if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
         toast.success("Your password has been updated, try to login with new password");
         setTimeout(() => {
-          this.props.history.push("/login");
+          // this.props.history.push("/login");
+          window.location.reload(true)
         }, 3000)
 
       } else {
@@ -363,102 +380,116 @@ class LoginComponent extends Component {
   //   }
   // }
 
-
+  modalClose() {
+    this.setState({ loginPopOut: false })
+    this.props.getpopOutState(false)
+  }
 
   render() {
-
+    console.log("in login", this.props)
     return (
-      <div>
-        <form onSubmit={this.OnSubmitLogin} className="container block block--margin-top">
-          <div className="text-center">
-            <img
-              src={Logo}
-              alt="MyEmporia"
-              height="250px"
-              width="auto"
-              className="mx-auto"
-            ></img>
-          </div>
-          <Row className="justify-content-center">
-            <Col lg="5" md="5">
-              <h4>Sign In</h4>
-              <TextField id="username" label="Username" variant="outlined" className="w-100 my-2" value={this.state.username} onChange={({ target }) => { this.setState({ username: target.value }) }} error={this.state.usernameErr} helperText={this.state.usernameErr && "Invalid username"} />
-              <FormControl variant="outlined" className="w-100 my-2">
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <OutlinedInput
-                  id="password"
-                  label="Password"
-                  error={this.state.passwordErr}
-                  type={this.state.hidden ? 'password' : 'text'}
-                  value={this.state.password}
-                  onChange={({ target }) => { this.setState({ password: target.value }) }}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={this.toggleShow}
-                      >
-                        {this.state.hidden ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-                {this.state.passwordErr && <FormHelperText style={{ color: "red" }}>Invalid password</FormHelperText>}
-              </FormControl>
-              <div className="form-group">
-                <div className="custom-control custom-checkbox">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="customCheck1"
-                    value={this.state.rememberMe}
-                    onChange={({ target }) => {
-                      this.setState({ rememberMe: target.checked });
-                    }}
-                  />
-                  <label className="custom-control-label" htmlFor="customCheck1">
-                    Remember me
-                  </label>
-                </div>
+      <Modal
+        className="modal-dialog-centered"
+        isOpen={this.state.loginPopOut}
+        // isOpen={true}
+        toggle={() => this.modalClose()}>
+        <ModalBody>
+          <CloseIcon
+            className="closeIcon"
+            onClick={() => this.modalClose()}
+            data-dismiss="modal" />
+          <div>
+            <form onSubmit={this.OnSubmitLogin} className="container block block--margin-top">
+              <div className="text-center">
+                <img
+                  src={Logo}
+                  alt="MyEmporia"
+                  height="250px"
+                  width="auto"
+                  className="mx-auto"
+                ></img>
               </div>
-              <div className="LoginForm-Submit">
-                <button
-                  type="submit"
-                  variant="contained"
-                  className="btn btn-primary w-100"
-                  style={{ borderRadius: "5px" }}
-                  disabled={this.state.username !== '' && this.state.password !== '' ? false : true}
-                >
-                  Sign In
-                </button>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <p className=" text-left" style={{ fontSize: "13px", paddingTop: "10px" }}>
-                    New to MyEmporia?
-                    {/* <Link className="nav-link" to={"/signup"}>
+              <div className="">
+                <div lg="5" md="5">
+                  <div className="d-flex justify-content-center"><h4>Sign In</h4></div>
+                  
+                  <TextField id="username" label="Username" variant="outlined" className="w-100 my-2" value={this.state.username} onChange={({ target }) => { this.setState({ username: target.value }) }} error={this.state.usernameErr} helperText={this.state.usernameErr && "Invalid username"} />
+                  <FormControl variant="outlined" className="w-100 my-2">
+                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <OutlinedInput
+                      id="password"
+                      label="Password"
+                      error={this.state.passwordErr}
+                      type={this.state.hidden ? 'password' : 'text'}
+                      value={this.state.password}
+                      onChange={({ target }) => { this.setState({ password: target.value }) }}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={this.toggleShow}
+                          >
+                            {this.state.hidden ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                    {this.state.passwordErr && <FormHelperText style={{ color: "red" }}>Invalid password</FormHelperText>}
+                  </FormControl>
+                  <div className="form-group">
+                    <div className="custom-control custom-checkbox">
+                      <input
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="customCheck1"
+                        value={this.state.rememberMe}
+                        onChange={({ target }) => {
+                          this.setState({ rememberMe: target.checked });
+                        }}
+                      />
+                      <label className="custom-control-label" htmlFor="customCheck1">
+                        Remember me
+                      </label>
+                    </div>
+                  </div>
+                  <div className="LoginForm-Submit">
+                    <button
+                      type="submit"
+                      variant="contained"
+                      className="btn btn-primary w-100"
+                      style={{ borderRadius: "5px" }}
+                      disabled={this.state.username !== '' && this.state.password !== '' ? false : true}
+                    >
+                      Sign In
+                    </button>
+                  </div>
+                  <div className="row">
+                    <div className="col-6">
+                      <p className=" text-left" style={{ fontSize: "13px", paddingTop: "10px" }}>
+                        New to MyEmporia?
+                        <Link className="nav-link" to={"/signup"}>
                       Sign Up
-                    </Link> */}
-                    <label onClick={() =>
-                      <>
-                        {this.props.history.push("/signup")}
-                      </>
-                    }>
-                      Sign Up
-                    </label>
-                    {/* <a href="/signup"><b>Sign Up</b></a> */}
-                  </p>
-                </div>
-                <div className="col-6">
-                  <p className="forgot-password text-right">
-                    <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
-                  </p>
-                </div>
-              </div>
+                    </Link>
+                        {/* <label onClick={() =>
+                          <>
+                            {this.props.history.push("/signup")}
+                          </>
+                        }>
+                          Sign Up
+                        </label> */}
+                        {/* <a href="/signup"><b>Sign Up</b></a> */}
+                      </p>
+                    </div>
+                    <div className="col-6">
+                      <p className="forgot-password text-right">
+                        <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
+                      </p>
+                    </div>
+                  </div>
 
-            </Col>
-            {/* <Divider orientation="vertical" flexItem /> */}
-            {/* <Col lg="5" md="5">
+                </div>
+                {/* <Divider orientation="vertical" flexItem /> */}
+                {/* <Col lg="5" md="5">
               <h4>Login with</h4>
               <div className="justify-content-center text-center">
                 <FacebookLogin
@@ -483,136 +514,139 @@ class LoginComponent extends Component {
                 </div>
               </div>
             </Col> */}
-          </Row>
-        </form>
+              </div>
+            </form>
 
-        <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth="true" maxWidth="xs">
-          <DialogContent dividers>
-            <div className="text-center">
-              <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>
-            </div>
-            <div className="text-center mt-2">
-              <h5>Forget Password</h5>
-            </div>
+            <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth="true" maxWidth="xs">
+              <DialogContent dividers>
+                <div className="text-center">
+                  <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>
+                </div>
+                <div className="text-center mt-2">
+                  <h5>Forget Password</h5>
+                </div>
 
-            {
-              this.state.isEmailVerify === false ?
-                (
-                  <>
-                    <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
-                      <label>Enter your email address below to reset password</label>
-                    </div>
-                    <div className="text-center my-4">
-                      <TextField id="username" label="Email Address" name="userEmail" variant="outlined" className="w-100 my-2" value={this.state.resetEmail} onChange={({ target }) => { this.setState({ resetEmail: target.value }) }} error={this.state.resetEmailErr} helperText={this.state.resetEmailErr && "Invalid Email"} />
-                      {this.state.isResetEmailErr && (
-                        <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
-                          <strong>Please key in a valid email</strong>
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-center mb-5">
-                      <Button className="btn btn-primary" size="large" color="primary" variant="contained" type="submit" onClick={() => this.verifyEmail()}>
-                        Confirm Email
-                      </Button>
-                    </div>
-                  </>
-                ) :
-                (
-                  <>
-                    <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
-                      <label>Please Key In New Password</label>
-                    </div>
-                    <div className="text-center my-4">
-                      <TextField
-                        id="newpassword"
-                        size="small"
-                        className="font"
-                        variant="outlined"
-                        error={this.state.passwordErr}
-                        type={this.state.hidden ? "password" : "text"}
-                        value={this.state.UpdatedValue}
-                        onChange={this.handleChangeforPassword.bind(this)}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={this.toggleShow}
-                              >
-                                {this.state.hidden ? (
-                                  <VisibilityOff />
-                                ) : (
-                                  <Visibility />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                      {this.state.validPassword === false && this.state.UpdatedValue !== "" && this.state.startCountDown === false && (
-                        <FormHelperText style={{ color: "red" }}>
-                          Invalid password
-                        </FormHelperText>
-                      )}
-                    </div>
-
-                    <div className="font link-button change-contact-mail" style={{ textAlign: "right" }}>
-                      {this.state.startCountDown === true ? (
-                        <div className="link-button" disabled>
-                          {this.state.counter + " seconds is remaining"}
+                {
+                  this.state.isEmailVerify === false ?
+                    (
+                      <>
+                        <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
+                          <label>Enter your email address below to reset password</label>
                         </div>
-                      ) : (
-                        <button
-                          className="font link-button change-contact-mail"
-                          disabled={this.state.validPassword ? false : true}
-                          onClick={() => this.getNewOTP()}
-                        >
-                          {" "}
-                          Send OTP to my email
-                        </button>
-                      )}
-                    </div>
-
-                    {this.state.enableOTP ? (
-                      <div>
-                        <div className="row contactrowStyle">
-                          <div className="col-6">
-                            <p className=" font">
-                              Enter the code we sent to your email{" "}
-                              {this.state.resetEmail.length > 0 && this.censorEmail(this.state.resetEmail)}
+                        <div className="text-center my-4">
+                          <TextField id="username" label="Email Address" name="userEmail" variant="outlined" className="w-100 my-2" value={this.state.resetEmail} onChange={({ target }) => { this.setState({ resetEmail: target.value }) }} error={this.state.resetEmailErr} helperText={this.state.resetEmailErr && "Invalid Email"} />
+                          {this.state.isResetEmailErr && (
+                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
+                              <strong>Please key in a valid email</strong>
                             </p>
-                          </div>
+                          )}
                         </div>
-                        <div className="row contactrowStyle">
-                          <div className="col-6 font otp">
-                            {/* <OtpInput
+                        <div className="text-center mb-5">
+                          <Button className="btn btn-primary" size="large" color="primary" variant="contained" type="submit" onClick={() => this.verifyEmail()}>
+                            Confirm Email
+                          </Button>
+                        </div>
+                      </>
+                    ) :
+                    (
+                      <>
+                        <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
+                          <label>Please Key In New Password</label>
+                        </div>
+                        <div className="text-center my-4">
+                          <TextField
+                            id="newpassword"
+                            size="small"
+                            className="font"
+                            variant="outlined"
+                            error={this.state.passwordErr}
+                            type={this.state.hidden ? "password" : "text"}
+                            value={this.state.UpdatedValue}
+                            onChange={this.handleChangeforPassword.bind(this)}
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={this.toggleShow}
+                                  >
+                                    {this.state.hidden ? (
+                                      <VisibilityOff />
+                                    ) : (
+                                      <Visibility />
+                                    )}
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                          {this.state.validPassword === false && this.state.UpdatedValue !== "" && this.state.startCountDown === false && (
+                            <FormHelperText style={{ color: "red" }}>
+                              Invalid password
+                            </FormHelperText>
+                          )}
+                        </div>
+
+                        <div className="font link-button change-contact-mail" style={{ textAlign: "right" }}>
+                          {this.state.startCountDown === true ? (
+                            <div className="link-button" disabled>
+                              {this.state.counter + " seconds is remaining"}
+                            </div>
+                          ) : (
+                            <button
+                              className="font link-button change-contact-mail"
+                              disabled={this.state.validPassword ? false : true}
+                              onClick={() => this.getNewOTP()}
+                            >
+                              {" "}
+                              Send OTP to my email
+                            </button>
+                          )}
+                        </div>
+
+                        {this.state.enableOTP ? (
+                          <div>
+                            <div className="row contactrowStyle">
+                              <div className="col-6">
+                                <p className=" font">
+                                  Enter the code we sent to your email{" "}
+                                  {this.state.resetEmail.length > 0 && this.censorEmail(this.state.resetEmail)}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="row contactrowStyle">
+                              <div className="col-6 font otp">
+                                {/* <OtpInput
                               value={this.state.otp}
                               onChange={this.handleChange}
                               numInputs={6}
                               separator={<span>-</span>}
                               inputStyle={inputstyle}
                             /> */}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                        ) : (
+                          ""
+                        )}
 
-                    {/* <div className="text-center mb-5">
+                        {/* <div className="text-center mb-5">
                       <Button className="btn btn-primary" size="large" color="primary" variant="contained" type="submit" onClick={() => this.verifyEmail()}>
                         Send OTP
                       </Button>
                     </div> */}
 
-                  </>
-                )
-            }
+                      </>
+                    )
+                }
 
-            {/* </form> */}
-          </DialogContent>
-        </Dialog>
-      </div>
+                {/* </form> */}
+              </DialogContent>
+            </Dialog>
+          </div>
+        </ModalBody>
+      </Modal>
+
 
 
     );

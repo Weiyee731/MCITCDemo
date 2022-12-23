@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 // application
 import Indicator from '../header/Indicator';
+import IndicatorAccount from "../header/IndicatorAccount";
 import {
     Menu18x14Svg,
     LogoSmallSvg,
@@ -85,11 +86,19 @@ class MobileHeader extends Component {
 
                                 <IndicatorCart />
 
-                                <Indicator
+                                {
+                                    localStorage.getItem('isLogin') === 'true' &&
+                                        <Indicator
                                     className="indicator--mobile"
-                                    url={localStorage.getItem('isLogin') === 'true' ? '/account' : '/login'}
+                                    url={'/account'}
                                     icon={<Person20Svg />}
-                                />
+                                />  
+                                }
+                                {
+                                    localStorage.getItem('isLogin') === 'false' &&
+                                        <IndicatorAccount />  
+                                }
+                                
 
                             </div>
                         </div>
