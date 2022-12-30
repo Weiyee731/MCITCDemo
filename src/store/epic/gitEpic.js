@@ -1059,11 +1059,33 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
+              // if (json[0].ReturnVal === 1) {
+              //   return dispatch({ type: GitAction.AddedProductCart, payload: JSON.parse(json[0].ReturnData) });
+              // } else {
+              //   toast.error(json[0].ReturnMsg)
+              //   return dispatch({ type: GitAction.AddedProductCart, payload: [] });
+              // }
               if (json[0].ReturnVal === 1) {
-                return dispatch({ type: GitAction.AddedProductCart, payload: JSON.parse(json[0].ReturnData) });
+                try{
+                  fetch(url +
+                    "Product_ItemListInCartByUserID?USERID=" + action.payload.userID)
+                    .then(response => response.json())
+                    .then(json => {
+                      json = JSON.parse(json)
+                      if (json[0].ReturnVal === 1) {
+                        console.log("updateProductCart", json)
+                        return dispatch({ type: GitAction.AddedProductCart, payload: JSON.parse(json[0].ReturnData) });
+
+                      }
+                    else{
+                      return dispatch({ type: GitAction.AddedProductCart, payload: [] });
+                }})
+                }
+                catch(e){console.log(e)}
+               
               } else {
                 toast.error(json[0].ReturnMsg)
-                return dispatch({ type: GitAction.AddedProductCart, payload: [] });
+                return dispatch({ type: GitAction.DeletedProductCart, payload: [] });
               }
             });
         } catch (error) {

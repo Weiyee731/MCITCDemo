@@ -431,6 +431,9 @@ class ShopPageCart_side extends Component {
         if (this.state.cart.length) {
             if (this.state.isDataAccepted === true) {
                 return (
+                //     <Link to={"/account/profile"} className="btn btn-secondary btn-sm">
+                //     Edit Profile
+                //   </Link>
                     <PageCheckout
                         data={this.state.selectedProductDetailList}
                         merchant={this.state.selectedProductDetailList.filter((ele, ind) => ind === this.state.selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))}
