@@ -15,6 +15,7 @@ import { cartAddItem } from '../../store/cart';
 import { url } from '../../services/utils';
 import { GitAction } from "../../store/action/gitAction";
 import { browserHistory } from "react-router";
+import { toast } from 'react-toastify';
 
 function Suggestions(props) {
     const {
@@ -38,6 +39,7 @@ function Suggestions(props) {
                     productQuantity: parseInt(x.ProductQuantity) + 1,
                     productName: product.data.ProductName
                 })
+                toast.success("The item was successfully updated to the cart")
             })
 
             if (found === false) {
@@ -49,6 +51,7 @@ function Suggestions(props) {
                     applyingPromoCode: 0,
                     productName: product.data.ProductName
                 })
+                toast.success("The item was successfully added to the cart")
             }
         }
 
@@ -75,7 +78,7 @@ function Suggestions(props) {
                     <div className="suggestions__item-meta">Variation: {product.variation.ProductVariationValue}</div>
                     {/* <div className="suggestions__item-meta">SKU: 83690/32</div> */}
                 </div>
-                <div className="suggestions__item-price" style={{margin:"auto"}}>
+                <div className="suggestions__item-price" style={{ margin: "auto" }}>
                     <Currency value={product.variation.ProductVariationPrice} />
                 </div>
                 {context === 'header' && (
@@ -111,7 +114,7 @@ function Suggestions(props) {
     ));
 
     return (
-        <div className={rootClasses} style={{top:"50px", padding:"10px", marginLeft:"10px"}}>
+        <div className={rootClasses} style={{ top: "50px", padding: "10px", marginLeft: "10px" }}>
             <ul className="suggestions__list">
                 {list}
             </ul>
