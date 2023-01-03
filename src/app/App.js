@@ -15,6 +15,7 @@ import { GlobalStyles } from "../components/globalStyles";
 import { lightTheme, darkTheme } from "../components/Themes";
 import { useDarkMode } from "../components/useDarkMode";
 import Toggle from "../components/Toggler";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 class App extends Component {
   constructor(props) {
@@ -75,6 +76,7 @@ class App extends Component {
     const { locale } = this.props;
     const { messages, direction } = languages[locale];
     return (
+      <GoogleOAuthProvider clientId="411428302197-ej2dqpaja8trlt2ms39n69b4bov05jqs.apps.googleusercontent.com">
       <ThemeProvider theme={lightTheme}>
         <GlobalStyles />
         <IntlProvider locale={locale} messages={messages}>
@@ -97,6 +99,7 @@ class App extends Component {
           </Router>
         </IntlProvider>
       </ThemeProvider>
+      </GoogleOAuthProvider>
     );
   }
 }

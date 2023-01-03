@@ -33,6 +33,13 @@ import CloseIcon from '@mui/icons-material/Close';
 // import OtpInput from "react-otp-input";
 import { Link, withRouter } from "react-router-dom";
 import SignupComponent from "../signup/signup.component";
+
+import jwt_decode from "jwt-decode";
+// import FacebookLogin from '@greatsumini/react-facebook-login';
+// import SocialLogin from "./socialLogin"
+import { FBLogin } from "./FBLogin"
+import {CustomGoogleLogin } from "./GoogleLogin"
+
 var CryptoJS = require("crypto-js");
 
 function mapStateToProps(state) {
@@ -99,7 +106,7 @@ const initialState = {
   otp: "",
 
   loginPopOut: false,
-  signupPopOut:false,
+  signupPopOut: false,
 }
 
 class LoginComponent extends Component {
@@ -112,8 +119,8 @@ class LoginComponent extends Component {
     this.OnSubmitLogin = this.OnSubmitLogin.bind(this);
     // this.resetPassword = this.resetPassword.bind(this);
     this.verifyEmail = this.verifyEmail.bind(this);
-    this.responseFacebook = this.responseFacebook.bind(this);
-    this.responseGoogle = this.responseGoogle.bind(this);
+    // this.responseFacebook = this.responseFacebook.bind(this);
+    // this.responseGoogle = this.responseGoogle.bind(this);
   }
 
   OnSubmitLogin(e) {
@@ -383,115 +390,107 @@ class LoginComponent extends Component {
   // }
 
   modalClose() {
-    this.setState({ loginPopOut: false, signupPopOut: false})
+    this.setState({ loginPopOut: false, signupPopOut: false })
     this.props.getpopOutState(false)
   }
 
-  getSignUp = (loginPopOut,signupPopOut) => {
-    this.setState({ loginPopOut: loginPopOut, signupPopOut: signupPopOut})
+  getSignUp = (loginPopOut, signupPopOut) => {
+    this.setState({ loginPopOut: loginPopOut, signupPopOut: signupPopOut })
   }
+
 
   render() {
     return (
       <>
-      <Modal
-        className="modal-dialog-centered"
-        isOpen={this.state.loginPopOut}
-        // isOpen={true}
-        toggle={() => this.modalClose()}>
-        <ModalBody>
-          <CloseIcon
-            className="closeIcon"
-            onClick={() => this.modalClose()}
-            data-dismiss="modal" />
-          <div>
-            <form onSubmit={this.OnSubmitLogin} className="container block block--margin-top">
-              <div className="text-center">
-                <img
-                  src={Logo}
-                  alt="MyEmporia"
-                  height="250px"
-                  width="auto"
-                  className="mx-auto"
-                ></img>
-              </div>
-              <div className="">
-                <div lg="5" md="5">
-                  <div className="d-flex justify-content-center"><h4>Sign In</h4></div>
+        <Modal
+          className="modal-dialog-centered"
+          isOpen={this.state.loginPopOut}
+          // isOpen={true}
+          toggle={() => this.modalClose()}>
+          <ModalBody>
+            <CloseIcon
+              className="closeIcon"
+              onClick={() => this.modalClose()}
+              data-dismiss="modal" />
+            <div>
+              <form onSubmit={this.OnSubmitLogin} className="container block block--margin-top">
+                <div className="text-center">
+                  <img
+                    src={Logo}
+                    alt="MyEmporia"
+                    height="250px"
+                    width="auto"
+                    className="mx-auto"
+                  ></img>
+                </div>
+                <div className="">
+                  <div lg="5" md="5">
+                    <div className="d-flex justify-content-center"><h4>Sign In</h4></div>
 
-                  <TextField id="username" label="Username" variant="outlined" className="w-100 my-2" value={this.state.username} onChange={({ target }) => { this.setState({ username: target.value }) }} error={this.state.usernameErr} helperText={this.state.usernameErr && "Invalid username"} />
-                  <FormControl variant="outlined" className="w-100 my-2">
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <OutlinedInput
-                      id="password"
-                      label="Password"
-                      error={this.state.passwordErr}
-                      type={this.state.hidden ? 'password' : 'text'}
-                      value={this.state.password}
-                      onChange={({ target }) => { this.setState({ password: target.value }) }}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={this.toggleShow}
-                          >
-                            {this.state.hidden ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                    {this.state.passwordErr && <FormHelperText style={{ color: "red" }}>Invalid password</FormHelperText>}
-                  </FormControl>
-                  <div className="form-group">
-                    <div className="custom-control custom-checkbox">
-                      <input
-                        type="checkbox"
-                        className="custom-control-input"
-                        id="customCheck1"
-                        value={this.state.rememberMe}
-                        onChange={({ target }) => {
-                          this.setState({ rememberMe: target.checked });
-                        }}
+                    <TextField id="username" label="Username" variant="outlined" className="w-100 my-2" value={this.state.username} onChange={({ target }) => { this.setState({ username: target.value }) }} error={this.state.usernameErr} helperText={this.state.usernameErr && "Invalid username"} />
+                    <FormControl variant="outlined" className="w-100 my-2">
+                      <InputLabel htmlFor="password">Password</InputLabel>
+                      <OutlinedInput
+                        id="password"
+                        label="Password"
+                        error={this.state.passwordErr}
+                        type={this.state.hidden ? 'password' : 'text'}
+                        value={this.state.password}
+                        onChange={({ target }) => { this.setState({ password: target.value }) }}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={this.toggleShow}
+                            >
+                              {this.state.hidden ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
                       />
-                      <label className="custom-control-label" htmlFor="customCheck1">
-                        Remember me
-                      </label>
+                      {this.state.passwordErr && <FormHelperText style={{ color: "red" }}>Invalid password</FormHelperText>}
+                    </FormControl>
+                    <div className="form-group">
+                      <div className="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id="customCheck1"
+                          value={this.state.rememberMe}
+                          onChange={({ target }) => {
+                            this.setState({ rememberMe: target.checked });
+                          }}
+                        />
+                        <label className="custom-control-label" htmlFor="customCheck1">
+                          Remember me
+                        </label>
+                      </div>
                     </div>
-                  </div>
-                  <div className="LoginForm-Submit">
-                    <button
-                      type="submit"
-                      variant="contained"
-                      className="btn btn-primary w-100"
-                      style={{ borderRadius: "5px" }}
-                      disabled={this.state.username !== '' && this.state.password !== '' ? false : true}
-                    >
-                      Sign In
-                    </button>
-                  </div>
-                  <div className="row">
-                    <div className="col-6">
-                      <p className=" text-left" style={{ fontSize: "13px", paddingTop: "10px" }}>
-                        New to MyEmporia?
-                        {/* <Link onClick={() =>this.setState({loginPopOut:false})} className="nav-link" to={"/signup"}>
+                    <div className="LoginForm-Submit">
+                      <button
+                        type="submit"
+                        variant="contained"
+                        className="btn btn-primary w-100"
+                        style={{ borderRadius: "5px" }}
+                        disabled={this.state.username !== '' && this.state.password !== '' ? false : true}
+                      >
+                        Sign In
+                      </button>
+                    </div>
+
+                    {/* <Link onClick={() => this.setState({ loginPopOut: false, signupPopOut: true })}>
                       Sign Up
+
                     </Link> */}
-                        <Link onClick={() => this.setState({ loginPopOut: false, signupPopOut: true})}>
-                          Sign Up
-                          {/* {
-                            this.state.signupPopOut &&
-                            <SignupComponent/>
-                          } */}
-                        </Link>
-                        
-                        {/* <label onClick={() =>
+
+                    {/* <label onClick={() =>
                           <>
                             {this.props.history.push("/signup")}
                           </>
                         }>
                           Sign Up
-                        </label> */}
-                        {/* <a href="/signup"><b>Sign Up</b></a> */}
+                        </label>
+                        <a href="/signup"><b>Sign Up</b></a>
                       </p>
                     </div>
                     <div className="col-6">
@@ -499,182 +498,176 @@ class LoginComponent extends Component {
                         <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
                       </p>
                     </div>
+                  </div> */}
+
+                  </div>
+                  <Divider className="pt-4 pb-4">OR</Divider>
+                  <div className="text-center w-100 xx-large">
+                    <CustomGoogleLogin/>
+                    <FBLogin />
+                  </div>
+                  <div>
+                    <div>
+                      <p className="text-center" style={{ fontSize: "13px", paddingTop: "10px" }}>
+                        New to MyEmporia?
+                        <Link onClick={() => this.setState({ loginPopOut: false, signupPopOut: true })}>
+                          Sign Up
+                        </Link>
+                      </p>
+                    </div>
+                    <div>
+                      <p className="forgot-password text-center">
+                        <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth="true" maxWidth="xs">
+                <DialogContent dividers>
+                  <div className="text-center">
+                    <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>
+                  </div>
+                  <div className="text-center mt-2">
+                    <h5>Forget Password</h5>
                   </div>
 
-                </div>
-                {/* <Divider orientation="vertical" flexItem /> */}
-                {/* <Col lg="5" md="5">
-              <h4>Login with</h4>
-              <div className="justify-content-center text-center">
-                <FacebookLogin
-                  appId="1088597931155576"
-                  autoLoad={false}
-                  fields="name,email,picture"
-                  callback={(e) => this.responseFacebook(e)}
-                  cssClass="w-100 facebook-btn py-2 my-1"
-                  icon="fa-facebook"
-                  textButton="   FACEBOOK"
-                />
-                <GoogleLogin
-                  clientId="111111213444444" //CLIENTID NOT CREATED YET
-                  buttonText="GOOGLE"
-                  onSuccess={(e) => this.responseGoogle(e)}
-                  onFailure={(e) => this.responseGoogle(e)}
-                  className="w-100 justify-content-center my-1"
-                />
-                <hr />
-                <div>
-                  New to MyEmporia? <a href="/signup"><b>Sign Up</b></a>
-                </div>
-              </div>
-            </Col> */}
-              </div>
-            </form>
+                  {
+                    this.state.isEmailVerify === false ?
+                      (
+                        <>
+                          <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
+                            <label>Enter your email address below to reset password</label>
+                          </div>
+                          <div className="text-center my-4">
+                            <TextField id="username" label="Email Address" name="userEmail" variant="outlined" className="w-100 my-2" value={this.state.resetEmail} onChange={({ target }) => { this.setState({ resetEmail: target.value }) }} error={this.state.resetEmailErr} helperText={this.state.resetEmailErr && "Invalid Email"} />
+                            {this.state.isResetEmailErr && (
+                              <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
+                                <strong>Please key in a valid email</strong>
+                              </p>
+                            )}
+                          </div>
+                          <div className="text-center mb-5">
+                            <Button className="btn btn-primary" size="large" color="primary" variant="contained" type="submit" onClick={() => this.verifyEmail()}>
+                              Confirm Email
+                            </Button>
+                          </div>
+                        </>
+                      ) :
+                      (
+                        <>
+                          <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
+                            <label>Please Key In New Password</label>
+                          </div>
+                          <div className="text-center my-4">
+                            <TextField
+                              id="newpassword"
+                              size="small"
+                              className="font"
+                              variant="outlined"
+                              error={this.state.passwordErr}
+                              type={this.state.hidden ? "password" : "text"}
+                              value={this.state.UpdatedValue}
+                              onChange={this.handleChangeforPassword.bind(this)}
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <IconButton
+                                      aria-label="toggle password visibility"
+                                      onClick={this.toggleShow}
+                                    >
+                                      {this.state.hidden ? (
+                                        <VisibilityOff />
+                                      ) : (
+                                        <Visibility />
+                                      )}
+                                    </IconButton>
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                            {this.state.validPassword === false && this.state.UpdatedValue !== "" && this.state.startCountDown === false && (
+                              <FormHelperText style={{ color: "red" }}>
+                                Invalid password
+                              </FormHelperText>
+                            )}
+                          </div>
 
-            <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth="true" maxWidth="xs">
-              <DialogContent dividers>
-                <div className="text-center">
-                  <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>
-                </div>
-                <div className="text-center mt-2">
-                  <h5>Forget Password</h5>
-                </div>
-
-                {
-                  this.state.isEmailVerify === false ?
-                    (
-                      <>
-                        <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
-                          <label>Enter your email address below to reset password</label>
-                        </div>
-                        <div className="text-center my-4">
-                          <TextField id="username" label="Email Address" name="userEmail" variant="outlined" className="w-100 my-2" value={this.state.resetEmail} onChange={({ target }) => { this.setState({ resetEmail: target.value }) }} error={this.state.resetEmailErr} helperText={this.state.resetEmailErr && "Invalid Email"} />
-                          {this.state.isResetEmailErr && (
-                            <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
-                              <strong>Please key in a valid email</strong>
-                            </p>
-                          )}
-                        </div>
-                        <div className="text-center mb-5">
-                          <Button className="btn btn-primary" size="large" color="primary" variant="contained" type="submit" onClick={() => this.verifyEmail()}>
-                            Confirm Email
-                          </Button>
-                        </div>
-                      </>
-                    ) :
-                    (
-                      <>
-                        <div className="text-center mt-1 mb-4" style={{ color: "#909090" }}>
-                          <label>Please Key In New Password</label>
-                        </div>
-                        <div className="text-center my-4">
-                          <TextField
-                            id="newpassword"
-                            size="small"
-                            className="font"
-                            variant="outlined"
-                            error={this.state.passwordErr}
-                            type={this.state.hidden ? "password" : "text"}
-                            value={this.state.UpdatedValue}
-                            onChange={this.handleChangeforPassword.bind(this)}
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={this.toggleShow}
-                                  >
-                                    {this.state.hidden ? (
-                                      <VisibilityOff />
-                                    ) : (
-                                      <Visibility />
-                                    )}
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
-                          {this.state.validPassword === false && this.state.UpdatedValue !== "" && this.state.startCountDown === false && (
-                            <FormHelperText style={{ color: "red" }}>
-                              Invalid password
-                            </FormHelperText>
-                          )}
-                        </div>
-
-                        <div className="font link-button change-contact-mail" style={{ textAlign: "right" }}>
-                          {this.state.startCountDown === true ? (
-                            <div className="link-button" disabled>
-                              {this.state.counter + " seconds is remaining"}
-                            </div>
-                          ) : (
-                            <button
-                              className="font link-button change-contact-mail"
-                              disabled={this.state.validPassword ? false : true}
-                              onClick={() => this.getNewOTP()}
-                            >
-                              {" "}
-                              Send OTP to my email
-                            </button>
-                          )}
-                        </div>
-
-                        {this.state.enableOTP ? (
-                          <div>
-                            <div className="row contactrowStyle">
-                              <div className="col-6">
-                                <p className=" font">
-                                  Enter the code we sent to your email{" "}
-                                  {this.state.resetEmail.length > 0 && this.censorEmail(this.state.resetEmail)}
-                                </p>
+                          <div className="font link-button change-contact-mail" style={{ textAlign: "right" }}>
+                            {this.state.startCountDown === true ? (
+                              <div className="link-button" disabled>
+                                {this.state.counter + " seconds is remaining"}
                               </div>
-                            </div>
-                            <div className="row contactrowStyle">
-                              <div className="col-6 font otp">
-                                {/* <OtpInput
+                            ) : (
+                              <button
+                                className="font link-button change-contact-mail"
+                                disabled={this.state.validPassword ? false : true}
+                                onClick={() => this.getNewOTP()}
+                              >
+                                {" "}
+                                Send OTP to my email
+                              </button>
+                            )}
+                          </div>
+
+                          {this.state.enableOTP ? (
+                            <div>
+                              <div className="row contactrowStyle">
+                                <div className="col-6">
+                                  <p className=" font">
+                                    Enter the code we sent to your email{" "}
+                                    {this.state.resetEmail.length > 0 && this.censorEmail(this.state.resetEmail)}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="row contactrowStyle">
+                                <div className="col-6 font otp">
+                                  {/* <OtpInput
                               value={this.state.otp}
                               onChange={this.handleChange}
                               numInputs={6}
                               separator={<span>-</span>}
                               inputStyle={inputstyle}
                             /> */}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ) : (
-                          ""
-                        )}
+                          ) : (
+                            ""
+                          )}
 
-                        {/* <div className="text-center mb-5">
+                          {/* <div className="text-center mb-5">
                       <Button className="btn btn-primary" size="large" color="primary" variant="contained" type="submit" onClick={() => this.verifyEmail()}>
                         Send OTP
                       </Button>
                     </div> */}
 
-                      </>
-                    )
-                }
+                        </>
+                      )
+                  }
 
-                {/* </form> */}
-              </DialogContent>
-            </Dialog>
-          </div>
-        </ModalBody>
-      </Modal>
-      <Modal
-            className="modal-dialog-centered"
-            isOpen={this.state.signupPopOut}
-            // isOpen={true}
-            toggle={() => this.modalClose()}>
-            <ModalBody>
-                <CloseIcon
-                    className="closeIcon"
-                    onClick={() => this.modalClose()}
-                    data-dismiss="modal" />
-                <SignupComponent getSignUp={this.getSignUp}></SignupComponent>
-            </ModalBody>
+                  {/* </form> */}
+                </DialogContent>
+              </Dialog>
+            </div>
+          </ModalBody>
+        </Modal>
+        <Modal
+          className="modal-dialog-centered"
+          isOpen={this.state.signupPopOut}
+          // isOpen={true}
+          toggle={() => this.modalClose()}>
+          <ModalBody>
+            <CloseIcon
+              className="closeIcon"
+              onClick={() => this.modalClose()}
+              data-dismiss="modal" />
+            <SignupComponent getSignUp={this.getSignUp}></SignupComponent>
+          </ModalBody>
         </Modal>
       </>
-      
+
 
 
 
