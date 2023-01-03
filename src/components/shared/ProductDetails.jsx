@@ -58,6 +58,13 @@ class ProductDetails extends Component {
 
     }
 
+    componentWillUnmount() {
+        // fix Warning: Can't perform a React state update on an unmounted component
+        this.setState = (state,callback)=>{
+            return;
+        };
+    }
+
     componentDidMount() {
         const { product } = this.props
         window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
@@ -167,8 +174,8 @@ class ProductDetails extends Component {
         // browserHistory.push("/login");
         // window.location.reload(false);
         // this.props.history.push({pathname: "/login", loginPopOut: true});
+        this.props.getpopOutDetailsCard(false,true)
         this.setState({loginPopOut:true})
-
     }
 
     handleWishlist = (product) => {
@@ -540,9 +547,9 @@ class ProductDetails extends Component {
                         className={`product product--layout--${layout}`}
                     >
                         {LayoutListing()}
-                    </Card>
+                    </Card>{console.log("l")}
                     {this.state.loginPopOut !== undefined && this.state.loginPopOut !== false &&
-                        <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
+                        <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState}/>
                     }
                 </div >
                 :

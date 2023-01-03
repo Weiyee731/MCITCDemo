@@ -29,6 +29,7 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Chip from '@mui/material/Chip';
+import LoginComponent from "../../pages/login/login.component";
 
 function ProductCard(props) {
   const {
@@ -48,6 +49,7 @@ function ProductCard(props) {
   const baseColor = props !== undefined && props.baseColor
   const highlightColor = props !== undefined && props.highlightColor
   const [isQuickViewOpen, setQuickView] = useState(false);
+  const [loginPopOut, setloginPopOut] = useState(false);
   const [productData, setProduct] = useState([]);
 
   let badges = [];
@@ -57,7 +59,8 @@ function ProductCard(props) {
   let wishlistView;
 
   const login = () => {
-    this.props.history.push("/login");
+    // this.props.history.push("/login");
+    setloginPopOut(true)
   }
 
   const handleWishlist = (product) => {
@@ -276,6 +279,15 @@ function ProductCard(props) {
       </Card>
     )
   }
+const getpopOutState = (loginPopOut) => {
+  setloginPopOut(loginPopOut)
+}
+
+const getpopOutDetailsCard = (cardPopOut,loginPopOut) => {
+  setloginPopOut(loginPopOut)
+  setQuickView(cardPopOut)
+}
+
   return (
     <div className={containerClasses}>
       {props.currentData !== undefined ?
@@ -291,10 +303,12 @@ function ProductCard(props) {
           <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
             <Cross20Svg />
           </button>
-          <ProductDetails product={product} />
+          <ProductDetails product={product} getpopOutDetailsCard={getpopOutDetailsCard}/>
         </div>
       </Modal>
-
+      {loginPopOut !== undefined && loginPopOut !== false &&
+            <LoginComponent loginPopOut={loginPopOut} getpopOutState={getpopOutState}/>
+                    }
     </div>
   );
 

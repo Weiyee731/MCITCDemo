@@ -27,13 +27,14 @@ import { browserHistory } from "react-router";
 
 function ShopPageWishlist(props) {
     const { wishlist, cartAddItem, wishlistRemoveItem } = props;
+    const [loginPopOut, setloginPopOut] = useState;
     const breadcrumb = [
         { title: 'Home', url: '' },
         { title: 'Wishlist', url: '' },
     ];
 
     const login = () => {
-        // this.props.history.push("/login");
+        setloginPopOut(true)
     }
 
     const deleteWishlist = (product) => {

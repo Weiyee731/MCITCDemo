@@ -37,7 +37,7 @@ class HeaderProductDetails extends Component {
   checkCart(product, quantity) {
     if (this.state.productVariationDetailID === "" && this.state.productVariationType !== "None") {
       toast.error("Please Select One of the Variation")
-      window.scrollTo(300, 0)
+      // window.scrollTo(300, 0)
     }
     else
       this.addCart(product, quantity)
@@ -78,6 +78,7 @@ class HeaderProductDetails extends Component {
   login() {
     // this.props.history.push("/login");
     this.setState({loginPopOut:true})
+    // this.props.getpopOutState(true)
   }
 
   handleWishlist = (product) => {
@@ -133,11 +134,13 @@ class HeaderProductDetails extends Component {
   }
 
   getpopOutState = (loginPopOut) => {
+    console.log("hello")
     if (this.state.loginPopOut === true)
     this.setState({ loginPopOut: false })
 }
 
   render() {
+    console.log("this.props")
     const { productDetails, } = this.props;
     const { quantity, } = this.state;
 
@@ -153,10 +156,8 @@ class HeaderProductDetails extends Component {
     }
 
     return (
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", zIndex: 999 }}>
-        {this.state.loginPopOut !== undefined && this.state.loginPopOut !== false &&
-                        <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
-                    }
+      <div>
+        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", zIndex: 999 }}>
         {
           productDetails !== undefined && productDetails !== null && productDetails.map((product) => {
             const productImage = JSON.parse(product.ProductImages).map((image) => { return (image.ProductMediaUrl) })
@@ -228,6 +229,11 @@ class HeaderProductDetails extends Component {
           )
         } */}
       </div>
+      <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
+      </div>
+        
+      
+      
     );
   }
 }

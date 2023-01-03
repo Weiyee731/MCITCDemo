@@ -32,6 +32,7 @@ import { Modal, ModalBody } from "reactstrap";
 import CloseIcon from '@mui/icons-material/Close';
 // import OtpInput from "react-otp-input";
 import { Link, withRouter } from "react-router-dom";
+import SignupComponent from "../signup/signup.component";
 var CryptoJS = require("crypto-js");
 
 function mapStateToProps(state) {
@@ -98,6 +99,7 @@ const initialState = {
   otp: "",
 
   loginPopOut: false,
+  signupPopOut:false,
 }
 
 class LoginComponent extends Component {
@@ -128,10 +130,10 @@ class LoginComponent extends Component {
   componentDidMount() {
     // if (this.props.location.pathname === '/')
     // {
-      this.setState({ loginPopOut: this.props.loginPopOut })
+    this.setState({ loginPopOut: this.props.loginPopOut })
     // }
     // else this.setState({ loginPopOut: this.props.location.loginPopOut })
-    
+
   }
 
   componentDidUpdate(prevProps) {
@@ -381,13 +383,17 @@ class LoginComponent extends Component {
   // }
 
   modalClose() {
-    this.setState({ loginPopOut: false })
+    this.setState({ loginPopOut: false, signupPopOut: false})
     this.props.getpopOutState(false)
   }
 
+  getSignUp = (loginPopOut,signupPopOut) => {
+    this.setState({ loginPopOut: loginPopOut, signupPopOut: signupPopOut})
+  }
+
   render() {
-    console.log("in login", this.props)
     return (
+      <>
       <Modal
         className="modal-dialog-centered"
         isOpen={this.state.loginPopOut}
@@ -412,7 +418,7 @@ class LoginComponent extends Component {
               <div className="">
                 <div lg="5" md="5">
                   <div className="d-flex justify-content-center"><h4>Sign In</h4></div>
-                  
+
                   <TextField id="username" label="Username" variant="outlined" className="w-100 my-2" value={this.state.username} onChange={({ target }) => { this.setState({ username: target.value }) }} error={this.state.usernameErr} helperText={this.state.usernameErr && "Invalid username"} />
                   <FormControl variant="outlined" className="w-100 my-2">
                     <InputLabel htmlFor="password">Password</InputLabel>
@@ -467,9 +473,17 @@ class LoginComponent extends Component {
                     <div className="col-6">
                       <p className=" text-left" style={{ fontSize: "13px", paddingTop: "10px" }}>
                         New to MyEmporia?
-                        <Link className="nav-link" to={"/signup"}>
+                        {/* <Link onClick={() =>this.setState({loginPopOut:false})} className="nav-link" to={"/signup"}>
                       Sign Up
-                    </Link>
+                    </Link> */}
+                        <Link onClick={() => this.setState({ loginPopOut: false, signupPopOut: true})}>
+                          Sign Up
+                          {/* {
+                            this.state.signupPopOut &&
+                            <SignupComponent/>
+                          } */}
+                        </Link>
+                        
                         {/* <label onClick={() =>
                           <>
                             {this.props.history.push("/signup")}
@@ -646,6 +660,21 @@ class LoginComponent extends Component {
           </div>
         </ModalBody>
       </Modal>
+      <Modal
+            className="modal-dialog-centered"
+            isOpen={this.state.signupPopOut}
+            // isOpen={true}
+            toggle={() => this.modalClose()}>
+            <ModalBody>
+                <CloseIcon
+                    className="closeIcon"
+                    onClick={() => this.modalClose()}
+                    data-dismiss="modal" />
+                <SignupComponent getSignUp={this.getSignUp}></SignupComponent>
+            </ModalBody>
+        </Modal>
+      </>
+      
 
 
 
