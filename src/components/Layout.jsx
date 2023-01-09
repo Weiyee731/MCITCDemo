@@ -216,7 +216,6 @@ const productLayouts = [
 
 function Layout(props) {
   const { match, headerLayout, homeComponent } = props;
-  console.log("layout")
   return (
     <React.Fragment>
       <Helmet></Helmet>

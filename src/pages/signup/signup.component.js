@@ -40,7 +40,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 const SignUp = (props) => {
-    console.log("this.props", props)
     const [signupPopOut, setsignupPopOut] = useState(props.signupPopOut)
     console.log(signupPopOut)
     const [currentForm, setCurrentForm] = useState(1);

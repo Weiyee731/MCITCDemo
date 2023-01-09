@@ -502,10 +502,10 @@ class LoginComponent extends Component {
 
                   </div>
                   <Divider className="pt-4 pb-4">OR</Divider>
-                  <div className="text-center w-100 xx-large">
+                  {/* <div className="text-center w-100 xx-large">
                     <CustomGoogleLogin/>
                     <FBLogin />
-                  </div>
+                  </div> */}
                   <div>
                     <div>
                       <p className="text-center" style={{ fontSize: "13px", paddingTop: "10px" }}>

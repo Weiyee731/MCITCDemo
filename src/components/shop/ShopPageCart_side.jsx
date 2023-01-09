@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 // third-party
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { browserHistory } from "react-router";
 import { GitAction } from "../../store/action/gitAction";
 
@@ -29,10 +29,11 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LoadingPanel from '../shared/loadingPanel'
+
+// import {  } from 'react-router-dom';
 class ShopPageCart_side extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             /** example: [{itemId: 8, value: 1}] */
             quantities: [],
@@ -59,6 +60,7 @@ class ShopPageCart_side extends Component {
         this.removeItem = this.removeItem.bind(this)
         this.handleSelectedProduct = this.handleSelectedProduct.bind(this)
         this.handleAllProductSellect = this.handleAllProductSellect.bind(this)
+
     }
     getItemQuantity(item) {
         var { quantities } = this.state;
@@ -183,7 +185,17 @@ class ShopPageCart_side extends Component {
 
 
             if (overProductStockAmountlimit !== true && this.state.selectedProductDetailList.length > 0) {
-                this.setState({ isDataAccepted: true })
+                // this.setState({ isDataAccepted: true })
+                // this.props.history.push('/shop/checkout');
+                const { selectedProductDetailList } = this.state
+                const merchant = selectedProductDetailList.filter((ele, ind) => ind === selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
+                this.props.history.push({
+                    pathname: '/shop/checkout',
+                    state: {
+                        data: selectedProductDetailList,
+                        merchant: merchant
+                    }
+                });
             }
 
             if (this.state.selectedProductDetailList.length === 0) {
@@ -253,7 +265,6 @@ class ShopPageCart_side extends Component {
     renderItems(displayCart) {
         return displayCart.map((item, i) => {
             let image;
-            console.log("item", item)
             image = (
                 <div className="product-image">
                     <Link to={url.product(item.product)} className="product-image__body">
@@ -358,7 +369,6 @@ class ShopPageCart_side extends Component {
                 } */}
                 {
                     this.state.MerchantShopName.map((shopName) => {
-                        console.log("shopNameshopName", shopName)
                         return (
                             <>
                                 <table className="cart__table cart-table" size="small">
@@ -430,15 +440,12 @@ class ShopPageCart_side extends Component {
         );
         if (this.state.cart.length) {
             if (this.state.isDataAccepted === true) {
-                return (
-                //     <Link to={"/account/profile"} className="btn btn-secondary btn-sm">
-                //     Edit Profile
-                //   </Link>
-                    <PageCheckout
-                        data={this.state.selectedProductDetailList}
-                        merchant={this.state.selectedProductDetailList.filter((ele, ind) => ind === this.state.selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))}
-                    />
-                )
+                // <PageCheckout
+                //     data={this.state.selectedProductDetailList}
+                //     merchant={this.state.selectedProductDetailList.filter((ele, ind) => ind === this.state.selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))}
+                // />
+
+
             } else {
                 if (this.props.productcart.length > 0 && this.props.productcart[0].ReturnVal !== '0') {
                     content = this.renderCart();
@@ -472,4 +479,4 @@ const mapDispatchToProps = (dispatch) => {
 
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCart_side);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ShopPageCart_side));

@@ -140,7 +140,6 @@ class HeaderProductDetails extends Component {
 }
 
   render() {
-    console.log("this.props")
     const { productDetails, } = this.props;
     const { quantity, } = this.state;
 

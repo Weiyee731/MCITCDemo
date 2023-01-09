@@ -649,8 +649,6 @@ class PromotionDetailsComponent extends Component {
 
     return (
       <div>
-        {" "}
-        {console.log("THIS.PROPS", this.props)}
         <div className="App" style={{ width: "100%", alignContent: "center" }}   >
           <div className="App-header">
             <h1 style={{ margin: "10px" }}>Promotion Details</h1>

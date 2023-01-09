@@ -14,8 +14,6 @@ import theme from "../../data/theme";
 import PageCheckOrder from "./ShopPageCheckOrder";
 import PagePayment from "./ShopPagePayment";
 import { GitAction } from "../../store/action/gitAction";
-// import StepProgressBar from "react-step-progress";
-// import "react-step-progress/dist/index.css";
 import PageCart from "./ShopPageCart";
 import PageCompleted from "./ShopPageCompleted";
 import { toast } from "react-toastify";
@@ -23,9 +21,12 @@ import axios from "axios";
 import { sha256, sha224 } from 'js-sha256';
 import { Crypto } from 'crypto-js'
 import { createBrowserHistory } from 'history';
-// import { runInThisContext } from "vm";
 import DeliveryFee from "./ShopPageDeliveryFee";
-
+import Grid from '@mui/material/Grid';
+import CheckoutSteps from './ShopPageCheckoutStepper';
+import CheckoutCart from './ShopPageCheckoutCart';
+import CheckoutBillingAddress from './ShopPageCheckoutBillingAddress'
+import CheckoutPayment from './CheckOutPayment/ShopPageCheckOutPayment';
 const crypto = require('crypto');
 
 
@@ -68,13 +69,14 @@ class PageCheckout extends Component {
       submit: false,
       shipping: 0,
       isShipping: false,
-      isErrorPoscode: false
+      isErrorPoscode: false,
+      activeStep:0
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
+
+    this.data = this.props.location.state.data;
+    // this.activeStep = 0;
   }
-
-
-
 
   async onFormSubmit() {
 
@@ -128,12 +130,54 @@ class PageCheckout extends Component {
 
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps,previous) {
     if (prevProps.order !== this.props.order) {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
       }
     }
+    
   }
+
+  handleNextStep = () => {
+    // dispatch(nextStep());
+    // this.activeStep += 1;
+    this.setState({activeStep: this.state.activeStep +1 })
+    console.log("activeStep",this.state.activeStep)
+  };
+
+  handleBackStep = () => {
+    // dispatch(backStep());
+    // this.activeStep -= 1;
+    this.setState({activeStep: this.state.activeStep -1 })
+  };
+
+  handleGotoStep = (step) => {
+    // dispatch(gotoStep(step));
+    this.setState({activeStep: step})
+  };
+
+  handleApplyDiscount = (value) => {
+    // if (cart.length) {
+    // dispatch(applyDiscount(value));
+    // }
+  };
+
+  handleCreateBilling = (address) => {
+    // dispatch(createBilling(address));
+    // dispatch(nextStep());
+    this.setState({activeStep: this.state.activeStep +1 })
+  };
+
+  handleApplyShipping = (value) => {
+    // dispatch(applyShipping(value));
+  };
+
+  handleReset = () => {
+    // if (completed) {
+    //   dispatch(resetCart());
+    //   navigate(PATH_DASHBOARD.eCommerce.shop, { replace: true });
+    // }
+  };
 
   render() {
     const breadcrumb = [
@@ -184,14 +228,12 @@ class PageCheckout extends Component {
         this.setState({ OrderTotalAmount: total })
     }
 
-    const step1Content = (
-      <PageCart data={this.props.data} merchant={this.props.merchant} />
-    );
+    const STEPS = ['Cart', 'Billing & address', 'Payment'];
+    const  data  = this.props.location.state;
+    // const { cart, activeStep } = checkout;
 
-    const step2Content = (
-      <PageCheckOrder handleGetAddressId={handleGetAddressId} data={this.props.data} merchant={this.props.merchant} />
-    );
-
+    console.log("data",data)
+    const completed = this.state.activeStep === STEPS.length;
     return (
       <React.Fragment>
         <Helmet>
@@ -200,37 +242,54 @@ class PageCheckout extends Component {
         <PageHeader header="Checkout" breadcrumb={breadcrumb} />
         <div className="checkout block">
           <div className="container">
-            {/* <StepProgressBar
-              startingStep={0}
-              primaryBtnClass="btn-lg"
-              secondaryBtnClass="btn-lg"
-              onSubmit={() => this.setState({ submit: true })}
-              steps={[
-                {
-                  label: "Check Order",
-                  name: "step 1",
-                  content: step1Content
-                },
-                {
-                  label: "Shipping Address",
-                  name: "step 2",
-                  content: step2Content,
-                  // validator: step2Validator
-                },
-                // {
-                //   label: "Payment",
-                //   name: "step 3",
-                //   content: step3Content,
-                //   // validator: step3Validator
-                // },
-                // {
-                //   label: "Completed",
-                //   name: "step 4",
-                //   content: step4Content,
-                //   // validator: step3Validator
-                // },
-              ]}
-            /> */}
+            <Grid container justifyContent={completed ? 'center' : 'flex-start'}>
+              <Grid item xs={12} md={8}>
+                <CheckoutSteps activeStep={this.state.activeStep} steps={STEPS} />
+              </Grid>
+            </Grid>
+
+            {completed ? (
+              <div>hi</div>
+              // <CheckoutOrderComplete open={completed} onReset={this.handleReset} onDownloadPDF={() => {}} />
+            ) : (
+              <>
+                {this.state.activeStep === 0 && (
+                  <CheckoutCart
+                    checkout={data}
+                    onNextStep={this.handleNextStep}
+                  // onDeleteCart={this.handleDeleteCart}
+                  // onApplyDiscount={this.handleApplyDiscount}
+                  // onIncreaseQuantity={this.handleIncreaseQuantity}
+                  // onDecreaseQuantity={this.handleDecreaseQuantity}
+                  />
+                )}
+                {this.state.activeStep === 1 && (
+                  <CheckoutBillingAddress
+                    checkout={data}
+                    onBackStep={this.handleBackStep}
+                    onCreateBilling={this.handleCreateBilling}
+                  />
+                )}
+                {this.state.activeStep === 2 && (
+                  // <div>check</div>
+                  // <PagePayment
+                  // checkout={data}
+                  //  merchant={merchant}
+                    // checkout={data}
+                    // onNextStep={this.handleNextStep}
+                    // onBackStep={this.handleBackStep}
+                    // onGotoStep={this.handleGotoStep}
+                    // onApplyShipping={this.handleApplyShipping}
+                    // onReset={this.handleReset}
+                  // />
+                  <CheckoutPayment
+                  checkout={data}
+                  onBackStep={this.handleBackStep}
+                  onGotoStep={this.handleGotoStep}
+                  />
+                )}
+              </>
+            )}
           </div>
         </div>
       </React.Fragment>
