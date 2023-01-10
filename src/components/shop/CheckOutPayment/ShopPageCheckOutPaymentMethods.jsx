@@ -49,6 +49,7 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions, ..
     };
 
     const field = { value: "cash" };
+    const defaultOption = paymentOptions[0]
 
     return (
         <>
@@ -56,7 +57,7 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions, ..
                 <CardHeader title="Payment options" />
 
                 <CardContent>
-                    <RadioGroup row defaultValue={paymentOptions[0]} defaultChecked={paymentOptions[0].title} >
+                    <RadioGroup row value={defaultOption ? defaultOption.value : 0}>
                         <Stack spacing={3} sx={{ width: 1 }}>
                             {paymentOptions.map((option) => (
                                 <PaymentOption
@@ -65,6 +66,7 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions, ..
                                     cardOptions={cardOptions}
                                     hasChild={option.value === 'credit_card'}
                                     isSelected={field.value === option.value}
+
                                     // isCreditMethod={
                                     //   option.value === 'credit_card' && field.value === 'credit_card'
                                     // }

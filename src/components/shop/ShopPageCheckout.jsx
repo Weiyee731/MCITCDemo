@@ -70,17 +70,17 @@ class PageCheckout extends Component {
       shipping: 0,
       isShipping: false,
       isErrorPoscode: false,
-      activeStep:0
+      activeStep: 0
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
 
     // this.data = this.props.location.state.data;
     // this.activeStep = 0;
-     this.STEPS = ['Cart', 'Billing & address', 'Payment'];
-      this.data  = this.props.location.state;
+    this.STEPS = ['Cart', 'Billing & address', 'Payment'];
+    this.data = this.props.location.state;
     // const { cart, activeStep } = checkout;
 
-    console.log("data",this.data)
+    console.log("data", this.data)
     this.completed = this.state.activeStep === this.STEPS.length;
   }
 
@@ -136,30 +136,30 @@ class PageCheckout extends Component {
 
   }
 
-  componentDidUpdate(prevProps,previous) {
+  componentDidUpdate(prevProps, previous) {
     if (prevProps.order !== this.props.order) {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
       }
     }
-    
+
   }
 
   handleNextStep = () => {
     // dispatch(nextStep());
     // this.activeStep += 1;
-    this.setState({activeStep: this.state.activeStep +1 })
-    console.log("activeStep",this.state.activeStep)
+    this.setState({ activeStep: this.state.activeStep + 1 })
+    console.log("activeStep", this.state.activeStep)
   };
 
   handleBackStep = () => {
     // dispatch(backStep());
     // this.activeStep -= 1;
-    this.setState({activeStep: this.state.activeStep -1 })
+    this.setState({ activeStep: this.state.activeStep - 1 })
   };
 
   handleGotoStep = (step) => {
     // dispatch(gotoStep(step));
-    this.setState({activeStep: step})
+    this.setState({ activeStep: step })
   };
 
   handleApplyDiscount = (value) => {
@@ -172,7 +172,7 @@ class PageCheckout extends Component {
     // dispatch(createBilling(address));
     // dispatch(nextStep());
     this.data["address"] = address;
-    this.setState({activeStep: this.state.activeStep +1, address:address })
+    this.setState({ activeStep: this.state.activeStep + 1, address: address })
   };
 
   handleApplyShipping = (value) => {
@@ -236,12 +236,6 @@ class PageCheckout extends Component {
         this.setState({ OrderTotalAmount: total })
     }
 
-    // const STEPS = ['Cart', 'Billing & address', 'Payment'];
-    // const  data  = this.props.location.state;
-    // // const { cart, activeStep } = checkout;
-
-    // console.log("data",data)
-    // const completed = this.state.activeStep === STEPS.length;
     return (
       <React.Fragment>
         <Helmet>
@@ -256,7 +250,7 @@ class PageCheckout extends Component {
               </Grid>
             </Grid>
 
-           {this.completed ? (
+            {this.completed ? (
               <div>hi</div>
               // <CheckoutOrderComplete open={completed} onReset={this.handleReset} onDownloadPDF={() => {}} />
             ) : (
@@ -279,22 +273,21 @@ class PageCheckout extends Component {
                   />
                 )}
                 {this.state.activeStep === 2 && (
-                  // <div>check</div>
                   // <PagePayment
                   // checkout={data}
                   //  merchant={merchant}
-                    // checkout={data}
-                    // onNextStep={this.handleNextStep}
-                    // onBackStep={this.handleBackStep}
-                    // onGotoStep={this.handleGotoStep}
-                    // onApplyShipping={this.handleApplyShipping}
-                    // onReset={this.handleReset}
+                  // checkout={data}
+                  // onNextStep={this.handleNextStep}
+                  // onBackStep={this.handleBackStep}
+                  // onGotoStep={this.handleGotoStep}
+                  // onApplyShipping={this.handleApplyShipping}
+                  // onReset={this.handleReset}
                   // />
                   <CheckoutPayment
-                  checkout={this.data}
-                  onBackStep={this.handleBackStep}
-                  onGotoStep={this.handleGotoStep}
-                  onApplyShipping={this.handleApplyShipping}
+                    checkout={this.data}
+                    onBackStep={this.handleBackStep}
+                    onGotoStep={this.handleGotoStep}
+                    onApplyShipping={this.handleApplyShipping}
                   />
                 )}
               </>

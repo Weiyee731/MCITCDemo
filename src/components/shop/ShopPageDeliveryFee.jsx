@@ -132,6 +132,7 @@ class DeliveryFee extends Component {
             shippingCost = rate[0].shippingRateFirstKG
         }
       }
+      console.log("shippingCost", shippingCost)
       this.props.handleGetPostcode(shippingCost)
     }
   }

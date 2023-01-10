@@ -11,7 +11,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import AddIcon from '@mui/icons-material/Add';
 //
 import CheckoutSummary from './ShopPageCheckoutCartSummary';
-// import CheckoutBillingNewAddressForm from './CheckoutBillingNewAddressForm';
+import CheckoutBillingNewAddressForm from './ShopPageCheckOutBillingNewAddressForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { GitAction } from '../../store/action/gitAction';
 import sum from 'lodash/sum';
@@ -32,6 +32,7 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
 
   const _addressBooks = useSelector(state => ({ _addressBooks: state.counterReducer.addresses }));
   const Selfpickup = [{
+    UserAddressBookID:0,
     UserAddressName: 'Self-pickup',
     UserAddressLine1: "Pickup Directly from our store",
     UserAddressLine2 :"",
@@ -90,9 +91,10 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
 
             <Button
               size="small"
-              variant="soft"
+              variant="contained"
               onClick={handleOpen}
               startIcon={<AddIcon />}
+              color="primary"
             >
               Add new address
             </Button>
@@ -100,15 +102,15 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} />
+          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} hideShipping={true}/>
         </Grid>
       </Grid>
 
-      {/* <CheckoutBillingNewAddressForm
+      <CheckoutBillingNewAddressForm
         open={open}
         onClose={handleClose}
         onCreateBilling={onCreateBilling}
-      /> */}
+      />
     </>
   );
 }

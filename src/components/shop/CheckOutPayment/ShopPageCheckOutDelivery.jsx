@@ -17,6 +17,7 @@ import {
 // import Iconify from '../../../../../components/iconify';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
+
 // ----------------------------------------------------------------------
 
 CheckoutDelivery.propTypes = {
@@ -25,7 +26,6 @@ CheckoutDelivery.propTypes = {
 };
 
 export default function CheckoutDelivery({ deliveryOptions, onApplyShipping, ...other }) {
-
   return (
     <Card {...other}>
       <CardHeader title="Delivery options" />
@@ -41,6 +41,7 @@ export default function CheckoutDelivery({ deliveryOptions, onApplyShipping, ...
                 // field.onChange(Number(value));
                 onApplyShipping(Number(value));
               }}
+              value={deliveryOptions[0].value}
             >
               <Box
                 gap={2}

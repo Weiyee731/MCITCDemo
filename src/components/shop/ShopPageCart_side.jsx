@@ -266,7 +266,7 @@ class ShopPageCart_side extends Component {
         return displayCart.map((item, i) => {
             let image;
             image = (
-                <div className="product-image">
+                <div className="product-image" key={i}>
                     <Link to={url.product(item.product)} className="product-image__body">
                         <img className="product-image__img" src={item.product.ProductImage !== null && item.product.ProductImage !== undefined && item.product.ProductImage.length > 0 ? item.product.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                     </Link>
@@ -300,9 +300,9 @@ class ShopPageCart_side extends Component {
                             {
                                 this.state.overProductStockAmountLimitID.length > 0 &&
                                 this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 &&
-                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x) => {
+                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x,i) => {
                                     return (
-                                        <label className='mt-3' style={{ color: "red" }}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
+                                        <label className='mt-3' style={{ color: "red" }} key={i}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
                                     )
                                 })
                             }
@@ -368,10 +368,10 @@ class ShopPageCart_side extends Component {
                         <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
                 } */}
                 {
-                    this.state.MerchantShopName.map((shopName) => {
+                    this.state.MerchantShopName.map((shopName,i) => {
                         return (
                             <>
-                                <table className="cart__table cart-table" size="small">
+                                <table className="cart__table cart-table" size="small" key={i}>
                                     <div className='shopName'>
                                         <Typography>
                                             <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>

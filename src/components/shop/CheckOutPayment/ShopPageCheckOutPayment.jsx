@@ -16,6 +16,9 @@ import CheckoutBillingInfo from './ShopPageCheckOutBillingInfo';
 import CheckoutPaymentMethods from './ShopPageCheckOutPaymentMethods';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import sum from 'lodash/sum';
+// import DeliveryFee from "../ShopPageDeliveryFee";
+
+import DeliveryFee from "../deliveryFee"
 // ----------------------------------------------------------------------
 
 const DELIVERY_OPTIONS = [
@@ -28,19 +31,19 @@ const DELIVERY_OPTIONS = [
 
 const PAYMENT_OPTIONS = [
     {
-        value: 'paypal',
+        value: 0,
         title: 'Pay with Paypal',
         description: 'You will be redirected to PayPal website to complete your purchase securely.',
         icons: ['/assets/icons/payments/ic_paypal.svg'],
     },
     {
-        value: 'credit_card',
+        value: 1,
         title: 'Credit / Debit Card',
         description: 'We support Mastercard, Visa, Discover and Stripe.',
         icons: ['/assets/icons/payments/ic_mastercard.svg', '/assets/icons/payments/ic_visa.svg'],
     },
     {
-        value: 'cash',
+        value: 2,
         title: 'Cash on CheckoutDelivery',
         description: 'Pay with cash when your order is delivered.',
         icons: [],
@@ -72,29 +75,10 @@ export default function CheckoutPayment({
 }) {
 
     const { data, address, merchant } = checkout;
-    console.log("pay", checkout)
     const total = sum(data.map((item) => item.total));
     const subtotal = sum(data.map((item) => item.total));
     const discount = sum(data.map((item) => item.discount));
 
-    //   const PaymentSchema = Yup.object().shape({
-    //     payment: Yup.string().required('Payment is required!'),
-    //   });
-
-    //   const defaultValues = {
-    //     delivery: shipping,
-    //     payment: '',
-    //   };
-
-    //   const methods = useForm({
-    // resolver: yupResolver(PaymentSchema),
-    // defaultValues,
-    //   });
-
-    //   const {
-    //     handleSubmit,
-    //     formState: { isSubmitting },
-    //   } = methods;
 
     const onSubmit = async () => {
         try {
@@ -105,8 +89,16 @@ export default function CheckoutPayment({
         }
     };
 
+    const handleGetPostcode = (value) => {
+        console.log("handleGetPostcode", value)
+        if (!isNaN(value))
+            this.setState({ shipping: value, isShipping: true })
+    }
+
+
+    // const fee = DeliveryFee({ handleGetPostcode: handleGetPostcode, address: address, data: data })
+    // console.log("fee", fee)
     return (
-        // <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
                 <CheckoutDelivery onApplyShipping={onApplyShipping} deliveryOptions={DELIVERY_OPTIONS} />
@@ -135,9 +127,10 @@ export default function CheckoutPayment({
                     total={total}
                     subtotal={subtotal}
                     discount={discount}
-                    // shipping={shipping}
+                    // shipping={deliveryFee}
                     onEdit={() => onGotoStep(0)}
                 />
+                {/* <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={address} data={data} /> */}
 
                 <LoadingButton
                     fullWidth
