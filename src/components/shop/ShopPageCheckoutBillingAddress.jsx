@@ -31,9 +31,16 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
   }, []);
 
   const _addressBooks = useSelector(state => ({ _addressBooks: state.counterReducer.addresses }));
+  const Selfpickup = [{
+    UserAddressName: 'Self-pickup',
+    UserAddressLine1: "Pickup Directly from our store",
+    UserAddressLine2 :"",
+    UserCity :"",
+    UserState :"",
+  }];
   // console.log("_addressBooks", _addressBooks._addressBooks)
   // const { total, discount, subtotal } = checkout;
-
+  console.log(_addressBooks._addressBooks)
   const { data } = checkout;
 
   const total = sum(data.map((item) => item.total));
@@ -54,11 +61,20 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
+          {
+            Selfpickup.map((address, index) => (
+              <DefaultAddressItem
+                key={index}
+                address={address}
+                onCreateBilling={() => onCreateBilling(address)}
+              />
+            ))
+          }
           {_addressBooks._addressBooks.map((address, index) => (
             <AddressItem
               key={index}
               address={address}
-            onCreateBilling={() => onCreateBilling(address)}
+              onCreateBilling={() => onCreateBilling(address)}
             />
           ))}
 
@@ -105,8 +121,8 @@ AddressItem.propTypes = {
 };
 
 function AddressItem({ address, onCreateBilling }) {
-  const { UserAddressBookID,UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = address;
- const isDefault = isDefaultAddress===1
+  const { UserAddressBookID, UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = address;
+  const isDefault = isDefaultAddress === 1
 
   return (
     <Card
@@ -141,7 +157,7 @@ function AddressItem({ address, onCreateBilling }) {
             )}
           </Stack>
 
-          <Typography variant="body2">{UserAddressLine1 + " " + UserAddressLine2 + ", " + UserCity +", " + UserState}</Typography>
+          <Typography variant="body2">{UserAddressLine1 + " " + UserAddressLine2 + ", " + UserCity + ", " + UserState}</Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {UserContactNo}
@@ -163,3 +179,49 @@ function AddressItem({ address, onCreateBilling }) {
     </Card>
   );
 }
+
+
+
+DefaultAddressItem.propTypes = {
+  address: PropTypes.object,
+  onCreateBilling: PropTypes.func,
+};
+
+function DefaultAddressItem({ address, onCreateBilling }) {
+  const { UserAddressName, UserAddressLine1 } = address;
+
+  return (
+    <Card
+      sx={{
+        p: 3,
+        mb: 3,
+      }}
+    >
+      <Stack
+        spacing={2}
+        alignItems={{
+          md: 'flex-end',
+        }}
+        direction={{
+          xs: 'column',
+          md: 'row',
+        }}
+      >
+        <Stack flexGrow={1} spacing={1}>
+          <Stack direction="row" alignItems="center">
+            <Typography variant="subtitle1">
+              {UserAddressName}
+            </Typography>
+          </Stack>
+
+          <Typography variant="body2">{UserAddressLine1}</Typography>
+        </Stack>
+
+          <Button variant="outlined" size="small" onClick={onCreateBilling}>
+            Self Pick Up
+          </Button>
+        </Stack>
+    </Card>
+  );
+}
+

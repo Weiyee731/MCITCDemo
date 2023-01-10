@@ -74,8 +74,14 @@ class PageCheckout extends Component {
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
 
-    this.data = this.props.location.state.data;
+    // this.data = this.props.location.state.data;
     // this.activeStep = 0;
+     this.STEPS = ['Cart', 'Billing & address', 'Payment'];
+      this.data  = this.props.location.state;
+    // const { cart, activeStep } = checkout;
+
+    console.log("data",this.data)
+    this.completed = this.state.activeStep === this.STEPS.length;
   }
 
   async onFormSubmit() {
@@ -165,11 +171,13 @@ class PageCheckout extends Component {
   handleCreateBilling = (address) => {
     // dispatch(createBilling(address));
     // dispatch(nextStep());
-    this.setState({activeStep: this.state.activeStep +1 })
+    this.data["address"] = address;
+    this.setState({activeStep: this.state.activeStep +1, address:address })
   };
 
   handleApplyShipping = (value) => {
     // dispatch(applyShipping(value));
+    this.data["shipping"] = value;
   };
 
   handleReset = () => {
@@ -228,12 +236,12 @@ class PageCheckout extends Component {
         this.setState({ OrderTotalAmount: total })
     }
 
-    const STEPS = ['Cart', 'Billing & address', 'Payment'];
-    const  data  = this.props.location.state;
-    // const { cart, activeStep } = checkout;
+    // const STEPS = ['Cart', 'Billing & address', 'Payment'];
+    // const  data  = this.props.location.state;
+    // // const { cart, activeStep } = checkout;
 
-    console.log("data",data)
-    const completed = this.state.activeStep === STEPS.length;
+    // console.log("data",data)
+    // const completed = this.state.activeStep === STEPS.length;
     return (
       <React.Fragment>
         <Helmet>
@@ -242,20 +250,20 @@ class PageCheckout extends Component {
         <PageHeader header="Checkout" breadcrumb={breadcrumb} />
         <div className="checkout block">
           <div className="container">
-            <Grid container justifyContent={completed ? 'center' : 'flex-start'}>
+            <Grid container justifyContent={this.completed ? 'center' : 'flex-start'}>
               <Grid item xs={12} md={8}>
-                <CheckoutSteps activeStep={this.state.activeStep} steps={STEPS} />
+                <CheckoutSteps activeStep={this.state.activeStep} steps={this.STEPS} />
               </Grid>
             </Grid>
 
-            {completed ? (
+           {this.completed ? (
               <div>hi</div>
               // <CheckoutOrderComplete open={completed} onReset={this.handleReset} onDownloadPDF={() => {}} />
             ) : (
               <>
                 {this.state.activeStep === 0 && (
                   <CheckoutCart
-                    checkout={data}
+                    checkout={this.data}
                     onNextStep={this.handleNextStep}
                   // onDeleteCart={this.handleDeleteCart}
                   // onApplyDiscount={this.handleApplyDiscount}
@@ -265,7 +273,7 @@ class PageCheckout extends Component {
                 )}
                 {this.state.activeStep === 1 && (
                   <CheckoutBillingAddress
-                    checkout={data}
+                    checkout={this.data}
                     onBackStep={this.handleBackStep}
                     onCreateBilling={this.handleCreateBilling}
                   />
@@ -283,9 +291,10 @@ class PageCheckout extends Component {
                     // onReset={this.handleReset}
                   // />
                   <CheckoutPayment
-                  checkout={data}
+                  checkout={this.data}
                   onBackStep={this.handleBackStep}
                   onGotoStep={this.handleGotoStep}
+                  onApplyShipping={this.handleApplyShipping}
                   />
                 )}
               </>

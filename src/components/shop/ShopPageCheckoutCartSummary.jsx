@@ -36,11 +36,12 @@ export default function CheckoutSummary({
   discount,
   subtotal,
   shipping,
+  hideShipping,
   onApplyDiscount,
   enableEdit = false,
   enableDiscount = false,
 }) {
-  const displayShipping = shipping !== null ? 'Free' : '-';
+  const defaultShipping = shipping !== null ? 'Free' : '-';
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -48,7 +49,7 @@ export default function CheckoutSummary({
         title="Order Summary"
         action={
           enableEdit && (
-            <Button size="small" onClick={onEdit} startIcon={<EditIcon/>}>
+            <Button size="small" onClick={onEdit} startIcon={<EditIcon />}>
               Edit
             </Button>
           )
@@ -68,17 +69,18 @@ export default function CheckoutSummary({
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Discount
             </Typography>
-            <Typography variant="subtitle2">{discount ?<Currency value={-discount}></Currency>: '-'}</Typography>
+            <Typography variant="subtitle2">{discount ? <Currency value={-discount}></Currency> : '-'}</Typography>
           </Stack>
-
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Shipping
-            </Typography>
-            <Typography variant="subtitle2">
-              {shipping ? <Currency value={shipping}></Currency>: displayShipping}
-            </Typography>
-          </Stack>
+          {!hideShipping&&
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                Shipping
+              </Typography>
+              <Typography variant="subtitle2">
+                {shipping ? <Currency value={shipping}></Currency> : defaultShipping}
+              </Typography>
+            </Stack>
+          }
 
           <Divider />
 
@@ -86,7 +88,7 @@ export default function CheckoutSummary({
             <Typography variant="subtitle1">Total</Typography>
             <Box sx={{ textAlign: 'right' }}>
               <Typography variant="subtitle1" sx={{ color: 'error.main' }}>
-              <Currency value={total}></Currency>
+                <Currency value={total}></Currency>
               </Typography>
               <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
                 (VAT included if applicable)

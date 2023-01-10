@@ -87,6 +87,8 @@ export default function CheckoutCart({
           enableDiscount
           total={total}
           // discount={discount}
+          shipping={null}
+          hideShipping={true}
           subtotal={subtotal}
           onApplyDiscount={onApplyDiscount}
         />
