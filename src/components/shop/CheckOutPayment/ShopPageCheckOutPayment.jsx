@@ -29,32 +29,26 @@ const DELIVERY_OPTIONS = [
     },
 ];
 
-const PAYMENT_OPTIONS = [
-    {
-        value: 0,
-        title: 'Pay with Paypal',
-        description: 'You will be redirected to PayPal website to complete your purchase securely.',
-        icons: ['/assets/icons/payments/ic_paypal.svg'],
-    },
-    {
-        value: 1,
-        title: 'Credit / Debit Card',
-        description: 'We support Mastercard, Visa, Discover and Stripe.',
-        icons: ['/assets/icons/payments/ic_mastercard.svg', '/assets/icons/payments/ic_visa.svg'],
-    },
-    {
-        value: 2,
-        title: 'Cash on CheckoutDelivery',
-        description: 'Pay with cash when your order is delivered.',
-        icons: [],
-    },
-];
+// const PAYMENT_OPTIONS = [
+//     {
+//         value: 0,
+//         title: 'Online Banking',
+//         description: 'You will be redirected to PayPal website to complete your purchase securely.',
+//         icons: ['/assets/icons/payments/ic_paypal.svg'],
+//     },
+//     {
+//         value: 1,
+//         title: 'Credit / Debit Card',
+//         description: 'We support Mastercard, Visa, Discover and Stripe.',
+//         icons: ['/assets/icons/payments/ic_mastercard.svg', '/assets/icons/payments/ic_visa.svg'],
+//     }
+// ];
 
-const CARDS_OPTIONS = [
-    { value: 'ViSa1', label: '**** **** **** 1212 - Jimmy Holland' },
-    { value: 'ViSa2', label: '**** **** **** 2424 - Shawn Stokes' },
-    { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' },
-];
+// const CARDS_OPTIONS = [
+//     { value: 'ViSa1', label: '**** **** **** 1212 - Jimmy Holland' },
+//     { value: 'ViSa2', label: '**** **** **** 2424 - Shawn Stokes' },
+//     { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' },
+// ];
 
 CheckoutPayment.propTypes = {
     onReset: PropTypes.func,
@@ -89,11 +83,11 @@ export default function CheckoutPayment({
         }
     };
 
-    const handleGetPostcode = (value) => {
-        console.log("handleGetPostcode", value)
-        if (!isNaN(value))
-            this.setState({ shipping: value, isShipping: true })
-    }
+    // const handleGetPostcode = (value) => {
+    //     console.log("handleGetPostcode", value)
+    //     if (!isNaN(value))
+    //         this.setState({ shipping: value, isShipping: true })
+    // }
 
 
     // const fee = DeliveryFee({ handleGetPostcode: handleGetPostcode, address: address, data: data })
@@ -104,9 +98,10 @@ export default function CheckoutPayment({
                 <CheckoutDelivery onApplyShipping={onApplyShipping} deliveryOptions={DELIVERY_OPTIONS} />
 
                 <CheckoutPaymentMethods
-                    cardOptions={CARDS_OPTIONS}
-                    paymentOptions={PAYMENT_OPTIONS}
-                    sx={{ my: 3 }}
+                  sx={{ my: 3 }}
+                    // cardOptions={CARDS_OPTIONS}
+                    // paymentOptions={PAYMENT_OPTIONS}
+                  
                 />
 
                 <Button

@@ -41,7 +41,7 @@ export default function CheckoutDelivery({ deliveryOptions, onApplyShipping, ...
                 // field.onChange(Number(value));
                 onApplyShipping(Number(value));
               }}
-              value={deliveryOptions[0].value}
+              defaultValue={deliveryOptions[0].value}
             >
               <Box
                 gap={2}

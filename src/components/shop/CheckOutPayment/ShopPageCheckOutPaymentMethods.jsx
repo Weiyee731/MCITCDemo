@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-// form
-// import { Controller, useFormContext } from 'react-hook-form';
+
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { GitAction } from '../../../store/action/gitAction';
 // @mui
 import {
     Box,
@@ -24,19 +25,81 @@ import {
 import Image from '../../image/Image';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddIcon from '@mui/icons-material/Add';
-
+import FPX from '../../../assets/fpx-logo2.png';
+import MASTERCARD from '../../../assets/Mastercard-logo.svg.png';
+import VISACARD from '../../../assets/Visa-Logo.png';
+import axios from "axios";
+import { toast } from "react-toastify";
 // section
-// import { PaymentNewCardDialog } from '../../../../payment';
 
 // ----------------------------------------------------------------------
 
 CheckoutPaymentMethods.propTypes = {
-    cardOptions: PropTypes.array,
-    paymentOptions: PropTypes.array,
+    // bankOptions: PropTypes.array,
 };
 
-export default function CheckoutPaymentMethods({ paymentOptions, cardOptions, ...other }) {
-    //   const { control } = useFormContext();
+export default function CheckoutPaymentMethods({ ...other }) {
+    const dispatch = useDispatch();
+
+    // useEffect(() => {
+    //     let URL2 = "https://myemporia.my/payment/06_fpx_bankListRequest.php"
+    //     const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+    //     axios.post(URL2, {}, config).then((res) => {
+    //         if (res.status === 200) {
+
+    //             let bankFinalList = []
+    //             let bankList = res.data.split('|')[0]
+    //             bankList = bankList.split(',')
+    //             bankList.length > 0 && bankList.map((bank) => {
+    //                 this.state.allBankDetails.filter((x) => x.BankID === bank.split("~")[0]).map((x) => {
+    //                     let bankListing = {
+    //                         BankID: bank.split("~")[0],
+    //                         BankStatus: bank.split("~")[1],
+    //                         BankName: x.BankName,
+    //                         BankType: x.BankType,
+    //                         PaymentMethod: x.PaymentMethod,
+    //                         PaymentMethodCharges: x.PaymentMethodCharges,
+    //                         PaymentMethodDesc: x.PaymentMethodDesc,
+    //                         PaymentMethodID: x.PaymentMethodID,
+    //                         PaymentMethodImage: x.PaymentMethodImage,
+    //                         TestingInd: x.TestingInd
+    //                     }
+    //                     bankFinalList.push(bankListing)
+    //                 })
+    //             })
+
+    //             bankList.length > 0 && bankList.map((bank) => {
+    //                 const listing = bankFinalList.filter((data) => data.BankID !== null && data.BankID.toLowerCase().includes(bank.split("~")[0].toLowerCase()))
+    //                 if (listing.length === 0) {
+    //                     let bankListing = {
+    //                         BankID: bank.split("~")[0],
+    //                         BankStatus: bank.split("~")[1],
+    //                         BankName: bank.split("~")[0],
+    //                         BankType: "B2C",
+    //                         PaymentMethod: bank.split("~")[0],
+    //                         PaymentMethodCharges: 1.2,
+    //                         PaymentMethodDesc: "FPX",
+    //                         PaymentMethodID: 59,
+    //                         PaymentMethodImage: "",
+    //                         TestingInd: 0
+    //                     }
+    //                     bankFinalList.push(bankListing)
+    //                 }
+    //             })
+
+    //             bankFinalList.sort((a, b) => a.PaymentMethod.localeCompare(b.PaymentMethod));
+    //             this.setState({ finalAllBankDetails: bankFinalList, BankID: "0" })
+    //         }
+    //     }).catch(e => {
+    //         toast.error("There is something wrong for bank retrieve. Please try again.")
+    //     })
+    // }, []);
+
+
+    // useEffect(() => {
+    //     dispatch(GitAction.CallAllPaymentMethod());
+    // }, []);
+    // const paymentmethod = useSelector(state => ({ paymentmethod: state.counterReducer.paymentmethod }));
 
     const [open, setOpen] = useState(false);
 
@@ -48,8 +111,30 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions, ..
         setOpen(false);
     };
 
-    const field = { value: "cash" };
-    const defaultOption = paymentOptions[0]
+    const PAYMENT_OPTIONS = [
+        {
+            value: 1,
+            title: 'Online Banking',
+            description: 'You will be redirected to PayPal website to complete your purchase securely.',
+            icons: [FPX],
+        },
+        {
+            value: 2,
+            title: 'Credit / Debit Card',
+            description: 'We support Mastercard, Visa, Discover and Stripe.',
+            icons: [MASTERCARD, VISACARD],
+        }
+    ];
+
+    const defaultOption = PAYMENT_OPTIONS[0]
+    const bankOptions = [
+        { value: 'ViSa1', label: '**** **** **** 1212 - Jimmy Holland' },
+        { value: 'ViSa2', label: '**** **** **** 2424 - Shawn Stokes' },
+        { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' },
+    ];
+
+
+
 
     return (
         <>
@@ -57,19 +142,19 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions, ..
                 <CardHeader title="Payment options" />
 
                 <CardContent>
-                    <RadioGroup row value={defaultOption ? defaultOption.value : 0}>
+                    <RadioGroup row defaultValue={defaultOption ? defaultOption.value : 0}>
                         <Stack spacing={3} sx={{ width: 1 }}>
-                            {paymentOptions.map((option) => (
+                            {PAYMENT_OPTIONS.map((option) => (
                                 <PaymentOption
                                     key={option.title}
                                     option={option}
-                                    cardOptions={cardOptions}
-                                    hasChild={option.value === 'credit_card'}
-                                    isSelected={field.value === option.value}
+                                    bankOptions={bankOptions}
+                                    hasChild={option.value === 1}
+                                    isBankIn={
+                                        option.value === 1}
+                                    // isSelected={field.value === option.value}
 
-                                    // isCreditMethod={
-                                    //   option.value === 'credit_card' && field.value === 'credit_card'
-                                    // }
+
                                     onOpen={handleOpen}
                                 />
                             ))}
@@ -90,11 +175,11 @@ PaymentOption.propTypes = {
     hasChild: PropTypes.bool,
     option: PropTypes.object,
     isSelected: PropTypes.bool,
-    cardOptions: PropTypes.array,
-    isCreditMethod: PropTypes.bool,
+    bankOptions: PropTypes.array,
+    isBankIn: PropTypes.bool,
 };
 
-function PaymentOption({ option, cardOptions, hasChild, isSelected, isCreditMethod, onOpen }) {
+function PaymentOption({ option, bankOptions, hasChild, isSelected, isBankIn, onOpen }) {
     const { value, title, icons, description } = option;
 
     return (
@@ -139,34 +224,26 @@ function PaymentOption({ option, cardOptions, hasChild, isSelected, isCreditMeth
                 }}
             >
                 {icons.map((icon) => (
-                    <Image key={icon} disabledEffect alt="logo card" src={icon} />
+                    <Image key={icon} disabledEffect alt="logo card" src={icon} sx={{ width: 37 }} />
                 ))}
             </Stack>
 
-            {isCreditMethod && (
+            {isBankIn && (
                 <Stack
                     alignItems="flex-start"
                     sx={{
                         px: 3,
                         width: 1,
+                        my: 3
                     }}
                 >
                     <TextField select fullWidth label="Cards" SelectProps={{ native: true }}>
-                        {cardOptions.map((card) => (
+                        {bankOptions.map((card) => (
                             <option key={card.value} value={card.value}>
                                 {card.label}
                             </option>
                         ))}
                     </TextField>
-
-                    <Button
-                        size="small"
-                        startIcon={<AddIcon />}
-                        onClick={onOpen}
-                        sx={{ my: 3 }}
-                    >
-                        Add new card
-                    </Button>
                 </Stack>
             )}
         </Paper>
