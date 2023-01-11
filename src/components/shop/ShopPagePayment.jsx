@@ -1,5 +1,6 @@
 // react
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
 // third-party
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -26,7 +27,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 
 // Display Card
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -40,6 +40,9 @@ import moment from "moment";
 import FPX from '../../assets/fpx-logo.png';
 import { Image } from 'react-bootstrap';
 import DeliveryFee from "./ShopPageDeliveryFee";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { Grid, Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 const crypto = require('crypto');
 
 const initialState = {
@@ -131,12 +134,19 @@ class PagePayment extends Component {
 
     this.state = initialState
     // this.handleShipping = this.handleShipping.bind(this)
-    this.setDetails = this.setDetails.bind(this)
+    // this.setDetails = this.setDetails.bind(this)
     this.props.CallAllCreditCard(window.localStorage.getItem("id"));
     this.props.CallAllPaymentMethod();
     this.handleBanking = this.handleBanking.bind(this)
   }
-
+  static propTypes = {
+    onReset: PropTypes.func,
+    checkout: PropTypes.object,
+    onBackStep: PropTypes.func,
+    onGotoStep: PropTypes.func,
+    onNextStep: PropTypes.func,
+    onApplyShipping: PropTypes.func,
+  };
   // handleShipping (address, state) {
   //   // console.log(address)
   //   // console.log(address[0].UserPoscode)
@@ -144,70 +154,70 @@ class PagePayment extends Component {
   //   this.props.history.push("/EmporiaDev/DeliveryFee", state={address})
   // }
 
-  setDetails(productcart) {
-    let shippingFee = 0
-    this.setState({
-      cart: productcart
-    })
+  // setDetails(productcart) {
+  //   let shippingFee = 0
+  //   this.setState({
+  //     cart: productcart
+  //   })
 
-    if (!isNaN(this.props.shippingfee))
-      shippingFee = parseFloat(this.props.shippingfee.toFixed(2))
+  //   if (!isNaN(this.props.shippingfee))
+  //     shippingFee = parseFloat(this.props.shippingfee.toFixed(2))
 
-    this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
-    this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee, shipping: shippingFee })
-    // this.setState({ total: 1 })
+  //   this.setState({ subtotal: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) })
+  //   this.setState({ total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee, shipping: shippingFee })
+  //   // this.setState({ total: 1 })
 
 
-    if (this.props.addressID !== undefined && this.props.addressID !== undefined && this.state.setAddress === false) {
+  //   if (this.props.addressID !== undefined && this.props.addressID !== undefined && this.state.setAddress === false) {
 
-      if (this.props.addressID !== 0) {
-        this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
-          parseInt(x.UserAddressBookID) === parseInt(this.props.addressID)).map((address) => {
-            let Userdetails = []
+  //     if (this.props.addressID !== 0) {
+  //       this.props.addresses.length > 0 && this.props.addresses !== undefined && this.props.addresses.filter((x) =>
+  //         parseInt(x.UserAddressBookID) === parseInt(this.props.addressID)).map((address) => {
+  //           let Userdetails = []
 
-            Userdetails = {
-              email: address.UserEmail,
-              addressLine1: address.UserAddressLine1,
-              addressLine2: address.UserAddressLine2,
-              addressName: address.UserAddressName,
+  //           Userdetails = {
+  //             email: address.UserEmail,
+  //             addressLine1: address.UserAddressLine1,
+  //             addressLine2: address.UserAddressLine2,
+  //             addressName: address.UserAddressName,
 
-              poscode: address.UserPoscode,
-              city: address.UserCity,
-              state: address.UserState,
-              contact: address.UserContactNo,
-              total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee
-            }
-            this.setState({
-              Userdetails: Userdetails,
-              setAddress: true
-            })
-          })
-      }
-      else {
-        let Userdetails = []
-        Userdetails = {
-          email: localStorage.getItem("email"),
-          addressLine1: "Self Collect",
-          addressLine2: "Self Collect",
-          addressName: localStorage.getItem("firstname") + localStorage.getItem("lastname"),
+  //             poscode: address.UserPoscode,
+  //             city: address.UserCity,
+  //             state: address.UserState,
+  //             contact: address.UserContactNo,
+  //             total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee
+  //           }
+  //           this.setState({
+  //             Userdetails: Userdetails,
+  //             setAddress: true
+  //           })
+  //         })
+  //     }
+  //     else {
+  //       let Userdetails = []
+  //       Userdetails = {
+  //         email: localStorage.getItem("email"),
+  //         addressLine1: "Self Collect",
+  //         addressLine2: "Self Collect",
+  //         addressName: localStorage.getItem("firstname") + localStorage.getItem("lastname"),
 
-          poscode: "Self Collect",
-          city: "Self Collect",
-          state: "Self Collect",
-          contact: localStorage.getItem("contact"),
-          total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee
-        }
-        this.setState({
-          Userdetails: Userdetails,
-          setAddress: true
-        })
-      }
-    }
-  }
+  //         poscode: "Self Collect",
+  //         city: "Self Collect",
+  //         state: "Self Collect",
+  //         contact: localStorage.getItem("contact"),
+  //         total: this.props.data.reduce((subtotal, item) => subtotal + item.total, 0) + shippingFee
+  //       }
+  //       this.setState({
+  //         Userdetails: Userdetails,
+  //         setAddress: true
+  //       })
+  //     }
+  //   }
+  // }
 
   componentDidMount() {
     if (this.props.data !== undefined && this.props.data.length > 0) {
-      this.setDetails(this.props.data)
+      // this.setDetails(this.props.data)
     }
 
     let URL2 = "https://myemporia.my/payment/06_fpx_bankListRequest.php"
@@ -949,12 +959,11 @@ class PagePayment extends Component {
 
     return (
       <React.Fragment>
-        <div className="cart">
+        {/* <div className="cart">
           <div className="container">
             <div className="card mt-3">
               <div className="card-body">
                 <h5 className="card-title">MyEmporia</h5>
-                {/* <h5 className="card-title">Pharmacy</h5> */}
                 {
                   this.props.addressID !== 0 ?
                     <div style={{ textAlign: "left" }}>
@@ -980,7 +989,52 @@ class PagePayment extends Component {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+        {/* <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}> */}
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8}>
+              {/* <CheckoutDelivery onApplyShipping={onApplyShipping} deliveryOptions={DELIVERY_OPTIONS} /> */}
+
+              {/* <CheckoutPaymentMethods
+                cardOptions={CARDS_OPTIONS}
+                paymentOptions={PAYMENT_OPTIONS}
+                sx={{ my: 3 }}
+              /> */}
+
+              <Button
+                size="small"
+                color="inherit"
+                onClick={this.props.onBackStep}
+                startIcon={<ArrowBackIosNewIcon />}
+              >
+                Back
+              </Button>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              {/* <CheckoutBillingInfo onBackStep={onBackStep} billing={billing} /> */}
+
+              {/* <CheckoutSummary
+                enableEdit
+                total={total}
+                subtotal={subtotal}
+                discount={discount}
+                shipping={shipping}
+                onEdit={() => onGotoStep(0)}
+              /> */}
+
+              <LoadingButton
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                // loading={isSubmitting}
+              >
+                Complete Order
+              </LoadingButton>
+            </Grid>
+          </Grid>
+        {/* </FormProvider> */}
         <Dialog
           open={this.state.isLimitAlert}
           onClose={() => this.setState({ isLimitAlert: false })}
@@ -1005,6 +1059,8 @@ class PagePayment extends Component {
     );
   }
 }
+
+
 
 const mapStateToProps = (state) => ({
   creditcard: state.counterReducer["creditcards"],

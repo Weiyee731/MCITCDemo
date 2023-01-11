@@ -39,7 +39,6 @@ class IndicatorCart extends React.Component {
   }
   render() {
     var totals;
-    console.log("this.props",this.props)
     if (this.props.cart.extraLines.length > 0) {
       const extraLines = this.props.cart.extraLines.map((extraLine, index) => (
         <tr key={index}>
