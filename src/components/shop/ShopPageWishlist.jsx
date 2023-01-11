@@ -27,15 +27,15 @@ import { browserHistory } from "react-router";
 
 function ShopPageWishlist(props) {
     const { wishlist, cartAddItem, wishlistRemoveItem } = props;
-    const [loginPopOut, setloginPopOut] = useState;
+    // const [loginPopOut, setloginPopOut] = useState;
     const breadcrumb = [
         { title: 'Home', url: '' },
         { title: 'Wishlist', url: '' },
     ];
 
-    const login = () => {
-        setloginPopOut(true)
-    }
+    // const login = () => {
+    //     setloginPopOut(true)
+    // }
 
     const deleteWishlist = (product) => {
 
@@ -75,6 +75,7 @@ function ShopPageWishlist(props) {
 
     let content;
 
+    console.log("dasdadasda", props)
     if (props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0') {
         const itemsList = wishlist.map((item) => {
             if (item.DelInd === 0) {

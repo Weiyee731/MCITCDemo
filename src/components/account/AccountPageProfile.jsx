@@ -120,8 +120,8 @@ class AccountPageProfile extends Component {
         }
       }
     } else {
-      this.props.history.push("/login")
-      // this.props.history.push("/login");
+      this.props.history.push("/EmporiaDev/login")
+      // this.props.history.push("/EmporiaDev/login");
       // window.location.reload(false);
     }
 

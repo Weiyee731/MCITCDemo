@@ -223,7 +223,7 @@ function Layout(props) {
       <ToastContainer autoClose={5000} hideProgressBar />
       {/* <Quickview />
       <MobileMenu /> */}
-      <Router basename={"/"}>
+      <Router basename={"/EmporiaDev/"}>
         <div className="site">
           <header className="site__header d-lg-none">
             <MobileHeader />

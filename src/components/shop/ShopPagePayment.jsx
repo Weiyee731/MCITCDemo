@@ -141,7 +141,7 @@ class PagePayment extends Component {
   //   // console.log(address)
   //   // console.log(address[0].UserPoscode)
   //   // <DeliveryFee address={address} />
-  //   this.props.history.push("/DeliveryFee", state={address})
+  //   this.props.history.push("/EmporiaDev/DeliveryFee", state={address})
   // }
 
   setDetails(productcart) {

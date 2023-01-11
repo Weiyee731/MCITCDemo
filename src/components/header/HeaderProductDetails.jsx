@@ -76,7 +76,7 @@ class HeaderProductDetails extends Component {
   }
 
   login() {
-    // this.props.history.push("/login");
+    // this.props.history.push("/EmporiaDev/login");
     this.setState({loginPopOut:true})
     // this.props.getpopOutState(true)
   }

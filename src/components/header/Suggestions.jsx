@@ -25,7 +25,7 @@ function Suggestions(props) {
     } = props;
 
     const login = () => {
-        this.props.history.push("/login");
+        this.props.history.push("/EmporiaDev/login");
     }
 
     const handleCart = (product) => {

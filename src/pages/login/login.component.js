@@ -213,7 +213,7 @@ class LoginComponent extends Component {
         // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
         // }
 
-        // this.props.history.push("/");
+        // this.props.history.push("/EmporiaDev/");
         window.location.reload(true);
       } else {
         toast.error("The username and password does not match.")
@@ -234,7 +234,7 @@ class LoginComponent extends Component {
       if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
         toast.success("Your password has been updated, try to login with new password");
         setTimeout(() => {
-          // this.props.history.push("/login");
+          // this.props.history.push("/EmporiaDev/login");
           window.location.reload(true)
         }, 3000)
 
@@ -485,7 +485,7 @@ class LoginComponent extends Component {
 
                     {/* <label onClick={() =>
                           <>
-                            {this.props.history.push("/signup")}
+                            {this.props.history.push("/EmporiaDev/signup")}
                           </>
                         }>
                           Sign Up

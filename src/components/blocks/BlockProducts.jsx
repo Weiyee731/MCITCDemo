@@ -13,6 +13,8 @@ import { Card, } from "@mui/material";
 export default function BlockProducts(props) {
   const { title, layout, featuredProduct, products, loading, withSidebar } = props;
 
+
+
   let large;
   let smalls;
 
@@ -38,7 +40,7 @@ export default function BlockProducts(props) {
 
     smalls = <div className="block-products__list">{productsList}</div>;
   }
-
+  console.log("CHECKKKKK4")
   return (
     <div className={`block block-products block-products--layout--${layout}`}>
       {

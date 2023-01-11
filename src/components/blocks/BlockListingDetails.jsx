@@ -30,6 +30,8 @@ import { Helmet } from 'react-helmet-async';
 // styles
 import './styles/BlockListingDetails.css'
 import ProductCard from "../shared/ProductCard";
+
+import Card from "@mui/material/Card";
 import { toast } from "react-toastify";
 import classNames from "classnames";
 import { findAllByDisplayValue } from "@testing-library/dom";
@@ -124,7 +126,7 @@ class BlockListingDetails extends Component {
     }
 
     processUrl(ProductCategoryID) {
-        return ("//shop/ProductListing/type:Category&typevalue:" + ProductCategoryID)
+        return ("/shop/ProductListing/type:Category&typevalue:" + ProductCategoryID)
     }
 
 
@@ -799,6 +801,7 @@ class BlockListingDetails extends Component {
                             </div>
                         </div>
                     </div>
+
                 </div >
             </React.Fragment >
         )

@@ -69,7 +69,7 @@ class DeliveryFee extends Component {
         else {
           toast.warning("The poscode is incorrect. Please cross check the selected address poscode")
           setTimeout(() => {
-            window.location.href = "/account/addresses/"
+            window.location.href = "/EmporiaDev/account/addresses/"
           }, 3000);
         }
       }

@@ -13,6 +13,7 @@ import CategorySidebar from "./CategorySidebar";
 import CategorySidebarItem from "./CategorySidebarItem";
 import PageHeader from "../shared/PageHeader";
 import ProductsView from "./ProductsView";
+import Card from "@mui/material/Card";
 // import shopApi from "../../api/shop";
 import WidgetFilters from "../widgets/WidgetFilters";
 import WidgetProducts from "../widgets/WidgetProducts";
@@ -388,6 +389,7 @@ function ShopPageCategory(props) {
   );
 
   const sidebarComponent = (
+
     <CategorySidebar offcanvas={offcanvas}>
       <CategorySidebarItem>
         {/* <WidgetFilters
@@ -410,7 +412,9 @@ function ShopPageCategory(props) {
     content = (
       <div className="container">
         <div className="block">{productsView}</div>
+    
         {sidebarComponent}
+      
       </div>
     );
   } else {

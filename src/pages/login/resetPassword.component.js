@@ -170,7 +170,7 @@
 
 //   useEffect(() => {
 //     if (props.currentUser.length > 0 && submitResetPasswordForm === true) {
-//       this.props.history.push("/login");
+//       this.props.history.push("/EmporiaDev/login");
 //       window.location.reload(false);
 //     }
 //   }, [props.currentUser], setsubmitResetPasswordForm);

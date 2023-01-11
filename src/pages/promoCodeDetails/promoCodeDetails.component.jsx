@@ -963,7 +963,7 @@ class PromoCodeDetailsComponent extends Component {
       
       setTimeout(
         function () {
-          this.props.history.push("/viewPromoCodes");
+          this.props.history.push("/EmporiaDev/viewPromoCodes");
         }.bind(this),
         500
       );

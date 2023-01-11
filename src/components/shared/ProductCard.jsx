@@ -59,7 +59,7 @@ function ProductCard(props) {
   let wishlistView;
 
   const login = () => {
-    // this.props.history.push("/login");
+    // this.props.history.push("/EmporiaDev/login");
     setloginPopOut(true)
   }
 
@@ -336,12 +336,16 @@ ProductCard.propTypes = {
 
 const mapStateToProps = (state) => ({
   wishlist: state.counterReducer.wishlist,
+  productcart: state.counterReducer["productcart"],
+  wishlist: state.counterReducer["wishlist"],
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
     CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
+    CallViewProductCart: (credentials) => dispatch(GitAction.CallViewProductCart(credentials)),
+    CallViewProductWishlist: (credentials) => dispatch(GitAction.CallViewProductWishlist(credentials)),
   }
 };
 

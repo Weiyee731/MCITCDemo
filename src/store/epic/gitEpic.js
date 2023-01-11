@@ -22,7 +22,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UserLoggedInWithData, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UserLoggedInWithData, payload: [] });
               }
             });
@@ -46,7 +46,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UserLoggedOut, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UserLoggedOut, payload: [] });
               }
             });
@@ -73,7 +73,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UserRegistered, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UserRegistered, payload: [] });
               }
             });
@@ -98,7 +98,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.CheckedUser, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                // //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.CheckedUser, payload: [] });
               }
             });
@@ -126,7 +126,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.VerifiedPassword, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                // //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.VerifiedPassword, payload: [] });
               }
             });
@@ -154,7 +154,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.SentOTPVerification, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                // //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.SentOTPVerification, payload: [] });
               }
             });
@@ -184,7 +184,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedContact, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedContact, payload: [] });
               }
             });
@@ -214,7 +214,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedEmail, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedEmail, payload: [] });
               }
             });
@@ -244,7 +244,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedPassword, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedPassword, payload: [] });
               }
             });
@@ -268,7 +268,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotPages, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotPages, payload: [] });
               }
             });
@@ -298,7 +298,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotUserProfile, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotUserProfile, payload: [] });
               }
             });
@@ -327,7 +327,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.EditedUserProfile, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.EditedUserProfile, payload: [] });
               }
             });
@@ -408,7 +408,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedUserStatus, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedUserStatus, payload: [] });
               }
             });
@@ -437,7 +437,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedShopDetail, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedShopDetail, payload: [] });
               }
             });
@@ -462,7 +462,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedProfileImage, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedProfileImage, payload: [] });
               }
             });
@@ -488,7 +488,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotAddress, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotAddress, payload: [] });
               }
             });
@@ -510,7 +510,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotAllAddress, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotAllAddress, payload: [] });
               }
             });
@@ -542,7 +542,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedAddress, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.AddedAddress, payload: [] });
               }
             });
@@ -639,7 +639,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedAddress, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedAddress, payload: [] });
               }
             });
@@ -726,7 +726,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedDefaultAddress, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedDefaultAddress, payload: [] });
               }
             });
@@ -795,7 +795,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.DeletedAddress, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.DeletedAddress, payload: [] });
               }
             });
@@ -878,7 +878,7 @@ export class GitEpic {
                 catch(e){console.log(e)}
                
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.DeletedProductCart, payload: [] });
               }
             });
@@ -1084,8 +1084,8 @@ export class GitEpic {
                 catch(e){console.log(e)}
                
               } else {
-                toast.error(json[0].ReturnMsg)
-                return dispatch({ type: GitAction.DeletedProductCart, payload: [] });
+                //toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.AddedProductCart, payload: [] });
               }
             });
         } catch (error) {
@@ -1159,7 +1159,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.ViewedProductCart, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.ViewedProductCart, payload: [] });
               }
             });
@@ -1209,7 +1209,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.ViewedProductWishlist, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.ViewedProductWishlist, payload: [] });
               }
             });
@@ -1233,7 +1233,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedProductWishlist, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.AddedProductWishlist, payload: [] });
               }
             });
@@ -1299,7 +1299,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.DeletedProductWishlist, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.DeletedProductWishlist, payload: [] });
               }
             });
@@ -1364,7 +1364,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotCountry, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotCountry, payload: [] });
               }
             });
@@ -1388,7 +1388,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotCourierService, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotCourierService, payload: [] });
               }
             });
@@ -1412,7 +1412,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotPaymentMethod, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotPaymentMethod, payload: [] });
               }
             });
@@ -1436,7 +1436,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotCreditCard, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotCreditCard, payload: [] });
               }
             });
@@ -1463,7 +1463,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedCreditCard, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.AddedCreditCard, payload: [] });
               }
             });
@@ -1543,7 +1543,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedCreditCard, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedCreditCard, payload: [] });
               }
             });
@@ -1619,7 +1619,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.DeletedCreditCard, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.DeletedCreditCard, payload: [] });
               }
             });
@@ -1693,7 +1693,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProduct, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProduct, payload: [] });
               }
             });
@@ -1721,7 +1721,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductListing, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductListing, payload: [] });
               }
             });
@@ -1746,7 +1746,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductDetail, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductDetail, payload: [] });
               }
             });
@@ -1769,7 +1769,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.ProductChecked, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.ProductChecked, payload: [] });
               }
             });
@@ -1800,7 +1800,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedProductVariationDetail, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.AddedProductVariationDetail, payload: [] });
               }
             });
@@ -1828,7 +1828,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedProductVariationDetail, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedProductVariationDetail, payload: [] });
               }
             });
@@ -1852,7 +1852,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductVariation, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductVariation, payload: [] });
               }
             });
@@ -1874,7 +1874,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductVariationByCategoryID, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductVariationByCategoryID, payload: [] });
               }
             });
@@ -1898,7 +1898,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductCategory, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductCategory, payload: [] });
               }
             });
@@ -1920,7 +1920,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductCategoryListing, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductCategoryListing, payload: [] });
               }
             });
@@ -1944,7 +1944,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotNotification, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotNotification, payload: [] });
               }
             });
@@ -1970,7 +1970,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotSupplierByUserStatus, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotSupplierByUserStatus, payload: [] });
               }
             });
@@ -2023,7 +2023,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.RegisteredSupplier, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.RegisteredSupplier, payload: [] });
               }
             });
@@ -2047,7 +2047,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.EndorsedSupplier, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.EndorsedSupplier, payload: [] });
               }
             });
@@ -2073,7 +2073,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductReviewByProductID, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductReviewByProductID, payload: [] });
               }
             });
@@ -2096,7 +2096,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductReview, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductReview, payload: [] });
               }
             });
@@ -2124,7 +2124,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.addedProductReview, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.addedProductReview, payload: [] });
               }
             });
@@ -2239,7 +2239,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedOrder, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.AddedOrder, payload: [] });
               }
             });
@@ -2384,7 +2384,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedOrderCreditCard, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.AddedOrderCreditCard, payload: [] });
               }
             });
@@ -2501,7 +2501,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedOrder, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedOrder, payload: [] });
               }
             });
@@ -2540,7 +2540,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.UpdatedOrder_CreditCard, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.UpdatedOrder_CreditCard, payload: [] });
               }
             });
@@ -2565,7 +2565,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.ViewedOrderStatus, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.ViewedOrderStatus, payload: [] });
               }
             });
@@ -2592,7 +2592,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.updatedTrackingNumber, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.updatedTrackingNumber, payload: [] });
               }
             });
@@ -2616,7 +2616,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotDeliverableList, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotDeliverableList, payload: [] });
               }
             });
@@ -2639,7 +2639,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotOrderListByOrderID, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotOrderListByOrderID, payload: [] });
               }
             });
@@ -2664,7 +2664,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotPromotion, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotPromotion, payload: [] });
               }
             });
@@ -2687,7 +2687,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotPromo, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotPromo, payload: [] });
               }
             });
@@ -2710,7 +2710,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotPromoCode, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotPromoCode, payload: [] });
               }
             });
@@ -2735,7 +2735,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotTransactions, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotTransactions, payload: [] });
               }
             });
@@ -2758,7 +2758,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotTransactionsWithDelivery, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotTransactionsWithDelivery, payload: [] });
               }
             });
@@ -2781,7 +2781,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotTransactionStatus, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotTransactionStatus, payload: [] });
               }
             });
@@ -2808,7 +2808,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotSubs, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotSubs, payload: [] });
               }
             });
@@ -2832,7 +2832,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedSubcs, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.AddedSubcs, payload: [] });
               }
             });
@@ -2861,7 +2861,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotMerchants, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotMerchants, payload: [] });
               }
             });
@@ -2885,7 +2885,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotMerchantOrders, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotMerchantOrders, payload: [] });
               }
             });
@@ -2910,7 +2910,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductOrders, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductOrders, payload: [] });
               }
             });
@@ -2934,7 +2934,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotProductStockByStatus, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotProductStockByStatus, payload: [] });
               }
             });
@@ -2975,7 +2975,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.SentPayment, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.SentPayment, payload: [] });
               }
             });
@@ -2997,7 +2997,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.gotFPXResponseList, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.gotFPXResponseList, payload: [] });
               }
             });
@@ -3027,7 +3027,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.ViewedBankList, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.ViewedBankList, payload: [] });
               }
             });
@@ -3052,7 +3052,7 @@ export class GitEpic {
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.GotPostcodes, payload: JSON.parse(json[0].ReturnData) });
               } else {
-                toast.error(json[0].ReturnMsg)
+                //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.GotPostcodes, payload: [] });
               }
             });

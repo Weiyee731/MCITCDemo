@@ -114,8 +114,8 @@ function AccountPageOrderDetails(props) {
 
   const orderDetail = props.location.orderdetails;
   if (orderDetail === undefined) {
-    this.props.history.push("/account/orders")
-    // this.props.history.push("/account/orders");
+    this.props.history.push("/EmporiaDev/account/orders")
+    // this.props.history.push("/EmporiaDev/account/orders");
     // window.location.reload(false);
   }
 
@@ -265,7 +265,7 @@ function AccountPageOrderDetails(props) {
   }
 
   const login = () => {
-    props.history.push("/login");
+    props.history.push("/EmporiaDev/login");
   }
 
   const productID = orderDetail !== null && JSON.parse(orderDetail.OrderProductDetail).map((x) => x.ProductID)
@@ -288,7 +288,7 @@ function AccountPageOrderDetails(props) {
                 <div className="order-header__actions">
                   {
                     orderDetail.TrackingStatusID !== 4 ?
-                      <Button onClick={() => window.location.href = "/account/orders"} style={{ backgroundColor: "grey", color: "white", borderWidth: 0, margin: "3px" }}>
+                      <Button onClick={() => window.location.href = "/EmporiaDev/account/orders"} style={{ backgroundColor: "grey", color: "white", borderWidth: 0, margin: "3px" }}>
                         BACK TO LIST
                       </Button>
                       :

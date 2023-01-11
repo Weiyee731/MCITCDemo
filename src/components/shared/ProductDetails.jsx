@@ -48,6 +48,7 @@ class ProductDetails extends Component {
             isProductSet: false,
             isTimerEnd: false,
             pathname: "",
+            count: 0
 
         };
         this.addCart = this.addCart.bind(this)
@@ -93,6 +94,8 @@ class ProductDetails extends Component {
         } else {
             this.setState({ isProductSet: false })
         }
+
+
     }
     componentDidUpdate(props) {
         const { product } = this.props
@@ -171,7 +174,7 @@ class ProductDetails extends Component {
     }
 
     login() {
-        // browserHistory.push("/login");
+        // browserhistory.push("/EmporiaDev/login");
         // window.location.reload(false);
         // this.props.history.push({pathname: "/login", loginPopOut: true});
         this.props.getpopOutDetailsCard(false,true)
@@ -244,6 +247,8 @@ class ProductDetails extends Component {
         const baseColor = "#c4c4c4"
         const highlightColor = "#ffffff"
 
+        console.log("CHECKKKKK")
+
         if (this.state.isTimerEnd === false)
             setInterval(() => {
                 this.setState({ isTimerEnd: true })
@@ -252,6 +257,20 @@ class ProductDetails extends Component {
         prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
         let merchant = product.ReturnVal !== undefined && product.ReturnVal !== "0" && product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
         let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
+
+
+        if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined && this.state.count === 0) {
+            console.log("sdasdsadsadsad", this.state.count)
+               // this.props.CallViewProductCart({
+            //     userID: localStorage.getItem("id")
+            // })
+            // this.props.CallViewProductWishlist({
+            //     userID: localStorage.getItem("id")
+            // })
+            
+            this.setState({ count: 1 })
+         
+        }
 
         const LayoutListing = () => {
             return (
@@ -583,6 +602,8 @@ const mapDispatchToProps = (dispatch) => {
         CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
         CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
         CallAddProductWishlist: (prodData) => dispatch(GitAction.CallAddProductWishlist(prodData)),
+        CallViewProductCart: (prodData) => dispatch(GitAction.CallViewProductCart(prodData)),
+        CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
         // CallProductReviewByProductID: (PropsData) => dispatch(GitAction.CallProductReviewByProductID(PropsData)),
     }
 };

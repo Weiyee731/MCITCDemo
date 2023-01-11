@@ -191,8 +191,8 @@ class AccountPagePassword extends Component {
     if (prevProps.updatePassword !== this.props.updatePassword) {
       if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
         toast.success("Your password has been updated");
-        this.props.history.push("/account/profile")
-        // this.props.history.push("/account/profile");
+        this.props.history.push("/EmporiaDev/account/profile")
+        // this.props.history.push("/EmporiaDev/account/profile");
         // window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");

@@ -95,6 +95,7 @@ class Product extends Component {
         this.setState({ isTimerEnd: true })
       }, 2000)
 
+      console.log("CHECKKKKK3")
     return (
       <div className="block" >
         <ProductDetails product={product} />

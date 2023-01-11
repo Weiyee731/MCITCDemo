@@ -283,7 +283,7 @@
 //     })
 //     .then(token => {
 //         sessionStorage.setItem('token', JSON.stringify(token.token));
-//         this.props.history.push("/users");
+//         this.props.history.push("/EmporiaDev/users");
 //         return;
 //     })
 //     .catch(e => {
@@ -314,7 +314,7 @@
 //     // }).then((response) => response.json())
 //     //   .then((json) => {
 //     //     console.log(json)
-//     //     this.props.history.push("/thank-you");
+//     //     this.props.history.push("/EmporiaDev/thank-you");
 //     //   })
 
 //     //   .catch((error) => console.log(error.message));
@@ -483,7 +483,7 @@
 //     if (prevProps.order !== this.props.order) {
 //       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
 
-//         // this.props.history.push("/");
+//         // this.props.history.push("/EmporiaDev/");
 //         // window.location.reload(false);
 //       }
 //     }
