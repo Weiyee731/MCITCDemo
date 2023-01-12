@@ -22,20 +22,19 @@ import Checkbox from "@mui/material/Checkbox";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import AccountPageAddAddress from '../account/AccountPageAddAddress';
+import { toast } from "react-toastify";
 // ----------------------------------------------------------------------
 
 CheckoutBillingNewAddressForm.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  onCreateBilling: PropTypes.func,
+  onCreateBilling: PropTypes.func
 };
 
 export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateBilling }) {
 
   const dispatch = useDispatch();
-  // const [country, setCountry] = useState(1)
-
-
+  const [isLoading, setIsLoading] = useState(false);
   const [newAddressInfo, editForm] = useState({
     Name: '',
     USERID: window.localStorage.getItem("id"),
@@ -48,6 +47,23 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
     USERCITY: '',
     COUNTRYID: 1
   })
+
+  const { addAddress } = useSelector(state => state.counterReducer);
+  const [prevValue, setPrevValue] = useState(addAddress);
+
+  useEffect(() => {
+    setIsLoading(false)
+    console.log("addAddress", addAddress)
+    console.log("add", addAddress !== [])
+    if (addAddress !== []) {
+      onClose()
+    }
+    if (addAddress !== prevValue) {
+      setPrevValue(addAddress)
+      toast.success("Your address is added successfully")
+    }
+
+  }, [addAddress]);
 
   useEffect(() => {
     dispatch(GitAction.CallCountry());
@@ -175,9 +191,10 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
 
       <DialogActions>
         <LoadingButton type="submit" variant="contained"
-          // loading={isSubmitting}
+          loading={isLoading}
           onClick={() => {
             handleaddAddress();
+            setIsLoading(true)
           }}
         >
           Add Address

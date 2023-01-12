@@ -15,6 +15,10 @@ import CheckoutBillingNewAddressForm from './ShopPageCheckOutBillingNewAddressFo
 import { useDispatch, useSelector } from 'react-redux';
 import { GitAction } from '../../store/action/gitAction';
 import sum from 'lodash/sum';
+import CircularProgress from '@mui/material/CircularProgress';
+import { LoadingButton } from '@mui/lab';
+import { toast } from "react-toastify";
+
 // ----------------------------------------------------------------------
 
 CheckoutBillingAddress.propTypes = {
@@ -26,32 +30,38 @@ CheckoutBillingAddress.propTypes = {
 export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateBilling }) {
   const dispatch = useDispatch();
 
-  const {deleteAddress,addAddress} = useSelector(state =>  state.counterReducer);
-
-  console.log("_address_ondelete",deleteAddress)
-
-  useEffect(() => {
-    dispatch(GitAction.CallAllAddress({ USERID: 1 }));
-  }, [deleteAddress,addAddress]);
-
-  const _addressBooks = useSelector(state => ({ _addressBooks: state.counterReducer.addresses }));
-  const Selfpickup = [{
+  const [Selfpickup, changeSelfpickup] = useState([{
     UserAddressBookID: 0,
     UserAddressName: 'Self-pickup',
     UserAddressLine1: "Pickup Directly from our store",
     UserAddressLine2: "",
     UserCity: "",
     UserState: "",
-  }];
+  }])
 
-  console.log(_addressBooks._addressBooks)
   const { data } = checkout;
-
   const total = sum(data.map((item) => item.total));
   const subtotal = sum(data.map((item) => item.total));
   const discount = sum(data.map((item) => item.discount));
 
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { deleteAddress, addAddress, addresses } = useSelector(state => state.counterReducer);
+
+  const [prevValue, setPrevValue] = useState(deleteAddress);
+
+  useEffect(() => {
+    dispatch(GitAction.CallAllAddress({ USERID: 1 }));
+  }, [deleteAddress, addAddress]);
+
+  useEffect(() => {
+    if (deleteAddress !== prevValue) {
+      console.log('value has changed');
+      setPrevValue(deleteAddress); // update the prevValue state
+      setIsLoading(false)
+      toast.success("Selected address is deleted")
+    }
+  }, [deleteAddress]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -74,11 +84,13 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
               />
             ))
           }
-          {_addressBooks._addressBooks.map((address, index) => (
+          {addresses.map((address, index) => (
             <AddressItem
               key={index}
               address={address}
               onCreateBilling={() => onCreateBilling(address)}
+              setIsLoading={setIsLoading}
+              isloading={isLoading}
             />
           ))}
 
@@ -113,6 +125,7 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
         open={open}
         onClose={handleClose}
         onCreateBilling={onCreateBilling}
+      // setIsLoading={setIsLoading} 
       />
     </>
   );
@@ -125,7 +138,7 @@ AddressItem.propTypes = {
   onCreateBilling: PropTypes.func,
 };
 
-function AddressItem({ address, onCreateBilling }) {
+function AddressItem({ address, onCreateBilling, setIsLoading, isloading }) {
   const { UserAddressBookID, UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = address;
   const isDefault = isDefaultAddress === 1
   const dispatch = useDispatch();
@@ -172,11 +185,12 @@ function AddressItem({ address, onCreateBilling }) {
 
         <Stack flexDirection="row" flexWrap="wrap" flexShrink={0}>
           {!isDefault && (
-            <Button variant="outlined" size="small" color="inherit" sx={{ mr: 1 }} onClick={() => {
+            <LoadingButton variant="outlined" type="submit" loading={isloading} size="small" color="inherit" sx={{ mr: 1 }} onClick={() => {
               dispatch(GitAction.CallDeleteAddress({ AddressBookNo: UserAddressBookID }));
+              setIsLoading(true)
             }}>
               Delete
-            </Button>
+            </LoadingButton>
           )}
 
           <Button variant="outlined" size="small" onClick={onCreateBilling}>
