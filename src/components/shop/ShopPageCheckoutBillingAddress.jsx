@@ -124,7 +124,8 @@ AddressItem.propTypes = {
 function AddressItem({ address, onCreateBilling }) {
   const { UserAddressBookID, UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = address;
   const isDefault = isDefaultAddress === 1
-
+  const dispatch = useDispatch();
+  
   return (
     <Card
       sx={{
@@ -167,7 +168,9 @@ function AddressItem({ address, onCreateBilling }) {
 
         <Stack flexDirection="row" flexWrap="wrap" flexShrink={0}>
           {!isDefault && (
-            <Button variant="outlined" size="small" color="inherit" sx={{ mr: 1 }}>
+            <Button variant="outlined" size="small" color="inherit" sx={{ mr: 1 }} onClick={() => {
+              dispatch(GitAction.CallDeleteAddress({ AddressBookNo: UserAddressBookID }));
+            }}>
               Delete
             </Button>
           )}
