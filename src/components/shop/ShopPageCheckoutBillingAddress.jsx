@@ -26,9 +26,13 @@ CheckoutBillingAddress.propTypes = {
 export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateBilling }) {
   const dispatch = useDispatch();
 
+  const {deleteAddress,addAddress} = useSelector(state =>  state.counterReducer);
+
+  console.log("_address_ondelete",deleteAddress)
+
   useEffect(() => {
     dispatch(GitAction.CallAllAddress({ USERID: 1 }));
-  }, []);
+  }, [deleteAddress,addAddress]);
 
   const _addressBooks = useSelector(state => ({ _addressBooks: state.counterReducer.addresses }));
   const Selfpickup = [{
@@ -125,7 +129,7 @@ function AddressItem({ address, onCreateBilling }) {
   const { UserAddressBookID, UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = address;
   const isDefault = isDefaultAddress === 1
   const dispatch = useDispatch();
-  
+
   return (
     <Card
       sx={{

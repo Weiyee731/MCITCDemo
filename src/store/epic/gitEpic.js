@@ -539,6 +539,7 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
+              console.log("addAddress json",json)
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedAddress, payload: JSON.parse(json[0].ReturnData) });
               } else {

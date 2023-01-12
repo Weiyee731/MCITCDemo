@@ -1,11 +1,6 @@
-
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import * as Yup from 'yup';
-// form
-// import { useForm } from 'react-hook-form';
-// import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import {
   Box,
@@ -18,15 +13,15 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { GitAction } from '../../store/action/gitAction';
-// assets
-// import { countries } from '../../../../../assets/data';
-// import FormProvider, {
-//   RHFCheckbox,
-//   RHFSelect,
-//   RHFTextField,
-//   RHFRadioGroup,
-// } from '../../../../../components/hook-form';
-
+import TextField from '@mui/material/TextField';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from "@mui/material/Checkbox";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import AccountPageAddAddress from '../account/AccountPageAddAddress';
 // ----------------------------------------------------------------------
 
 CheckoutBillingNewAddressForm.propTypes = {
@@ -36,45 +31,29 @@ CheckoutBillingNewAddressForm.propTypes = {
 };
 
 export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateBilling }) {
-//   const NewAddressSchema = Yup.object().shape({
-//     receiver: Yup.string().required('Fullname is required'),
-//     phoneNumber: Yup.string().required('Phone number is required'),
-//     address: Yup.string().required('Address is required'),
-//     city: Yup.string().required('City is required'),
-//     state: Yup.string().required('State is required'),
-//     country: Yup.string().required('Country is required'),
-//     zipCode: Yup.string().required('Zip code is required'),
-//   });
-const dispatch = useDispatch();
-  const defaultValues = {
-    addressType: 'Home',
-    receiver: '',
-    phoneNumber: '',
-    address: '',
-    city: '',
-    state: '',
-    country: '',
-    zipCode: '',
-    isDefault: true,
-  };
+
+  const dispatch = useDispatch();
+  // const [country, setCountry] = useState(1)
+
+
+  const [newAddressInfo, editForm] = useState({
+    Name: '',
+    USERID: window.localStorage.getItem("id"),
+    ContactNo: '',
+    email: '',
+    USERADDRESSLINE1: '',
+    USERADDRESSLINE2: '',
+    USERPOSCODE: '',
+    USERSTATE: '',
+    USERCITY: '',
+    COUNTRYID: 1
+  })
 
   useEffect(() => {
     dispatch(GitAction.CallCountry());
   }, []);
 
   const countrylist = useSelector(state => ({ countries: state.counterReducer.countries }));
-
-
-//   const methods = useForm({
-//     resolver: yupResolver(NewAddressSchema),
-//     defaultValues,
-//   });
-
-//   const {
-//     handleSubmit,
-//     formState: { isSubmitting },
-//   } = methods;
-
   const onSubmit = async (data) => {
     try {
       onCreateBilling({
@@ -89,77 +68,126 @@ const dispatch = useDispatch();
     }
   };
 
+  const handleaddAddress = () => {
+    dispatch(GitAction.CallAddAddress(newAddressInfo));
+  }
+
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      {/* <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle>Add new address</DialogTitle>
+      <DialogTitle>Add new address</DialogTitle>
 
-        <DialogContent dividers>
-          <Stack spacing={3}>
-            <RHFRadioGroup
-              row
-              name="addressType"
-              options={[
-                { label: 'Home', value: 'Home' },
-                { label: 'Office', value: 'Office' },
-              ]}
-            />
+      <DialogContent dividers>
+        <Stack spacing={3}>
+          {/* <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            name="addressType"
+          // value={parseInt(this.state.paymentMethodsID)}
+          >
+            <Stack spacing={0} direction="row" >
+              <div>
+                <FormControlLabel value="1" control={<Radio />} label="Online Banking" style={{ justifyContent: 'center' }}
+                  onClick={() => this.handlePaymentClick(1, true)}
+                // checked={parseInt(this.state.paymentMethodsID) === 1}
+                />
+              </div>
+              <div>
+                <FormControlLabel value="2" control={<Radio />} label="Online Banking" style={{ justifyContent: 'center' }}
+                  onClick={() => this.handlePaymentClick(1, true)}
+                // checked={parseInt(this.state.paymentMethodsID) === 1}
+                />
+              </div>
+            </Stack>
+          </RadioGroup> */}
+          <Box
+            rowGap={3}
+            columnGap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(2, 1fr)',
+            }}
+          >
+            <TextField id="outlined-basic" name="Name" label="Full Name" variant="outlined" value={newAddressInfo.Name}
+              onChange={(e) => {
+                editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+              }} />
 
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
+            <TextField id="outlined-basic" name="ContactNo" label="Phone Number" variant="outlined" value={newAddressInfo.ContactNo}
+              onChange={(e) => { editForm({ ...newAddressInfo, [e.target.name]: e.target.value }) }} />
+
+          </Box>
+          <TextField id="outlined-basic" name="email" label="Email" variant="outlined" value={newAddressInfo.email}
+            onChange={(e) => {
+              editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+            }} />
+
+          <TextField id="outlined-basic" name="USERADDRESSLINE1" label="Address Line 1" variant="outlined" value={newAddressInfo.USERADDRESSLINE1}
+            onChange={(e) => {
+              editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+            }} />
+          <TextField id="outlined-basic" name="USERADDRESSLINE2" label="Address Line 2" variant="outlined" value={newAddressInfo.USERADDRESSLINE2}
+            onChange={(e) => {
+              editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+            }} />
+
+          <Box
+            rowGap={3}
+            columnGap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(3, 1fr)',
+            }}
+          >
+            <TextField id="outlined-basic" name="USERCITY" label="Town / City" variant="outlined" value={newAddressInfo.USERCITY} onChange={(e) => {
+              editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+            }} />
+            <TextField id="outlined-basic" name="USERSTATE" label="State" variant="outlined" value={newAddressInfo.USERSTATE} onChange={(e) => {
+              editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+            }} />
+            <TextField id="outlined-basic" name="USERPOSCODE" label="Zip/Code" variant="outlined" type="number" value={newAddressInfo.USERPOSCODE} onChange={(e) => {
+              editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+            }} />
+          </Box>
+
+          <FormControl fullWidth  >
+            <Select
+              id="Country"
+              variant="outlined"
+              defaultValue={1}
+              name="COUNTRYID"
+              value={newAddressInfo.COUNTRYID}
+              onChange={(e) => { editForm({ ...newAddressInfo, [e.target.name]: e.target.value }) }}
+              style={{
+                textAlign: "left",
+                width: "100%",
               }}
             >
-              <RHFTextField name="receiver" label="Full Name" />
-
-              <RHFTextField name="phoneNumber" label="Phone Number" />
-            </Box>
-
-            <RHFTextField name="address" label="Address" />
-
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(3, 1fr)',
-              }}
-            >
-              <RHFTextField name="city" label="Town / City" />
-
-              <RHFTextField name="state" label="State" />
-
-              <RHFTextField name="zipCode" label="Zip/Code" />
-            </Box>
-
-            <RHFSelect native name="country" label="Country">
-              <option value="" />
-              {countries.map((country) => (
-                <option key={country.code} value={country.label}>
-                  {country.label}
-                </option>
+              {countrylist.countries.map((country) => (
+                <MenuItem value={country.CountryId}
+                  key={country.CountryId}> {country.CountryName}</MenuItem>
               ))}
-            </RHFSelect>
+            </Select>
+          </FormControl>
+          <FormControlLabel control={<Checkbox />} name="isDefault" label="Use this address as default." sx={{ mt: 3 }} onClick={() => { }} />
+        </Stack>
+      </DialogContent>
 
-            <RHFCheckbox name="isDefault" label="Use this address as default." sx={{ mt: 3 }} />
-          </Stack>
-        </DialogContent>
+      <DialogActions>
+        <LoadingButton type="submit" variant="contained"
+          // loading={isSubmitting}
+          onClick={() => {
+            handleaddAddress();
+          }}
+        >
+          Add Address
+        </LoadingButton>
 
-        <DialogActions>
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Deliver to this Address
-          </LoadingButton>
-
-          <Button color="inherit" variant="outlined" onClick={onClose}>
-            Cancel
-          </Button>
-        </DialogActions>
-      </FormProvider> */}
+        <Button color="inherit" variant="outlined" onClick={onClose}>
+          Cancel
+        </Button>
+      </DialogActions>
+      {/* </FormProvider> */}
     </Dialog>
   );
 }
