@@ -61,6 +61,7 @@ const rootEpic = combineEpics(
   gitEpic.addProductReview,
   //==================DELIVERY==========================//
   gitEpic.getDeliverableList,
+  gitEpic.Order_CalculateOrderShipping,
   //==================NOTIFICATION==========================//
   gitEpic.getNotification,
   //==================ORDER==========================//

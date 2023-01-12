@@ -54,6 +54,7 @@ const INITIAL_STATE = {
   wishlist: [],
   order: [],
   orderByID: [],
+  deliveryFee:[],
   updatedProducts: [],
   productMgmtResult: [],
   addProductVariationResult: [],
@@ -1070,7 +1071,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         account: action.payload,
       });
-    //===============ACCOUNT==============//
+    //===============Delivery==============//
     case GitAction.GetDeliverableList:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotDeliverableList:
@@ -1086,6 +1087,16 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         orderByID: action.payload,
       });
+
+    case GitAction.GetOrderShippingFee:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotOrderShippingFee:
+      return Object.assign({}, state, {
+        loading: false,
+        orderByID: action.payload,
+      });
+
+
     //=============================PROMOTIONS===============================//
     case GitAction.GetPromotion:
       return Object.assign({}, state, { loading: true });

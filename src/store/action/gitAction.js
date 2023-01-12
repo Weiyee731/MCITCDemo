@@ -848,6 +848,16 @@ export class GitAction {
     };
   }
 
+  static GetOrderShippingFee = "GET-ORDERSHIPPINGFEE";
+  static GotOrderShippingFee = "GOT-ORDERSHIPPINGFEE";
+
+  static CallGetOrderShippingFee(suppData) {
+    return {
+      type: GitAction.GetOrderShippingFee,
+      payload: suppData
+    };
+  }
+
   //=================REVIEW=============================//
 
   // Summary

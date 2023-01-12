@@ -3,7 +3,7 @@ import 'rxjs'
 import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 import axios from "axios";
-const { filter, map,switchMap  } = require('rxjs/operators');
+const { filter, map, switchMap } = require('rxjs/operators');
 const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/"
 export class GitEpic {
   User_Login = action$ =>
@@ -860,7 +860,7 @@ export class GitEpic {
             .then(json => {
               json = JSON.parse(json)
               if (json[0].ReturnVal === 1) {
-                try{
+                try {
                   fetch(url +
                     "Product_ItemListInCartByUserID?USERID=" + action.payload.userID)
                     .then(response => response.json())
@@ -871,12 +871,13 @@ export class GitEpic {
                         return dispatch({ type: GitAction.DeletedProductCart, payload: JSON.parse(json[0].ReturnData) });
 
                       }
-                    else{
-                      return dispatch({ type: GitAction.DeletedProductCart, payload: [] });
-                }})
+                      else {
+                        return dispatch({ type: GitAction.DeletedProductCart, payload: [] });
+                      }
+                    })
                 }
-                catch(e){console.log(e)}
-               
+                catch (e) { console.log(e) }
+
               } else {
                 //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.DeletedProductCart, payload: [] });
@@ -942,7 +943,7 @@ export class GitEpic {
   //             json = JSON.parse(json)
   //             if (json[0].ReturnVal === 1) {
   //               switchMap(action => this.viewProductCartList({ userID: action.payload.userID }))
-                
+
   //               // return dispatch({ type: GitAction.UpdatedProductCart, payload: JSON.parse(json[0].ReturnData) });
   //             } else {
   //               toast.error(json[0].ReturnMsg)
@@ -955,8 +956,8 @@ export class GitEpic {
   //       }
   //     }
   //   }));
-    
-    updateProductCart = action$ =>
+
+  updateProductCart = action$ =>
     action$.pipe(
       filter(action => action.type === GitAction.UpdateProductCart),
       map(action => {
@@ -969,7 +970,7 @@ export class GitEpic {
               .then(json => {
                 json = JSON.parse(json)
                 if (json[0].ReturnVal === 1) {
-                  try{
+                  try {
                     fetch(url +
                       "Product_ItemListInCartByUserID?USERID=" + action.payload.userID)
                       .then(response => response.json())
@@ -980,12 +981,13 @@ export class GitEpic {
                           return dispatch({ type: GitAction.UpdatedProductCart, payload: JSON.parse(json[0].ReturnData) });
 
                         }
-                      else{
-                        return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
-                  }})
+                        else {
+                          return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
+                        }
+                      })
                   }
-                  catch(e){console.log(e)}
-                 
+                  catch (e) { console.log(e) }
+
                 } else {
                   toast.error(json[0].ReturnMsg)
                   return dispatch({ type: GitAction.UpdatedProductCart, payload: [] });
@@ -1066,7 +1068,7 @@ export class GitEpic {
               //   return dispatch({ type: GitAction.AddedProductCart, payload: [] });
               // }
               if (json[0].ReturnVal === 1) {
-                try{
+                try {
                   fetch(url +
                     "Product_ItemListInCartByUserID?USERID=" + action.payload.userID)
                     .then(response => response.json())
@@ -1077,12 +1079,13 @@ export class GitEpic {
                         return dispatch({ type: GitAction.AddedProductCart, payload: JSON.parse(json[0].ReturnData) });
 
                       }
-                    else{
-                      return dispatch({ type: GitAction.AddedProductCart, payload: [] });
-                }})
+                      else {
+                        return dispatch({ type: GitAction.AddedProductCart, payload: [] });
+                      }
+                    })
                 }
-                catch(e){console.log(e)}
-               
+                catch (e) { console.log(e) }
+
               } else {
                 //toast.error(json[0].ReturnMsg)
                 return dispatch({ type: GitAction.AddedProductCart, payload: [] });
@@ -2649,6 +2652,33 @@ export class GitEpic {
         }
       }
     }));
+
+  Order_CalculateOrderShipping = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetOrderShippingFee), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_CalculateOrderShipping?PRODUCTID=" + action.payload.PRODUCTID 
+            + "&PROJECTID" + action.payload.PROJECTID 
+            + "&PRODUCTQUANTITY" + action.payload.PRODUCTQUANTITY 
+            + "&POSCODE" + action.payload.POSCODE)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotOrderShippingFee, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotOrderShippingFee, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: Order_CalculateOrderShipping. Please check on URL")
+          return dispatch({ type: GitAction.GotOrderShippingFee, payload: [] });
+        }
+      }
+    }));
+
 
   // PROMOTION
 
