@@ -2659,9 +2659,9 @@ export class GitEpic {
         try {
           return fetch(url +
             "Order_CalculateOrderShipping?PRODUCTID=" + action.payload.PRODUCTID 
-            + "&PROJECTID" + action.payload.PROJECTID 
-            + "&PRODUCTQUANTITY" + action.payload.PRODUCTQUANTITY 
-            + "&POSCODE" + action.payload.POSCODE)
+            + "&PROJECTID=" + action.payload.PROJECTID 
+            + "&PRODUCTQUANTITY=" + action.payload.PRODUCTQUANTITY 
+            + "&POSCODE=" + action.payload.POSCODE)
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)

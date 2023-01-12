@@ -32,15 +32,14 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
 
   const _addressBooks = useSelector(state => ({ _addressBooks: state.counterReducer.addresses }));
   const Selfpickup = [{
-    UserAddressBookID:0,
+    UserAddressBookID: 0,
     UserAddressName: 'Self-pickup',
     UserAddressLine1: "Pickup Directly from our store",
-    UserAddressLine2 :"",
-    UserCity :"",
-    UserState :"",
+    UserAddressLine2: "",
+    UserCity: "",
+    UserState: "",
   }];
-  // console.log("_addressBooks", _addressBooks._addressBooks)
-  // const { total, discount, subtotal } = checkout;
+
   console.log(_addressBooks._addressBooks)
   const { data } = checkout;
 
@@ -102,7 +101,7 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} hideShipping={true}/>
+          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} hideShipping={true} />
         </Grid>
       </Grid>
 
@@ -219,10 +218,10 @@ function DefaultAddressItem({ address, onCreateBilling }) {
           <Typography variant="body2">{UserAddressLine1}</Typography>
         </Stack>
 
-          <Button variant="outlined" size="small" onClick={onCreateBilling}>
-            Self Pick Up
-          </Button>
-        </Stack>
+        <Button variant="outlined" size="small" onClick={onCreateBilling}>
+          Self Pick Up
+        </Button>
+      </Stack>
     </Card>
   );
 }

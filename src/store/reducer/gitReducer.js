@@ -1093,7 +1093,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.GotOrderShippingFee:
       return Object.assign({}, state, {
         loading: false,
-        orderByID: action.payload,
+        deliveryFee: action.payload,
       });
 
 

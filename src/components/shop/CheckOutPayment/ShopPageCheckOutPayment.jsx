@@ -12,7 +12,7 @@ import CheckoutCartCheckOutButton from './ShopPageCheckOutPaymentButton';
 import sum from 'lodash/sum';
 // import DeliveryFee from "../ShopPageDeliveryFee";
 
-import DeliveryFee from "../deliveryFee"
+// import DeliveryFee from "../deliveryFee"
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GitAction } from '../../../store/action/gitAction';
@@ -35,6 +35,7 @@ CheckoutPayment.propTypes = {
     onBackStep: PropTypes.func,
     onGotoStep: PropTypes.func,
     onNextStep: PropTypes.func,
+    deliveryFee: PropTypes.object,
     onApplyShipping: PropTypes.func,
 };
 
@@ -44,9 +45,10 @@ export default function CheckoutPayment({
     onNextStep,
     onBackStep,
     onGotoStep,
+    deliveryFee,
     onApplyShipping,
 }) {
-
+console.log("deliveryFeepay",deliveryFee)
     const { data, address, merchant } = checkout;
     const total = sum(data.map((item) => item.total));
     const subtotal = sum(data.map((item) => item.total));
@@ -156,7 +158,7 @@ export default function CheckoutPayment({
                     total={total}
                     subtotal={subtotal}
                     discount={discount}
-                    // shipping={deliveryFee}
+                    shipping={deliveryFee}
                     onEdit={() => onGotoStep(0)}
                 />
 

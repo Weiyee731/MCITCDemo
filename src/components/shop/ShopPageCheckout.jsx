@@ -36,6 +36,7 @@ function mapStateToProps(state) {
     productcart: state.counterReducer.productcart,
     order: state.counterReducer.order,
     payment: state.counterReducer.payment,
+    deliveryFee: state.counterReducer.deliveryFee,
   };
 }
 
@@ -44,6 +45,7 @@ function mapDispatchToProps(dispatch) {
     CallAddOrder: (propsData) => dispatch(GitAction.CallAddOrder(propsData)),
     CallClearOrder: () => dispatch(GitAction.CallClearOrder()),
     CallSentPayment: (propsData) => dispatch(GitAction.CallSentPayment(propsData)),
+    CallGetOrderShippingFee: (propsData) => dispatch(GitAction.CallGetOrderShippingFee(propsData)),
   };
 }
 
@@ -70,17 +72,13 @@ class PageCheckout extends Component {
       shipping: 0,
       isShipping: false,
       isErrorPoscode: false,
-      activeStep: 0
+      activeStep: 0,
+      deliveryFee: [{ "ShippingCost": 0 }]
     };
     this.onFormSubmit = this.onFormSubmit.bind(this)
 
-    // this.data = this.props.location.state.data;
-    // this.activeStep = 0;
     this.STEPS = ['Cart', 'Billing & address', 'Payment'];
     this.data = this.props.location.state;
-    // const { cart, activeStep } = checkout;
-
-    console.log("data", this.data)
     this.completed = this.state.activeStep === this.STEPS.length;
   }
 
@@ -142,41 +140,46 @@ class PageCheckout extends Component {
       }
     }
 
+    if (prevProps.deliveryFee !== this.props.deliveryFee) {
+      this.setState({deliveryFee: this.props.deliveryFee})
+      console.log("deliveryFee", this.props.deliveryFee)
+    }
   }
 
   handleNextStep = () => {
-    // dispatch(nextStep());
-    // this.activeStep += 1;
     this.setState({ activeStep: this.state.activeStep + 1 })
     console.log("activeStep", this.state.activeStep)
   };
 
   handleBackStep = () => {
-    // dispatch(backStep());
-    // this.activeStep -= 1;
     this.setState({ activeStep: this.state.activeStep - 1 })
   };
 
   handleGotoStep = (step) => {
-    // dispatch(gotoStep(step));
     this.setState({ activeStep: step })
   };
 
   handleApplyDiscount = (value) => {
-    // if (cart.length) {
-    // dispatch(applyDiscount(value));
-    // }
   };
 
   handleCreateBilling = (address) => {
-    // dispatch(createBilling(address));
-    // dispatch(nextStep());
+    let PRODUCTID = this.data.data.map((item) => { return item.product.ProductID })
+    console.log("PRODUCTID", PRODUCTID)
+    let ProductQuantity = this.data.data.map((item) => { return item.product.ProductQuantity })
+    var obj = {
+      PRODUCTID: PRODUCTID,
+      PROJECTID: 2,
+      PRODUCTQUANTITY: ProductQuantity,
+      POSCODE: address.UserPoscode
+    }
     this.data["address"] = address;
+    console.log("data", this.data)
+    this.props.CallGetOrderShippingFee(obj)
+
     this.setState({ activeStep: this.state.activeStep + 1, address: address })
   };
 
   handleApplyShipping = (value) => {
-    // dispatch(applyShipping(value));
     this.data["shipping"] = value;
   };
 
@@ -193,48 +196,48 @@ class PageCheckout extends Component {
       { title: "Checkout", url: "" },
     ];
 
-    const handleGetAddressId = (value) => {
-      if (value.length !== 0)
-        this.setState({ address: value })
-    }
+    // const handleGetAddressId = (value) => {
+    //   if (value.length !== 0)
+    //     this.setState({ address: value })
+    // }
 
-    const handleGetPostcode = (value) => {
-      if (!isNaN(value))
-        this.setState({ shipping: value, isShipping: true })
-    }
+    // const handleGetPostcode = (value) => {
+    //   if (!isNaN(value))
+    //     this.setState({ shipping: value, isShipping: true })
+    // }
 
-    const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
+    // const handleGetPaymentId = (payment, paymentmethodtypeId, paymentmethodtype) => {
 
-      if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0) {
-        if (payment.UserPaymentMethodID !== undefined) {
-          this.setState({ PaymentMethodID: payment.UserPaymentMethodID, PaymentMethod: payment.UserCardType })
-        } else {
-          this.setState({ PaymentMethodID: payment.PaymentMethodID, PaymentMethod: payment.PaymentMethod })
-        }
-        this.setState({ PaymentMethodTypeID: paymentmethodtypeId, PaymentMethodType: paymentmethodtype })
-      }
-      else {
-        this.setState({ PaymentMethodID: 0 })
-      }
-    }
+    //   if (payment !== null && paymentmethodtypeId.length !== 0 && paymentmethodtype.length !== 0) {
+    //     if (payment.UserPaymentMethodID !== undefined) {
+    //       this.setState({ PaymentMethodID: payment.UserPaymentMethodID, PaymentMethod: payment.UserCardType })
+    //     } else {
+    //       this.setState({ PaymentMethodID: payment.PaymentMethodID, PaymentMethod: payment.PaymentMethod })
+    //     }
+    //     this.setState({ PaymentMethodTypeID: paymentmethodtypeId, PaymentMethodType: paymentmethodtype })
+    //   }
+    //   else {
+    //     this.setState({ PaymentMethodID: 0 })
+    //   }
+    // }
 
 
-    if (this.state.submit === true) {
-      if (this.state.isShipping === false && this.state.isErrorPoscode === false) {
-        return (
-          <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={this.state.address} data={this.props.data} />
-        )
-      }
-      else
-        return (
-          <PagePayment addressID={this.state.address} data={this.props.data} merchant={this.props.merchant} shippingfee={this.state.shipping} />
-        )
-    }
+    // if (this.state.submit === true) {
+    //   if (this.state.isShipping === false && this.state.isErrorPoscode === false) {
+    //     return (
+    //       <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={this.state.address} data={this.props.data} />
+    //     )
+    //   }
+    //   else
+    //     return (
+    //       <PagePayment addressID={this.state.address} data={this.props.data} merchant={this.props.merchant} shippingfee={this.state.shipping} />
+    //     )
+    // }
 
-    const handleGetTotal = (total) => {
-      if (total !== 0)
-        this.setState({ OrderTotalAmount: total })
-    }
+    // const handleGetTotal = (total) => {
+    //   if (total !== 0)
+    //     this.setState({ OrderTotalAmount: total })
+    // }
 
     return (
       <React.Fragment>
@@ -273,20 +276,11 @@ class PageCheckout extends Component {
                   />
                 )}
                 {this.state.activeStep === 2 && (
-                  // <PagePayment
-                  // checkout={data}
-                  //  merchant={merchant}
-                  // checkout={data}
-                  // onNextStep={this.handleNextStep}
-                  // onBackStep={this.handleBackStep}
-                  // onGotoStep={this.handleGotoStep}
-                  // onApplyShipping={this.handleApplyShipping}
-                  // onReset={this.handleReset}
-                  // />
                   <CheckoutPayment
                     checkout={this.data}
                     onBackStep={this.handleBackStep}
                     onGotoStep={this.handleGotoStep}
+                    deliveryFee={this.state.deliveryFee}
                     onApplyShipping={this.handleApplyShipping}
                   />
                 )}

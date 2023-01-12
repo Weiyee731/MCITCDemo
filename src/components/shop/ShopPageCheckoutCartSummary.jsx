@@ -77,7 +77,7 @@ export default function CheckoutSummary({
                 Shipping
               </Typography>
               <Typography variant="subtitle2">
-                {shipping ? <Currency value={shipping}></Currency> : defaultShipping}
+                {shipping ? <Currency value={shipping[0].ShippingCost}></Currency> : defaultShipping}
               </Typography>
             </Stack>
           }
