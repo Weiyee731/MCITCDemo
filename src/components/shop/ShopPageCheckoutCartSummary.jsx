@@ -24,7 +24,7 @@ CheckoutSummary.propTypes = {
   total: PropTypes.number,
   discount: PropTypes.number,
   subtotal: PropTypes.number,
-  shipping: PropTypes.number,
+  shipping: PropTypes.array,
   enableEdit: PropTypes.bool,
   enableDiscount: PropTypes.bool,
   onApplyDiscount: PropTypes.func,

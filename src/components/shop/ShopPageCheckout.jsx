@@ -139,10 +139,8 @@ class PageCheckout extends Component {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
       }
     }
-
     if (prevProps.deliveryFee !== this.props.deliveryFee) {
-      this.setState({deliveryFee: this.props.deliveryFee})
-      console.log("deliveryFee", this.props.deliveryFee)
+      this.setState({ deliveryFee: this.props.deliveryFee })
     }
   }
 

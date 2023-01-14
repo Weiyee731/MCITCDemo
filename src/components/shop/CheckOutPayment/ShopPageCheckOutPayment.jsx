@@ -35,7 +35,7 @@ CheckoutPayment.propTypes = {
     onBackStep: PropTypes.func,
     onGotoStep: PropTypes.func,
     onNextStep: PropTypes.func,
-    deliveryFee: PropTypes.object,
+    deliveryFee: PropTypes.array,
     onApplyShipping: PropTypes.func,
 };
 
@@ -48,7 +48,6 @@ export default function CheckoutPayment({
     deliveryFee,
     onApplyShipping,
 }) {
-console.log("deliveryFeepay",deliveryFee)
     const { data, address, merchant } = checkout;
     const total = sum(data.map((item) => item.total));
     const subtotal = sum(data.map((item) => item.total));
