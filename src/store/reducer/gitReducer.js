@@ -5,6 +5,8 @@ const INITIAL_STATE = {
   gitData: {},
   loading: true,
   currentUser: {},
+  registerUser: {},
+  otp: {},
   supplier: [],
   products: [],
   productsListing: [],
@@ -94,7 +96,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.UserRegistered:
       return Object.assign({}, state, {
         loading: false,
-        currentUser: action.payload,
+        registerUser: action.payload,
+      });
+
+    case GitAction.RegisterOTP:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UserRegisteredOTP:
+      return Object.assign({}, state, {
+        loading: false,
+        otp: action.payload,
       });
 
     case GitAction.Login:

@@ -38,7 +38,7 @@ import jwt_decode from "jwt-decode";
 // import FacebookLogin from '@greatsumini/react-facebook-login';
 // import SocialLogin from "./socialLogin"
 import { FBLogin } from "./FBLogin"
-import {CustomGoogleLogin } from "./GoogleLogin"
+import { CustomGoogleLogin } from "./GoogleLogin"
 
 var CryptoJS = require("crypto-js");
 
@@ -243,6 +243,7 @@ class LoginComponent extends Component {
       }
     }
   }
+  
 
   toggleShow() {
     this.setState({ hidden: !this.state.hidden });
@@ -400,6 +401,7 @@ class LoginComponent extends Component {
 
 
   render() {
+    console.log(this.props)
     return (
       <>
         <Modal

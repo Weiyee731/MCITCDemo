@@ -125,9 +125,6 @@ function HomePageTwo(props) {
   //     page: 1,
   //   })
   // }, [])
-
-  console.log("CHECKKKKK1")
-
   return (
     <React.Fragment>
       <div className="block--margin-top">
