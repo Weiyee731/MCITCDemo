@@ -9,6 +9,9 @@ export class GitAction {
   // Signup
   static Register = "REGISTER";
   static UserRegistered = "SUCCESSFULLY-CREATED-USER";
+  
+  static RegisterOTP = "REGISTEROTP";
+  static UserRegisteredOTP = "SUCCESSFULLY-CREATED-USERACCOUNT";
 
   // Login
   static Login = "LOGIN";
@@ -98,6 +101,13 @@ export class GitAction {
   static CallSignup(credentials) {
     return {
       type: GitAction.Register,
+      payload: credentials,
+    };
+  }
+
+  static CallSignupOTP(credentials) {
+    return {
+      type: GitAction.RegisterOTP,
       payload: credentials,
     };
   }

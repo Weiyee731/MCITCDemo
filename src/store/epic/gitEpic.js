@@ -62,11 +62,11 @@ export class GitEpic {
       return dispatch => {
         try {
           return fetch(url +
-            "User_RegisterSimplified?userEmail=" +
+            "User_Register_WithOTP?USEREMAIL=" +
             action.payload.Email +
-            "&password=" +
+            "&PASSWORD=" +
             action.payload.Password +
-            "&ProjectID=2")
+            "&PROJECTID=2")
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
@@ -80,6 +80,34 @@ export class GitEpic {
         } catch (error) {
           toast.error("Error Code: RegisterUser. Please check on URL")
           return dispatch({ type: GitAction.UserRegistered, payload: [] });
+        }
+      }
+    }));
+
+  RegisterUserOTP = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.RegisterOTP), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_Register_VerifyOTP?USERID=" +
+            action.payload.UserID +
+            "&USEREMAIL=" +
+            action.payload.Email +
+            "&OTP=" +
+            action.payload.OTP)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UserRegisteredOTP, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                //toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UserRegisteredOTP, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: RegisterOTP. Please check on URL")
+          return dispatch({ type: GitAction.UserRegisteredOTP, payload: [] });
         }
       }
     }));

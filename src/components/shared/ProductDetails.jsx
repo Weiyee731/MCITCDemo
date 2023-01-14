@@ -275,13 +275,14 @@ class ProductDetails extends Component {
         const LayoutListing = () => {
             return (
                 <div className="product__content">
+                    {console.log(product)}
                     {
                         window.location.pathname !== "/" ?
                             this.state.isProductSet === true &&
                             <ProductGallery
                                 layout={layout}
                                 currentData={this.state}
-                                images={typeof product.ProductImages === "string" ? JSON.parse(product.ProductImages) : [Logo]}
+                                images={typeof product.ProductImages === "string" && product.ProductImages !=="[]" ? JSON.parse(product.ProductImages) : [Logo]}
                                 baseColor={baseColor}
                                 highlightColor={highlightColor}
                             />
@@ -408,8 +409,8 @@ class ProductDetails extends Component {
                                                     <Chip size="small" variant="outlined" color="success" label={"Out of Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
                                         }
                                         &nbsp;
-                                        <Chip variant="outlined" color="secondary" label="Brand: " size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
-                                        <Chip variant="outlined" color="info" label={"SKU: " + product.SKU} size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
+                                        <Chip variant="outlined" color="secondary" label={"Brand: " + (product.Brand === "-" ? "None" : product.Brand) } size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
+                                        <Chip variant="outlined" color="info" label={"SKU: " + (product.SKU === "-" ? "N/A" : product.SKU) } size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
                                     </ul>
                                     {/* <div className="product__seller">
                                         <Typography variant="caption">Seller:{" "}</Typography>
@@ -460,7 +461,7 @@ class ProductDetails extends Component {
                                     </div> */}
                                 </div>
                                 <div className="product__sidebar">
-                                    <div className="product__prices">{prices}</div>
+                                    <div className="product__prices">{product.ProductPrice !== null ? product.ProductPrice : "N/A" }</div>
                                     {
                                         variation !== null && variation !== "" && variation !== undefined && variation.ProductVariation !== "None" &&
                                         (

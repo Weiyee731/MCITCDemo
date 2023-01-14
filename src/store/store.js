@@ -13,6 +13,7 @@ const rootEpic = combineEpics(
   gitEpic.User_Login,
   gitEpic.LogoutUser,
   gitEpic.RegisterUser,
+  gitEpic.RegisterUserOTP,
   gitEpic.getUserPage,
   gitEpic.ViewAddress,
   gitEpic.ViewAllAddress,

@@ -19,12 +19,15 @@ import { toast } from "react-toastify";
 import { Link, withRouter } from "react-router-dom";
 import { Modal, ModalBody } from "reactstrap";
 import CloseIcon from '@mui/icons-material/Close';
+import { MuiOtpInput } from 'mui-one-time-password-input'
+
 
 // Application
 import Logo from "../../assets/Emporia.png";
 
 function mapStateToProps(state) {
     return {
+        registerUser: state.counterReducer["registerUser"],
         currentUser: state.counterReducer["currentUser"],
         exist: state.counterReducer["exists"],
         loading: state.counterReducer["loading"],
@@ -35,14 +38,16 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         CallSignup: (credentials) => dispatch(GitAction.CallSignup(credentials)),
+        CallSignupOTP: (credentials) => dispatch(GitAction.CallSignupOTP(credentials)),
         CallCheckUserExists: (credentials) => dispatch(GitAction.CallCheckUserExists(credentials)),
     };
 }
 
 const SignUp = (props) => {
+    console.log("props", props);
     const [signupPopOut, setsignupPopOut] = useState(props.signupPopOut)
-    console.log(signupPopOut)
     const [currentForm, setCurrentForm] = useState(1);
+    const [otp, setOtp] = useState('');
     const [userDetail, setUserDetail] = useState({
         FirstName: "",
         LastName: "",
@@ -54,6 +59,7 @@ const SignUp = (props) => {
         isLastNameFill: false,
         isUsernameFill: false,
         isEmailFill: false,
+        isOTPFill: false,
         isConfirmPasswordFill: false,
 
     });
@@ -65,11 +71,12 @@ const SignUp = (props) => {
     // const [EmailDuplicate, setEmailDuplicate] = useState(false);
     const [PasswordEmpty, setPasswordEmpty] = useState(false);
     const [ConfirmPasswordEmpty, setConfirmPasswordEmpty] = useState(false);
+    const [OTPEmpty, setOTPEmpty] = useState(false);
     const [submitRegisterForm, setSubmitRegisterForm] = useState(false);
-
     const [passErrorMatch, setPassErrorMatch] = useState(false);
     const [passErrorWrongFormat, setPassWrongFormat] = useState(false);
     const [emailErrorWrongFormat, setEmailWrongFormat] = useState(false);
+    const [OTPErrorWrongFormat, setOTPErrorWrongFormat] = useState(false);
 
     const [pass, setPass] = useState();
     const [confirmPass, setConfirmPass] = useState();
@@ -89,16 +96,16 @@ const SignUp = (props) => {
             EmailEmpty ||
             PasswordEmpty ||
             ConfirmPasswordEmpty ||
+            OTPEmpty ||
             passErrorWrongFormat ||
             emailErrorWrongFormat ||
-            passErrorMatch
+            passErrorMatch ||
+            OTPErrorWrongFormat
         ) {
             toast.error("Please complete the form with correct information.");
         } else {
-
             props.CallCheckUserExists({ Email: userDetail.Email, Value: "signup" })
             setEmailVefication(true)
-
         }
     };
 
@@ -123,9 +130,10 @@ const SignUp = (props) => {
         };
     };
 
-    const submitForm = () => {
+    const submitForm = (userDetail) => {
         props.CallSignup(userDetail);
-        setSubmitRegisterForm(true);
+        toast.info("Thank you for registering, you can now login")
+        // setSubmitRegisterForm(true);
     };
 
     const verifyPass = () => {
@@ -146,7 +154,6 @@ const SignUp = (props) => {
     };
 
     useEffect(() => {
-        console.log("11")
         const timeOutId = setTimeout(() => checkEmail(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.Email]);
@@ -165,7 +172,6 @@ const SignUp = (props) => {
     };
 
     useEffect(() => {
-        console.log("22")
         const timeOutId = setTimeout(() => checkPassword(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.Password]);
@@ -179,7 +185,6 @@ const SignUp = (props) => {
     };
 
     useEffect(() => {
-        console.log("33")
         const timeOutId = setTimeout(() => checkConfirmPassword(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.ConfirmPassword]);
@@ -195,14 +200,14 @@ const SignUp = (props) => {
         }
     };
 
+    // validation of confirm password format
     useEffect(() => {
-        console.log("44")
         const timeOutId = setTimeout(() => verifyPass(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.Password, userDetail.ConfirmPassword]);
 
+    // validation of password format
     useEffect(() => {
-        console.log("55")
         const timeOutId = setTimeout(() => verifyPassFormat(), 1000);
         return () => clearTimeout(timeOutId);
     }, [userDetail.Password]);
@@ -230,16 +235,15 @@ const SignUp = (props) => {
         }
     };
 
-
-    function onSubmit(data) { }
-    const changeBackground = (e) => {
-        e.target.style.background = "#a31702";
-        e.target.style.color = "#fff";
-    };
-    const changeBackground2 = (e) => {
-        e.target.style.background = "#fff";
-        e.target.style.color = "#a31702";
-    };
+    // function onSubmit(data) { }
+    // const changeBackground = (e) => {
+    //     e.target.style.background = "#a31702";
+    //     e.target.style.color = "#fff";
+    // };
+    // const changeBackground2 = (e) => {
+    //     e.target.style.background = "#fff";
+    //     e.target.style.color = "#a31702";
+    // };
 
     let existData = props.exist
         ? Object.keys(props.exist).map((key) => {
@@ -258,49 +262,125 @@ const SignUp = (props) => {
         });
     }
 
+    useEffect(() => {
+        if (verifyEmail === true && props.emailVerification.length === 0) {
+            submitForm(userDetail);
+        }
+        else if (props.emailVerification.length > 0 && props.emailVerification[0].UserID !== 0) {
+            toast.info("Email already exists, please try again")
+            setEmailVefication()
+            const timeOutId = setTimeout(1000);
+            return () => clearTimeout(timeOutId);
+        }
+    }, [props.emailVerification], setEmailVefication)
+
+
+    // useEffect(() => {
+    //     console.log("66")
+    //     if (props.currentUser.length > 0 && submitRegisterForm === true && props.currentUser[0].ReturnVal !== "0") {
+    //         console.log("77")
+    //         localStorage.setItem("isLogin", true);
+    //         localStorage.setItem("role", props.currentUser[0].UserType);
+    //         localStorage.setItem("roleid", props.currentUser[0].UserTypeID);
+    //         localStorage.setItem("userName", props.currentUser[0].Username);
+    //         localStorage.setItem(
+    //             "productEndorsementBadge",
+    //             props.currentUser[0].productEndorsementBadge
+    //         );
+    //         localStorage.setItem(
+    //             "productBadge",
+    //             props.currentUser[0].productBadge
+    //         );
+    //         localStorage.setItem("id", props.currentUser[0].UserID);
+
+    //         this.props.history.push("/");
+    //         window.location.reload(false);
+    //     }
+    // }, [props.currentUser], setSubmitRegisterForm);
+
+    // useEffect(() => {
+    //     if (props.emailVerification.length === [] && verifyEmail === true ) {
+    //         // if (props.emailVerification.length > 0 && verifyEmail === true) {
+    //         // console.log(userDetail)
+    //         console.log("ready to submit Form", userDetail)
+    //         submitForm();
+    //     }
+    // }, [props.emailVerification], setEmailVefication);
+
+
+    // console.log(props.emailVerification !== [] && props.emailVerification[0])
+
+    const handleChange = (newValue) => {
+        console.log("newValue", newValue)
+        if (newValue !== undefined && newValue !== "") {
+            setOtp(newValue)
+        }
+    }
+    
+    const data = {
+        UserID: props.registerUser.length > 0 && props.registerUser[0].UserID,
+        Email: userDetail.Email,
+        OTP: otp
+    }
+
+    const submitOTP = (data) => {
+        if (props.registerUser.length > 0 && props.registerUser[0].UserID !== null) {
+            props.CallSignupOTP(data);
+        }
+    };
 
     useEffect(() => {
-        console.log("66")
-        if (props.currentUser.length > 0 && submitRegisterForm === true && props.currentUser[0].ReturnVal !== "0") {
-            console.log("77")
-            localStorage.setItem("isLogin", true);
-            localStorage.setItem("role", props.currentUser[0].UserType);
-            localStorage.setItem("roleid", props.currentUser[0].UserTypeID);
-            localStorage.setItem("userName", props.currentUser[0].Username);
-            localStorage.setItem(
-                "productEndorsementBadge",
-                props.currentUser[0].productEndorsementBadge
-            );
-            localStorage.setItem(
-                "productBadge",
-                props.currentUser[0].productBadge
-            );
-            localStorage.setItem("id", props.currentUser[0].UserID);
-
-            this.props.history.push("/");
-            window.location.reload(false);
+        if (props.currentUser.length > 0) {
+            toast.info("Successfully Registered, you can login to enjoy your shopping now!")
+            window.location.reload(true);
         }
-    }, [props.currentUser], setSubmitRegisterForm);
+    })
 
-    useEffect(() => {
-        if (props.emailVerification.length > 0 && verifyEmail === true && props.emailVerification[0].ReturnVal === "0") {
-            // if (props.emailVerification.length > 0 && verifyEmail === true) {
-            submitForm();
-        }
-    }, [props.emailVerification], setEmailVefication);
+    const handleOTP = () => {
+        return (
+            <div className="mt-3" >
+                <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={otp} onChange={handleChange} />
+                {/* {OTPEmpty && userDetail.isOTPFill === true && (
+                    <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", textAlign: "right", fontSize: "12px", }}  >
+                        This is required
+                    </p>
+                )} */}
+                {OTPErrorWrongFormat && !OTPEmpty && (
+                    <p style={{ color: "#a31702", margin: "0px 0px 0px 10px", fontSize: "12px", }}  >
+                        Please key in a valid OTP
+                    </p>
+                )}
+                <div className="SignUpForm-Submit mt-4" style={{ textAlign: "center" }}>
+                    <button
+                        type="submit"
+                        style={{ borderRadius: "5px" }}
+                        variant="contained"
+                        className="btn btn-primary w-100"
+                        onClick={submitOTP(data)}
+                        disabled={userDetail.Email !== '' && userDetail.Password !== '' && otp !== '' ? false : true}
+                    >
+                        Submit
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
     return (
-                <div className="block block--margin-top" style={{ width: "100%" }}>
-                    <div className="text-center">
-                        {console.log("AHDJJDHJAHDJAHD")}
-                        <img
-                            src={Logo}
-                            alt="MyEmporia"
-                            height="250px"
-                            width="auto"
-                            className="mx-auto"
-                        ></img>
-                        {console.log("HERE IS SIGNUP EMPOIA")}
-                    </div>
+        <div className="block block--margin-top" style={{ width: "100%" }}>
+            <div className="text-center">
+                <img
+                    src={Logo}
+                    alt="MyEmporia"
+                    height="250px"
+                    width="auto"
+                    className="mx-auto"
+                ></img>
+            </div>
+            {
+                props.registerUser.length > 0 && props.registerUser[0].UserID > 0 ?
+                    handleOTP()
+                    :
                     <div className="container" style={{ width: "100%" }}>
                         <div className="text-center">
                             <h4>Create a new MyEmporia's account</h4>
@@ -403,8 +483,8 @@ const SignUp = (props) => {
                                     </button>
 
                                     <div className="SignUpForm-Submit mt-3">
-                                        Already have an account? 
-                                        <Link onClick={() => props.getSignUp(true,false)}>
+                                        Already have an account?
+                                        <Link onClick={() => props.getSignUp(true, false)}>
                                             Login
                                         </Link>
                                     </div>
@@ -413,7 +493,8 @@ const SignUp = (props) => {
                             </Col>
                         </div>
                     </div>
-                </div>
+            }
+        </div>
 
     );
 };
