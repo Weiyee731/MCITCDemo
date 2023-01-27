@@ -506,7 +506,10 @@ function Layout(props) {
                       />
                     )}
                   />
-                  <Route component={SitePageNotFound} />
+                  <Route 
+                  exact
+                  path="*"
+                  component={SitePageNotFound} />
             </Switch>
           </div>
           <footer className="site__footer">
