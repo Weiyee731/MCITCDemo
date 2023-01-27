@@ -379,6 +379,7 @@ class AccountPageOrders extends Component {
           </div>
         </div>
         <div id={"footer" + index} className="card-footer">
+          {/* {console.log(this.props.allmerchantorders)} */}
           {
             this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
 

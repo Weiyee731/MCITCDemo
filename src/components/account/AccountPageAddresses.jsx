@@ -47,6 +47,8 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 function mapStateToProps(state) {
   return {
     addresses: state.counterReducer["addresses"],
+    deleteAddress: state.counterReducer["deleteAddress"],
+    addAddress: state.counterReducer["addAddress"],
     defaultAddress: state.counterReducer["defaultAddress"],
     countrylist: state.counterReducer["countries"],
   };
@@ -71,8 +73,11 @@ class AccountPageAddresses extends Component {
       onAdd: false,
       onEdit: null,
       onDefault: false,
-
+      changeDefaultAddress: false,
       addressIdClicked: " ",
+      addAddress: false,
+      editAddress: false,
+      deleteAddress: false,
     };
     this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
     this.props.CallCountry();
@@ -87,6 +92,27 @@ class AccountPageAddresses extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    // console.log(prevProps)
+    if(prevProps.addresses !== this.props.addresses && this.state.changeDefaultAddress === true) {
+      this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
+      this.setState({ changeDefaultAddress: false });
+    }
+
+    if(this.state.addAddress === true && this.props.addAddress !== undefined && this.props.addAddress.length > 0) {
+      this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
+      this.setState({ addAddress: false });
+    }
+
+    if(this.state.deleteAddress === true && this.props.deleteAddress !== undefined && this.props.deleteAddress.length > 0) {
+      this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
+      this.setState({ deleteAddress: false });
+    }
+
+    if(this.state.editAddress === true && this.props.addresses !== undefined && this.props.addresses.length > 0) {
+      this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
+      this.setState({ editAddress: false });
+    }
+  
   }
 
   onAddClick = () => {
@@ -99,7 +125,6 @@ class AccountPageAddresses extends Component {
 
 
   onChangeDefault = (data) => {
-
     let defaultID = "";
     let gotDefault = false;
 
@@ -115,6 +140,7 @@ class AccountPageAddresses extends Component {
           OldAddressBookNo: defaultID,
           USERID: window.localStorage.getItem("id")
         })
+        this.setState({ changeDefaultAddress: true });
       }
     }
     else {
@@ -127,11 +153,11 @@ class AccountPageAddresses extends Component {
   };
 
   handleCallbackfromAdd = (childData) => {
-    this.setState({ onAdd: childData });
+    this.setState({ onAdd: childData, addAddress: true });
   };
 
   handleCallbackfromEdit = (childData) => {
-    this.setState({ onEdit: childData });
+    this.setState({ onEdit: childData, editAddress: true });
   };
 
   onDeleteClick = (data) => {
@@ -141,9 +167,11 @@ class AccountPageAddresses extends Component {
     };
 
     this.props.CallDeleteAddress(deletedAddress);
+    this.setState({ deleteAddress: true})
   };
 
   render() {
+    console.log(this.props)
     return (
       <Card>
         {this.state.onAdd ? (

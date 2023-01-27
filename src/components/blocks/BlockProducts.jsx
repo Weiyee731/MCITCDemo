@@ -40,7 +40,7 @@ export default function BlockProducts(props) {
 
     smalls = <div className="block-products__list">{productsList}</div>;
   }
-  console.log("CHECKKKKK4")
+  
   return (
     <div className={`block block-products block-products--layout--${layout}`}>
       {

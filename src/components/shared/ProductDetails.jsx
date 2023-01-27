@@ -94,8 +94,6 @@ class ProductDetails extends Component {
         } else {
             this.setState({ isProductSet: false })
         }
-
-
     }
     componentDidUpdate(props) {
         const { product } = this.props
@@ -178,7 +176,7 @@ class ProductDetails extends Component {
         // window.location.reload(false);
         // this.props.history.push({pathname: "/login", loginPopOut: true});
         // this.props.getpopOutDetailsCard(false,true)
-        this.setState({loginPopOut:true})
+        this.setState({ loginPopOut: true })
     }
 
     handleWishlist = (product) => {

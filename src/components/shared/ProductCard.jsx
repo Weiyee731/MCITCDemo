@@ -75,41 +75,26 @@ function ProductCard(props) {
           userWishlistID: x.UserWishlistID,
           productName: product.ProductName
         })
+        toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 3000)
       })
-      
+
       if (found === false) {
         props.CallAddProductWishlist({
           userID: window.localStorage.getItem("id"),
           productID: product.ProductID,
           productName: product.ProductName
         })
+        toast.success("Successfully Added Wishlist, you can continue enjoy your shopping")
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 3000)
       }
     } else
       login()
   }
-
-  console.log(props.wishlist)
-  console.log(props.deletewishlist)
-  console.log(props.addwishlist)
-  console.log(props)
-
-  // useEffect(() => {
-  //   if (props.deletewishlist !== [] && props.deletewishlist !== undefined && props.deletewishlist.length > 0) {
-  //     toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
-  //     setTimeout(() => {
-  //       window.location.reload(true);
-  //     }, 3000)
-  //   }
-  // }, [props.deletewishlist])
-
-  // useEffect(() => {
-  //   if (props.addwishlist !== [] && props.addwishlist !== undefined && props.addwishlist.length > 0) {
-  //     toast.success("Successfully Added Wishlist, you can continue enjoy your shopping")
-  //     setTimeout(() => {
-  //       window.location.reload(true);
-  //     }, 3000)
-  //   }
-  // }, [props.addwishlist])
 
   image = (
     <div className="product-card__image product-image">

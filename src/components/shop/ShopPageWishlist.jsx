@@ -91,7 +91,6 @@ function ShopPageWishlist(props) {
 
     let content;
 
-    console.log("dasdadasda", props)
     if (props.wishlist.length > 0 && props.wishlist[0].DelInd !== 1 && props.wishlist[0].UserWishlistID !== 0) {
         const itemsList = wishlist.map((item) => {
             if (item.DelInd === 0) {

@@ -674,7 +674,7 @@ export class GitEpic {
   //   });
 
   updateAddress = action$ =>
-    action$.pipe(filter(action => action.type === GitAction.GetAllAddress), map(action => {
+    action$.pipe(filter(action => action.type === GitAction.UpdateAddress), map(action => {
       return dispatch => {
         try {
           return fetch(url +

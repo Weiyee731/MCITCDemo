@@ -36,10 +36,18 @@ function Header(props) {
   const [show, setShow] = useState(false);
   const [isproductPage, setisproductPage] = useState(false);
   const [openloginPopOut, setopenloginPopOut] = useState(false);
-
-
   const [cartOpen, setCartOpen] = useState(false);
 
+  useEffect(() => {
+    if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined) {
+      props.CallViewProductWishlist({
+        userID: localStorage.getItem("id")
+      })
+      props.CallViewProductCart({
+        userID: localStorage.getItem("id")
+      })
+    }
+  }, [])
 
   const showFrom = 510;
   const classes = classNames('totop', {
@@ -206,6 +214,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     openMobileMenu: mobileMenuOpen,
     CallProductDetail: (propData) => dispatch(GitAction.CallProductDetail(propData)),
+    CallViewProductCart: (prodData) => dispatch(GitAction.CallViewProductCart(prodData)),
+    CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
   }
 
 };
