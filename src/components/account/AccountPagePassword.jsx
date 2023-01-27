@@ -25,6 +25,7 @@ import FormControl from "@mui/material/FormControl";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
 import FormHelperText from "@mui/material/FormHelperText";
+import { MuiOtpInput } from 'mui-one-time-password-input'
 // import OtpInput from "react-otp-input";
 import PhoneInput, {
   formatPhoneNumber,
@@ -300,8 +301,9 @@ class AccountPagePassword extends Component {
   checkPassword = (e) => {
     if (
       this.props.verifyPassword !== undefined &&
-      this.props.verifyPassword[0].ValidationInd !== undefined &&
-      this.props.verifyPassword[0].ValidationInd !== 0 &&
+      this.props.verifyPassword[0].UserID !== 0 &&
+      // this.props.verifyPassword[0].ValidationInd !== undefined &&
+      // this.props.verifyPassword[0].ValidationInd !== 0 &&
       this.props.verifyPassword.length > 0
     ) {
       this.setState({ confirmPasswordPage: false });
@@ -575,8 +577,8 @@ class AccountPagePassword extends Component {
                           </p>
                         </div>
                       </div>
-                      <div className="row contactrowStyle">
-                        <div className="col-6 font otp">
+                      <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={this.state.otp} onChange={this.handleChange} />
+                        {/* <div className="col-6 font otp"> */}
                           {/* <OtpInput
                             value={this.state.otp}
                             onChange={this.handleChange}
@@ -584,8 +586,8 @@ class AccountPagePassword extends Component {
                             separator={<span>-</span>}
                             inputStyle={inputstyle}
                           /> */}
-                        </div>
-                      </div>
+                        {/* </div>
+                      </div> */}
                     </div>
                   ) : (
                     ""

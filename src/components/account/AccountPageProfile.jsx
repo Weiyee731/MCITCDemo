@@ -132,6 +132,26 @@ class AccountPageProfile extends Component {
       if (this.props.currentUser.length > 0 && this.props.currentUser[0].ReturnMsg === "Image had uploaded" && this.state.showBoxForImage === true)
         this.modalClose()
     }
+    
+    //solve data missing on refresh
+    if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.TYPEVALUE !== undefined && this.state.USERGENDER === "") {
+      if (this.props.currentUser !== {} && this.props.currentUser !== null) {
+        let userDetails = this.props.currentUser[0];
+        if (userDetails !== undefined) {
+          this.setState({
+            USERDATEBIRTH: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
+            USEREMAIL: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
+            USERGENDER: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? userDetails.UserGender : "-",
+            validfirstName: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? true : false,
+            validlastName: userDetails.LastName !== undefined && userDetails.LastName !== null ? true : false,
+            validDOB: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? true : false,
+            validGender: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? true : false,
+            validContact: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? true : false,
+            validEmail: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? true : false,
+          })
+        }
+      }
+    }
   }
 
   onFileUpload = () => {
@@ -222,13 +242,14 @@ class AccountPageProfile extends Component {
 
   handleChangeforGender = (e) => {
     const { value } = e.target;
-
     if (value !== null) {
+      console.log("hello1",value)
       this.setState({
         USERGENDER: value,
         validGender: true,
       });
     } else {
+      console.log("hello11")
       this.setState({
         validGender: false,
       });
@@ -283,7 +304,7 @@ class AccountPageProfile extends Component {
 
   /////////////////CALL API TO UPDATE PROFILE INFO///////////////////////////////////////////
   updateProfile() {
-
+    console.log("this.state.USERGENDER",this.state.USERGENDER)
     // if (
     // //   !isStringNullOrEmpty(this.state.Name) &&
     // //   isContactValid(this.state.ContactNo) &&
@@ -312,6 +333,8 @@ class AccountPageProfile extends Component {
 
 
   render() {
+    console.log(this.props.currentUser[0],"this.props.currentUser")
+    console.log(this.state.USERGENDER)
     const imgurl = "https://myemporia.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {
@@ -415,7 +438,7 @@ class AccountPageProfile extends Component {
                           size="small"
                           id="userdob"
                           type="date"
-                          value={moment(this.state.USERDATEBIRTH).format('YYYY-MM-DD')}
+                          value={moment(row.USERDATEBIRTH).format('YYYY-MM-DD')}
                           onChange={this.handleChangeforDOB.bind(this)}
                         />
                       </div>
@@ -423,13 +446,13 @@ class AccountPageProfile extends Component {
 
                     <div className="row">
                       <div className="col-3 rowStyle">Gender</div>
-                      <div className="col-8">
+                      <div className="col-8">{console.log("this.state.USERGENDER",row.FirstName,row.UserGender,this.state.USERGENDER)}
                         <FormControl component="fieldset">
                           <RadioGroup
                             aria-label="USERGENDER"
                             name="USERGENDER"
                             defaultValue={row.UserGender}
-                            value={this.state.USERGENDER}
+                            // value={this.state.USERGENDER}
                             onChange={this.handleChangeforGender}
                           >
                             <FormControlLabel

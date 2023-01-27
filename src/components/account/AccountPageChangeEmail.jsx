@@ -25,6 +25,7 @@ import FormControl from "@mui/material/FormControl";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
 import FormHelperText from "@mui/material/FormHelperText";
+import { MuiOtpInput } from 'mui-one-time-password-input'
 // import OtpInput from "react-otp-input";
 import PhoneInput, {
   formatPhoneNumber,
@@ -172,12 +173,12 @@ class PageChangeEmail extends Component {
         toast.warn("The OTP key are incorrect. Please try again");
       }
     }
-
     if (prevProps.emailVerification !== this.props.emailVerification)
-      if (this.props.emailVerification.length > 0 && this.state.isEmailSet === true && this.props.emailVerification[0].ReturnVal === "0") {
+      if (this.props.emailVerification.length > 0 && this.state.isEmailSet === true && this.props.emailVerification[0].ReturnVal === 0) {
         this.getNewOTP();
         this.setState({ isEmailSet: false })
       }
+      
   }
 
   componentWillUnmount(prevProps) {
@@ -276,8 +277,10 @@ class PageChangeEmail extends Component {
 
   checkPassword = (e) => {
     if (
-      this.props.verifyPassword[0].ValidationInd !== undefined &&
-      this.props.verifyPassword[0].ValidationInd !== 0 &&
+      this.props.verifyPassword !== undefined &&
+      this.props.verifyPassword[0].UserID !== 0 &&
+      // this.props.verifyPassword[0].ValidationInd !== undefined &&
+      // this.props.verifyPassword[0].ValidationInd !== 0 &&
       this.props.verifyPassword.length > 0
     ) {
       this.setState({ confirmPasswordPage: false });
@@ -289,14 +292,16 @@ class PageChangeEmail extends Component {
 
   getNewOTP = (e) => {
     this.props.CallSendOTP(this.state); //send otp
-    if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
-      this.stopTimer(60);
+    if (this.props.verifyOTP !== undefined) {
+      if(this.props.verifyOTP.length > 0){
+        this.stopTimer(60);
       this.setState({
         startCountDown: true,
         enableOTP: true,
         validEmail: false,
       });
       this.runTimer();
+      }
     } else {
       toast.warning("Request failed! Please try again");
     }
@@ -505,8 +510,9 @@ class PageChangeEmail extends Component {
                           </p>
                         </div>
                       </div>
-                      <div className="row contactrowStyle">
-                        <div className="col-6 font otp">
+                      <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={this.state.otp} onChange={this.handleChange} />
+                      {/* <div className="row contactrowStyle">
+                        <div className="col-6 font otp"> */}
                           {/* <OtpInput
                             value={this.state.otp}
                             onChange={this.handleChange}
@@ -514,8 +520,8 @@ class PageChangeEmail extends Component {
                             separator={<span>-</span>}
                             inputStyle={inputstyle}
                           /> */}
-                        </div>
-                      </div>
+                        {/* </div>
+                      </div> */}
                     </div>
                   ) : (
                     ""

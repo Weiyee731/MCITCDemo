@@ -25,6 +25,7 @@ import FormControl from "@mui/material/FormControl";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
 import FormHelperText from "@mui/material/FormHelperText";
+import { MuiOtpInput } from 'mui-one-time-password-input'
 // import OtpInput from "react-otp-input";
 import PhoneInput, {
   formatPhoneNumber,
@@ -162,7 +163,7 @@ class PageChangeContact extends Component {
 
     if (prevProps.verifyPassword !== this.props.verifyPassword)
       this.checkPassword()
-
+console.log(this.props.contactUpdated)
     if (prevProps.contactUpdated !== this.props.contactUpdated) {
       if (this.props.contactUpdated && this.props.contactUpdated[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your contact number has been updated");
@@ -219,7 +220,7 @@ class PageChangeContact extends Component {
       this.setState({
         UpdatedValue: e,
       });
-      if (e!== undefined && e.length > 0 && e.match(phoneno)) {
+      if (e !== undefined && e.length > 0 && e.match(phoneno)) {
         this.setState({ validContact: true });
       } else {
         this.setState({ validContact: false });
@@ -259,11 +260,15 @@ class PageChangeContact extends Component {
   };
 
   checkPassword = (e) => {
+    console.log(this.props.verifyPassword[0].ReturnVal)
+    console.log(this.props.verifyPassword)
     if (
+      this.props.verifyPassword.length > 0 &&
       this.props.verifyPassword !== undefined &&
-      this.props.verifyPassword[0].ValidationInd !== undefined &&
-      this.props.verifyPassword[0].ValidationInd !== 0 &&
-      this.props.verifyPassword.length > 0
+      this.props.verifyPassword[0].UserID !== 0
+      // this.props.verifyPassword[0].ValidationInd !== undefined &&
+      // this.props.verifyPassword[0].ValidationInd !== 0 &&
+
     ) {
       this.setState({ confirmPasswordPage: false });
     } else {
@@ -432,7 +437,9 @@ class PageChangeContact extends Component {
                       Your Current Contact Number is{" "}
                       {this.props.currentUser[0] !== undefined &&
                         this.props.currentUser[0].UserContactNo !== undefined &&
-                        this.props.currentUser[0].UserContactNo !== null
+                        this.props.currentUser[0].UserContactNo !== null &&
+                        this.props.currentUser[0].UserContactNo !== 0 &&
+                        this.props.currentUser[0].UserContactNo !== '-'
                         ? this.censorContact(
                           this.props.currentUser[0].UserContactNo
                         )
@@ -482,6 +489,7 @@ class PageChangeContact extends Component {
                           </p>
                         </div>
                       </div>
+                      <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={this.state.otp} onChange={this.handleChange} />
                       <div className="row contactrowStyle">
                         <div className="col-6 font otp">
                           {/* <OtpInput

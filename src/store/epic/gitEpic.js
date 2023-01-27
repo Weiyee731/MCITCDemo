@@ -123,12 +123,13 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
-              if (json[0].ReturnVal === 1) {
-                return dispatch({ type: GitAction.CheckedUser, payload: JSON.parse(json[0].ReturnData) });
-              } else {
-                // //toast.error(json[0].ReturnMsg)
-                return dispatch({ type: GitAction.CheckedUser, payload: [] });
-              }
+              console.log(json)
+              // if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.CheckedUser, payload: json });
+              // } else {
+              //   // //toast.error(json[0].ReturnMsg)
+              //   return dispatch({ type: GitAction.CheckedUser, payload: [] });
+              // }
             });
         } catch (error) {
           toast.error("Error Code: RegisterUser. Please check on URL")
@@ -140,6 +141,13 @@ export class GitEpic {
   verifyPassword = action$ =>
     action$.pipe(filter(action => action.type === GitAction.VerifyPassword), map(action => {
       return dispatch => {
+        console.log(url +
+          "User_ValidationByType?USERID=" +
+          action.payload.USERID +
+          "&TYPE=" +
+          action.payload.VerifyType +
+          "&VALIDATIONFIELD=" +
+          action.payload.password)
         try {
           return fetch(url +
             "User_ValidationByType?USERID=" +
@@ -196,6 +204,15 @@ export class GitEpic {
   updateContact = action$ =>
     action$.pipe(filter(action => action.type === GitAction.UpdateContact), map(action => {
       return dispatch => {
+        console.log(url +
+          "User_UpdateProfileSpecificField?USERID=" +
+          action.payload.USERID +
+          "&TYPE=" +
+          action.payload.UPDATETYPE +
+          "&OTP=" +
+          action.payload.otp +
+          "&UPDATEDFIELD=" +
+          action.payload.UpdatedValue)
         try {
           return fetch(url +
             "User_UpdateProfileSpecificField?USERID=" +
@@ -209,12 +226,13 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
-              if (json[0].ReturnVal === 1) {
-                return dispatch({ type: GitAction.UpdatedContact, payload: JSON.parse(json[0].ReturnData) });
-              } else {
-                //toast.error(json[0].ReturnMsg)
-                return dispatch({ type: GitAction.UpdatedContact, payload: [] });
-              }
+              console.log(json)
+              // if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedContact, payload: json });
+              // } else {
+              //   // //toast.error(json[0].ReturnMsg)
+              //   return dispatch({ type: GitAction.UpdatedContact, payload: [] });
+              // }
             });
         } catch (error) {
           toast.error("Error Code: RegisterUser. Please check on URL")
@@ -239,12 +257,13 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
-              if (json[0].ReturnVal === 1) {
-                return dispatch({ type: GitAction.UpdatedEmail, payload: JSON.parse(json[0].ReturnData) });
-              } else {
-                //toast.error(json[0].ReturnMsg)
-                return dispatch({ type: GitAction.UpdatedEmail, payload: [] });
-              }
+              console.log(json)
+              // if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UpdatedEmail, payload: json });
+              // } else {
+              //   // //toast.error(json[0].ReturnMsg)
+              //   return dispatch({ type: GitAction.UpdatedEmail, payload: [] });
+              // }
             });
         } catch (error) {
           toast.error("Error Code: RegisterUser. Please check on URL")
@@ -340,6 +359,14 @@ export class GitEpic {
   updateUserProfile = action$ =>
     action$.pipe(filter(action => action.type === GitAction.EditUserProfile), map(action => {
       return dispatch => {
+        console.log(url +
+          "User_UpdateProfile?USERID=" + action.payload.USERID +
+          "&FIRSTNAME=" + action.payload.USERFIRSTNAME +
+          "&LASTNAME=" + action.payload.USERLASTNAME +
+          "&USERCONTACTNO=" + action.payload.USERCONTACTNO +
+          "&USERDOB=" + action.payload.USERDATEBIRTH +
+          "&USEREMAIL=" + action.payload.USEREMAIL +
+          "&USERGENDER=" + action.payload.USERGENDER)
         try {
           return fetch(url +
             "User_UpdateProfile?USERID=" + action.payload.USERID +
