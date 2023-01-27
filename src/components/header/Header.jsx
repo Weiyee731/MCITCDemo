@@ -122,9 +122,14 @@ function Header(props) {
                 <Search context="header" style={{ borderRadius: "10px" }} />
               </div>
               <div className="nav-panel__indicators">
-                {localStorage.getItem("isLogin") === 'true' && <Indicator url="/shop/wishlist"
-                  value={props.wishlist !== undefined && props.wishlist[0] !== undefined && props.wishlist[0].ReturnVal === undefined ? props.wishlist.filter((x) => x.DelInd === 0).length : 0}
-                  icon={<Heart20Svg />} />}
+                {
+                  localStorage.getItem("isLogin") === 'true' &&
+                  <Indicator url="/shop/wishlist"
+                    value={props.wishlist !== undefined && props.wishlist[0] !== undefined && props.wishlist[0].UserWishlistID !== undefined ?
+                      props.wishlist.filter((x) => x.DelInd === 0).length :
+                      0}
+                    icon={<Heart20Svg />} />
+                }
                 {
                   localStorage.getItem("isLogin") === "false" ?
                     <Indicator
@@ -138,12 +143,12 @@ function Header(props) {
                       }}
                     />
                     :
-                    <IndicatorCart 
-                    onClick={() => {
-                      setCartOpen(true)
-                    }} />
+                    <IndicatorCart
+                      onClick={() => {
+                        setCartOpen(true)
+                      }} />
                 }
-                <IndicatorAccount/>
+                <IndicatorAccount />
               </div>
             </div>
             :
@@ -152,7 +157,7 @@ function Header(props) {
                 <HeaderProductDetails productDetails={currentProductDetails} />
               </div>
             </div>
-            
+
         }
         {
           <div >

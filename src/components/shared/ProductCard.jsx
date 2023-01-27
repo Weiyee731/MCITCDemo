@@ -30,6 +30,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Chip from '@mui/material/Chip';
 import LoginComponent from "../../pages/login/login.component";
+import { toast } from "react-toastify";
 
 function ProductCard(props) {
   const {
@@ -75,6 +76,7 @@ function ProductCard(props) {
           productName: product.ProductName
         })
       })
+      
       if (found === false) {
         props.CallAddProductWishlist({
           userID: window.localStorage.getItem("id"),
@@ -85,6 +87,29 @@ function ProductCard(props) {
     } else
       login()
   }
+
+  console.log(props.wishlist)
+  console.log(props.deletewishlist)
+  console.log(props.addwishlist)
+  console.log(props)
+
+  // useEffect(() => {
+  //   if (props.deletewishlist !== [] && props.deletewishlist !== undefined && props.deletewishlist.length > 0) {
+  //     toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
+  //     setTimeout(() => {
+  //       window.location.reload(true);
+  //     }, 3000)
+  //   }
+  // }, [props.deletewishlist])
+
+  // useEffect(() => {
+  //   if (props.addwishlist !== [] && props.addwishlist !== undefined && props.addwishlist.length > 0) {
+  //     toast.success("Successfully Added Wishlist, you can continue enjoy your shopping")
+  //     setTimeout(() => {
+  //       window.location.reload(true);
+  //     }, 3000)
+  //   }
+  // }, [props.addwishlist])
 
   image = (
     <div className="product-card__image product-image">
@@ -279,14 +304,14 @@ function ProductCard(props) {
       </Card>
     )
   }
-const getpopOutState = (loginPopOut) => {
-  setloginPopOut(loginPopOut)
-}
+  const getpopOutState = (loginPopOut) => {
+    setloginPopOut(loginPopOut)
+  }
 
-const getpopOutDetailsCard = (cardPopOut,loginPopOut) => {
-  setloginPopOut(loginPopOut)
-  setQuickView(cardPopOut)
-}
+  const getpopOutDetailsCard = (cardPopOut, loginPopOut) => {
+    setloginPopOut(loginPopOut)
+    setQuickView(cardPopOut)
+  }
 
   return (
     <div className={containerClasses}>
@@ -303,12 +328,12 @@ const getpopOutDetailsCard = (cardPopOut,loginPopOut) => {
           <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
             <Cross20Svg />
           </button>
-          <ProductDetails product={product} getpopOutDetailsCard={getpopOutDetailsCard}/>
+          <ProductDetails product={product} getpopOutDetailsCard={getpopOutDetailsCard} />
         </div>
       </Modal>
       {loginPopOut !== undefined && loginPopOut !== false &&
-            <LoginComponent loginPopOut={loginPopOut} getpopOutState={getpopOutState}/>
-                    }
+        <LoginComponent loginPopOut={loginPopOut} getpopOutState={getpopOutState} />
+      }
     </div>
   );
 
@@ -335,6 +360,8 @@ ProductCard.propTypes = {
 
 
 const mapStateToProps = (state) => ({
+  deletewishlist: state.counterReducer.deletewishlist,
+  addwishlist: state.counterReducer.addwishlist,
   wishlist: state.counterReducer.wishlist,
   productcart: state.counterReducer["productcart"],
   wishlist: state.counterReducer["wishlist"],

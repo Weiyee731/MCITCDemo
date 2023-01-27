@@ -55,6 +55,8 @@ const INITIAL_STATE = {
   updatedCreditCard: [],
   productcart: [],
   wishlist: [],
+  addwishlist: [],
+  deletewishlist: [],
   order: [],
   orderByID: [],
   deliveryFee:[],
@@ -105,6 +107,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         otp: action.payload,
+        currentUser: action.payload,
       });
 
     case GitAction.Login:
@@ -1367,7 +1370,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.DeletedProductWishlist:
       return Object.assign({}, state, {
         loading: false,
-        wishlist: action.payload,
+        deletewishlist: action.payload,
       });
 
     case GitAction.AddProductWishlist:
@@ -1375,7 +1378,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.AddedProductWishlist:
       return Object.assign({}, state, {
         loading: false,
-        wishlist: action.payload,
+        addwishlist: action.payload,
       });
 
     case GitAction.ViewProductWishlist:

@@ -717,7 +717,7 @@ class BlockListingDetails extends Component {
 
                             <hr />
                             <div className="d-flex">
-                                <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: '#2b535d', width: "100%" }} onClick={() => this.resetFilter()}> Reset Fitlers</Button>
+                                <Button variant="contained" color="primary" disableElevation style={{ backgroundColor: '#2b535d', width: "100%" }} onClick={() => this.resetFilter()}> Reset Filters</Button>
                             </div>
                         </div>
                         <div className="col-lg-9 col-md-9 ">

@@ -19,7 +19,7 @@ import { wishlistRemoveItem } from '../../store/wishlist';
 import { GitAction } from "../../store/action/gitAction";
 import Logo from "../../assets/Emporia.png";
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo"
-
+import { toast } from "react-toastify";
 
 // data stubs
 import theme from '../../data/theme';
@@ -33,18 +33,34 @@ function ShopPageWishlist(props) {
         { title: 'Wishlist', url: '' },
     ];
 
+    useEffect(() => {
+        if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined) {
+            props.CallViewProductWishlist({
+                userID: localStorage.getItem("id")
+            })
+        }
+    }, [])
+
     // const login = () => {
     //     setloginPopOut(true)
     // }
 
     const deleteWishlist = (product) => {
-
         props.CallDeleteProductWishlist({
             userID: localStorage.getItem("id"),
             userWishlistID: product.UserWishlistID,
             productName: product.ProductName
         })
     }
+
+    useEffect(() => {
+        if (props.deletewishlist !== undefined && props.deletewishlist.length > 0) {
+            toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 3000)
+        }
+    }, [props.deletewishlist])
 
     // const addCart = (product) => {
     //     let found = false
@@ -76,7 +92,7 @@ function ShopPageWishlist(props) {
     let content;
 
     console.log("dasdadasda", props)
-    if (props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0') {
+    if (props.wishlist.length > 0 && props.wishlist[0].DelInd !== 1 && props.wishlist[0].UserWishlistID !== 0) {
         const itemsList = wishlist.map((item) => {
             if (item.DelInd === 0) {
                 let image;
@@ -180,6 +196,7 @@ function ShopPageWishlist(props) {
 const mapStateToProps = (state) => ({
     // wishlist: state.wishlist,
     wishlist: state.counterReducer.wishlist,
+    deletewishlist: state.counterReducer.deletewishlist,
     // productcart: state.counterReducer.productcart
 });
 
@@ -187,6 +204,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         // CallUpdateProductCart: (prodData) => dispatch(GitAction.CallUpdateProductCart(prodData)),
         CallDeleteProductWishlist: (prodData) => dispatch(GitAction.CallDeleteProductWishlist(prodData)),
+        CallViewProductWishlist: (prodData) => dispatch(GitAction.CallViewProductWishlist(prodData)),
         // CallAddProductCart: (prodData) => dispatch(GitAction.CallAddProductCart(prodData)),
     }
 };

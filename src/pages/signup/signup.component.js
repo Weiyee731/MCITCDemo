@@ -316,7 +316,7 @@ const SignUp = (props) => {
             setOtp(newValue)
         }
     }
-    
+
     const data = {
         UserID: props.registerUser.length > 0 && props.registerUser[0].UserID,
         Email: userDetail.Email,
@@ -334,7 +334,7 @@ const SignUp = (props) => {
             toast.info("Successfully Registered, you can login to enjoy your shopping now!")
             window.location.reload(true);
         }
-    })
+    }, [props.currentUser])
 
     const handleOTP = () => {
         return (
@@ -356,7 +356,7 @@ const SignUp = (props) => {
                         style={{ borderRadius: "5px" }}
                         variant="contained"
                         className="btn btn-primary w-100"
-                        onClick={submitOTP(data)}
+                        onClick={() => submitOTP(data)}
                         disabled={userDetail.Email !== '' && userDetail.Password !== '' && otp !== '' ? false : true}
                     >
                         Submit
