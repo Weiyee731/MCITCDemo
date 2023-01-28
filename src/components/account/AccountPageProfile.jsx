@@ -89,7 +89,7 @@ class AccountPageProfile extends Component {
       TYPEVALUE: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id"),
       USERROLEID: "0",
       LISTPERPAGE: "999",
-      PAGE: "1"
+      PAGE: "1",
     };
   }
   /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
@@ -139,6 +139,9 @@ class AccountPageProfile extends Component {
         let userDetails = this.props.currentUser[0];
         if (userDetails !== undefined) {
           this.setState({
+            USERFIRSTNAME: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? userDetails.FirstName : "-",
+            USERLASTNAME: userDetails.LastName !== undefined && userDetails.LastName !== null ? userDetails.LastName : "-",
+            USERCONTACTNO: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
             USERDATEBIRTH: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
             USEREMAIL: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
             USERGENDER: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? userDetails.UserGender : "-",
@@ -329,12 +332,33 @@ class AccountPageProfile extends Component {
       LISTPERPAGE: "999",
       PAGE: "1"
     });
+
+    this.props.CallUserProfile(this.state);
+    if (this.props.currentUser !== {} && this.props.currentUser !== null) {
+      let userDetails = this.props.currentUser[0];
+      if (userDetails !== undefined) {
+        this.setState({
+          USERFIRSTNAME: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? userDetails.FirstName : "-",
+          USERLASTNAME: userDetails.LastName !== undefined && userDetails.LastName !== null ? userDetails.LastName : "-",
+          USERCONTACTNO: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
+          USERDATEBIRTH: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
+          USEREMAIL: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
+          USERGENDER: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? userDetails.UserGender : "-",
+          validfirstName: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? true : false,
+          validlastName: userDetails.LastName !== undefined && userDetails.LastName !== null ? true : false,
+          validDOB: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? true : false,
+          validGender: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? true : false,
+          validContact: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? true : false,
+          validEmail: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? true : false,
+        })
+      }
+    }
+
   }
 
 
   render() {
-    console.log(this.props.currentUser[0],"this.props.currentUser")
-    console.log(this.state.USERGENDER)
+    console.log(this.props.currentUser,"this.props.currentUser")
     const imgurl = "https://myemporia.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {
@@ -482,7 +506,7 @@ class AccountPageProfile extends Component {
                       <div className="col-8 font">
                         {/* {
                         this.state.editContact === false ? */}
-                        <>
+                        <>{console.log(row.UserContactNo)}
                           {row.UserContactNo !== null && row.UserContactNo !== undefined && row.UserContactNo !== "-" ? censorContact(row.UserContactNo) : "-"}
                           <Link to={{ pathname: "/account/changeContact" }}>
                             {/* <Link to="/account/changeContact" > */}
