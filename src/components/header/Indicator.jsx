@@ -77,7 +77,7 @@ class Indicator extends Component {
     }
   };
 
-  toggle() {
+ toggle() {
     this.setState((state) => ({
       open: !state.open,
     }));

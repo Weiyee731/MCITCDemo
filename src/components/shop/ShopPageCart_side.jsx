@@ -155,7 +155,7 @@ class ShopPageCart_side extends Component {
     // ---------------------------------------------------- Check Out ------------------------------------
 
     CheckOutOnClick = (items) => {
-
+        
         if (localStorage.getItem("id")) {
             let ProductIDs = [];
             let ProductQuantity = [];
@@ -186,7 +186,7 @@ class ShopPageCart_side extends Component {
 
             if (overProductStockAmountlimit !== true && this.state.selectedProductDetailList.length > 0) {
                 // this.setState({ isDataAccepted: true })
-                // this.props.history.push('/shop/checkout');
+                // this.props.history.push('/shop/checkout')
                 const { selectedProductDetailList } = this.state
                 const merchant = selectedProductDetailList.filter((ele, ind) => ind === selectedProductDetailList.findIndex(elem => elem.MerchantShopName === ele.MerchantShopName))
                 this.props.history.push({
@@ -210,6 +210,7 @@ class ShopPageCart_side extends Component {
         else {
             this.props.history.push("/EmporiaDev/login");
         }
+    
     };
 
     // ---------------------------------------------------- Check Selected ------------------------------------
@@ -404,7 +405,7 @@ class ShopPageCart_side extends Component {
                             </div>
                             <div className="col-8 checkout-button">
                                 <button className="btn btn-primary" variant="outlined" color="primary" style={{ borderRadius: "5px" }}
-                                    onClick={() => this.CheckOutOnClick(this.state.selectedProductDetailList)}>
+                                    onClick={() => {this.CheckOutOnClick(this.state.selectedProductDetailList);this.props.setCartOpen(false)}}>
                                     Checkout  ( <Currency value={this.state.subtotal}></Currency> )</button>
                             </div>
                         </div>
@@ -418,7 +419,6 @@ class ShopPageCart_side extends Component {
     }
 
     render() {
-
         const breadcrumb = [
             { title: 'Home', url: '' },
             { title: 'Shopping Cart', url: '' },

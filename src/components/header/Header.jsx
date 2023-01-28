@@ -174,7 +174,7 @@ function Header(props) {
                 sx: { width: "380px" },
               }}
               anchor='right' open={cartOpen} onClose={() => setCartOpen(false)}>
-              <PageCart_side history={"cart"} />
+              <PageCart_side history={"cart"} setCartOpen={setCartOpen}/>
             </Drawer>
           </div>
         }
