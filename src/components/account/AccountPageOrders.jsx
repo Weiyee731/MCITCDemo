@@ -353,8 +353,6 @@ class AccountPageOrders extends Component {
                   <th>Total</th>
                 </tr>
               </thead>
-              {/* {console.log("this.props.allmerchantorders", this.props.allmerchantorders)} */}
-              {/* {console.log("this.props.allmerchantorders", this.state.TrackingStatuss)} */}
               <tbody>
                 {this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
                   this.state.isFiltered === false ?
@@ -379,10 +377,8 @@ class AccountPageOrders extends Component {
           </div>
         </div>
         <div id={"footer" + index} className="card-footer">
-          {/* {console.log(this.props.allmerchantorders)} */}
           {
-            this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
-
+            orders.length > 0 && orders[0].OrderID > 0 ?
               <Pagination
                 current={page}
                 total={
@@ -431,7 +427,7 @@ class AccountPageOrders extends Component {
               size="small"
               placeholderText="Select Date"
               onChange={(e) => this.handleDateChange(e)}
-              value={this.state.selectedDate}
+              value={this.state.selectedDate !== null ? this.state.selectedDate : new Date()}
               className={`w-100`}
             />
           </div>
