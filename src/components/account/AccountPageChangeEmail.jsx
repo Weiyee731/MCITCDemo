@@ -166,7 +166,7 @@ class PageChangeEmail extends Component {
     if (prevProps.emailUpdated !== this.props.emailUpdated) {
       if (this.props.emailUpdated && this.props.emailUpdated[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your email  has been updated");
-        this.props.history.push("/EmporiaDev/account/profile")
+        // this.props.history.push("/account/profile")
         // this.props.history.push("/EmporiaDev/account/profile");
         // window.location.reload(false);
       } else {
@@ -177,6 +177,19 @@ class PageChangeEmail extends Component {
       if (this.props.emailVerification.length > 0 && this.state.isEmailSet === true && this.props.emailVerification[0].ReturnVal === 0) {
         this.getNewOTP();
         this.setState({ isEmailSet: false })
+      }
+    if(prevProps.verifyOTP !== this.props.verifyOTP){
+      if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
+      this.stopTimer(60);
+      this.setState({
+        startCountDown: true,
+        enableOTP: true,
+        validPassword: false,
+      });
+      this.runTimer();
+    } else {
+      toast.warning("Request failed! Please try again");
+    }
       }
       
   }
@@ -292,19 +305,6 @@ class PageChangeEmail extends Component {
 
   getNewOTP = (e) => {
     this.props.CallSendOTP(this.state); //send otp
-    if (this.props.verifyOTP !== undefined) {
-      if(this.props.verifyOTP.length > 0){
-        this.stopTimer(60);
-      this.setState({
-        startCountDown: true,
-        enableOTP: true,
-        validEmail: false,
-      });
-      this.runTimer();
-      }
-    } else {
-      toast.warning("Request failed! Please try again");
-    }
   }
 
 

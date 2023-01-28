@@ -190,15 +190,30 @@ class AccountPagePassword extends Component {
       this.checkPassword()
 
     if (prevProps.updatePassword !== this.props.updatePassword) {
-      if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
+      if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password was Wrong") {
         toast.success("Your password has been updated");
-        this.props.history.push("/EmporiaDev/account/profile")
+        this.props.history.push("/account/profile")
         // this.props.history.push("/EmporiaDev/account/profile");
         // window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
       }
     }
+
+    if(prevProps.verifyOTP !== this.props.verifyOTP){
+      if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
+      this.stopTimer(60);
+      this.setState({
+        startCountDown: true,
+        enableOTP: true,
+        validPassword: false,
+      });
+      this.runTimer();
+    } else {
+      toast.warning("Request failed! Please try again");
+    }
+    }
+    
   }
 
   componentWillUnmount(prevProps) {
@@ -314,17 +329,6 @@ class AccountPagePassword extends Component {
 
   getNewOTP = (e) => {
     this.props.CallSendOTP(this.state); //send otp
-    if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
-      this.stopTimer(60);
-      this.setState({
-        startCountDown: true,
-        enableOTP: true,
-        validPassword: false,
-      });
-      this.runTimer();
-    } else {
-      toast.warning("Request failed! Please try again");
-    }
   };
 
   submitOTP = (e) => {

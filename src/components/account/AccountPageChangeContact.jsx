@@ -163,15 +163,27 @@ class PageChangeContact extends Component {
 
     if (prevProps.verifyPassword !== this.props.verifyPassword)
       this.checkPassword()
-console.log(this.props.contactUpdated)
     if (prevProps.contactUpdated !== this.props.contactUpdated) {
       if (this.props.contactUpdated && this.props.contactUpdated[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your contact number has been updated");
-        this.props.history.push("/EmporiaDev/account/profile")
+        this.props.history.push("/account/profile")
         // window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
       }
+    }
+    if(prevProps.verifyOTP !== this.props.verifyOTP){
+      if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
+      this.stopTimer(60);
+      this.setState({
+        startCountDown: true,
+        enableOTP: true,
+        validPassword: false,
+      });
+      this.runTimer();
+    } else {
+      toast.warning("Request failed! Please try again");
+    }
     }
   }
 
@@ -260,8 +272,6 @@ console.log(this.props.contactUpdated)
   };
 
   checkPassword = (e) => {
-    console.log(this.props.verifyPassword[0].ReturnVal)
-    console.log(this.props.verifyPassword)
     if (
       this.props.verifyPassword.length > 0 &&
       this.props.verifyPassword !== undefined &&
@@ -278,17 +288,6 @@ console.log(this.props.contactUpdated)
 
   getNewOTP = (e) => {
     if (this.state.UpdatedValue.length > 0) { this.props.CallSendOTP(this.state); }
-    if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
-      this.stopTimer(60);
-      this.setState({
-        startCountDown: true,
-        enableOTP: true,
-        validContact: false,
-      });
-      this.runTimer();
-    } else {
-      toast.warning("Request failed! Please try again");
-    }
   };
 
   submitOTP = (e) => {
