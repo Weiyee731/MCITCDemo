@@ -27,14 +27,14 @@ import SitePageCareers from "./site/SitePageCareers";
 import AccountLayout from "./account/AccountLayout";
 import BlogPageCategory from "./blog/BlogPageCategory";
 import BlogPagePost from "./blog/BlogPagePost";
-import PageCart from "./shop/ShopPageCart";
+// import PageCart from "./shop/ShopPageCart";
 import PageCart_side from "./shop/ShopPageCart_side";
 import ShopPageReceipt from "./shop/ShopPageReceipt";
 
-import DeliveryFee from "./shop/ShopPageDeliveryFee";
+// import DeliveryFee from "./shop/ShopPageDeliveryFee";
 import CheckPaymentStatus from "./shop/CheckPaymentStatus";
 import PageCheckout from "./shop/ShopPageCheckout";
-import ShopPageCheckOut from "./shop/CheckOut";
+// import ShopPageCheckOut from "./shop/CheckOut";
 import PageCompare from "./shop/ShopPageCompare";
 import PageWishlist from "./shop/ShopPageWishlist";
 import ShopPageCategory from "./shop/ShopPageCategory";
@@ -301,7 +301,7 @@ function Layout(props) {
                     )}
                   />
                   {productLayouts}
-                  <Route exact path="/shop/cart" component={PageCart} />
+                  {/* <Route exact path="/shop/cart" component={PageCart} /> */}
                   <Route exact path="/shop/sidecart" component={PageCart_side} />
                   {/* <Route exact path="/shop/ShopPageReceipt" component={ShopPageReceipt} /> */}
 
@@ -325,8 +325,8 @@ function Layout(props) {
 
                   <Route exact path="/shop/checkPaymentStatus" component={CheckPaymentStatus} />
                   <Route exact path="/shop/checkout" component={PageCheckout} />
-                  <Route exact path="/shop/deliveryfee" component={DeliveryFee} />
-                  <Route exact path="/shop/checkout2" component={ShopPageCheckOut} />
+                  {/* <Route exact path="/shop/deliveryfee" component={DeliveryFee} /> */}
+                  {/* <Route exact path="/shop/checkout2" component={ShopPageCheckOut} /> */}
                   <Route
                     exact
                     path="/shop/checkout/success"

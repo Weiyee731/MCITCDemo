@@ -54,6 +54,23 @@ export default function CheckoutPayment({
     const discount = sum(data.map((item) => item.discount));
     const [BankID, setBankID] = useState(0);
     const [PaymentType, setPaymentType] = useState("1");
+    const [fpxData, setfpxData] = useState({
+        fpx_checkSum: 0,
+        fpx_buyerBankId: 0,
+        fpx_sellerExOrderNo: 0,
+        fpx_sellerTxnTime: 0,
+        fpx_sellerOrderNo: 0
+    });
+    // const [UserFpxData, setUserFpxData] = useState({
+    //     fpx_buyerAccNo
+    //     fpx_buyerBankBranch
+    //     fpx_buyerEmail
+    //     fpx_buyerIban
+    //     fpx_buyerId
+    //     fpx_buyerName
+    //     fpx_makerName
+    //     fpx_msgToken
+    // })
 
     // need to delete
     const isVoucherApply = false;
@@ -89,7 +106,7 @@ export default function CheckoutPayment({
         formData.append("bankingdata", bankingdata);
         axios.post(URL, formData, config).then((res) => {
             if (res.status === 200) {
-                this.setState({
+               setfpxData({
                     fpx_checkSum: res.data.split('"')[1],
                     fpx_buyerBankId: bankid,
                     fpx_sellerExOrderNo: fpx_sellerExOrderNo,

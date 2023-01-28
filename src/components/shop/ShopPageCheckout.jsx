@@ -14,14 +14,14 @@ import theme from "../../data/theme";
 import PageCheckOrder from "./ShopPageCheckOrder";
 import PagePayment from "./ShopPagePayment";
 import { GitAction } from "../../store/action/gitAction";
-import PageCart from "./ShopPageCart";
-import PageCompleted from "./ShopPageCompleted";
+// import PageCart from "./ShopPageCart";
+// import PageCompleted from "./ShopPageCompleted";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { sha256, sha224 } from 'js-sha256';
 import { Crypto } from 'crypto-js'
 import { createBrowserHistory } from 'history';
-import DeliveryFee from "./ShopPageDeliveryFee";
+// import DeliveryFee from "./ShopPageDeliveryFee";
 import Grid from '@mui/material/Grid';
 import CheckoutSteps from './ShopPageCheckoutStepper';
 import CheckoutCart from './ShopPageCheckoutCart';

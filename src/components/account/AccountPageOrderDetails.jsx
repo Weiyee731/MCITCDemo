@@ -36,7 +36,7 @@ import Box from '@mui/material/Box';
 
 import AccountPagePayment from "./AccountPagePayment";
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
-import DeliveryFee from "../shop/ShopPageDeliveryFee";
+// import DeliveryFee from "../shop/ShopPageDeliveryFee";
 import { Modal, ModalBody } from "reactstrap";
 import CloseIcon from '@mui/icons-material/Close';
 import USER from "../../assets/user.jpg";

@@ -238,9 +238,10 @@ export class GitAction {
   static GetPaymentMethod = "GET-PAYMENTMETHID";
   static GotPaymentMethod = "GOT-PAYMENTMETHID";
 
-  static CallAllPaymentMethod() {
+  static CallAllPaymentMethod(prodData) {
     return {
       type: GitAction.GetPaymentMethod,
+      payload: prodData,
     };
   }
 

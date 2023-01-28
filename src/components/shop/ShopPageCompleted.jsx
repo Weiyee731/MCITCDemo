@@ -18,7 +18,7 @@ import Tab from "@mui/material/Tab";
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
 import queryString from "query-string";
-import PageCheckoutQr from "./ShopPageCheckoutQr";
+// import PageCheckoutQr from "./ShopPageCheckoutQr";
 
 class PageCompleted extends Component {
   payments = payments;
@@ -146,7 +146,7 @@ class PageCompleted extends Component {
 
     const breadcrumb = [
       { title: "Home", url: "" },
-      { title: "Shopping Cart", url: "/shop/cart" },
+      { title: "Shopping Cart", url: "/shop/sidecart" },
       { title: "Checkout", url: "/shop/checkout" },
       { title: "OnlinePayment", url: "" },
     ];

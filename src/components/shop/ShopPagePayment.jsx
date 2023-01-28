@@ -39,7 +39,7 @@ import {
 import moment from "moment";
 import FPX from '../../assets/fpx-logo.png';
 import { Image } from 'react-bootstrap';
-import DeliveryFee from "./ShopPageDeliveryFee";
+// import DeliveryFee from "./ShopPageDeliveryFee";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';

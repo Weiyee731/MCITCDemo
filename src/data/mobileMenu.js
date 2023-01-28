@@ -68,7 +68,7 @@ export default [
                     { type: 'link', label: 'Product Sidebar', url: '/shop/product-sidebar' },
                 ],
             },
-            { type: 'link', label: 'Cart', url: '/shop/cart' },
+            { type: 'link', label: 'Cart', url: '/shop/sidecart' },
             { type: 'link', label: 'Checkout', url: '/shop/checkout' },
             { type: 'link', label: 'Order Success', url: '/shop/checkout/success' },
             { type: 'link', label: 'Wishlist', url: '/shop/wishlist' },
