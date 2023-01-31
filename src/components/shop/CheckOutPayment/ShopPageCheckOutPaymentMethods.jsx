@@ -45,11 +45,50 @@ export default function CheckoutPaymentMethods({ onSelectPaymentTypes, onSelectB
     const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(GitAction.CallAllPaymentMethod());
+    }, []);
+
+    const { paymentmethod } = useSelector(state => state.counterReducer);
+
+    useEffect(() => {
+        let banklist = [];
+        typeof paymentmethod === "object" && Object.keys(paymentmethod).length !== 0 && paymentmethod.filter((x) => parseInt(x.PaymentMethodTypeID) === 2).map((bank) => {
+            bank.PaymentMethod !== null && JSON.parse(bank.PaymentMethod).map((details) => {
+                banklist.push(details)
+                // this.setState({ isAllBankSet: true, })
+            })
+        })
+        setAllBankDetails(banklist);
+
+    }, [paymentmethod]);
+
+
+
+    // useEffect(() => {
+    //     let obj={
+    //         PRODUCTID:
+    //         PROJECTID:
+    //         PRODUCTQUANTITY:
+    //         POSCODE:
+    //     }
+    //     dispatch(GitAction.CallGetOrderShippingFee());
+    // })
+    // const totalDeliveryFee = useSelector(state => ({ deliveryFee: state.counterReducer.deliveryFee }));
+
+
+    const [open, setOpen] = useState(false);
+    const [BankID, setBankID] = useState(0);
+    const [isAllBankSet, setAllBank] = useState(false);
+    // const [BankingType, setBankType] = useState("");
+    const [finalAllBankDetails, setfinalAllBankDetails] = useState([]);
+    const [allBankDetails, setAllBankDetails] = useState([]);
+
+    useEffect(() => {
+
         let URL2 = "https://myemporia.my/payment/06_fpx_bankListRequest.php"
         const config = { headers: { 'Content-Type': 'multipart/form-data' } }
         axios.post(URL2, {}, config).then((res) => {
             if (res.status === 200) {
-
                 let bankFinalList = []
                 let bankList = res.data.split('|')[0]
                 bankList = bankList.split(',')
@@ -89,7 +128,6 @@ export default function CheckoutPaymentMethods({ onSelectPaymentTypes, onSelectB
                         bankFinalList.push(bankListing)
                     }
                 })
-
                 bankFinalList.sort((a, b) => a.PaymentMethod.localeCompare(b.PaymentMethod));
                 // this.setState({ finalAllBankDetails: bankFinalList, BankID: "0" })
                 setfinalAllBankDetails(bankFinalList)
@@ -98,34 +136,9 @@ export default function CheckoutPaymentMethods({ onSelectPaymentTypes, onSelectB
         }).catch(e => {
             toast.error("There is something wrong for bank retrieve. Please try again.")
         })
-    }, []);
 
+    }, [allBankDetails]);
 
-    useEffect(() => {
-        dispatch(GitAction.CallAllPaymentMethod(1));
-    }, []);
-    const paymentmethod = useSelector(state => ({ paymentmethod: state.counterReducer.paymentmethod }));
-console.log("paymentmethod",paymentmethod)
-
-
-    // useEffect(() => {
-    //     let obj={
-    //         PRODUCTID:
-    //         PROJECTID:
-    //         PRODUCTQUANTITY:
-    //         POSCODE:
-    //     }
-    //     dispatch(GitAction.CallGetOrderShippingFee());
-    // })
-    // const totalDeliveryFee = useSelector(state => ({ deliveryFee: state.counterReducer.deliveryFee }));
-
-
-    const [open, setOpen] = useState(false);
-    const [BankID, setBankID] = useState(0);
-    const [isAllBankSet, setAllBank] = useState(false);
-    // const [BankingType, setBankType] = useState("");
-    const [finalAllBankDetails, setfinalAllBankDetails] = useState([]);
-    const [allBankDetails, setAllBankDetails] = useState([]);
     const handleOpen = () => {
         setOpen(true);
     };
@@ -151,7 +164,6 @@ console.log("paymentmethod",paymentmethod)
 
     const defaultOption = PAYMENT_OPTIONS[0]
     const bankOptions = finalAllBankDetails !== null && finalAllBankDetails.filter((x) => x.BankType === "B2C").map((details) => {
-        console.log("details",details)
         return details
     })
 
@@ -559,7 +571,7 @@ console.log("paymentmethod",paymentmethod)
                                     hasChild={option.value === 1}
                                     isBankIn={option.value === 1}
                                     handleBanking={onSelectBank}
-                                    // isSelected={field.value === option.value}
+                                    isSelected={defaultOption.value === option.value}
                                     onOpen={handleOpen}
                                 />
                             ))}
@@ -587,7 +599,8 @@ PaymentOption.propTypes = {
 
 function PaymentOption({ option, bankOptions, hasChild, isSelected, isBankIn, onOpen, handleBanking }) {
     const { value, title, icons, description } = option;
-
+    // var bankSelected = bankOptions[0] ? bankOptions[0].BankID : 0;
+    const [bankSelected, setbankSelected] = useState(bankOptions[0] ? bankOptions[0].BankID : 0)
     return (
         <Paper
             variant="outlined"
@@ -643,7 +656,7 @@ function PaymentOption({ option, bankOptions, hasChild, isSelected, isBankIn, on
                         my: 3
                     }}
                 >
-                    <TextField select fullWidth label="Banks" SelectProps={{ native: true }} onChange={(e) => handleBanking(e.target.value)}>
+                    <TextField select fullWidth label="Banks" SelectProps={{ native: true }} value={bankSelected} onChange={(e) => { handleBanking(e.target.value); setbankSelected(e.target.value)}}>
                         {bankOptions.map((bank) => (
                             <option key={bank.BankID} value={bank.BankID}>
                                 {bank.BankName}

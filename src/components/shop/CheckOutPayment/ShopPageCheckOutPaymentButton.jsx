@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GitAction } from '../../../store/action/gitAction';
 
@@ -10,7 +10,7 @@ CheckoutCartCheckOutButton.propTypes = {
     totalApplyPromo: PropTypes.number,
     total: PropTypes.number,
     Userdetails: PropTypes.object,
-    BankID: PropTypes.number,
+    BankID: PropTypes.string,
 };
 
 export default function CheckoutCartCheckOutButton({
@@ -26,7 +26,7 @@ export default function CheckoutCartCheckOutButton({
 
     const dispatch = useDispatch()
     const [isSetDetail, setDetails] = useState(false)
-    const fpx_information = {
+    const [fpx_information, setfpx_information] = useState({
         fpx_msgType: "AR",
         fpx_msgToken: "01",
         // fpx_sellerExId: "EX00013776",
@@ -49,7 +49,31 @@ export default function CheckoutCartCheckOutButton({
         fpx_buyerIban: "",
         fpx_productDesc: "Emporia Hardware",
         fpx_version: "6.0"
-    }
+    })
+    // const fpx_information = {
+    //     fpx_msgType: "AR",
+    //     fpx_msgToken: "01",
+    //     // fpx_sellerExId: "EX00013776",
+    //     fpx_sellerExId: "EX00012067", // live FPX
+    //     fpx_sellerExOrderNo: "",
+    //     fpx_sellerTxnTime: "",
+    //     fpx_sellerOrderNo: "",
+    //     // fpx_sellerId: "SE00015397",
+    //     fpx_sellerId: "SE00055564",  // live FPX
+    //     fpx_sellerBankCode: "01",
+    //     fpx_txnCurrency: "MYR",
+    //     fpx_txnAmount: "",
+    //     fpx_buyerEmail: "",
+    //     fpx_buyerName: "",
+
+    //     fpx_buyerBankBranch: "",
+    //     fpx_buyerAccNo: "",
+    //     fpx_buyerId: "",
+    //     fpx_makerName: "",
+    //     fpx_buyerIban: "",
+    //     fpx_productDesc: "Emporia Hardware",
+    //     fpx_version: "6.0"
+    // }
 
 
     // credit and debit card
@@ -128,10 +152,10 @@ export default function CheckoutCartCheckOutButton({
         }
     }
     else {
-        access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
-        profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
-        // access_key = "51f40be210ff34cba0079b19efd3ab42"  //live credit card
-        // profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4"  //live credit card
+        // access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
+        // profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
+        access_key = "51f40be210ff34cba0079b19efd3ab42"  //live credit card
+        profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4"  //live credit card
         transaction_uuid = time + '123'
         signed_date_time = now
         locale = "en"
@@ -176,7 +200,7 @@ export default function CheckoutCartCheckOutButton({
     }
 
     const onSubmit = (Ind, transactionUUID) => {
-
+        console.log("onSubmit")
         let ProductID = ""
         let UserCartID = []
         let ProductQuantity = []
@@ -250,7 +274,7 @@ export default function CheckoutCartCheckOutButton({
             UserCartID: UserCartID,
             UserAddressID: Userdetails.UserAddressBookID,
             PaymentMethodID: PaymentType === "1" ? "2" : "1",
-            UserPaymentMethodID: PaymentType === "1" ? "2": "1",
+            UserPaymentMethodID: PaymentType === "1" ? "2" : "1",
             OrderTotalAmount: totalPrice,
             OrderPaidAmount: 0,
             ProductVariationDetailID: ProductVariationDetailID,
@@ -271,98 +295,101 @@ export default function CheckoutCartCheckOutButton({
             bill_to_address_city: bill_to_address_city,
             bill_to_address_country: bill_to_address_country
         }))
-    // this.props.CallAddOrderCreditCard()
+        // this.props.CallAddOrderCreditCard()
 
-}
+    }
 
-return (
-    <div className="checkout">
-        <div className="" style={{ textAlign: "left" }}>
-            {/* container */}
-            {
-                PaymentType === "1" && BankID !== "0" ?
-                    <React.Fragment>
-                        <label style={{ fontSize: "12px" }}>By Clicking on the "Proceed" button , you hereby agree with <a href={"https://www.mepsfpx.com.my/FPXMain/termsAndConditions.jsp"} style={{ color: "blue" }} >FPX's Terms & Conditions</a> </label>
-                        <div>
+    return (
+        <div className="checkout">
+            <div className="" style={{ textAlign: "left" }}>
+                {console.log("cccBankID",BankID)}
+                {
+
+                    PaymentType === "1" && BankID !== "0" ?
+                        <React.Fragment>
+                            <label style={{ fontSize: "12px" }}>By Clicking on the "Proceed" button , you hereby agree with <a href={"https://www.mepsfpx.com.my/FPXMain/termsAndConditions.jsp"} style={{ color: "blue" }} >FPX's Terms & Conditions</a> </label>
+                            <div>
 
 
 
-                            {
-                                <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
-                                    {/* // <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
+                                {
+                                    //live
+                                    <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
+                                        {/* <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
 
-                                    <input type="hidden" value={fpx_information.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
-                                    <input type="hidden" value={fpx_information.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
-                                    <input type="hidden" value={fpx_information.fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
-                                    <input type="hidden" value={fpx_information.fpx_sellerExOrderNo} id="fpx_sellerExOrderNo" name="fpx_sellerExOrderNo"></input>
-                                    <input type="hidden" value={fpx_information.fpx_sellerTxnTime} id="fpx_sellerTxnTime" name="fpx_sellerTxnTime"></input>
-                                    <input type="hidden" value={fpx_information.fpx_sellerOrderNo} id="fpx_sellerOrderNo" name="fpx_sellerOrderNo"></input>
-                                    <input type="hidden" value={fpx_information.fpx_sellerId} id="fpx_sellerId" name="fpx_sellerId"></input>
-                                    <input type="hidden" value={fpx_information.fpx_sellerBankCode} id="fpx_sellerBankCode" name="fpx_sellerBankCode"></input>
-                                    <input type="hidden" value={fpx_information.fpx_txnCurrency} id="fpx_txnCurrency" name="fpx_txnCurrency"></input>
-                                    <input type="hidden" value={parseFloat(fpx_information.fpx_txnAmount).toFixed(2)} id="fpx_txnAmount" name="fpx_txnAmount"></input>
-                                    <input type="hidden" value={fpx_information.fpx_buyerEmail} id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
-                                    <input type="hidden" value={fpx_information.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
-                                    <input type="hidden" value={fpx_information.fpx_buyerName} id="fpx_buyerName" name="fpx_buyerName"></input>
-                                    <input type="hidden" value={fpx_information.fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
-                                    <input type="hidden" value={fpx_information.fpx_buyerBankBranch} id="fpx_buyerBankBranch" name="fpx_buyerBankBranch"></input>
-                                    <input type="hidden" value={fpx_information.fpx_buyerAccNo} id="fpx_buyerAccNo" name="fpx_buyerAccNo"></input>
-                                    <input type="hidden" value={fpx_information.fpx_buyerId} id="fpx_buyerId" name="fpx_buyerId"></input>
-                                    <input type="hidden" value={fpx_information.fpx_makerName} id="fpx_makerName" name="fpx_makerName"></input>
-                                    <input type="hidden" value={fpx_information.fpx_buyerIban} id="fpx_buyerIban" name="fpx_buyerIban"></input>
-                                    <input type="hidden" value={fpx_information.fpx_version} id="fpx_version" name="fpx_version"></input>
-                                    <input type="hidden" value={fpx_information.fpx_productDesc} id="fpx_productDesc" name="fpx_productDesc"></input>
-                                    <input type="submit"
-                                        style={{
-                                            backgroundColor: "#04AA6D",
-                                            border: "none",
-                                            color: "white",
-                                            fontSize: "14px",
-                                            textDecoration: "none",
-                                            width: "100%"
-                                        }} id="submit" name="submit" value={textInside} onClick={() => onSubmit(PickUpIndicator, fpx_information.fpx_sellerOrderNo)} />
+                                        <input type="hidden" value={fpx_information.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
+                                        <input type="hidden" value={fpx_information.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
+                                        <input type="hidden" value={fpx_information.fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
+                                        <input type="hidden" value={fpx_information.fpx_sellerExOrderNo} id="fpx_sellerExOrderNo" name="fpx_sellerExOrderNo"></input>
+                                        <input type="hidden" value={fpx_information.fpx_sellerTxnTime} id="fpx_sellerTxnTime" name="fpx_sellerTxnTime"></input>
+                                        <input type="hidden" value={fpx_information.fpx_sellerOrderNo} id="fpx_sellerOrderNo" name="fpx_sellerOrderNo"></input>
+                                        <input type="hidden" value={fpx_information.fpx_sellerId} id="fpx_sellerId" name="fpx_sellerId"></input>
+                                        <input type="hidden" value={fpx_information.fpx_sellerBankCode} id="fpx_sellerBankCode" name="fpx_sellerBankCode"></input>
+                                        <input type="hidden" value={fpx_information.fpx_txnCurrency} id="fpx_txnCurrency" name="fpx_txnCurrency"></input>
+                                        <input type="hidden" value={parseFloat(fpx_information.fpx_txnAmount).toFixed(2)} id="fpx_txnAmount" name="fpx_txnAmount"></input>
+                                        <input type="hidden" value={fpx_information.fpx_buyerEmail} id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
+                                        <input type="hidden" value={fpx_information.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
+                                        <input type="hidden" value={fpx_information.fpx_buyerName} id="fpx_buyerName" name="fpx_buyerName"></input>
+                                        <input type="hidden" value={fpx_information.fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
+                                        <input type="hidden" value={fpx_information.fpx_buyerBankBranch} id="fpx_buyerBankBranch" name="fpx_buyerBankBranch"></input>
+                                        <input type="hidden" value={fpx_information.fpx_buyerAccNo} id="fpx_buyerAccNo" name="fpx_buyerAccNo"></input>
+                                        <input type="hidden" value={fpx_information.fpx_buyerId} id="fpx_buyerId" name="fpx_buyerId"></input>
+                                        <input type="hidden" value={fpx_information.fpx_makerName} id="fpx_makerName" name="fpx_makerName"></input>
+                                        <input type="hidden" value={fpx_information.fpx_buyerIban} id="fpx_buyerIban" name="fpx_buyerIban"></input>
+                                        <input type="hidden" value={fpx_information.fpx_version} id="fpx_version" name="fpx_version"></input>
+                                        <input type="hidden" value={fpx_information.fpx_productDesc} id="fpx_productDesc" name="fpx_productDesc"></input>
+                                        <input type="submit"
+                                            style={{
+                                                backgroundColor: "#04AA6D",
+                                                border: "none",
+                                                color: "white",
+                                                fontSize: "14px",
+                                                textDecoration: "none",
+                                                width: "100%"
+                                            }} id="submit" name="submit" value={textInside+"rrr"} onClick={() => onSubmit(PickUpIndicator, fpx_information.fpx_sellerOrderNo)} />
+                                    </form>
+                                }
+                            </div>
+                        </React.Fragment>
+                        :
+                        <React.Fragment>
+                            <div>
+                                {/*live*/}
+                                <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post">
+
+                                    {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">  */}
+                                    <input type="hidden" id="access_key" name="access_key" value={access_key}></input>
+                                    <input type="hidden" id="profile_id" name="profile_id" value={profile_id}></input>
+                                    <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={transaction_uuid}></input>
+                                    <input type="hidden" id="signed_field_names" name="signed_field_names" value={signed_field_names}></input>
+                                    <input type="hidden" id="signed_date_time" name="signed_date_time" value={signed_date_time}></input>
+                                    <input type="hidden" id="locale" name="locale" value={locale}></input>
+                                    <input type="hidden" id="transaction_type" name="transaction_type" value="sale"></input>
+                                    <input type="hidden" id="reference_number" name="reference_number" value={reference_number}></input>
+                                    <input type="hidden" id="amount" name="amount" value={amount}></input>
+                                    <input type="hidden" id="currency" name="currency" value={currency}></input>
+                                    <input type="hidden" id="bill_to_surname" name="bill_to_surname" value={bill_to_surname}></input>
+                                    <input type="hidden" id="bill_to_forename" name="bill_to_forename" value={bill_to_forename}></input>
+                                    <input type="hidden" id="bill_to_email" name="bill_to_email" value={bill_to_email}></input>
+                                    <input type="hidden" id="bill_to_address_line1" name="bill_to_address_line1" value={bill_to_address_line1}></input>
+                                    <input type="hidden" id="bill_to_address_city" name="bill_to_address_city" value={bill_to_address_city}></input>
+                                    <input type="hidden" id="bill_to_address_country" name="bill_to_address_country" value={bill_to_address_country}></input>
+                                    {/* <input type="hidden" id="signature" name="signature" value={signed}></input> */}
+                                    <input type="submit" style={{
+                                        backgroundColor: PaymentType === "2" ? "#04AA6D" : "#808080",
+                                        border: "none",
+                                        color: "white",
+                                        fontSize: "14px",
+                                        textDecoration: "none",
+                                        width: "100%"
+                                    }} id="submit" name="submit" value={textInside+"cv"} onClick={() =>
+                                        onSubmitCreditCard(PickUpIndicator, time + '123')
+                                    } disabled={PaymentType === "2" ? false : true} />
                                 </form>
-                            }
-                        </div>
-                    </React.Fragment>
-                    :
-                    <React.Fragment>
-                        <div>
-                            {/* */}
-                            <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post">
-                                {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
-                                <input type="hidden" id="access_key" name="access_key" value={access_key}></input>
-                                <input type="hidden" id="profile_id" name="profile_id" value={profile_id}></input>
-                                <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={transaction_uuid}></input>
-                                <input type="hidden" id="signed_field_names" name="signed_field_names" value={signed_field_names}></input>
-                                <input type="hidden" id="signed_date_time" name="signed_date_time" value={signed_date_time}></input>
-                                <input type="hidden" id="locale" name="locale" value={locale}></input>
-                                <input type="hidden" id="transaction_type" name="transaction_type" value="sale"></input>
-                                <input type="hidden" id="reference_number" name="reference_number" value={reference_number}></input>
-                                <input type="hidden" id="amount" name="amount" value={amount}></input>
-                                <input type="hidden" id="currency" name="currency" value={currency}></input>
-                                <input type="hidden" id="bill_to_surname" name="bill_to_surname" value={bill_to_surname}></input>
-                                <input type="hidden" id="bill_to_forename" name="bill_to_forename" value={bill_to_forename}></input>
-                                <input type="hidden" id="bill_to_email" name="bill_to_email" value={bill_to_email}></input>
-                                <input type="hidden" id="bill_to_address_line1" name="bill_to_address_line1" value={bill_to_address_line1}></input>
-                                <input type="hidden" id="bill_to_address_city" name="bill_to_address_city" value={bill_to_address_city}></input>
-                                <input type="hidden" id="bill_to_address_country" name="bill_to_address_country" value={bill_to_address_country}></input>
-                                {/* <input type="hidden" id="signature" name="signature" value={signed}></input> */}
-                                <input type="submit" style={{
-                                    backgroundColor: PaymentType === "2" ? "#04AA6D" : "#808080",
-                                    border: "none",
-                                    color: "white",
-                                    fontSize: "14px",
-                                    textDecoration: "none",
-                                    width: "100%"
-                                }} id="submit" name="submit" value={textInside} onClick={() =>
-                                    onSubmitCreditCard(PickUpIndicator, time + '123')
-                                } disabled={PaymentType === "2" ? false : true} />
-                            </form>
-                        </div>
-                    </React.Fragment>
-            }
+                            </div>
+                        </React.Fragment>
+                }
+            </div >
         </div >
-    </div >
-);
+    );
 }

@@ -1190,7 +1190,6 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.ViewProductCart), map(action => {
       return dispatch => {
         try {
-          console.log("anyyy", "viewProductCartList")
           return fetch(url +
             "Product_ItemListInCartByUserID?USERID=" + action.payload.userID)
             .then(response => response.json())
@@ -1445,7 +1444,7 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.GetPaymentMethod), map(action => {
       return dispatch => {
         try {
-          return fetch(url + "User_ViewUserPaymentMethod?USERID=" + action.payload)
+          return fetch(url + "General_ViewPaymentMethod")
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)

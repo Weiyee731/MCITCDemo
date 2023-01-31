@@ -53,8 +53,6 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
 
   useEffect(() => {
     setIsLoading(false)
-    console.log("addAddress", addAddress)
-    console.log("add", addAddress !== [])
     if (addAddress !== []) {
       onClose()
     }

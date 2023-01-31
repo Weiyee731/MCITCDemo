@@ -52,7 +52,7 @@ export default function CheckoutPayment({
     const total = sum(data.map((item) => item.total));
     const subtotal = sum(data.map((item) => item.total));
     const discount = sum(data.map((item) => item.discount));
-    const [BankID, setBankID] = useState(0);
+    const [BankID, setBankID] = useState("0");
     const [PaymentType, setPaymentType] = useState("1");
     const [fpxData, setfpxData] = useState({
         fpx_checkSum: 0,
@@ -61,30 +61,37 @@ export default function CheckoutPayment({
         fpx_sellerTxnTime: 0,
         fpx_sellerOrderNo: 0
     });
-    // const [UserFpxData, setUserFpxData] = useState({
-    //     fpx_buyerAccNo
-    //     fpx_buyerBankBranch
-    //     fpx_buyerEmail
-    //     fpx_buyerIban
-    //     fpx_buyerId
-    //     fpx_buyerName
-    //     fpx_makerName
-    //     fpx_msgToken
-    // })
-
-    // need to delete
+    const [UserFpxData, setUserFpxData] = useState({
+        fpx_buyerAccNo: "",
+        fpx_buyerBankBranch: "",
+        fpx_buyerEmail: "",
+        fpx_buyerIban: "",
+        fpx_buyerId: "",
+        fpx_buyerName: "",
+        fpx_makerName: "",
+        fpx_msgToken: "01",
+        fpx_msgType: "AR",
+        fpx_productDesc: "Emporia Hardware",
+        fpx_sellerBankCode: "01",
+        // fpx_sellerExId: "EX00013776",
+        fpx_sellerExId: "EX00012067", // live FPX
+        // fpx_sellerId: "SE00015397",
+        fpx_sellerId: "SE00055564",  // live FPX
+        fpx_txnAmount: "",
+        fpx_txnCurrency: "MYR",
+        fpx_version: "6.0",
+    })
     const isVoucherApply = false;
     const totalApplyPromo = 0
-    // 
 
-    const onSubmit = async () => {
-        try {
-            onNextStep();
-            onReset();
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    // const onSubmit = async () => {
+    //     try {
+    //         onNextStep();
+    //         onReset();
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
     const handlePaymentTypes = (type) => {
         // type==1 , bankin // type==2 , creditcard
@@ -92,13 +99,15 @@ export default function CheckoutPayment({
     }
 
     const handleBanking = (bankid) => {
-        console.log("bankid", bankid)
+        
+        console.log("bankid",typeof bankid)
+        console.log("bankid",bankid)
         let date = moment(new Date()).format("YYYYMMDDHHmmss").toString()
         let fpx_sellerExOrderNo = date
         let fpx_sellerTxnTime = date
         let fpx_sellerOrderNo = date
 
-        let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
+        let bankingdata = UserFpxData.fpx_buyerAccNo + "|" + UserFpxData.fpx_buyerBankBranch + "|" + bankid + "|" + UserFpxData.fpx_buyerEmail + "|" + UserFpxData.fpx_buyerIban + "|" + UserFpxData.fpx_buyerId + "|" + UserFpxData.fpx_buyerName + "|" + UserFpxData.fpx_makerName + "|" + UserFpxData.fpx_msgToken + "|" + UserFpxData.fpx_msgType + "|" + UserFpxData.fpx_productDesc + "|" + UserFpxData.fpx_sellerBankCode + "|" + UserFpxData.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + UserFpxData.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(UserFpxData.fpx_txnAmount).toFixed(2) + "|" + UserFpxData.fpx_txnCurrency + "|" + UserFpxData.fpx_version
 
         let URL = "https://myemporia.my/payment/check.php"
         const config = { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -106,7 +115,7 @@ export default function CheckoutPayment({
         formData.append("bankingdata", bankingdata);
         axios.post(URL, formData, config).then((res) => {
             if (res.status === 200) {
-               setfpxData({
+                setfpxData({
                     fpx_checkSum: res.data.split('"')[1],
                     fpx_buyerBankId: bankid,
                     fpx_sellerExOrderNo: fpx_sellerExOrderNo,
@@ -168,7 +177,6 @@ export default function CheckoutPayment({
 
             <Grid item xs={12} md={4}>
                 <CheckoutBillingInfo onBackStep={onBackStep} billing={address} />
-
                 <CheckoutSummary
                     enableEdit
                     total={total}

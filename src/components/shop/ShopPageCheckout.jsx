@@ -12,7 +12,7 @@ import PageHeader from "../shared/PageHeader";
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
 import PageCheckOrder from "./ShopPageCheckOrder";
-import PagePayment from "./ShopPagePayment";
+// import PagePayment from "./ShopPagePayment";
 import { GitAction } from "../../store/action/gitAction";
 // import PageCart from "./ShopPageCart";
 // import PageCompleted from "./ShopPageCompleted";
@@ -146,7 +146,6 @@ class PageCheckout extends Component {
 
   handleNextStep = () => {
     this.setState({ activeStep: this.state.activeStep + 1 })
-    console.log("activeStep", this.state.activeStep)
   };
 
   handleBackStep = () => {
@@ -162,7 +161,6 @@ class PageCheckout extends Component {
 
   handleCreateBilling = (address) => {
     let PRODUCTID = this.data.data.map((item) => { return item.product.ProductID })
-    console.log("PRODUCTID", PRODUCTID)
     let ProductQuantity = this.data.data.map((item) => { return item.product.ProductQuantity })
     var obj = {
       PRODUCTID: PRODUCTID,
@@ -171,7 +169,6 @@ class PageCheckout extends Component {
       POSCODE: address.UserPoscode
     }
     this.data["address"] = address;
-    console.log("data", this.data)
     this.props.CallGetOrderShippingFee(obj)
 
     this.setState({ activeStep: this.state.activeStep + 1, address: address })

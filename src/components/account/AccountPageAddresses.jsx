@@ -92,7 +92,6 @@ class AccountPageAddresses extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // console.log(prevProps)
     if(prevProps.addresses !== this.props.addresses && this.state.changeDefaultAddress === true) {
       this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
       this.setState({ changeDefaultAddress: false });
@@ -171,7 +170,6 @@ class AccountPageAddresses extends Component {
   };
 
   render() {
-    console.log(this.props)
     return (
       <Card>
         {this.state.onAdd ? (

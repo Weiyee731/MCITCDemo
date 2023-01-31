@@ -610,7 +610,6 @@ class AccountPagePayment extends Component {
             )
         }
 
-        console.log("dateeee", this.state)
 
         return (
             <div className="checkout">

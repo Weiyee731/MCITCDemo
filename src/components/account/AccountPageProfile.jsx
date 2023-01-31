@@ -246,13 +246,11 @@ class AccountPageProfile extends Component {
   handleChangeforGender = (e) => {
     const { value } = e.target;
     if (value !== null) {
-      console.log("hello1",value)
       this.setState({
         USERGENDER: value,
         validGender: true,
       });
     } else {
-      console.log("hello11")
       this.setState({
         validGender: false,
       });
@@ -307,7 +305,6 @@ class AccountPageProfile extends Component {
 
   /////////////////CALL API TO UPDATE PROFILE INFO///////////////////////////////////////////
   updateProfile() {
-    console.log("this.state.USERGENDER",this.state.USERGENDER)
     // if (
     // //   !isStringNullOrEmpty(this.state.Name) &&
     // //   isContactValid(this.state.ContactNo) &&
@@ -358,7 +355,6 @@ class AccountPageProfile extends Component {
 
 
   render() {
-    console.log(this.props.currentUser,"this.props.currentUser")
     const imgurl = "https://myemporia.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {
