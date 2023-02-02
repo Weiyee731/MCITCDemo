@@ -17,7 +17,6 @@ import Logo from "../../assets/Emporia.png";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
-
 const slickSettingsFeatured = {
   dots: false,
   arrows: false,
@@ -106,9 +105,11 @@ class ProductGallery extends Component {
   }
 
   componentDidMount() {
-    // this.createGallery = import("../../photoswipe").then(
-    //   (module) => module.createGallery
-    // );
+    this.createGallery = import("../../photoswipe").then(
+      (module) => module.createGallery
+    );
+
+    // console.log(this.createGallery)
 
     // this is necessary to reset the transition state, because sometimes
     // react-slick does not trigger an afterChange event after a beforeChange event
@@ -261,14 +262,17 @@ class ProductGallery extends Component {
 
       this.gallery = createGallery(items, options);
 
+      // this.gallery.loadAndOpen();
       this.gallery.listen("beforeChange", () => {
         if (this.gallery && this.slickFeaturedRef) {
           this.slickFeaturedRef.slickGoTo(this.gallery.getCurrentIndex(), true);
         }
       });
-      this.gallery.listen("destroy", () => {
-        this.gallery = null;
-      });
+      // this.gallery.listen("destroy", () => {
+      //   this.gallery = null;
+      // });
+      
+      this.gallery.destroy();
 
       this.gallery.init();
     });
@@ -359,8 +363,6 @@ class ProductGallery extends Component {
       <div className="product__gallery">
         <div className="product-gallery">
           <div className="product-gallery__featured">
-
-
             {layout !== "quickview" && (
               <button
                 type="button"

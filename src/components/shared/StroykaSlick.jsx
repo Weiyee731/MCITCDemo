@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 
 // application
 import languages from '../../i18n';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 class StroykaSlickBase extends Component {
     slickRef;

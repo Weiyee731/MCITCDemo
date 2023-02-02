@@ -1,8 +1,11 @@
-import 'photoswipe/dist/photoswipe.css';
-import 'photoswipe/dist/default-skin/default-skin.css';
+// import 'photoswipe/dist/photoswipe.css';
+// import 'photoswipe/dist/default-skin/default-skin.css';
 
-import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js';
-import _PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
+// import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js';
+// import _PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
+
+import PhotoSwipeLightbox from 'photoswipe/lightbox';
+import _PhotoSwipeUIDefault from 'photoswipe/style.css';
 
 // noinspection CheckTagEmptyBody
 const template = `
