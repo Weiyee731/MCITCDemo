@@ -19,7 +19,12 @@ import { GitAction } from '../../../store/action/gitAction';
 import axios from "axios";
 import { toast } from "react-toastify";
 import moment from "moment";
+
+import { HmacSHA256 } from 'crypto-js';
 // ----------------------------------------------------------------------
+// const crypto = require('crypto');
+
+
 
 const DELIVERY_OPTIONS = [
     {
@@ -54,35 +59,232 @@ export default function CheckoutPayment({
     const discount = sum(data.map((item) => item.discount));
     const [BankID, setBankID] = useState("0");
     const [PaymentType, setPaymentType] = useState("1");
-    const [fpxData, setfpxData] = useState({
+    const [isSetDetail, setDetails] = useState(false)
+
+    const [fpx_information, setfpx_information] = useState({
+        fpx_msgType: "AR",
+        fpx_msgToken: "01",
+        // fpx_sellerExId: "EX00013776",
+        fpx_sellerExId: "EX00012067", // live FPX
+        fpx_sellerExOrderNo: "",
+        fpx_sellerTxnTime: "",
+        fpx_sellerOrderNo: "",
+        // fpx_sellerId: "SE00015397",
+        fpx_sellerId: "SE00055564",  // live FPX
+        fpx_sellerBankCode: "01",
+        fpx_txnCurrency: "MYR",
+        fpx_txnAmount: "",
+        fpx_buyerEmail: "",
+        fpx_buyerName: "",
+
+        fpx_buyerBankBranch: "",
+        fpx_buyerAccNo: "",
+        fpx_buyerId: "",
+        fpx_makerName: "",
+        fpx_buyerIban: "",
+        fpx_productDesc: "Emporia Hardware",
+        fpx_version: "6.0",
+
+
+
         fpx_checkSum: 0,
         fpx_buyerBankId: 0,
         fpx_sellerExOrderNo: 0,
         fpx_sellerTxnTime: 0,
         fpx_sellerOrderNo: 0
-    });
-    const [UserFpxData, setUserFpxData] = useState({
-        fpx_buyerAccNo: "",
-        fpx_buyerBankBranch: "",
-        fpx_buyerEmail: "",
-        fpx_buyerIban: "",
-        fpx_buyerId: "",
-        fpx_buyerName: "",
-        fpx_makerName: "",
-        fpx_msgToken: "01",
-        fpx_msgType: "AR",
-        fpx_productDesc: "Emporia Hardware",
-        fpx_sellerBankCode: "01",
-        // fpx_sellerExId: "EX00013776",
-        fpx_sellerExId: "EX00012067", // live FPX
-        // fpx_sellerId: "SE00015397",
-        fpx_sellerId: "SE00055564",  // live FPX
-        fpx_txnAmount: "",
-        fpx_txnCurrency: "MYR",
-        fpx_version: "6.0",
+    })
+    const [limit, setlimit] = useState({
+        isLimitAlert: false,
+        limitMsg: "",
+        isLimitCheck: false,
+    })
+
+    const [paymentData, setpaymentData] = useState({
+        access_key: "",
+        profile_id: "",
+        transaction_uuid: "",
+        signed_date_time: "",
+        locale: "",
+        transaction_type: "",
+        reference_number: "",
+        amount: "",
+
+        currency: "",
+        bill_to_surname: "",
+        bill_to_forename: "",
+
+        bill_to_email: "",
+        bill_to_address_line1: "",
+        bill_to_address_city: "",
+
+        bill_to_address_postal_code: "",
+        bill_to_address_state: "",
+        bill_to_address_country: "",
+        signature: "",
+        signed_field_names: "",
+
+
+        totalPrice: "",
+        PickUpIndicator: "",
+        time: "",
+
+        lastname: "",
+        firstname: "",
+        email: "",
+        addressLine1: "",
+        city: "",
+        state: "",
+        poscode: "",
+        now: "",
+
     })
     const isVoucherApply = false;
     const totalApplyPromo = 0
+
+    useEffect(() => {
+
+        // credit and debit card
+        let now = new Date().toISOString().split('.').shift() + 'Z';
+        const d = new Date().getTime();
+        console.log("d.gettime", d)
+        // setpaymentData({ ...paymentData,})
+        var n = Math.floor(Math.random() * 11);
+        var k = Math.floor(Math.random() * 1000000);
+        var m = String.fromCharCode(n) + k;
+
+        {/* this.setState({ applyPromo: applyPromo, promoError: promoError, isVoucherApply: verify, totalApplyPromo: totalAfterPromo, totalDeduction: deduction, isShippingPromo: isShippingPromo }) */ }
+
+        let totalPrice = isVoucherApply ? parseFloat(totalApplyPromo).toFixed(2) : parseFloat(total).toFixed(2)
+        let lastname = address.UserAddressBookID === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia" : address.UserAddressName
+        let firstname = address.UserAddressBookID === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia" : address.UserAddressName
+        let email = address.UserAddressBookID === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com" : address.UserEmail
+        let addressLine1 = address.UserAddressBookID === 0 ? "SELFCOLECT" : address.UserAddressLine1
+        let city = address.UserAddressBookID === 0 ? "SELFCOLECT" : address.UserCity
+        let state = address.UserAddressBookID === 0 ? "SELFCOLECT" : address.UserState
+        let poscode = address.UserAddressBookID === 0 ? "94300" : address.UserPoscode
+        let PickUpIndicator = address.UserAddressBookID === 0 ? 1 : 0
+        setpaymentData({
+            ...paymentData,
+            totalPrice: totalPrice,
+            PickUpIndicator: PickUpIndicator,
+            lastname: lastname,
+            firstname: firstname,
+            email: email,
+            addressLine1: addressLine1,
+            city: city,
+            state: state,
+            poscode: poscode,
+            now: now,
+            time: d
+        })
+
+        // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e"
+        // // live credit card
+        // // const APIKey = "2c57e2f0161a450ebe5fb67ffbdd51fc196b0256ed1940158f54990b57f4ec3c1e08823fa84c4596bea898bb2b53e6d124414d118b954914806c182092123d4008ba628a8eaf403faa7e3c1adb470ee9d6044313451442d2acd532b47d42e00a2fdecfa996334065a94e0d46d32b7534b3fb4016198047568afd83c99823f6ed"
+
+        if (isSetDetail === false && data.length !== 0) {
+            if (address.UserAddressBookID === 0) {
+                if (parseInt(totalPrice) > 30000) {
+                    setlimit({ ...limit, isLimitAlert: true, limitMsg: "Maximum Transaction Limit Exceeded" })
+                }
+                else if (parseInt(totalPrice) < 1) {
+                    setlimit({ ...limit, isLimitAlert: true, limitMsg: "Transaction Amount Below Transaction Limit" })
+                }
+                setDetails(true)
+                setfpx_information({
+                    ...fpx_information,
+                    fpx_buyerName: localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "Emporia",
+                    fpx_buyerEmail: "weiyee731@gmail.com",
+                    fpx_txnAmount: totalPrice
+                })
+
+            } else {
+                console.log("Transaction1", paymentData)
+                if (parseInt(totalPrice) > 30000) {
+                    setlimit({ ...limit, isLimitAlert: true, limitMsg: "Maximum Transaction Limit Exceeded" })
+                }
+                else if (parseInt(totalPrice) < 1) {
+                    setlimit({ ...limit, isLimitAlert: true, limitMsg: "Transaction Amount Below Transaction Limit" })
+                }
+                setDetails(true)
+                setfpx_information({
+                    ...fpx_information,
+                    fpx_buyerName: lastname,
+                    fpx_buyerEmail: email,
+                    fpx_txnAmount: totalPrice
+                })
+            }
+        }
+        else {
+
+            // access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
+            // profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
+            // paymentData.access_key = "51f40be210ff34cba0079b19efd3ab42"  //live credit card
+            // paymentData.profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4"  //live credit card
+            // 
+            // paymentData.transaction_uuid = paymentData.time + '123'
+            // paymentData.signed_date_time = now
+            // paymentData.locale = "en"
+            // paymentData.transaction_type = "sale"
+            // paymentData.reference_number = paymentData.time
+            // paymentData.amount = totalPrice
+            // paymentData.currency = "MYR"
+            // paymentData.bill_to_surname = lastname
+            // paymentData.bill_to_forename = firstname
+            // paymentData.bill_to_email = email
+            // paymentData.bill_to_address_line1 = addressLine1
+            // paymentData.bill_to_address_city = city
+
+            // paymentData.bill_to_address_postal_code = poscode
+            // paymentData.bill_to_address_state = state
+            // paymentData.bill_to_address_country = "MY"
+            // paymentData.signed_field_names = "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_country"
+
+            // paymentData.signature = "access_key=" + paymentData.access_key + ",profile_id=" + paymentData.profile_id + ",transaction_uuid=" + paymentData.transaction_uuid + ",signed_field_names=" + paymentData.signed_field_names + ",signed_date_time=" + paymentData.signed_date_time + ",locale=" + paymentData.locale + ",transaction_type=sale,reference_number=" + paymentData.reference_number + ",amount=" + paymentData.amount + ",currency=" + paymentData.currency + ",bill_to_surname=" + paymentData.bill_to_surname + ",bill_to_forename=" + paymentData.bill_to_forename + ",bill_to_email=" + paymentData.bill_to_email + ",bill_to_address_line1=" + paymentData.bill_to_address_line1 + ",bill_to_address_city=" + paymentData.bill_to_address_city + ",bill_to_address_country=" + paymentData.bill_to_address_country
+
+            // setpaymentData({
+            //     ...paymentData,
+            //     access_key: "51f40be210ff34cba0079b19efd3ab42",  //live credit card,
+            //     profile_id: "0CE666B6-7064-4D68-9DFE-EC46776C02A4",  //live credit card
+            //     transaction_uuid: paymentData.time + '123',
+            //     signed_date_time: now,
+            //     locale: "en",
+            //     transaction_type: "sale",
+            //     reference_number: paymentData.time,
+            //     amount: totalPrice,
+            //     currency: "MYR",
+            //     bill_to_surname: lastname,
+            //     bill_to_forename: firstname,
+            //     bill_to_email: email,
+            //     bill_to_address_line1: addressLine1,
+            //     bill_to_address_city: city,
+            //     bill_to_address_postal_code: poscode,
+            //     bill_to_address_state: state,
+            //     bill_to_address_country: "MY",
+            //     signed_field_names: "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_country",
+            //     signature: "access_key=" + paymentData.access_key + ",profile_id=" + paymentData.profile_id + ",transaction_uuid=" + paymentData.transaction_uuid + ",signed_field_names=" + paymentData.signed_field_names + ",signed_date_time=" + paymentData.signed_date_time + ",locale=" + paymentData.locale + ",transaction_type=sale,reference_number=" + paymentData.reference_number + ",amount=" + paymentData.amount + ",currency=" + paymentData.currency + ",bill_to_surname=" + paymentData.bill_to_surname + ",bill_to_forename=" + paymentData.bill_to_forename + ",bill_to_email=" + paymentData.bill_to_email + ",bill_to_address_line1=" + paymentData.bill_to_address_line1 + ",bill_to_address_city=" + paymentData.bill_to_address_city + ",bill_to_address_country=" + paymentData.bill_to_address_country
+            // })
+
+            // console.log("Transaction", paymentData)
+            // // console.log("Transactioncrypto", crypto.createHmac('sha256',APIKey))
+            // const crypto = require('crypto');
+
+            // const algorithm = 'sha256';
+            // const secret = APIKey;
+            // const message = paymentData.signature;
+
+            // const hmac = crypto.createHmac(algorithm, secret);
+            // hmac.update(message);
+            // const hash = hmac.digest('hex');
+
+            // var signed = crypto
+            //     .createHmac('sha256', APIKey)
+            //     .update(paymentData.signature)
+            //     .digest('base64');
+        }
+
+    }, [])
+
 
     // const onSubmit = async () => {
     //     try {
@@ -95,28 +297,109 @@ export default function CheckoutPayment({
 
     const handlePaymentTypes = (type) => {
         // type==1 , bankin // type==2 , creditcard
-        setPaymentType(type)
+        setPaymentType(type);
+        if (type === "2") {
+                  // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e"
+            // live credit card
+            const APIKey = "2c57e2f0161a450ebe5fb67ffbdd51fc196b0256ed1940158f54990b57f4ec3c1e08823fa84c4596bea898bb2b53e6d124414d118b954914806c182092123d4008ba628a8eaf403faa7e3c1adb470ee9d6044313451442d2acd532b47d42e00a2fdecfa996334065a94e0d46d32b7534b3fb4016198047568afd83c99823f6ed"
+
+            
+            let access_key = "51f40be210ff34cba0079b19efd3ab42";  //live credit card,
+            let profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4";  //live credit card
+            let transaction_uuid = paymentData.time + '123';
+            let signed_date_time = paymentData.now;
+            let locale = "en";
+            let transaction_type = "sale";
+            let reference_number = paymentData.time;
+            let amount = paymentData.totalPrice;
+            let currency = "MYR";
+            let bill_to_surname = paymentData.lastname;
+            let bill_to_forename = paymentData.firstname;
+            let bill_to_email = paymentData.email;
+            let bill_to_address_line1 = paymentData.addressLine1;
+            let bill_to_address_city = paymentData.city;
+            let bill_to_address_postal_code = paymentData.poscode;
+            let bill_to_address_state = paymentData.state;
+            let bill_to_address_country = "MY";
+            let signed_field_names = "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_country";
+            let  signature= "access_key=" + access_key + ",profile_id=" + profile_id + ",transaction_uuid=" + transaction_uuid + ",signed_field_names=" + signed_field_names + ",signed_date_time=" + signed_date_time + ",locale=" + locale + ",transaction_type=sale,reference_number=" + "1" + ",amount="+ amount + ",currency=" + currency + ",bill_to_surname=" + bill_to_surname + ",bill_to_forename=" + bill_to_forename + ",bill_to_email=" + bill_to_email + ",bill_to_address_line1=" + bill_to_address_line1 + ",bill_to_address_city=" + bill_to_address_city + ",bill_to_address_country=" + bill_to_address_country;
+            let signed =  HmacSHA256(signature, APIKey).toString();
+            const base64EncodedHmac = btoa(signed);
+            console.log("signed", base64EncodedHmac)
+
+
+      
+            setpaymentData({
+                ...paymentData,
+                access_key: access_key,
+                profile_id: profile_id,
+                transaction_uuid: transaction_uuid,
+                signed_date_time: signed_date_time,
+                locale: locale,
+                transaction_type: "sale",
+                reference_number: paymentData.time,
+                amount: paymentData.totalPrice,
+                currency: "MYR",
+                bill_to_surname: paymentData.lastname,
+                bill_to_forename: paymentData.firstname,
+                bill_to_email: paymentData.email,
+                bill_to_address_line1: paymentData.addressLine1,
+                bill_to_address_city: paymentData.city,
+                bill_to_address_postal_code: paymentData.poscode,
+                bill_to_address_state: paymentData.state,
+                bill_to_address_country: "MY",
+                signed_field_names: signed_field_names,
+                signature:signature,
+                signed:base64EncodedHmac
+            })
+            console.log("dasdas", paymentData)
+            // console.log("Transactioncrypto", crypto.createHmac('sha256',APIKey))
+            // const crypto = require('crypto');
+
+            // const algorithm = 'sha256';
+            // const secret = APIKey;
+            // const message = paymentData.signature;
+
+            // const hmac = crypto.createHmac(algorithm, secret);
+            // hmac.update(message);
+            // const hash = hmac.digest('hex');
+
+            // var signed = crypto
+            //     .createHmac('sha256', APIKey)
+            //     .update(paymentData.signature)
+            //     .digest('base64');
+
+
+           
+        }
     }
 
     const handleBanking = (bankid) => {
-        
-        console.log("bankid",typeof bankid)
-        console.log("bankid",bankid)
+
+        console.log("bankid", typeof bankid)
+        console.log("bankid", bankid)
         let date = moment(new Date()).format("YYYYMMDDHHmmss").toString()
         let fpx_sellerExOrderNo = date
         let fpx_sellerTxnTime = date
         let fpx_sellerOrderNo = date
 
-        let bankingdata = UserFpxData.fpx_buyerAccNo + "|" + UserFpxData.fpx_buyerBankBranch + "|" + bankid + "|" + UserFpxData.fpx_buyerEmail + "|" + UserFpxData.fpx_buyerIban + "|" + UserFpxData.fpx_buyerId + "|" + UserFpxData.fpx_buyerName + "|" + UserFpxData.fpx_makerName + "|" + UserFpxData.fpx_msgToken + "|" + UserFpxData.fpx_msgType + "|" + UserFpxData.fpx_productDesc + "|" + UserFpxData.fpx_sellerBankCode + "|" + UserFpxData.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + UserFpxData.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(UserFpxData.fpx_txnAmount).toFixed(2) + "|" + UserFpxData.fpx_txnCurrency + "|" + UserFpxData.fpx_version
-
+        let bankingdata = fpx_information.fpx_buyerAccNo + "|" + fpx_information.fpx_buyerBankBranch + "|" + bankid + "|" + fpx_information.fpx_buyerEmail + "|" + fpx_information.fpx_buyerIban + "|" + fpx_information.fpx_buyerId + "|" + fpx_information.fpx_buyerName + "|" + fpx_information.fpx_makerName + "|" + fpx_information.fpx_msgToken + "|" + fpx_information.fpx_msgType + "|" + fpx_information.fpx_productDesc + "|" + fpx_information.fpx_sellerBankCode + "|" + fpx_information.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + fpx_information.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(fpx_information.fpx_txnAmount).toFixed(2) + "|" + fpx_information.fpx_txnCurrency + "|" + fpx_information.fpx_version
+        console.log("bankingdata", fpx_information)
+        console.log("bankingdata", fpx_information.fpx_txnAmount)
         let URL = "https://myemporia.my/payment/check.php"
         const config = { headers: { 'Content-Type': 'multipart/form-data' } }
         const formData = new FormData()
         formData.append("bankingdata", bankingdata);
         axios.post(URL, formData, config).then((res) => {
+
             if (res.status === 200) {
-                setfpxData({
-                    fpx_checkSum: res.data.split('"')[1],
+                console.log("res", res.data)
+                console.log("res1", res.data.split('"')[1])
+                console.log("res2", fpx_sellerTxnTime)
+                console.log("res3", fpx_sellerOrderNo)
+                setfpx_information({
+                    ...fpx_information,
+                    fpx_checkSum: res.data,
                     fpx_buyerBankId: bankid,
                     fpx_sellerExOrderNo: fpx_sellerExOrderNo,
                     fpx_sellerTxnTime: fpx_sellerTxnTime,
@@ -203,6 +486,8 @@ export default function CheckoutPayment({
                     total={total}
                     Userdetails={address}
                     BankID={BankID}
+                    fpx_information={fpx_information}
+                    paymentData={paymentData}
                 />
             </Grid>
         </Grid>
