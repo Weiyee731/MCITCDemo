@@ -784,6 +784,7 @@ class BlockListingDetails extends Component {
 
                                                         return (
                                                             <div key={index} className="block-products__list-item">
+                                                                {console.log("hello")}
                                                                 <ProductCard product={products}></ProductCard>
                                                             </div>
 
@@ -794,7 +795,7 @@ class BlockListingDetails extends Component {
                                                 :
                                                 <div className="ml-2"><i>No products for this section</i></div>
                                             :
-                                            <LoadingPanel />
+                                            <LoadingPanel backgroundColor="whitesmoke"/>
                                     }
 
                                 </div>
