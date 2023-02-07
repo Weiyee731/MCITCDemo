@@ -18,13 +18,23 @@ import BlockProducts from '../blocks/BlockProducts';
 import BlockSlideShow from '../blocks/BlockSlideShow';
 import BlockMoreButton from '../blocks/BlockMoreButton';
 import LoadingPanel from "../shared/loadingPanel";
+import Rating from '@mui/material/Rating';
 
 // data stubs
 import Logo from "../../assets/Emporia.png";
+import shopCover from "../../assets/shopCover.png";
+import "./merchantpage.css";
+import MerchantSocialLinks from './MerchantSocialLinks';
+
+import SocialLinks from '../shared/SocialLinks';
+
 import {
     Card,
     CardMedia,
     CardContent,
+    Paper,
+    Typography,
+    Box,
 } from "@mui/material";
 
 function mapStateToProps(state) {
@@ -32,6 +42,28 @@ function mapStateToProps(state) {
         loading: state.counterReducer["loading"],
         productsListing: state.counterReducer["productsListing"],
         merchant: state.counterReducer["merchant"],
+    };
+}
+
+function useWindowDimensions() {
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowDimensions(getWindowDimensions());
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return windowDimensions;
+}
+
+function getWindowDimensions() {
+    const { innerWidth: width } = window;
+    return {
+        width,
     };
 }
 
@@ -46,7 +78,11 @@ function mapDispatchToProps(dispatch) {
 function MerchantPage(props) {
 
     let profileimage;
-
+    const { width } = useWindowDimensions();
+    const socialLinks = [
+        { type: 'facebook', url: "", icon: 'fab fa-facebook-f' },
+        { type: 'facebook', url: "", icon: 'fab fa-instagram' }
+    ]
     const merchantDetails = props.merchant.length > 0 &&
         props.merchant[0].ReturnVal === undefined && props.merchant[0];
 
@@ -56,7 +92,7 @@ function MerchantPage(props) {
                 component="img"
                 alt="Profile Picture"
                 height="100"
-                image={merchantDetails.ShopImage && merchantDetails.ShopImage.length ? Logo + merchantDetails.ShopImage : Logo}
+                image={merchantDetails.ShopCoverImage && merchantDetails.ShopCoverImage.length ? Logo + merchantDetails.ShopCoverImage : Logo}
                 onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
                 style={{
                     height: "100%",
@@ -66,62 +102,163 @@ function MerchantPage(props) {
         </div>
     )
 
-    const { layout } = props;
+    // const { layout } = props;
 
-    const containerClasses = classNames("product-card", {
-        "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
-        "product-card--layout--grid product-card--size--nl": layout === "grid-nl",
-        "product-card--layout--grid product-card--size--lg": layout === "grid-lg",
-        "product-card--layout--list": layout === "list",
-        "product-card--layout--horizontal": layout === "horizontal",
-    });
+    // const containerClasses = classNames("product-card", {
+    //     "product-card--layout--grid product-card--size--sm": layout === "grid-sm",
+    //     "product-card--layout--grid product-card--size--nl": layout === "grid-nl",
+    //     "product-card--layout--grid product-card--size--lg": layout === "grid-lg",
+    //     "product-card--layout--list": layout === "list",
+    //     "product-card--layout--horizontal": layout === "horizontal",
+    // });
 
     const Userprofile = (
-        <Card className='p-4 mb-4'>
-            <CardContent>
-                <div className="row">
-                    <div className="col-lg-4 col-md-4 col-sm-12">
-                        <div className={containerClasses}>
-                            {
-                                merchantDetails.ShopCoverImage !== null &&
+        // <Card className='p-4 mb-4'>
+        <>
+            {width > 768 &&
+                <Card elevation={3} className='' style={{ borderRadius: "0.5vw", padding: "0px" }}>
+                    <CardContent style={{ padding: "0px" }}>
+                        <CardMedia
+                            className='merchant-profile-background-img'
+                            image={merchantDetails.ShopCoverImage !== null ? merchantDetails.ShopCoverImage : shopCover}
+                            // image={merchantDetails.ShopCoverImage !== null ? merchantDetails.ShopCoverImage : Logo}
+                            title="green iguana"
+                        />
+                        <div>
+                            <CardContent className='merchant-profile-card-content' sx={{ height: "10vw" }}>
+                                <div className='row m-1 merchant-profile'>
+                                    <div className='col-8'>
+                                        <div className='row' style={{ display: "flex", alignItems: "center" }}>
+                                            <div className='col-3 merchant-profile-img'>
+                                                <Box borderRadius="50%" sx={{
+                                                    border: 3,
+                                                    borderColor: 'grey.500',
+                                                    width: "9vw",
+                                                    height: "9vw",
+                                                    backgroundColor: "white"
+                                                }}>
+                                                    <img
+                                                        // className="product-image__img"
+                                                        width="100%"
+                                                        src={merchantDetails.ShopImage}
+                                                        onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+                                                        alt=""
+                                                    />
+                                                </Box>
+
+                                            </div>
+                                            <div className='col-9 merchantDescription' style={{ marginTop: "2vw" }}>
+                                                <div style={{
+                                                    height: "max-content", padding: "0.3vw", backgroundColor: "#2b535e", borderRadius: "0.5vw",
+                                                    color: "white", opacity: 0.8, width: "max-content"
+                                                }}>
+                                                    <Typography variant='h5'>
+                                                        {merchantDetails.ShopName}
+                                                    </Typography>
+                                                </div>
+                                                <div className='mt-2'>
+                                                    <Box>
+                                                        <div className='row'>
+                                                            <div className='' style={{ display: "flex" }}>
+                                                                <Rating name="read-only" value={merchantDetails.ShopRating !== null ? parseInt(merchantDetails.ShopRating) : 1} readOnly />
+                                                                <Typography className='m-1'>({merchantDetails.ShopReviewCount !== null ? merchantDetails.ShopReviewCount : 0} Rating)</Typography>
+                                                            </div>
+
+                                                        </div>
+                                                    </Box>
+                                                </div>
+                                                <div className='row  '>
+                                                    {/* <div className='col-4'></div> */}
+                                                    <div className="col-lg-8 col-md-8 col-sm-12">
+                                                        <Typography className='m-2'>Description: {merchantDetails.ShopDescription !== null ? merchantDetails.ShopDescription : "No Description"}</Typography>
+                                                        <Typography className='m-2'>Products : {merchantDetails.MerchantTotalProduct !== null ? merchantDetails.MerchantTotalProduct : 0}</Typography>
+                                                        <Typography className='m-2'>Origin : {merchantDetails.ShopCity !== null ? merchantDetails.ShopCity : ""}</Typography>
+                                                        <Typography className='m-2'>Joined : {merchantDetails.LastJoined !== null ? merchantDetails.LastJoined : ""}</Typography>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div className='col-4 social-links-web' style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                                    <div className="topbar__item">
+                                        <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
+                                    </div>
+                                    
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </div>
+                    </CardContent>
+                </Card>}
+
+            {width <= 768 &&
+                <Card className='' style={{ borderRadius: "2.5vw", padding: "0px" }}>
+                    <CardContent style={{ padding: "0px" }}>
+                        <CardMedia
+                            className='merchant-profile-background-img-phone'
+                            image={merchantDetails.ShopCoverImage !== null ? merchantDetails.ShopCoverImage : shopCover}
+                            // image={merchantDetails.ShopCoverImage !== null ? merchantDetails.ShopCoverImage : Logo}
+                            title="green iguana"
+                        />
+                        <div className='row' style={{ display: "flex", alignItems: "center", flexDirection: "column", position: "relative", bottom: "31vw" }}>
+                            {/* <div className='col-12'> */}
+                            <Box borderRadius="50%" sx={{
+                                border: 3,
+                                borderColor: 'grey.500',
+                                width: "20vw",
+                                height: "20vw",
+                                backgroundColor: "white"
+                            }}>
                                 <img
-                                    className="product-image__img"
-                                    src={merchantDetails.ShopCoverImage}
+                                    // className="product-image__img"
+                                    width="100%"
+                                    src={merchantDetails.ShopImage}
                                     onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
                                     alt=""
                                 />
-                            }
-                            <div className="product-card__info">
-                                <div className="product-card__name text-center">
-                                    {profileimage}
+                            </Box>
+                            <div style={{
+                                height: "max-content", padding: "0.3vw", backgroundColor: "#2b535e", borderRadius: "0.5vw",
+                                color: "white", opacity: 0.8, width: "max-content"
+                            }}>
+                                <Typography variant='h5'>
                                     {merchantDetails.ShopName}
-                                    {merchantDetails.UserFullName}
+                                </Typography>
+                            </div>
+                        </div>
+                        <div className='col-12 social-media-phone' style={{ display: "flex", justifyContent: "flex-end" }}>
+                        <div className="topbar__item">
+                            <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
+                        </div>
+                        </div>
+                        <div>
+                            <CardContent>
+                                <div className='row merchant-profile-card-content-phone' style={{ position: "relative" }}>
+                                    <div className="col-lg-8 col-md-8 col-sm-12 merchant-description-phone">
+                                        <div className='mt-2 col-12'>
+                                            <Box>
+                                                <div className='row'>
+                                                    <div className='' style={{ display: "flex" }}>
+                                                        <Rating name="read-only" value={merchantDetails.ShopRating !== null ? parseInt(merchantDetails.ShopRating) : 1} readOnly />
+                                                        <Typography className='m-1'>({merchantDetails.ShopReviewCount !== null ? merchantDetails.ShopReviewCount : 0} Rating)</Typography>
+                                                    </div>
+                                                </div>
+                                            </Box>
+                                        </div>
+                                        <Typography className='m-2'>Description: {merchantDetails.ShopDescription !== null ? merchantDetails.ShopDescription : "No Description"}</Typography>
+                                        <Typography className='m-2'>Products : {merchantDetails.MerchantTotalProduct !== null ? merchantDetails.MerchantTotalProduct : 0}</Typography>
+                                        <Typography className='m-2'>Origin : {merchantDetails.ShopCity !== null ? merchantDetails.ShopCity : ""}</Typography>
+                                        <Typography className='m-2'>Joined : {merchantDetails.LastJoined !== null ? merchantDetails.LastJoined : ""}</Typography>
+                                    </div>
                                 </div>
-                            </div>
+                            </CardContent>
                         </div>
-                    </div>
-                    <div className="col-lg-8 col-md-8 col-sm-12">
-                        <div className='row'>
-                            <div className='col-6'>
-                                <div className='m-2'>Products : {merchantDetails.MerchantTotalProduct !== null ? merchantDetails.MerchantTotalProduct : 0}</div>
-                            </div>
-                            <div className='col-6'>
-                                <div className='m-2'>Origin : {merchantDetails.ShopCity !== null ? merchantDetails.ShopCity : ""}</div>
-                            </div>
-                        </div>
-                        <div className='row'>
-                            <div className='col-6'>
-                                <div className='m-2'>Rating : {merchantDetails.ShopRating !== null ? merchantDetails.ShopRating : 0} ({merchantDetails.ShopReviewCount !== null ? merchantDetails.ShopReviewCount : 0} Rating)</div>
-                            </div>
-                            <div className='col-6'>
-                                <div className='m-2'>Joined : {merchantDetails.LastJoined !== null ? merchantDetails.LastJoined : ""}</div>
-                            </div>
-                        </div>
-                        <div className='m-2'>Description：{merchantDetails.ShopDescription !== null ? merchantDetails.ShopDescription : "No Description"}</div>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
+                    </CardContent>
+                </Card>}
+        </>
+
+
     )
 
     const [postsToShow, setPostsToShow] = useState([]);
@@ -188,7 +325,7 @@ function MerchantPage(props) {
             <div className="block--margin-top">
                 <div className="container">
                     {Userprofile}
-                    <Card className='mb-4'>
+                    <Card className='mb-4 mt-4'>
                         <CardContent>
                             <div className="block-header__title"
                                 style={{
@@ -226,7 +363,7 @@ function MerchantPage(props) {
                                             <div className="my-4" style={{ textAlign: "center", fontWeight: "BOLD" }}>
                                                 Merchant does not have any products
                                             </div>
-                                            <div className="my-4" style={{textAlign: "center"}}>
+                                            <div className="my-4" style={{ textAlign: "center" }}>
                                                 <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                                             </div>
                                         </>
