@@ -150,6 +150,7 @@ function ProductCard(props) {
       </div>
     );
   } else {
+    console.log("product123",product)
     price = (
       <div className="product-card__prices">
         <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
