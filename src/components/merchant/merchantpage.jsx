@@ -325,7 +325,7 @@ function MerchantPage(props) {
             <div className="block--margin-top">
                 <div className="container">
                     {Userprofile}
-                    <Card className='mb-4 mt-4'>
+                    {/* <Card className='mb-4 mt-4'>
                         <CardContent>
                             <div className="block-header__title"
                                 style={{
@@ -340,11 +340,11 @@ function MerchantPage(props) {
                             </div>
                             <BlockSlideShow merchantDetails={merchantDetails} />
                         </CardContent>
-                    </Card>
+                    </Card> */}
                 </div>
                 {
                     props.loading === false ?
-                        <>
+                        <div className='m-3'>
                             <BlockProducts
                                 title="Featured Products"
                                 layout="large-first"
@@ -369,7 +369,7 @@ function MerchantPage(props) {
                                         </>
                                     )
                             }
-                        </>
+                        </div>
                         : <LoadingPanel />
                 }
             </div>
