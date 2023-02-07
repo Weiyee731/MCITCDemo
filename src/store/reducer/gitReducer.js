@@ -38,7 +38,7 @@ const INITIAL_STATE = {
   transactionStatus: [],
   promotions: [],
   addresses: [],
-  deleteAddress:[],
+  deleteAddress: [],
   defaultaddress: [],
   merchant: [],
   merchantOrders: [],
@@ -59,7 +59,7 @@ const INITIAL_STATE = {
   deletewishlist: [],
   order: [],
   orderByID: [],
-  deliveryFee:[],
+  deliveryFee: [],
   updatedProducts: [],
   productMgmtResult: [],
   addProductVariationResult: [],
@@ -75,6 +75,7 @@ const INITIAL_STATE = {
   endorsedProduct: [],
   logistic: [],
   tracking: [],
+  trackingStatus: [],
   allAddress: [],
 
   payment: [],
@@ -1012,6 +1013,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
         tracking: action.payload,
       });
 
+    case GitAction.OrderRequestShipmentStatus:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.OrderRequestedShipmentStatus:
+      return Object.assign({}, state, {
+        loading: false,
+        trackingStatus: action.payload,
+      });
+
     case GitAction.resetTracking:
       return Object.assign({}, state, { tracking: [] });
 
@@ -1423,7 +1432,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
         bankList: action.payload,
       });
 
-      //================= POSTCODES ================//
+    //================= POSTCODES ================//
     case GitAction.GetPostcodes:
       return Object.assign({}, state, { loading: true });
     case GitAction.GotPostcodes:

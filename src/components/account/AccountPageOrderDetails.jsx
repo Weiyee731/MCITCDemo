@@ -35,7 +35,7 @@ import StepContent from '@mui/material/StepContent';
 import Box from '@mui/material/Box';
 
 import AccountPagePayment from "./AccountPagePayment";
-import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
+import { isStringNullOrEmpty, isArrayNotEmpty } from "../../Utilities/UtilRepo";
 // import DeliveryFee from "../shop/ShopPageDeliveryFee";
 import { Modal, ModalBody } from "reactstrap";
 import CloseIcon from '@mui/icons-material/Close';
@@ -75,12 +75,14 @@ function mapStateToProps(state) {
   return {
     reviews: state.counterReducer["reviews"],
     loading: state.counterReducer["loading"],
+    orderShipmentStatus: state.counterReducer.trackingStatus
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     CallAddProductReview: (PropsData) => dispatch(GitAction.CallAddProductReview(PropsData)),
+    CallOrderRequestShipmentStatus: (PropsData) => dispatch(GitAction.CallOrderRequestShipmentStatus(PropsData)),
   };
 }
 
@@ -103,6 +105,7 @@ function AccountPageOrderDetails(props) {
 
   const handleClose = () => {
     setOpen(false);
+
   };
 
   const handleGetPostcode = (value) => {
@@ -160,12 +163,12 @@ function AccountPageOrderDetails(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <Typography variants="body1" style={{ marginLeft: '10%', marginTop: '7%' }}>
+        {/* <Typography variants="body1" style={{ marginLeft: '10%', marginTop: '7%' }}>
           {"Tracking No:  AA987654321BB"}
-        </Typography>
+        </Typography> */}
         <DialogContent>
           <Box sx={{ maxWidth: 400 }}>
-            <Stepper orientation="vertical" >
+            {/* <Stepper orientation="vertical" >
               {steps.map((step, index) => (
                 <Step key={step.date} expanded="true">
                   <StepLabel  >
@@ -179,10 +182,47 @@ function AccountPageOrderDetails(props) {
                   </StepContent>
                 </Step>
               ))}
-            </Stepper>
+            </Stepper> */}
+            <div className="container-fluid">
+              <div className="container">
+                {props.orderShipmentStatus.length !== 0 ?
+                  <>
+                    {isArrayNotEmpty(props.orderShipmentStatus.trackHeader) &&
+                      <Typography style={{fontWeight: "bold" }}>Tracking Number :{props.orderShipmentStatus.trackHeader[0].hawb}</Typography>
+                    }
+                    <hr />
+                    {
+                      isArrayNotEmpty(props.orderShipmentStatus.trackDetails) &&
+                      <div className="row">
+                        <Typography style={{ fontWeight: "bold" }}>Parcel Status</Typography><br/>
+                        <Typography>Shiping Status : {props.orderShipmentStatus.trackDetails[0].status}</Typography><br/>
+                        <Typography>Latest Location : {props.orderShipmentStatus.trackDetails[0].location}</Typography><br/>
+                        <Typography>Latest Update Time : {props.orderShipmentStatus.trackDetails[0].detTime}</Typography><br/>
+                        <Typography>Latest Update Date : {props.orderShipmentStatus.trackDetails[0].detDate}</Typography><br/>
+                      </div>
+                    }
+                    <hr />
+                    {
+                      isArrayNotEmpty(props.orderShipmentStatus.trackHeader) &&
+                      <div className="row">
+                        <Typography style={{ fontSize: "11px", fontWeight: "bold" }}>Parcel Details</Typography><br/>
+                        <Typography>Parcel Origin : {props.orderShipmentStatus.trackHeader[0].status}</Typography><br/>
+                        <Typography>Parcel Destination : {props.orderShipmentStatus.trackHeader[0].location}</Typography><br/>
+                        <Typography>Parcel Weight : {props.orderShipmentStatus.trackHeader[0].t_weight} kg</Typography><br/>
+                        <Typography>Parcel Dimension : {props.orderShipmentStatus.trackHeader[0].vw_height + "cm(H) * " + props.orderShipmentStatus.trackHeader[0].vw_length + "cm(L) * " + props.orderShipmentStatus.trackHeader[0].vw_width + "cm(W)"}</Typography>
+                      </div>
+                    }
+                  </>
+                  :
+                  <Typography>There is an error while retrieving Order Tracking Status</Typography>
+                }
+              </div>
+            </div>
           </Box>
           {/* ---------------------------------------------------------------------- */}
         </DialogContent>
+
+
         <DialogActions>
           <Button onClick={handleClose} autoFocus>
             Close
@@ -269,6 +309,15 @@ function AccountPageOrderDetails(props) {
   }
 
   const productID = orderDetail !== null && JSON.parse(orderDetail.OrderProductDetail).map((x) => x.ProductID)
+
+  console.log("dasdasdsa", props)
+
+
+  useEffect(() => {
+    if (props.orderShipmentStatus.length !== 0 && !open) {
+      setOpen(true)
+    }
+  }, [props.orderShipmentStatus])
 
   return (
     <React.Fragment>
@@ -373,7 +422,13 @@ function AccountPageOrderDetails(props) {
                                           {
                                             orders.LogisticID !== null && orders.LogisticID !== 0 ?
                                               <>
-                                                <td style={{ width: "15%" }}>
+                                                <td style={{ width: "15%" }} onClick={() => props.CallOrderRequestShipmentStatus({
+                                                  TRACKINGNUMBER: orders.TrackingNumber,
+                                                  TYPE: "true",
+                                                  PROJECTID: 2
+                                                })}>
+                                                  {console.log("dsadsdsa", orders)}
+                                                  {console.log("dsadsdsa123", props)}
                                                   <div style={{ fontSize: "13px" }}>
                                                     {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
                                                       return (courier.LogisticName)

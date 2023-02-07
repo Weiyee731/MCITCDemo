@@ -1030,6 +1030,8 @@ export class GitAction {
   static updateTrackingNumber = "UPDATE-TRACKING-NUMBER";
   static updatedTrackingNumber = "UPDATED-TRACKING-NUMBER";
   static resetTracking = "RESET-TRACKING-NUMBER";
+  static OrderRequestShipmentStatus = "VIEW-ORDERSHIPMENT-STATUS";
+  static OrderRequestedShipmentStatus = "VIEWED-ORDERSHIPMENT-STATUS";
   static ClearOrder = "CLEAR-ORDER";
   static ClearedOrder = "CLEARED-ORDER";
   static GetProductStockByStatus = "GET-PRODUCTSTOCKBYSTATUS";
@@ -1109,6 +1111,13 @@ export class GitAction {
   static CallUpdateOrderTracking(prodData) {
     return {
       type: GitAction.updateTrackingNumber,
+      payload: prodData,
+    };
+  }
+
+  static CallOrderRequestShipmentStatus(prodData) {
+    return {
+      type: GitAction.OrderRequestShipmentStatus,
       payload: prodData,
     };
   }
