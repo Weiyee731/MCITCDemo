@@ -68,6 +68,7 @@ class ProductDetails extends Component {
 
     componentDidMount() {
         const { product } = this.props
+        console.log("product: " , product)
         window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
         let productID = ""
         if (window.location.pathname !== undefined) {
@@ -95,6 +96,7 @@ class ProductDetails extends Component {
             this.setState({ isProductSet: false })
         }
     }
+
     componentDidUpdate(props) {
         const { product } = this.props
         let productID = ""
@@ -142,7 +144,6 @@ class ProductDetails extends Component {
     addCart = (product, quantity) => {
         let found = false
         if (this.props.productcart) {
-
             this.props.productcart.filter(x => x.ProductID === product.ProductID).map((x) => {
                 if (x.ProductVariationDetailID !== null && x.ProductVariationDetailID === this.state.productVariationDetailID) {
                     found = true
@@ -459,6 +460,7 @@ class ProductDetails extends Component {
                                     </div> */}
                                 </div>
                                 <div className="product__sidebar">
+                                    {console.log("product41",product)}
                                     <div className="product__prices"> {product.ProductPrice !== null ? 'RM ' + product.ProductPrice : "N/A"}</div>
                                     {
                                         variation !== null && variation !== "" && variation !== undefined && variation.ProductVariation !== "None" &&

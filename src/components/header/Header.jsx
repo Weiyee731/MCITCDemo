@@ -46,6 +46,7 @@ function Header(props) {
       props.CallViewProductCart({
         userID: localStorage.getItem("id")
       })
+      console.log("CallViewProductCart:header")
     }
   }, [])
 

@@ -324,6 +324,7 @@ function ProductCard(props) {
           <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
             <Cross20Svg />
           </button>
+          {console.log("product card",product)}
           <ProductDetails product={product} getpopOutDetailsCard={getpopOutDetailsCard} />
         </div>
       </Modal>

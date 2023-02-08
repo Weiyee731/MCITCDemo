@@ -268,7 +268,7 @@ class ShopPageCart_side extends Component {
             let image;
             image = (
                 <div className="product-image" key={i}>
-                    <Link to={url.product(item.product)} className="product-image__body">
+                    <Link to={url.product(item.product)} className="product-image__body" onClick={()=>{this.props.setCartOpen(false)}}>
                         <img className="product-image__img" src={item.product.ProductImage !== null && item.product.ProductImage !== undefined && item.product.ProductImage.length > 0 ? item.product.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                     </Link>
                 </div>
@@ -295,7 +295,7 @@ class ShopPageCart_side extends Component {
                     </Grid>
                     <Grid item className="cart-table__column--product">
                         <div style={{ fontSize: "14px" }} className="cart-fixNameLength">
-                            <Link to={url.product(item.product)} className="cart-table__product-name">
+                            <Link to={url.product(item.product)} className="cart-table__product-name" onClick={()=>{this.props.setCartOpen(false)}}>
                                 {item.product.ProductName}
                             </Link>
                             {
@@ -375,7 +375,7 @@ class ShopPageCart_side extends Component {
                                 <table className="cart__table cart-table" size="small" key={i}>
                                     <div className='shopName'>
                                         <Typography>
-                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>
+                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }} onClick={()=>{this.props.setCartOpen(false)}}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>
                                         </Typography>
                                     </div>
                                     <tbody className="cart-table__body">
@@ -405,7 +405,7 @@ class ShopPageCart_side extends Component {
                             </div>
                             <div className="col-8 checkout-button">
                                 <button className="btn btn-primary" variant="outlined" color="primary" style={{ borderRadius: "5px" }}
-                                    onClick={() => {this.CheckOutOnClick(this.state.selectedProductDetailList);this.props.setCartOpen(false)}}>
+                                    onClick={() => {this.CheckOutOnClick(this.state.selectedProductDetailList); this.props.setCartOpen(false)}}>
                                     Checkout  ( <Currency value={this.state.subtotal}></Currency> )</button>
                             </div>
                         </div>
