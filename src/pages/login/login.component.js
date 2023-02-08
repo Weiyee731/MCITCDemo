@@ -535,7 +535,7 @@ class LoginComponent extends Component {
                 </div>
               </form>
 
-              <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth="true" maxWidth="xs">
+              <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth={true} maxWidth="xs">
                 <DialogContent dividers>
                   <div className="text-center">
                     <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>

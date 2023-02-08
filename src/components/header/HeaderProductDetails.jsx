@@ -110,9 +110,9 @@ class HeaderProductDetails extends Component {
     return (
       typeof this.props.wishlist !== "undefined" && this.props.wishlist.length > 0 ?
         this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-          this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+          this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x,ind) => {
             return (
-              <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
+              <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
               ><Wishlist16Svg fill="red" />
               </button>
@@ -158,10 +158,10 @@ class HeaderProductDetails extends Component {
       <div>
         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", zIndex: 999 }}>
         {
-          productDetails !== undefined && productDetails !== null && productDetails.map((product) => {
+          productDetails !== undefined && productDetails !== null && productDetails.map((product,ind) => {
             const productImage = JSON.parse(product.ProductImages).map((image) => { return (image.ProductMediaUrl) })
             return (
-              <>
+              <div key={ind}>
                 <div >
                   <img
                     className="site-header__logo_img"
@@ -199,7 +199,7 @@ class HeaderProductDetails extends Component {
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             )
           })
         }
