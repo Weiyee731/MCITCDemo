@@ -68,7 +68,6 @@ class ProductDetails extends Component {
 
     componentDidMount() {
         const { product } = this.props
-        console.log("product: " , product)
         window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
         let productID = ""
         if (window.location.pathname !== undefined) {
@@ -199,7 +198,6 @@ class ProductDetails extends Component {
                     productName: product.ProductName
                 }
                 this.props.CallAddProductWishlist(data)
-                console.log(data)
                 // })
             }
         }
@@ -211,7 +209,7 @@ class ProductDetails extends Component {
         return (
             typeof this.props.wishlist !== undefined && this.props.wishlist.length > 0 ?
                 this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-                    this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x,ind) => {
+                    this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x, ind) => {
                         return (
                             <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
                                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
@@ -408,8 +406,10 @@ class ProductDetails extends Component {
                                                     <Chip size="small" variant="outlined" color="success" label={"Out of Stock" + " (" + (this.state.isVariationSet === true ? this.state.productQuantity : product.ProductStockAmount > 0 ? product.ProductStockAmount : 0) + ")"} />
                                         }
                                         &nbsp;
-                                        <Chip variant="outlined" color="secondary" label={"Brand: " + (product.Brand === "-" ? "None" : product.Brand)} size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
-                                        <Chip variant="outlined" color="info" label={"SKU: " + (product.SKU === "-" ? "N/A" : product.SKU)} size="small"><Link to="/">{product.Brand}</Link></Chip>&nbsp;
+                                        <Chip variant="outlined" color="secondary" label={"Brand: " + (product.Brand === "-" ? "None" : product.Brand)} size="small">
+                                            {/* <Link to="/">{product.Brand}</Link> */}
+                                        </Chip>&nbsp;
+                                        <Chip variant="outlined" color="info" label={"SKU: " + (product.SKU === "-" ? "N/A" : product.SKU)} size="small" />&nbsp;
                                     </ul>
                                     {/* <div className="product__seller">
                                         <Typography variant="caption">Seller:{" "}</Typography>
@@ -460,7 +460,6 @@ class ProductDetails extends Component {
                                     </div> */}
                                 </div>
                                 <div className="product__sidebar">
-                                    {console.log("product41",product)}
                                     <div className="product__prices"> {product.ProductPrice !== null ? 'RM ' + product.ProductPrice : "N/A"}</div>
                                     {
                                         variation !== null && variation !== "" && variation !== undefined && variation.ProductVariation !== "None" &&
