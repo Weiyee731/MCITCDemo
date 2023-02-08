@@ -46,6 +46,7 @@ function Header(props) {
       props.CallViewProductCart({
         userID: localStorage.getItem("id")
       })
+      console.log("CallViewProductCart:header")
     }
   }, [])
 
@@ -147,7 +148,6 @@ function Header(props) {
                       icon={<Cart20Svg />}
                       onClick={() => {
                         setCartOpen(true)
-                        console.log("hi")
                       }}
                     />
                     :

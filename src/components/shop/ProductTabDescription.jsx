@@ -24,8 +24,8 @@ class ProductTabDescription extends Component {
                     :
                     <div className={this.state.isExpand ? "product__description_expand" : "product__description"}>
                         <p style={{ fontSize: "14px" }} dangerouslySetInnerHTML={{ __html: htmlString }} />
-                        <p class="read-more"></p>
-                        <p class="read-more-text" onClick={() => this.setState({ isExpand: !this.state.isExpand })}>{this.state.isExpand ? "Read Less" : "Read More"} </p>
+                        <p className="read-more"></p>
+                        <p className="read-more-text" onClick={() => this.setState({ isExpand: !this.state.isExpand })}>{this.state.isExpand ? "Read Less" : "Read More"} </p>
                     </div>
                 }
 

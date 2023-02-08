@@ -20,7 +20,7 @@ import { GitAction } from "../../store/action/gitAction";
 class IndicatorCart extends React.Component {
   constructor(props) {
     super(props);
-    this.state = this.props;
+    // this.state = this.props;
     this.removeItem = this.removeItem.bind(this)
   }
 
@@ -32,6 +32,7 @@ class IndicatorCart extends React.Component {
     if (localStorage.getItem("isLogin") === true) {
       this.props.CallViewProductCart({ userID: localStorage.getItem("id") })
       this.props.CallViewProductWishlist({ userID: localStorage.getItem("id") })
+      console.log("CallViewProductCart:indicator caret")
     }
   }
   setCartOpen(bool) {

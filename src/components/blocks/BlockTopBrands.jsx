@@ -101,8 +101,8 @@ class BlockTopBrands extends Component {
             return (
               // <div key={index} style={categoryGrid} className="col-2 col-xs-2 p-3"
               // className="col-2p-3"
-              <div className="col-2" style={divStyle}>
-                <div key={index} style={categoryGrid} >
+              <div className="col-2" style={divStyle} key={index}>
+                <div style={categoryGrid} >
                   <div>
                     {/* <Link to={url.productByCategory(data)}> <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="50%" height="50%" /></Link> */}
                     <Link to={'/'}> <img src={data.ProductCategoryImage} alt={data.ProductCategory} style={{width: data.width}} /></Link>
