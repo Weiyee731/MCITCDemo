@@ -20,7 +20,7 @@ export default function BlockProducts(props) {
 
   // if (featuredProduct) {
   //   large = (
-      
+
   //     <div className="block-products__featured">
   //       <div className="block-products__featured-item">
   //         <ProductCard product={featuredProduct} />
@@ -40,7 +40,7 @@ export default function BlockProducts(props) {
 
     smalls = <div className="block-products__list">{productsList}</div>;
   }
-  
+
   return (
     <div className={`block block-products block-products--layout--${layout}`}>
       {
@@ -66,10 +66,10 @@ BlockProducts.propTypes = {
   title: PropTypes.string.isRequired,
   featuredProduct: PropTypes.object,
   products: PropTypes.array,
-  layout: PropTypes.oneOf(["large-first", "large-last"]),
+  layout: PropTypes.oneOf(['large-first', 'large-last']),
 };
 
 BlockProducts.defaultProps = {
   products: [],
-  layout: "large-first",
+  layout: 'large-first',
 };

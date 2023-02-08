@@ -156,7 +156,7 @@ function HomePageTwo(props) {
         <BlockProducts
           {...props}
           title="Featured Products"
-          layout="large-first"
+          layout='large-first'
           products={postsToShow.length > 0 ? postsToShow : props.products.length > 0 && props.products[0].ReturnVal !== '0' ? props.products : []}
           rows={2}
         />

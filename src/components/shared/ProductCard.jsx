@@ -143,8 +143,7 @@ function ProductCard(props) {
 
 
   if (product.ProductPromotion && JSON.parse(product.ProductPromotion).length > 0) {
-    console.log("product123456", product)
-    console.log("product123456", JSON.parse(product.ProductPromotion).PromotionPrice)
+
     price = (
       <div className="product-card__prices">
         <span className="product-card__new-price">
@@ -156,9 +155,8 @@ function ProductCard(props) {
       </div>
     );
 
-    PromoTag = [{ id: 1, tag:  JSON.parse(product.ProductPromotion)[0].ProductDiscount , color: "#d23f57" }]
+    PromoTag = [{ id: 1, tag: JSON.parse(product.ProductPromotion)[0].ProductDiscount, color: "#d23f57" }]
   } else {
-    console.log("product123", product, product.ProductName)
     price = (
       <div className="product-card__prices">
         <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
@@ -234,7 +232,7 @@ function ProductCard(props) {
           {
             PromoTag.map((x, index) => {
               return (
-                <Chip size="small" variant="filled" label={<div>{x.tag}% Promo</div>} key={x.id} color='primary' style={{ backgroundColor: x.color, boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px" }} />
+                <Chip size="small" key={index} variant="filled" label={<div>{x.tag}% Promo</div>} key={x.id} color='primary' style={{ backgroundColor: x.color, boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px" }} />
               )
             })
           }
@@ -324,7 +322,6 @@ function ProductCard(props) {
           <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
             <Cross20Svg />
           </button>
-          {console.log("product card",product)}
           <ProductDetails product={product} getpopOutDetailsCard={getpopOutDetailsCard} />
         </div>
       </Modal>
