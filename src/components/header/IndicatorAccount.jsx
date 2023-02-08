@@ -200,14 +200,6 @@ class IndicatorAccount extends Component {
             </Link>
             <div className="account-menu__divider" />
             <ul className="account-menu__links">
-              {localStorage.getItem("roleid") <= 16 && (
-                window.location.hostname === "localhost" ?
-                  <li onClick={() => window.location.href = "http://localhost:3001/cms.myemporia.my/" + localStorage.getItem("username_encrypt").replace('+', 'xMl3Jk').replace('/', 'Por21Ld').replace('=', 'Ml32')
-                    + "_" + localStorage.getItem("password").replace('+', 'xMl3Jk').replace('/', 'Por21Ld').replace('=', 'Ml32')}><a>Inventory</a></li>
-                  :
-                  <li onClick={() => window.location.href = "https://cms.myemporia.my/" + localStorage.getItem("username_encrypt").replace('+', 'xMl3Jk').replace('/', 'Por21Ld').replace('=', 'Ml32')
-                    + "_" + localStorage.getItem("password").replace('+', 'xMl3Jk').replace('/', 'Por21Ld').replace('=', 'Ml32')}><a>Inventory</a></li>
-              )}
               <li>
                 <Link to="/account/profile">My Profile</Link>
               </li>
