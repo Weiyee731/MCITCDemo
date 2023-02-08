@@ -23,6 +23,7 @@ import moment from "moment";
 import { HmacSHA256 } from 'crypto-js';
 // ----------------------------------------------------------------------
 // const crypto = require('crypto');
+var CryptoJS = require("crypto-js");
 
 
 
@@ -146,7 +147,6 @@ export default function CheckoutPayment({
         // credit and debit card
         let now = new Date().toISOString().split('.').shift() + 'Z';
         const d = new Date().getTime();
-        console.log("d.gettime", d)
         // setpaymentData({ ...paymentData,})
         var n = Math.floor(Math.random() * 11);
         var k = Math.floor(Math.random() * 1000000);
@@ -199,7 +199,6 @@ export default function CheckoutPayment({
                 })
 
             } else {
-                console.log("Transaction1", paymentData)
                 if (parseInt(totalPrice) > 30000) {
                     setlimit({ ...limit, isLimitAlert: true, limitMsg: "Maximum Transaction Limit Exceeded" })
                 }
@@ -299,11 +298,13 @@ export default function CheckoutPayment({
         // type==1 , bankin // type==2 , creditcard
         setPaymentType(type);
         if (type === "2") {
-                  // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e"
+            // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e"
             // live credit card
             const APIKey = "2c57e2f0161a450ebe5fb67ffbdd51fc196b0256ed1940158f54990b57f4ec3c1e08823fa84c4596bea898bb2b53e6d124414d118b954914806c182092123d4008ba628a8eaf403faa7e3c1adb470ee9d6044313451442d2acd532b47d42e00a2fdecfa996334065a94e0d46d32b7534b3fb4016198047568afd83c99823f6ed"
 
-            
+
+            // let access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
+            // let profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
             let access_key = "51f40be210ff34cba0079b19efd3ab42";  //live credit card,
             let profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4";  //live credit card
             let transaction_uuid = paymentData.time + '123';
@@ -321,14 +322,12 @@ export default function CheckoutPayment({
             let bill_to_address_postal_code = paymentData.poscode;
             let bill_to_address_state = paymentData.state;
             let bill_to_address_country = "MY";
-            let signed_field_names = "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_country";
-            let  signature= "access_key=" + access_key + ",profile_id=" + profile_id + ",transaction_uuid=" + transaction_uuid + ",signed_field_names=" + signed_field_names + ",signed_date_time=" + signed_date_time + ",locale=" + locale + ",transaction_type=sale,reference_number=" + "1" + ",amount="+ amount + ",currency=" + currency + ",bill_to_surname=" + bill_to_surname + ",bill_to_forename=" + bill_to_forename + ",bill_to_email=" + bill_to_email + ",bill_to_address_line1=" + bill_to_address_line1 + ",bill_to_address_city=" + bill_to_address_city + ",bill_to_address_country=" + bill_to_address_country;
-            let signed =  HmacSHA256(signature, APIKey).toString();
-            const base64EncodedHmac = btoa(signed);
-            console.log("signed", base64EncodedHmac)
+            let signed_field_names = "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_postal_code,bill_to_address_state,bill_to_address_country";
+            let signature = "access_key=" + access_key + ",profile_id=" + profile_id + ",transaction_uuid=" + transaction_uuid + ",signed_field_names=" + signed_field_names + ",signed_date_time=" + signed_date_time + ",locale=" + locale + ",transaction_type=sale,reference_number=" + reference_number + ",amount=" + amount + ",currency=" + currency + ",bill_to_surname=" + bill_to_surname + ",bill_to_forename=" + bill_to_forename + ",bill_to_email=" + bill_to_email + ",bill_to_address_line1=" + bill_to_address_line1 + ",bill_to_address_city=" + bill_to_address_city + ",bill_to_address_postal_code=" + bill_to_address_postal_code + ",bill_to_address_state=" + bill_to_address_state + ",bill_to_address_country=" + bill_to_address_country;
 
+            let hash = CryptoJS.HmacSHA256(signature, APIKey);
+            var base64EncodedHmac = hash.toString(CryptoJS.enc.Base64);
 
-      
             setpaymentData({
                 ...paymentData,
                 access_key: access_key,
@@ -336,56 +335,32 @@ export default function CheckoutPayment({
                 transaction_uuid: transaction_uuid,
                 signed_date_time: signed_date_time,
                 locale: locale,
-                transaction_type: "sale",
-                reference_number: paymentData.time,
-                amount: paymentData.totalPrice,
-                currency: "MYR",
-                bill_to_surname: paymentData.lastname,
-                bill_to_forename: paymentData.firstname,
-                bill_to_email: paymentData.email,
-                bill_to_address_line1: paymentData.addressLine1,
-                bill_to_address_city: paymentData.city,
-                bill_to_address_postal_code: paymentData.poscode,
-                bill_to_address_state: paymentData.state,
+                transaction_type: transaction_type,
+                reference_number: reference_number,
+                amount: amount,
+                currency: currency,
+                bill_to_surname: bill_to_surname,
+                bill_to_forename: bill_to_forename,
+                bill_to_email: bill_to_email,
+                bill_to_address_line1: bill_to_address_line1,
+                bill_to_address_city: bill_to_address_city,
+                bill_to_address_postal_code: bill_to_address_postal_code,
+                bill_to_address_state: bill_to_address_state,
                 bill_to_address_country: "MY",
                 signed_field_names: signed_field_names,
-                signature:signature,
-                signed:base64EncodedHmac
+                signature: signature,
+                signed: base64EncodedHmac
             })
-            console.log("dasdas", paymentData)
-            // console.log("Transactioncrypto", crypto.createHmac('sha256',APIKey))
-            // const crypto = require('crypto');
-
-            // const algorithm = 'sha256';
-            // const secret = APIKey;
-            // const message = paymentData.signature;
-
-            // const hmac = crypto.createHmac(algorithm, secret);
-            // hmac.update(message);
-            // const hash = hmac.digest('hex');
-
-            // var signed = crypto
-            //     .createHmac('sha256', APIKey)
-            //     .update(paymentData.signature)
-            //     .digest('base64');
-
-
-           
         }
     }
 
     const handleBanking = (bankid) => {
-
-        console.log("bankid", typeof bankid)
-        console.log("bankid", bankid)
         let date = moment(new Date()).format("YYYYMMDDHHmmss").toString()
         let fpx_sellerExOrderNo = date
         let fpx_sellerTxnTime = date
         let fpx_sellerOrderNo = date
 
         let bankingdata = fpx_information.fpx_buyerAccNo + "|" + fpx_information.fpx_buyerBankBranch + "|" + bankid + "|" + fpx_information.fpx_buyerEmail + "|" + fpx_information.fpx_buyerIban + "|" + fpx_information.fpx_buyerId + "|" + fpx_information.fpx_buyerName + "|" + fpx_information.fpx_makerName + "|" + fpx_information.fpx_msgToken + "|" + fpx_information.fpx_msgType + "|" + fpx_information.fpx_productDesc + "|" + fpx_information.fpx_sellerBankCode + "|" + fpx_information.fpx_sellerExId + "|" + fpx_sellerExOrderNo + "|" + fpx_information.fpx_sellerId + "|" + fpx_sellerOrderNo + "|" + fpx_sellerTxnTime + "|" + parseFloat(fpx_information.fpx_txnAmount).toFixed(2) + "|" + fpx_information.fpx_txnCurrency + "|" + fpx_information.fpx_version
-        console.log("bankingdata", fpx_information)
-        console.log("bankingdata", fpx_information.fpx_txnAmount)
         let URL = "https://myemporia.my/payment/check.php"
         const config = { headers: { 'Content-Type': 'multipart/form-data' } }
         const formData = new FormData()
@@ -393,10 +368,6 @@ export default function CheckoutPayment({
         axios.post(URL, formData, config).then((res) => {
 
             if (res.status === 200) {
-                console.log("res", res.data)
-                console.log("res1", res.data.split('"')[1])
-                console.log("res2", fpx_sellerTxnTime)
-                console.log("res3", fpx_sellerOrderNo)
                 setfpx_information({
                     ...fpx_information,
                     fpx_checkSum: res.data,

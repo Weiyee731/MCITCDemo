@@ -118,7 +118,7 @@ function Header(props) {
                     className="site-header__logo_img"
                     src={Logo}
                     alt=""
-                    style={{ height: "6vw" }}
+                    style={{ height: "3vw" }}
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = Logo;

@@ -1726,6 +1726,7 @@ export class GitEpic {
             "&USERID=" + action.payload.userId +
             "&PROJECTID=2" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
+            // "&PLATFORMTYPE=eCommerce" +
             "&PAGE=" + action.payload.page)
             .then(response => response.json())
             .then(json => {
@@ -1753,6 +1754,7 @@ export class GitEpic {
             "&TypeValue=" + action.payload.typeValue +
             "&USERID=" + action.payload.userId +
             // "&ProjectID=2" + 
+            "&PLATFORMTYPE=eCommerce" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
             "&PAGE=" + action.payload.page)
             .then(response => response.json())
@@ -2643,34 +2645,34 @@ export class GitEpic {
       }
     }));
 
-    
-  Order_RequestOrderShipmentStatus = action$ =>
-  action$.pipe(filter(action => action.type === GitAction.OrderRequestShipmentStatus), map(action => {
-    return dispatch => {
-      try {
-        return fetch(url +
-          "Order_RequestOrderStatus?TRACKINGNUMBER=" + action.payload.TRACKINGNUMBER +
-          "&TYPE=" + action.payload.TYPE +
-          "&PROJECTID=" + action.payload.PROJECTID)
-          .then(response => response.json())
-          .then(json => {
 
-            console.log("return ddsdsadsada", json)
-            json = JSON.parse(json)
-            console.log("return1 ddsdsadsada", json)
-            if (json[0].ReturnVal === 0) {
-              return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: JSON.parse(json[0].ReturnData) });
-            } else {
-              toast.error(json[0].ReturnMsg)
-              return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: [] });
-            }
-          });
-      } catch (error) {
-        toast.error("Error Code: OrderRequestedShipmentStatus. Please check on URL")
-        return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: [] });
+  Order_RequestOrderShipmentStatus = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.OrderRequestShipmentStatus), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_RequestOrderStatus?TRACKINGNUMBER=" + action.payload.TRACKINGNUMBER +
+            "&TYPE=" + action.payload.TYPE +
+            "&PROJECTID=" + action.payload.PROJECTID)
+            .then(response => response.json())
+            .then(json => {
+
+              console.log("return ddsdsadsada", json)
+              json = JSON.parse(json)
+              console.log("return1 ddsdsadsada", json)
+              if (json[0].ReturnVal === 0) {
+                return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: OrderRequestedShipmentStatus. Please check on URL")
+          return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: [] });
+        }
       }
-    }
-  }));
+    }));
 
   // DELIVERY
 

@@ -172,7 +172,7 @@ class ProductDetails extends Component {
     }
 
     login() {
-        // browserhistory.push("/EmporiaDev/login");
+        // browserhistory.push("/login");
         // window.location.reload(false);
         // this.props.history.push({pathname: "/login", loginPopOut: true});
         // this.props.getpopOutDetailsCard(false,true)
