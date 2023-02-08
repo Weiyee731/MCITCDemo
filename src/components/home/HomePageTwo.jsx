@@ -52,7 +52,6 @@ function HomePageTwo(props) {
 
   const loopWithSlice = () => {
     if (props.products.length > 0 && props.products[0].ReturnVal !== '0') {
-      console.log("props.products", props.products)
       tempArray = [...postsToShow, ...props.products];
       setPostsToShow(tempArray)
     }
@@ -64,7 +63,6 @@ function HomePageTwo(props) {
 
   useEffect(() => {
     if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined) {
-      console.log("CallViewProductCart:hommepage2")
       props.CallViewProductCart({
         userID: localStorage.getItem("id")
       })
@@ -152,7 +150,6 @@ function HomePageTwo(props) {
           // rows={2}
           products={postsToShow.length === 0 ? props.products.length > 0 && props.products[0].ReturnVal !== '0' ? props.products : [] : postsToShow}
         />
-        {/* {console.log(props)} */}
         <BlockProducts
           {...props}
           title="Featured Products"

@@ -143,14 +143,13 @@ function ProductCard(props) {
 
 
   if (product.ProductPromotion && JSON.parse(product.ProductPromotion).length > 0) {
-
     price = (
       <div className="product-card__prices">
         <span className="product-card__new-price">
           <Currency value={JSON.parse(product.ProductPromotion)[0].PromotionPrice} currency={"RM"} />
         </span>{" "}
         <span className="product-card__old-price">
-          <Currency value={product.ProductPrice} currency={"RM"} />
+          <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0}  currency={"RM"} />
         </span>
       </div>
     );
@@ -185,7 +184,7 @@ function ProductCard(props) {
     (
       props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
         props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x,ind) => {
+          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x, ind) => {
             return (
               <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
@@ -232,7 +231,10 @@ function ProductCard(props) {
           {
             PromoTag.map((x, index) => {
               return (
-                <Chip size="small" key={index} variant="filled" label={<div>{x.tag}% Promo</div>} key={x.id} color='primary' style={{ backgroundColor: x.color, boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px" }} />
+                <Chip size="small" key={index} variant="filled" label={<div>{x.tag}% OFF</div>} key={x.id} color='primary' style={{
+                  backgroundColor: x.color
+                  // , boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px"
+                }} />
               )
             })
           }
