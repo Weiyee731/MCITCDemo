@@ -431,7 +431,7 @@ class ShopPageCart_side extends Component {
                 <div className="container">
                     <div className="block-empty__body">
                         <div className="block-empty__message">Your shopping cart is empty!</div>
-                        <div className="block-empty__actions">
+                        <div className="block-empty__actions" onClick={()=>this.props.setCartOpen(false)}>
                             <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                         </div>
                     </div>

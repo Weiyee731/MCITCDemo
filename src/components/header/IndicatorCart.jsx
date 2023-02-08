@@ -20,7 +20,7 @@ import { GitAction } from "../../store/action/gitAction";
 class IndicatorCart extends React.Component {
   constructor(props) {
     super(props);
-    this.state = this.props;
+    // this.state = this.props;
     this.removeItem = this.removeItem.bind(this)
   }
 

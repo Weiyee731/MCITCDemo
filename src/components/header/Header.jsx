@@ -148,7 +148,6 @@ function Header(props) {
                       icon={<Cart20Svg />}
                       onClick={() => {
                         setCartOpen(true)
-                        console.log("hi")
                       }}
                     />
                     :
