@@ -34,7 +34,7 @@ export default function BlockProducts(props) {
     });
     const productsList = products.map((product, index) => (
       <Card elevation={2} key={index} className={blockClasses}>
-        <ProductCard {...props} product={product} />
+        <ProductCard {...props} product={product} layout="grid-sm"/>
       </Card>
     ));
 
@@ -66,7 +66,7 @@ BlockProducts.propTypes = {
   title: PropTypes.string.isRequired,
   featuredProduct: PropTypes.object,
   products: PropTypes.array,
-  layout: PropTypes.oneOf(['large-first', 'large-last']),
+  layout: PropTypes.string,
 };
 
 BlockProducts.defaultProps = {

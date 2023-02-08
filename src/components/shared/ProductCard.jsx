@@ -185,9 +185,9 @@ function ProductCard(props) {
     (
       props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
         props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x,ind) => {
             return (
-              <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
+              <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
               ><Wishlist16Svg fill="red" />
               </button>

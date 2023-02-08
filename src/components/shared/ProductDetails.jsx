@@ -211,9 +211,9 @@ class ProductDetails extends Component {
         return (
             typeof this.props.wishlist !== undefined && this.props.wishlist.length > 0 ?
                 this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-                    this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+                    this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x,ind) => {
                         return (
-                            <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
+                            <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
                                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
                             ><Wishlist16Svg fill="red" />
                             </button>
@@ -319,10 +319,10 @@ class ProductDetails extends Component {
                                                     style={{ cursor: "pointer" }} />
                                             </a>
                                             <ReactTooltip globalEventOff='click' place="top" type="dark" effect="solid" clickable={true} zIndex={10}> */}
-                                            <div class="sticky_share_btn">
-                                                <div class="fixed_share">
-                                                    <ul class="listing">
-                                                        <li class="facebook">
+                                            <div className="sticky_share_btn">
+                                                <div className="fixed_share">
+                                                    <ul className="listing">
+                                                        <li className="facebook">
                                                             <FacebookShareButton
                                                                 className="fadeIn"
                                                                 openShareDialogOnClick
@@ -332,7 +332,7 @@ class ProductDetails extends Component {
                                                                 <FacebookIcon size={35} round={true} />
                                                             </FacebookShareButton>
                                                         </li>
-                                                        <li class="pinterest">
+                                                        <li className="pinterest">
                                                             <TelegramShareButton
                                                                 className="fadeIn"
                                                                 openShareDialogOnClick
@@ -341,7 +341,7 @@ class ProductDetails extends Component {
                                                                 <TelegramIcon size={35} round={true} />
                                                             </TelegramShareButton>
                                                         </li>
-                                                        <li class="twitter">
+                                                        <li className="twitter">
                                                             <TwitterShareButton
                                                                 className="fadeIn"
                                                                 openShareDialogOnClick
@@ -349,7 +349,7 @@ class ProductDetails extends Component {
                                                                 <TwitterIcon size={35} round={true} />
                                                             </TwitterShareButton>
                                                         </li>
-                                                        <li class="whatsapp">
+                                                        <li className="whatsapp">
                                                             <WhatsappShareButton
                                                                 className="fadeIn"
                                                                 openShareDialogOnClick
@@ -360,8 +360,8 @@ class ProductDetails extends Component {
                                                             </WhatsappShareButton>
                                                         </li>
                                                     </ul>
-                                                    <span class="share-toggle">
-                                                        <i class="fa fa-share-alt"></i>
+                                                    <span className="share-toggle">
+                                                        <i className="fa fa-share-alt"></i>
                                                     </span>
                                                 </div>
                                             </div>

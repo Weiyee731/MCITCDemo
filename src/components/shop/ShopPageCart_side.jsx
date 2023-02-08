@@ -275,7 +275,7 @@ class ShopPageCart_side extends Component {
             );
 
             return (
-                <Grid container key={item.id} className="cart-table__row">
+                <Grid container key={i} className="cart-table__row">
                     <Grid item className="cart-button">
                         {
                             this.props.history !== undefined &&
@@ -301,9 +301,9 @@ class ShopPageCart_side extends Component {
                             {
                                 this.state.overProductStockAmountLimitID.length > 0 &&
                                 this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 &&
-                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x,i) => {
+                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x,ind) => {
                                     return (
-                                        <label className='mt-3' style={{ color: "red" }} key={i}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
+                                        <label className='mt-3' style={{ color: "red" }} key={ind}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
                                     )
                                 })
                             }
@@ -369,10 +369,10 @@ class ShopPageCart_side extends Component {
                         <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
                 } */}
                 {
-                    this.state.MerchantShopName.map((shopName,i) => {
+                    this.state.MerchantShopName.map((shopName,ind) => {
                         return (
                             <>
-                                <table className="cart__table cart-table" size="small" key={i}>
+                                <table className="cart__table cart-table" size="small" key={ind}>
                                     <div className='shopName'>
                                         <Typography>
                                             <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }} onClick={()=>{this.props.setCartOpen(false)}}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>
