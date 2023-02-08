@@ -4,7 +4,9 @@ import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 import axios from "axios";
 const { filter, map, switchMap } = require('rxjs/operators');
-const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/"
+const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/";
+const platformType = "MyEmporia";
+// const url = "http://localhost/EmporiaTest/eCommerceCMSApi/api/myemporia/"
 export class GitEpic {
   User_Login = action$ =>
     action$.pipe(filter(action => action.type === GitAction.Login), map(action => {
@@ -125,7 +127,7 @@ export class GitEpic {
               json = JSON.parse(json)
               console.log(json)
               // if (json[0].ReturnVal === 1) {
-                return dispatch({ type: GitAction.CheckedUser, payload: json });
+              return dispatch({ type: GitAction.CheckedUser, payload: json });
               // } else {
               //   // //toast.error(json[0].ReturnMsg)
               //   return dispatch({ type: GitAction.CheckedUser, payload: [] });
@@ -218,7 +220,7 @@ export class GitEpic {
             .then(json => {
               json = JSON.parse(json)
               // if (json[0].ReturnVal === 1) {
-                return dispatch({ type: GitAction.UpdatedContact, payload: json });
+              return dispatch({ type: GitAction.UpdatedContact, payload: json });
               // } else {
               //   // //toast.error(json[0].ReturnMsg)
               //   return dispatch({ type: GitAction.UpdatedContact, payload: [] });
@@ -248,7 +250,7 @@ export class GitEpic {
             .then(json => {
               json = JSON.parse(json)
               // if (json[0].ReturnVal === 1) {
-                return dispatch({ type: GitAction.UpdatedEmail, payload: json });
+              return dispatch({ type: GitAction.UpdatedEmail, payload: json });
               // } else {
               //   // //toast.error(json[0].ReturnMsg)
               //   return dispatch({ type: GitAction.UpdatedEmail, payload: [] });
@@ -575,7 +577,7 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
-              console.log("addAddress json",json)
+              console.log("addAddress json", json)
               if (json[0].ReturnVal === 1) {
                 return dispatch({ type: GitAction.AddedAddress, payload: JSON.parse(json[0].ReturnData) });
               } else {
@@ -1725,7 +1727,8 @@ export class GitEpic {
             "&USERID=" + action.payload.userId +
             "&PROJECTID=2" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
-            "&PAGE=" + action.payload.page)
+            "&PAGE=" + action.payload.page+
+            "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
@@ -1752,8 +1755,10 @@ export class GitEpic {
             "&TypeValue=" + action.payload.typeValue +
             "&USERID=" + action.payload.userId +
             // "&ProjectID=2" + 
+            "&PLATFORMTYPE=eCommerce" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
-            "&PAGE=" + action.payload.page)
+            "&PAGE=" + action.payload.page+
+            "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
@@ -2642,6 +2647,35 @@ export class GitEpic {
       }
     }));
 
+
+  Order_RequestOrderShipmentStatus = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.OrderRequestShipmentStatus), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_RequestOrderStatus?TRACKINGNUMBER=" + action.payload.TRACKINGNUMBER +
+            "&TYPE=" + action.payload.TYPE +
+            "&PROJECTID=" + action.payload.PROJECTID)
+            .then(response => response.json())
+            .then(json => {
+
+              console.log("return ddsdsadsada", json)
+              json = JSON.parse(json)
+              console.log("return1 ddsdsadsada", json)
+              if (json[0].ReturnVal === 0) {
+                return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: OrderRequestedShipmentStatus. Please check on URL")
+          return dispatch({ type: GitAction.OrderRequestedShipmentStatus, payload: [] });
+        }
+      }
+    }));
+
   // DELIVERY
 
   getDeliverableList = action$ =>
@@ -2694,9 +2728,9 @@ export class GitEpic {
       return dispatch => {
         try {
           return fetch(url +
-            "Order_CalculateOrderShipping?PRODUCTID=" + action.payload.PRODUCTID 
-            + "&PROJECTID=" + action.payload.PROJECTID 
-            + "&PRODUCTQUANTITY=" + action.payload.PRODUCTQUANTITY 
+            "Order_CalculateOrderShipping?PRODUCTID=" + action.payload.PRODUCTID
+            + "&PROJECTID=" + action.payload.PROJECTID
+            + "&PRODUCTQUANTITY=" + action.payload.PRODUCTQUANTITY
             + "&POSCODE=" + action.payload.POSCODE)
             .then(response => response.json())
             .then(json => {

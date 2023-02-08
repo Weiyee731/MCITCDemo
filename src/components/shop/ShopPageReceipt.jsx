@@ -79,7 +79,7 @@ class ShopPageReceipt extends Component {
         //     }
         //     // else {
         //     //     setTimeout(() => {
-        //     //         window.location.href = "/EmporiaDev//"
+        //     //         window.location.href = "//"
         //     //         window.reload(false)
         //     //     }, 4000);
         //     // }
@@ -297,7 +297,7 @@ class ShopPageReceipt extends Component {
                 {/* {
                     setTimeout(
                         function () {
-                            window.location.href = "/EmporiaDev//"
+                            window.location.href = "//"
                             window.reload(false);
                         }.bind(this),
                         500

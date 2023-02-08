@@ -144,7 +144,7 @@ class IndicatorAccount extends Component {
   //   if (prevProps.currentUser !== this.props.currentUser) {
   //     if (this.state.isLogout === true && this.props.currentUser.length === 0) {
   //       setTimeout(() => {
-  //         this.props.history.push("/EmporiaDev/");
+  //         this.props.history.push("/");
   //         window.location.reload(false);
   //       }, 1000);
   //     }

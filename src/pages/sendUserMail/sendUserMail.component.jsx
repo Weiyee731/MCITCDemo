@@ -40,7 +40,7 @@
 // }
 
 // const back = (props) => {
-//    props.history.push("/EmporiaDev/viewUserMail");
+//    props.history.push("/viewUserMail");
 //   };
 
 //   const columns = [

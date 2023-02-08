@@ -40,6 +40,8 @@ import jwt_decode from "jwt-decode";
 import { FBLogin } from "./FBLogin"
 import { CustomGoogleLogin } from "./GoogleLogin"
 
+import styled from 'styled-components';
+
 var CryptoJS = require("crypto-js");
 
 function mapStateToProps(state) {
@@ -108,6 +110,13 @@ const initialState = {
   loginPopOut: false,
   signupPopOut: false,
 }
+
+const StyledDiv = styled.div`
+  color: #2b535e;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+`;
 
 class LoginComponent extends Component {
   constructor(props) {
@@ -512,9 +521,9 @@ class LoginComponent extends Component {
                     <div>
                       <p className="text-center" style={{ fontSize: "13px", paddingTop: "10px" }}>
                         New to MyEmporia?
-                        <Link onClick={() => this.setState({ loginPopOut: false, signupPopOut: true })}>
+                        <StyledDiv onClick={() => this.setState({ loginPopOut: false, signupPopOut: true })}>
                           Sign Up
-                        </Link>
+                        </StyledDiv>
                       </p>
                     </div>
                     <div>
@@ -526,7 +535,7 @@ class LoginComponent extends Component {
                 </div>
               </form>
 
-              <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth="true" maxWidth="xs">
+              <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth={true} maxWidth="xs">
                 <DialogContent dividers>
                   <div className="text-center">
                     <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>

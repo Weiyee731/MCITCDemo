@@ -167,7 +167,7 @@ class PageChangeEmail extends Component {
       if (this.props.emailUpdated && this.props.emailUpdated[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your email  has been updated");
         // this.props.history.push("/account/profile")
-        // this.props.history.push("/EmporiaDev/account/profile");
+        // this.props.history.push("/account/profile");
         // window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
@@ -323,8 +323,8 @@ class PageChangeEmail extends Component {
       this.stopTimer(60);
     }
     if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-      this.props.history.push("/EmporiaDev/account/profile")
-      // this.props.history.push("/EmporiaDev/account/profile");
+      this.props.history.push("/account/profile")
+      // this.props.history.push("/account/profile");
       // window.location.reload(false);
     } else {
     }

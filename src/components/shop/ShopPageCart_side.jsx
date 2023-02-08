@@ -268,14 +268,14 @@ class ShopPageCart_side extends Component {
             let image;
             image = (
                 <div className="product-image" key={i}>
-                    <Link to={url.product(item.product)} className="product-image__body">
+                    <Link to={url.product(item.product)} className="product-image__body" onClick={()=>{this.props.setCartOpen(false)}}>
                         <img className="product-image__img" src={item.product.ProductImage !== null && item.product.ProductImage !== undefined && item.product.ProductImage.length > 0 ? item.product.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                     </Link>
                 </div>
             );
 
             return (
-                <Grid container key={item.id} className="cart-table__row">
+                <Grid container key={i} className="cart-table__row">
                     <Grid item className="cart-button">
                         {
                             this.props.history !== undefined &&
@@ -295,15 +295,15 @@ class ShopPageCart_side extends Component {
                     </Grid>
                     <Grid item className="cart-table__column--product">
                         <div style={{ fontSize: "14px" }} className="cart-fixNameLength">
-                            <Link to={url.product(item.product)} className="cart-table__product-name">
+                            <Link to={url.product(item.product)} className="cart-table__product-name" onClick={()=>{this.props.setCartOpen(false)}}>
                                 {item.product.ProductName}
                             </Link>
                             {
                                 this.state.overProductStockAmountLimitID.length > 0 &&
                                 this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 &&
-                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x,i) => {
+                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x,ind) => {
                                     return (
-                                        <label className='mt-3' style={{ color: "red" }} key={i}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
+                                        <label className='mt-3' style={{ color: "red" }} key={ind}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
                                     )
                                 })
                             }
@@ -369,13 +369,13 @@ class ShopPageCart_side extends Component {
                         <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
                 } */}
                 {
-                    this.state.MerchantShopName.map((shopName,i) => {
+                    this.state.MerchantShopName.map((shopName,ind) => {
                         return (
                             <>
-                                <table className="cart__table cart-table" size="small" key={i}>
+                                <table className="cart__table cart-table" size="small" key={ind}>
                                     <div className='shopName'>
                                         <Typography>
-                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>
+                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }} onClick={()=>{this.props.setCartOpen(false)}}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>
                                         </Typography>
                                     </div>
                                     <tbody className="cart-table__body">
@@ -405,7 +405,7 @@ class ShopPageCart_side extends Component {
                             </div>
                             <div className="col-8 checkout-button">
                                 <button className="btn btn-primary" variant="outlined" color="primary" style={{ borderRadius: "5px" }}
-                                    onClick={() => {this.CheckOutOnClick(this.state.selectedProductDetailList);this.props.setCartOpen(false)}}>
+                                    onClick={() => {this.CheckOutOnClick(this.state.selectedProductDetailList); this.props.setCartOpen(false)}}>
                                     Checkout  ( <Currency value={this.state.subtotal}></Currency> )</button>
                             </div>
                         </div>
@@ -431,7 +431,7 @@ class ShopPageCart_side extends Component {
                 <div className="container">
                     <div className="block-empty__body">
                         <div className="block-empty__message">Your shopping cart is empty!</div>
-                        <div className="block-empty__actions">
+                        <div className="block-empty__actions" onClick={()=>this.props.setCartOpen(false)}>
                             <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                         </div>
                     </div>

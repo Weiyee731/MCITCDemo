@@ -84,7 +84,8 @@ export const FBLogin = () => (
       border: 'none',
       borderRadius: '4px',
       width: '100%'
-    }} children={<div><FacebookIcon/>  Sign in with Facebook</div>} />
+    }} 
+    children={<div><FacebookIcon/>  Sign in with Facebook</div>} />
 );
 
 // export const FBLoginWithRender = () => (

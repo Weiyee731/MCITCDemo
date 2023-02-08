@@ -7,6 +7,18 @@ export const isEmailValid = (email) => { return (typeof email === 'undefined' ||
 export const isLongitude = (longitude) => { return isFinite(longitude) && Math.abs(longitude) <= 180; }
 export const isLatitude = (latitude) => { return isFinite(latitude) && Math.abs(latitude) <= 90; }
 export const isDecimalValid = (number) => { return (typeof number === 'undefined' || number == '' || !/^[0-9]\d*(\.\d+)?$/.test(number)) ? true : false }
+export const isArrayNotEmpty = (list) => {
+    try {
+        if (typeof list !== 'undefined' && list !== null && Array.isArray(list) && list.length > 0)
+            return true
+        else
+            return false
+    }
+    catch (e) {
+        console.log(e)
+        return false
+    }
+}
 
 //time functions
 export const convertDateTimeToString = (date) => {

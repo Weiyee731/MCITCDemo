@@ -55,13 +55,11 @@ function HomePageTwo(props) {
       tempArray = [...postsToShow, ...props.products];
       setPostsToShow(tempArray)
     }
-
   };
 
   const handleShowMorePosts = () => {
     setPage(page + 1)
   };
-
 
   useEffect(() => {
     if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined) {
@@ -152,11 +150,10 @@ function HomePageTwo(props) {
           // rows={2}
           products={postsToShow.length === 0 ? props.products.length > 0 && props.products[0].ReturnVal !== '0' ? props.products : [] : postsToShow}
         />
-        {/* {console.log(props)} */}
         <BlockProducts
           {...props}
           title="Featured Products"
-          layout="large-first"
+          layout='large-first'
           products={postsToShow.length > 0 ? postsToShow : props.products.length > 0 && props.products[0].ReturnVal !== '0' ? props.products : []}
           rows={2}
         />

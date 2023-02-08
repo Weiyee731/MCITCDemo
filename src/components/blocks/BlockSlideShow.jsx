@@ -191,7 +191,7 @@ class BlockSlideShow extends Component {
       ];
 
       return (
-        <>
+        
           <div key={index} className="block-slideshow__slide">
             {/* <div
             className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
@@ -236,7 +236,6 @@ class BlockSlideShow extends Component {
             </div>
           </div>
 
-        </>
       );
     });
 

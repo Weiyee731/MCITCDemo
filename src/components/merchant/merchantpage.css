@@ -1,0 +1,262 @@
+.merchant-profile {
+    position: relative; 
+    bottom: 6vw;
+}
+
+.merchant-profile-card-content {
+    height: 5vw !important;
+}
+
+.merchant-profile-background-img {
+    height: 15vw;
+}
+
+.merchantDescription {
+    left: 3.5vw;
+}
+
+.social-links-web {
+    position: relative;
+    bottom: 1.5vw;
+}
+
+.social-media-phone {
+    position:relative;
+    bottom:26.5vw;
+}
+
+@media screen and (max-width: 2560px) {
+    .merchant-profile-card-content {
+        height: 7vw !important;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 2vw;
+    }
+}
+
+@media screen and (max-width: 2200px) {
+    .merchantDescription {
+        left: 2vw;
+    }
+    .merchant-profile-img {
+        position: relative; 
+        bottom: 2vw;
+    }
+    .merchant-profile-card-content {
+        height: 8vw !important;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 3vw;
+    }
+}
+
+@media screen and (max-width: 1800px) {
+    .merchantDescription {
+        left: 0.5vw;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 4vw;
+    }
+    .merchant-profile-img {
+        position: relative; 
+        bottom: 2vw;
+    }
+    .merchant-profile-card-content {
+        height: 11vw !important;
+    }
+}
+
+@media screen and (max-width: 1600px) {
+    .merchantDescription {
+        left: -0.5vw;
+    }
+    .merchant-profile-img {
+        position: relative; 
+        bottom: 4vw;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 5vw;
+    }
+    .merchant-profile-card-content {
+        height: 13vw !important;
+    }
+}
+@media screen and (max-width: 1450px) {
+    .merchantDescription {
+        left: -1.5vw;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 6vw;
+    }
+    .merchant-profile-img {
+        position: relative; 
+        bottom: 4vw;
+    }
+    .merchant-profile-card-content {
+        height: 14vw !important;
+    }
+}
+
+@media screen and (max-width: 1224px) {
+    .merchant-profile-img {
+        position: relative; 
+        bottom: 6vw;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 8vw;
+    }
+    .merchant-profile {
+        position: relative; 
+        bottom: 4vw;
+    }
+    .merchantDescription {
+        left: -2.3vw;
+        bottom: 2.5vw;
+    }
+    .merchant-profile-card-content {
+        height: 15vw !important;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .merchant-profile-img {
+        position: relative; 
+        bottom: 7vw;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 10vw;
+    }
+    .merchant-profile {
+        position: relative; 
+        bottom: 4vw;
+    }
+    .merchantDescription {
+        left: -2.3vw;
+    }
+    .merchant-profile-card-content {
+        height: 17vw !important;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .merchant-profile-img {
+        position: relative; 
+        bottom: 6vw;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 11vw;
+    }
+    .merchantDescription {
+        left: -0.5vw;
+    }
+    .merchant-profile {
+        position: relative; 
+        bottom: 5vw;
+    }
+    .merchant-profile-card-content {
+        height: 18vw !important;
+    }
+}
+
+@media screen and (max-width: 946px) {
+    .merchant-profile-background-img {
+        height: 15vw;
+    }
+    .social-links-web {
+        position: relative;
+        bottom: 7vw;
+    }
+    .merchant-profile-img {
+        position: relative; 
+        /* bottom: 16vw; */
+    }
+    .merchantDescription {
+        left: -0.5vw;
+    }
+    .merchant-profile {
+        position: relative; 
+        bottom: 10vw;
+    }
+    .merchant-profile-card-content {
+        height: 21vw !important;
+    }
+}
+
+@media screen and (max-width: 770px) {
+    .merchant-profile-background-img {
+        height: 15vw;
+    }
+    .merchant-profile-img {
+        position: relative; 
+        bottom: 10vw;
+    }
+    .merchantDescription {
+        left: -0.5vw;
+    }
+    .merchant-profile {
+        position: relative; 
+        bottom: 6vw;
+    }
+    .merchant-profile-card-content {
+        height: 23vw !important;
+    }
+    .merchant-profile-background-img-phone {
+        height: 40vw;
+    }
+    .merchant-profile-card-content-phone {
+        height: 0vw !important;
+    }
+    .merchant-content-phone {
+        bottom:29.5vw;
+    }
+    .merchant-description-phone {
+        bottom: 25vw;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .merchant-profile-background-img-phone {
+        height: 40vw;
+    }
+    .merchant-profile-card-content-phone {
+        height: 10vw !important;
+    }
+    .merchant-profile-img-phone {
+        /* bottom: 9.5vw; */
+    }
+    .social-media-phone {
+        position:relative;
+        bottom:32.5vw;
+    }
+}
+
+@media screen and (max-width: 479px) and (min-width: 350px) {
+    .merchant-profile-background-img-phone {
+        height: 40vw;
+    }
+    .merchant-profile-card-content-phone {
+        height: 12vw !important;
+    }
+    .social-media-phone {
+        position:relative;
+        bottom:26.5vw;
+    }
+}
+
+@media screen and (max-width: 349px) {
+    .social-media-phone {
+        position:relative;
+        bottom:25.5vw;
+    }
+    .merchant-profile-card-content-phone {
+        height: 20vw !important;
+    }
+}

@@ -31,6 +31,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Chip from '@mui/material/Chip';
 import LoginComponent from "../../pages/login/login.component";
 import { toast } from "react-toastify";
+import { fontSize } from "@mui/system";
 
 function ProductCard(props) {
   const {
@@ -56,8 +57,10 @@ function ProductCard(props) {
   let badges = [];
   let image;
   let price;
+  let PromoPrice;
   let features;
   let wishlistView;
+  let PromoTag;
 
   const login = () => {
     // this.props.history.push("/EmporiaDev/login");
@@ -138,24 +141,30 @@ function ProductCard(props) {
   //   );
   // }
 
-  if (product.compareAtPrice) {
+
+  if (product.ProductPromotion && JSON.parse(product.ProductPromotion).length > 0) {
     price = (
       <div className="product-card__prices">
         <span className="product-card__new-price">
-          <Currency value={product.ProductPrice} currency={"RM"} />
+          <Currency value={JSON.parse(product.ProductPromotion)[0].PromotionPrice} currency={"RM"} />
         </span>{" "}
         <span className="product-card__old-price">
-          <Currency value={product.compareAtPrice} currency={"RM"} />
+          <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0}  currency={"RM"} />
         </span>
       </div>
     );
+
+    PromoTag = [{ id: 1, tag: JSON.parse(product.ProductPromotion)[0].ProductDiscount, color: "#d23f57" }]
   } else {
     price = (
       <div className="product-card__prices">
         <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
       </div>
     );
+
+    PromoTag = []
   }
+
 
   if (product.attributes && product.attributes.length) {
     features = (
@@ -175,9 +184,9 @@ function ProductCard(props) {
     (
       props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
         props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
+          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x, ind) => {
             return (
-              <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
+              <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
               ><Wishlist16Svg fill="red" />
               </button>
@@ -209,10 +218,10 @@ function ProductCard(props) {
       { id: 2, color: "primary" },
     ]
 
-    const sampleTag = [
-      { id: 1, tag: "- 42%", color: "#d23f57" },
-      // { id: 2, tag: "free shipping", color: "#41924B" }
-    ]
+    // const PromoTag = [
+    //   { id: 1, tag: "- 42%", color: "#d23f57" },
+    //   // { id: 2, tag: "free shipping", color: "#41924B" }
+    // ]
     return (
       <Card elevation={2}>
         <button
@@ -220,10 +229,12 @@ function ProductCard(props) {
           style={{ textAlign: "right", display: "flex" }}
         >
           {
-            sampleTag.length > 0 &&
-            sampleTag.map((x, index) => {
+            PromoTag.map((x, index) => {
               return (
-                <Chip size="small" variant="filled" label={x.tag} key={x.id} color='primary' style={{ backgroundColor: x.color, boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px" }} />
+                <Chip size="small" key={index} variant="filled" label={<div>{x.tag}% OFF</div>} key={x.id} color='primary' style={{
+                  backgroundColor: x.color
+                  // , boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px"
+                }} />
               )
             })
           }
