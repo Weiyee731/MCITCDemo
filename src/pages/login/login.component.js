@@ -410,7 +410,6 @@ class LoginComponent extends Component {
 
 
   render() {
-    console.log(this.props)
     return (
       <>
         <Modal
