@@ -76,8 +76,9 @@ class ProductDetails extends Component {
             isProductSet: false,
             isTimerEnd: false,
             pathname: "",
-            count: 0
+            count: 0,
 
+            productId:0
         };
         this.addCart = this.addCart.bind(this)
         this.handleWishlist = this.handleWishlist.bind(this)
@@ -119,7 +120,7 @@ class ProductDetails extends Component {
                         productVariationType: variation.ProductVariation,
                     })
             })
-            this.setState({ productPrice: product.ProductPrice, isProductSet: true })
+            this.setState({ productPrice: product.ProductPrice, isProductSet: true,productId :product.ProductID })
         } else {
             this.setState({ isProductSet: false })
         }
@@ -311,6 +312,7 @@ class ProductDetails extends Component {
                                 images={typeof product.ProductImages === "string" && product.ProductImages !== "[]" ? JSON.parse(product.ProductImages) : [Logo]}
                                 baseColor={baseColor}
                                 highlightColor={highlightColor}
+                                product={product}
                             />
                             :
                             <Link to={url.product(product)}>
@@ -422,11 +424,11 @@ class ProductDetails extends Component {
                                         </div>
                                     </div>
                                     <ul className="product__meta">
-                                        {
+                                        {/* {
                                             product.ProductPromotion && JSON.parse(product.ProductPromotion).length > 0 &&
                                             <Chip size="small" variant="outlined" label={`${JSON.parse(product.ProductPromotion)[0].ProductDiscount} % OFF`} style={{ backgroundColor: "#d23f57", color: '#ffffff',borderRadius:'0px' }} />
                                         }
-                                        &nbsp;
+                                        &nbsp; */}
                                         {
                                             this.state.isVariationSet === true ?
                                                 this.state.productQuantity > 0 ?

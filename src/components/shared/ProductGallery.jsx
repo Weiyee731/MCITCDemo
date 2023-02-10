@@ -16,6 +16,7 @@ import Logo from "../../assets/Emporia.png";
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import Chip from '@mui/material/Chip';
 
 const slickSettingsFeatured = {
   dots: false,
@@ -271,7 +272,7 @@ class ProductGallery extends Component {
       // this.gallery.listen("destroy", () => {
       //   this.gallery = null;
       // });
-      
+
       this.gallery.destroy();
 
       this.gallery.init();
@@ -293,18 +294,28 @@ class ProductGallery extends Component {
     const baseColor = this.props !== undefined && this.props.baseColor
     const highlightColor = this.props !== undefined && this.props.highlightColor
 
-    const featured = images.map((image, index) => (
-      <div
-        key={index}
-        className="product-image product-image--location--gallery"
-      >
-        <Link
-          to={`/${image.ProductMediaUrl}`}
-          className="product-image__body"
-          onClick={(event) => this.handleFeaturedClick(event, index)}
-          target="_blank"
-        >
-          {/*
+    const featured = () => {
+      console.log("image", JSON.parse(this.props.product.ProductPromotion)[0])
+      let promotionEnabled = false;
+      let promotionDiscount = 0;
+      if (this.props.product.ProductPromotion && JSON.parse(this.props.product.ProductPromotion).length > 0) {
+        promotionEnabled = true;
+        promotionDiscount= JSON.parse(this.props.product.ProductPromotion)[0].ProductDiscount
+      }
+     
+      return (
+        images.map((image, index) => (
+          <div
+            key={index}
+            className="product-image product-image--location--gallery"
+          >
+            <Link
+              to={`/${image.ProductMediaUrl}`}
+              className="product-image__body"
+              onClick={(event) => this.handleFeaturedClick(event, index)}
+              target="_blank"
+            >
+              {/*
                     The data-width and data-height attributes must contain the size of a larger
                     version of the product image.
 
@@ -312,23 +323,31 @@ class ProductGallery extends Component {
                     attribute, in which case the width and height will be obtained from the
                     naturalWidth and naturalHeight property of img.product-image__img.
                     */}
-          <img
-            className="product-image__img"
-            src={image.ProductMediaUrl !== undefined ? image.ProductMediaUrl : image}
-            alt=""
-            ref={(element) => {
-              this.imagesRefs[index] = element;
-            }}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = Logo;
-            }}
-            data-width="700"
-            data-height="700"
-          />
-        </Link>
-      </div>
-    ));
+              <img
+                className="product-image__img"
+                src={image.ProductMediaUrl !== undefined ? image.ProductMediaUrl : image}
+                alt=""
+                ref={(element) => {
+                  this.imagesRefs[index] = element;
+                }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = Logo;
+                }}
+                data-width="700"
+                data-height="700"
+              />
+            </Link>
+            {promotionEnabled&& <Chip variant="outlined" label={`${promotionDiscount} % OFF`} style={{ backgroundColor: "#d23f57", color: '#ffffff',borderRadius:'0px' }} />   }
+          </div>
+        )
+
+        )
+      )
+    };
+
+
+    
 
     const thumbnails = images.map((image, index) => {
       const classes = classNames(
@@ -380,7 +399,7 @@ class ProductGallery extends Component {
               afterChange={this.handleFeaturedAfterChange}
             >
               {checkReturn() ?
-                featured
+                featured()
                 :
                 <Skeleton height={350} baseColor={baseColor} highlightColor={highlightColor} />
               }
