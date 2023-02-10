@@ -36,7 +36,6 @@ const PriceSection = memo(({ product }) => {
     let price = product.ProductPrice === null ? "N/A" : <Currency value={product.ProductPrice} currency={"RM"} />;
     if (product.ProductPromotion && JSON.parse(product.ProductPromotion).length > 0) {
         let promotion = JSON.parse(product.ProductPromotion)[0];
-        console.log("promotion: ", promotion)
         component =
             <div className="wrapper">
                 <div className="product__prices">
@@ -97,7 +96,6 @@ class ProductDetails extends Component {
 
     componentDidMount() {
         const { product } = this.props
-        console.log("product: ", product)
         window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
         let productID = ""
         if (window.location.pathname !== undefined) {

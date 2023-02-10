@@ -134,7 +134,6 @@ class HeaderProductDetails extends Component {
   }
 
   getpopOutState = (loginPopOut) => {
-    console.log("hello")
     if (this.state.loginPopOut === true)
     this.setState({ loginPopOut: false })
 }

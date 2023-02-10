@@ -56,7 +56,6 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
 
   useEffect(() => {
     if (deleteAddress !== prevValue) {
-      console.log('value has changed');
       setPrevValue(deleteAddress); // update the prevValue state
       setIsLoading(false)
       toast.success("Selected address is deleted")

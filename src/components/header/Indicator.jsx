@@ -66,10 +66,6 @@ class Indicator extends Component {
       event.preventDefault();
     }
 
-    // if (popOut){
-    //   console.log("popOut")
-    // }
-
     this.toggle();
 
     if (onClick) {
