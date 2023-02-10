@@ -17,7 +17,7 @@
     -ms-grid-columns: 50% 50%;
     grid-template-columns: [gallery] calc(50% - 20px) [info] calc(50% - 20px);
     grid-template-rows: auto auto auto auto auto;
-    grid-column-gap: 40px;
+    grid-column-gap: 30px;
 }
 
 .product__gallery {
@@ -251,20 +251,20 @@
 .product__prices {
     margin-top: 18px;
     margin-bottom: 14px;
-    font-size: 28pt;
-    font-weight: $font-weight-bold;
+    font-size: $body-font-size;
+    font-weight: $font-weight-semi-bold;
     letter-spacing: -.03em;
     color: $price-color;
 }
 
 .product__new-price {
     color: $price-new-color;
+    font-size: 24px;
 }
 
 .product__old-price {
     color: $price-old-color;
-    font-weight: $font-weight-normal;
-    font-size: 20px;
+    font-weight: $font-weight-extra-light;
     text-decoration: line-through;
 }
 
@@ -330,7 +330,7 @@
 }
 
 .product__option-label {
-    font-size: 14pt;
+    font-size: $body-font-size;
     text-transform: uppercase;
     font-weight: $font-weight-medium;
     color: $body-font-alt-color;
@@ -613,4 +613,12 @@ ul.listing {
     100% {
         opacity: 1;
     }
+}
+
+
+.promotion-header{
+    background-color: aqua;
+    height: 36px;
+    padding: 0 20px;
+    margin: 12px 0 0 0;
 }

@@ -1780,10 +1780,16 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.GetProductDetail), map(action => {
       return dispatch => {
         try {
+          console.log("getProductDetail",url +
+          "Product_ItemDetailByProductID?ProductID=" + action.payload.productId +
+          "&USERID=" + action.payload.userId +
+          "&PROJECTID=2"+
+          "&PLATFORMTYPE=" + platformType)
           return fetch(url +
             "Product_ItemDetailByProductID?ProductID=" + action.payload.productId +
             "&USERID=" + action.payload.userId +
-            "&PROJECTID=2")
+            "&PROJECTID=2"+
+            "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)

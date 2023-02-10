@@ -92,7 +92,7 @@ function ShopPageWishlist(props) {
     let content;
 
     if (props.wishlist.length > 0 && props.wishlist[0].DelInd !== 1 && props.wishlist[0].UserWishlistID !== 0) {
-        const itemsList = wishlist.map((item) => {
+        const itemsList = wishlist.map((item,ind) => {
             if (item.DelInd === 0) {
                 let image;
                 if (item.ProductImage !== null && item.ProductImage !== undefined && item.ProductImage.length > 0) {
@@ -114,7 +114,7 @@ function ShopPageWishlist(props) {
                 }
 
                 return (
-                    <tr key={item.id} className="wishlist__row">
+                    <tr key={ind} className="wishlist__row">
                         <td className="wishlist__column wishlist__column--image">
                             {image}
                         </td>
@@ -129,7 +129,7 @@ function ShopPageWishlist(props) {
                         <td className="wishlist__column wishlist__column--stock">
                             <div className="badge badge-success">{isStringNullOrEmpty(item.Brand) ? "No Brand" : item.Brand}</div>
                         </td>
-                        <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? item.ProductPrice : 0} currency={"RM"} /></td>
+                        <td className="wishlist__column wishlist__column--price"><Currency value={item.ProductPrice !== null ? parseFloat(item.ProductPrice) : 0} currency={"RM"} /></td>
                         <td className="wishlist__column wishlist__column--tocart">
                             <Link to={url.product(item)} className="wishlist__product-name"><button className={'btn btn-primary btn-sm'} style={{ borderRadius: "5px" }}>View Product</button></Link>
                         </td>
