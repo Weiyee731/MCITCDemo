@@ -91,7 +91,7 @@ function Header(props) {
   let pathLength = window.location.pathname.split("/").length
   let currentProductID = window.location.pathname.split("/")[pathLength - 1]
   const currentProductDetails = props.product !== null && props.product !== undefined && props.product.filter((x) => x.ProductID == currentProductID).map((y) => y)
-
+  
   useEffect(() => {
     let canceled = false;
     if (localStorage.getItem("isLogin") === true)
@@ -173,7 +173,7 @@ function Header(props) {
                 sx: { width: "380px" },
               }}
               anchor='right' open={cartOpen} onClose={() => setCartOpen(false)}>
-              <PageCart_side history={"cart"} setCartOpen={setCartOpen}/>
+              <PageCart_side history={"cart"} setCartOpen={setCartOpen} />
             </Drawer>
           </div>
         }
@@ -205,7 +205,7 @@ Header.defaultProps = {
 
 const mapStateToProps = (state) => ({
   wishlist: state.counterReducer.wishlist,
-  products: state.counterReducer.products,
+  // products: state.counterReducer.products,
   product: state.counterReducer["productsByID"],
 });
 

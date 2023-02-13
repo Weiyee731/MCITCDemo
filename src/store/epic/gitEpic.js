@@ -1923,6 +1923,7 @@ export class GitEpic {
   getAllCategories = action$ =>
     action$.pipe(filter(action => action.type === GitAction.GetProductCategory), map(action => {
       return dispatch => {
+        console.log("Product_CategoryListByAll", url + "Product_CategoryListByAll")
         try {
           return fetch(url + "Product_CategoryListByAll")
             .then(response => response.json())
