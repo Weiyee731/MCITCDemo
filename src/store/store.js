@@ -80,6 +80,7 @@ const rootEpic = combineEpics(
   gitEpic.getAllProductPromos,
   gitEpic.getAllPromoCodes,
   gitEpic.getAllPromotion,
+  gitEpic.checkPromoCode,
   //==================TRANSACTIONS========================//
   gitEpic.getAllTransactions,
   gitEpic.getAllTransactionStatus,

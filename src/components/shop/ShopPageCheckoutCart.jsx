@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import sum from 'lodash/sum';
 import { Link as RouterLink } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
 // @mui
 import { Grid, Card, Button, CardHeader, Typography } from '@mui/material';
 // routes
@@ -12,6 +13,7 @@ import EmptyContent from '../EmptyContent/EmptyContent';
 //
 import CheckoutSummary from './ShopPageCheckoutCartSummary';
 import CheckoutCartProductList from './ShopPageCheckoutCartProductList';
+import { isArrayNotEmpty } from '../../Utilities/UtilRepo';
 
 // ----------------------------------------------------------------------
 
@@ -19,26 +21,45 @@ CheckoutCart.propTypes = {
   checkout: PropTypes.object,
   onNextStep: PropTypes.func,
   onDeleteCart: PropTypes.func,
-  onApplyDiscount: PropTypes.func,
   onDecreaseQuantity: PropTypes.func,
-  onIncreaseQuantity: PropTypes.func,
+  onIncreaseQuantity: PropTypes.func,  
+  onApplyDiscount: PropTypes.func,
+  onRemovePromoError: PropTypes.func,
+  onHandleDiscount: PropTypes.func,
+  onHandlePromoCode: PropTypes.func,
 };
 
 export default function CheckoutCart({
   checkout,
-  onNextStep,
-  onApplyDiscount,
+  onNextStep,  
   onDeleteCart,
   onIncreaseQuantity,
   onDecreaseQuantity,
+  onApplyDiscount,
+  onRemovePromoError,
+  onHandleDiscount,
+  onHandlePromoCode,
+  validPromoData,
+  discount,
+  total,
+  subtotal,
+  promoCode,
 }) {
 
   const { data } = checkout;
+  // const [total, setTotal] = useState(sum(data.map((item) => item.total)))
+  // const [subtotal, setSubtotal] = useState(sum(data.map((item) => item.total)))
+  // const [discount, setDiscount] = useState(sum(data.map((item) => item.discount)))
 
   const totalItems = sum(data.map((item) => item.quantity));
-  const total = sum(data.map((item) => item.total));
-  const subtotal = sum(data.map((item) => item.total));
+  // let total = sum(data.map((item) => item.total));
+  // const subtotal = sum(data.map((item) => item.total));
+  // let discount = sum(data.map((item) => item.discount));
   const isEmptyCart = !data.length;
+
+  // const onHandleDiscount = (promoData) => {
+  //   onHandleDiscount(promoData,)
+  // }
 
   return (
     <Grid container spacing={3}>
@@ -81,17 +102,32 @@ export default function CheckoutCart({
           Continue Shopping
         </Button>
       </Grid>
+      {
+        console.log("sadsadsa subtotal11", subtotal)
+
+      }
+      {
+        console.log("sadsadsa discount11", discount)
+      }
+      {
+        console.log("sadsadsa total11", total)}
 
       <Grid item xs={12} md={4}>
         <CheckoutSummary
           enableDiscount
           total={total}
-          // discount={discount}
+          discount={discount}
+          subtotal={subtotal}
+          promoCode={promoCode}
+          validPromoData={validPromoData}
+          onRemovePromoError={onRemovePromoError}
+          onHandleDiscount={onHandleDiscount}    
+          onHandlePromoCode={onHandlePromoCode}      
+          onApplyDiscount={onApplyDiscount}
           shipping={null}
           hideShipping={true}
-          subtotal={subtotal}
-          onApplyDiscount={onApplyDiscount}
         />
+        {console.log("Dsadsada", checkout)}
         <Button
           fullWidth
           size="large"

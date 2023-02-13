@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GitAction } from '../../../store/action/gitAction';
+import { isArrayNotEmpty } from '../../../Utilities/UtilRepo';
 
 CheckoutCartCheckOutButton.propTypes = {
     PaymentType: PropTypes.string,
@@ -24,10 +25,14 @@ export default function CheckoutCartCheckOutButton({
     Userdetails,
     BankID,
     fpx_information,
-    paymentData
+    paymentData,
+    shipping,
+    checkout,
+    validPromoData,
+    promoCode
 }) {
     const crypto = require('crypto');
-
+    const { data } = checkout;
     const dispatch = useDispatch()
 
     const checkFPXdata = (data) => {
@@ -44,20 +49,29 @@ export default function CheckoutCartCheckOutButton({
         }
     }
 
+    console.log("dsadsada2336666", data)
+    console.log("1111validPromoData", validPromoData)
     const onSubmit = (Ind, transactionUUID) => {
         let ProductID = ""
         let UserCartID = []
         let ProductQuantity = []
         let ProductVariationDetailID = []
+        let PromoID = 0
 
-        this.props.data.map((x, index) => {
+
+        data.map((x, index) => {
             ProductID = index === 0 ? x.product.ProductID : ProductID + "," + x.product.ProductID
             UserCartID.push(x.product.UserCartID)
             ProductQuantity = index === 0 ? x.product.ProductQuantity : ProductQuantity + "," + x.product.ProductQuantity
             ProductVariationDetailID = index === 0 ? x.product.ProductVariationDetailID : ProductVariationDetailID + "," + x.product.ProductVariationDetailID
         })
 
-        dispatch(GitAction.CallAddOrder({
+        if (isArrayNotEmpty(validPromoData)) {
+            if (validPromoData[0].PromoCodeID !== null)
+                PromoID = validPromoData[0].PromoCodeID
+        }
+
+        let object = {
             UserID: window.localStorage.getItem("id"),
             ProductID: ProductID,
             ProductQuantity: ProductQuantity,
@@ -70,6 +84,8 @@ export default function CheckoutCartCheckOutButton({
             ProductVariationDetailID: ProductVariationDetailID,
             TrackingStatusID: 2,
             PickUpInd: Ind,
+            PromotionID: "",
+            PromotionCodeID: PromoID,
             TRANSACTIONUUID: checkFPXdata(fpx_information.fpx_sellerOrderNo),
             fpx_msgToken: checkFPXdata(fpx_information.fpx_msgToken),
             fpx_sellerExOrderNo: checkFPXdata(fpx_information.fpx_sellerExOrderNo),
@@ -88,26 +104,38 @@ export default function CheckoutCartCheckOutButton({
             fpx_buyerIban: checkFPXdata(fpx_information.fpx_buyerIban),
             fpx_version: checkFPXdata(fpx_information.fpx_version),
             fpx_productDesc: checkFPXdata(fpx_information.fpx_productDesc)
-        }));
+        }
+        // console.log("objectobject", object)
+        dispatch(GitAction.CallAddOrder(object));
     }
 
     const onSubmitCreditCard = (Ind, transactionUUID) => {
+        console.log("sdsadsadsa")
         let ProductID = ""
         let UserCartID = []
         let ProductQuantity = []
         let ProductVariationDetailID = []
+        let PromoID = 0
 
-        this.props.data.map((x, index) => {
+        data.map((x, index) => {
             ProductID = index === 0 ? x.product.ProductID : ProductID + "," + x.product.ProductID
             UserCartID.push(x.product.UserCartID)
             ProductQuantity = index === 0 ? x.product.ProductQuantity : ProductQuantity + "," + x.product.ProductQuantity
             ProductVariationDetailID = index === 0 ? x.product.ProductVariationDetailID : ProductVariationDetailID + "," + x.product.ProductVariationDetailID
         })
-        dispatch(GitAction.CallAddOrder({
+
+        if (isArrayNotEmpty(validPromoData)) {
+            if (validPromoData[0].PromoCodeID !== null)
+                PromoID = validPromoData[0].PromoCodeID
+        }
+
+        let object = {
             UserID: window.localStorage.getItem("id"),
             ProductID: ProductID,
             ProductQuantity: ProductQuantity,
             UserCartID: UserCartID,
+            PromotionID: "",
+            PromotionCodeID: PromoID,
             UserAddressID: Userdetails.UserAddressBookID,
             PaymentMethodID: PaymentType === "1" ? "2" : "1",
             UserPaymentMethodID: PaymentType === "1" ? "2" : "1",
@@ -116,9 +144,7 @@ export default function CheckoutCartCheckOutButton({
             ProductVariationDetailID: ProductVariationDetailID,
             TrackingStatusID: 2,
             PickUpInd: Ind,
-
             TRANSACTIONUUID: paymentData.transaction_uuid,
-
             signed_field_names: paymentData.signed_field_names,
             signed_date_time: paymentData.signed_date_time,
             locale: paymentData.locale,
@@ -130,8 +156,41 @@ export default function CheckoutCartCheckOutButton({
             bill_to_address_line1: paymentData.bill_to_address_line1,
             bill_to_address_city: paymentData.bill_to_address_city,
             bill_to_address_country: paymentData.bill_to_address_country
-        }))
-        // this.props.CallAddOrderCreditCard()
+
+        }
+
+        console.log("dasda", object)
+        // dispatch(GitAction.CallAddOrderCreditCard({
+        //     UserID: window.localStorage.getItem("id"),
+        //     ProductID: ProductID,
+        //     ProductQuantity: ProductQuantity,
+        //     UserCartID: UserCartID,
+        // PromotionID: "",
+        //     PromotionCodeID: "",
+        //     UserAddressID: Userdetails.UserAddressBookID,
+        //     PaymentMethodID: PaymentType === "1" ? "2" : "1",
+        //     UserPaymentMethodID: PaymentType === "1" ? "2" : "1",
+        //     OrderTotalAmount: paymentData.totalPrice,
+        //     OrderPaidAmount: 0,
+        //     ProductVariationDetailID: ProductVariationDetailID,
+        //     TrackingStatusID: 2,
+        //     PickUpInd: Ind,
+
+        //     TRANSACTIONUUID: paymentData.transaction_uuid,
+
+        //     signed_field_names: paymentData.signed_field_names,
+        //     signed_date_time: paymentData.signed_date_time,
+        //     locale: paymentData.locale,
+        //     reference_number: paymentData.reference_number,
+        //     currency: paymentData.currency,
+        //     bill_to_surname: paymentData.bill_to_surname,
+        //     bill_to_forename: paymentData.bill_to_forename,
+        //     bill_to_email: paymentData.bill_to_email,
+        //     bill_to_address_line1: paymentData.bill_to_address_line1,
+        //     bill_to_address_city: paymentData.bill_to_address_city,
+        //     bill_to_address_country: paymentData.bill_to_address_country
+        // }))
+        dispatch(GitAction.CallAddOrderCreditCard(object));
 
     }
 
@@ -143,42 +202,42 @@ export default function CheckoutCartCheckOutButton({
                         <React.Fragment>
                             <label style={{ fontSize: "12px" }}>By Clicking on the "Proceed" button , you hereby agree with <a href={"https://www.mepsfpx.com.my/FPXMain/termsAndConditions.jsp"} style={{ color: "blue" }} >FPX's Terms & Conditions</a> </label>
                             <div>
-                                {
-                                    //live
-                                    <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
-                                        {/* <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
-                                        <input type="hidden" value={fpx_information.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
-                                        <input type="hidden" value={fpx_information.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
-                                        <input type="hidden" value={fpx_information.fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
-                                        <input type="hidden" value={fpx_information.fpx_sellerExOrderNo} id="fpx_sellerExOrderNo" name="fpx_sellerExOrderNo"></input>
-                                        <input type="hidden" value={fpx_information.fpx_sellerTxnTime} id="fpx_sellerTxnTime" name="fpx_sellerTxnTime"></input>
-                                        <input type="hidden" value={fpx_information.fpx_sellerOrderNo} id="fpx_sellerOrderNo" name="fpx_sellerOrderNo"></input>
-                                        <input type="hidden" value={fpx_information.fpx_sellerId} id="fpx_sellerId" name="fpx_sellerId"></input>
-                                        <input type="hidden" value={fpx_information.fpx_sellerBankCode} id="fpx_sellerBankCode" name="fpx_sellerBankCode"></input>
-                                        <input type="hidden" value={fpx_information.fpx_txnCurrency} id="fpx_txnCurrency" name="fpx_txnCurrency"></input>
-                                        <input type="hidden" value={parseFloat(fpx_information.fpx_txnAmount).toFixed(2)} id="fpx_txnAmount" name="fpx_txnAmount"></input>
-                                        <input type="hidden" value={fpx_information.fpx_buyerEmail} id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
-                                        <input type="hidden" value={fpx_information.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
-                                        <input type="hidden" value={fpx_information.fpx_buyerName} id="fpx_buyerName" name="fpx_buyerName"></input>
-                                        <input type="hidden" value={fpx_information.fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
-                                        <input type="hidden" value={fpx_information.fpx_buyerBankBranch} id="fpx_buyerBankBranch" name="fpx_buyerBankBranch"></input>
-                                        <input type="hidden" value={fpx_information.fpx_buyerAccNo} id="fpx_buyerAccNo" name="fpx_buyerAccNo"></input>
-                                        <input type="hidden" value={fpx_information.fpx_buyerId} id="fpx_buyerId" name="fpx_buyerId"></input>
-                                        <input type="hidden" value={fpx_information.fpx_makerName} id="fpx_makerName" name="fpx_makerName"></input>
-                                        <input type="hidden" value={fpx_information.fpx_buyerIban} id="fpx_buyerIban" name="fpx_buyerIban"></input>
-                                        <input type="hidden" value={fpx_information.fpx_version} id="fpx_version" name="fpx_version"></input>
-                                        <input type="hidden" value={fpx_information.fpx_productDesc} id="fpx_productDesc" name="fpx_productDesc"></input>
-                                        <input type="submit"
-                                            style={{
-                                                backgroundColor: "#04AA6D",
-                                                border: "none",
-                                                color: "white",
-                                                fontSize: "14px",
-                                                textDecoration: "none",
-                                                width: "100%"
-                                            }} id="submit" name="submit" value={textInside} onClick={() => onSubmit(paymentData.PickUpIndicator, fpx_information.fpx_sellerOrderNo)} />
-                                    </form>
-                                }
+
+                                {/* //live */}
+                                <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
+
+                                    {/* <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
+                                    <input type="hidden" value={fpx_information.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
+                                    <input type="hidden" value={fpx_information.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
+                                    <input type="hidden" value={fpx_information.fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
+                                    <input type="hidden" value={fpx_information.fpx_sellerExOrderNo} id="fpx_sellerExOrderNo" name="fpx_sellerExOrderNo"></input>
+                                    <input type="hidden" value={fpx_information.fpx_sellerTxnTime} id="fpx_sellerTxnTime" name="fpx_sellerTxnTime"></input>
+                                    <input type="hidden" value={fpx_information.fpx_sellerOrderNo} id="fpx_sellerOrderNo" name="fpx_sellerOrderNo"></input>
+                                    <input type="hidden" value={fpx_information.fpx_sellerId} id="fpx_sellerId" name="fpx_sellerId"></input>
+                                    <input type="hidden" value={fpx_information.fpx_sellerBankCode} id="fpx_sellerBankCode" name="fpx_sellerBankCode"></input>
+                                    <input type="hidden" value={fpx_information.fpx_txnCurrency} id="fpx_txnCurrency" name="fpx_txnCurrency"></input>
+                                    <input type="hidden" value={parseFloat(fpx_information.fpx_txnAmount).toFixed(2)} id="fpx_txnAmount" name="fpx_txnAmount"></input>
+                                    <input type="hidden" value={fpx_information.fpx_buyerEmail} id="fpx_buyerEmail" name="fpx_buyerEmail"></input>
+                                    <input type="hidden" value={fpx_information.fpx_checkSum} id="fpx_checkSum" name="fpx_checkSum"></input>
+                                    <input type="hidden" value={fpx_information.fpx_buyerName} id="fpx_buyerName" name="fpx_buyerName"></input>
+                                    <input type="hidden" value={fpx_information.fpx_buyerBankId} id="fpx_buyerBankId" name="fpx_buyerBankId"></input>
+                                    <input type="hidden" value={fpx_information.fpx_buyerBankBranch} id="fpx_buyerBankBranch" name="fpx_buyerBankBranch"></input>
+                                    <input type="hidden" value={fpx_information.fpx_buyerAccNo} id="fpx_buyerAccNo" name="fpx_buyerAccNo"></input>
+                                    <input type="hidden" value={fpx_information.fpx_buyerId} id="fpx_buyerId" name="fpx_buyerId"></input>
+                                    <input type="hidden" value={fpx_information.fpx_makerName} id="fpx_makerName" name="fpx_makerName"></input>
+                                    <input type="hidden" value={fpx_information.fpx_buyerIban} id="fpx_buyerIban" name="fpx_buyerIban"></input>
+                                    <input type="hidden" value={fpx_information.fpx_version} id="fpx_version" name="fpx_version"></input>
+                                    <input type="hidden" value={fpx_information.fpx_productDesc} id="fpx_productDesc" name="fpx_productDesc"></input>
+                                    <input type="submit"
+                                        style={{
+                                            backgroundColor: "#04AA6D",
+                                            border: "none",
+                                            color: "white",
+                                            fontSize: "14px",
+                                            textDecoration: "none",
+                                            width: "100%"
+                                        }} id="submit" name="submit" value={textInside} disabled={shipping[0].ShippingCost == null ? true : false} onClick={() => onSubmit(paymentData.PickUpIndicator, fpx_information.fpx_sellerOrderNo)} />
+                                </form>
                             </div>
                         </React.Fragment>
                         :
@@ -186,7 +245,7 @@ export default function CheckoutCartCheckOutButton({
                             <div>
                                 {/*live*/}
                                 <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post">
-                                    {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">  */}
+                                    {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
                                     <input type="hidden" id="access_key" name="access_key" value={paymentData.access_key}></input>
                                     <input type="hidden" id="profile_id" name="profile_id" value={paymentData.profile_id}></input>
                                     <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={paymentData.transaction_uuid}></input>
@@ -213,11 +272,14 @@ export default function CheckoutCartCheckOutButton({
                                         fontSize: "14px",
                                         textDecoration: "none",
                                         width: "100%"
-                                    }} id="submit" name="submit" value={textInside} onClick={() =>
-                                        onSubmitCreditCard(paymentData.PickUpIndicator, paymentData.time + '123')
-                                    } disabled={PaymentType === "2" ? false : true} />
+                                    }} id="submit" name="submit" value="submit"
+                                        onClick={() =>
+                                            onSubmitCreditCard(paymentData.PickUpIndicator, paymentData.time + '123')
+                                        } disabled={PaymentType === "2" ?
+                                            shipping[0].ShippingCost == null ? true :
+                                                false : true} />
                                 </form>
-
+                                {/*  */}
 
                             </div>
                         </React.Fragment>

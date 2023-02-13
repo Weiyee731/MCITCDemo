@@ -9,7 +9,7 @@ export class GitAction {
   // Signup
   static Register = "REGISTER";
   static UserRegistered = "SUCCESSFULLY-CREATED-USER";
-  
+
   static RegisterOTP = "REGISTEROTP";
   static UserRegisteredOTP = "SUCCESSFULLY-CREATED-USERACCOUNT";
 
@@ -1193,6 +1193,9 @@ export class GitAction {
   static GetPromotion = "GET-PROMOTION";
   static GotPromotion = "GOT-PROMOTION";
 
+  static checkPromoCode = "CHECK-PROMOCODE";
+  static checkedPromoCode = "CHECKED-PROMOCODE";
+
   static AddPromotion = "ADD-PROMOTION";
   static AddedPromotion = "ADDED-PROMOTION";
 
@@ -1234,6 +1237,13 @@ export class GitAction {
   static CallViewPromotion(promoData) {
     return {
       type: GitAction.GetPromotion,
+      payload: promoData,
+    };
+  }
+
+  static CallViewPromoCode(promoData) {
+    return {
+      type: GitAction.checkPromoCode,
       payload: promoData,
     };
   }

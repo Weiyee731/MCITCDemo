@@ -11,6 +11,7 @@ import PageHeader from "../shared/PageHeader";
 // data stubs
 import payments from "../../data/shopPayments";
 import theme from "../../data/theme";
+import sum from 'lodash/sum';
 import PageCheckOrder from "./ShopPageCheckOrder";
 // import PagePayment from "./ShopPagePayment";
 import { GitAction } from "../../store/action/gitAction";
@@ -21,6 +22,7 @@ import axios from "axios";
 import { sha256, sha224 } from 'js-sha256';
 import { Crypto } from 'crypto-js'
 import { createBrowserHistory } from 'history';
+import { isStringNullOrEmpty, isArrayNotEmpty } from "../../Utilities/UtilRepo";
 // import DeliveryFee from "./ShopPageDeliveryFee";
 import Grid from '@mui/material/Grid';
 import CheckoutSteps from './ShopPageCheckoutStepper';
@@ -37,6 +39,7 @@ function mapStateToProps(state) {
     order: state.counterReducer.order,
     payment: state.counterReducer.payment,
     deliveryFee: state.counterReducer.deliveryFee,
+    promoCode: state.counterReducer.promoCode,
   };
 }
 
@@ -46,6 +49,7 @@ function mapDispatchToProps(dispatch) {
     CallClearOrder: () => dispatch(GitAction.CallClearOrder()),
     CallSentPayment: (propsData) => dispatch(GitAction.CallSentPayment(propsData)),
     CallGetOrderShippingFee: (propsData) => dispatch(GitAction.CallGetOrderShippingFee(propsData)),
+    CallViewPromoCode: (propsData) => dispatch(GitAction.CallViewPromoCode(propsData)),
   };
 }
 
@@ -56,6 +60,8 @@ class PageCheckout extends Component {
 
     this.state = {
       payment: "bank",
+      isApplyClick: false,
+      validPromoData: [],
       tabvalue: 0,
       ProductID: [],
       ProductQuantity: [],
@@ -73,7 +79,13 @@ class PageCheckout extends Component {
       isShipping: false,
       isErrorPoscode: false,
       activeStep: 0,
-      deliveryFee: [{ "ShippingCost": 0 }]
+      deliveryFee: [{ "ShippingCost": 0 }],
+
+      discount: 0,
+      total: 0,
+      subtotal: 0,
+      isPromoCodeSet: false,
+      promoCode: ""
     };
     // this.onFormSubmit = this.onFormSubmit.bind(this)
 
@@ -81,6 +93,7 @@ class PageCheckout extends Component {
     this.data = this.props.location.state;
     this.completed = this.state.activeStep === this.STEPS.length;
   }
+
 
   // async onFormSubmit() {
 
@@ -134,15 +147,57 @@ class PageCheckout extends Component {
 
   // }
 
+  setPricing() {
+    let listing = this.data.data
+    let totalPrice = sum(listing.map((item) => item.total))
+    let subtotalPrice = sum(listing.map((item) => item.total))
+    let discountPrice = sum(listing.map((item) => item.discount))
+
+    this.setState({
+      total: totalPrice,
+      subtotal: subtotalPrice,
+      discount: discountPrice
+    })
+  }
+
+  componentDidMount() {
+    console.log("dasdasdad", this.props.location.state)
+    if (this.data !== undefined && isArrayNotEmpty(this.data.data))
+      this.setPricing()
+  }
+
   componentDidUpdate(prevProps, previous) {
     if (prevProps.order !== this.props.order) {
       if (this.props.order !== undefined && this.props.order[0] !== undefined && this.props.order[0].ReturnVal === 1) {
       }
     }
+
+    console.log("this.props.deliveryFee", this.props.deliveryFee)
     if (prevProps.deliveryFee !== this.props.deliveryFee) {
       this.setState({ deliveryFee: this.props.deliveryFee })
     }
+
+    if (prevProps.promoCode !== this.props.promoCode && this.state.isApplyClick === true) {
+      this.setState({ isApplyClick: false, validPromoData: isArrayNotEmpty(this.props.promoCode) ? this.props.promoCode : [{ isValidCode: false }] })
+      console.log("dasdsad", this.props.promoCode)
+    }
+
+    // if (this.state.total === 0) {
+
+    //   let data = this.props.location.state
+    //   let totalPrice = sum(data.map((item) => item.total))
+    //   let subtotalPrice = sum(data.map((item) => item.total))
+    //   let discountPrice = sum(data.map((item) => item.discount))
+
+    //   this.setState({
+    //     total: totalPrice,
+    //     subtotal: subtotalPrice,
+    //     discount: discountPrice
+    //   })
+    // }
   }
+
+
 
   handleNextStep = () => {
     this.setState({ activeStep: this.state.activeStep + 1 })
@@ -157,19 +212,42 @@ class PageCheckout extends Component {
   };
 
   handleApplyDiscount = (value) => {
+    this.props.CallViewPromoCode({ promoCode: value })
+    this.setState({ isApplyClick: true })
+    console.log("handleApplyDiscount", value)
   };
 
+  handleRemovePromoError = () => {
+    this.setState({ validPromoData: [], isPromoCodeSet: false })
+    if (this.data !== undefined && isArrayNotEmpty(this.data.data))
+      this.setPricing()
+  }
+
   handleCreateBilling = (address) => {
-    let PRODUCTID = this.data.data.map((item) => { return item.product.ProductID })
-    let ProductQuantity = this.data.data.map((item) => { return item.product.ProductQuantity })
-    var obj = {
-      PRODUCTID: PRODUCTID,
-      PROJECTID: 2,
-      PRODUCTQUANTITY: ProductQuantity,
-      POSCODE: address.UserPoscode
+
+    // console.log("sasasasa", address)
+
+    // deliveryFee: [{ "ShippingCost": 0 }],
+
+
+    console.log("dsadsadsa", address)
+
+    if (address.UserAddressBookID === 0) {
+      this.setState({ deliveryFee: [{ "ShippingCost": 0 }] })
+    } else {
+      let PRODUCTID = this.data.data.map((item) => { return item.product.ProductID })
+      let ProductQuantity = this.data.data.map((item) => { return item.product.ProductQuantity })
+      var obj = {
+        PRODUCTID: PRODUCTID,
+        PROJECTID: 2,
+        PRODUCTQUANTITY: ProductQuantity,
+        POSCODE: address.UserPoscode
+      }
+
+      this.data["address"] = address;
+      this.props.CallGetOrderShippingFee(obj)
     }
-    this.data["address"] = address;
-    this.props.CallGetOrderShippingFee(obj)
+
 
     this.setState({ activeStep: this.state.activeStep + 1, address: address })
   };
@@ -185,12 +263,37 @@ class PageCheckout extends Component {
     // }
   };
 
+  onHandlePromoCode = (data) => {
+    this.setState({ promoCode: data })
+  }
+  onHandleDiscount = (promoData) => {
+    const { subtotal, total } = this.state
+    console.log("handleDiscounthandleDiscount", promoData)
+    if (isArrayNotEmpty(promoData)) {
+
+      if (promoData[0].PromoCodeID !== undefined) {
+        if (this.state.isPromoCodeSet === false) {
+          let discountPrice = parseFloat(subtotal * promoData[0].PromoDiscount / 100).toFixed(2)
+          let totalPrice = parseFloat(total).toFixed(2) - discountPrice
+          this.setState({ discount: discountPrice, total: totalPrice, isPromoCodeSet: true })
+        }
+      } else {
+        if (this.data !== undefined && isArrayNotEmpty(this.data.data))
+          this.setPricing()
+      }
+    }
+  }
+
   render() {
+
+    console.log("sadadad111", this.state)
     const breadcrumb = [
       { title: "Home", url: "" },
       { title: "Checkout", url: "" },
     ];
 
+
+    console.log("dsdsdsad", this.props)
     // const handleGetAddressId = (value) => {
     //   if (value.length !== 0)
     //     this.setState({ address: value })
@@ -247,6 +350,7 @@ class PageCheckout extends Component {
                 <CheckoutSteps activeStep={this.state.activeStep} steps={this.STEPS} />
               </Grid>
             </Grid>
+            {console.log("dsadas", this.state)}
 
             {this.completed ? (
               <div>hi</div>
@@ -257,8 +361,17 @@ class PageCheckout extends Component {
                   <CheckoutCart
                     checkout={this.data}
                     onNextStep={this.handleNextStep}
-                  // onDeleteCart={this.handleDeleteCart}
-                  // onApplyDiscount={this.handleApplyDiscount}
+                    // onDeleteCart={this.handleDeleteCart}
+                    discount={this.state.discount}
+                    subtotal={this.state.subtotal}
+                    total={this.state.total}
+                    promoCode={this.state.promoCode}
+                    validPromoData={this.state.validPromoData}
+                    onRemovePromoError={this.handleRemovePromoError}
+                    onHandleDiscount={this.onHandleDiscount}
+                    onApplyDiscount={this.handleApplyDiscount}
+                    onHandlePromoCode={this.onHandlePromoCode}
+
                   // onIncreaseQuantity={this.handleIncreaseQuantity}
                   // onDecreaseQuantity={this.handleDecreaseQuantity}
                   />
@@ -266,13 +379,31 @@ class PageCheckout extends Component {
                 {this.state.activeStep === 1 && (
                   <CheckoutBillingAddress
                     checkout={this.data}
-                    onBackStep={this.handleBackStep}
+                    discount={this.state.discount}
+                    subtotal={this.state.subtotal}
+                    total={this.state.total}
+                    promoCode={this.state.promoCode}
+                    validPromoData={this.state.validPromoData}
+                    onRemovePromoError={this.handleRemovePromoError}
+                    onHandleDiscount={this.onHandleDiscount}
+                    onHandlePromoCode={this.onHandlePromoCode}
+                    onApplyDiscount={this.handleApplyDiscount}
+                    onBackStep={this.handleBackStep}     
                     onCreateBilling={this.handleCreateBilling}
                   />
                 )}
                 {this.state.activeStep === 2 && (
                   <CheckoutPayment
                     checkout={this.data}
+                    discount={this.state.discount}
+                    subtotal={this.state.subtotal}
+                    total={this.state.total}
+                    promoCode={this.state.promoCode}
+                    validPromoData={this.state.validPromoData}
+                    onRemovePromoError={this.handleRemovePromoError}
+                    onHandleDiscount={this.onHandleDiscount}
+                    onHandlePromoCode={this.onHandlePromoCode}
+                    onApplyDiscount={this.handleApplyDiscount}
                     onBackStep={this.handleBackStep}
                     onGotoStep={this.handleGotoStep}
                     deliveryFee={this.state.deliveryFee}

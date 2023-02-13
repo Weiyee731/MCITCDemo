@@ -25,9 +25,13 @@ CheckoutBillingAddress.propTypes = {
   checkout: PropTypes.object,
   onBackStep: PropTypes.func,
   onCreateBilling: PropTypes.func,
+  onApplyDiscount: PropTypes.func,
+  onRemovePromoError: PropTypes.func,
+  onHandleDiscount: PropTypes.func,
+  onHandlePromoCode: PropTypes.func,
 };
 
-export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateBilling }) {
+export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateBilling, total, subtotal, discount, validPromoData, promoCode, onApplyDiscount, onRemovePromoError, onHandleDiscount, onHandlePromoCode }) {
   const dispatch = useDispatch();
 
   const [Selfpickup, changeSelfpickup] = useState([{
@@ -40,9 +44,9 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
   }])
 
   const { data } = checkout;
-  const total = sum(data.map((item) => item.total));
-  const subtotal = sum(data.map((item) => item.total));
-  const discount = sum(data.map((item) => item.discount));
+  // const total = sum(data.map((item) => item.total));
+  // const subtotal = sum(data.map((item) => item.total));
+  // const discount = sum(data.map((item) => item.discount));
 
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -116,7 +120,13 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} hideShipping={true} />
+          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} promoCode={promoCode} hideShipping={true}
+            validPromoData={validPromoData}
+            onRemovePromoError={onRemovePromoError}
+            onHandleDiscount={onHandleDiscount}
+            onApplyDiscount={onApplyDiscount}
+            onHandlePromoCode={onHandlePromoCode}
+          />
         </Grid>
       </Grid>
 
@@ -138,9 +148,17 @@ AddressItem.propTypes = {
 };
 
 function AddressItem({ address, onCreateBilling, setIsLoading, isloading }) {
-  const { UserAddressBookID, UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = address;
+  const { UserAddressBookID, UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress, NSA_ODA, PostOffice } = address;
   const isDefault = isDefaultAddress === 1
   const dispatch = useDispatch();
+
+  const checkDeliveryTime = (ODA) => {
+    let duration = 0
+    if (ODA !== undefined) {
+      duration = ODA.split("+")[1]
+    }
+    return duration
+  }
 
   return (
     <Card
@@ -180,6 +198,12 @@ function AddressItem({ address, onCreateBilling, setIsLoading, isloading }) {
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {UserContactNo}
           </Typography>
+          {
+            NSA_ODA === "Non-Serviceable Area" && <Typography style={{ color: "red" }}>Parcel required self-pickup in nearest post office.</Typography>
+          }
+          {
+            NSA_ODA !== undefined && NSA_ODA !== "Non-Serviceable Area" && NSA_ODA !== null && <Typography style={{ color: "red" }}>Extra {checkDeliveryTime(NSA_ODA)} days is required than normal delivery</Typography>
+          }
         </Stack>
 
         <Stack flexDirection="row" flexWrap="wrap" flexShrink={0}>

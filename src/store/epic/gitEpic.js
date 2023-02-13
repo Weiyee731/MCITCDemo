@@ -1715,7 +1715,7 @@ export class GitEpic {
             "&USERID=" + action.payload.userId +
             "&PROJECTID=2" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
-            "&PAGE=" + action.payload.page+
+            "&PAGE=" + action.payload.page +
             "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
@@ -1745,7 +1745,7 @@ export class GitEpic {
             // "&ProjectID=2" + 
             "&PLATFORMTYPE=eCommerce" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
-            "&PAGE=" + action.payload.page+
+            "&PAGE=" + action.payload.page +
             "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
@@ -1771,7 +1771,7 @@ export class GitEpic {
           return fetch(url +
             "Product_ItemDetailByProductID?ProductID=" + action.payload.productId +
             "&USERID=" + action.payload.userId +
-            "&PROJECTID=2"+
+            "&PROJECTID=2" +
             "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
@@ -2237,7 +2237,8 @@ export class GitEpic {
                 USERID: action.payload.UserID,
                 USERADDRESSID: action.payload.UserAddressID,
                 PROMOTIONID: 0,
-                PROMOTIONCODEID: 0,
+                USERCARTID: action.payload.UserCartID,
+                PROMOTIONCODEID: action.payload.PromotionCodeID,
                 PAYMENTMETHODID: action.payload.PaymentMethodID,
                 USERPAYMENTMETHODID: action.payload.UserPaymentMethodID,
                 ORDERTOTALAMOUNT: action.payload.OrderTotalAmount,
@@ -2386,7 +2387,8 @@ export class GitEpic {
                 USERID: action.payload.UserID,
                 USERADDRESSID: action.payload.UserAddressID,
                 PROMOTIONID: 0,
-                PROMOTIONCODEID: 0,
+                USERCARTID: action.payload.UserCartID,
+                PROMOTIONCODEID: action.payload.PromotionCodeID,
                 PAYMENTMETHODID: action.payload.PaymentMethodID,
                 USERPAYMENTMETHODID: action.payload.UserPaymentMethodID,
                 ORDERTOTALAMOUNT: action.payload.OrderTotalAmount,
@@ -2757,6 +2759,29 @@ export class GitEpic {
         } catch (error) {
           toast.error("Error Code: getAllPromotion. Please check on URL")
           return dispatch({ type: GitAction.GotPromotion, payload: [] });
+        }
+      }
+    }));
+
+  checkPromoCode = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.checkPromoCode), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Promo_ViewPromoCodeByCode?PROMOCODE=" + action.payload.promoCode)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.checkedPromoCode, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                //toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.checkedPromoCode, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: checkPromoCode. Please check on URL")
+          return dispatch({ type: GitAction.checkedPromoCode, payload: [] });
         }
       }
     }));
