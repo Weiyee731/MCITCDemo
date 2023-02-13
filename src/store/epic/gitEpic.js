@@ -1715,7 +1715,7 @@ export class GitEpic {
             "&USERID=" + action.payload.userId +
             "&PROJECTID=2" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
-            "&PAGE=" + action.payload.page+
+            "&PAGE=" + action.payload.page +
             "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
@@ -1745,7 +1745,7 @@ export class GitEpic {
             // "&ProjectID=2" + 
             "&PLATFORMTYPE=eCommerce" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
-            "&PAGE=" + action.payload.page+
+            "&PAGE=" + action.payload.page +
             "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
@@ -1771,7 +1771,7 @@ export class GitEpic {
           return fetch(url +
             "Product_ItemDetailByProductID?ProductID=" + action.payload.productId +
             "&USERID=" + action.payload.userId +
-            "&PROJECTID=2"+
+            "&PROJECTID=2" +
             "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
@@ -1923,6 +1923,7 @@ export class GitEpic {
   getAllCategories = action$ =>
     action$.pipe(filter(action => action.type === GitAction.GetProductCategory), map(action => {
       return dispatch => {
+        console.log("Product_CategoryListByAll", url + "Product_CategoryListByAll")
         try {
           return fetch(url + "Product_CategoryListByAll")
             .then(response => response.json())

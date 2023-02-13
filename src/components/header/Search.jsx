@@ -173,7 +173,8 @@ function Search(props) {
     }
 
     if (event.key === "Enter") {
-      this.props.history.push("/shop/ProductListing/type:Keyword&typevalue:" + searchquery)
+      // this.props.history.push("/shop/ProductListing/type:Keyword&typevalue:" + searchquery)
+      window.location.href = "/shop/ProductListing/type:Keyword&typevalue:" + searchquery
       // this.props.history.push("/shop/ProductListing/type:Keyword&typevalue:" + searchquery);
       // window.location.reload(false);
     }
