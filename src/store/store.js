@@ -34,6 +34,8 @@ const rootEpic = combineEpics(
   gitEpic.updateEmail,
   //==================COUNTRY==========================//
   gitEpic.getCountry,
+  //==================BANNER==========================//
+  gitEpic.getBanner,
   //==================COURIER SERVICE==========================//
   gitEpic.getAllCourierService,
   //==================PAYMENT METHOD==========================//
@@ -117,6 +119,6 @@ const middleware = [
   epicMiddleware
 ]
 const initialState = {};
-const store = createStore(rootReducer,initialState, applyMiddleware(...middleware))
+const store = createStore(rootReducer, initialState, applyMiddleware(...middleware))
 epicMiddleware.run(rootEpic);
 export default store

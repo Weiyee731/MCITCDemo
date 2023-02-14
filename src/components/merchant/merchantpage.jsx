@@ -36,6 +36,7 @@ import {
     Typography,
     Box,
 } from "@mui/material";
+import { isArrayNotEmpty } from '../../Utilities/UtilRepo';
 
 function mapStateToProps(state) {
     return {
@@ -181,10 +182,10 @@ function MerchantPage(props) {
 
                                     </div>
                                     <div className='col-4 social-links-web' style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                                    <div className="topbar__item">
-                                        <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
-                                    </div>
-                                    
+                                        <div className="topbar__item">
+                                            <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
+                                        </div>
+
                                     </div>
                                 </div>
                             </CardContent>
@@ -228,9 +229,9 @@ function MerchantPage(props) {
                             </div>
                         </div>
                         <div className='col-12 social-media-phone' style={{ display: "flex", justifyContent: "flex-end" }}>
-                        <div className="topbar__item">
-                            <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
-                        </div>
+                            <div className="topbar__item">
+                                <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
+                            </div>
                         </div>
                         <div>
                             <CardContent>
@@ -264,11 +265,12 @@ function MerchantPage(props) {
     const [postsToShow, setPostsToShow] = useState([]);
     let tempArray = []
     const [page, setPage] = useState(1);
+    const [previousPage, setPrevious] = useState(0);
 
     const loopWithSlice = () => {
-        if (props.productsListing.length > 0 && JSON.parse(props.productsListing)[0] !== undefined && JSON.parse(props.productsListing)[0].ReturnVal !== '0') {
+        if (isArrayNotEmpty(props.productsListing)) {
 
-            let listingArray = JSON.parse(props.productsListing).filter((x) => x.MerchantID === parseInt(props.merchantID))
+            let listingArray = props.productsListing.filter((x) => x.MerchantID === parseInt(props.merchantID))
             tempArray = [...postsToShow, ...listingArray];
             const filterList = tempArray.filter((ele, ind) => ind === tempArray.findIndex(elem => elem.ProductID === ele.ProductID))
             setPostsToShow(filterList)
@@ -288,6 +290,7 @@ function MerchantPage(props) {
     }, [])
 
 
+
     useEffect(() => {
         props.CallAllProductsListing({
             type: "Merchant",
@@ -296,28 +299,35 @@ function MerchantPage(props) {
             productPage: 10,
             page: page,
         })
-        loopWithSlice()
     }, [])
 
     useEffect(() => {
+        let didCancel = false
         props.CallAllProductsListing({
             type: "Merchant",
-            typeValue: props.merchantID !== null && props.merchantID !== undefined ? props.merchantID : 0,
-            userId: localStorage.getItem("isLogin") === true ? localStorage.getItem("id") : 0,
-            productPage: 10,
+            typeValue: 0,
+            userId: 0,
+            productPage: 20,
             page: page,
         })
         loopWithSlice()
-    }, [props.productsListing, page])
+        return () => {
+            didCancel = true;
+        }
+    }, [page])
 
     const handleShowMorePosts = () => {
         setPage(page + 1)
+        setPrevious(page)
     };
 
     const breadcrumb = [
         { title: "Home", url: url.home() },
         { title: merchantDetails.ShopName, url: "" },
     ];
+
+    if (page === 1 && isArrayNotEmpty(props.productsListing) && postsToShow.length === 0)
+        loopWithSlice()
 
     return (
         <React.Fragment>
@@ -343,34 +353,34 @@ function MerchantPage(props) {
                     </Card> */}
                 </div>
                 {
-                    props.loading === false ?
-                        <div className='m-3'>
-                            <BlockProducts
-                                title="Featured Products"
-                                layout="large-first"
-                                products={postsToShow}
-                                rows={2}
-                            />
-                            {
-                                postsToShow.length > 0 ?
-                                    (
-                                        <div className="my-4">
-                                            <BlockMoreButton viewMore={handleShowMorePosts} />
+                    // props.loading === false ?
+                    <div className='m-3'>
+                        <BlockProducts
+                            title="Featured Products"
+                            layout="large-first"
+                            products={postsToShow}
+                            rows={2}
+                        />
+                        {
+                            postsToShow.length > 0 ?
+                                (
+                                    <div className="my-4">
+                                        <BlockMoreButton viewMore={handleShowMorePosts} />
+                                    </div>
+                                ) :
+                                (
+                                    <>
+                                        <div className="my-4" style={{ textAlign: "center", fontWeight: "BOLD" }}>
+                                            Merchant does not have any products
                                         </div>
-                                    ) :
-                                    (
-                                        <>
-                                            <div className="my-4" style={{ textAlign: "center", fontWeight: "BOLD" }}>
-                                                Merchant does not have any products
-                                            </div>
-                                            <div className="my-4" style={{ textAlign: "center" }}>
-                                                <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
-                                            </div>
-                                        </>
-                                    )
-                            }
-                        </div>
-                        : <LoadingPanel />
+                                        <div className="my-4" style={{ textAlign: "center" }}>
+                                            <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                                        </div>
+                                    </>
+                                )
+                        }
+                    </div>
+                    // : <LoadingPanel />
                 }
             </div>
         </React.Fragment>

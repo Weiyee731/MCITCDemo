@@ -351,8 +351,6 @@ class ShopPageCart_side extends Component {
         const style = {
             width: '10%',
             position: 'absolute',
-
-
         }
 
 

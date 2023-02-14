@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   currentUser: {},
   registerUser: {},
   otp: {},
+  banner: [],
   supplier: [],
   products: [],
   productsListing: [],
@@ -274,6 +275,16 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         countries: action.payload,
+      });
+
+    //=======================BANNER========================//
+
+    case GitAction.GetBanner:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotBanner:
+      return Object.assign({}, state, {
+        loading: false,
+        banner: action.payload,
       });
 
     //=======================COURIER SERVICE========================//

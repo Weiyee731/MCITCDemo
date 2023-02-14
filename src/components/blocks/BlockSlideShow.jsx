@@ -7,11 +7,13 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
+import { GitAction } from "../../store/action/gitAction";
 // application
 import departmentsAria from "../../services/departmentsArea";
 import languages from "../../i18n";
 import StroykaSlick from "../shared/StroykaSlick";
 import banner1 from "../../assets/banner1.jpeg";
+import { isArrayNotEmpty } from "../../Utilities/UtilRepo";
 
 const slickSettings = {
   dots: true,
@@ -23,6 +25,16 @@ const slickSettings = {
 };
 
 class BlockSlideShow extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      slides: [],
+      isBannerSet: false
+    };
+  }
+
   departmentsAreaRef = null;
 
   media = window.matchMedia("(min-width: 992px)");
@@ -83,77 +95,77 @@ class BlockSlideShow extends Component {
   //   },
   // ];
 
-  slides = [
-    {
-      title: "",
-      text: "",
-      image_classic: {
-        ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
-        rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
-      },
-      image_full: {
-        ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
-        rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
-        // ltr: banner1,
-        // rtl: banner1,
-      },
-      image_mobile: {
-        ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
-        rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
-      },
-    },
-    {
-      title: "",
-      text: "",
-      image_classic: {
-        ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
-        rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
-      },
-      image_full: {
-        ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
-        rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
-        // ltr: banner1,
-        // rtl: banner1,
-      },
-      image_mobile: {
-        ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
-        rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
-      },
-    },
-    // {
-    //   title: "",
-    //   text:
-    //     "",
-    //   image_classic: {
-    //     ltr: "images/slides/slide_2.jpg",
-    //     rtl: "images/slides/slide_2.jpg",
-    //   },
-    //   image_full: {
-    //     ltr: "images/slides/slide_2_full.jpg",
-    //     rtl: "images/slides/slide_2_full.jpg",
-    //   },
-    //   image_mobile: {
-    //     ltr: "images/slides/slide_2_mobile.jpg",
-    //     rtl: "images/slides/slide_2_mobile.jpg",
-    //   },
-    // },
-    // {
-    //   title: '',
-    //   text: '',
-    //   image_classic: {
-    //     ltr: 'images/slides/slide_3.jpg',
-    //     rtl: 'images/slides/slide_3.jpg',
-    //   },
-    //   image_full: {
-    //     ltr: 'images/slides/slide_3_full.jpg',
-    //     rtl: 'images/slides/slide_3_full.jpg',
-    //   },
-    //   image_mobile: {
-    //     ltr: 'images/slides/slide_3_mobile.jpg',
-    //     rtl: 'images/slides/slide_3_mobile.jpg',
-    //   },
-    // },
-  ];
+  // slides = [
+  //   {
+  //     title: "",
+  //     text: "",
+  //     image_classic: {
+  //       ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+  //       rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+  //     },
+  //     image_full: {
+  //       ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+  //       rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+  //       // ltr: banner1,
+  //       // rtl: banner1,
+  //     },
+  //     image_mobile: {
+  //       ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+  //       rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+  //     },
+  //   },
+  //   {
+  //     title: "",
+  //     text: "",
+  //     image_classic: {
+  //       ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+  //       rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+  //     },
+  //     image_full: {
+  //       ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+  //       rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+  //       // ltr: banner1,
+  //       // rtl: banner1,
+  //     },
+  //     image_mobile: {
+  //       ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+  //       rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+  //     },
+  //   },
+  //   // {
+  //   //   title: "",
+  //   //   text:
+  //   //     "",
+  //   //   image_classic: {
+  //   //     ltr: "images/slides/slide_2.jpg",
+  //   //     rtl: "images/slides/slide_2.jpg",
+  //   //   },
+  //   //   image_full: {
+  //   //     ltr: "images/slides/slide_2_full.jpg",
+  //   //     rtl: "images/slides/slide_2_full.jpg",
+  //   //   },
+  //   //   image_mobile: {
+  //   //     ltr: "images/slides/slide_2_mobile.jpg",
+  //   //     rtl: "images/slides/slide_2_mobile.jpg",
+  //   //   },
+  //   // },
+  //   // {
+  //   //   title: '',
+  //   //   text: '',
+  //   //   image_classic: {
+  //   //     ltr: 'images/slides/slide_3.jpg',
+  //   //     rtl: 'images/slides/slide_3.jpg',
+  //   //   },
+  //   //   image_full: {
+  //   //     ltr: 'images/slides/slide_3_full.jpg',
+  //   //     rtl: 'images/slides/slide_3_full.jpg',
+  //   //   },
+  //   //   image_mobile: {
+  //   //     ltr: 'images/slides/slide_3_mobile.jpg',
+  //   //     rtl: 'images/slides/slide_3_mobile.jpg',
+  //   //   },
+  //   // },
+  // ];
 
   componentDidMount() {
     if (this.media.addEventListener) {
@@ -162,6 +174,7 @@ class BlockSlideShow extends Component {
       // noinspection JSDeprecatedSymbols
       this.media.addListener(this.onChangeMedia);
     }
+    this.props.CallBanner()
   }
 
   componentWillUnmount() {
@@ -174,6 +187,32 @@ class BlockSlideShow extends Component {
       this.media.removeListener(this.onChangeMedia);
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.banner !== this.props.banner && this.state.isBannerSet === false && isArrayNotEmpty(this.props.banner)) {
+      let listing = []
+      this.props.banner.map((x) => {
+        listing.push({
+          title: "",
+          text: "",
+          image_classic: {
+            ltr: x.ProductMediaUrl,
+            rtl: x.ProductMediaUrl,
+          },
+          image_full: {
+            ltr: x.ProductMediaUrl,
+            rtl: x.ProductMediaUrl,
+          },
+          image_mobile: {
+            ltr: x.ProductMediaUrl,
+            rtl: x.ProductMediaUrl,
+          },
+        })
+      })
+      this.setState({ slides: listing, isBannerSet: true })
+    }
+  }
+
 
   onChangeMedia = () => {
     if (this.media.matches) {
@@ -203,7 +242,7 @@ class BlockSlideShow extends Component {
       "col-lg-9": withDepartments, // col for the banner-part
     });
 
-    const slides = this.slides.map((slide, index) => {
+    const slides = isArrayNotEmpty(this.state.slides) && this.state.slides.map((slide, index) => {
       const image = (withDepartments ? slide.image_classic : slide.image_full)[
         direction
       ];
@@ -291,8 +330,22 @@ BlockSlideShow.defaultProps = {
   withDepartments: false,
 };
 
-const mapStateToProps = (state) => ({
-  locale: state.locale,
-});
+// const mapStateToProps = (state) => ({
+//   locale: state.locale,
+// });
 
-export default connect(mapStateToProps)(BlockSlideShow);
+function mapStateToProps(state) {
+  return {
+    banner: state.counterReducer["banner"],
+    locale: state.locale,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    CallBanner: (credentials) => dispatch(GitAction.CallBanner(credentials)),
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(BlockSlideShow);

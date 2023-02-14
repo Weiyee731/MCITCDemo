@@ -233,6 +233,16 @@ export class GitAction {
     };
   }
 
+    //==================BANNER==========================//
+    static GetBanner = "GET-BANNER";
+    static GotBanner = "GOT-BANNER";
+  
+    static CallBanner() {
+      return {
+        type: GitAction.GetBanner,
+      };
+    }
+
   //==================COURIER SERVICE==========================//
   static GetCourierService = "GET-COURIER-SERVICE";
   static GotCourierService = "GOT-COURIER-SERVICE";

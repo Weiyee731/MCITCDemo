@@ -1404,6 +1404,28 @@ export class GitEpic {
       }
     }));
 
+    getBanner = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetBanner), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "General_ViewBanner?PROJECTID=2")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotBanner, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                //toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotBanner, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: GotBanner. Please check on URL")
+          return dispatch({ type: GitAction.GotBanner, payload: [] });
+        }
+      }
+    }));
+
   // All Courier Service
 
   getAllCourierService = action$ =>
@@ -1742,8 +1764,7 @@ export class GitEpic {
             "Product_ItemListByType?Type=" + action.payload.type +
             "&TypeValue=" + action.payload.typeValue +
             "&USERID=" + action.payload.userId +
-            // "&ProjectID=2" + 
-            "&PLATFORMTYPE=eCommerce" +
+            "&ProjectID=2" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
             "&PAGE=" + action.payload.page +
             "&PLATFORMTYPE=" + platformType)
