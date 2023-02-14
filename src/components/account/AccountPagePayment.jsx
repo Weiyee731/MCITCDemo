@@ -461,7 +461,6 @@ class AccountPagePayment extends Component {
         let signature = ""
         let signed_field_names = ""
 
-        console.log("this.state.Userdetails",this.state.Userdetails)
         if (this.state.isSetDetail === false && this.state.Userdetails.length !== 0) {
             if (this.props.addressID === 0) {
                 if (parseInt(totalPrice) > 30000)

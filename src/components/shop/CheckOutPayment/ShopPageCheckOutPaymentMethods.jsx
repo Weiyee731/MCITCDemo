@@ -87,9 +87,8 @@ export default function CheckoutPaymentMethods({ onSelectPaymentTypes, onSelectB
 
         let URL2 = "https://myemporia.my/payment/06_fpx_bankListRequest.php"
         const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-        axios.post(URL2, {}, config).then((res) => {console.log("res"+res)
+        axios.post(URL2, {}, config).then((res) => {
             if (res.status === 200) {
-                console.log("res211"+res.data)
                 let bankFinalList = []
                 let bankList = res.data.split('|')[0]
                 bankList = bankList.split(',')

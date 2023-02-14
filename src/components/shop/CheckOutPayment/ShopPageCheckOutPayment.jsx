@@ -31,7 +31,7 @@ const DELIVERY_OPTIONS = [
     {
         value: 0,
         title: 'Standard delivery',
-        description: 'Delivered on Monday, August 12',
+        description: '',
     },
 ];
 
@@ -43,6 +43,11 @@ CheckoutPayment.propTypes = {
     onNextStep: PropTypes.func,
     deliveryFee: PropTypes.array,
     onApplyShipping: PropTypes.func,
+
+    onHandleDiscount: PropTypes.func,
+    handleRemovePromoError: PropTypes.func,
+    onHandlePromoCode: PropTypes.func,
+    handleApplyDiscount: PropTypes.func,
 };
 
 export default function CheckoutPayment({
@@ -53,11 +58,22 @@ export default function CheckoutPayment({
     onGotoStep,
     deliveryFee,
     onApplyShipping,
+    onApplyDiscount,
+    onRemovePromoError,
+    onHandleDiscount,
+    onHandlePromoCode,
+    validPromoData,
+    discount,
+    total,
+    subtotal,
+    promoCode,
+
+
 }) {
     const { data, address, merchant } = checkout;
-    const total = sum(data.map((item) => item.total));
-    const subtotal = sum(data.map((item) => item.total));
-    const discount = sum(data.map((item) => item.discount));
+    // const total = sum(data.map((item) => item.total));
+    // const subtotal = sum(data.map((item) => item.total));
+    // const discount = sum(data.map((item) => item.discount));
     const [BankID, setBankID] = useState("0");
     const [PaymentType, setPaymentType] = useState("1");
     const [isSetDetail, setDetails] = useState(false)
@@ -85,8 +101,6 @@ export default function CheckoutPayment({
         fpx_buyerIban: "",
         fpx_productDesc: "Emporia Hardware",
         fpx_version: "6.0",
-
-
 
         fpx_checkSum: 0,
         fpx_buyerBankId: 0,
@@ -152,9 +166,10 @@ export default function CheckoutPayment({
         var k = Math.floor(Math.random() * 1000000);
         var m = String.fromCharCode(n) + k;
 
+        console.log("SHIPPING IN OB", deliveryFee)
         {/* this.setState({ applyPromo: applyPromo, promoError: promoError, isVoucherApply: verify, totalApplyPromo: totalAfterPromo, totalDeduction: deduction, isShippingPromo: isShippingPromo }) */ }
-
-        let totalPrice = isVoucherApply ? parseFloat(totalApplyPromo).toFixed(2) : parseFloat(total).toFixed(2)
+        let totalPrice = deliveryFee[0].ShippingCost == null ? parseFloat(total).toFixed(2) : parseFloat(total + deliveryFee[0].ShippingCost).toFixed(2)
+        // let totalPrice = isVoucherApply ? parseFloat(totalApplyPromo).toFixed(2) : parseFloat(total).toFixed(2)
         let lastname = address.UserAddressBookID === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia" : address.UserAddressName
         let firstname = address.UserAddressBookID === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia" : address.UserAddressName
         let email = address.UserAddressBookID === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com" : address.UserEmail
@@ -175,7 +190,8 @@ export default function CheckoutPayment({
             state: state,
             poscode: poscode,
             now: now,
-            time: d
+            time: d,
+            deliveryPrice: deliveryFee[0].ShippingCost == null ? 0 : deliveryFee[0].ShippingCost
         })
 
         // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e"
@@ -215,74 +231,9 @@ export default function CheckoutPayment({
             }
         }
         else {
-
-            // access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
-            // profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
-            // paymentData.access_key = "51f40be210ff34cba0079b19efd3ab42"  //live credit card
-            // paymentData.profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4"  //live credit card
-            // 
-            // paymentData.transaction_uuid = paymentData.time + '123'
-            // paymentData.signed_date_time = now
-            // paymentData.locale = "en"
-            // paymentData.transaction_type = "sale"
-            // paymentData.reference_number = paymentData.time
-            // paymentData.amount = totalPrice
-            // paymentData.currency = "MYR"
-            // paymentData.bill_to_surname = lastname
-            // paymentData.bill_to_forename = firstname
-            // paymentData.bill_to_email = email
-            // paymentData.bill_to_address_line1 = addressLine1
-            // paymentData.bill_to_address_city = city
-
-            // paymentData.bill_to_address_postal_code = poscode
-            // paymentData.bill_to_address_state = state
-            // paymentData.bill_to_address_country = "MY"
-            // paymentData.signed_field_names = "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_country"
-
-            // paymentData.signature = "access_key=" + paymentData.access_key + ",profile_id=" + paymentData.profile_id + ",transaction_uuid=" + paymentData.transaction_uuid + ",signed_field_names=" + paymentData.signed_field_names + ",signed_date_time=" + paymentData.signed_date_time + ",locale=" + paymentData.locale + ",transaction_type=sale,reference_number=" + paymentData.reference_number + ",amount=" + paymentData.amount + ",currency=" + paymentData.currency + ",bill_to_surname=" + paymentData.bill_to_surname + ",bill_to_forename=" + paymentData.bill_to_forename + ",bill_to_email=" + paymentData.bill_to_email + ",bill_to_address_line1=" + paymentData.bill_to_address_line1 + ",bill_to_address_city=" + paymentData.bill_to_address_city + ",bill_to_address_country=" + paymentData.bill_to_address_country
-
-            // setpaymentData({
-            //     ...paymentData,
-            //     access_key: "51f40be210ff34cba0079b19efd3ab42",  //live credit card,
-            //     profile_id: "0CE666B6-7064-4D68-9DFE-EC46776C02A4",  //live credit card
-            //     transaction_uuid: paymentData.time + '123',
-            //     signed_date_time: now,
-            //     locale: "en",
-            //     transaction_type: "sale",
-            //     reference_number: paymentData.time,
-            //     amount: totalPrice,
-            //     currency: "MYR",
-            //     bill_to_surname: lastname,
-            //     bill_to_forename: firstname,
-            //     bill_to_email: email,
-            //     bill_to_address_line1: addressLine1,
-            //     bill_to_address_city: city,
-            //     bill_to_address_postal_code: poscode,
-            //     bill_to_address_state: state,
-            //     bill_to_address_country: "MY",
-            //     signed_field_names: "access_key,profile_id,transaction_uuid,signed_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency,bill_to_surname,bill_to_forename,bill_to_email,bill_to_address_line1,bill_to_address_city,bill_to_address_country",
-            //     signature: "access_key=" + paymentData.access_key + ",profile_id=" + paymentData.profile_id + ",transaction_uuid=" + paymentData.transaction_uuid + ",signed_field_names=" + paymentData.signed_field_names + ",signed_date_time=" + paymentData.signed_date_time + ",locale=" + paymentData.locale + ",transaction_type=sale,reference_number=" + paymentData.reference_number + ",amount=" + paymentData.amount + ",currency=" + paymentData.currency + ",bill_to_surname=" + paymentData.bill_to_surname + ",bill_to_forename=" + paymentData.bill_to_forename + ",bill_to_email=" + paymentData.bill_to_email + ",bill_to_address_line1=" + paymentData.bill_to_address_line1 + ",bill_to_address_city=" + paymentData.bill_to_address_city + ",bill_to_address_country=" + paymentData.bill_to_address_country
-            // })
-
-            // console.log("Transaction", paymentData)
-            // // console.log("Transactioncrypto", crypto.createHmac('sha256',APIKey))
-            // const crypto = require('crypto');
-
-            // const algorithm = 'sha256';
-            // const secret = APIKey;
-            // const message = paymentData.signature;
-
-            // const hmac = crypto.createHmac(algorithm, secret);
-            // hmac.update(message);
-            // const hash = hmac.digest('hex');
-
-            // var signed = crypto
-            //     .createHmac('sha256', APIKey)
-            //     .update(paymentData.signature)
-            //     .digest('base64');
         }
 
-    }, [])
+    }, [deliveryFee])
 
 
     // const onSubmit = async () => {
@@ -302,7 +253,6 @@ export default function CheckoutPayment({
             // live credit card
             const APIKey = "2c57e2f0161a450ebe5fb67ffbdd51fc196b0256ed1940158f54990b57f4ec3c1e08823fa84c4596bea898bb2b53e6d124414d118b954914806c182092123d4008ba628a8eaf403faa7e3c1adb470ee9d6044313451442d2acd532b47d42e00a2fdecfa996334065a94e0d46d32b7534b3fb4016198047568afd83c99823f6ed"
 
-
             // let access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
             // let profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
             let access_key = "51f40be210ff34cba0079b19efd3ab42";  //live credit card,
@@ -312,7 +262,9 @@ export default function CheckoutPayment({
             let locale = "en";
             let transaction_type = "sale";
             let reference_number = paymentData.time;
-            let amount = paymentData.totalPrice;
+            // let amount = paymentData.totalPrice;
+
+            let amount = deliveryFee[0].ShippingCost == null ? parseFloat(total).toFixed(2) : parseFloat(total + deliveryFee[0].ShippingCost).toFixed(2)
             let currency = "MYR";
             let bill_to_surname = paymentData.lastname;
             let bill_to_forename = paymentData.firstname;
@@ -349,7 +301,8 @@ export default function CheckoutPayment({
                 bill_to_address_country: "MY",
                 signed_field_names: signed_field_names,
                 signature: signature,
-                signed: base64EncodedHmac
+                signed: base64EncodedHmac,
+                deliveryPrice: deliveryFee[0].ShippingCost == null ? 0 : deliveryFee[0].ShippingCost
             })
         }
     }
@@ -430,12 +383,18 @@ export default function CheckoutPayment({
             </Grid>
 
             <Grid item xs={12} md={4}>
-                <CheckoutBillingInfo onBackStep={onBackStep} billing={address} />
+                <CheckoutBillingInfo onBackStep={onBackStep} shipping={deliveryFee} billing={address} />
                 <CheckoutSummary
                     enableEdit
-                    total={total}
+                    total={total + paymentData.deliveryPrice}
                     subtotal={subtotal}
                     discount={discount}
+                    promoCode={promoCode}
+                    validPromoData={validPromoData}
+                    onRemovePromoError={onRemovePromoError}
+                    onHandleDiscount={onHandleDiscount}
+                    onApplyDiscount={onApplyDiscount}
+                    onHandlePromoCode={onHandlePromoCode}
                     shipping={deliveryFee}
                     onEdit={() => onGotoStep(0)}
                 />
@@ -454,11 +413,15 @@ export default function CheckoutPayment({
                     textInside={"Complete Order"}
                     isVoucherApply={isVoucherApply}
                     totalApplyPromo={totalApplyPromo}
-                    total={total}
+                    total={total + paymentData.deliveryPrice}
+                    shipping={deliveryFee}
                     Userdetails={address}
                     BankID={BankID}
                     fpx_information={fpx_information}
                     paymentData={paymentData}
+                    validPromoData={validPromoData}
+                    promoCode={promoCode}
+                    checkout={checkout}
                 />
             </Grid>
         </Grid>

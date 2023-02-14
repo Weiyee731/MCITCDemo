@@ -57,7 +57,6 @@ function ProductCard(props) {
   let badges = [];
   let image;
   let price;
-  let PromoPrice;
   let features;
   let wishlistView;
   let PromoTag;
@@ -231,7 +230,7 @@ function ProductCard(props) {
           {
             PromoTag.map((x, index) => {
               return (
-                <Chip size="small" key={index} variant="filled" label={<div>{x.tag}% OFF</div>} key={x.id} color='primary' style={{
+                <Chip size="small" key={index} variant="filled" label={<div>{x.tag}% OFF</div>} color='primary' style={{
                   backgroundColor: x.color
                   // , boxShadow: "rgb(255 103 128 / 80%) 0px 8px 15px -6px"
                 }} />

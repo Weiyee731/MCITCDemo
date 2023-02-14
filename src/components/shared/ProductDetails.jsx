@@ -1,5 +1,5 @@
 // react
-import React, { Component } from "react";
+import React, { Component, memo } from "react";
 
 // third-party
 import classNames from "classnames";
@@ -31,6 +31,33 @@ import { FacebookIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareBut
 import IndicatorAccount from "../header/IndicatorAccount";
 import LoginComponent from "../../pages/login/login.component";
 
+const PriceSection = memo(({ product }) => {
+    let component;
+    let price = product.ProductPrice === null ? "N/A" : <Currency value={product.ProductPrice} currency={"RM"} />;
+    if (product.ProductPromotion && JSON.parse(product.ProductPromotion).length > 0) {
+        let promotion = JSON.parse(product.ProductPromotion)[0];
+        component =
+            <div className="wrapper">
+                <div className="product__prices">
+                    <span className="product__old-price mr-2">
+                        <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
+                    </span>
+                    <span className="product__new-price product__prices">
+                        <Currency value={JSON.parse(product.ProductPromotion)[0].PromotionPrice} currency={"RM"} />
+                    </span>
+                    {/* <span className="ml-2">
+                        <Chip variant="filled" label={<div>{JSON.parse(product.ProductPromotion)[0].ProductDiscount}% OFF</div>} color='primary' style={{ backgroundColor: "#d23f57" }} />
+                    </span> */}
+                </div>
+            </div>
+    }
+    else {
+        component = <div className="product__prices">{price}</div>
+    }
+    return component;
+});
+
+
 class ProductDetails extends Component {
     constructor(props) {
         super(props);
@@ -48,8 +75,9 @@ class ProductDetails extends Component {
             isProductSet: false,
             isTimerEnd: false,
             pathname: "",
-            count: 0
+            count: 0,
 
+            productId:0
         };
         this.addCart = this.addCart.bind(this)
         this.handleWishlist = this.handleWishlist.bind(this)
@@ -90,7 +118,7 @@ class ProductDetails extends Component {
                         productVariationType: variation.ProductVariation,
                     })
             })
-            this.setState({ productPrice: product.ProductPrice, isProductSet: true })
+            this.setState({ productPrice: product.ProductPrice, isProductSet: true,productId :product.ProductID })
         } else {
             this.setState({ isProductSet: false })
         }
@@ -282,6 +310,7 @@ class ProductDetails extends Component {
                                 images={typeof product.ProductImages === "string" && product.ProductImages !== "[]" ? JSON.parse(product.ProductImages) : [Logo]}
                                 baseColor={baseColor}
                                 highlightColor={highlightColor}
+                                product={product}
                             />
                             :
                             <Link to={url.product(product)}>
@@ -310,61 +339,61 @@ class ProductDetails extends Component {
                                         {this.wishlisting(product)}
                                     </div>
                                     <div className="row" style={{ display: "flex", flexDirection: "row", }}>
-                                        <h3 className="col-11 product__name">{product.ProductName}</h3>
-                                        <div className="col-1">
-                                            {/* <a data-tip data-event='click focus'>
+                                        <h3 className="col-12 product__name">{product.ProductName}</h3>
+                                        {/* <div className="col-1"> */}
+                                        {/* <a data-tip data-event='click focus'>
                                                 <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
                                                     style={{ cursor: "pointer" }} />
                                             </a>
                                             <ReactTooltip globalEventOff='click' place="top" type="dark" effect="solid" clickable={true} zIndex={10}> */}
-                                            <div className="sticky_share_btn">
-                                                <div className="fixed_share">
-                                                    <ul className="listing">
-                                                        <li className="facebook">
-                                                            <FacebookShareButton
-                                                                className="fadeIn"
-                                                                openShareDialogOnClick
-                                                                url={"https://myemporia.my/shop/products/" + product.ProductID}
-                                                                quote="Check this out at MyEmporia, Get it now!"
-                                                                hashtag={"#MyEmporia"}>
-                                                                <FacebookIcon size={35} round={true} />
-                                                            </FacebookShareButton>
-                                                        </li>
-                                                        <li className="pinterest">
-                                                            <TelegramShareButton
-                                                                className="fadeIn"
-                                                                openShareDialogOnClick
-                                                                title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
-                                                                url={"https://myemporia.my/shop/products/" + product.ProductID} >
-                                                                <TelegramIcon size={35} round={true} />
-                                                            </TelegramShareButton>
-                                                        </li>
-                                                        <li className="twitter">
-                                                            <TwitterShareButton
-                                                                className="fadeIn"
-                                                                openShareDialogOnClick
-                                                                url={"https://myemporia.my/shop/products/" + product.ProductID} >
-                                                                <TwitterIcon size={35} round={true} />
-                                                            </TwitterShareButton>
-                                                        </li>
-                                                        <li className="whatsapp">
-                                                            <WhatsappShareButton
-                                                                className="fadeIn"
-                                                                openShareDialogOnClick
-                                                                title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
-                                                                separator={"/n "}
-                                                                url={"https://myemporia.my/shop/products/" + product.ProductID}>
-                                                                <WhatsappIcon size={35} round={true} />
-                                                            </WhatsappShareButton>
-                                                        </li>
-                                                    </ul>
-                                                    <span className="share-toggle">
-                                                        <i className="fa fa-share-alt"></i>
-                                                    </span>
-                                                </div>
+                                        <div className="sticky_share_btn">
+                                            <div className="fixed_share">
+                                                <ul className="listing">
+                                                    <li className="facebook">
+                                                        <FacebookShareButton
+                                                            className="fadeIn"
+                                                            openShareDialogOnClick
+                                                            url={"https://myemporia.my/shop/products/" + product.ProductID}
+                                                            quote="Check this out at MyEmporia, Get it now!"
+                                                            hashtag={"#MyEmporia"}>
+                                                            <FacebookIcon size={35} round={true} />
+                                                        </FacebookShareButton>
+                                                    </li>
+                                                    <li className="pinterest">
+                                                        <TelegramShareButton
+                                                            className="fadeIn"
+                                                            openShareDialogOnClick
+                                                            title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                                                            url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                                                            <TelegramIcon size={35} round={true} />
+                                                        </TelegramShareButton>
+                                                    </li>
+                                                    <li className="twitter">
+                                                        <TwitterShareButton
+                                                            className="fadeIn"
+                                                            openShareDialogOnClick
+                                                            url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                                                            <TwitterIcon size={35} round={true} />
+                                                        </TwitterShareButton>
+                                                    </li>
+                                                    <li className="whatsapp">
+                                                        <WhatsappShareButton
+                                                            className="fadeIn"
+                                                            openShareDialogOnClick
+                                                            title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                                                            separator={"/n "}
+                                                            url={"https://myemporia.my/shop/products/" + product.ProductID}>
+                                                            <WhatsappIcon size={35} round={true} />
+                                                        </WhatsappShareButton>
+                                                    </li>
+                                                </ul>
+                                                <span className="share-toggle">
+                                                    <i className="fa fa-share-alt"></i>
+                                                </span>
                                             </div>
-                                            {/* </ReactTooltip> */}
                                         </div>
+                                        {/* </ReactTooltip> */}
+                                        {/* </div> */}
                                     </div>
                                     <div className="product__rating">
                                         <div className="product__rating-stars">
@@ -393,6 +422,11 @@ class ProductDetails extends Component {
                                         </div>
                                     </div>
                                     <ul className="product__meta">
+                                        {/* {
+                                            product.ProductPromotion && JSON.parse(product.ProductPromotion).length > 0 &&
+                                            <Chip size="small" variant="outlined" label={`${JSON.parse(product.ProductPromotion)[0].ProductDiscount} % OFF`} style={{ backgroundColor: "#d23f57", color: '#ffffff',borderRadius:'0px' }} />
+                                        }
+                                        &nbsp; */}
                                         {
                                             this.state.isVariationSet === true ?
                                                 this.state.productQuantity > 0 ?
@@ -409,6 +443,7 @@ class ProductDetails extends Component {
                                         <Chip variant="outlined" color="secondary" label={"Brand: " + (product.Brand === "-" ? "None" : product.Brand)} size="small">
                                             {/* <Link to="/">{product.Brand}</Link> */}
                                         </Chip>&nbsp;
+
                                         <Chip variant="outlined" color="info" label={"SKU: " + (product.SKU === "-" ? "N/A" : product.SKU)} size="small" />&nbsp;
                                     </ul>
                                     {/* <div className="product__seller">
@@ -460,14 +495,12 @@ class ProductDetails extends Component {
                                     </div> */}
                                 </div>
                                 <div className="product__sidebar">
-                                    <div className="product__prices"> {product.ProductPrice !== null ? 'RM ' + product.ProductPrice : "N/A"}</div>
+                                    <PriceSection product={product} />
                                     {
                                         variation !== null && variation !== "" && variation !== undefined && variation.ProductVariation !== "None" &&
                                         (
                                             <div className="product__option">
-                                                <label
-                                                    className="product__option-label"
-                                                >
+                                                <label className="product__option-label">
                                                     {variation.ProductVariation}
                                                 </label>
                                                 <div className="product__variation">
@@ -504,7 +537,7 @@ class ProductDetails extends Component {
 
                                     <div className="product__option">
                                         <div className="row form-group product__option d-flex align-items-center">
-                                            <div className="col-3">
+                                            <div className="col-2">
                                                 <label
                                                     htmlFor="product-quantity"
                                                     className="product__option-label"

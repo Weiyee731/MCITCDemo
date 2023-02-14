@@ -85,6 +85,7 @@ const INITIAL_STATE = {
   fpxResponseList: [],
   creditCardOrder: [],
   postcodes: [],
+  promoCode: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -336,6 +337,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
     //     loading: false,
     //     promotions: action.payload,
     //   });
+
+    case GitAction.checkPromoCode:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.checkedPromoCode:
+      return Object.assign({}, state, {
+        loading: false,
+        promoCode: action.payload,
+      });
 
     // case GitAction.AddPromotion:
     //   return Object.assign({}, state, { loading: true });

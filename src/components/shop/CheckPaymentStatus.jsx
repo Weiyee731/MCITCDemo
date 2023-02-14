@@ -185,7 +185,6 @@ class CheckPaymentStatus extends Component {
         let bankFinalList = []
         let bankList = res.data.split('|')[0]
         bankList = bankList.split(',')
-        console.log("bankListbankList", bankList)
         bankList.length > 0 && bankList.map((bank) => {
           this.state.allBankDetails.filter((x) => x.BankID === bank.split("~")[0]).map((x) => {
             let bankListing = {
@@ -204,7 +203,6 @@ class CheckPaymentStatus extends Component {
           })
         })
 
-        console.log("bankList", bankList)
         bankList.length > 0 && bankList.map((bank) => {
 
           const listing = bankFinalList.filter((data) => data.BankID !== null && data.BankID.toLowerCase().includes(bank.split("~")[0].toLowerCase()))
@@ -251,9 +249,7 @@ class CheckPaymentStatus extends Component {
 
       let bankingdata = this.state.fpx_buyerAccNo + "|" + this.state.fpx_buyerBankBranch + "|" + bankid + "|" + this.state.fpx_buyerEmail + "|" + this.state.fpx_buyerIban + "|" + this.state.fpx_buyerId + "|" + this.state.fpx_buyerName + "|" + this.state.fpx_makerName + "|" + this.state.fpx_msgToken + "|" + this.state.fpx_msgType + "|" + this.state.fpx_productDesc + "|" + this.state.fpx_sellerBankCode + "|" + this.state.fpx_sellerExId + "|" + this.state.fpx_sellerExOrderNo + "|" + this.state.fpx_sellerId + "|" + this.state.fpx_sellerOrderNo + "|" + this.state.fpx_sellerTxnTime + "|" + parseFloat(this.state.fpx_txnAmount).toFixed(2) + "|" + this.state.fpx_txnCurrency + "|" + this.state.fpx_version
 
-      // console.log("bankingdata", bankingdata)
-      // console.log("bankingdata this.state.fpx_buyerAccNo + | + this.state.fpx_buyerBankBranch + | + bankid + | + this.state.fpx_buyerEmail + | + this.state.fpx_buyerIban + |+ this.state.fpx_buyerId + | + this.state.fpx_buyerName +| + this.state.fpx_makerName + | + this.state.fpx_msgToken + | + this.state.fpx_msgType + | + this.state.fpx_productDesc + | + this.state.fpx_sellerBankCode + | + this.state.fpx_sellerExId + | + fpx_sellerExOrderNo + | + this.state.fpx_sellerId + | + fpx_sellerOrderNo + | + fpx_sellerTxnTime + | + this.state.fpx_txnAmount+ | + this.state.fpx_txnCurrency + | + this.state.fpx_version")
-      let URL = "https://myemporia.my/payment/check.php"
+  
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
       const formData = new FormData()
       formData.append("bankingdata", bankingdata);
@@ -404,7 +400,7 @@ class CheckPaymentStatus extends Component {
             {
               this.state.finalAllBankDetails !== null && this.state.finalAllBankDetails.filter((x) => x.BankType === type).map((details) =>
                 <option disabled={details.BankStatus === "B" ? true : false} value={details.BankID} key={details.BankID}  >
-                  {console.log("BANKBANK", details)}
+               
                   {details.PaymentMethod}{details.BankStatus === "B" ? " (Offline)" : ""}
                 </option>
               )

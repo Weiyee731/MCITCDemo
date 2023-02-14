@@ -32,11 +32,15 @@ export default function BlockProducts(props) {
     const blockClasses = classNames("block-products__list-item", {
       "block-products-carousel--loading": loading,
     });
-    const productsList = products.map((product, index) => (
-      <Card elevation={2} key={index} className={blockClasses}>
+  
+    const productsList = products.map((product, index) => {
+      return(
+        <Card elevation={2} key={index} className={blockClasses}>
         <ProductCard {...props} product={product} layout="grid-sm"/>
       </Card>
-    ));
+      )
+    }  
+    );
 
     smalls = <div className="block-products__list">{productsList}</div>;
   }
