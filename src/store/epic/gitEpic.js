@@ -2230,9 +2230,11 @@ export class GitEpic {
           return fetch(url + "Order_AddOrder"
             , {
               method: 'POST',
+
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Headers': '*',
               },
               body: JSON.stringify({
                 USERID: action.payload.UserID,
