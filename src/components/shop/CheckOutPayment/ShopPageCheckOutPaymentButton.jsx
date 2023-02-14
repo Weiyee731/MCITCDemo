@@ -61,7 +61,7 @@ export default function CheckoutCartCheckOutButton({
 
         data.map((x, index) => {
             ProductID = index === 0 ? x.product.ProductID : ProductID + "," + x.product.ProductID
-            UserCartID.push(x.product.UserCartID)
+            UserCartID = index === 0 ? x.product.UserCartID : UserCartID + "," + x.product.UserCartID
             ProductQuantity = index === 0 ? x.product.ProductQuantity : ProductQuantity + "," + x.product.ProductQuantity
             ProductVariationDetailID = index === 0 ? x.product.ProductVariationDetailID : ProductVariationDetailID + "," + x.product.ProductVariationDetailID
         })
@@ -119,7 +119,7 @@ export default function CheckoutCartCheckOutButton({
 
         data.map((x, index) => {
             ProductID = index === 0 ? x.product.ProductID : ProductID + "," + x.product.ProductID
-            UserCartID.push(x.product.UserCartID)
+            UserCartID = index === 0 ? x.product.UserCartID : UserCartID + "," + x.product.UserCartID
             ProductQuantity = index === 0 ? x.product.ProductQuantity : ProductQuantity + "," + x.product.ProductQuantity
             ProductVariationDetailID = index === 0 ? x.product.ProductVariationDetailID : ProductVariationDetailID + "," + x.product.ProductVariationDetailID
         })
