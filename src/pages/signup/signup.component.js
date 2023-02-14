@@ -21,6 +21,7 @@ import { Modal, ModalBody } from "reactstrap";
 import CloseIcon from '@mui/icons-material/Close';
 import { MuiOtpInput } from 'mui-one-time-password-input'
 
+import styled from 'styled-components';
 
 // Application
 import Logo from "../../assets/Emporia.png";
@@ -86,6 +87,13 @@ const SignUp = (props) => {
     //     { title: "Login", url: "/login" },
     //     { title: "SignUp", url: "" },
     // ];
+
+    const StyledDiv = styled.div`
+  color: #2b535e;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+`;
 
     const checkFormIsFilled = () => {
         verifyPassFormat();
@@ -368,11 +376,11 @@ const SignUp = (props) => {
 
     return (
         <div className="block block--margin-top" style={{ width: "100%" }}>
-            <div className="text-center">
+            <div className="text-center mt-3">
                 <img
                     src={Logo}
                     alt="MyEmporia"
-                    height="250px"
+                    height="120px"
                     width="auto"
                     className="mx-auto"
                 ></img>
@@ -381,7 +389,7 @@ const SignUp = (props) => {
                 props.registerUser.length > 0 && props.registerUser[0].UserID > 0 ?
                     handleOTP()
                     :
-                    <div className="container" style={{ width: "100%" }}>
+                    <div className="container mt-5" style={{ width: "100%" }}>
                         <div className="text-center">
                             <h4>Create a new MyEmporia's account</h4>
                         </div>
@@ -482,11 +490,17 @@ const SignUp = (props) => {
                                         Sign Up
                                     </button>
 
-                                    <div className="SignUpForm-Submit mt-3">
-                                        Already have an account?
-                                        <Link onClick={() => props.getSignUp(true, false)}>
+                                    <div>
+                                        <p className="text-center mt-3" style={{ fontSize: "13px", paddingTop: "10px" }}>
+                                            By sigining up, you agree to MyEmporia's <br />
+                                            <a href="./site/terms">Terms & Condition</a> and <a href="./site/policy">Privacy Policy</a>
+                                        </p>
+                                    </div>
+                                    <div className="SignUpForm-Submit mt-3" style={{ fontSize: "14px" }}>
+                                        Already have an account? 
+                                        <StyledDiv onClick={() => props.getSignUp(true, false)}>
                                             Login
-                                        </Link>
+                                        </StyledDiv>
                                     </div>
 
                                 </div>

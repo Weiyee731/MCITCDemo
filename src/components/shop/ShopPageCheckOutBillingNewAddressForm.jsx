@@ -45,7 +45,7 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
     USERPOSCODE: '',
     USERSTATE: '',
     USERCITY: '',
-    COUNTRYID: 1
+    COUNTRYID: 148
   })
 
   const { addAddress } = useSelector(state => state.counterReducer);

@@ -79,7 +79,7 @@ class AccountPageAddresses extends Component {
       editAddress: false,
       deleteAddress: false,
     };
-    this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
+    this.props.CallAllAddress({ USERID: localStorage.getItem("id") });
     this.props.CallCountry();
     this.handleCallbackfromAdd = this.handleCallbackfromAdd.bind(this);
     this.handleCallbackfromEdit = this.handleCallbackfromEdit.bind(this);
@@ -92,26 +92,26 @@ class AccountPageAddresses extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.addresses !== this.props.addresses && this.state.changeDefaultAddress === true) {
+    if (prevProps.addresses !== this.props.addresses && this.state.changeDefaultAddress === true) {
       this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
       this.setState({ changeDefaultAddress: false });
     }
 
-    if(this.state.addAddress === true && this.props.addAddress !== undefined && this.props.addAddress.length > 0) {
+    if (this.state.addAddress === true && this.props.addAddress !== undefined && this.props.addAddress.length > 0) {
       this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
       this.setState({ addAddress: false });
     }
 
-    if(this.state.deleteAddress === true && this.props.deleteAddress !== undefined && this.props.deleteAddress.length > 0) {
+    if (this.state.deleteAddress === true && this.props.deleteAddress !== undefined && this.props.deleteAddress.length > 0) {
       this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
       this.setState({ deleteAddress: false });
     }
 
-    if(this.state.editAddress === true && this.props.addresses !== undefined && this.props.addresses.length > 0) {
+    if (this.state.editAddress === true && this.props.addresses !== undefined && this.props.addresses.length > 0) {
       this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
       this.setState({ editAddress: false });
     }
-  
+
   }
 
   onAddClick = () => {
@@ -166,7 +166,7 @@ class AccountPageAddresses extends Component {
     };
 
     this.props.CallDeleteAddress(deletedAddress);
-    this.setState({ deleteAddress: true})
+    this.setState({ deleteAddress: true })
   };
 
   render() {

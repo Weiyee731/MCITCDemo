@@ -63,6 +63,9 @@ export class GitAction {
   static SendOTPVerification = "SEND-OTP-VERIFICATION";
   static SentOTPVerification = "SENT-OTP-VERIFICATION";
 
+
+  static ClearOTPVerification = "CLEAR-OTP-VERIFICATION";
+
   static UpdateContact = "UPDATE-CONTACT";
   static UpdatedContact = "UPDATED-CONTACT";
 
@@ -198,6 +201,12 @@ export class GitAction {
     return {
       type: GitAction.SendOTPVerification,
       payload: propsData,
+    };
+  }
+
+  static ClearCallOTPVerification() {
+    return {
+      type: GitAction.ClearOTPVerification,
     };
   }
 

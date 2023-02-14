@@ -55,7 +55,7 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
   const [prevValue, setPrevValue] = useState(deleteAddress);
 
   useEffect(() => {
-    dispatch(GitAction.CallAllAddress({ USERID: 1 }));
+    dispatch(GitAction.CallAllAddress({ USERID: localStorage.getItem("id") }));
   }, [deleteAddress, addAddress]);
 
   useEffect(() => {

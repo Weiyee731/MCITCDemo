@@ -88,18 +88,36 @@ class BlockSlideShow extends Component {
       title: "",
       text: "",
       image_classic: {
-        ltr: "https://myemporia.my/images/slides/slide_4.png",
-        rtl: "https://myemporia.my/images/slides/slide_4.png",
+        ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+        rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
       },
       image_full: {
-        ltr: "https://myemporia.my/images/slides/slide_4.png",
-        rtl: "https://myemporia.my/images/slides/slide_4.png",
+        ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+        rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
         // ltr: banner1,
         // rtl: banner1,
       },
       image_mobile: {
-        ltr: "https://myemporia.my/images/slides/slide_4.png",
-        rtl: "https://myemporia.my/images/slides/slide_4.png",
+        ltr: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+        rtl: "https://myemporia.my/images/slides/Slider_20230214_1.png",
+      },
+    },
+    {
+      title: "",
+      text: "",
+      image_classic: {
+        ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+        rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+      },
+      image_full: {
+        ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+        rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+        // ltr: banner1,
+        // rtl: banner1,
+      },
+      image_mobile: {
+        ltr: "https://myemporia.my/images/slides/Slider_20230214_2.png",
+        rtl: "https://myemporia.my/images/slides/Slider_20230214_2.png",
       },
     },
     // {
@@ -191,50 +209,50 @@ class BlockSlideShow extends Component {
       ];
 
       return (
-        
-          <div key={index} className="block-slideshow__slide">
-            {/* <div
+
+        <div key={index} className="block-slideshow__slide">
+          {/* <div
             className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
             style={{
               backgroundImage: `url(${image})`,
             }}
           /> */}
-            <img
-              className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
-              // style={{
-              //   width: '100vw',
-              //   position: 'relative',
-              //   left: '50%',
-              //   right: '50%',
-              //   marginLeft: '-50vw',
-              //   marginRight: '-50vw'
-              // }}
-              src={image}
-              width={"100%"}
-              height={"auto"}
+          <img
+            className="block-slideshow__slide-image block-slideshow__slide-image--desktop"
+            // style={{
+            //   width: '100vw',
+            //   position: 'relative',
+            //   left: '50%',
+            //   right: '50%',
+            //   marginLeft: '-50vw',
+            //   marginRight: '-50vw'
+            // }}
+            src={image}
+            width={"100%"}
+            height={"auto"}
+          />
+          <div
+            className="block-slideshow__slide-image block-slideshow__slide-image--mobile"
+            style={{
+              backgroundImage: `url(${slide.image_mobile[direction]})`,
+            }}
+          />
+          <div className="block-slideshow__slide-content">
+            <div
+              className="block-slideshow__slide-title"
+              dangerouslySetInnerHTML={{ __html: slide.title }}
             />
             <div
-              className="block-slideshow__slide-image block-slideshow__slide-image--mobile"
-              style={{
-                backgroundImage: `url(${slide.image_mobile[direction]})`,
-              }}
+              className="block-slideshow__slide-text"
+              dangerouslySetInnerHTML={{ __html: slide.text }}
             />
-            <div className="block-slideshow__slide-content">
-              <div
-                className="block-slideshow__slide-title"
-                dangerouslySetInnerHTML={{ __html: slide.title }}
-              />
-              <div
-                className="block-slideshow__slide-text"
-                dangerouslySetInnerHTML={{ __html: slide.text }}
-              />
-            </div>
-            <div className="block-slideshow__slide-button">
-              <Link to={"/shop/ProductListing/type:Merchant&typevalue:" + 0} className="btn btn-primary btn-lg" style={{ borderRadius: "5px" }}>
-                Shop Now
-              </Link>
-            </div>
           </div>
+          <div className="block-slideshow__slide-button">
+            <Link to={"/shop/ProductListing/type:Merchant&typevalue:" + 0} className="btn btn-primary btn-lg" style={{ borderRadius: "5px" }}>
+              Shop Now
+            </Link>
+          </div>
+        </div>
 
       );
     });

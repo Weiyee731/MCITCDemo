@@ -26,14 +26,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Button from "@mui/material/Button";
 import DialogContentText from '@mui/material/DialogContentText';
-import { isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
+import { isArrayNotEmpty, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import { toast } from "react-toastify";
 import { Modal, ModalBody } from "reactstrap";
 import CloseIcon from '@mui/icons-material/Close';
-// import OtpInput from "react-otp-input";
 import { Link, withRouter } from "react-router-dom";
 import SignupComponent from "../signup/signup.component";
 
+import { MuiOtpInput } from 'mui-one-time-password-input'
 import jwt_decode from "jwt-decode";
 // import FacebookLogin from '@greatsumini/react-facebook-login';
 // import SocialLogin from "./socialLogin"
@@ -60,6 +60,7 @@ function mapDispatchToProps(dispatch) {
     CallResetCheckUserExists: (credentials) => dispatch(GitAction.CallResetCheckUserExists(credentials)),
     CallSendOTP: (credentials) => dispatch(GitAction.CallSendOTP(credentials)),
     CallUpdatePassword: (credentials) => dispatch(GitAction.CallUpdatePassword(credentials)),
+    ClearCallOTPVerification: () => dispatch(GitAction.ClearCallOTPVerification()),
   };
 }
 
@@ -228,7 +229,9 @@ class LoginComponent extends Component {
         toast.error("The username and password does not match.")
       }
     }
+
     if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true && this.state.isReturn === false) {
+
       if (this.props.emailVerification[0].UserID !== undefined) {
         this.setState({ resetUserID: this.props.emailVerification[0].UserID, isEmailVerify: true, verifyEmail: false, isReturn: true })
       }
@@ -240,19 +243,33 @@ class LoginComponent extends Component {
     }
 
     if (prevProps.updatePassword !== this.props.updatePassword) {
-      if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password had Changed") {
+      if (this.props.updatePassword && isArrayNotEmpty(this.props.updatePassword) && this.props.updatePassword[0].UserID !== undefined) {
         toast.success("Your password has been updated, try to login with new password");
         setTimeout(() => {
-          // this.props.history.push("/EmporiaDev/login");
           window.location.reload(true)
-        }, 3000)
+        }, 5000)
 
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
       }
     }
+
+    if (this.props.verifyOTP !== prevProps.verifyOTP && this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0 && this.state.startCountDown === false) {
+      if (this.props.verifyOTP[0].UserID !== undefined) {
+        this.stopTimer(60);
+        this.setState({
+          startCountDown: true,
+          enableOTP: true,
+          validPassword: false,
+        });
+        this.runTimer();
+        this.props.ClearCallOTPVerification()
+      }
+      else {
+        toast.warning("Request failed! Please try again");
+      }
+    }
   }
-  
 
   toggleShow() {
     this.setState({ hidden: !this.state.hidden });
@@ -294,8 +311,8 @@ class LoginComponent extends Component {
         otp: otp,
         UpdatedValue: this.state.UpdatedValue
       });
-      this.setState({ startCountDown: false });
-      this.stopTimer(60);
+      // this.setState({ startCountDown: false, enableOTP: false });
+      // this.stopTimer(60);
     }
   };
 
@@ -328,18 +345,6 @@ class LoginComponent extends Component {
       GETOTPTYPE: this.state.GETOTPTYPE,
       UpdatedValue: this.state.UPDATETYPE
     }); //send otp.
-
-    if (this.props.verifyOTP !== undefined && this.props.verifyOTP.length > 0) {
-      this.stopTimer(60);
-      this.setState({
-        startCountDown: true,
-        enableOTP: true,
-        validPassword: false,
-      });
-      this.runTimer();
-    } else {
-      toast.warning("Request failed! Please try again");
-    }
   };
 
   runTimer() {
@@ -410,6 +415,10 @@ class LoginComponent extends Component {
 
 
   render() {
+
+    if (this.state.counter === 0 && this.state.enableOTP === true)
+      this.setState({ enableOTP: false, otp: "" })
+
     return (
       <>
         <Modal
@@ -424,16 +433,16 @@ class LoginComponent extends Component {
               data-dismiss="modal" />
             <div>
               <form onSubmit={this.OnSubmitLogin} className="container block block--margin-top">
-                <div className="text-center">
+                <div className="text-center  mt-3">
                   <img
                     src={Logo}
                     alt="MyEmporia"
-                    height="250px"
+                    height="120px"
                     width="auto"
                     className="mx-auto"
                   ></img>
                 </div>
-                <div className="">
+                <div className=" mt-5">
                   <div lg="5" md="5">
                     <div className="d-flex justify-content-center"><h4>Sign In</h4></div>
 
@@ -536,10 +545,10 @@ class LoginComponent extends Component {
 
               <Dialog open={this.state.isForgetPassword} onClose={() => { this.setState(initialState) }} fullWidth={true} maxWidth="xs">
                 <DialogContent dividers>
-                  <div className="text-center">
-                    <img src={Logo} alt="Emporia" height="250px" width="auto" className="mx-auto" ></img>
+                  <div className="text-center mt-3" >
+                    <img src={Logo} alt="Emporia" height="120px" width="auto" className="mx-auto" ></img>
                   </div>
-                  <div className="text-center mt-2">
+                  <div className="text-center mt-5">
                     <h5>Forget Password</h5>
                   </div>
 
@@ -620,26 +629,18 @@ class LoginComponent extends Component {
                               </button>
                             )}
                           </div>
-
                           {this.state.enableOTP ? (
-                            <div>
+                            <div className="row my-4">
                               <div className="row contactrowStyle">
-                                <div className="col-6">
-                                  <p className=" font">
-                                    Enter the code we sent to your email{" "}
-                                    {this.state.resetEmail.length > 0 && this.censorEmail(this.state.resetEmail)}
-                                  </p>
-                                </div>
+                                <p className=" font">
+                                  Enter the code we sent to your email{" "}
+                                  {this.state.resetEmail.length > 0 && this.censorEmail(this.state.resetEmail)}
+                                </p>
                               </div>
                               <div className="row contactrowStyle">
-                                <div className="col-6 font otp">
-                                  {/* <OtpInput
-                              value={this.state.otp}
-                              onChange={this.handleChange}
-                              numInputs={6}
-                              separator={<span>-</span>}
-                              inputStyle={inputstyle}
-                            /> */}
+                                <div className="font otp">
+                                  <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={this.state.otp} onChange={this.handleChange} />
+
                                 </div>
                               </div>
                             </div>

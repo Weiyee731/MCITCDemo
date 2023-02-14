@@ -237,6 +237,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         verifyOTP: action.payload,
       });
 
+    case GitAction.ClearOTPVerification:
+      return Object.assign({}, state, { loading: true, verifyOTP: [] });
+
     case GitAction.UpdateContact:
       return Object.assign({}, state, { loading: true });
     case GitAction.UpdatedContact:
