@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { withStyles } from '@mui/styles';
-import Rating from '@mui/lab/Rating';
+import { Rating } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import InputLabel from '@mui/material/InputLabel';
@@ -108,9 +108,6 @@ const sortingOption = [
     { value: 'high-to-low', label: 'Price High to Low' }
 ]
 
-
-
-
 class BlockListingDetails extends Component {
     constructor(props) {
         super(props);
@@ -129,7 +126,6 @@ class BlockListingDetails extends Component {
         return ("/shop/ProductListing/type:Category&typevalue:" + ProductCategoryID)
     }
 
-
     componentDidMount() {
         this.props.CallAllProductCategoryListing();
         this.props.CallAllProductsListing({
@@ -140,8 +136,8 @@ class BlockListingDetails extends Component {
             page: 1
         })
 
-        this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined &&
-            this.state.productList.push(JSON.parse(this.props.productsListing))
+        this.props.productsListing !== undefined && this.props.productsListing.length > 0 && 
+            this.state.productList.push(this.props.productsListing)
 
         if (this.props.productCategories !== undefined && this.props.productCategories.length > 0)
             this.handleCategory()
@@ -152,11 +148,11 @@ class BlockListingDetails extends Component {
         if (!this.state.isDataBind) {
             this.setState({ products: this.props.products, isDataBind: true })
         }
-
         if (prevProps.productsListing !== this.props.productsListing) {
-            if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+            if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 
+                ) {
                 this.state.productList.splice(0, this.state.productList.length)
-                this.state.productList.push(JSON.parse(this.props.productsListing))
+                this.state.productList.push(this.props.productsListing)
                 this.setState({ isCheckDataBind: true })
             }
             else {
@@ -762,9 +758,9 @@ class BlockListingDetails extends Component {
                                             color="primary"
                                         >
                                             {
-                                                sortingOption.map((options) => {
+                                                sortingOption.map((options, index) => {
                                                     return (
-                                                        <MenuItem value={options.value}>{options.label}</MenuItem>
+                                                        <MenuItem value={options.value} key={index}>{options.label}</MenuItem>
                                                     )
                                                 })
                                             }
@@ -794,7 +790,7 @@ class BlockListingDetails extends Component {
                                                 :
                                                 <div className="ml-2"><i>No products for this section</i></div>
                                             :
-                                            <LoadingPanel backgroundColor="#f5f5f500"/>
+                                            <LoadingPanel backgroundColor="#f5f5f500" />
                                     }
 
                                 </div>

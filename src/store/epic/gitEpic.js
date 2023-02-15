@@ -1760,18 +1760,28 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.GetProductListing), map(action => {
       return dispatch => {
         try {
+          console.log("getProductsListing2",url +
+          "Product_ItemListByType?Type=" + action.payload.type +
+          "&TypeValue=" + action.payload.typeValue +
+          "&USERID=" + action.payload.userId +
+          "&PROJECTID=2" +
+          "&PRODUCTPERPAGE=" + action.payload.productPage +
+          "&PAGE=" + action.payload.page +
+          "&PLATFORMTYPE=" + platformType)
           return fetch(url +
             "Product_ItemListByType?Type=" + action.payload.type +
             "&TypeValue=" + action.payload.typeValue +
             "&USERID=" + action.payload.userId +
-            "&ProjectID=2" +
+            "&PROJECTID=2" +
             "&PRODUCTPERPAGE=" + action.payload.productPage +
             "&PAGE=" + action.payload.page +
             "&PLATFORMTYPE=" + platformType)
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
+              console.log("getProductsListing1",json)
               if (json[0].ReturnVal === 1) {
+                console.log("getProductsListing",json)
                 return dispatch({ type: GitAction.GotProductListing, payload: JSON.parse(json[0].ReturnData) });
               } else {
                 //toast.error(json[0].ReturnMsg)
@@ -1944,9 +1954,8 @@ export class GitEpic {
   getAllCategories = action$ =>
     action$.pipe(filter(action => action.type === GitAction.GetProductCategory), map(action => {
       return dispatch => {
-        console.log("Product_CategoryListByAll", url + "Product_CategoryListByAll")
         try {
-          return fetch(url + "Product_CategoryListByAll")
+          return fetch(url + "Product_CategoryListByAll?PROJECTID=2")
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)

@@ -22,6 +22,7 @@ function Suggestions(props) {
         context,
         className,
         products,
+        closeSuggestion
     } = props;
 
     const login = () => {
@@ -58,11 +59,11 @@ function Suggestions(props) {
     }
     const rootClasses = classNames(`suggestions suggestions--location--${context}`, className);
 
-    const list = (products && products.map((product) => {
+    const list = (products && products.map((product, ind) => {
         let images = product.data.ProductImage
         return (
 
-            <li key={product.data.ProductID} className="suggestions__item">
+            <li key={ind} className="suggestions__item">
                 {images && images.length > 0 && (
                     <div className="suggestions__item-image product-image">
                         <div className="product-image__body">
@@ -71,17 +72,29 @@ function Suggestions(props) {
                     </div>
                 )}
                 <div className="suggestions__item-info">
-                    <Link className="suggestions__item-name" to={url.product(product.data)}>
+                    {
+                        product.data.ProductCategoryID === 0 ?
+                            (<Link className="suggestions__item-name" to={"/shop/ProductListing/type:Keyword&typevalue:" + product.data.ProductCategory} onClick={() => closeSuggestion()}>
+                                {product.data.ProductCategory}
+                            </Link>)
+                            :
+                            (<Link className="suggestions__item-name" to={"/shop/ProductListing/type:Category&typevalue:" + product.data.ProductCategoryID} onClick={() => closeSuggestion()}>
+                                {product.data.ProductCategory}
+                            </Link>)
+                    }
+
+                    {/* <Link className="suggestions__item-name" to={url.product(product.data)}>
                         {product.data.ProductName}
                     </Link>
                     <div className="suggestions__item-meta">Merchant: {product.data.MerchantShopName}</div>
-                    <div className="suggestions__item-meta">Variation: {product.variation.ProductVariationValue}</div>
+                    <div className="suggestions__item-meta">Variation: {product.variation.ProductVariationValue}</div> */}
                     {/* <div className="suggestions__item-meta">SKU: 83690/32</div> */}
                 </div>
                 <div className="suggestions__item-price" style={{ margin: "auto" }}>
-                    <Currency value={product.variation.ProductVariationPrice} />
+                    Search this
+                    {/* <Currency value={product.variation.ProductVariationPrice} /> */}
                 </div>
-                {context === 'header' && (
+                {/* {context === 'header' && (
                     <div className="suggestions__item-actions">
                         <button
                             type="button"
@@ -89,8 +102,8 @@ function Suggestions(props) {
                             className={classNames("btn btn-primary btn-sm btn-svg-icon")}
                         >
                             <Cart16Svg />
-                        </button>
-                        {/* 
+                        </button> */}
+                {/* 
                         <AsyncAction
                             action={() => cartAddItem(product)}
                             render={({ run, loading }) => (
@@ -106,8 +119,8 @@ function Suggestions(props) {
                                 </button>
                             )}
                         /> */}
-                    </div>
-                )}
+                {/* </div>
+                )} */}
             </li>
         )
     }

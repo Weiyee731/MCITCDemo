@@ -15,43 +15,46 @@ import Suggestions from './Suggestions';
 import { Cross20Svg, Search20Svg } from '../../svg';
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
+import { useDispatch, useSelector } from 'react-redux';
 
 function mapStateToProps(state) {
   return {
     loading: state.counterReducer["loading"],
     products: state.counterReducer["products"],
+    categories: state.counterReducer["categories"],
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    CallAllProductCategory: (prodData) => dispatch(GitAction.CallAllProductCategory(prodData)),
   };
 }
 
-function useCategories() {
-  const [categories, setCategories] = useState([]);
+// function useCategories() {
+//   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    let canceled = false;
+//   useEffect(() => {
+//     let canceled = false;
 
-    const treeToList = (categories, depth = 0) => (
-      categories.reduce(
-        (result, category) => [
-          ...result,
-          { depth, ...category },
-          ...treeToList(category.children || [], depth + 1),
-        ],
-        [],
-      )
-    );
+//     const treeToList = (categories, depth = 0) => (
+//       categories.reduce(
+//         (result, category) => [
+//           ...result,
+//           { depth, ...category },
+//           ...treeToList(category.children || [], depth + 1),
+//         ],
+//         [],
+//       )
+//     );
 
-    return () => {
-      canceled = true;
-    };
-  }, [setCategories]);
+//     return () => {
+//       canceled = true;
+//     };
+//   }, [setCategories]);
 
-  return categories;
-}
+//   return categories;
+// }
 
 function Search(props) {
   const {
@@ -67,7 +70,7 @@ function Search(props) {
   const [hasSuggestions, setHasSuggestions] = useState(false);
   const [suggestedProducts, setSuggestedProducts] = useState([]);
   const [query, setQuery] = useState('');
-  const [category] = useState('[all]');
+  // const [category] = useState('[all]');
   const wrapper = useRef(null);
   const close = useCallback(() => {
     if (onClose) {
@@ -96,6 +99,12 @@ function Search(props) {
   // Cancel previous typing.
   useEffect(() => () => cancelFn(), [cancelFn]);
 
+  useEffect(() => {
+    props.CallAllProductCategory();
+  }, []);
+
+  const { categories } = useSelector(state => state.counterReducer);
+
   const handleFocus = () => {
     setSuggestionsOpen(true);
   };
@@ -118,29 +127,25 @@ function Search(props) {
       timer = setTimeout(() => {
         const options = { limit: 5 };
 
-        if (category !== '[all]') {
-          options.category = category;
-        }
+        let filteredCategory = []
 
-        let filteredProduct = []
-
-        if (props.products.length > 0) {
-          props.products.filter(el => el.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_').toLowerCase().trim().includes(query.toLowerCase().trim())).map((data)=>{
-            if(data.ProductVariation !== null)
-            {
-              JSON.parse(data.ProductVariation).map((x)=>{
-                filteredProduct.push({
-                  data: data,
-                  variation: x
-                })
+        if (categories.length > 0) {
+          categories.filter(el => el.ProductCategory.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '_').toLowerCase().trim().includes(query.toLowerCase().trim())).map((data) => {
+            if (data.ProductCategory !== null) {
+              filteredCategory.push({
+                data: data,
+                variation: []
               })
             }
           })
         }
-        if (filteredProduct.length > 0) {
-          setSuggestedProducts(filteredProduct.slice(0, 5));
-          setHasSuggestions(filteredProduct.length > 0);
+
+        setSuggestedProducts([{ data: { ProductCategory: query ,ProductCategoryID: 0} }])
+        if (filteredCategory.length > 0) {
+          setSuggestedProducts(prevArray => [...prevArray, ...filteredCategory.slice(0, 5)]);
+          setHasSuggestions(filteredCategory.length > 0);
           setSuggestionsOpen(true);
+          console.log("filteredCategory",filteredCategory)
         }
 
         if (canceled) {
@@ -210,7 +215,7 @@ function Search(props) {
             aria-label="Site search"
             type="text"
             autoComplete="off"
-            style={{borderRadius:"5px"}}
+            style={{ borderRadius: "5px" }}
           />
 
           <button className="search__button search__button--type--submit" type="submit"
@@ -220,9 +225,11 @@ function Search(props) {
             <Search20Svg />
           </button>
           {closeButton}
-          <div className="search__border"style={{borderRadius:"5px"}} />
+          <div className="search__border" style={{ borderRadius: "5px" }} />
         </div>
-        <Suggestions className="search__suggestions" context={context} products={suggestedProducts} />
+        <Suggestions className="search__suggestions" context={context} products={suggestedProducts} closeSuggestion={close}
+        //  linktoGo={"/shop/ProductListing/type:Keyword&typevalue:" + suggestedProducts.data.ProductCategory}
+        />
       </div>
     </div >
   );
