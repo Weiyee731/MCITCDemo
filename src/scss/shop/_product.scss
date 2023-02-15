@@ -251,7 +251,7 @@
 .product__prices {
     margin-top: 18px;
     margin-bottom: 14px;
-    font-size: $body-font-size;
+    font-size: 24px;
     font-weight: $font-weight-semi-bold;
     letter-spacing: -.03em;
     color: $price-color;
@@ -259,6 +259,7 @@
 
 .product__new-price {
     color: $price-new-color;
+    font-weight: $font-weight-semi-bold;
     font-size: 24px;
 }
 
@@ -266,6 +267,7 @@
     color: $price-old-color;
     font-weight: $font-weight-extra-light;
     text-decoration: line-through;
+    font-size: 16px;
 }
 
 .product__option {

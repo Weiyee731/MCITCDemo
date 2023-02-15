@@ -42,7 +42,7 @@ const PriceSection = memo(({ product }) => {
                     <span className="product__old-price mr-2">
                         <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
                     </span>
-                    <span className="product__new-price product__prices">
+                    <span className="product__new-price">
                         <Currency value={JSON.parse(product.ProductPromotion)[0].PromotionPrice} currency={"RM"} />
                     </span>
                     {/* <span className="ml-2">

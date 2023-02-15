@@ -155,7 +155,7 @@ class ShopPageCart_side extends Component {
     // ---------------------------------------------------- Check Out ------------------------------------
 
     CheckOutOnClick = (items) => {
-        
+
         if (localStorage.getItem("id")) {
             let ProductIDs = [];
             let ProductQuantity = [];
@@ -210,7 +210,7 @@ class ShopPageCart_side extends Component {
         else {
             this.props.history.push("/EmporiaDev/login");
         }
-    
+
     };
 
     // ---------------------------------------------------- Check Selected ------------------------------------
@@ -268,7 +268,7 @@ class ShopPageCart_side extends Component {
             let image;
             image = (
                 <div className="product-image" key={i}>
-                    <Link to={url.product(item.product)} className="product-image__body" onClick={()=>{this.props.setCartOpen(false)}}>
+                    <Link to={url.product(item.product)} className="product-image__body" onClick={() => { this.props.setCartOpen(false) }}>
                         <img className="product-image__img" src={item.product.ProductImage !== null && item.product.ProductImage !== undefined && item.product.ProductImage.length > 0 ? item.product.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                     </Link>
                 </div>
@@ -295,13 +295,13 @@ class ShopPageCart_side extends Component {
                     </Grid>
                     <Grid item className="cart-table__column--product">
                         <div style={{ fontSize: "14px" }} className="cart-fixNameLength">
-                            <Link to={url.product(item.product)} className="cart-table__product-name" onClick={()=>{this.props.setCartOpen(false)}}>
+                            <Link to={url.product(item.product)} className="cart-table__product-name" onClick={() => { this.props.setCartOpen(false) }}>
                                 {item.product.ProductName}
                             </Link>
                             {
                                 this.state.overProductStockAmountLimitID.length > 0 &&
                                 this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 &&
-                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x,ind) => {
+                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x, ind) => {
                                     return (
                                         <label className='mt-3' style={{ color: "red" }} key={ind}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
                                     )
@@ -311,10 +311,26 @@ class ShopPageCart_side extends Component {
                         <div style={{ fontSize: "11px" }}>
                             Variation: {item.product.ProductVariationValue}
                         </div>
+                        {console.log("cart", item.product)}
                         <div>
-                            <Typography color="#2b535e" fontWeight="500">
-                                <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
-                            </Typography>
+                            {
+                                item.product.ProductPromotion && JSON.parse(item.product.ProductPromotion).length > 0 ?
+
+                                    <div>
+                                        <span className="product-card__new-price">
+                                            <Currency value={JSON.parse(item.product.ProductPromotion)[0].PromotionPrice} currency={"RM"} />
+                                        </span>
+                                        <span className="product-card__old-price">
+                                            <Currency value={item.product.ProductPrice !== null && item.product.ProductPrice !== undefined ? parseFloat(item.product.ProductPrice) : 0} currency={"RM"} />
+                                        </span>
+                                    </div>
+                                    :
+                                    <span className="product-card__new-price">
+                                        <Currency value={item.product.ProductPrice} currency={"RM"} />
+                                    </span>
+
+                                // PromoTag = [{ id: 1, tag: JSON.parse(product.ProductPromotion)[0].ProductDiscount, color: "#d23f57" }]
+                            }
                         </div>
                         <div className='cart-fixinputNumber'>
                             {
@@ -329,6 +345,12 @@ class ShopPageCart_side extends Component {
                                     <label> {this.getItemQuantity(item)} </label>
                             }
                         </div>
+                        <span className='cart-subtotal'>
+                                Total :  
+                            <Typography color="#ff2626" fontWeight="500" className='d-inline-flex'>
+                                <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
+                            </Typography>
+                        </span>
                     </Grid>
                     <Grid item className="cart-button">
                         {
@@ -367,13 +389,13 @@ class ShopPageCart_side extends Component {
                         <PageHeader header="Shopping Cart" breadcrumb={breadcrumb} /> : <PageHeader />
                 } */}
                 {
-                    this.state.MerchantShopName.map((shopName,ind) => {
+                    this.state.MerchantShopName.map((shopName, ind) => {
                         return (
                             <>
                                 <table className="cart__table cart-table" size="small" key={ind}>
                                     <div className='shopName'>
                                         <Typography>
-                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }} onClick={()=>{this.props.setCartOpen(false)}}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>
+                                            <Link to={{ pathname: url.cartMerchant(this.state.cart.filter((x) => x.MerchantShopName === shopName)[0].MerchantID) }} onClick={() => { this.props.setCartOpen(false) }}>{shopName ? <>{shopName} <KeyboardArrowRightIcon /> </> : <>Shop Name  <KeyboardArrowRightIcon /></>}</Link>
                                         </Typography>
                                     </div>
                                     <tbody className="cart-table__body">
@@ -403,7 +425,7 @@ class ShopPageCart_side extends Component {
                             </div>
                             <div className="col-8 checkout-button">
                                 <button className="btn btn-primary" variant="outlined" color="primary" style={{ borderRadius: "5px" }}
-                                    onClick={() => {this.CheckOutOnClick(this.state.selectedProductDetailList); this.props.setCartOpen(false)}}>
+                                    onClick={() => { this.CheckOutOnClick(this.state.selectedProductDetailList); this.props.setCartOpen(false) }}>
                                     Checkout  ( <Currency value={this.state.subtotal}></Currency> )</button>
                             </div>
                         </div>
@@ -429,7 +451,7 @@ class ShopPageCart_side extends Component {
                 <div className="container">
                     <div className="block-empty__body">
                         <div className="block-empty__message">Your shopping cart is empty!</div>
-                        <div className="block-empty__actions" onClick={()=>this.props.setCartOpen(false)}>
+                        <div className="block-empty__actions" onClick={() => this.props.setCartOpen(false)}>
                             <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
                         </div>
                     </div>
