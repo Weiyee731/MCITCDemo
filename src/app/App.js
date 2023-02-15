@@ -76,7 +76,7 @@ class App extends Component {
     const { locale } = this.props;
     const { messages, direction } = languages[locale];
     return (
-      <GoogleOAuthProvider clientId="411428302197-ej2dqpaja8trlt2ms39n69b4bov05jqs.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="1089726873361-rg2eh6mrmac947ofivkecl5mofo6naho.apps.googleusercontent.com">
       <ThemeProvider theme={lightTheme}>
         <GlobalStyles />
         <IntlProvider locale={locale} messages={messages}>

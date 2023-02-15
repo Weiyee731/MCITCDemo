@@ -68,10 +68,10 @@ const SocialLogin = () => {
           >
             <FacebookLoginButton />
           </LoginSocialFacebook>
-
+         
           <LoginSocialGoogle
             isOnlyGetToken
-            client_id={"411428302197-ej2dqpaja8trlt2ms39n69b4bov05jqs.apps.googleusercontent.com" || ''}
+            client_id={"1089726873361-rg2eh6mrmac947ofivkecl5mofo6naho.apps.googleusercontent.com" || ''}
             onLoginStart={onLoginStart}
             onResolve={({ provider, data }) => {
               setProvider(provider)
