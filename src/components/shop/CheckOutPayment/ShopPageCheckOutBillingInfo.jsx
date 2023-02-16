@@ -11,14 +11,13 @@ CheckoutBillingInfo.propTypes = {
     onBackStep: PropTypes.func,
 };
 
-export default function CheckoutBillingInfo({ billing, onBackStep, shipping }) {
+export default function CheckoutBillingInfo({ billing, onBackStep, shipping, isPendingPayment }) {
     const { UserAddressBookID, UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = billing;
     const isDefault = isDefaultAddress === 1
     const fullAddress = UserAddressLine1 + " " + UserAddressLine2 + ", " + UserCity + ", " + UserState
 
     const checkDeliveryTime = (ODA) => {
         let duration = 0
-        console.log("dsadsadsa", ODA)
         if (ODA !== undefined) {
             duration = ODA.split("+")[1]
         }
@@ -30,6 +29,7 @@ export default function CheckoutBillingInfo({ billing, onBackStep, shipping }) {
             <CardHeader
                 title="Billing Address"
                 action={
+                    isPendingPayment !== true &&
                     <Button size="small" startIcon={<EditIcon />} onClick={onBackStep}>
                         Change
                     </Button>

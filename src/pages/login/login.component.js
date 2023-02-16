@@ -223,7 +223,7 @@ class LoginComponent extends Component {
         // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
         // }
 
-        // this.props.history.push("/EmporiaDev/");
+        // this.props.history.push("/");
         window.location.reload(true);
       } else {
         toast.error("The username and password does not match.")
@@ -504,7 +504,7 @@ class LoginComponent extends Component {
 
                     {/* <label onClick={() =>
                           <>
-                            {this.props.history.push("/EmporiaDev/signup")}
+                            {this.props.history.push("/signup")}
                           </>
                         }>
                           Sign Up

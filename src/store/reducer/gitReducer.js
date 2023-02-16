@@ -1036,6 +1036,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
         tracking: action.payload,
       });
 
+    case GitAction.OrderTrackingStatusUpdate:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.OrderTrackingStatusUpdated:
+      return Object.assign({}, state, {
+        loading: false,
+        trackingStatus: action.payload,
+      });
+
     case GitAction.OrderRequestShipmentStatus:
       return Object.assign({}, state, { loading: true });
     case GitAction.OrderRequestedShipmentStatus:
@@ -1043,6 +1051,9 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         trackingStatus: action.payload,
       });
+
+    case GitAction.resetTrackingStatus:
+      return Object.assign({}, state, { trackingStatus: [] });
 
     case GitAction.resetTracking:
       return Object.assign({}, state, { tracking: [] });

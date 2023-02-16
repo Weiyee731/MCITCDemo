@@ -67,6 +67,7 @@ export default function CheckoutPayment({
     total,
     subtotal,
     promoCode,
+    isPendingPayment,
 
 
 }) {
@@ -249,14 +250,14 @@ export default function CheckoutPayment({
         // type==1 , bankin // type==2 , creditcard
         setPaymentType(type);
         if (type === "2") {
-            // const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e"
+            const APIKey = "f783628784ec4418af60cd35a0825d7348e554e1b51d4904a3f724e7cc089a64017e565d08d34592ae97a223a0ffa5ed430d202f43454968897b9cddcb604ee2316f500b3cd24cba9cb44b54a1ca43d3bdf35062728945b28b5144f4a6f22bffc43072e5a41c456c9d0ba003c81ad4097c65c2fa2aa147fb9d72bdb336df288e"
             // live credit card
-            const APIKey = "2c57e2f0161a450ebe5fb67ffbdd51fc196b0256ed1940158f54990b57f4ec3c1e08823fa84c4596bea898bb2b53e6d124414d118b954914806c182092123d4008ba628a8eaf403faa7e3c1adb470ee9d6044313451442d2acd532b47d42e00a2fdecfa996334065a94e0d46d32b7534b3fb4016198047568afd83c99823f6ed"
+            // const APIKey = "2c57e2f0161a450ebe5fb67ffbdd51fc196b0256ed1940158f54990b57f4ec3c1e08823fa84c4596bea898bb2b53e6d124414d118b954914806c182092123d4008ba628a8eaf403faa7e3c1adb470ee9d6044313451442d2acd532b47d42e00a2fdecfa996334065a94e0d46d32b7534b3fb4016198047568afd83c99823f6ed"
 
-            // let access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
-            // let profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
-            let access_key = "51f40be210ff34cba0079b19efd3ab42";  //live credit card,
-            let profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4";  //live credit card
+            let access_key = "fb2033f6e3fe3bb29fa96ebc01c911ae"
+            let profile_id = "FCC3E6E0-639C-4A4E-B58B-9C759897778F"
+            // let access_key = "51f40be210ff34cba0079b19efd3ab42";  //live credit card,
+            // let profile_id = "0CE666B6-7064-4D68-9DFE-EC46776C02A4";  //live credit card
             let transaction_uuid = paymentData.time + '123';
             let signed_date_time = paymentData.now;
             let locale = "en";
@@ -371,21 +372,25 @@ export default function CheckoutPayment({
                     onSelectPaymentTypes={handlePaymentTypes}
                     onSelectBank={handleBanking}
                 />
-
-                <Button
-                    size="small"
-                    color="inherit"
-                    onClick={onBackStep}
-                    startIcon={<ArrowBackIosNewIcon />}
-                >
-                    Back
-                </Button>
+                {
+                    isPendingPayment !== true &&
+                    <Button
+                        size="small"
+                        color="inherit"
+                        onClick={onBackStep}
+                        startIcon={<ArrowBackIosNewIcon />}
+                    >
+                        Back
+                    </Button>
+                }
             </Grid>
 
             <Grid item xs={12} md={4}>
-                <CheckoutBillingInfo onBackStep={onBackStep} shipping={deliveryFee} billing={address} />
+                <CheckoutBillingInfo onBackStep={onBackStep} shipping={deliveryFee} billing={address}
+                    isPendingPayment={isPendingPayment} />
                 <CheckoutSummary
                     enableEdit
+                    isPendingPayment={isPendingPayment}
                     total={total + paymentData.deliveryPrice}
                     subtotal={subtotal}
                     discount={discount}

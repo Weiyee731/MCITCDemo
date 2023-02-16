@@ -13,7 +13,7 @@ import dataOrders from "../../data/accountOrders";
 import theme from "../../data/theme";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
-import { isStringNullOrEmpty } from "../../Utilities/UtilRepo";
+import { isArrayNotEmpty, isStringNullOrEmpty } from "../../Utilities/UtilRepo";
 
 //Tab
 import Box from '@mui/material/Box';
@@ -108,8 +108,8 @@ class AccountPageOrders extends Component {
     super(props);
     this.props.CallGetTransactionStatus();
     this.props.CallGetMerchantsOrders({
-      trackingStatus: 2,
-      UserID: window.localStorage.getItem("id")
+      trackingStatus: 0,
+      UserID: localStorage.getItem("id")
     });
     this.props.CallAllAddress({ USERID: window.localStorage.getItem("id") });
 
@@ -354,18 +354,27 @@ class AccountPageOrders extends Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
-                  this.state.isFiltered === false ?
-                    this.props.allmerchantorders.filter((x) => x.TrackingStatus === this.state.TrackingStatus).map((a) => {
-                      orders.push(a)
-                    })
-                    : this.state.filteredList.filter((x) => x.TrackingStatus === this.state.TrackingStatus).map((a) => {
-                      orders.push(a)
-                    })
-                  : ""
+                {isArrayNotEmpty(this.props.allmerchantorders) && this.props.allmerchantorders[0].OrderID !== undefined ?
+                  this.state.TrackingStatus !== "-" ?
+                    this.state.isFiltered === false ?
+                      this.props.allmerchantorders.filter((x) => x.TrackingStatus === this.state.TrackingStatus).map((a) => {
+                        orders.push(a)
+                      })
+                      : this.state.filteredList.filter((x) => x.TrackingStatus === this.state.TrackingStatus).map((a) => {
+                        orders.push(a)
+                      })
+                    :
+                    this.state.isFiltered === false ?
+                      this.props.allmerchantorders.map((a) => {
+                        orders.push(a)
+                      })
+                      : this.state.filteredList.map((a) => {
+                        orders.push(a)
+                      })
+                  : []
                 }
                 {
-                  this.props.allmerchantorders.length > 0 && this.props.allmerchantorders[0].ReturnVal !== 0 && this.props.allmerchantorders[0].ReturnVal === undefined ?
+                  isArrayNotEmpty(this.props.allmerchantorders) && this.props.allmerchantorders[0].OrderID !== undefined ?
                     this.state.TrackingStatus === "-" ?
                       this.state.isFiltered === false ?
                         orderDetailListing(this.props.allmerchantorders)
@@ -377,6 +386,8 @@ class AccountPageOrders extends Component {
           </div>
         </div>
         <div id={"footer" + index} className="card-footer">
+          {console.log("orders", orders)}
+
           {
             orders.length > 0 && orders[0].OrderID > 0 ?
               <Pagination

@@ -1,7 +1,7 @@
 {
   "name": "MyEmporia",
   "version": "1.1.1",
-  "homepage": "/EmporiaDev/",
+  "homepage": "/",
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^2.11.0",

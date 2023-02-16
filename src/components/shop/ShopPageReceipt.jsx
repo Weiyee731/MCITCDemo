@@ -16,6 +16,7 @@ import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingPanel from '../shared/loadingPanel';
+import { isArrayNotEmpty } from '../../Utilities/UtilRepo';
 
 class ShopPageReceipt extends Component {
     constructor(props) {
@@ -404,7 +405,8 @@ class ShopPageReceipt extends Component {
         const returnPage = (type) => {
             switch (type) {
                 case "bank":
-                    if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata[0].ReturnVal !== 1 && this.props.orderstatusdata[0].ReturnVal !== '0') {
+                    // if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata[0].ReturnVal !== 1 && this.props.orderstatusdata[0].ReturnVal !== '0') {
+                    if (isArrayNotEmpty(this.props.orderstatusdata) && this.props.orderstatusdata[0].Transactionuuid !== undefined) {
                         if (this.state.responseCode === "00")
                             return (this.successPage(this.props.orderstatusdata[0]))
                         else {
@@ -418,8 +420,9 @@ class ShopPageReceipt extends Component {
                         return (this.errorPage())
 
                 case "card":
-                    if (this.props.orderstatusdata !== undefined && this.props.orderstatusdata.length > 0 && this.props.orderstatusdata[0].ReturnVal !== 1) {
-                        if (this.props.orderstatusdata[0].TrackingStatusID === 1)
+                    // console.log("dadadas", this.props)
+                    if (isArrayNotEmpty(this.props.orderstatusdata) && this.props.orderstatusdata[0].Transactionuuid !== undefined) {
+                        if (this.props.orderstatusdata[0].TrackingStatusID === 2)
                             return (this.successPage(this.props.orderstatusdata[0]))
                         else
                             return (this.errorPage(this.props.orderstatusdata[0]))

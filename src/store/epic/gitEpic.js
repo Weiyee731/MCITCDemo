@@ -1404,7 +1404,7 @@ export class GitEpic {
       }
     }));
 
-    getBanner = action$ =>
+  getBanner = action$ =>
     action$.pipe(filter(action => action.type === GitAction.GetBanner), map(action => {
       return dispatch => {
         try {
@@ -1760,14 +1760,14 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.GetProductListing), map(action => {
       return dispatch => {
         try {
-          console.log("getProductsListing2",url +
-          "Product_ItemListByType?Type=" + action.payload.type +
-          "&TypeValue=" + action.payload.typeValue +
-          "&USERID=" + action.payload.userId +
-          "&PROJECTID=2" +
-          "&PRODUCTPERPAGE=" + action.payload.productPage +
-          "&PAGE=" + action.payload.page +
-          "&PLATFORMTYPE=" + platformType)
+          console.log("getProductsListing2", url +
+            "Product_ItemListByType?Type=" + action.payload.type +
+            "&TypeValue=" + action.payload.typeValue +
+            "&USERID=" + action.payload.userId +
+            "&PROJECTID=2" +
+            "&PRODUCTPERPAGE=" + action.payload.productPage +
+            "&PAGE=" + action.payload.page +
+            "&PLATFORMTYPE=" + platformType)
           return fetch(url +
             "Product_ItemListByType?Type=" + action.payload.type +
             "&TypeValue=" + action.payload.typeValue +
@@ -1779,9 +1779,9 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
-              console.log("getProductsListing1",json)
+              console.log("getProductsListing1", json)
               if (json[0].ReturnVal === 1) {
-                console.log("getProductsListing",json)
+                console.log("getProductsListing", json)
                 return dispatch({ type: GitAction.GotProductListing, payload: JSON.parse(json[0].ReturnData) });
               } else {
                 //toast.error(json[0].ReturnMsg)
@@ -2667,6 +2667,31 @@ export class GitEpic {
         } catch (error) {
           toast.error("Error Code: Order_ViewPaymentDetailsByUUID. Please check on URL")
           return dispatch({ type: GitAction.updatedTrackingNumber, payload: [] });
+        }
+      }
+    }));
+
+
+  Order_UpdateTrackingStatus = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.OrderTrackingStatusUpdate), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "Order_UpdateTrackingStatus?OrderID=" + action.payload.OrderID +
+            "&TrackingStatusID=" + action.payload.TrackingStatusID)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.OrderTrackingStatusUpdated, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                // toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.OrderTrackingStatusUpdated, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: OrderTrackingStatusUpdated. ")
+          return dispatch({ type: GitAction.OrderTrackingStatusUpdated, payload: [] });
         }
       }
     }));

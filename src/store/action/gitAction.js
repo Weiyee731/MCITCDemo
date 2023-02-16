@@ -233,15 +233,15 @@ export class GitAction {
     };
   }
 
-    //==================BANNER==========================//
-    static GetBanner = "GET-BANNER";
-    static GotBanner = "GOT-BANNER";
-  
-    static CallBanner() {
-      return {
-        type: GitAction.GetBanner,
-      };
-    }
+  //==================BANNER==========================//
+  static GetBanner = "GET-BANNER";
+  static GotBanner = "GOT-BANNER";
+
+  static CallBanner() {
+    return {
+      type: GitAction.GetBanner,
+    };
+  }
 
   //==================COURIER SERVICE==========================//
   static GetCourierService = "GET-COURIER-SERVICE";
@@ -1048,6 +1048,9 @@ export class GitAction {
   static OrderUserDetailsUpdated = "UPDATED-ORDER-USERDETAILS";
   static updateTrackingNumber = "UPDATE-TRACKING-NUMBER";
   static updatedTrackingNumber = "UPDATED-TRACKING-NUMBER";
+  static OrderTrackingStatusUpdate = "UPDATE-TRACKING-STATUS";
+  static OrderTrackingStatusUpdated = "UPDATED-TRACKING-STATUS";
+  static resetTrackingStatus = "RESET-TRACKING-STATUS";
   static resetTracking = "RESET-TRACKING-NUMBER";
   static OrderRequestShipmentStatus = "VIEW-ORDERSHIPMENT-STATUS";
   static OrderRequestedShipmentStatus = "VIEWED-ORDERSHIPMENT-STATUS";
@@ -1131,6 +1134,19 @@ export class GitAction {
     return {
       type: GitAction.updateTrackingNumber,
       payload: prodData,
+    };
+  }
+
+  static CallUpdateOrderTrackingStatus(prodData) {
+    return {
+      type: GitAction.OrderTrackingStatusUpdate,
+      payload: prodData,
+    };
+  }
+
+  static CallResetOrderTrackingStatus() {
+    return {
+      type: GitAction.resetTrackingStatus,
     };
   }
 

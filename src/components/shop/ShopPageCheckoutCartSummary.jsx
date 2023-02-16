@@ -52,6 +52,7 @@ export default function CheckoutSummary({
   onHandlePromoCode,
   enableEdit = false,
   enableDiscount = false,
+  isPendingPayment
 }) {
   const defaultShipping = shipping !== null ? 'Free' : '-';
   // const [promoCode, setPromoCode] = useState([])
@@ -68,7 +69,7 @@ export default function CheckoutSummary({
       <CardHeader
         title="Order Summary"
         action={
-          enableEdit && (
+          isPendingPayment !== true && enableEdit && (
             <Button size="small" onClick={onEdit} startIcon={<EditIcon />}>
               Edit
             </Button>
@@ -99,7 +100,7 @@ export default function CheckoutSummary({
               <Typography variant="subtitle2">
                 {shipping ? <Currency value={shipping[0].ShippingCost}></Currency> : defaultShipping}
               </Typography>
-    
+
             </Stack>
           }
 
@@ -118,33 +119,46 @@ export default function CheckoutSummary({
           </Stack>
 
           {/* {enableDiscount && onApplyDiscount && ( */}
-          <TextField
-            fullWidth
-            placeholder="Discount codes / Gifts"
-            defaultValue={promoCode}
-            onChange={(e) => {
-              onHandlePromoCode(e.target.value)
-              // setPromoCode(e.target.value)
-              if (isArrayNotEmpty(validPromoData))
-                onRemovePromoError()
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Button onClick={() => onApplyDiscount(promoCode)} sx={{ mr: -0.5 }}>
-                    Apply
-                  </Button>
-                </InputAdornment>
-              ),
-              style: { color: promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) ? validPromoData[0].isValidCode === false ? "red" : "green" : "black" }
-            }}
-          />
           {
-            promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) && validPromoData[0].isValidCode === false &&
+            isPendingPayment === true ?
+              <>
+                {
+                  promoCode !== undefined ?
+                    <Typography>{promoCode}</Typography>
+                    :
+                    <Typography>No Promo Code is used</Typography>
+                }
+              </>
+              :
+              <TextField
+                fullWidth
+                placeholder="Discount codes / Gifts"
+                defaultValue={promoCode}
+                onChange={(e) => {
+                  onHandlePromoCode(e.target.value)
+                  // setPromoCode(e.target.value)
+                  if (isArrayNotEmpty(validPromoData))
+                    onRemovePromoError()
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Button onClick={() => onApplyDiscount(promoCode)} sx={{ mr: -0.5 }}>
+                        Apply
+                      </Button>
+                    </InputAdornment>
+                  ),
+                  style: { color: promoCode !== undefined && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) ? validPromoData[0].isValidCode === false ? "red" : "green" : "black" }
+                }}
+              />
+          }
+
+          {
+            promoCode !== undefined && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) && validPromoData[0].isValidCode === false &&
             <FormHelperText style={{ color: "red" }}>   Invalid Promo Code </FormHelperText>
           }
           {
-            promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) && validPromoData[0].PromoCodeID !== undefined &&
+            promoCode !== undefined && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) && validPromoData[0].PromoCodeID !== undefined &&
             <FormHelperText style={{ color: "green" }}> Promo Code is Used</FormHelperText>
           }
         </Stack>

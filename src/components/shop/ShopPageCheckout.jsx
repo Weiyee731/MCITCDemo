@@ -161,7 +161,6 @@ class PageCheckout extends Component {
   }
 
   componentDidMount() {
-    console.log("dasdasdad", this.props.location.state)
     if (this.data !== undefined && isArrayNotEmpty(this.data.data))
       this.setPricing()
   }
@@ -172,14 +171,12 @@ class PageCheckout extends Component {
       }
     }
 
-    console.log("this.props.deliveryFee", this.props.deliveryFee)
     if (prevProps.deliveryFee !== this.props.deliveryFee) {
       this.setState({ deliveryFee: this.props.deliveryFee })
     }
 
     if (prevProps.promoCode !== this.props.promoCode && this.state.isApplyClick === true) {
       this.setState({ isApplyClick: false, validPromoData: isArrayNotEmpty(this.props.promoCode) ? this.props.promoCode : [{ isValidCode: false }] })
-      console.log("dasdsad", this.props.promoCode)
     }
 
     // if (this.state.total === 0) {
@@ -214,7 +211,6 @@ class PageCheckout extends Component {
   handleApplyDiscount = (value) => {
     this.props.CallViewPromoCode({ promoCode: value })
     this.setState({ isApplyClick: true })
-    console.log("handleApplyDiscount", value)
   };
 
   handleRemovePromoError = () => {
@@ -229,8 +225,6 @@ class PageCheckout extends Component {
 
     // deliveryFee: [{ "ShippingCost": 0 }],
 
-
-    console.log("dsadsadsa", address)
 
     if (address.UserAddressBookID === 0) {
       this.setState({ deliveryFee: [{ "ShippingCost": 0 }] })
@@ -268,7 +262,6 @@ class PageCheckout extends Component {
   }
   onHandleDiscount = (promoData) => {
     const { subtotal, total } = this.state
-    console.log("handleDiscounthandleDiscount", promoData)
     if (isArrayNotEmpty(promoData)) {
 
       if (promoData[0].PromoCodeID !== undefined) {
@@ -286,7 +279,6 @@ class PageCheckout extends Component {
 
   render() {
 
-    console.log("sadadad111", this.state)
     const breadcrumb = [
       { title: "Home", url: "" },
       { title: "Checkout", url: "" },

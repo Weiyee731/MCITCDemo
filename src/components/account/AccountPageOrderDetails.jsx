@@ -34,7 +34,7 @@ import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import Box from '@mui/material/Box';
 
-import AccountPagePayment from "./AccountPagePayment";
+// import AccountPagePayment from "./AccountPagePayment";
 import { isStringNullOrEmpty, isArrayNotEmpty } from "../../Utilities/UtilRepo";
 // import DeliveryFee from "../shop/ShopPageDeliveryFee";
 import { Modal, ModalBody } from "reactstrap";
@@ -44,6 +44,8 @@ import ReviewRating from "@mui/lab/Rating";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { toast } from "react-toastify";
 
+import sum from 'lodash/sum';
+import CheckoutPayment from '../shop/CheckOutPayment/ShopPageCheckOutPayment';
 
 //stepper content
 const steps = [
@@ -74,6 +76,7 @@ const steps = [
 function mapStateToProps(state) {
   return {
     reviews: state.counterReducer["reviews"],
+    trackingStatus: state.counterReducer["trackingStatus"],
     loading: state.counterReducer["loading"],
     orderShipmentStatus: state.counterReducer.trackingStatus
   };
@@ -82,7 +85,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     CallAddProductReview: (PropsData) => dispatch(GitAction.CallAddProductReview(PropsData)),
+    CallUpdateOrderTrackingStatus: (PropsData) => dispatch(GitAction.CallUpdateOrderTrackingStatus(PropsData)),
     CallOrderRequestShipmentStatus: (PropsData) => dispatch(GitAction.CallOrderRequestShipmentStatus(PropsData)),
+    CallResetOrderTrackingStatus: () => dispatch(GitAction.CallResetOrderTrackingStatus()),
   };
 }
 
@@ -98,6 +103,15 @@ function AccountPageOrderDetails(props) {
   const [parentProductReviewID, setparentProductReviewID] = React.useState(0);
   const [productReviewComment, setproductReviewComment] = React.useState("");
   const [isReviewSet, setisReviewSet] = React.useState(false);
+  const [paymentOrderDetail, setPaymentOrderDetail] = React.useState([]);
+  const [isOpenModalCancel, setModalCancel] = React.useState(false);
+  const [isOrderCancel, setCancelOrder] = React.useState(false);
+
+
+  // useEffect(() => {
+  //   console.log("dsdsdasda", props)
+  // }, [props.trackingStatus]);
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -116,8 +130,10 @@ function AccountPageOrderDetails(props) {
   }
 
   const orderDetail = props.location.orderdetails;
+  console.log("dasdaadsa", orderDetail)
   if (orderDetail === undefined) {
-    this.props.history.push("/EmporiaDev/account/orders")
+    window.location.href = "/EmporiaDev/account/orders"
+    // this.props.history.push("/EmporiaDev/account/orders")
     // this.props.history.push("/EmporiaDev/account/orders");
     // window.location.reload(false);
   }
@@ -128,6 +144,80 @@ function AccountPageOrderDetails(props) {
   if (orderDetail !== undefined && orderDetail.OrderProductDetail !== null) {
     filteredMerchant = JSON.parse(orderDetail.OrderProductDetail).filter((ele, ind) => ind
       === JSON.parse(orderDetail.OrderProductDetail).findIndex(elem => elem.MerchantID === ele.MerchantID))
+
+
+    console.log("dsdasd", orderDetail)
+    if (paymentOrderDetail.length === 0) {
+      let listing =
+      {
+        address: {
+          CountryID: orderDetail.CountryID,
+          NAS_ODA: orderDetail.NAS_ODA,
+          PostOffice: orderDetail.PostOffice,
+          UserAddressBookID: orderDetail.UserAddressID,
+          UserAddressLine1: orderDetail.UserAddressLine1,
+          UserAddressLine2: orderDetail.UserAddressLine2,
+          UserAddressName: orderDetail.UserAddressName,
+          UserCity: orderDetail.UserCity,
+          UserContactNo: orderDetail.UserContactNo,
+          UserEmail: orderDetail.UserEmailAddress,
+          UserID: orderDetail.UserID,
+          UserPoscode: orderDetail.UserPoscode,
+          UserState: orderDetail.UserState,
+
+        },
+        orderID: orderDetail.OrderID,
+        orderName: orderDetail.OrderName,
+        data: [],
+        subtotal: 0,
+        promoCode: "",
+        shipping: [{ "ShippingCost": 0 }],
+        total: 0
+        // total: orderDetail.totalAmount
+      }
+
+      let detailsListing = []
+
+      orderDetail.OrderProductDetail !== undefined && JSON.parse(orderDetail.OrderProductDetail).map((x) => {
+
+        let image = ""
+        if (x.ProductImages !== undefined && x.ProductImages !== null) {
+          image = JSON.parse(x.ProductImages)[0].ProductMediaUrl
+        }
+        let data = {
+          MerchantID: x.MerchantID,
+          MerchantShopName: x.MerchantShopName,
+          product: {
+            MerchantID: x.MerchantID,
+            MerchantShopName: x.MerchantShopName,
+            ProductID: x.ProductID,
+            ProductImage: image,
+            ProductName: x.ProductName,
+            ProductPrice: x.ProductVariationPrice,
+            ProductQuantity: x.ProductQuantity,
+            ProductVariationDetailID: x.ProductVariationDetailID,
+            ProductVariationValue: x.ProductVariationValue,
+            ShopState: x.ProductID,
+          },
+          price: x.ProductVariationPrice,
+          quantity: x.ProductQuantity,
+          total: x.ProductVariationPrice * x.ProductQuantity,
+        }
+        detailsListing.push(data)
+      })
+
+      // console.log("dadadadas", detailsListing.data)
+      let subtotalPrice = sum(detailsListing.map((item) => item.total))
+      listing.subtotal = subtotalPrice
+      listing.total = subtotalPrice
+      listing.shipping[0] = { ShippingCost: orderDetail.totalAmount - subtotalPrice }
+      listing.data = detailsListing
+
+      console.log("dsasadsada", listing)
+      setPaymentOrderDetail(listing)
+      console.log("dsdasdsa121212", listing)
+    }
+
   }
 
 
@@ -188,27 +278,27 @@ function AccountPageOrderDetails(props) {
                 {props.orderShipmentStatus.length !== 0 ?
                   <>
                     {isArrayNotEmpty(props.orderShipmentStatus.trackHeader) &&
-                      <Typography style={{fontWeight: "bold" }}>Tracking Number :{props.orderShipmentStatus.trackHeader[0].hawb}</Typography>
+                      <Typography style={{ fontWeight: "bold" }}>Tracking Number :{props.orderShipmentStatus.trackHeader[0].hawb}</Typography>
                     }
                     <hr />
                     {
                       isArrayNotEmpty(props.orderShipmentStatus.trackDetails) &&
                       <div className="row">
-                        <Typography style={{ fontWeight: "bold" }}>Parcel Status</Typography><br/>
-                        <Typography>Shiping Status : {props.orderShipmentStatus.trackDetails[0].status}</Typography><br/>
-                        <Typography>Latest Location : {props.orderShipmentStatus.trackDetails[0].location}</Typography><br/>
-                        <Typography>Latest Update Time : {props.orderShipmentStatus.trackDetails[0].detTime}</Typography><br/>
-                        <Typography>Latest Update Date : {props.orderShipmentStatus.trackDetails[0].detDate}</Typography><br/>
+                        <Typography style={{ fontWeight: "bold" }}>Parcel Status</Typography><br />
+                        <Typography>Shiping Status : {props.orderShipmentStatus.trackDetails[0].status}</Typography><br />
+                        <Typography>Latest Location : {props.orderShipmentStatus.trackDetails[0].location}</Typography><br />
+                        <Typography>Latest Update Time : {props.orderShipmentStatus.trackDetails[0].detTime}</Typography><br />
+                        <Typography>Latest Update Date : {props.orderShipmentStatus.trackDetails[0].detDate}</Typography><br />
                       </div>
                     }
                     <hr />
                     {
                       isArrayNotEmpty(props.orderShipmentStatus.trackHeader) &&
                       <div className="row">
-                        <Typography style={{ fontSize: "11px", fontWeight: "bold" }}>Parcel Details</Typography><br/>
-                        <Typography>Parcel Origin : {props.orderShipmentStatus.trackHeader[0].status}</Typography><br/>
-                        <Typography>Parcel Destination : {props.orderShipmentStatus.trackHeader[0].location}</Typography><br/>
-                        <Typography>Parcel Weight : {props.orderShipmentStatus.trackHeader[0].t_weight} kg</Typography><br/>
+                        <Typography style={{ fontSize: "11px", fontWeight: "bold" }}>Parcel Details</Typography><br />
+                        <Typography>Parcel Origin : {props.orderShipmentStatus.trackHeader[0].status}</Typography><br />
+                        <Typography>Parcel Destination : {props.orderShipmentStatus.trackHeader[0].location}</Typography><br />
+                        <Typography>Parcel Weight : {props.orderShipmentStatus.trackHeader[0].t_weight} kg</Typography><br />
                         <Typography>Parcel Dimension : {props.orderShipmentStatus.trackHeader[0].vw_height + "cm(H) * " + props.orderShipmentStatus.trackHeader[0].vw_length + "cm(L) * " + props.orderShipmentStatus.trackHeader[0].vw_width + "cm(W)"}</Typography>
                       </div>
                     }
@@ -319,12 +409,47 @@ function AccountPageOrderDetails(props) {
     }
   }, [props.orderShipmentStatus])
 
+
+
+  useEffect(() => {
+
+    if (isArrayNotEmpty(props.trackingStatus) && props.trackingStatus[0].OrderID !== undefined) {
+      toast.success("Order " + paymentOrderDetail.orderName + " is successfully cancel")
+      props.CallResetOrderTrackingStatus()
+      setCancelOrder(true)
+      setModalCancel(false)
+    }
+    console.log("sadasdasda", props)
+  }, [props.trackingStatus])
+
+  console.log("sadasdasda12345", props)
+
   return (
     <React.Fragment>
       {
         isProceedPayment === true ?
           // isDeliverySet === true ?
-          <AccountPagePayment data={orderDetail} shippingFees={shipping} />
+          // <AccountPagePayment data={orderDetail} shippingFees={shipping} />
+          <>
+            <CheckoutPayment
+              checkout={paymentOrderDetail}
+              isPendingPayment={true}
+              // discount={this.state.discount}
+              subtotal={paymentOrderDetail.subtotal}
+              total={paymentOrderDetail.total}
+              promoCode={paymentOrderDetail.promoCode}
+              // validPromoData={this.state.validPromoData}
+              // onRemovePromoError={this.handleRemovePromoError}
+              // onHandleDiscount={this.onHandleDiscount}
+              // onHandlePromoCode={this.onHandlePromoCode}
+              // onApplyDiscount={this.handleApplyDiscount}
+              // onBackStep={this.handleBackStep}
+              // onGotoStep={this.handleGotoStep}
+              deliveryFee={paymentOrderDetail.shipping}
+            // onApplyShipping={this.handleApplyShipping}
+            />
+          </>
+
           :
           //   <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={address !== 0 ? address[0].UserAddressBookID : address} data={JSON.parse(orderDetail.OrderProductDetail)} orderHistory={true} />
           // :
@@ -354,7 +479,7 @@ function AccountPageOrderDetails(props) {
                   </mark>{" "}
                   and is currently{" "}
                   <mark className="order-header__status">
-                    {orderDetail.TrackingStatus}
+                    {isOrderCancel === false ? orderDetail.TrackingStatus : " Cancelled"}
                   </mark>
                   .
                 </div>
@@ -516,88 +641,126 @@ function AccountPageOrderDetails(props) {
               <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
                 {
                   orderDetail.TrackingStatus === "In Purchasing" ?
-                    <div className="card address-card address-card--featured">
-                      <div className="address-card__body">
-                        <div className="address-card__badge address-card__badge--muted">
-                          Pending Payment
-                        </div>
-                        <div className="address-card__row">
-                          <div className="address-card__name">
-                            Waiting for payment to complete the order
-                          </div>
-                        </div>
-                        <div style={{ textAlign: "center" }}>
-                          <Button onClick={() => setProceedPayment(true)} style={{ backgroundColor: "forestgreen", color: "white", borderWidth: 0 }}>
-                            Proceed Payment
-                          </Button>
-                        </div>
-
+                    <>
+                      <div className="card address-card address-card--featured">
+                        {
+                          isOrderCancel === false ?
+                            <>
+                              <div className="address-card__body">
+                                <div className="address-card__badge address-card__badge--muted">
+                                  Pending Payment
+                                </div>
+                                <div className="address-card__row">
+                                  <div className="address-card__name">
+                                    Waiting for payment to complete the order
+                                  </div>
+                                </div>
+                                <div style={{ textAlign: "center" }}>
+                                  <Button onClick={() => setProceedPayment(true)} style={{ backgroundColor: "forestgreen", color: "white", borderWidth: 0 }}>
+                                    Proceed Payment
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="address-card__body">
+                                <div className="address-card__row">
+                                  <div className="address-card__name">
+                                    Wrong Order is make
+                                  </div>
+                                </div>
+                                <div style={{ textAlign: "center" }}>
+                                  <Button onClick={() => setModalCancel(true)} style={{ backgroundColor: "red", color: "white", borderWidth: 0 }}>
+                                    Cancel Order
+                                  </Button>
+                                </div>
+                              </div>
+                            </>
+                            :
+                            <div className="address-card__body">
+                              <div className="address-card__row">
+                                <div className="address-card__name" style={{ color: "red", textAlign: "center" }}>
+                                  This Order is cancelled
+                                </div>
+                              </div>
+                            </div>
+                        }
                       </div>
-                    </div>
+                    </>
                     :
                     <>
+                      {console.log("sadadasd", orderDetail)}
                       {
-                        orderDetail.PaymentMethodID === 1 ?
+                        orderDetail.TrackingStatusID === 6 ?
                           <div className="card address-card address-card--featured">
                             <div className="address-card__body">
-                              <div className="address-card__badge address-card__badge--muted">
-                                CREDIT / DEBIT CARD
-                              </div>
                               <div className="address-card__row">
-                                <div className="address-card__name">
-                                  CREDIT / DEBIT CARD PAYMENT
+                                <div className="address-card__name" style={{ color: "red", textAlign: "center" }}>
+                                  This Order is cancelled
                                 </div>
                               </div>
                             </div>
                           </div>
                           :
-                          <>
-                            {
-                              orderDetail.PaymentMethodID === 3 &&
-                              <div className="card address-card address-card--featured">
-                                <div className="address-card__body">
-                                  <div className="address-card__badge address-card__badge--muted">
-                                    E-WALLET
-                                  </div>
-                                  <div className="address-card__row">
-                                    <div className="address-card__name">
-                                      E-WALLET PAYMENT
-                                    </div>
+                          orderDetail.PaymentMethodID === 1 ?
+                            <div className="card address-card address-card--featured">
+                              <div className="address-card__body">
+                                <div className="address-card__badge address-card__badge--muted">
+                                  CREDIT / DEBIT CARD
+                                </div>
+                                <div className="address-card__row">
+                                  <div className="address-card__name">
+                                    CREDIT / DEBIT CARD PAYMENT
                                   </div>
                                 </div>
                               </div>
-                            }
-                            {
-                              orderDetail.PaymentMethodID === 2 &&
-                              <div className="card address-card address-card--featured">
-                                <div className="address-card__body">
-                                  <div className="address-card__badge address-card__badge--muted">
-                                    FPX
-                                  </div>
-                                  <div className="address-card__row">
-                                    <div className="address-card__name">
-                                      FPX PAYMENT
+                            </div>
+                            :
+                            <>
+                              {
+                                orderDetail.PaymentMethodID === 3 &&
+                                <div className="card address-card address-card--featured">
+                                  <div className="address-card__body">
+                                    <div className="address-card__badge address-card__badge--muted">
+                                      E-WALLET
+                                    </div>
+                                    <div className="address-card__row">
+                                      <div className="address-card__name">
+                                        E-WALLET PAYMENT
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            }
-                            {
-                              orderDetail.PaymentMethodID === 4 &&
-                              <div className="card address-card address-card--featured">
-                                <div className="address-card__body">
-                                  <div className="address-card__badge address-card__badge--muted">
-                                    PAYPAL
-                                  </div>
-                                  <div className="address-card__row">
-                                    <div className="address-card__name">
-                                      PAYPAL PAYMENT
+                              }
+                              {
+                                orderDetail.PaymentMethodID === 2 &&
+                                <div className="card address-card address-card--featured">
+                                  <div className="address-card__body">
+                                    <div className="address-card__badge address-card__badge--muted">
+                                      FPX
+                                    </div>
+                                    <div className="address-card__row">
+                                      <div className="address-card__name">
+                                        FPX PAYMENT
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            }
-                          </>
+                              }
+                              {
+                                orderDetail.PaymentMethodID === 4 &&
+                                <div className="card address-card address-card--featured">
+                                  <div className="address-card__body">
+                                    <div className="address-card__badge address-card__badge--muted">
+                                      PAYPAL
+                                    </div>
+                                    <div className="address-card__row">
+                                      <div className="address-card__name">
+                                        PAYPAL PAYMENT
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              }
+                            </>
                       }
                     </>
                 }
@@ -645,6 +808,45 @@ function AccountPageOrderDetails(props) {
                       <div className=" mb-0">
                         <button style={{ borderRadius: "5px" }} className="btn btn-primary btn-md" onClick={() => localStorage.getItem("isLogin") === "false" ? login() : OnSubmitReview(productID[0])} >
                           Post Your Review
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+                </ModalBody>
+              </Modal>
+            </div>
+
+            <div style={{ textAlign: "center", padding: "inherit", }} >
+              <Modal
+                className="modal-dialog-centered"
+                isOpen={isOpenModalCancel}
+                toggle={() => setModalCancel(false)}
+              >
+                <ModalBody>
+                  <CloseIcon
+                    className="closeIcon"
+                    onClick={() => setModalCancel(false)}
+                    data-dismiss="modal" />
+                  <div
+                    align="center"
+                    className="form-content p-2"
+                  >
+                    <div className="reviews-view__header" >Are you sure to cancel this order ? </div>
+                    <div className="row justify-content-center" >
+                      <div className=" mb-0">
+                        <button style={{ borderRadius: "5px", margin: "10px" }} className="btn btn-primary btn-md" onClick={() => {
+                          props.CallUpdateOrderTrackingStatus({
+                            OrderID: paymentOrderDetail.orderID,
+                            TrackingStatusID: 6
+                          })
+                        }
+
+                        }>
+                          Yes
+                        </button>
+                        <button style={{ borderRadius: "8px", margin: "10px", backgroundColor: "white", color: "black", fontWeight: "bold" }} className="btn btn-primary btn-md" onClick={() => setModalCancel(false)} >
+                          No
                         </button>
                       </div>
                     </div>
