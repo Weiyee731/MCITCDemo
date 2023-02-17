@@ -68,6 +68,14 @@ function Topbar() {
               Customer Care
             </Button>
           </div>
+          <div className="topbar__item">
+            {/* <DropdownLanguage /> */}
+            {localStorage.getItem("isLogin") === "true" &&
+            <Button 
+              style={{ fontSize: "9pt", background: "inherit", border: "transparent", height: "1vw", display: "flex", alignItems: "center", fontFamily: 'Helvetica' }}>
+              <a style={{color: "white"}} href="http://localhost:3001/ecommerceCMSDev/register" target="_blank" rel="noreferrer">Sign up merchant account</a>
+            </Button>}
+          </div>
         </div>
       </div>
     </div>

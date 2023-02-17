@@ -144,7 +144,7 @@ class BlockListingDetails extends Component {
     }
 
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps,prevState) {
         if (!this.state.isDataBind) {
             this.setState({ products: this.props.products, isDataBind: true })
         }
@@ -166,20 +166,22 @@ class BlockListingDetails extends Component {
 
         if (prevProps.location.pathname !== this.props.location.pathname)
             window.location.href = this.props.location.pathname
+            
 
-        if (this.props.productCategories !== undefined && this.props.productCategories.length > 0)
+        if ( this.props.productCategories !== undefined && this.props.productCategories.length > 0)
             if (this.state.isCategorySet === false)
                 this.handleCategory()
-            else
-                this.props.CallAllProductCategoryListing();
+            // else
+                // this.props.CallAllProductCategoryListing();
     }
 
     handleCategory() {
         let tempCategoryHierachy = 0
         let breadcrumb = this.state.breadcrumb
-        if (this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == "Category" && this.state.categoryHierachy === 0) {
+        // if (this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == "Category" && this.state.categoryHierachy === 0) {
+        if (this.state.categoryHierachy === 0) {
             this.props.productCategories.map((category) => {
-                if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
+                // if (category.ProductCategoryID === this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
                     this.setState({
                         categoryHierachy: 1,
                         breadcrumb: [...breadcrumb, ...[
@@ -187,7 +189,7 @@ class BlockListingDetails extends Component {
                         ]]
                     })
                     tempCategoryHierachy = 1
-                }
+                // }
             })
             if (tempCategoryHierachy === 1) {
                 this.state.CategoryHierachyListing.push(this.props.productCategories)
@@ -248,10 +250,9 @@ class BlockListingDetails extends Component {
     }
 
     handleFilterOption(e) {
-        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 ) {
             let tempObject = this.state.filterOptions
-            let tempList = JSON.parse(this.props.productsListing)
-
+            let tempList = this.props.productsListing
             switch (e.target.id) {
                 case "min-price":
                     tempObject.minPrice = Number(e.target.value)
@@ -326,14 +327,14 @@ class BlockListingDetails extends Component {
     handleFilterPriceButton() {
         let minPrice = this.state.filterOptions.minPrice
         let maxPrice = this.state.filterOptions.maxPrice
-        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
-            let list = JSON.parse(this.props.productsListing)
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 ) {
+            let list = this.props.productsListing
             let isStringExist = false
             let listToCheck = []
             let tempArray = []
 
             list.map((x) => {
-                if (x.ProductPrice.includes("-")) {
+                if (x.ProductPrice) {
                     listToCheck.push(x)
                     isStringExist = true
                 }
@@ -341,7 +342,7 @@ class BlockListingDetails extends Component {
 
             if (!isNaN(minPrice) && !isNaN(maxPrice)) {
                 if (minPrice > maxPrice) {
-                    list = list.filter(el => el.ProductSellingPrice > minPrice)
+                    list = list.filter(el => el.ProductPrice > minPrice)
 
                     if (isStringExist === true) {
                         listToCheck.map((x) => {
@@ -388,14 +389,14 @@ class BlockListingDetails extends Component {
     }
 
     resetFilter() {
-        this.setListing(JSON.parse(this.props.productsListing))
+        this.setListing(this.props.productsListing)
         this.setState({ filterOptions: initialState.filterOptions })
     }
 
 
     handleSorting(options) {
-        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
-            let list = JSON.parse(this.props.productsListing)
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 ) {
+            let list = this.props.productsListing
 
             switch (options.target.value) {
                 case "latest":
@@ -429,8 +430,7 @@ class BlockListingDetails extends Component {
     }
 
     handleShipFilter(value) {
-
-        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 && JSON.parse(this.props.productsListing)[0].ReturnVal === undefined) {
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0) {
             switch (value) {
                 case "WM":
                     this.checkFilterStatus(0)
@@ -456,7 +456,6 @@ class BlockListingDetails extends Component {
     }
 
     checkFilterStatus(index) {
-
         let checkBox = false
         if (this.state.shippedFrom_checkbox[index] === true) {
             this.state.shippedFrom_checkbox[index] = false
@@ -469,7 +468,7 @@ class BlockListingDetails extends Component {
                 this.handleShippingList()
             }
             else {
-                this.setListing(JSON.parse(this.props.productsListing))
+                this.setListing(this.props.productsListing)
             }
         }
 
@@ -480,11 +479,10 @@ class BlockListingDetails extends Component {
     }
 
     handleShippingList() {
-        let oriList = JSON.parse(this.props.productsListing)
+        let oriList = this.props.productsListing
         let tempFilterList = []
         let Listing = []
         let jointArray = []
-
         this.state.shippedFrom_checkbox.map((shipped, index) => {
             if (shipped === true) {
                 switch (index) {
@@ -689,23 +687,23 @@ class BlockListingDetails extends Component {
                                         </div>
                                         <div id="fllter-4-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                             <Rating name="read-only" value={4} readOnly size="small" />
-                                            <Typography component="legend"> & above</Typography>
+                                            <Typography id="fllter-4-stars" component="legend"> & above</Typography>
                                         </div>
                                         <div id="fllter-3-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                             <Rating name="read-only" value={3} readOnly size="small" />
-                                            <Typography component="legend"> & above</Typography>
+                                            <Typography id="fllter-3-stars" component="legend"> & above</Typography>
                                         </div>
                                         <div id="fllter-2-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)} >
                                             <Rating name="read-only" value={2} readOnly size="small" />
-                                            <Typography component="legend"> & above</Typography>
+                                            <Typography id="fllter-2-stars" component="legend"> & above</Typography>
                                         </div>
                                         <div id="fllter-1-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                             <Rating name="read-only" value={1} readOnly size="small" />
-                                            <Typography component="legend"> & above</Typography>
+                                            <Typography id="fllter-1-stars" component="legend"> & above</Typography>
                                         </div>
                                         <div id="fllter-no-stars" className="d-flex mb-1 rating-background" style={{ cursor: 'pointer' }} onClick={(e) => this.handleFilterOption(e)}>
                                             <Rating name="read-only" value={0} readOnly size="small" />
-                                            <Typography component="legend"> - No Ratings</Typography>
+                                            <Typography id="fllter-no-stars" component="legend"> - No Ratings</Typography>
                                         </div>
                                     </div>
                                 </div>
