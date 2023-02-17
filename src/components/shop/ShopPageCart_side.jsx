@@ -346,9 +346,15 @@ class ShopPageCart_side extends Component {
                             }
                         </div>
                         <span className='cart-subtotal'>
-                                Total :  
+                            Total :
                             <Typography color="#ff2626" fontWeight="500" className='d-inline-flex'>
-                                <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
+                                {
+                                    item.product.ProductPromotion && JSON.parse(item.product.ProductPromotion).length > 0 ?
+                                        <Currency value={JSON.parse(item.product.ProductPromotion)[0].PromotionPrice * item.product.ProductQuantity} currency={"RM"} />
+                                        :
+                                        <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
+                                }
+
                             </Typography>
                         </span>
                     </Grid>
