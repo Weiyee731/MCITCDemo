@@ -20,6 +20,16 @@ CheckoutCartProduct.propTypes = {
 
 export default function CheckoutCartProduct({ row, onDelete, onDecrease, onIncrease }) {
   const { name, size, price, variation, product, quantity, available } = row;
+
+  let promotionPrice = 0
+
+  console.log("Dsdadasdassda", row)
+  if (row.product !== undefined && row.product.ProductPromotion !== undefined) {
+    JSON.parse(row.product.ProductPromotion).map((x) => {
+      if (x.ProductVariationDetailID === row.product.ProductVariationDetailID)
+        promotionPrice = x.PromotionPrice
+    })
+  }
   return (
     <TableRow>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
@@ -45,14 +55,32 @@ export default function CheckoutCartProduct({ row, onDelete, onDecrease, onIncre
           </Stack>
         </Stack>
       </TableCell>
-
-      <TableCell><Currency value={price}></Currency></TableCell>
+      {console.log("dsdadas99999", row)}
+      <TableCell>
+        {promotionPrice !== 0 ?
+          <>
+            <span className="product-card__new-price">
+              <Currency value={promotionPrice} currency={"RM"} />
+            </span>
+            <span className="product-card__old-price">
+              <Currency value={price} currency={"RM"} />
+            </span>
+          </>
+          :
+          <>
+            <span className="product-card__new-price">
+              <Currency value={price} currency={"RM"} />
+            </span>
+          </>
+        }
+        {/* <Currency value={price}></Currency> */}
+      </TableCell>
       {/* <TableCell>{fCurrency(price)}</TableCell> */}
       <TableCell>
         {quantity}
       </TableCell>
 
-      <TableCell align="right">{<Currency value={price * quantity}></Currency>}</TableCell>
+      <TableCell align="right">{<Currency value={promotionPrice !== 0 ? promotionPrice * quantity : price * quantity}></Currency>}</TableCell>
     </TableRow>
   );
 }

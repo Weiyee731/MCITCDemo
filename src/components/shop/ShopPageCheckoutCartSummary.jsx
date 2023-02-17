@@ -124,7 +124,7 @@ export default function CheckoutSummary({
               <>
                 {
                   promoCode !== undefined ?
-                    <Typography>{promoCode}</Typography>
+                    <Typography style={{ color: "green" }}>Promo Code Apply: {promoCode}</Typography>
                     :
                     <Typography>No Promo Code is used</Typography>
                 }

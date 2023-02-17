@@ -47,6 +47,7 @@ import { toast } from "react-toastify";
 import sum from 'lodash/sum';
 import CheckoutPayment from '../shop/CheckOutPayment/ShopPageCheckOutPayment';
 
+import Currency from '../shared/Currency';
 //stepper content
 const steps = [
   {
@@ -146,7 +147,7 @@ function AccountPageOrderDetails(props) {
       === JSON.parse(orderDetail.OrderProductDetail).findIndex(elem => elem.MerchantID === ele.MerchantID))
 
 
-    console.log("dsdasd", orderDetail)
+    console.log("dsdorderDetailorderDetailorderDetailasd", orderDetail)
     if (paymentOrderDetail.length === 0) {
       let listing =
       {
@@ -170,9 +171,12 @@ function AccountPageOrderDetails(props) {
         orderName: orderDetail.OrderName,
         data: [],
         subtotal: 0,
-        promoCode: "",
+        promoCode: orderDetail.PromoCode,
+        promoDiscount: orderDetail.PromoDiscount,
         shipping: [{ "ShippingCost": 0 }],
-        total: 0
+        total: 0,
+        discount: 0
+
         // total: orderDetail.totalAmount
       }
 
@@ -180,6 +184,7 @@ function AccountPageOrderDetails(props) {
 
       orderDetail.OrderProductDetail !== undefined && JSON.parse(orderDetail.OrderProductDetail).map((x) => {
 
+        console.log("dsdorderDetailorderDetailorderDetailasd123", x)
         let image = ""
         if (x.ProductImages !== undefined && x.ProductImages !== null) {
           image = JSON.parse(x.ProductImages)[0].ProductMediaUrl
@@ -197,8 +202,12 @@ function AccountPageOrderDetails(props) {
             ProductQuantity: x.ProductQuantity,
             ProductVariationDetailID: x.ProductVariationDetailID,
             ProductVariationValue: x.ProductVariationValue,
+            PromotionPrice: x.PromotionPrice,
+            DiscountPrice: x.DiscountPrice,
             ShopState: x.ProductID,
           },
+          totalPromotionPrice: x.PromotionPrice * x.ProductQuantity,
+          totalDiscountPrice: x.DiscountPrice * x.ProductQuantity,
           price: x.ProductVariationPrice,
           quantity: x.ProductQuantity,
           total: x.ProductVariationPrice * x.ProductQuantity,
@@ -209,8 +218,13 @@ function AccountPageOrderDetails(props) {
       // console.log("dadadadas", detailsListing.data)
       let subtotalPrice = sum(detailsListing.map((item) => item.total))
       listing.subtotal = subtotalPrice
-      listing.total = subtotalPrice
-      listing.shipping[0] = { ShippingCost: orderDetail.totalAmount - subtotalPrice }
+      listing.discount = parseFloat(orderDetail.PromoDiscount / 100 * subtotalPrice) + sum(detailsListing.map((item) => item.totalDiscountPrice))
+      console.log("ssdsdsadsasdsa", listing.discount)
+      console.log("ssdsdsadsasdsa total", subtotalPrice)
+      console.log("ssdsdsadsasdsa", parseFloat(orderDetail.PromoDiscount / 100 * subtotalPrice))
+      console.log("ssdsdsadsasdsa", sum(detailsListing.map((item) => item.totalDiscountPrice)))
+      listing.total = orderDetail.totalAmount
+      listing.shipping[0] = { ShippingCost: orderDetail.OrderShippingFeeAmount }
       listing.data = detailsListing
 
       console.log("dsasadsada", listing)
@@ -422,7 +436,6 @@ function AccountPageOrderDetails(props) {
     console.log("sadasdasda", props)
   }, [props.trackingStatus])
 
-  console.log("sadasdasda12345", props)
 
   return (
     <React.Fragment>
@@ -434,9 +447,9 @@ function AccountPageOrderDetails(props) {
             <CheckoutPayment
               checkout={paymentOrderDetail}
               isPendingPayment={true}
-              // discount={this.state.discount}
+              discount={paymentOrderDetail.discount}
               subtotal={paymentOrderDetail.subtotal}
-              total={paymentOrderDetail.total}
+              total={isArrayNotEmpty(paymentOrderDetail.shipping) ? paymentOrderDetail.total - paymentOrderDetail.shipping[0].ShippingCost : paymentOrderDetail.total}
               promoCode={paymentOrderDetail.promoCode}
               // validPromoData={this.state.validPromoData}
               // onRemovePromoError={this.handleRemovePromoError}
@@ -513,7 +526,7 @@ function AccountPageOrderDetails(props) {
                                   <th>Unit Price</th>
                                   <th>Quantity</th>
                                   <th>Total</th>
-                                  <th>Tracking</th>
+                                  {orderDetail.TrackingStatusID !== 1 && <th>Tracking</th>}
                                 </tr>
                               </thead>
                               {
@@ -541,35 +554,63 @@ function AccountPageOrderDetails(props) {
                                             <div style={{ fontSize: "11px" }}>  Weight : {orders.ProductWeight} kg   </div>
                                           </td>
 
-                                          <td style={{ width: "15%" }}>RM {parseFloat(orders.ProductVariationPrice).toFixed(2)}</td>
+                                          <td style={{ width: "15%" }}>
+                                            {
+                                              orders.PromotionPrice !== null ?
+                                                <>
+                                                  <span className="product-card__new-price">
+                                                    <Currency value={orders.PromotionPrice} currency={"RM"} />
+                                                  </span>
+                                                  <span className="product-card__old-price">
+                                                    <Currency value={orders.ProductVariationPrice} currency={"RM"} />
+                                                  </span>
+                                                </>
+                                                :
+                                                <span className="product-card__new-price">
+                                                  <Currency value={orders.ProductVariationPrice} currency={"RM"} />
+                                                </span>
+                                            }
+                                          </td>
+                                          {console.log("dsdsadsada", orders)}
                                           <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
-                                          <td style={{ width: "15%" }}>RM {parseFloat(orders.ProductVariationPrice * orders.ProductQuantity).toFixed(2)}</td>
-                                          {
-                                            orders.LogisticID !== null && orders.LogisticID !== 0 ?
-                                              <>
-                                                <td style={{ width: "15%" }} onClick={() => props.CallOrderRequestShipmentStatus({
-                                                  TRACKINGNUMBER: orders.TrackingNumber,
-                                                  TYPE: "true",
-                                                  PROJECTID: 2
-                                                })}>
-                                                  {console.log("dsadsdsa", orders)}
-                                                  {console.log("dsadsdsa123", props)}
-                                                  <div style={{ fontSize: "13px" }}>
-                                                    {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
-                                                      return (courier.LogisticName)
-                                                    })}
-                                                  </div>
-                                                  <div style={{ fontSize: "13px" }}>
-                                                    {orders.TrackingNumber}
-                                                  </div>
-                                                </td>
-                                              </>
-                                              :
-                                              <td style={{ width: "15%" }}>
-                                                <div style={{ fontSize: "13px", textAlign: "center" }}>
-                                                  Temporarily no tracking for this item
-                                                </div>
-                                              </td>
+                                          <td style={{ width: "15%" }}>
+                                            {
+                                              orders.PromotionPrice !== null ?
+                                                <Currency value={orders.PromotionPrice * orders.ProductQuantity} currency={"RM"} />
+                                                :
+                                                <Currency value={orders.ProductVariationPrice * orders.ProductQuantity} currency={"RM"} />
+                                            }
+                                          </td>
+                                          {orders.TrackingStatusID !== 1 &&
+                                            <>
+                                              {
+                                                orders.LogisticID !== null && orders.LogisticID !== 0 ?
+                                                  <>
+                                                    <td style={{ width: "15%" }} onClick={() => props.CallOrderRequestShipmentStatus({
+                                                      TRACKINGNUMBER: orders.TrackingNumber,
+                                                      TYPE: "true",
+                                                      PROJECTID: 2
+                                                    })}>
+                                                      {console.log("dsadsdsa", orders)}
+                                                      {console.log("dsadsdsa123", props)}
+                                                      <div style={{ fontSize: "13px" }}>
+                                                        {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
+                                                          return (courier.LogisticName)
+                                                        })}
+                                                      </div>
+                                                      <div style={{ fontSize: "13px" }}>
+                                                        {orders.TrackingNumber}
+                                                      </div>
+                                                    </td>
+                                                  </>
+                                                  :
+                                                  <td style={{ width: "15%" }}>
+                                                    <div style={{ fontSize: "13px", textAlign: "center" }}>
+                                                      Temporarily no tracking for this item
+                                                    </div>
+                                                  </td>
+                                              }
+                                            </>
                                           }
                                         </tr>
                                       </tbody>
@@ -580,21 +621,42 @@ function AccountPageOrderDetails(props) {
                         )
                       })}
                       <Divider light />
+                      {console.log("paymentOrderDetailpaymentOrderDetailpaymentOrderDetailpaymentOrderDetail", paymentOrderDetail)}
                       <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
                         <div className="row">
                           <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Subtotal </div>
-                          <div className="col-2" >RM {subtotalPrice}</div>
+                          <div className="col-2" >
+                            <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.subtotal}></Currency>}</Typography>
+                          </div>
                         </div>
                         <div className="row" >
+                          <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Discount </div>
+                          <div className="col-2" >
+                            <Typography variant="subtitle2">{paymentOrderDetail.discount !== null ? <Currency value={-parseFloat(paymentOrderDetail.discount).toFixed(2)}></Currency> : '-'}</Typography>
+                          </div>
+                        </div>
+                        {
+                          paymentOrderDetail.promoCode !== null &&
+                          <div className="row">
+                            <div className="col-12" style={{ fontWeight: "bold", textAlign: "right", padding: "10px", color: "green" }}>
+                              <Typography> Promocode {paymentOrderDetail.promoCode} is used , {paymentOrderDetail.promoDiscount} % off</Typography>
+                            </div>
+                          </div>
+                        }
+                        <div className="row" >
                           <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Shipping </div>
-                          <div className="col-2" >RM {shipping}</div>
+                          <div className="col-2" >
+                            <Typography variant="subtitle2">{isArrayNotEmpty(paymentOrderDetail.shipping) ? <Currency value={parseFloat(paymentOrderDetail.shipping[0].ShippingCost).toFixed(2)}></Currency> : <Currency value={0}></Currency>}</Typography></div>
                         </div>
                       </div>
+
                       <Divider light />
                       <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
                         <div className="row">
                           <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Total </div>
-                          <div className="col-2" >RM {totalOverall}</div>
+                          <div className="col-2" >
+                            <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.total}></Currency>}</Typography>
+                          </div>
                         </div>
                       </div>
                     </>

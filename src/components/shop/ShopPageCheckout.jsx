@@ -149,12 +149,23 @@ class PageCheckout extends Component {
 
   setPricing() {
     let listing = this.data.data
+
+    let discount = []
+    isArrayNotEmpty(listing) && listing.map((data) => {
+      if (data.product !== undefined && data.product.ProductPromotion !== undefined) {
+        JSON.parse(data.product.ProductPromotion).map((x) => {
+          if (x.ProductVariationDetailID === data.product.ProductVariationDetailID)
+            discount.push(x.DiscountPrice * data.quantity)
+        })
+      }
+    })
+
     let totalPrice = sum(listing.map((item) => item.total))
     let subtotalPrice = sum(listing.map((item) => item.total))
-    let discountPrice = sum(listing.map((item) => item.discount))
+    let discountPrice = sum(discount.map((item) => item))
 
     this.setState({
-      total: totalPrice,
+      total: totalPrice - discountPrice,
       subtotal: subtotalPrice,
       discount: discountPrice
     })
@@ -266,9 +277,9 @@ class PageCheckout extends Component {
 
       if (promoData[0].PromoCodeID !== undefined) {
         if (this.state.isPromoCodeSet === false) {
-          let discountPrice = parseFloat(subtotal * promoData[0].PromoDiscount / 100).toFixed(2)
+          let discountPrice = parseFloat(subtotal * promoData[0].PromoDiscount / 100)
           let totalPrice = parseFloat(total).toFixed(2) - discountPrice
-          this.setState({ discount: discountPrice, total: totalPrice, isPromoCodeSet: true })
+          this.setState({ discount: discountPrice + this.state.discount, total: totalPrice, isPromoCodeSet: true })
         }
       } else {
         if (this.data !== undefined && isArrayNotEmpty(this.data.data))
@@ -380,7 +391,7 @@ class PageCheckout extends Component {
                     onHandleDiscount={this.onHandleDiscount}
                     onHandlePromoCode={this.onHandlePromoCode}
                     onApplyDiscount={this.handleApplyDiscount}
-                    onBackStep={this.handleBackStep}     
+                    onBackStep={this.handleBackStep}
                     onCreateBilling={this.handleCreateBilling}
                   />
                 )}
