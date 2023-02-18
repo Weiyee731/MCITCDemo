@@ -109,10 +109,6 @@ function AccountPageOrderDetails(props) {
   const [isOrderCancel, setCancelOrder] = React.useState(false);
 
 
-  // useEffect(() => {
-  //   console.log("dsdsdasda", props)
-  // }, [props.trackingStatus]);
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -131,7 +127,6 @@ function AccountPageOrderDetails(props) {
   }
 
   const orderDetail = props.location.orderdetails;
-  console.log("dasdaadsa", orderDetail)
   if (orderDetail === undefined) {
     window.location.href = "/EmporiaDev/account/orders"
     // this.props.history.push("/EmporiaDev/account/orders")
@@ -219,17 +214,10 @@ function AccountPageOrderDetails(props) {
       let subtotalPrice = sum(detailsListing.map((item) => item.total))
       listing.subtotal = subtotalPrice
       listing.discount = parseFloat(orderDetail.PromoDiscount / 100 * subtotalPrice) + sum(detailsListing.map((item) => item.totalDiscountPrice))
-      console.log("ssdsdsadsasdsa", listing.discount)
-      console.log("ssdsdsadsasdsa total", subtotalPrice)
-      console.log("ssdsdsadsasdsa", parseFloat(orderDetail.PromoDiscount / 100 * subtotalPrice))
-      console.log("ssdsdsadsasdsa", sum(detailsListing.map((item) => item.totalDiscountPrice)))
       listing.total = orderDetail.totalAmount
-      listing.shipping[0] = { ShippingCost: orderDetail.OrderShippingFeeAmount }
+      listing.shipping[0] = { ShippingCost: orderDetail.OrderShippingFeeAmount !== null ? orderDetail.OrderShippingFeeAmount : 0 }
       listing.data = detailsListing
-
-      console.log("dsasadsada", listing)
       setPaymentOrderDetail(listing)
-      console.log("dsdasdsa121212", listing)
     }
 
   }
@@ -414,9 +402,6 @@ function AccountPageOrderDetails(props) {
 
   const productID = orderDetail !== null && JSON.parse(orderDetail.OrderProductDetail).map((x) => x.ProductID)
 
-  console.log("dasdasdsa", props)
-
-
   useEffect(() => {
     if (props.orderShipmentStatus.length !== 0 && !open) {
       setOpen(true)
@@ -433,7 +418,6 @@ function AccountPageOrderDetails(props) {
       setCancelOrder(true)
       setModalCancel(false)
     }
-    console.log("sadasdasda", props)
   }, [props.trackingStatus])
 
 
@@ -571,7 +555,6 @@ function AccountPageOrderDetails(props) {
                                                 </span>
                                             }
                                           </td>
-                                          {console.log("dsdsadsada", orders)}
                                           <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
                                           <td style={{ width: "15%" }}>
                                             {
@@ -581,36 +564,31 @@ function AccountPageOrderDetails(props) {
                                                 <Currency value={orders.ProductVariationPrice * orders.ProductQuantity} currency={"RM"} />
                                             }
                                           </td>
-                                          {orders.TrackingStatusID !== 1 &&
-                                            <>
-                                              {
-                                                orders.LogisticID !== null && orders.LogisticID !== 0 ?
-                                                  <>
-                                                    <td style={{ width: "15%" }} onClick={() => props.CallOrderRequestShipmentStatus({
-                                                      TRACKINGNUMBER: orders.TrackingNumber,
-                                                      TYPE: "true",
-                                                      PROJECTID: 2
-                                                    })}>
-                                                      {console.log("dsadsdsa", orders)}
-                                                      {console.log("dsadsdsa123", props)}
-                                                      <div style={{ fontSize: "13px" }}>
-                                                        {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
-                                                          return (courier.LogisticName)
-                                                        })}
-                                                      </div>
-                                                      <div style={{ fontSize: "13px" }}>
-                                                        {orders.TrackingNumber}
-                                                      </div>
-                                                    </td>
-                                                  </>
-                                                  :
-                                                  <td style={{ width: "15%" }}>
-                                                    <div style={{ fontSize: "13px", textAlign: "center" }}>
-                                                      Temporarily no tracking for this item
-                                                    </div>
-                                                  </td>
-                                              }
-                                            </>
+                                          {
+                                            orders.LogisticID !== null && orders.LogisticID !== 0 ?
+                                              <>
+                                                <td style={{ width: "15%" }} onClick={() => props.CallOrderRequestShipmentStatus({
+                                                  TRACKINGNUMBER: orders.TrackingNumber,
+                                                  TYPE: "true",
+                                                  PROJECTID: 2
+                                                })}>
+                                                  <div style={{ fontSize: "13px" }}>
+                                                    {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
+                                                      return (courier.LogisticName)
+                                                    })}
+                                                  </div>
+                                                  <div style={{ fontSize: "13px" }}>
+                                                    {orders.TrackingNumber}
+                                                  </div>
+                                                </td>
+                                              </>
+                                              :
+                                              orderDetail.TrackingStatusID !== 1 &&
+                                              <td style={{ width: "15%" }}>
+                                                <div style={{ fontSize: "13px", textAlign: "center" }}>
+                                                  Temporarily no tracking for this item
+                                                </div>
+                                              </td>
                                           }
                                         </tr>
                                       </tbody>
@@ -621,7 +599,6 @@ function AccountPageOrderDetails(props) {
                         )
                       })}
                       <Divider light />
-                      {console.log("paymentOrderDetailpaymentOrderDetailpaymentOrderDetailpaymentOrderDetail", paymentOrderDetail)}
                       <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
                         <div className="row">
                           <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Subtotal </div>
@@ -749,7 +726,6 @@ function AccountPageOrderDetails(props) {
                     </>
                     :
                     <>
-                      {console.log("sadadasd", orderDetail)}
                       {
                         orderDetail.TrackingStatusID === 6 ?
                           <div className="card address-card address-card--featured">

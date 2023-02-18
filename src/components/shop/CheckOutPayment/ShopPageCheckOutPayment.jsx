@@ -415,6 +415,7 @@ export default function CheckoutPayment({
                 </LoadingButton> */}
                 <CheckoutCartCheckOutButton
                     PaymentType={PaymentType}
+                    isPendingPayment={isPendingPayment}
                     textInside={"Complete Order"}
                     isVoucherApply={isVoucherApply}
                     totalApplyPromo={totalApplyPromo}

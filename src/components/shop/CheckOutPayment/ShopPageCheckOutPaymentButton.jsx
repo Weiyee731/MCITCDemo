@@ -29,7 +29,8 @@ export default function CheckoutCartCheckOutButton({
     shipping,
     checkout,
     validPromoData,
-    promoCode
+    promoCode,
+    isPendingPayment
 }) {
     const crypto = require('crypto');
     const { data } = checkout;
@@ -48,15 +49,15 @@ export default function CheckoutCartCheckOutButton({
                 return dataValue
         }
     }
+    { console.log("saadsdsadsa", checkout) }
 
-    console.log("dsadsada2336666", data)
-    console.log("1111validPromoData", validPromoData)
     const onSubmit = (Ind, transactionUUID) => {
         let ProductID = ""
         let UserCartID = []
         let ProductQuantity = []
         let ProductVariationDetailID = []
         let PromoID = 0
+        let OrderID = 0
 
 
         data.map((x, index) => {
@@ -71,7 +72,11 @@ export default function CheckoutCartCheckOutButton({
                 PromoID = validPromoData[0].PromoCodeID
         }
 
+        if (isPendingPayment === true)
+            OrderID = checkout.orderID
+
         let object = {
+            OrderID: OrderID,
             UserID: window.localStorage.getItem("id"),
             ProductID: ProductID,
             ProductQuantity: ProductQuantity,
@@ -107,8 +112,13 @@ export default function CheckoutCartCheckOutButton({
             fpx_version: checkFPXdata(fpx_information.fpx_version),
             fpx_productDesc: checkFPXdata(fpx_information.fpx_productDesc)
         }
+
+        if (isPendingPayment === true)
+            dispatch(GitAction.CallUpdateAccountOrder(object))
+        else
+            dispatch(GitAction.CallAddOrder(object))
         // console.log("objectobject", object)
-        dispatch(GitAction.CallAddOrder(object));
+        // dispatch(GitAction.CallAddOrder(object));
     }
 
     const onSubmitCreditCard = (Ind, transactionUUID) => {
@@ -118,6 +128,7 @@ export default function CheckoutCartCheckOutButton({
         let ProductQuantity = []
         let ProductVariationDetailID = []
         let PromoID = 0
+        let OrderID = 0
 
         data.map((x, index) => {
             ProductID = index === 0 ? x.product.ProductID : ProductID + "," + x.product.ProductID
@@ -131,7 +142,11 @@ export default function CheckoutCartCheckOutButton({
                 PromoID = validPromoData[0].PromoCodeID
         }
 
+        if (isPendingPayment === true)
+            OrderID = checkout.orderID
+
         let object = {
+            OrderID: OrderID,
             UserID: window.localStorage.getItem("id"),
             ProductID: ProductID,
             ProductQuantity: ProductQuantity,
@@ -160,7 +175,6 @@ export default function CheckoutCartCheckOutButton({
             bill_to_address_line1: paymentData.bill_to_address_line1,
             bill_to_address_city: paymentData.bill_to_address_city,
             bill_to_address_country: paymentData.bill_to_address_country
-
         }
 
         console.log("dasda", object)
@@ -194,7 +208,11 @@ export default function CheckoutCartCheckOutButton({
         //     bill_to_address_city: paymentData.bill_to_address_city,
         //     bill_to_address_country: paymentData.bill_to_address_country
         // }))
-        dispatch(GitAction.CallAddOrderCreditCard(object));
+
+        if (isPendingPayment === true)
+            dispatch(GitAction.CallUpdateAccountOrderCreditCard(object))
+        else
+            dispatch(GitAction.CallAddOrderCreditCard(object));
 
     }
 
@@ -252,40 +270,40 @@ export default function CheckoutCartCheckOutButton({
                             <div>
                                 {/*live*/}
                                 {/* <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post"> */}
-                                {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
-                                <input type="hidden" id="access_key" name="access_key" value={paymentData.access_key}></input>
-                                <input type="hidden" id="profile_id" name="profile_id" value={paymentData.profile_id}></input>
-                                <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={paymentData.transaction_uuid}></input>
-                                <input type="hidden" id="signed_field_names" name="signed_field_names" value={paymentData.signed_field_names}></input>
-                                <input type="hidden" id="signed_date_time" name="signed_date_time" value={paymentData.signed_date_time}></input>
-                                <input type="hidden" id="locale" name="locale" value={paymentData.locale}></input>
-                                <input type="hidden" id="transaction_type" name="transaction_type" value="sale"></input>
-                                <input type="hidden" id="reference_number" name="reference_number" value={paymentData.reference_number}></input>
-                                <input type="hidden" id="amount" name="amount" value={paymentData.amount}></input>
-                                <input type="hidden" id="currency" name="currency" value={paymentData.currency}></input>
-                                <input type="hidden" id="bill_to_surname" name="bill_to_surname" value={paymentData.bill_to_surname}></input>
-                                <input type="hidden" id="bill_to_forename" name="bill_to_forename" value={paymentData.bill_to_forename}></input>
-                                <input type="hidden" id="bill_to_email" name="bill_to_email" value={paymentData.bill_to_email}></input>
-                                <input type="hidden" id="bill_to_address_line1" name="bill_to_address_line1" value={paymentData.bill_to_address_line1}></input>
-                                <input type="hidden" id="bill_to_address_city" name="bill_to_address_city" value={paymentData.bill_to_address_city}></input>
-                                <input type="hidden" id="bill_to_address_postal_code" name="bill_to_address_postal_code" value={paymentData.bill_to_address_postal_code}></input>
-                                <input type="hidden" id="bill_to_address_state" name="bill_to_address_state" value={paymentData.bill_to_address_state}></input>
-                                <input type="hidden" id="bill_to_address_country" name="bill_to_address_country" value={paymentData.bill_to_address_country}></input>
-                                <input type="hidden" id="signature" name="signature" value={paymentData.signed}></input>
-                                <input type="submit" style={{
-                                    backgroundColor: PaymentType === "2" ? "#04AA6D" : "#808080",
-                                    border: "none",
-                                    color: "white",
-                                    fontSize: "14px",
-                                    textDecoration: "none",
-                                    width: "100%"
-                                }} id="submit" name="submit" value="submit"
-                                    onClick={() =>
-                                        onSubmitCreditCard(paymentData.PickUpIndicator, paymentData.time + '123')
-                                    } disabled={PaymentType === "2" ?
-                                        shipping[0].ShippingCost == null ? true :
-                                            false : true} />
-                                {/* </form> */}
+                                <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+                                    <input type="hidden" id="access_key" name="access_key" value={paymentData.access_key}></input>
+                                    <input type="hidden" id="profile_id" name="profile_id" value={paymentData.profile_id}></input>
+                                    <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={paymentData.transaction_uuid}></input>
+                                    <input type="hidden" id="signed_field_names" name="signed_field_names" value={paymentData.signed_field_names}></input>
+                                    <input type="hidden" id="signed_date_time" name="signed_date_time" value={paymentData.signed_date_time}></input>
+                                    <input type="hidden" id="locale" name="locale" value={paymentData.locale}></input>
+                                    <input type="hidden" id="transaction_type" name="transaction_type" value="sale"></input>
+                                    <input type="hidden" id="reference_number" name="reference_number" value={paymentData.reference_number}></input>
+                                    <input type="hidden" id="amount" name="amount" value={paymentData.amount}></input>
+                                    <input type="hidden" id="currency" name="currency" value={paymentData.currency}></input>
+                                    <input type="hidden" id="bill_to_surname" name="bill_to_surname" value={paymentData.bill_to_surname}></input>
+                                    <input type="hidden" id="bill_to_forename" name="bill_to_forename" value={paymentData.bill_to_forename}></input>
+                                    <input type="hidden" id="bill_to_email" name="bill_to_email" value={paymentData.bill_to_email}></input>
+                                    <input type="hidden" id="bill_to_address_line1" name="bill_to_address_line1" value={paymentData.bill_to_address_line1}></input>
+                                    <input type="hidden" id="bill_to_address_city" name="bill_to_address_city" value={paymentData.bill_to_address_city}></input>
+                                    <input type="hidden" id="bill_to_address_postal_code" name="bill_to_address_postal_code" value={paymentData.bill_to_address_postal_code}></input>
+                                    <input type="hidden" id="bill_to_address_state" name="bill_to_address_state" value={paymentData.bill_to_address_state}></input>
+                                    <input type="hidden" id="bill_to_address_country" name="bill_to_address_country" value={paymentData.bill_to_address_country}></input>
+                                    <input type="hidden" id="signature" name="signature" value={paymentData.signed}></input>
+                                    <input type="submit" style={{
+                                        backgroundColor: PaymentType === "2" ? "#04AA6D" : "#808080",
+                                        border: "none",
+                                        color: "white",
+                                        fontSize: "14px",
+                                        textDecoration: "none",
+                                        width: "100%"
+                                    }} id="submit" name="submit" value="submit"
+                                        onClick={() =>
+                                            onSubmitCreditCard(paymentData.PickUpIndicator, paymentData.time + '123')
+                                        } disabled={PaymentType === "2" ?
+                                            shipping[0].ShippingCost == null ? true :
+                                                false : true} />
+                                </form>
                                 {/*  */}
 
                             </div>
