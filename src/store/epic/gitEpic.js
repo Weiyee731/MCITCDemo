@@ -1403,6 +1403,28 @@ export class GitEpic {
         }
       }
     }));
+  
+    General_ViewState = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.GetState), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url + "General_ViewState")
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.GotState, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                //toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.GotState, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: GetCountry. Please check on URL")
+          return dispatch({ type: GitAction.GotState, payload: [] });
+        }
+      }
+    }));
 
   getBanner = action$ =>
     action$.pipe(filter(action => action.type === GitAction.GetBanner), map(action => {

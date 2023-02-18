@@ -8,11 +8,12 @@ import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 import theme from "../../data/theme";
 import TextField from "@mui/material/TextField";
+import {MenuItem, InputLabel} from "@mui/material";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import "react-phone-number-input/style.css";
-import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
+import { isContactValid, isEmailValid, isStringNullOrEmpty, isArrayNotEmpty } from "../../Utilities/UtilRepo"
 import "../../app/App.scss";
 
 import { toast } from "react-toastify";
@@ -21,6 +22,7 @@ function mapStateToProps(state) {
   return {
     addresses: state.counterReducer["addresses"],
     countrylist: state.counterReducer["countries"],
+    states: state.counterReducer["states"],
   };
 }
 
@@ -28,6 +30,7 @@ function mapDispatchToProps(dispatch) {
   return {
     CallAddAddress: (prodData) => dispatch(GitAction.CallAddAddress(prodData)),
     CallCountry: () => dispatch(GitAction.CallCountry()),
+    CallState: () => dispatch(GitAction.CallState()),
   };
 }
 
@@ -51,6 +54,7 @@ class AccountPageAddAddress extends Component {
     this.selectCountry = this.selectCountry.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.props.CallCountry();
+    this.props.CallState();
   }
 
   handleChange(data, e) {
@@ -119,6 +123,8 @@ class AccountPageAddAddress extends Component {
   }
 
   render() {
+    const country = this.props.states
+    const selectedCity = this.props.states.filter((x) => x.State === this.state.USERSTATE).map((y) => JSON.parse(y.CityDetail))
     return (
       <div className="card">
         <Helmet>
@@ -223,37 +229,65 @@ class AccountPageAddAddress extends Component {
                     <FormHelperText FormHelperText style={{ color: "red" }}>   Invalid Poscode </FormHelperText>
                   )}
                 </div>
-
-                <div className="form-group col-md-6">
-                  <TextField
-                    label="Town / City"
-                    id="outlined-size-normal"
+                
+              <div className="form-group col-md-6">
+                  <FormControl
                     variant="outlined"
-                    style={{ width: "100%" }}
                     size="small"
-                    onChange={this.handleChange.bind(this, "USERCITY")}
-                    required
-                  />
-                  {isStringNullOrEmpty(this.state.USERCITY) && this.state.USERCITY.length > 0 && (
-                    <FormHelperText style={{ color: "red" }}>   Invalid City </FormHelperText>
-                  )}
+                    style={{ width: "100%" }}
+                  >
+                    <InputLabel id="demo-simple-select-label">State</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="State"
+                      variant="outlined"
+                      value={this.state.USERSTATE}
+                      size="small"
+                      onChange={this.handleChange.bind(this, "USERSTATE")}
+                      style={{
+                        textAlign: "left",
+                        width: "100%",
+                      }}
+                    >
+                      {
+                          isArrayNotEmpty(this.props.states) && this.props.states.map((el, idx) => {
+                              return <MenuItem key={el.StateID} value={el.State}>{el.State}</MenuItem>
+                          })
+                      }
+                    </Select>
+                  </FormControl>
                 </div>
               </div>
 
               <div className="form-row">
-                <div className="form-group col-md-6">
-                  <TextField
-                    label="State"
-                    id="outlined-size-normal"
+              <div className="form-group col-md-6">
+                  <FormControl
                     variant="outlined"
-                    style={{ width: "100%" }}
                     size="small"
-                    onChange={this.handleChange.bind(this, "USERSTATE")}
-                    required
-                  />
-                  {isStringNullOrEmpty(this.state.USERSTATE) && this.state.USERSTATE.length > 0 && (
-                    <FormHelperText style={{ color: "red" }}>   Invalid State </FormHelperText>
-                  )}
+                    style={{ width: "100%" }}
+                  >
+                    <InputLabel id="demo-simple-select-label">Town / City</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Town / City"
+                      variant="outlined"
+                      value={this.state.USERCITY}
+                      size="small"
+                      onChange={this.handleChange.bind(this, "USERCITY")}
+                      style={{
+                        textAlign: "left",
+                        width: "100%",
+                      }}
+                    >
+                      {
+                            isArrayNotEmpty(selectedCity[0]) && selectedCity[0].map((data, idx) => {
+                                return <MenuItem key={idx} value={data.City}>{data.City}</MenuItem>
+                            })
+                        }
+                    </Select>
+                  </FormControl>
                 </div>
 
                 <div className="form-group col-md-6">
@@ -275,14 +309,11 @@ class AccountPageAddAddress extends Component {
                         width: "100%",
                       }}
                     >
-                      {this.props.countrylist.map((country) => (
-                        <option
-                          value={country.CountryId}
-                          key={country.CountryId}
-                        >
-                          {country.CountryName}
-                        </option>
-                      ))}
+                      {this.props.countrylist.map((country) => {
+                        return <MenuItem key={country.CountryId} value={country.CountryId}>{country.CountryName}</MenuItem>
+                      })
+                      }
+                        
                     </Select>
                   </FormControl>
                 </div>

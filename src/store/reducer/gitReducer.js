@@ -78,7 +78,7 @@ const INITIAL_STATE = {
   tracking: [],
   trackingStatus: [],
   allAddress: [],
-
+  states:[],
   payment: [],
   bankList: [],
   orderstatus: [],
@@ -275,6 +275,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         countries: action.payload,
+      });
+
+    case GitAction.GetState:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.GotState:
+      return Object.assign({}, state, {
+        loading: false,
+        states: action.payload,
       });
 
     //=======================BANNER========================//

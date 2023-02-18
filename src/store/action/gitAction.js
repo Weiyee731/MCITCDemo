@@ -233,6 +233,14 @@ export class GitAction {
     };
   }
 
+  static GetState = "GET-STATE";
+  static GotState = "GOT-STATE";
+  static CallState() {
+    return {
+      type: GitAction.GetState,
+    };
+  }
+
   //==================BANNER==========================//
   static GetBanner = "GET-BANNER";
   static GotBanner = "GOT-BANNER";

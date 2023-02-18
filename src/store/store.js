@@ -34,6 +34,7 @@ const rootEpic = combineEpics(
   gitEpic.updateEmail,
   //==================COUNTRY==========================//
   gitEpic.getCountry,
+  gitEpic.General_ViewState,
   //==================BANNER==========================//
   gitEpic.getBanner,
   //==================COURIER SERVICE==========================//
