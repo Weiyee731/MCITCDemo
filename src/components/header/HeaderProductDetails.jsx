@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Logo from "../../assets/Emporia.png"
 import { Wishlist16Svg } from "../../svg";
-import { Link,withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 // application;
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -77,7 +77,7 @@ class HeaderProductDetails extends Component {
 
   login() {
     // this.props.history.push("/login");
-    this.setState({loginPopOut:true})
+    this.setState({ loginPopOut: true })
     // this.props.getpopOutState(true)
   }
 
@@ -110,7 +110,7 @@ class HeaderProductDetails extends Component {
     return (
       typeof this.props.wishlist !== "undefined" && this.props.wishlist.length > 0 ?
         this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-          this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x,ind) => {
+          this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x, ind) => {
             return (
               <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.handleWishlist(product) : this.login()}
                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
@@ -135,8 +135,8 @@ class HeaderProductDetails extends Component {
 
   getpopOutState = (loginPopOut) => {
     if (this.state.loginPopOut === true)
-    this.setState({ loginPopOut: false })
-}
+      this.setState({ loginPopOut: false })
+  }
 
   render() {
     const { productDetails, } = this.props;
@@ -155,61 +155,61 @@ class HeaderProductDetails extends Component {
 
     return (
       <div>
-        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", zIndex: 999 }}>
-        {
-          productDetails !== undefined && productDetails !== null && productDetails.map((product,ind) => {
-            const productImage = JSON.parse(product.ProductImages).map((image) => { return (image.ProductMediaUrl) })
-            return (
-              <div key={ind}>
-                <div >
-                  <img
-                    className="site-header__logo_img"
-                    style={{ height: "5vw" }}
-                    src={product.ProductImages !== null ? productImage : Logo}
-                    onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-                    alt={product.ProductName}
-                  />
-                </div>
-                <div className="search__body" style={{ margin: "0 16px", width: "70%" }}>
-                  <Typography variant="body1" className="product__name" style={{ fontWeight: "700" }}>{product.ProductName}</Typography>
-                  <Typography variant="h6" className="product__prices">RM {product.ProductPrice}</Typography>
-                </div>
-                <div className="nav-panel__indicators">
-                  <div className="form-group product__add-to-cart" >
-                    <div className="product__actions">
-                      <div className="product__actions-item product__actions-item--addtocart mx-1">
+        <div>
+          {
+            productDetails !== undefined && productDetails !== null && productDetails.map((product, ind) => {
+              const productImage = JSON.parse(product.ProductImages).map((image) => { return (image.ProductMediaUrl) })
+              return (
+                <div key={ind} style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                  <div >
+                    <img
+                      className="site-header__logo_img"
+                      style={{ height: "5vw" }}
+                      src={product.ProductImages !== null ? productImage : Logo}
+                      onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
+                      alt={product.ProductName}
+                    />
+                  </div>
+                  <div className="search__body" style={{ margin: "0 16px", width: "70%" }}>
+                    <Typography variant="body1" className="product__name" style={{ fontWeight: "700" }}>{product.ProductName}</Typography>
+                    <Typography variant="h6" className="product__prices">RM {product.ProductPrice}</Typography>
+                  </div>
+                  <div className="nav-panel__indicators">
+                    <div className="form-group product__add-to-cart" >
+                      <div className="product__actions">
+                        <div className="product__actions-item product__actions-item--addtocart mx-1">
 
-                        <button
-                          type="button"
-                          disabled={this.state.isVariationSet === true ?
-                            (this.state.productQuantity > 0 ? false : true) :
-                            (product.ProductStockAmount > 0 ? false : true)
-                          }
-                          onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(productDetails[0], quantity) : this.login()}
-                          className="btn btn-primary product-card__addtocart"
-                          style={{ borderRadius: "5px", zIndex: "999" }}
-                        >
-                          Add To Cart
-                        </button>
-                      </div>
-                      <div className="product__actions-item product__actions-item--wishlist mx-1">
-                        {this.wishlisting(productDetails[0])}
+                          <button
+                            type="button"
+                            disabled={this.state.isVariationSet === true ?
+                              (this.state.productQuantity > 0 ? false : true) :
+                              (product.ProductStockAmount > 0 ? false : true)
+                            }
+                            onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? this.checkCart(productDetails[0], quantity) : this.login()}
+                            className="btn btn-primary product-card__addtocart"
+                            style={{ borderRadius: "5px", zIndex: "999" }}
+                          >
+                            Add To Cart
+                          </button>
+                        </div>
+                        <div className="product__actions-item product__actions-item--wishlist mx-1">
+                          {this.wishlisting(productDetails[0])}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )
-          })
-        }
+              )
+            })
+          }
 
-        {/* <img
+          {/* <img
           className="product-image__img"
           src={product.ProductImage !== null ? product.ProductImage : Logo}
           onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
           alt={product.ProductName}
         /> */}
-        {/* <ProductDetails product={product} />
+          {/* <ProductDetails product={product} />
         {
           this.props.version === "1" ? (
             <ProductTabs
@@ -226,12 +226,12 @@ class HeaderProductDetails extends Component {
             />
           )
         } */}
+        </div>
+        <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
       </div>
-      <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
-      </div>
-        
-      
-      
+
+
+
     );
   }
 }

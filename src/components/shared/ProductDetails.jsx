@@ -77,7 +77,7 @@ class ProductDetails extends Component {
             pathname: "",
             count: 0,
 
-            productId:0
+            productId: 0
         };
         this.addCart = this.addCart.bind(this)
         this.handleWishlist = this.handleWishlist.bind(this)
@@ -118,7 +118,7 @@ class ProductDetails extends Component {
                         productVariationType: variation.ProductVariation,
                     })
             })
-            this.setState({ productPrice: product.ProductPrice, isProductSet: true,productId :product.ProductID })
+            this.setState({ productPrice: product.ProductPrice, isProductSet: true, productId: product.ProductID })
         } else {
             this.setState({ isProductSet: false })
         }
@@ -339,7 +339,12 @@ class ProductDetails extends Component {
                                         {this.wishlisting(product)}
                                     </div>
                                     <div className="row" style={{ display: "flex", flexDirection: "row", }}>
-                                        <h3 className="col-12 product__name">{product.ProductName}</h3>
+                                        <h3 className="col-12 product__name">{product.ProductName}123</h3>
+                                        <Typography className="col-12 product__name" >
+                                            Merchant Shop:  <Link to={url.cartMerchant(product.MerchantID)}>{product.ShopName}</Link>
+                                        </Typography>
+                                        {console.log("productproductproductproductproduct", product)}
+
                                         {/* <div className="col-1"> */}
                                         {/* <a data-tip data-event='click focus'>
                                                 <img src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/null/external-share-basic-user-interface-anggara-basic-outline-anggara-putra.png"
@@ -395,6 +400,7 @@ class ProductDetails extends Component {
                                         {/* </ReactTooltip> */}
                                         {/* </div> */}
                                     </div>
+
                                     <div className="product__rating">
                                         <div className="product__rating-stars">
                                             <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
