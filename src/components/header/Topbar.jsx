@@ -46,6 +46,9 @@ function Topbar() {
     },
   ];
 
+  const registerURL = window.location.hostname === "localhost" ? "http://localhost:3002/cms.myemporia.my/register/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("id") : "https://cms.myemporia.my/ecommerceCMSDev/register/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("id");
+
+  const loginURL = window.location.hostname === "localhost" ? "http://localhost:3002/cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("password") : "https://cms.myemporia.my/ecommerceCMSDev/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("password");
   return (
     <div className="site-header__topbar topbar">
       <div className="topbar__container container">
@@ -70,11 +73,16 @@ function Topbar() {
           </div>
           <div className="topbar__item">
             {/* <DropdownLanguage /> */}
-            {localStorage.getItem("isLogin") === "true" &&
-            <Button 
-              style={{ fontSize: "9pt", background: "inherit", border: "transparent", height: "1vw", display: "flex", alignItems: "center", fontFamily: 'Helvetica' }}>
-              <a style={{color: "white"}} href="http://localhost:3001/ecommerceCMSDev/register" target="_blank" rel="noreferrer">Sign up merchant account</a>
-            </Button>}
+            {localStorage.getItem("isLogin") === "true" && localStorage.getItem("roleid") === "17" &&
+              <Button
+                style={{ fontSize: "9pt", background: "inherit", border: "transparent", height: "1vw", display: "flex", alignItems: "center", fontFamily: 'Helvetica' }}>
+                <a style={{ color: "white" }} href={registerURL} target="_blank" rel="noreferrer">Sign up Seller Account</a>
+              </Button>}
+            {localStorage.getItem("isLogin") === "true" && parseInt(localStorage.getItem("roleid")) < 17 &&
+              <Button
+                style={{ fontSize: "9pt", background: "inherit", border: "transparent", height: "1vw", display: "flex", alignItems: "center", fontFamily: 'Helvetica' }}>
+                <a style={{ color: "white" }} href={loginURL} target="_blank" rel="noreferrer">Seller account</a>
+              </Button>}
           </div>
         </div>
       </div>

@@ -233,7 +233,7 @@ function SitePageFaq() {
                                                 <Typography>
                                                     We are provided these payment methods
                                                     <ul>
-                                                        <li>E-Wallet</li>
+                                                        {/* <li>E-Wallet</li> */}
                                                         <li>Credit / Debit Card</li>
                                                         <li>Online Banking</li>
                                                     </ul>

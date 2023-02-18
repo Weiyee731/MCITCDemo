@@ -141,8 +141,6 @@ function AccountPageOrderDetails(props) {
     filteredMerchant = JSON.parse(orderDetail.OrderProductDetail).filter((ele, ind) => ind
       === JSON.parse(orderDetail.OrderProductDetail).findIndex(elem => elem.MerchantID === ele.MerchantID))
 
-
-    console.log("dsdorderDetailorderDetailorderDetailasd", orderDetail)
     if (paymentOrderDetail.length === 0) {
       let listing =
       {
@@ -179,7 +177,6 @@ function AccountPageOrderDetails(props) {
 
       orderDetail.OrderProductDetail !== undefined && JSON.parse(orderDetail.OrderProductDetail).map((x) => {
 
-        console.log("dsdorderDetailorderDetailorderDetailasd123", x)
         let image = ""
         if (x.ProductImages !== undefined && x.ProductImages !== null) {
           image = JSON.parse(x.ProductImages)[0].ProductMediaUrl
@@ -209,8 +206,6 @@ function AccountPageOrderDetails(props) {
         }
         detailsListing.push(data)
       })
-
-      // console.log("dadadadas", detailsListing.data)
       let subtotalPrice = sum(detailsListing.map((item) => item.total))
       listing.subtotal = subtotalPrice
       listing.discount = parseFloat(orderDetail.PromoDiscount / 100 * subtotalPrice) + sum(detailsListing.map((item) => item.totalDiscountPrice))

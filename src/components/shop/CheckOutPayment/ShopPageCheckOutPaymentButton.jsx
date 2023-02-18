@@ -49,7 +49,6 @@ export default function CheckoutCartCheckOutButton({
                 return dataValue
         }
     }
-    { console.log("saadsdsadsa", checkout) }
 
     const onSubmit = (Ind, transactionUUID) => {
         let ProductID = ""
