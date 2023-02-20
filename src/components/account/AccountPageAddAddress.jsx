@@ -326,6 +326,13 @@ class AccountPageAddAddress extends Component {
                 >
                   Save
                 </button>
+                <button
+                  className="m-3 btn btn-primary"
+                  type="button"
+                  onClick={() =>window.location.reload("/account/addresses")}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>

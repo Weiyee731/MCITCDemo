@@ -173,7 +173,6 @@ class AccountPageAddresses extends Component {
   render() {
     return (
       <Card>
-        {console.log(this.props.states)}
         {this.state.onAdd ? (
           <AccountPageAddAddress parentCallback={this.handleCallbackfromAdd} />
         ) : (
