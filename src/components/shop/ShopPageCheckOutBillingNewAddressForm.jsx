@@ -21,8 +21,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from "@mui/material/Checkbox";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { InputLabel } from "@mui/material";
 import AccountPageAddAddress from '../account/AccountPageAddAddress';
 import { toast } from "react-toastify";
+import { isContactValid, isEmailValid, isStringNullOrEmpty, isArrayNotEmpty } from "../../Utilities/UtilRepo"
 // ----------------------------------------------------------------------
 
 CheckoutBillingNewAddressForm.propTypes = {
@@ -49,6 +51,7 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
   })
 
   const { addAddress } = useSelector(state => state.counterReducer);
+  const { states } = useSelector(state => state.counterReducer);
   const [prevValue, setPrevValue] = useState(addAddress);
 
   useEffect(() => {
@@ -65,6 +68,7 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
 
   useEffect(() => {
     dispatch(GitAction.CallCountry());
+    dispatch(GitAction.CallState());
   }, []);
 
   const countrylist = useSelector(state => ({ countries: state.counterReducer.countries }));
@@ -85,6 +89,8 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
   const handleaddAddress = () => {
     dispatch(GitAction.CallAddAddress(newAddressInfo));
   }
+
+  const selectedCity = states.filter((x) => x.State === newAddressInfo.USERSTATE).map((y) => JSON.parse(y.CityDetail))
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -153,12 +159,64 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
               sm: 'repeat(3, 1fr)',
             }}
           >
-            <TextField id="outlined-basic" name="USERCITY" label="Town / City" variant="outlined" value={newAddressInfo.USERCITY} onChange={(e) => {
-              editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
-            }} />
-            <TextField id="outlined-basic" name="USERSTATE" label="State" variant="outlined" value={newAddressInfo.USERSTATE} onChange={(e) => {
-              editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
-            }} />
+            <FormControl
+              variant="outlined"
+              // size="small"
+              style={{ width: "100%" }}
+            >
+              <InputLabel id="demo-simple-select-label">State</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name="USERSTATE"
+                label="State"
+                variant="outlined"
+                value={newAddressInfo.USERSTATE}
+                // size="small"
+                onChange={(e) => {
+                  editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+                }}
+                // onChange={this.handleChange.bind(this, "USERSTATE")}
+                style={{
+                  textAlign: "left",
+                  width: "100%",
+                }}
+              >
+                {
+                  isArrayNotEmpty(states) && states.map((el, idx) => {
+                    return <MenuItem key={el.StateID} value={el.State}>{el.State}</MenuItem>
+                  })
+                }
+              </Select>
+            </FormControl>
+            <FormControl
+              variant="outlined"
+              // size="small"
+              style={{ width: "100%" }}
+            >
+              <InputLabel id="demo-simple-select-label">Town / City</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                variant="outlined"
+                // size="small"
+                name="USERCITY"
+                label="Town / City"
+                value={newAddressInfo.USERCITY} onChange={(e) => {
+                  editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
+                }}
+                style={{
+                  textAlign: "left",
+                  width: "100%",
+                }}
+              >
+                {
+                  isArrayNotEmpty(selectedCity[0]) && selectedCity[0].map((data, idx) => {
+                    return <MenuItem key={idx} value={data.City}>{data.City}</MenuItem>
+                  })
+                }
+              </Select>
+            </FormControl>
             <TextField id="outlined-basic" name="USERPOSCODE" label="Zip/Code" variant="outlined" type="number" value={newAddressInfo.USERPOSCODE} onChange={(e) => {
               editForm({ ...newAddressInfo, [e.target.name]: e.target.value })
             }} />
