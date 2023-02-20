@@ -11,6 +11,7 @@ const rootEpic = combineEpics(
   //==================USER==========================//
   // gitEpic.getAllUserByTypeId,
   gitEpic.User_Login,
+  gitEpic.User_Login_GoogleFB,
   gitEpic.LogoutUser,
   gitEpic.RegisterUser,
   gitEpic.RegisterUserOTP,
