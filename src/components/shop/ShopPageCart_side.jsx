@@ -311,7 +311,6 @@ class ShopPageCart_side extends Component {
                         <div style={{ fontSize: "11px" }}>
                             Variation: {item.product.ProductVariationValue}
                         </div>
-                        {console.log("cart", item.product)}
                         <div>
                             {
                                 item.product.ProductPromotion && JSON.parse(item.product.ProductPromotion).length > 0 ?

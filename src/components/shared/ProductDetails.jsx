@@ -339,7 +339,7 @@ class ProductDetails extends Component {
                                         {this.wishlisting(product)}
                                     </div>
                                     <div className="row" style={{ display: "flex", flexDirection: "row", }}>
-                                        <h3 className="col-12 product__name">{product.ProductName}123</h3>
+                                        <h3 className="col-12 product__name">{product.ProductName}</h3>
                                         <Typography className="col-12 product__name" >
                                             Merchant Shop:  <Link to={url.cartMerchant(product.MerchantID)}>{product.ShopName}</Link>
                                         </Typography>

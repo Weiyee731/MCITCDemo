@@ -25,7 +25,7 @@ import Logo from "../../assets/Emporia.png";
 import shopCover from "../../assets/shopCover.png";
 import "./merchantpage.css";
 import MerchantSocialLinks from './MerchantSocialLinks';
-
+import ReactRoundedImage from "react-rounded-image"
 import SocialLinks from '../shared/SocialLinks';
 
 import {
@@ -128,48 +128,34 @@ function MerchantPage(props) {
                         <div>
                             <CardContent className='merchant-profile-card-content' sx={{ height: "10vw" }}>
                                 <div className='row m-1 merchant-profile'>
-                                    <div className='col-8'>
+                                    <div className={width >= 768 && width <= 1440 ? 'col-12' : width > 1440 && 'col-8'}>
                                         <div className='row' style={{ display: "flex", alignItems: "center" }}>
                                             <div className='col-3 merchant-profile-img'>
-                                                <Box borderRadius="50%" sx={{
-                                                    border: 3,
-                                                    borderColor: 'grey.500',
-                                                    width: "9vw",
-                                                    height: "9vw",
-                                                    backgroundColor: "white"
-                                                }}>
-                                                    <img
-                                                        // className="product-image__img"
-                                                        width="100%"
-                                                        src={merchantDetails.ShopImage}
-                                                        onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-                                                        alt=""
-                                                    />
-                                                </Box>
-
+                                                <ReactRoundedImage image={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo} roundedSize="10" roundedColor="white" imageWidth="180" imageHeight="180" />
                                             </div>
-                                            <div className='col-9 merchantDescription' style={{ marginTop: "2vw" }}>
+                                            <div className='col-9 merchantDescription' style={{ marginTop: "2.5vw" }}>
                                                 <div style={{
-                                                    height: "max-content", padding: "0.3vw", backgroundColor: "#2b535e", borderRadius: "0.5vw",
-                                                    color: "white", opacity: 0.8, width: "max-content"
+                                                    height: "max-content", paddingLeft: "0.5vw", paddingRight: "0.5vw", backgroundColor: "#2b535e", borderRadius: "0.2vw",
+                                                    color: "white", opacity: 1, width: "max-content"
                                                 }}>
                                                     <Typography variant='h5'>
                                                         {merchantDetails.ShopName}
                                                     </Typography>
                                                 </div>
-                                                <div className='mt-2'>
-                                                    <Box>
-                                                        <div className='row'>
-                                                            <div className='' style={{ display: "flex" }}>
-                                                                <Rating name="read-only" value={merchantDetails.ShopRating !== null ? parseInt(merchantDetails.ShopRating) : 1} readOnly />
-                                                                <Typography className='m-1'>({merchantDetails.ShopReviewCount !== null ? merchantDetails.ShopReviewCount : 0} Rating)</Typography>
-                                                            </div>
+                                                <div className='mt-4'>
+                                                    <div className="col-lg-8 col-md-8 col-sm-12">
+                                                        <Box>
+                                                            <div className='row'>
+                                                                <div className='' style={{ display: "flex" }}>
+                                                                    <Rating name="read-only" value={merchantDetails.ShopRating !== null ? parseInt(merchantDetails.ShopRating) : 1} readOnly />
+                                                                    <Typography className='m-1'>({merchantDetails.ShopReviewCount !== null ? merchantDetails.ShopReviewCount : 0} Rating)</Typography>
+                                                                </div>
 
-                                                        </div>
-                                                    </Box>
+                                                            </div>
+                                                        </Box>
+                                                    </div>
                                                 </div>
                                                 <div className='row  '>
-                                                    {/* <div className='col-4'></div> */}
                                                     <div className="col-lg-8 col-md-8 col-sm-12">
                                                         <Typography className='m-2'>Description: {merchantDetails.ShopDescription !== null ? merchantDetails.ShopDescription : "No Description"}</Typography>
                                                         <Typography className='m-2'>Products : {merchantDetails.MerchantTotalProduct !== null ? merchantDetails.MerchantTotalProduct : 0}</Typography>
@@ -181,11 +167,11 @@ function MerchantPage(props) {
                                         </div>
 
                                     </div>
-                                    <div className='col-4 social-links-web' style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                                    {/* className={width >= 768 && width <= 1440 ? 'col-12' : width > 1440 && 'col-8'} */}
+                                    <div className={width >= 768 && width <= 1440 ? 'col-12 social-links-web' : width > 1440 && 'col-4 social-links-web'} style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                                         <div className="topbar__item">
                                             <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
                                         </div>
-
                                     </div>
                                 </div>
                             </CardContent>
@@ -203,22 +189,7 @@ function MerchantPage(props) {
                             title="green iguana"
                         />
                         <div className='row' style={{ display: "flex", alignItems: "center", flexDirection: "column", position: "relative", bottom: "31vw" }}>
-                            {/* <div className='col-12'> */}
-                            <Box borderRadius="50%" sx={{
-                                border: 3,
-                                borderColor: 'grey.500',
-                                width: "20vw",
-                                height: "20vw",
-                                backgroundColor: "white"
-                            }}>
-                                <img
-                                    // className="product-image__img"
-                                    width="100%"
-                                    src={merchantDetails.ShopImage}
-                                    onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-                                    alt=""
-                                />
-                            </Box>
+                            <ReactRoundedImage image={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo} roundedSize="10" roundedColor="white" />
                             <div style={{
                                 height: "max-content", padding: "0.3vw", backgroundColor: "#2b535e", borderRadius: "0.5vw",
                                 color: "white", opacity: 0.8, width: "max-content"
