@@ -37,6 +37,7 @@ import classNames from "classnames";
 import { findAllByDisplayValue } from "@testing-library/dom";
 
 import LoadingPanel from '../shared/loadingPanel';
+import { isArrayNotEmpty } from "../../Utilities/UtilRepo";
 
 function mapStateToProps(state) {
     return {
@@ -136,7 +137,7 @@ class BlockListingDetails extends Component {
             page: 1
         })
 
-        this.props.productsListing !== undefined && this.props.productsListing.length > 0 && 
+        this.props.productsListing !== undefined && this.props.productsListing.length > 0 &&
             this.state.productList.push(this.props.productsListing)
 
         if (this.props.productCategories !== undefined && this.props.productCategories.length > 0)
@@ -144,13 +145,13 @@ class BlockListingDetails extends Component {
     }
 
 
-    componentDidUpdate(prevProps,prevState) {
+    componentDidUpdate(prevProps, prevState) {
         if (!this.state.isDataBind) {
             this.setState({ products: this.props.products, isDataBind: true })
         }
         if (prevProps.productsListing !== this.props.productsListing) {
-            if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 
-                ) {
+            if (this.props.productsListing !== undefined && this.props.productsListing.length > 0
+            ) {
                 this.state.productList.splice(0, this.state.productList.length)
                 this.state.productList.push(this.props.productsListing)
                 this.setState({ isCheckDataBind: true })
@@ -166,30 +167,33 @@ class BlockListingDetails extends Component {
 
         if (prevProps.location.pathname !== this.props.location.pathname)
             window.location.href = this.props.location.pathname
-            
 
-        if ( this.props.productCategories !== undefined && this.props.productCategories.length > 0)
+
+        if (this.props.productCategories !== undefined && this.props.productCategories.length > 0)
             if (this.state.isCategorySet === false)
                 this.handleCategory()
-            // else
-                // this.props.CallAllProductCategoryListing();
+        // else
+        // this.props.CallAllProductCategoryListing();
     }
 
     handleCategory() {
         let tempCategoryHierachy = 0
         let breadcrumb = this.state.breadcrumb
-        // if (this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == "Category" && this.state.categoryHierachy === 0) {
-        if (this.state.categoryHierachy === 0) {
+
+        // if (this.props.match.params.selectedtype.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '') == "Category" && this.state.categoryHierachy !== 0) {
+        if (this.props.productCategories.length > 0) {
+
+            // if (this.state.categoryHierachy !== 0) {
             this.props.productCategories.map((category) => {
-                // if (category.ProductCategoryID === this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
+                if (category.ProductCategoryID == this.props.match.params.selectedtypevalue.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')) {
                     this.setState({
                         categoryHierachy: 1,
                         breadcrumb: [...breadcrumb, ...[
-                            { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID) },
+                            { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID), ProductCategoryID: category.ProductCategoryID },
                         ]]
                     })
                     tempCategoryHierachy = 1
-                // }
+                }
             })
             if (tempCategoryHierachy === 1) {
                 this.state.CategoryHierachyListing.push(this.props.productCategories)
@@ -204,8 +208,8 @@ class BlockListingDetails extends Component {
                                 this.setState({
                                     categoryName: category.ProductCategory,
                                     breadcrumb: [...breadcrumb, ...[
-                                        { title: [categoryList.ProductCategory], url: this.processUrl(categoryList.ProductCategoryID) },
-                                        { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID) },
+                                        { title: [categoryList.ProductCategory], url: this.processUrl(categoryList.ProductCategoryID), ProductCategoryID: categoryList.ProductCategoryID },
+                                        { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID), ProductCategoryID: category.ProductCategoryID },
                                     ]]
                                 })
                                 tempCategoryHierachy = 2
@@ -229,9 +233,9 @@ class BlockListingDetails extends Component {
                                         this.setState({
                                             categoryName: category.ProductCategory,
                                             breadcrumb: [...breadcrumb, ...[
-                                                { title: [categoryListing.ProductCategory], url: this.processUrl(categoryListing.ProductCategoryID) },
-                                                { title: [categoryList.ProductCategory], url: this.processUrl(categoryList.ProductCategoryID) },
-                                                { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID) },
+                                                { title: [categoryListing.ProductCategory], url: this.processUrl(categoryListing.ProductCategoryID), ProductCategoryID: categoryListing.ProductCategoryID },
+                                                { title: [categoryList.ProductCategory], url: this.processUrl(categoryList.ProductCategoryID), ProductCategoryID: categoryList.ProductCategoryID },
+                                                { title: [category.ProductCategory], url: this.processUrl(category.ProductCategoryID), ProductCategoryID: category.ProductCategoryID },
                                             ]]
                                         })
                                         tempCategoryHierachy = 3
@@ -245,12 +249,14 @@ class BlockListingDetails extends Component {
                         })
                 })
             }
+            // }
+            this.setState({ isCategorySet: true })
+            // }
         }
-        this.setState({ isCategorySet: true })
     }
 
     handleFilterOption(e) {
-        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 ) {
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0) {
             let tempObject = this.state.filterOptions
             let tempList = this.props.productsListing
             switch (e.target.id) {
@@ -327,7 +333,7 @@ class BlockListingDetails extends Component {
     handleFilterPriceButton() {
         let minPrice = this.state.filterOptions.minPrice
         let maxPrice = this.state.filterOptions.maxPrice
-        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 ) {
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0) {
             let list = this.props.productsListing
             let isStringExist = false
             let listToCheck = []
@@ -395,7 +401,7 @@ class BlockListingDetails extends Component {
 
 
     handleSorting(options) {
-        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0 ) {
+        if (this.props.productsListing !== undefined && this.props.productsListing.length > 0) {
             let list = this.props.productsListing
 
             switch (options.target.value) {
@@ -526,6 +532,53 @@ class BlockListingDetails extends Component {
             "block-products-carousel--loading": loading,
         });
 
+        const checkCategoryListing = (hierachy, categoryID) => {
+            let check = false
+            let breadcrumb = this.state.breadcrumb
+            if (hierachy === 1) {
+                if (breadcrumb[2] !== undefined && breadcrumb[2].ProductCategoryID === categoryID)
+                    check = true
+            }
+
+            if (hierachy === 2) {
+                if (breadcrumb[3] !== undefined && breadcrumb[3].ProductCategoryID === categoryID)
+                    check = true
+            }
+
+            if (hierachy === 3) {
+                if (breadcrumb[4] !== undefined && breadcrumb[4].ProductCategoryID === categoryID)
+                    check = true
+            }
+            return check
+        }
+
+
+        const unSelectedLayout = (data) => {
+            return (
+                <>
+                    <FiberManualRecordOutlinedIcon
+                        onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                    />
+                    <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                    >{data.ProductCategory}
+                    </label>
+                </>
+            )
+        }
+
+        const selectedLayout = (data) => {
+            return (
+                <>
+                    {/* <FiberManualRecordOutlinedIcon
+                        onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                    />
+                    <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                    >{data.ProductCategory}
+                    </label> */}
+                    <DoubleArrowIcon fontSize='sm' /> <label className="sub-label-active" >{data.ProductCategory}</label>
+                </>
+            )
+        }
         return (
             <React.Fragment>
                 <Helmet>
@@ -556,15 +609,15 @@ class BlockListingDetails extends Component {
                                     </Link>
                                 </div>
                                 {
-                                    this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
-                                    <div>
-                                        <label onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID; this.setState({ isCheckDataBind: false }) }}>
-                                            {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
-                                        </label>
-                                    </div>
+                                    // this.state.categoryHierachy === 2 || this.state.categoryHierachy === 3 || this.state.categoryHierachy === 4 &&
+                                    // <div>
+                                    //     <label onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + this.state.ParentCategory[0].ProductCategoryID; this.setState({ isCheckDataBind: false }) }}>
+                                    //         {this.state.ParentCategory !== null && this.state.ParentCategory[0] !== undefined && this.state.ParentCategory[0].ProductCategory}
+                                    //     </label>
+                                    // </div>
                                 }
                                 <div>
-                                    {this.state.CategoryHierachyListing.length > 0 && this.state.CategoryHierachyListing[0] !== null &&
+                                    {/* {this.state.CategoryHierachyListing.length > 0 && this.state.CategoryHierachyListing[0] !== null &&
                                         this.state.CategoryHierachyListing[0].map((category) => {
                                             return (
                                                 <div key={category.ProductCategory} className="sub-category-items">
@@ -605,7 +658,88 @@ class BlockListingDetails extends Component {
                                                     }
                                                 </div>
                                             )
-                                        })}
+                                        })} */}
+                                    {
+                                        isArrayNotEmpty(this.props.productCategories) && this.props.productCategories.map((data) => {
+                                            return (
+                                                <>
+                                                    <div key={data.ProductCategory} className="sub-category-items " style={{ fontWeight: "200" }}>
+                                                        {checkCategoryListing(1, data.ProductCategoryID) ?
+                                                            <>
+                                                                {selectedLayout(data)}
+                                                                {
+                                                                    data.HierarchyItem !== undefined && JSON.parse(data.HierarchyItem).map((dataDetail) => {
+                                                                        return (
+                                                                            <div key={dataDetail.ProductCategory} className="sub-label " style={{ fontWeight: "200", paddingLeft: "20px" }}>
+                                                                                {checkCategoryListing(2, dataDetail.ProductCategoryID) ?
+                                                                                    <>
+                                                                                        {selectedLayout(dataDetail)}
+                                                                                        {
+                                                                                            dataDetail.HierarchyItem !== undefined && JSON.parse(dataDetail.HierarchyItem).map((detailListing) => {
+                                                                                                return (
+                                                                                                    <div key={dataDetail.ProductCategory} className="sub-category-items " style={{ fontWeight: "200", paddingLeft: "40px" }}>
+                                                                                                        {checkCategoryListing(3, detailListing.ProductCategoryID) ?
+                                                                                                            selectedLayout(detailListing)
+                                                                                                            :
+                                                                                                            unSelectedLayout(detailListing)
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                )
+                                                                                            })
+                                                                                        }
+                                                                                    </>
+                                                                                    :
+                                                                                    unSelectedLayout(dataDetail)
+                                                                                }
+                                                                            </div>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </>
+                                                            :
+                                                            unSelectedLayout(data)
+
+
+                                                        }
+                                                        {/* <FiberManualRecordOutlinedIcon
+                                                            onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                        />
+                                                        <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                        >{data.ProductCategory}
+                                                        </label> */}
+                                                        {/* {
+                                                            data.HierarchyItem !== undefined && JSON.parse(data.HierarchyItem).map((dataDetail) => {
+                                                                return (
+                                                                    <div key={dataDetail.ProductCategory} className="sub-label " style={{ fontWeight: "200", paddingLeft: "20px" }}>
+                                                                        <FiberManualRecordOutlinedIcon
+                                                                            onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + dataDetail.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                                        />
+                                                                        <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + dataDetail.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                                        >{dataDetail.ProductCategory}
+                                                                        </label>
+                                                                        {
+                                                                            dataDetail.HierarchyItem !== undefined && JSON.parse(dataDetail.HierarchyItem).map((detailListing) => {
+                                                                                return (
+                                                                                    <div key={dataDetail.ProductCategory} className="sub-category-items " style={{ fontWeight: "200", paddingLeft: "40px" }}>
+                                                                                        <FiberManualRecordOutlinedIcon
+                                                                                            onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + dataDetail.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                                                        />
+                                                                                        <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + dataDetail.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                                                                                        >{dataDetail.ProductCategory}
+                                                                                        </label>
+                                                                                    </div>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </div>
+                                                                )
+                                                            })
+                                                        } */}
+                                                    </div>
+                                                </>
+                                            )
+                                        })
+                                    }
                                 </div>
                             </div>
                             <hr />
@@ -770,7 +904,9 @@ class BlockListingDetails extends Component {
                             <div className="container">
                                 <div className="row">
                                     {
-                                        this.state.isCategorySet === true && this.state.isCheckDataBind === true && this.props.productCategories !== undefined && this.props.productCategories.length > 0 ?
+                                        // this.state.isCategorySet === true && 
+                                        // this.state.isCheckDataBind === true && 
+                                        this.props.productCategories !== undefined && this.props.productCategories.length > 0 ?
 
                                             this.state.productList.length > 0 ?
                                                 this.state.productList[0].length > 0 && typeof this.state.productList[0] !== undefined ?

@@ -464,7 +464,6 @@ function AccountPageOrderDetails(props) {
                       </Button>
                   }
                 </div>
-                {console.log("dasdadsa", orderDetail)}
                 <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
                 <div className="order-header__subtitle">
                   Was placed on{" "}
@@ -488,18 +487,15 @@ function AccountPageOrderDetails(props) {
                           <>
                             <div key={i}>
                               <th>
-                                {console.log("props.location.merchant", props.location.merchant)}
                                 {
                                   props.location.merchant.length > 0 && props.location.merchant.filter((X) => X.UserID === MerchantList.MerchantID).map((merchant) => {
-                                    console.log("safafa", merchant)
-                                    // return (merchant.ShopName)
+                                    return (merchant.ShopName)
                                   })
                                 }
                               </th>
                             </div>
                             <div style={{ backgroundColor: '#F9D295' }}>
                               <Divider light />
-                              {console.log("dsadadas", MerchantList)}
                               {trackingDetail(i + 1, MerchantList)}
                             </div>
                             <table>
