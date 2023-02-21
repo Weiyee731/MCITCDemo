@@ -13,6 +13,7 @@ import { withRouter } from "react-router-dom";
 // data stubs
 import theme from "../../data/theme";
 import Logo from "../../assets/Emporia.png";
+import StoreIcon from '@mui/icons-material/Store';
 // import { browserHistory } from "react-router";
 
 //Display by Order Along with Tracking No
@@ -239,9 +240,9 @@ function AccountPageOrderDetails(props) {
   totalOverall = isStringNullOrEmpty(orderDetail) ? parseFloat(0).toFixed(2) : parseFloat(orderDetail.totalAmount).toFixed(2)
   shipping = parseFloat(totalOverall - subtotalPrice).toFixed(2)
 
-  let trackingDetail = (index) => (
+  let trackingDetail = (index, MerchantList) => (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <Typography style={{ marginLeft: '4%', marginTop: '1%', marginBottom: '1%' }}>Order {index}</Typography>
+      <Typography style={{ marginLeft: '4%', marginTop: '1%', marginBottom: '1%' }}><StoreIcon /> {MerchantList.ShopName}</Typography>
       {/* <Typography style={{ marginLeft: '4%', marginTop: '1%' }}>Tracking No: AA987654321BB</Typography>
       <IconButton aria-label="View" style={{ marginLeft: 'auto' }} onClick={handleClickOpen}> <VisibilityIcon /></IconButton> */}
       <Dialog
@@ -463,6 +464,7 @@ function AccountPageOrderDetails(props) {
                       </Button>
                   }
                 </div>
+                {console.log("dasdadsa", orderDetail)}
                 <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
                 <div className="order-header__subtitle">
                   Was placed on{" "}
@@ -486,21 +488,24 @@ function AccountPageOrderDetails(props) {
                           <>
                             <div key={i}>
                               <th>
+                                {console.log("props.location.merchant", props.location.merchant)}
                                 {
                                   props.location.merchant.length > 0 && props.location.merchant.filter((X) => X.UserID === MerchantList.MerchantID).map((merchant) => {
-                                    return (merchant.ShopName)
+                                    console.log("safafa", merchant)
+                                    // return (merchant.ShopName)
                                   })
                                 }
                               </th>
                             </div>
                             <div style={{ backgroundColor: '#F9D295' }}>
                               <Divider light />
-                              {trackingDetail(i + 1)}
+                              {console.log("dsadadas", MerchantList)}
+                              {trackingDetail(i + 1, MerchantList)}
                             </div>
                             <table>
                               <thead>
                                 <tr>
-                                  <th>Preview</th>
+                                  <th>Image</th>
                                   <th>Product</th>
                                   <th>Unit Price</th>
                                   <th>Quantity</th>
