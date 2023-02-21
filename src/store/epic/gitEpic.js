@@ -35,6 +35,43 @@ export class GitEpic {
       }
     }));
 
+  User_Login_GoogleFB = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.LoginGoogleFB), map(action => {
+      return dispatch => {
+        try {
+          console.log(url +
+            "User_Login_GoogleFB?USEREMAIL=" +
+            action.payload.email +
+            "&PROJECTID=2" +
+            "&TOKEN=" +
+            action.payload.id +
+            "&TYPE=" +
+            action.payload.TYPE)
+          return fetch(url +
+            "User_Login_GoogleFB?USEREMAIL=" +
+            action.payload.email +
+            "&PROJECTID=2" +
+            "&TOKEN=" +
+            action.payload.id +
+            "&TYPE=" +
+            action.payload.TYPE)
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.UserGoogleFBLoggedIn, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                //toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.UserGoogleFBLoggedIn, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: User_Login. Please check on URL")
+          return dispatch({ type: GitAction.UserGoogleFBLoggedIn, payload: [] });
+        }
+      }
+    }));
+
   LogoutUser = action$ =>
     action$.pipe(filter(action => action.type === GitAction.Logout), map(action => {
       return dispatch => {
@@ -118,6 +155,10 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.CheckUser), map(action => {
       return dispatch => {
         try {
+          console.log(url +
+            "User_CheckDuplicate?email=" +
+            action.payload.Email +
+            "&ProjectID=2")
           return fetch(url +
             "User_CheckDuplicate?email=" +
             action.payload.Email +

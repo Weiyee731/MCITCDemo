@@ -56,6 +56,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     loginUser: (credentials) => dispatch(GitAction.CallLogin(credentials)),
+    CallLoginGoogleFB: (credentials) => dispatch(GitAction.CallLoginGoogleFB(credentials)),
     CallCheckUserExists: (credentials) => dispatch(GitAction.CallCheckUserExists(credentials)),
     CallResetCheckUserExists: (credentials) => dispatch(GitAction.CallResetCheckUserExists(credentials)),
     CallSendOTP: (credentials) => dispatch(GitAction.CallSendOTP(credentials)),
@@ -133,24 +134,91 @@ class LoginComponent extends Component {
     // this.responseGoogle = this.responseGoogle.bind(this);
   }
 
-  OnSubmitLogin(e) {
-    e.preventDefault();
-    this.props.loginUser(this.state);
+  OnSubmitLogin(e, platform) {
+
+    console.log("ee", e)
+    switch (platform) {
+      case 'MyEmporia':
+        {
+          console.log("e", e)
+          e.preventDefault();
+          this.props.loginUser(this.state);
+        }
+      case 'Google':
+        {
+          this.props.CallCheckUserExists({ Email: e.email, Value: "forgetPassword" })
+          // e['TYPE'] = 2;
+          // this.props.CallLoginGoogleFB(e);
+        }
+      case 'Facebook':
+        { }
+    }
+
+  }
+
+  setProfile(profile, platform) {
+    localStorage.setItem("isLogin", true);
+    localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
+    localStorage.setItem("lastname", this.props.currentUser[0].LastName);
+    localStorage.setItem("role", this.props.currentUser[0].UserType);
+    localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
+    localStorage.setItem("userName", this.state.username);
+    localStorage.setItem("password", this.encryptData(this.state.password));
+    localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
+    localStorage.setItem("productEndorsementBadge", this.props.currentUser[0].productEndorsementBadge);
+    localStorage.setItem("productBadge", this.props.currentUser[0].productBadge);
+    localStorage.setItem("id", this.props.currentUser[0].UserID);
+
+    if (this.state.rememberMe === false) {
+      localStorage.setItem("isLogin", true);
+      cookies.set("isLogin", true);
+
+      cookies.set("rememberMe", this.state.rememberMe);
+      localStorage.setItem("userName", this.state.username);
+      localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
+      localStorage.setItem("password", this.encryptData(this.state.password));
+      localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
+      cookies.set("firstname", this.props.currentUser[0].FirstName);
+      localStorage.setItem("lastname", this.props.currentUser[0].LastName);
+      cookies.set("lastname", this.props.currentUser[0].LastName);
+      localStorage.setItem("role", this.props.currentUser[0].UserType);
+      cookies.set("role", this.props.currentUser[0].UserType);
+      localStorage.setItem("id", this.props.currentUser[0].UserID);
+
+
+      localStorage.setItem("email", this.props.currentUser[0].UserEmailAddress);
+      localStorage.setItem("contact", this.props.currentUser[0].UserContactNo);
+    } else {
+      let date = new Date();
+      date.setTime(date.getTime() + 60 * 60 * 24 * 1000);
+      const options = { path: "./", expires: date };
+      localStorage.setItem("isLogin", true);
+      cookies.set("isLogin", true, options);
+      cookies.set("rememberMe", this.state.rememberMe, options);
+      localStorage.setItem("id", this.props.currentUser[0].UserID);
+      localStorage.setItem("userName", this.state.username);
+      localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
+      localStorage.setItem("password", this.encryptData(this.state.password));
+      localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
+      cookies.set("firstname", this.props.currentUser[0].FirstName, options);
+      localStorage.setItem("lastname", this.props.currentUser[0].LastName);
+      cookies.set("lastname", this.props.currentUser[0].LastName, options);
+      localStorage.setItem("role", this.props.currentUser[0].UserType);
+      localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
+      cookies.set("role", this.props.currentUser[0].UserType, options);
+
+      localStorage.setItem("email", this.props.currentUser[0].UserEmailAddress);
+      localStorage.setItem("contact", this.props.currentUser[0].UserContactNo);
+    }
   }
 
   encryptData(data) {
     var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace(/\+/g, 'p1L2u3S').replace(/\//g, 's1L2a3S4h').replace(/=/g, 'e1Q2u3A4l');
-
     return ciphertext
   }
 
   componentDidMount() {
-    // if (this.props.location.pathname === '/')
-    // {
     this.setState({ loginPopOut: this.props.loginPopOut })
-    // }
-    // else this.setState({ loginPopOut: this.props.location.loginPopOut })
-
   }
 
   componentDidUpdate(prevProps) {
@@ -159,79 +227,15 @@ class LoginComponent extends Component {
     }
     if (prevProps.currentUser !== this.props.currentUser) {
       if (this.props.currentUser.length > 0 && this.props.currentUser !== [] && this.props.currentUser !== undefined && this.props.currentUser[0].UserID !== undefined) {
-        localStorage.setItem("isLogin", true);
-        localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
-        localStorage.setItem("lastname", this.props.currentUser[0].LastName);
-        localStorage.setItem("role", this.props.currentUser[0].UserType);
-        localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
-        localStorage.setItem("userName", this.state.username);
-        localStorage.setItem("password", this.encryptData(this.state.password));
-        localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
-        localStorage.setItem(
-          "productEndorsementBadge",
-          this.props.currentUser[0].productEndorsementBadge
-        );
-        localStorage.setItem(
-          "productBadge",
-          this.props.currentUser[0].productBadge
-        );
-        localStorage.setItem("id", this.props.currentUser[0].UserID);
-
-        if (this.state.rememberMe === false) {
-          localStorage.setItem("isLogin", true);
-          cookies.set("isLogin", true);
-
-          cookies.set("rememberMe", this.state.rememberMe);
-          localStorage.setItem("userName", this.state.username);
-          localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
-          localStorage.setItem("password", this.encryptData(this.state.password));
-          localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
-          cookies.set("firstname", this.props.currentUser[0].FirstName);
-          localStorage.setItem("lastname", this.props.currentUser[0].LastName);
-          cookies.set("lastname", this.props.currentUser[0].LastName);
-          localStorage.setItem("role", this.props.currentUser[0].UserType);
-          cookies.set("role", this.props.currentUser[0].UserType);
-          localStorage.setItem("id", this.props.currentUser[0].UserID);
-
-
-          localStorage.setItem("email", this.props.currentUser[0].UserEmailAddress);
-          localStorage.setItem("contact", this.props.currentUser[0].UserContactNo);
-        } else {
-          let date = new Date();
-          date.setTime(date.getTime() + 60 * 60 * 24 * 1000);
-          const options = { path: "./", expires: date };
-          localStorage.setItem("isLogin", true);
-          cookies.set("isLogin", true, options);
-          cookies.set("rememberMe", this.state.rememberMe, options);
-          localStorage.setItem("id", this.props.currentUser[0].UserID);
-          localStorage.setItem("userName", this.state.username);
-          localStorage.setItem("username_encrypt", this.encryptData(this.state.username));
-          localStorage.setItem("password", this.encryptData(this.state.password));
-          localStorage.setItem("firstname", this.props.currentUser[0].FirstName);
-          cookies.set("firstname", this.props.currentUser[0].FirstName, options);
-          localStorage.setItem("lastname", this.props.currentUser[0].LastName);
-          cookies.set("lastname", this.props.currentUser[0].LastName, options);
-          localStorage.setItem("role", this.props.currentUser[0].UserType);
-          localStorage.setItem("roleid", this.props.currentUser[0].UserTypeID);
-          cookies.set("role", this.props.currentUser[0].UserType, options);
-
-          localStorage.setItem("email", this.props.currentUser[0].UserEmailAddress);
-          localStorage.setItem("contact", this.props.currentUser[0].UserContactNo);
-        }
-        // if (localStorage.getItem("isLogin") === true) {
-        // this.props.CallViewProductCart({ userID: this.props.currentUser[0].UserID })
-        // this.props.CallViewProductWishlist({ userID: this.props.currentUser[0].UserID })
-        // }
-
-        // this.props.history.push("/EmporiaDev/");
+        this.setProfile();
         window.location.reload(true);
       } else {
         toast.error("The username and password does not match.")
       }
     }
-
+    console.log("emailVerification", this.props.emailVerification)
     if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true && this.state.isReturn === false) {
-
+      console.log("emailVerificationaaaa", this.props.emailVerification)
       if (this.props.emailVerification[0].UserID !== undefined) {
         this.setState({ resetUserID: this.props.emailVerification[0].UserID, isEmailVerify: true, verifyEmail: false, isReturn: true })
       }
@@ -432,7 +436,7 @@ class LoginComponent extends Component {
               onClick={() => this.modalClose()}
               data-dismiss="modal" />
             <div>
-              <form onSubmit={this.OnSubmitLogin} className="container block block--margin-top">
+              <form onSubmit={(e) => this.OnSubmitLogin(e, "MyEmporia")} className="container block block--margin-top">
                 <div className="text-center  mt-3">
                   <img
                     src={Logo}
@@ -522,22 +526,22 @@ class LoginComponent extends Component {
                   </div>
                   <Divider className="pt-4 pb-4">OR</Divider>
                   <div className="text-center w-100 xx-large">
-                    <CustomGoogleLogin />
+                    <CustomGoogleLogin clickLogin={this.OnSubmitLogin} setProfile={this.setProfile} />
                     <FBLogin />
                   </div>
                   <div>
                     <div>
-                      <p className="text-center" style={{ fontSize: "13px", paddingTop: "10px" }}>
+                      <div className="text-center" style={{ fontSize: "13px", paddingTop: "10px" }}>
                         New to MyEmporia?
                         <StyledDiv onClick={() => this.setState({ loginPopOut: false, signupPopOut: true })}>
                           Sign Up
                         </StyledDiv>
-                      </p>
+                      </div>
                     </div>
                     <div>
-                      <p className="forgot-password text-center">
+                      <div className="forgot-password text-center">
                         <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </div>

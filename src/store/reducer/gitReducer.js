@@ -121,6 +121,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
         currentUser: action.payload,
       });
 
+    case GitAction.LoginGoogleFB:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.UserGoogleFBLoggedIn:
+      return Object.assign({}, state, {
+        loading: false,
+        currentUser: action.payload,
+      });
+
     case GitAction.Logout:
       return Object.assign({}, state, { loading: true });
     case GitAction.UserLoggedOut:

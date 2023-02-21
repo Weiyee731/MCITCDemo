@@ -18,6 +18,9 @@ export class GitAction {
   static UserLoggedIn = "SUCCESSFULLY-LOGIN";
   static UserLoggedInWithData = "SUCCESSFULLY-LOGIN-WITH-DATA";
 
+  static LoginGoogleFB = "LOGIN-GOOGLE-FB";
+  static UserGoogleFBLoggedIn = "SUCCESSFULLY-LOGIN-GOOGLE-FB";
+
   //Logout
   static Logout = "LOGOUT";
   static UserLoggedOut = "SUCCESSFULLY-LOGOUT";
@@ -118,6 +121,13 @@ export class GitAction {
   static CallLogin(credentials) {
     return {
       type: GitAction.Login,
+      payload: credentials,
+    };
+  }
+  
+  static CallLoginGoogleFB(credentials) {
+    return {
+      type: GitAction.LoginGoogleFB,
       payload: credentials,
     };
   }

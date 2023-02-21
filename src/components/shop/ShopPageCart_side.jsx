@@ -396,7 +396,6 @@ class ShopPageCart_side extends Component {
                 {
                     this.state.MerchantShopName.map((shopName, ind) => {
                         return (
-                            <>
                                 <table className="cart__table cart-table" size="small" key={ind}>
                                     <div className='shopName'>
                                         <Typography>
@@ -407,7 +406,6 @@ class ShopPageCart_side extends Component {
                                         {this.props.history !== undefined ? this.renderItems(this.state.cart.filter((X) => X.MerchantShopName === shopName)) : this.renderItems(this.props.data.filter((X) => X.MerchantShopName === shopName))}
                                     </tbody>
                                 </table>
-                            </>
                         )
                     })
                 }
