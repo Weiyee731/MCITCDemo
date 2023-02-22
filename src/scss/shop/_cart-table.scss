@@ -23,6 +23,7 @@
 .cart-table__column--product {
     width: 161px;
     padding: 0 10px 0px;
+    margin:auto;
 }
 
 .cart-table__product-name {
@@ -56,7 +57,10 @@
 }
 
 .cart-button {
-    align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .checkout-button {
@@ -71,6 +75,11 @@
 
 .cart-subtotal{
     width: 80px;
+    display: flex;
+    flex-direction: column;
+    margin-top:4%;
+    padding-top: 5%;
+
 }
 
 .shopName {
@@ -184,6 +193,7 @@
     .cart-table__column--image {
         // width: 1px;
         text-align: center;
+        margin:auto;
 
         @include direction {
             #{$padding-inline-end}: 4px;
@@ -301,7 +311,6 @@
 
     .cart-table__column--product {
         width: 150px;
-        text-align: center;
         border-bottom: 1px solid $cart-table-card-border-color;
         padding: 0 20px 18px;
     }

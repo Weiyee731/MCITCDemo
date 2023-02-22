@@ -4,8 +4,6 @@
 @import '../variables';
 @import '../mixins/direction';
 
-
-.product-gallery {}
 .product-gallery__featured {
     position: relative;
     box-shadow: $product-gallery-item-default-shadow;

@@ -19,6 +19,9 @@ import {
 } from '../../svg';
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import Search from '../header/Search';
+import { Cart20Svg  } from '../../svg';
+import PageCart_side from "../shop/ShopPageCart_side";
+import { Drawer } from '@mui/material';
 import IndicatorCart from '../../components/header/IndicatorCart'
 
 class MobileHeader extends Component {
@@ -27,6 +30,7 @@ class MobileHeader extends Component {
 
         this.state = {
             searchOpen: false,
+            openCart: false,
         };
         this.searchInput = React.createRef();
     }
@@ -49,7 +53,7 @@ class MobileHeader extends Component {
 
     render() {
         const { openMobileMenu, wishlist, cart, productcart } = this.props;
-        const { searchOpen } = this.state;
+        const { searchOpen, openCart } = this.state;
         const searchClasses = classNames('mobile-header__search', {
             'mobile-header__search--open': searchOpen,
         });
@@ -86,7 +90,13 @@ class MobileHeader extends Component {
                                     />
                                 }
 
-                                <IndicatorCart />
+                                <Indicator 
+                                    value={productcart !== undefined ? productcart.length : 0}
+                                    onClick={() => {
+                                        this.setState({openCart:true})
+                                      }} 
+                                    icon={<Cart20Svg/>}
+                                />
 
                                 {
                                     localStorage.getItem('isLogin') === 'true' &&
@@ -99,6 +109,18 @@ class MobileHeader extends Component {
                                 {
                                     localStorage.getItem('isLogin') === 'false' &&
                                         <IndicatorAccount />  
+                                }
+
+                                {
+                                        <div >
+                                            <Drawer
+                                            PaperProps={{
+                                                sx: { width: "380px" },
+                                            }}
+                                            anchor='right' open={openCart} onClose={() => this.setState({openCart:false})}>
+                                            <PageCart_side history={this.props.productcart} setCartOpen={() => this.setState({openCart:false})}/>
+                                            </Drawer>
+                                        </div>
                                 }
                                 
 

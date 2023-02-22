@@ -276,94 +276,97 @@ class ShopPageCart_side extends Component {
 
             return (
                 <Grid container key={i} className="cart-table__row">
-                    <Grid item className="cart-button">
-                        {
-                            this.props.history !== undefined &&
-                            <Checkbox
-                                checked={
-                                    this.state.selectedProductDetailList.length > 0 ?
-                                        this.state.selectedProductDetailList.filter(x => x.id === item.id).length > 0 ?
-                                            true : false
-                                        : false
+                    
+                    <Grid container spacing={2}>
+                        <Grid item className="cart-button" xs={2}>
+                            {
+                                this.props.history !== undefined &&
+                                <Checkbox
+                                    checked={
+                                        this.state.selectedProductDetailList.length > 0 ?
+                                            this.state.selectedProductDetailList.filter(x => x.id === item.id).length > 0 ?
+                                                true : false
+                                            : false
+                                    }
+                                    onClick={() => this.handleSelectedProduct(item, i)}
+                                />
+                            }
+                        </Grid>
+                        <Grid item xs={4} style={{margin:'auto'}}>
+                            {image}
+                        </Grid>
+                        <Grid item className="cart-table__column--product" xs={4} style={{margin:'auto'}}>
+                            <div style={{ fontSize: "14px" }} className="cart-fixNameLength">
+                                <Link to={url.product(item.product)} className="cart-table__product-name" onClick={() => { this.props.setCartOpen(false) }}>
+                                    {item.product.ProductName}
+                                </Link>
+                                {
+                                    this.state.overProductStockAmountLimitID.length > 0 &&
+                                    this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 &&
+                                    this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x, ind) => {
+                                        return (
+                                            <label className='mt-3' style={{ color: "red" }} key={ind}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
+                                        )
+                                    })
                                 }
-                                onClick={() => this.handleSelectedProduct(item, i)}
-                            />
-                        }
-                    </Grid>
-                    <Grid item className="cart-table__column--image">
-                        {image}
-                    </Grid>
-                    <Grid item className="cart-table__column--product">
-                        <div style={{ fontSize: "14px" }} className="cart-fixNameLength">
-                            <Link to={url.product(item.product)} className="cart-table__product-name" onClick={() => { this.props.setCartOpen(false) }}>
-                                {item.product.ProductName}
-                            </Link>
-                            {
-                                this.state.overProductStockAmountLimitID.length > 0 &&
-                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).length > 0 &&
-                                this.state.overProductStockAmountLimitID.filter(x => x === item.product.ProductID).map((x, ind) => {
-                                    return (
-                                        <label className='mt-3' style={{ color: "red" }} key={ind}> Over Stock Limit,  Available Stock: {item.product.ProductStock !== null ? item.product.ProductStock : "0"} </label>
-                                    )
-                                })
-                            }
-                        </div>
-                        <div style={{ fontSize: "11px" }}>
-                            Variation: {item.product.ProductVariationValue}
-                        </div>
-                        <div>
-                            {
-                                item.product.ProductPromotion && JSON.parse(item.product.ProductPromotion).length > 0 ?
-
-                                    <div>
-                                        <span className="product-card__new-price">
-                                            <Currency value={JSON.parse(item.product.ProductPromotion)[0].PromotionPrice} currency={"RM"} />
-                                        </span>
-                                        <span className="product-card__old-price">
-                                            <Currency value={item.product.ProductPrice !== null && item.product.ProductPrice !== undefined ? parseFloat(item.product.ProductPrice) : 0} currency={"RM"} />
-                                        </span>
-                                    </div>
-                                    :
-                                    <span className="product-card__new-price">
-                                        <Currency value={item.product.ProductPrice} currency={"RM"} />
-                                    </span>
-
-                                // PromoTag = [{ id: 1, tag: JSON.parse(product.ProductPromotion)[0].ProductDiscount, color: "#d23f57" }]
-                            }
-                        </div>
-                        <div className='cart-fixinputNumber'>
-                            {
-                                this.props.history !== undefined ?
-                                    <InputNumber
-                                        onChange={(quantity) => this.handleChangeQuantity(item, quantity)}
-                                        value={this.getItemQuantity(item)}
-                                        min={1}
-                                        className="inputNumber-sm"
-                                        size="sm"
-                                    /> :
-                                    <label> {this.getItemQuantity(item)} </label>
-                            }
-                        </div>
-                        <span className='cart-subtotal'>
-                            Total :
-                            <Typography color="#ff2626" fontWeight="500" className='d-inline-flex'>
+                            </div>
+                            <div style={{ fontSize: "11px" }}>
+                                Variation: {item.product.ProductVariationValue}
+                            </div>
+                            <div>
                                 {
                                     item.product.ProductPromotion && JSON.parse(item.product.ProductPromotion).length > 0 ?
-                                        <Currency value={JSON.parse(item.product.ProductPromotion)[0].PromotionPrice * item.product.ProductQuantity} currency={"RM"} />
-                                        :
-                                        <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
-                                }
 
-                            </Typography>
-                        </span>
-                    </Grid>
-                    <Grid item className="cart-button">
-                        {
-                            this.props.history !== undefined &&
-                            <Button onClick={() => this.removeItem(item.product)} className={'btn btn-light btn-sm btn-svg-icon'} >
-                                <Cross12Svg />
-                            </Button>
-                        }
+                                        <div>
+                                            <span className="product-card__new-price">
+                                                <Currency value={JSON.parse(item.product.ProductPromotion)[0].PromotionPrice} currency={"RM"} />
+                                            </span>
+                                            <span className="product-card__old-price">
+                                                <Currency value={item.product.ProductPrice !== null && item.product.ProductPrice !== undefined ? parseFloat(item.product.ProductPrice) : 0} currency={"RM"} />
+                                            </span>
+                                        </div>
+                                        :
+                                        <span className="product-card__new-price">
+                                            <Currency value={item.product.ProductPrice} currency={"RM"} />
+                                        </span>
+
+                                    // PromoTag = [{ id: 1, tag: JSON.parse(product.ProductPromotion)[0].ProductDiscount, color: "#d23f57" }]
+                                }
+                            </div>
+                            <div className='cart-fixinputNumber'>
+                                {
+                                    this.props.history !== undefined ?
+                                        <InputNumber
+                                            onChange={(quantity) => this.handleChangeQuantity(item, quantity)}
+                                            value={this.getItemQuantity(item)}
+                                            min={1}
+                                            className="inputNumber-sm"
+                                            size="sm"
+                                        /> :
+                                        <label> {this.getItemQuantity(item)} </label>
+                                }
+                            </div>
+                            <span className='cart-subtotal'>
+                                <Typography variant="caption">Total</Typography>
+                                <Typography color="#ff2626" fontWeight="500" className='d-inline-flex'>
+                                    {
+                                        item.product.ProductPromotion && JSON.parse(item.product.ProductPromotion).length > 0 ?
+                                            <Currency value={JSON.parse(item.product.ProductPromotion)[0].PromotionPrice * item.product.ProductQuantity} currency={"RM"} />
+                                            :
+                                            <Currency value={item.product.ProductPrice * item.product.ProductQuantity} currency={"RM"} />
+                                    }
+
+                                </Typography>
+                            </span>
+                        </Grid>
+                        <Grid item className="cart-button" xs={2}>
+                            {
+                                this.props.history !== undefined &&
+                                <Button onClick={() => this.removeItem(item.product)} className={'btn btn-light btn-sm btn-svg-icon'} >
+                                    <Cross12Svg />
+                                </Button>
+                            }
+                        </Grid>
                     </Grid>
                 </Grid>
             );
