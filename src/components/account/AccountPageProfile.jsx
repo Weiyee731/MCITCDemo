@@ -1,5 +1,5 @@
 // react
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 
 // third-party
 import { Modal, ModalBody } from "reactstrap";
@@ -90,12 +90,15 @@ class AccountPageProfile extends Component {
       USERROLEID: "0",
       LISTPERPAGE: "999",
       PAGE: "1",
+      width: window.innerWidth
     };
   }
   /////////////////////UPLOAD PROFILE PHOTO/////////////////////////////////////////////////
 
 
   componentDidMount() {
+
+    window.addEventListener("resize", this.updateDimensions);
 
     if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.TYPEVALUE !== undefined) {
       this.props.CallUserProfile(this.state);
@@ -128,11 +131,12 @@ class AccountPageProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
+
     if (prevProps.currentUser !== this.props.currentUser) {
       if (this.props.currentUser.length > 0 && this.props.currentUser[0].ReturnMsg === "Image had uploaded" && this.state.showBoxForImage === true)
         this.modalClose()
     }
-    
+
     //solve data missing on refresh
     if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.TYPEVALUE !== undefined && this.state.USERGENDER === "") {
       if (this.props.currentUser !== {} && this.props.currentUser !== null) {
@@ -155,6 +159,14 @@ class AccountPageProfile extends Component {
         }
       }
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions = () => {
+    this.setState({ width: window.innerWidth })
   }
 
   onFileUpload = () => {
@@ -355,6 +367,7 @@ class AccountPageProfile extends Component {
 
 
   render() {
+    console.log(this.state.width)
     const imgurl = "https://myemporia.my/emporiaimage/userprofile/"
 
     const getUploadParams = () => {
@@ -387,328 +400,450 @@ class AccountPageProfile extends Component {
     };
 
     return (
+
       <Card>
-        <CardContent>
-          <div className="row">
-            <div className="col-6">
-              <div
-                style={{
-                  textAlign: "left",
-                  fontWeight: 800
-                }}
-              >
-                My Profile
-              </div>
-
-              <div className="font font-subtitle">
-                Manage your personal information
-              </div>
-            </div>
-            <div className="col-6" style={{ textAlign: "right" }}>
-              <button
-                variant="contained"
-                className="btn btn-primary"
-                onClick={() => this.updateProfile()}
-              >
-                <DoneIcon className="saveicon" />
-                Save
-              </button>
-            </div>
-          </div>
-          <Divider variant="fullWidth" className="dividerbottom" />
-
-          <div className="row">
-            <div className="container col-8">
-              {this.props.currentUser && this.props.currentUser.length > 0 && this.props.currentUser !== null &&
-                this.props.currentUser.map((row) => (
-                  <div className="container">
-                    <div className="row" >
-                      <div className="col-3 rowStyle vertical-align">First Name</div>
-                      <div className="col-8 ">
-                        <TextField
-                          className="font"
-                          variant="outlined"
-                          size="small"
-                          id="userfirstname"
-                          defaultValue={row.FirstName}
-                          onChange={this.handleChangeforFirstName.bind(this)}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-3 rowStyle vertical-align">Last Name</div>
-                      <div className="col-8">
-                        <TextField
-                          className="font"
-                          variant="outlined"
-                          size="small"
-                          id="userlastname"
-                          defaultValue={row.LastName}
-                          onChange={this.handleChangeforLastName.bind(this)}
-                        />
-                      </div>
+        {
+          this.state.width >= 768 ?
+            <>
+              <CardContent>
+                <div className="row">
+                  <div className="col-6">
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontWeight: 800
+                      }}
+                    >
+                      My Profile
                     </div>
 
-                    <div className="row">
-                      <div className=" col-3 rowStyle vertical-align">Date of Birth</div>
-                      <div className="col-8">
-                        <TextField
-                          className="font"
-                          variant="outlined"
-                          size="small"
-                          id="userdob"
-                          type="date"
-                          value={moment(row.USERDATEBIRTH).format('YYYY-MM-DD')}
-                          onChange={this.handleChangeforDOB.bind(this)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="row">
-                      <div className="col-3 rowStyle">Gender</div>
-                      <div className="col-8">{console.log("this.state.USERGENDER",row.FirstName,row.UserGender,this.state.USERGENDER)}
-                        <FormControl component="fieldset">
-                          <RadioGroup
-                            aria-label="USERGENDER"
-                            name="USERGENDER"
-                            defaultValue={row.UserGender}
-                            // value={this.state.USERGENDER}
-                            onChange={this.handleChangeforGender}
-                          >
-                            <FormControlLabel
-                              className=" MuiTypography-body1 "
-                              value="Male"
-                              control={<Radio />}
-                              label="Male"
-                            />
-                            <FormControlLabel
-                              className=" MuiTypography-body1"
-                              value="Female"
-                              control={<Radio />}
-                              label="Female"
-                            />
-                            <FormControlLabel
-                              className=" MuiTypography-body1"
-                              value="RatherNotToSay"
-                              control={<Radio />}
-                              label="Rather Not To Say"
-                            />
-                          </RadioGroup>
-                        </FormControl>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-3 rowStyle">Contact Number</div>
-                      <div className="col-8 font">
-                        {/* {
-                        this.state.editContact === false ? */}
-                        <>{console.log(row.UserContactNo)}
-                          {row.UserContactNo !== null && row.UserContactNo !== undefined && row.UserContactNo !== "-" ? censorContact(row.UserContactNo) : "-"}
-                          <Link to={{ pathname: "/account/changeContact" }}>
-                            {/* <Link to="/account/changeContact" > */}
-                            <div className="change-contact-mail" >Change Contact</div>
-                          </Link>
-                        </>
-                        {/* :
-                          <input
-                            variant="outlined"
-                            size="small"
-                            id="usercontact"
-                            type="text"
-                            pattern="[\d| ]{16,22}"
-                            defaultValue={row.UserContactNo}
-                            onChange={this.handleChangeforContact.bind(this)}
-                          />
-                      } */}
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-3 rowStyle">Email Address</div>
-                      <div className="col-8 font">
-                        {/* {
-                        this.state.editEmail === false ? */}
-                        <>
-                          {row.UserEmailAddress !== null && row.UserEmailAddress !== undefined ? censorEmail(row.UserEmailAddress) : "-"}
-                          <Link to="/account/changeEmail">
-                            <div className="change-contact-mail" onClick={() => this.setState({ editEmail: true })}>Change Email</div>
-                          </Link>
-                        </>
-                        {/* :
-                          <PageChangeEmail />
-                        // <input
-                        //   variant="outlined"
-                        //   size="small"
-                        //   id="useremail"
-                        //   type="text"
-                        //   defaultValue={row.UserEmailAddress}
-                        //   onChange={this.handleChangeforEmail.bind(this)}
-                        // />
-                      } */}
-                      </div>
+                    <div className="font font-subtitle">
+                      Manage your personal information
                     </div>
                   </div>
-                ))}
-            </div>
-            <div className="col-4 border-line-left">
-              <div onClick={() => this.modalOpen()} className="imagecontainer">
-                <img
-                  className="profilePic"
-                  src={this.props.currentUser !== undefined &&
-                    this.props.currentUser.length > 0 &&
-                    this.props.currentUser[0].UserProfileImage !== null &&
-                    this.props.currentUser[0].UserProfileImage !== undefined
-                    ? imgurl + this.props.currentUser[0].UserProfileImage : "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg"}
+                  <div className="col-6" style={{ textAlign: "right" }}>
+                    <button
+                      variant="contained"
+                      className="btn btn-primary"
+                      onClick={() => this.updateProfile()}
+                    >
+                      <DoneIcon className="saveicon" />
+                      Save
+                    </button>
+                  </div>
+                </div>
+                <Divider variant="fullWidth" className="dividerbottom" />
 
-                  alt="Profile"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src =
-                      "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg";
-                  }}
-                />
-                <div className="overlay">Edit</div>
-              </div>
-              <div className="description"><br /> Click on the image above to edit profile picture</div>
-            </div>
-          </div>
-        </CardContent>
-
-        <div
-          style={{
-            textAlign: "center",
-            padding: "inherit",
-          }}
-        >
-          <Modal
-            className="modal-dialog-centered"
-            isOpen={this.state.showBoxForImage}
-            toggle={() => this.modalClose()}
-          >
-            <ModalBody>
-              <CloseIcon
-                className="closeIcon"
-                onClick={() => this.modalClose()}
-                data-dismiss="modal" />
-              <div
-                align="center"
-                className="form-content p-2"
-              >
-                <div>
-                  <Dropzone
-                    style={{ width: "100vw", height: "60vh" }}
-                    onDrop={(acceptedFiles) => {
-                      if (acceptedFiles.length > 0) {
-                        this.setState({
-                          preview: acceptedFiles.map(file => URL.createObjectURL(file)),
-                          imageName: acceptedFiles[0].name,
-                          fileAdded: true,
-                          imageFile: acceptedFiles,
-                        });
-                        return;
-                      } else {
-                        this.setState({
-                          imageName: "",
-                          fileAdded: false,
-                          fileUpload: [],
-                        });
-                      }
-                    }}
-                    accept="image/*"
-                    maxFiles={1}
-                    multiple={false}
-                    getUploadParams={getUploadParams}
-                    onChangeStatus={handleChangeStatus}
-                    onSubmit={handleSubmit}
-                  >
-                    {({
-                      getRootProps,
-                      getInputProps,
-                      isDragActive,
-                      isDragAccept,
-                      isDragReject,
-                    }) => (
-                      <section>
-                        <div
-                          {...getRootProps({
-                            className: "dropzone",
-                          })}
-                          className="preview-container"
-                          style={{
-                            borderColor: isDragActive
-                              ? isDragReject
-                                ? "#fc5447"
-                                : "#a0d100"
-                              : "#b8b8b8",
-                            color: isDragActive
-                              ? isDragReject
-                                ? "#a31702"
-                                : "#507500"
-                              : "#828282",
-                          }}
-                        >
-                          <input {...getInputProps()} />
-                          {this.state.fileAdded ? (
-                            <div className="droppedFileImage">
-                              <img className="profilePic" src={this.state.preview} alt={this.state.imageName} />
+                <div className="row">
+                  <div className="container col-8">
+                    {this.props.currentUser && this.props.currentUser.length > 0 && this.props.currentUser !== null &&
+                      this.props.currentUser.map((row) => (
+                        <div className="container">
+                          <div className="row" >
+                            <div className="col-3 rowStyle vertical-align">First Name</div>
+                            <div className="col-8 ">
+                              <TextField
+                                className="font"
+                                variant="outlined"
+                                size="small"
+                                id="userfirstname"
+                                defaultValue={row.FirstName}
+                                onChange={this.handleChangeforFirstName.bind(this)}
+                              />
                             </div>
-                          ) : (
-                            <div className="preview-word">
-                              {!isDragActive && "Drop a file"}
-                              {isDragActive &&
-                                !isDragReject &&
-                                "Drop the file here ..."}
+                          </div>
+                          <div className="row">
+                            <div className="col-3 rowStyle vertical-align">Last Name</div>
+                            <div className="col-8">
+                              <TextField
+                                className="font"
+                                variant="outlined"
+                                size="small"
+                                id="userlastname"
+                                defaultValue={row.LastName}
+                                onChange={this.handleChangeforLastName.bind(this)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="row">
+                            <div className=" col-3 rowStyle vertical-align">Date of Birth</div>
+                            <div className="col-8">
+                              <TextField
+                                className="font"
+                                variant="outlined"
+                                size="small"
+                                id="userdob"
+                                type="date"
+                                value={moment(row.USERDATEBIRTH).format('YYYY-MM-DD')}
+                                onChange={this.handleChangeforDOB.bind(this)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="row">
+                            <div className="col-3 rowStyle">Gender</div>
+                            <div className="col-8">{console.log("this.state.USERGENDER", row.FirstName, row.UserGender, this.state.USERGENDER)}
+                              <FormControl component="fieldset">
+                                <RadioGroup
+                                  aria-label="USERGENDER"
+                                  name="USERGENDER"
+                                  defaultValue={row.UserGender}
+                                  onChange={this.handleChangeforGender}
+                                >
+                                  <FormControlLabel
+                                    className=" MuiTypography-body1 "
+                                    value="Male"
+                                    control={<Radio />}
+                                    label="Male"
+                                  />
+                                  <FormControlLabel
+                                    className=" MuiTypography-body1"
+                                    value="Female"
+                                    control={<Radio />}
+                                    label="Female"
+                                  />
+                                  <FormControlLabel
+                                    className=" MuiTypography-body1"
+                                    value="RatherNotToSay"
+                                    control={<Radio />}
+                                    label="Rather Not To Say"
+                                  />
+                                </RadioGroup>
+                              </FormControl>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-3 rowStyle">Contact Number</div>
+                            <div className="col-8 font">
+                              <>{console.log(row.UserContactNo)}
+                                {row.UserContactNo !== null && row.UserContactNo !== undefined && row.UserContactNo !== "-" ? censorContact(row.UserContactNo) : "-"}
+                                <Link to={{ pathname: "/account/changeContact" }}>
+                                  <div className="change-contact-mail" >Change Contact</div>
+                                </Link>
+                              </>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-3 rowStyle">Email Address</div>
+                            <div className="col-8 font">
+                              <>
+                                {row.UserEmailAddress !== null && row.UserEmailAddress !== undefined ? censorEmail(row.UserEmailAddress) : "-"}
+                                <Link to="/account/changeEmail">
+                                  <div className="change-contact-mail" onClick={() => this.setState({ editEmail: true })}>Change Email</div>
+                                </Link>
+                              </>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                  <div className="col-4 border-line-left">
+                    <div onClick={() => this.modalOpen()} className="imagecontainer">
+                      <img
+                        className="profilePic"
+                        src={this.props.currentUser !== undefined &&
+                          this.props.currentUser.length > 0 &&
+                          this.props.currentUser[0].UserProfileImage !== null &&
+                          this.props.currentUser[0].UserProfileImage !== undefined
+                          ? imgurl + this.props.currentUser[0].UserProfileImage : "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg"}
+
+                        alt="Profile"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg";
+                        }}
+                      />
+                      <div className="overlay">Edit</div>
+                    </div>
+                    <div className="description"><br /> Click on the image above to edit profile picture</div>
+                  </div>
+                </div>
+              </CardContent>
+
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "inherit",
+                }}
+              >
+                <Modal
+                  className="modal-dialog-centered"
+                  isOpen={this.state.showBoxForImage}
+                  toggle={() => this.modalClose()}
+                >
+                  <ModalBody>
+                    <CloseIcon
+                      className="closeIcon"
+                      onClick={() => this.modalClose()}
+                      data-dismiss="modal" />
+                    <div
+                      align="center"
+                      className="form-content p-2"
+                    >
+                      <div>
+                        <Dropzone
+                          style={{ width: "100vw", height: "60vh" }}
+                          onDrop={(acceptedFiles) => {
+                            if (acceptedFiles.length > 0) {
+                              this.setState({
+                                preview: acceptedFiles.map(file => URL.createObjectURL(file)),
+                                imageName: acceptedFiles[0].name,
+                                fileAdded: true,
+                                imageFile: acceptedFiles,
+                              });
+                              return;
+                            } else {
+                              this.setState({
+                                imageName: "",
+                                fileAdded: false,
+                                fileUpload: [],
+                              });
+                            }
+                          }}
+                          accept="image/*"
+                          maxFiles={1}
+                          multiple={false}
+                          getUploadParams={getUploadParams}
+                          onChangeStatus={handleChangeStatus}
+                          onSubmit={handleSubmit}
+                        >
+                          {({
+                            getRootProps,
+                            getInputProps,
+                            isDragActive,
+                            isDragAccept,
+                            isDragReject,
+                          }) => (
+                            <section>
+                              <div
+                                {...getRootProps({
+                                  className: "dropzone",
+                                })}
+                                className="preview-container"
+                                style={{
+                                  borderColor: isDragActive
+                                    ? isDragReject
+                                      ? "#fc5447"
+                                      : "#a0d100"
+                                    : "#b8b8b8",
+                                  color: isDragActive
+                                    ? isDragReject
+                                      ? "#a31702"
+                                      : "#507500"
+                                    : "#828282",
+                                }}
+                              >
+                                <input {...getInputProps()} />
+                                {this.state.fileAdded ? (
+                                  <div className="droppedFileImage">
+                                    <img className="profilePic" src={this.state.preview} alt={this.state.imageName} />
+                                  </div>
+                                ) : (
+                                  <div className="preview-word">
+                                    {!isDragActive && "Drop a file"}
+                                    {isDragActive &&
+                                      !isDragReject &&
+                                      "Drop the file here ..."}
+                                  </div>
+                                )}
+                              </div>
+                            </section>
+                          )}
+                        </Dropzone>
+                      </div>
+                      <div className="row justify-content-center">
+                        <div className="col-6">
+                          {this.state.fileAdded && (
+                            <div >
+                              <button
+                                className="button-font mb-2 mr-1 btn btn-primary"
+                                size="sm"
+                                theme="light"
+                                onClick={() => {
+                                  this.removeFile();
+                                }}
+                              >
+                                <CloseIcon />
+                                Remove file
+                              </button>
                             </div>
                           )}
                         </div>
-                      </section>
-                    )}
-                  </Dropzone>
-                </div>
-                <div className="row justify-content-center">
-                  <div className="col-6">
-                    {this.state.fileAdded && (
-                      <div >
-                        <button
-                          className="button-font mb-2 mr-1 btn btn-primary"
-                          size="sm"
-                          theme="light"
-                          onClick={() => {
-                            this.removeFile();
-                          }}
-                        >
-                          <CloseIcon />
-                          Remove file
-                        </button>
+
+                        {this.state.fileAdded ? (
+                          <div className="col-6">
+                            <button style={{ float: "left" }}
+                              className="btn btn-primary button-font"
+                              onClick={this.onFileUpload}
+                            >
+                              Upload Image
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="justify-content-center contactrowStyle"><div>Click on the box to add or edit the photo</div></div>
+                        )}
+
                       </div>
-                    )}
-                  </div>
-
-                  {this.state.fileAdded ? (
-                    <div className="col-6">
-                      <button style={{ float: "left" }}
-                        className="btn btn-primary button-font"
-                        onClick={this.onFileUpload}
-                      >
-                        Upload Image
-                      </button>
                     </div>
-                  ) : (
-                    <div className="justify-content-center contactrowStyle"><div>Click on the box to add or edit the photo</div></div>
-                  )}
-
-                </div>
-                {/* <button
-                  type="button"
-                  className="btn btn-primary mr-1"
-                  onClick={() => this.modalClose()}
-                  data-dismiss="modal"
-                >
-                  Close
-                </button> */}
+                  </ModalBody>
+                </Modal>
               </div>
-            </ModalBody>
-          </Modal>
-        </div>
+            </>
+            :
+            // Mobile View
+            <>
+              <CardContent>
+                <div className="row">
+                  <div className="col-6">
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontWeight: 800
+                      }}
+                    >
+                      My Profile
+                    </div>
+
+                    <div className="font font-subtitle">
+                      Manage your personal information
+                    </div>
+                  </div>
+                  <div className="col-6" style={{ textAlign: "right" }}>
+                    <button
+                      variant="contained"
+                      className="btn btn-primary"
+                      onClick={() => this.updateProfile()}
+                    >
+                      <DoneIcon className="saveicon" />
+                      Save
+                    </button>
+                  </div>
+                </div>
+                <div className="row">
+                <div className="col-12 border-line-left">
+                    <div onClick={() => this.modalOpen()} className="imagecontainer">
+                      <img
+                        className="profilePic"
+                        src={this.props.currentUser !== undefined &&
+                          this.props.currentUser.length > 0 &&
+                          this.props.currentUser[0].UserProfileImage !== null &&
+                          this.props.currentUser[0].UserProfileImage !== undefined
+                          ? imgurl + this.props.currentUser[0].UserProfileImage : "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg"}
+
+                        alt="Profile"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg";
+                        }}
+                      />
+                      <div className="overlay">Edit</div>
+                    </div>
+                    <div className="description"><br /> Click on the image above to edit profile picture</div>
+                  </div>
+                  <div className="container col-12">
+                    {this.props.currentUser && this.props.currentUser.length > 0 && this.props.currentUser !== null &&
+                      this.props.currentUser.map((row) => (
+                        <div className="container">
+                          <div className="row" >
+                            <div className="mobileRowStyle vertical-align">First Name</div>
+                              <TextField
+                                className="font"
+                                variant="outlined"
+                                size="small"
+                                id="userfirstname"
+                                defaultValue={row.FirstName}
+                                onChange={this.handleChangeforFirstName.bind(this)}
+                              />
+                          </div>
+                          <div className="row">
+                            <div className="mobileRowStyle vertical-align">Last Name</div>
+                              <TextField
+                                className="font"
+                                variant="outlined"
+                                size="small"
+                                id="userlastname"
+                                defaultValue={row.LastName}
+                                onChange={this.handleChangeforLastName.bind(this)}
+                              />
+                          </div>
+
+                          <div className="row">
+                            <div className="mobileRowStyle vertical-align">Date of Birth</div>
+                              <TextField
+                                className="font"
+                                variant="outlined"
+                                size="small"
+                                id="userdob"
+                                type="date"
+                                value={moment(row.USERDATEBIRTH).format('YYYY-MM-DD')}
+                                onChange={this.handleChangeforDOB.bind(this)}
+                              />
+                          </div>
+
+                          <div className="mt-3 mb-3">
+                            <div className="mobileRowStyle">Gender</div>
+                              <FormControl component="fieldset">
+                                <RadioGroup
+                                  aria-label="USERGENDER"
+                                  name="USERGENDER"
+                                  defaultValue={row.UserGender}
+                                  onChange={this.handleChangeforGender}
+                                >
+                                  <FormControlLabel
+                                    className=" MuiTypography-body1 "
+                                    value="Male"
+                                    control={<Radio />}
+                                    label="Male"
+                                  />
+                                  <FormControlLabel
+                                    className=" MuiTypography-body1"
+                                    value="Female"
+                                    control={<Radio />}
+                                    label="Female"
+                                  />
+                                  <FormControlLabel
+                                    className=" MuiTypography-body1"
+                                    value="RatherNotToSay"
+                                    control={<Radio />}
+                                    label="Rather Not To Say"
+                                  />
+                                </RadioGroup>
+                              </FormControl>
+                          </div>
+                          <div className="row">
+                            <div className="mobileRowStyle">Contact Number</div>
+                            <div className="font">
+                              <>
+                                {row.UserContactNo !== null && row.UserContactNo !== undefined && row.UserContactNo !== "-" ? censorContact(row.UserContactNo) : "-"}
+                                <Link to={{ pathname: "/account/changeContact" }}>
+                                  <div className="change-contact-mail" >Change Contact</div>
+                                </Link>
+                              </>
+                              </div>
+                          </div>
+                          <div className="row">
+                            <div className="mobileRowStyle">Email Address</div>
+                            <div className="font">
+                              <>
+                                {row.UserEmailAddress !== null && row.UserEmailAddress !== undefined ? censorEmail(row.UserEmailAddress) : "-"}
+                                <Link to="/account/changeEmail">
+                                  <div className="change-contact-mail" onClick={() => this.setState({ editEmail: true })}>Change Email</div>
+                                </Link>
+                              </>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </CardContent>
+
+            </>
+        }
+
       </Card>
     );
   }
