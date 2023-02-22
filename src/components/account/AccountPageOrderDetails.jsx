@@ -1,5 +1,5 @@
 // react
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 // third-party
 import { Helmet } from "react-helmet-async";
@@ -93,6 +93,28 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
+}
+
+function getWindowDimensions() {
+  const { innerWidth: width } = window;
+  return {
+    width,
+  };
+}
+
 
 function AccountPageOrderDetails(props) {
   //dialog
@@ -108,9 +130,7 @@ function AccountPageOrderDetails(props) {
   const [paymentOrderDetail, setPaymentOrderDetail] = React.useState([]);
   const [isOpenModalCancel, setModalCancel] = React.useState(false);
   const [isOrderCancel, setCancelOrder] = React.useState(false);
-
-
-
+  const { width } = useWindowDimensions();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -419,478 +439,613 @@ function AccountPageOrderDetails(props) {
 
   return (
     <React.Fragment>
-      {
-        isProceedPayment === true ?
-          // isDeliverySet === true ?
-          // <AccountPagePayment data={orderDetail} shippingFees={shipping} />
-          <>
-            <CheckoutPayment
-              checkout={paymentOrderDetail}
-              isPendingPayment={true}
-              discount={paymentOrderDetail.discount}
-              subtotal={paymentOrderDetail.subtotal}
-              total={isArrayNotEmpty(paymentOrderDetail.shipping) ? paymentOrderDetail.total - paymentOrderDetail.shipping[0].ShippingCost : paymentOrderDetail.total}
-              promoCode={paymentOrderDetail.promoCode}
-              // validPromoData={this.state.validPromoData}
-              // onRemovePromoError={this.handleRemovePromoError}
-              // onHandleDiscount={this.onHandleDiscount}
-              // onHandlePromoCode={this.onHandlePromoCode}
-              // onApplyDiscount={this.handleApplyDiscount}
-              // onBackStep={this.handleBackStep}
-              // onGotoStep={this.handleGotoStep}
-              deliveryFee={paymentOrderDetail.shipping}
-            // onApplyShipping={this.handleApplyShipping}
-            />
-          </>
+      <>
+        {
+          // width >= 768 ?
+            isProceedPayment === true ?
+              // isDeliverySet === true ?
+              // <AccountPagePayment data={orderDetail} shippingFees={shipping} />
+              <>
+                <CheckoutPayment
+                  checkout={paymentOrderDetail}
+                  isPendingPayment={true}
+                  discount={paymentOrderDetail.discount}
+                  subtotal={paymentOrderDetail.subtotal}
+                  total={isArrayNotEmpty(paymentOrderDetail.shipping) ? paymentOrderDetail.total - paymentOrderDetail.shipping[0].ShippingCost : paymentOrderDetail.total}
+                  promoCode={paymentOrderDetail.promoCode}
+                  // validPromoData={this.state.validPromoData}
+                  // onRemovePromoError={this.handleRemovePromoError}
+                  // onHandleDiscount={this.onHandleDiscount}
+                  // onHandlePromoCode={this.onHandlePromoCode}
+                  // onApplyDiscount={this.handleApplyDiscount}
+                  // onBackStep={this.handleBackStep}
+                  // onGotoStep={this.handleGotoStep}
+                  deliveryFee={paymentOrderDetail.shipping}
+                // onApplyShipping={this.handleApplyShipping}
+                />
+              </>
 
-          :
-          //   <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={address !== 0 ? address[0].UserAddressBookID : address} data={JSON.parse(orderDetail.OrderProductDetail)} orderHistory={true} />
-          // :
-          <>
-            <Helmet>
-              <title>{`Order Details — ${theme.name}`}</title>
-            </Helmet>
-            <div className="card">
-              <div className="order-header">
-                <div className="order-header__actions">
-                  {
-                    orderDetail.TrackingStatusID !== 4 ?
-                      <Button onClick={() => window.location.href = "/EmporiaDev/account/orders"} style={{ backgroundColor: "grey", color: "white", borderWidth: 0, margin: "3px" }}>
-                        BACK TO LIST
-                      </Button>
-                      :
-                      <Button onClick={() => modalOpen()} style={{ backgroundColor: "#2b535e", color: "white", borderWidth: 0, margin: "3px" }}>
-                        RATE
-                      </Button>
-                  }
-                </div>
-                <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
-                <div className="order-header__subtitle">
-                  Was placed on{" "}
-                  <mark className="order-header__date">
-                    {orderDetail.CreatedDate}
-                  </mark>{" "}
-                  and is currently{" "}
-                  <mark className="order-header__status">
-                    {isOrderCancel === false ? orderDetail.TrackingStatus : " Cancelled"}
-                  </mark>
-                  .
-                </div>
-              </div>
-              <div className="card-divider" />
-              <div className="card-table">
-                <div className="table-responsive-sm">
-                  {orderDetail.OrderProductDetail !== null ?
-                    <>
-                      {filteredMerchant.length > 0 && filteredMerchant.map((MerchantList, i) => {
-                        return (
-                          <>
-                            <div key={i}>
-                              <th>
-                                {
-                                  props.location.merchant.length > 0 && props.location.merchant.filter((X) => X.UserID === MerchantList.MerchantID).map((merchant) => {
-                                    return (merchant.ShopName)
-                                  })
-                                }
-                              </th>
-                            </div>
-                            <div style={{ backgroundColor: '#F9D295' }}>
-                              <Divider light />
-                              {trackingDetail(i + 1, MerchantList)}
-                            </div>
-                            <table>
-                              <thead>
-                                <tr>
-                                  <th>Image</th>
-                                  <th>Product</th>
-                                  <th>Unit Price</th>
-                                  <th>Quantity</th>
-                                  <th>Total</th>
-                                  {orderDetail.TrackingStatusID !== 1 && <th>Tracking</th>}
-                                </tr>
-                              </thead>
-                              {
-                                orderDetail.OrderProductDetail !== null && JSON.parse(orderDetail.OrderProductDetail).filter((x) => x.MerchantID === MerchantList.MerchantID)
-                                  .map((orders) => {
-                                    return (
-                                      <tbody className="card-table__body card-table__body--merge-rows">
-                                        <tr>
-                                          <td style={{ width: "15%" }}>
-                                            <img
-                                              className="product-image dropcart__product-image"
-                                              src={orders.ProductImages !== null && orders.ProductImages !== "[]" ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
-                                              alt=""
-                                              onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src = Logo;
-                                              }}
-                                            />
-                                          </td>
-                                          <td style={{ width: "20%" }}>
-                                            <div style={{ fontSize: "14px", fontWeight: "bold" }}>  {orders.ProductName}  </div>
-                                            <div style={{ fontSize: "11px" }}>  Variation : {orders.ProductVariationValue}  </div>
-                                            <div style={{ fontSize: "11px" }}>  SKU : {orders.SKU}  </div>
-                                            <div style={{ fontSize: "11px" }}>  Dimension : {orders.ProductDimensionWidth}m (W) X {orders.ProductDimensionHeight}m (H) X {orders.ProductDimensionDeep}m (L) </div>
-                                            <div style={{ fontSize: "11px" }}>  Weight : {orders.ProductWeight} kg   </div>
-                                          </td>
-
-                                          <td style={{ width: "15%" }}>
-                                            {
-                                              orders.PromotionPrice !== null ?
-                                                <>
-                                                  <span className="product-card__new-price">
-                                                    <Currency value={orders.PromotionPrice} currency={"RM"} />
-                                                  </span>
-                                                  <span className="product-card__old-price">
-                                                    <Currency value={orders.ProductVariationPrice} currency={"RM"} />
-                                                  </span>
-                                                </>
-                                                :
-                                                <span className="product-card__new-price">
-                                                  <Currency value={orders.ProductVariationPrice} currency={"RM"} />
-                                                </span>
-                                            }
-                                          </td>
-                                          <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
-                                          <td style={{ width: "15%" }}>
-                                            {
-                                              orders.PromotionPrice !== null ?
-                                                <Currency value={orders.PromotionPrice * orders.ProductQuantity} currency={"RM"} />
-                                                :
-                                                <Currency value={orders.ProductVariationPrice * orders.ProductQuantity} currency={"RM"} />
-                                            }
-                                          </td>
-                                          {
-                                            orders.LogisticID !== null && orders.LogisticID !== 0 ?
-                                              <>
-                                                <td style={{ width: "15%" }} onClick={() => props.CallOrderRequestShipmentStatus({
-                                                  TRACKINGNUMBER: orders.TrackingNumber,
-                                                  TYPE: "true",
-                                                  PROJECTID: 2
-                                                })}>
-                                                  <div style={{ fontSize: "13px" }}>
-                                                    {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
-                                                      return (courier.LogisticName)
-                                                    })}
-                                                  </div>
-                                                  <div style={{ fontSize: "13px" }}>
-                                                    {orders.TrackingNumber}
-                                                  </div>
-                                                </td>
-                                              </>
-                                              :
-                                              orderDetail.TrackingStatusID !== 1 &&
-                                              <td style={{ width: "15%" }}>
-                                                <div style={{ fontSize: "13px", textAlign: "center" }}>
-                                                  Temporarily no tracking for this item
-                                                </div>
-                                              </td>
-                                          }
-                                        </tr>
-                                      </tbody>
-                                    )
-                                  })}
-                            </table>
-                          </>
-                        )
-                      })}
-                      <Divider light />
-                      <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
-                        <div className="row">
-                          <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Subtotal </div>
-                          <div className="col-2" >
-                            <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.subtotal}></Currency>}</Typography>
-                          </div>
-                        </div>
-                        <div className="row" >
-                          <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Discount </div>
-                          <div className="col-2" >
-                            <Typography variant="subtitle2">{paymentOrderDetail.discount !== null ? <Currency value={-parseFloat(paymentOrderDetail.discount).toFixed(2)}></Currency> : '-'}</Typography>
-                          </div>
-                        </div>
-                        {
-                          paymentOrderDetail.promoCode !== null &&
-                          <div className="row">
-                            <div className="col-12" style={{ fontWeight: "bold", textAlign: "right", padding: "10px", color: "green" }}>
-                              <Typography> Promocode {paymentOrderDetail.promoCode} is used , {paymentOrderDetail.promoDiscount} % off</Typography>
-                            </div>
-                          </div>
-                        }
-                        <div className="row" >
-                          <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Shipping </div>
-                          <div className="col-2" >
-                            <Typography variant="subtitle2">{isArrayNotEmpty(paymentOrderDetail.shipping) ? <Currency value={parseFloat(paymentOrderDetail.shipping[0].ShippingCost).toFixed(2)}></Currency> : <Currency value={0}></Currency>}</Typography></div>
-                        </div>
-                      </div>
-
-                      <Divider light />
-                      <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
-                        <div className="row">
-                          <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Total </div>
-                          <div className="col-2" >
-                            <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.total}></Currency>}</Typography>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                    :
-                    <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                      <div style={{ marginBottom: "20px" }}>
-                        Something went wrong
-                      </div>
-                      <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
-                    </div>
-                  }
-                </div>
-              </div>
-            </div>
-            <div className="row mt-3 no-gutters mx-n2">
-              <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
-                {
-                  orderDetail.PickUpInd === 0 ?
-                    orderDetail.UserAddresID !== 0 && orderDetail.UserAddressLine1 === null ?
-                      address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
-                        addressListing(addresspreview, "addressBook")
-                      ))
-                      :
-                      addressListing(orderDetail, "newAddress")
-                    :
-                    <div className="card address-card address-card--featured">
-                      <div className="address-card__body">
-                        <div className="address-card__badge address-card__badge--muted">
-                          Self Pick Up
-                        </div>
-                        <div className="address-card__name">
-                          User Self Pick Up
-                        </div>
-                        <div className="address-card__name">
-                          {orderDetail.UserFullName === null ? orderDetail.FirstName : orderDetail.UserFullName}
-                        </div>
-                        <div className="address-card__row">
-                          {orderDetail.UserContactNo}
-                        </div>
-                      </div>
-                    </div>
-                }
-              </div>
-              <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
-                {
-                  orderDetail.TrackingStatus === "In Purchasing" ?
-                    <>
-                      <div className="card address-card address-card--featured">
-                        {
-                          isOrderCancel === false ?
-                            <>
-                              <div className="address-card__body">
-                                <div className="address-card__badge address-card__badge--muted">
-                                  Pending Payment
-                                </div>
-                                <div className="address-card__row">
-                                  <div className="address-card__name">
-                                    Waiting for payment to complete the order
-                                  </div>
-                                </div>
-                                <div style={{ textAlign: "center" }}>
-                                  <Button onClick={() => setProceedPayment(true)} style={{ backgroundColor: "forestgreen", color: "white", borderWidth: 0 }}>
-                                    Proceed Payment
-                                  </Button>
-                                </div>
-                              </div>
-                              <div className="address-card__body">
-                                <div className="address-card__row">
-                                  <div className="address-card__name">
-                                    Wrong Order is make
-                                  </div>
-                                </div>
-                                <div style={{ textAlign: "center" }}>
-                                  <Button onClick={() => setModalCancel(true)} style={{ backgroundColor: "red", color: "white", borderWidth: 0 }}>
-                                    Cancel Order
-                                  </Button>
-                                </div>
-                              </div>
-                            </>
-                            :
-                            <div className="address-card__body">
-                              <div className="address-card__row">
-                                <div className="address-card__name" style={{ color: "red", textAlign: "center" }}>
-                                  This Order is cancelled
-                                </div>
-                              </div>
-                            </div>
-                        }
-                      </div>
-                    </>
-                    :
-                    <>
+              :
+              //   <DeliveryFee handleGetPostcode={handleGetPostcode} addressID={address !== 0 ? address[0].UserAddressBookID : address} data={JSON.parse(orderDetail.OrderProductDetail)} orderHistory={true} />
+              // :
+              <>
+                <Helmet>
+                  <title>{`Order Details — ${theme.name}`}</title>
+                </Helmet>
+                <div className="card">
+                  <div className="order-header">
+                    <div className="order-header__actions">
                       {
-                        orderDetail.TrackingStatusID === 6 ?
-                          <div className="card address-card address-card--featured">
-                            <div className="address-card__body">
-                              <div className="address-card__row">
-                                <div className="address-card__name" style={{ color: "red", textAlign: "center" }}>
-                                  This Order is cancelled
+                        orderDetail.TrackingStatusID !== 4 ?
+                          <Button onClick={() => window.location.href = "/EmporiaDev/account/orders"} style={{ backgroundColor: "grey", color: "white", borderWidth: 0, margin: "3px" }}>
+                            BACK TO LIST
+                          </Button>
+                          :
+                          <Button onClick={() => modalOpen()} style={{ backgroundColor: "#2b535e", color: "white", borderWidth: 0, margin: "3px" }}>
+                            RATE
+                          </Button>
+                      }
+                    </div>
+                    <h5 className="order-header__title">Order #{orderDetail.OrderID}</h5>
+                    <div className="order-header__subtitle">
+                      Was placed on{" "}
+                      <mark className="order-header__date">
+                        {orderDetail.CreatedDate}
+                      </mark>{" "}
+                      and is currently{" "}
+                      <mark className="order-header__status">
+                        {isOrderCancel === false ? orderDetail.TrackingStatus : " Cancelled"}
+                      </mark>
+                      .
+                    </div>
+                  </div>
+                  <div className="card-divider" />
+                  {
+                    width >= 768 ?
+<div className="card-table">
+                    <div className="table-responsive-sm">
+                      {orderDetail.OrderProductDetail !== null ?
+                        <>
+                          {filteredMerchant.length > 0 && filteredMerchant.map((MerchantList, i) => {
+                            return (
+                              <>
+                                <div key={i}>
+                                  <th>
+                                    {
+                                      props.location.merchant.length > 0 && props.location.merchant.filter((X) => X.UserID === MerchantList.MerchantID).map((merchant) => {
+                                        return (merchant.ShopName)
+                                      })
+                                    }
+                                  </th>
                                 </div>
+                                <div style={{ backgroundColor: '#F9D295' }}>
+                                  <Divider light />
+                                  {trackingDetail(i + 1, MerchantList)}
+                                </div>
+                                <table>
+                                  <thead>
+                                    <tr>
+                                      <th>Image</th>
+                                      <th>Product</th>
+                                      <th>Unit Price</th>
+                                      <th>Quantity</th>
+                                      <th>Total</th>
+                                      {orderDetail.TrackingStatusID !== 1 && <th>Tracking</th>}
+                                    </tr>
+                                  </thead>
+                                  {
+                                    orderDetail.OrderProductDetail !== null && JSON.parse(orderDetail.OrderProductDetail).filter((x) => x.MerchantID === MerchantList.MerchantID)
+                                      .map((orders) => {
+                                        return (
+                                          <tbody className="card-table__body card-table__body--merge-rows">
+                                            <tr>
+                                              <td style={{ width: "15%" }}>
+                                                <img
+                                                  className="product-image dropcart__product-image"
+                                                  src={orders.ProductImages !== null && orders.ProductImages !== "[]" ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
+                                                  alt=""
+                                                  onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = Logo;
+                                                  }}
+                                                />
+                                              </td>
+                                              <td style={{ width: "20%" }}>
+                                                <div style={{ fontSize: "14px", fontWeight: "bold" }}>  {orders.ProductName}  </div>
+                                                <div style={{ fontSize: "11px" }}>  Variation : {orders.ProductVariationValue}  </div>
+                                                <div style={{ fontSize: "11px" }}>  SKU : {orders.SKU}  </div>
+                                                <div style={{ fontSize: "11px" }}>  Dimension : {orders.ProductDimensionWidth}m (W) X {orders.ProductDimensionHeight}m (H) X {orders.ProductDimensionDeep}m (L) </div>
+                                                <div style={{ fontSize: "11px" }}>  Weight : {orders.ProductWeight} kg   </div>
+                                              </td>
+
+                                              <td style={{ width: "15%" }}>
+                                                {
+                                                  orders.PromotionPrice !== null ?
+                                                    <>
+                                                      <span className="product-card__new-price">
+                                                        <Currency value={orders.PromotionPrice} currency={"RM"} />
+                                                      </span>
+                                                      <span className="product-card__old-price">
+                                                        <Currency value={orders.ProductVariationPrice} currency={"RM"} />
+                                                      </span>
+                                                    </>
+                                                    :
+                                                    <span className="product-card__new-price">
+                                                      <Currency value={orders.ProductVariationPrice} currency={"RM"} />
+                                                    </span>
+                                                }
+                                              </td>
+                                              <td style={{ width: "10%" }}>{orders.ProductQuantity}</td>
+                                              <td style={{ width: "15%" }}>
+                                                {
+                                                  orders.PromotionPrice !== null ?
+                                                    <Currency value={orders.PromotionPrice * orders.ProductQuantity} currency={"RM"} />
+                                                    :
+                                                    <Currency value={orders.ProductVariationPrice * orders.ProductQuantity} currency={"RM"} />
+                                                }
+                                              </td>
+                                              {
+                                                orders.LogisticID !== null && orders.LogisticID !== 0 ?
+                                                  <>
+                                                    <td style={{ width: "15%" }} onClick={() => props.CallOrderRequestShipmentStatus({
+                                                      TRACKINGNUMBER: orders.TrackingNumber,
+                                                      TYPE: "true",
+                                                      PROJECTID: 2
+                                                    })}>
+                                                      <div style={{ fontSize: "13px" }}>
+                                                        {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
+                                                          return (courier.LogisticName)
+                                                        })}
+                                                      </div>
+                                                      <div style={{ fontSize: "13px" }}>
+                                                        {orders.TrackingNumber}
+                                                      </div>
+                                                    </td>
+                                                  </>
+                                                  :
+                                                  orderDetail.TrackingStatusID !== 1 &&
+                                                  <td style={{ width: "15%" }}>
+                                                    <div style={{ fontSize: "13px", textAlign: "center" }}>
+                                                      Temporarily no tracking for this item
+                                                    </div>
+                                                  </td>
+                                              }
+                                            </tr>
+                                          </tbody>
+                                        )
+                                      })}
+                                </table>
+                              </>
+                            )
+                          })}
+                          <Divider light />
+                          <div style={{ padding: "15px 15px", backgroundColor: "white"}}>
+                            <div className="row">
+                              <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Subtotal </div>
+                              <div className="col-2" >
+                                <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.subtotal}></Currency>}</Typography>
+                              </div>
+                            </div>
+                            <div className="row" >
+                              <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Discount </div>
+                              <div className="col-2" >
+                                <Typography variant="subtitle2">{paymentOrderDetail.discount !== null ? <Currency value={-parseFloat(paymentOrderDetail.discount).toFixed(2)}></Currency> : '-'}</Typography>
+                              </div>
+                            </div>
+                            {
+                              paymentOrderDetail.promoCode !== null &&
+                              <div className="row">
+                                <div className="col-12" style={{ fontWeight: "bold", textAlign: "right", padding: "10px", color: "green" }}>
+                                  <Typography> Promocode {paymentOrderDetail.promoCode} is used , {paymentOrderDetail.promoDiscount} % off</Typography>
+                                </div>
+                              </div>
+                            }
+                            <div className="row" >
+                              <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Shipping </div>
+                              <div className="col-2" >
+                                <Typography variant="subtitle2">{isArrayNotEmpty(paymentOrderDetail.shipping) ? <Currency value={parseFloat(paymentOrderDetail.shipping[0].ShippingCost).toFixed(2)}></Currency> : <Currency value={0}></Currency>}</Typography></div>
+                            </div>
+                          </div>
+
+                          <Divider light />
+                          <div style={{ padding: "15px 15px", backgroundColor: "white" }}>
+                            <div className="row">
+                              <div className="col-10" style={{ fontWeight: "bold", textAlign: "right", }}>  Total </div>
+                              <div className="col-2" >
+                                <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.total}></Currency>}</Typography>
                               </div>
                             </div>
                           </div>
-                          :
-                          orderDetail.PaymentMethodID === 1 ?
+                        </>
+                        :
+                        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                          <div style={{ marginBottom: "20px" }}>
+                            Something went wrong
+                          </div>
+                          <Link to="/" className="btn btn-primary btn-sm">Continue Shopping</Link>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                    :
+                    // mobile View
+                    <div>
+                      {filteredMerchant.length > 0 && filteredMerchant.map((MerchantList, i) => {
+                            return (
+                              <>
+                                  {
+                                    orderDetail.OrderProductDetail !== null && JSON.parse(orderDetail.OrderProductDetail).filter((x) => x.MerchantID === MerchantList.MerchantID)
+                                      .map((orders) => {
+                                        return (
+                                            <div className="m-3">
+                                              <div className="d-flex justify-content-center">
+                                                <img
+                                                  className="product-image dropcart__product-image"
+                                                  src={orders.ProductImages !== null && orders.ProductImages !== "[]" ? JSON.parse(orders.ProductImages)[0].ProductMediaUrl : Logo}
+                                                  alt=""
+                                                  onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = Logo;
+                                                  }}
+                                                />
+                                              </div>
+                                                <div style={{ fontSize: "14px", fontWeight: "bold" }}><center>{orders.ProductName}</center>  </div>
+                                                <div style={{ fontSize: "11px" }}>  Variation : {orders.ProductVariationValue}  </div>
+                                                <div style={{ fontSize: "11px" }}>  SKU : {orders.SKU}  </div>
+                                                <div style={{ fontSize: "11px" }}>  Dimension : {orders.ProductDimensionWidth}m (W) X {orders.ProductDimensionHeight}m (H) X {orders.ProductDimensionDeep}m (L) </div>
+                                                <div style={{ fontSize: "11px" }}>  Weight : {orders.ProductWeight} kg   </div>
+
+                                              <div style={{ fontSize: "11px" }}>Unit Price : 
+                                                {
+                                                  orders.PromotionPrice !== null ?
+                                                    <>
+                                                      <span className="product-card__new-price">
+                                                        <Currency value={orders.PromotionPrice} currency={"RM"} />
+                                                      </span>
+                                                      <span className="product-card__old-price">
+                                                        <Currency value={orders.ProductVariationPrice} currency={"RM"} />
+                                                      </span>
+                                                    </>
+                                                    :
+                                                    <span className="product-card__new-price">
+                                                      <Currency value={orders.ProductVariationPrice} currency={"RM"} />
+                                                    </span>
+                                                }
+                                              </div>
+                                              <div style={{ fontSize: "11px" }}>Quantity : {orders.ProductQuantity}</div>
+                                              <div className="mt-2" style={{ fontSize: "11px",fontWeight: "bold", textAlign:"right"}}>Total : 
+                                                {
+                                                  orders.PromotionPrice !== null ?
+                                                    <Currency value={orders.PromotionPrice * orders.ProductQuantity} currency={"RM"} />
+                                                    :
+                                                    <Currency value={orders.ProductVariationPrice * orders.ProductQuantity} currency={"RM"} />
+                                                }
+                                              </div>
+                                              {
+                                                orders.LogisticID !== null && orders.LogisticID !== 0 ?
+                                                  <>
+                                                    <div onClick={() => props.CallOrderRequestShipmentStatus({
+                                                      TRACKINGNUMBER: orders.TrackingNumber,
+                                                      TYPE: "true",
+                                                      PROJECTID: 2
+                                                    })}>
+                                                      <div style={{ fontSize: "13px" }}>
+                                                        {props.location.logistic.length > 0 && props.location.logistic.filter((x) => x.LogisticID === orders.LogisticID).map((courier) => {
+                                                          return (courier.LogisticName)
+                                                        })}
+                                                      </div>
+                                                      <div style={{ fontSize: "13px" }}>
+                                                        Tracking: {orders.TrackingNumber}
+                                                      </div>
+                                                    </div>
+                                                  </>
+                                                  :
+                                                  orderDetail.TrackingStatusID !== 1 &&
+                                                  <div>
+                                                    <div style={{ fontSize: "13px", textAlign: "center" }}>
+                                                      Temporarily no tracking for this item
+                                                    </div>
+                                                  </div>
+                                              }
+                                              <Divider light />
+                                            </div>
+                                            
+                                        )
+                                      })}
+                                  <Divider light />
+                              </>
+                            )
+                          })}
+                      <div style={{ padding: "15px 15px", backgroundColor: "white", textAlign:"Right", fontSize: "14px" }}>
+                            <div className="row">
+                              <div className="" style={{ fontWeight: "bold"}}>  Subtotal </div>
+                              <div className="" >
+                                <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.subtotal}></Currency>}</Typography>
+                              </div>
+                            </div>
+                            <div className="" >
+                              <div className="" style={{ fontWeight: "bold" }}>  Discount </div>
+                              <div className="" >
+                                <Typography variant="subtitle2">{paymentOrderDetail.discount !== null ? <Currency value={-parseFloat(paymentOrderDetail.discount).toFixed(2)}></Currency> : '-'}</Typography>
+                              </div>
+                            </div>
+                            {
+                              paymentOrderDetail.promoCode !== null &&
+                              <div className="">
+                                <div className="" style={{ fontWeight: "bold", padding: "10px", color: "green" }}>
+                                  <Typography> Promocode {paymentOrderDetail.promoCode} is used , {paymentOrderDetail.promoDiscount} % off</Typography>
+                                </div>
+                              </div>
+                            }
+                            <div className="" >
+                              <div className="" style={{ fontWeight: "bold", }}>  Shipping </div>
+                              <div className="" >
+                                <Typography variant="subtitle2">{isArrayNotEmpty(paymentOrderDetail.shipping) ? <Currency value={parseFloat(paymentOrderDetail.shipping[0].ShippingCost).toFixed(2)}></Currency> : <Currency value={0}></Currency>}</Typography></div>
+                            </div>
+                          </div>
+
+                          <Divider light />
+                          <div style={{ padding: "15px 15px", backgroundColor: "white", textAlign:"Right" }}>
+                            <div className="">
+                              <div className="" style={{ fontWeight: "bold", }}>  Total </div>
+                              <div className="" >
+                                <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.total}></Currency>}</Typography>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                  }
+                  
+                </div>
+              </>
+        }
+        <div className="row mt-3 no-gutters mx-n2">
+          <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
+            {
+              orderDetail.PickUpInd === 0 ?
+                orderDetail.UserAddresID !== 0 && orderDetail.UserAddressLine1 === null ?
+                  address.filter((x) => x.UserAddressBookID === orderDetail.UserAddresID).map((addresspreview) => (
+                    addressListing(addresspreview, "addressBook")
+                  ))
+                  :
+                  addressListing(orderDetail, "newAddress")
+                :
+                <div className="card address-card address-card--featured">
+                  <div className="address-card__body">
+                    <div className="address-card__badge address-card__badge--muted">
+                      Self Pick Up
+                    </div>
+                    <div className="address-card__name">
+                      User Self Pick Up
+                    </div>
+                    <div className="address-card__name">
+                      {orderDetail.UserFullName === null ? orderDetail.FirstName : orderDetail.UserFullName}
+                    </div>
+                    <div className="address-card__row">
+                      {orderDetail.UserContactNo}
+                    </div>
+                  </div>
+                </div>
+            }
+          </div>
+          <div className="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
+            {
+              orderDetail.TrackingStatus === "In Purchasing" ?
+                <>
+                  <div className="card address-card address-card--featured">
+                    {
+                      isOrderCancel === false ?
+                        <>
+                          <div className="address-card__body">
+                            <div className="address-card__badge address-card__badge--muted">
+                              Pending Payment
+                            </div>
+                            <div className="address-card__row">
+                              <div className="address-card__name">
+                                Waiting for payment to complete the order
+                              </div>
+                            </div>
+                            <div style={{ textAlign: "center" }}>
+                              <Button onClick={() => setProceedPayment(true)} style={{ backgroundColor: "forestgreen", color: "white", borderWidth: 0 }}>
+                                Proceed Payment
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="address-card__body">
+                            <div className="address-card__row">
+                              <div className="address-card__name">
+                                Wrong Order is make
+                              </div>
+                            </div>
+                            <div style={{ textAlign: "center" }}>
+                              <Button onClick={() => setModalCancel(true)} style={{ backgroundColor: "red", color: "white", borderWidth: 0 }}>
+                                Cancel Order
+                              </Button>
+                            </div>
+                          </div>
+                        </>
+                        :
+                        <div className="address-card__body">
+                          <div className="address-card__row">
+                            <div className="address-card__name" style={{ color: "red", textAlign: "center" }}>
+                              This Order is cancelled
+                            </div>
+                          </div>
+                        </div>
+                    }
+                  </div>
+                </>
+                :
+                <>
+                  {
+                    orderDetail.TrackingStatusID === 6 ?
+                      <div className="card address-card address-card--featured">
+                        <div className="address-card__body">
+                          <div className="address-card__row">
+                            <div className="address-card__name" style={{ color: "red", textAlign: "center" }}>
+                              This Order is cancelled
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      :
+                      orderDetail.PaymentMethodID === 1 ?
+                        <div className="card address-card address-card--featured">
+                          <div className="address-card__body">
+                            <div className="address-card__badge address-card__badge--muted">
+                              CREDIT / DEBIT CARD
+                            </div>
+                            <div className="address-card__row">
+                              <div className="address-card__name">
+                                CREDIT / DEBIT CARD PAYMENT
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        :
+                        <>
+                          {
+                            orderDetail.PaymentMethodID === 3 &&
                             <div className="card address-card address-card--featured">
                               <div className="address-card__body">
                                 <div className="address-card__badge address-card__badge--muted">
-                                  CREDIT / DEBIT CARD
+                                  E-WALLET
                                 </div>
                                 <div className="address-card__row">
                                   <div className="address-card__name">
-                                    CREDIT / DEBIT CARD PAYMENT
+                                    E-WALLET PAYMENT
                                   </div>
                                 </div>
                               </div>
                             </div>
-                            :
-                            <>
-                              {
-                                orderDetail.PaymentMethodID === 3 &&
-                                <div className="card address-card address-card--featured">
-                                  <div className="address-card__body">
-                                    <div className="address-card__badge address-card__badge--muted">
-                                      E-WALLET
-                                    </div>
-                                    <div className="address-card__row">
-                                      <div className="address-card__name">
-                                        E-WALLET PAYMENT
-                                      </div>
-                                    </div>
+                          }
+                          {
+                            orderDetail.PaymentMethodID === 2 &&
+                            <div className="card address-card address-card--featured">
+                              <div className="address-card__body">
+                                <div className="address-card__badge address-card__badge--muted">
+                                  FPX
+                                </div>
+                                <div className="address-card__row">
+                                  <div className="address-card__name">
+                                    FPX PAYMENT
                                   </div>
                                 </div>
-                              }
-                              {
-                                orderDetail.PaymentMethodID === 2 &&
-                                <div className="card address-card address-card--featured">
-                                  <div className="address-card__body">
-                                    <div className="address-card__badge address-card__badge--muted">
-                                      FPX
-                                    </div>
-                                    <div className="address-card__row">
-                                      <div className="address-card__name">
-                                        FPX PAYMENT
-                                      </div>
-                                    </div>
+                              </div>
+                            </div>
+                          }
+                          {
+                            orderDetail.PaymentMethodID === 4 &&
+                            <div className="card address-card address-card--featured">
+                              <div className="address-card__body">
+                                <div className="address-card__badge address-card__badge--muted">
+                                  PAYPAL
+                                </div>
+                                <div className="address-card__row">
+                                  <div className="address-card__name">
+                                    PAYPAL PAYMENT
                                   </div>
                                 </div>
-                              }
-                              {
-                                orderDetail.PaymentMethodID === 4 &&
-                                <div className="card address-card address-card--featured">
-                                  <div className="address-card__body">
-                                    <div className="address-card__badge address-card__badge--muted">
-                                      PAYPAL
-                                    </div>
-                                    <div className="address-card__row">
-                                      <div className="address-card__name">
-                                        PAYPAL PAYMENT
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              }
-                            </>
-                      }
-                    </>
-                }
+                              </div>
+                            </div>
+                          }
+                        </>
+                  }
+                </>
+            }
+          </div>
+        </div>
+        <div style={{ textAlign: "center", padding: "inherit", }} >
+          <Modal
+            className="modal-dialog-centered"
+            isOpen={openRate}
+            toggle={() => modalClose()}
+          >
+            <ModalBody>
+              <CloseIcon
+                className="closeIcon"
+                onClick={() => modalClose()}
+                data-dismiss="modal" />
+              <div
+                align="center"
+                className="form-content p-2"
+              >
+                <div className="reviews-view__header" >Write A Review</div>
+                <div className="row justify-content-center" >
+                  <div id="review_avatar" className="review__avatar" style={{ marginLeft: "10px", marginRight: 0 }}>
+                    <img src={USER} alt="avatar" onError={(e) => (e.target.src = USER)} />
+                  </div>
+                  <div className="review__content col-10" style={{}} id="writeReviews">
+                    <div style={{ display: "flex" }}>
+                      <Box component="fieldset" mb={1} borderColor="transparent" >
+                        <ReviewRating
+                          size="medium"
+                          emptyIcon={<StarBorderIcon fontSize="medium" />}
+                          name="customized-empty"
+                          value={productReviewRating}
+                          onChange={({ target }) => {
+                            setproductReviewRating(target.value)
+                          }}
+                          required
+                        />
+                      </Box>
+                    </div>
+                    <div className="form-group mb-2">
+                      <textarea className="form-control" style={{ height: "80px" }} placeholder="Tell us more about your review on this product" id="review-text" rows="6" value={productReviewComment} onChange={({ target }) => { setproductReviewComment(target.value) }} required />
+                    </div>
+                  </div>
+                  <div className=" mb-0">
+                    <button style={{ borderRadius: "5px" }} className="btn btn-primary btn-md" onClick={() => localStorage.getItem("isLogin") === "false" ? login() : OnSubmitReview(productID[0])} >
+                      Post Your Review
+                    </button>
+                  </div>
+                </div>
+
               </div>
-            </div>
-            <div style={{ textAlign: "center", padding: "inherit", }} >
-              <Modal
-                className="modal-dialog-centered"
-                isOpen={openRate}
-                toggle={() => modalClose()}
+            </ModalBody>
+          </Modal>
+        </div>
+
+        <div style={{ textAlign: "center", padding: "inherit", }} >
+          <Modal
+            className="modal-dialog-centered"
+            isOpen={isOpenModalCancel}
+            toggle={() => setModalCancel(false)}
+          >
+            <ModalBody>
+              <CloseIcon
+                className="closeIcon"
+                onClick={() => setModalCancel(false)}
+                data-dismiss="modal" />
+              <div
+                align="center"
+                className="form-content p-2"
               >
-                <ModalBody>
-                  <CloseIcon
-                    className="closeIcon"
-                    onClick={() => modalClose()}
-                    data-dismiss="modal" />
-                  <div
-                    align="center"
-                    className="form-content p-2"
-                  >
-                    <div className="reviews-view__header" >Write A Review</div>
-                    <div className="row justify-content-center" >
-                      <div id="review_avatar" className="review__avatar" style={{ marginLeft: "10px", marginRight: 0 }}>
-                        <img src={USER} alt="avatar" onError={(e) => (e.target.src = USER)} />
-                      </div>
-                      <div className="review__content col-10" style={{}} id="writeReviews">
-                        <div style={{ display: "flex" }}>
-                          <Box component="fieldset" mb={1} borderColor="transparent" >
-                            <ReviewRating
-                              size="medium"
-                              emptyIcon={<StarBorderIcon fontSize="medium" />}
-                              name="customized-empty"
-                              value={productReviewRating}
-                              onChange={({ target }) => {
-                                setproductReviewRating(target.value)
-                              }}
-                              required
-                            />
-                          </Box>
-                        </div>
-                        <div className="form-group mb-2">
-                          <textarea className="form-control" style={{ height: "80px" }} placeholder="Tell us more about your review on this product" id="review-text" rows="6" value={productReviewComment} onChange={({ target }) => { setproductReviewComment(target.value) }} required />
-                        </div>
-                      </div>
-                      <div className=" mb-0">
-                        <button style={{ borderRadius: "5px" }} className="btn btn-primary btn-md" onClick={() => localStorage.getItem("isLogin") === "false" ? login() : OnSubmitReview(productID[0])} >
-                          Post Your Review
-                        </button>
-                      </div>
-                    </div>
+                <div className="reviews-view__header" >Are you sure to cancel this order ? </div>
+                <div className="row justify-content-center" >
+                  <div className=" mb-0">
+                    <button style={{ borderRadius: "5px", margin: "10px" }} className="btn btn-primary btn-md" onClick={() => {
+                      props.CallUpdateOrderTrackingStatus({
+                        OrderID: paymentOrderDetail.orderID,
+                        TrackingStatusID: 6
+                      })
+                    }
 
+                    }>
+                      Yes
+                    </button>
+                    <button style={{ borderRadius: "8px", margin: "10px", backgroundColor: "white", color: "black", fontWeight: "bold" }} className="btn btn-primary btn-md" onClick={() => setModalCancel(false)} >
+                      No
+                    </button>
                   </div>
-                </ModalBody>
-              </Modal>
-            </div>
+                </div>
 
-            <div style={{ textAlign: "center", padding: "inherit", }} >
-              <Modal
-                className="modal-dialog-centered"
-                isOpen={isOpenModalCancel}
-                toggle={() => setModalCancel(false)}
-              >
-                <ModalBody>
-                  <CloseIcon
-                    className="closeIcon"
-                    onClick={() => setModalCancel(false)}
-                    data-dismiss="modal" />
-                  <div
-                    align="center"
-                    className="form-content p-2"
-                  >
-                    <div className="reviews-view__header" >Are you sure to cancel this order ? </div>
-                    <div className="row justify-content-center" >
-                      <div className=" mb-0">
-                        <button style={{ borderRadius: "5px", margin: "10px" }} className="btn btn-primary btn-md" onClick={() => {
-                          props.CallUpdateOrderTrackingStatus({
-                            OrderID: paymentOrderDetail.orderID,
-                            TrackingStatusID: 6
-                          })
-                        }
+              </div>
+            </ModalBody>
+          </Modal>
+        </div>
+      </>
 
-                        }>
-                          Yes
-                        </button>
-                        <button style={{ borderRadius: "8px", margin: "10px", backgroundColor: "white", color: "black", fontWeight: "bold" }} className="btn btn-primary btn-md" onClick={() => setModalCancel(false)} >
-                          No
-                        </button>
-                      </div>
-                    </div>
-
-                  </div>
-                </ModalBody>
-              </Modal>
-            </div>
-          </>
-      }
     </React.Fragment>
   );
 }

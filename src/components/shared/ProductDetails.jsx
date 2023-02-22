@@ -543,7 +543,7 @@ class ProductDetails extends Component {
 
                                     <div className="product__option">
                                         <div className="row form-group product__option d-flex align-items-center">
-                                            <div className="col-2">
+                                            <div className="col-12 col-lg-3 col-xl-2">
                                                 <label
                                                     htmlFor="product-quantity"
                                                     className="product__option-label"
@@ -551,7 +551,7 @@ class ProductDetails extends Component {
                                                     Quantity
                                                 </label>
                                             </div>
-                                            <div className="col-2 product__actions-item">
+                                            <div className="col-12 col-lg-3 col-xl-2 product__actions-item">
                                                 <InputNumber
                                                     id="product-quantity"
                                                     aria-label="Quantity"
