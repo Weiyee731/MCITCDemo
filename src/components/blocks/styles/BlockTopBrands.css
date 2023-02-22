@@ -1,0 +1,25 @@
+.scrollbox {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    align-items: center;
+    flex-direction: row;
+    overflow-x: auto;
+    width:100%;
+    /* visibility: hidden; */
+  }
+  
+  .scrollbox-content,
+  .scrollbox:hover,
+  .scrollbox:focus {
+    visibility: visible;
+  }
+  
+  .scrollbox_delayed {
+    transition: visibility 0.2s;
+  }
+  
+  .scrollbox_delayed:hover {
+    transition: visibility 0s 0.2s;
+  }

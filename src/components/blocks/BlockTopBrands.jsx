@@ -7,7 +7,7 @@ import { GitAction } from "../../store/action/gitAction";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { url } from "../../services/utils";
-
+import "./styles/BlockTopBrands.css";
 
 // application
 import BlockHeader from "../shared/BlockHeader";
@@ -64,13 +64,16 @@ class BlockTopBrands extends Component {
       padding: "5px",
       alignItems: "center",
       flexDirection: "row",
+      overflowX: 'auto', 
+      width:'100%', 
+      
     }
 
     const categoryGrid = {
       paddingTop: "10px",
       textAlign: "center",
       cursor: "pointer",
-      width: "100%",
+      width: "120px",
       marginBottom: "10px"
     }
 
@@ -78,6 +81,7 @@ class BlockTopBrands extends Component {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
+   
     }
 
 
@@ -101,11 +105,13 @@ class BlockTopBrands extends Component {
             return (
               // <div key={index} style={categoryGrid} className="col-2 col-xs-2 p-3"
               // className="col-2p-3"
-              <div className="col-2" style={divStyle} key={index}>
-                <div style={categoryGrid} >
-                  <div>
+              <div className="col m-2" style={divStyle} key={index}>
+                <div style={categoryGrid}  >
+                  <div >
                     {/* <Link to={url.productByCategory(data)}> <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="50%" height="50%" /></Link> */}
-                    <Link to={'/'}> <img src={data.ProductCategoryImage} alt={data.ProductCategory} style={{width: data.width}} /></Link>
+                    <Link to={'/'}> 
+                      <img src={data.ProductCategoryImage} alt={data.ProductCategory} style={{width: data.width, resizeMode:'cover'}} />
+                    </Link>
                     {/* <label style={{ fontSize: "13px" }}>{data.ProductCategory}</label> */}
                   </div>
                 </div>
