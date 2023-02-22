@@ -63,7 +63,7 @@ function Topbar() {
                     </div> */}
           <div className="topbar__item">
             {/* <DropdownCurrency /> */}
-            <SocialLinks className="footer-newsletter__social-links" shape="circle" />
+            <SocialLinks  shape="circle" />
           </div>
           <div className="topbar__item">
             {/* <DropdownLanguage /> */}

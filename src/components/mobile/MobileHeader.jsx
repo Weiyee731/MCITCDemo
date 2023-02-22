@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 // application
+import Topbar from '../header/Topbar';
 import Indicator from '../header/Indicator';
 import IndicatorAccount from "../header/IndicatorAccount";
 import {
@@ -56,6 +57,7 @@ class MobileHeader extends Component {
         return (
             <div className="mobile-header">
                 <div className="mobile-header__panel">
+                    <Topbar/>
                     <div className="container">
                         <div className="mobile-header__body">
                             <button type="button" className="mobile-header__menu-button" onClick={openMobileMenu}>
