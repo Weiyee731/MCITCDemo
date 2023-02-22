@@ -61,7 +61,7 @@ class MobileHeader extends Component {
                     <div className="container">
                         <div className="mobile-header__body">
                             <button type="button" className="mobile-header__menu-button" onClick={openMobileMenu}>
-                                <Menu18x14Svg />
+                                {/* <Menu18x14Svg /> */}
                             </button>
                             <Link to="/" className="mobile-header__logo"><LogoSmallSvg /></Link>
                             <Search
