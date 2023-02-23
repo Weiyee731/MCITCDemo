@@ -757,7 +757,7 @@ function AccountPageOrderDetails(props) {
                         )
                       })}
                       <div style={{ padding: "15px 15px", backgroundColor: "white", textAlign: "Right", fontSize: "14px" }}>
-                        <div className="row">
+                        <div className="">
                           <div className="" style={{ fontWeight: "bold" }}>  Subtotal </div>
                           <div className="" >
                             <Typography variant="subtitle2">{<Currency value={paymentOrderDetail.subtotal}></Currency>}</Typography>

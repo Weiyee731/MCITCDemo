@@ -99,7 +99,7 @@ class ProductDetails extends Component {
         window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
         let productID = ""
         if (window.location.pathname !== undefined) {
-            if (window.location.pathname !== "/") {
+            if (window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products") {
                 let length = window.location.pathname.split("/").length
                 productID = window.location.pathname.split("/")[length - 1]
             }
@@ -129,6 +129,7 @@ class ProductDetails extends Component {
         let productID = ""
         if (window.location.pathname !== undefined) {
             if (window.location.pathname !== "/") {
+            //     console.log("hello",window.location.pathname)
                 let length = window.location.pathname.split("/").length
                 productID = window.location.pathname.split("/")[length - 1]
             }
@@ -136,8 +137,9 @@ class ProductDetails extends Component {
                 productID = product.ProductID
             }
         }
-
+        console.log(this.state.isProductSet,product.ProductID,productID,window.location.pathname.split("/"))
         if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && this.state.isProductSet === false) {
+            console.log(this.state.isProductSet,product.ProductID)
             product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
                 variation.ProductVariationValue === "-" &&
                     this.setState({
@@ -266,6 +268,7 @@ class ProductDetails extends Component {
     }
 
     render() {
+        console.log(this.props)
         const {
             product,
             layout,
@@ -302,7 +305,7 @@ class ProductDetails extends Component {
             return (
                 <div className="product__content">
                     {
-                        window.location.pathname !== "/" ?
+                        window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products" ?
                             this.state.isProductSet === true &&
                             <ProductGallery
                                 layout={layout}
@@ -313,7 +316,7 @@ class ProductDetails extends Component {
                                 product={product}
                             />
                             :
-                            <Link to={url.product(product)}>
+                            <Link to={url.product(product)}>{console.log("here:")}
                                 <div className="product-card__image product-image">
                                     <div className="product-image__body">
                                         {
@@ -331,6 +334,7 @@ class ProductDetails extends Component {
                                 </div>
                             </Link>
                     }
+                    {console.log(this.state.isTimerEnd,this.state.isProductSet,this.props)}
                     {
                         this.state.isTimerEnd === true && this.state.isProductSet === true ?
                             <div>
@@ -598,7 +602,7 @@ class ProductDetails extends Component {
         }
 
         return (
-            window.location.pathname !== "/" ?
+            window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products" ?
                 <div className="block" >
                     <Card elevation={2}
                         style={{ backgroundColor: "white", padding: "20px" }}
