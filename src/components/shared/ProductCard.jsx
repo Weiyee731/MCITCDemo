@@ -37,6 +37,7 @@ function ProductCard(props) {
   const {
     product,
     layout,
+    QuickViewIndicator,
   } = props;
 
   const containerClasses = classNames("product-card", {
@@ -317,13 +318,12 @@ function ProductCard(props) {
         :
         ProductCardlayout()
       }
-
       <Modal isOpen={isQuickViewOpen} toggle={() => setQuickView(!isQuickViewOpen)} centered size="xl">
         <div className="quickview">
           <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
             <Cross20Svg />
           </button>
-          <ProductDetails product={product} getpopOutDetailsCard={getpopOutDetailsCard} />
+          <ProductDetails product={product} quickViewIndicator={props.quickViewIndicator} getpopOutDetailsCard={getpopOutDetailsCard} />
         </div>
       </Modal>
       {loginPopOut !== undefined && loginPopOut !== false &&

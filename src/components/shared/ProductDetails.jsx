@@ -99,7 +99,7 @@ class ProductDetails extends Component {
         window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
         let productID = ""
         if (window.location.pathname !== undefined) {
-            if (window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products") {
+            if ( this.props.quickViewIndicator !== true && window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products") {
                 let length = window.location.pathname.split("/").length
                 productID = window.location.pathname.split("/")[length - 1]
             }
@@ -108,7 +108,7 @@ class ProductDetails extends Component {
             }
         }
 
-        if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID)) {
+        if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && product.ProductVariation !== undefined) {
             product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
                 variation.ProductVariationValue === "-" &&
                     this.setState({
@@ -128,8 +128,7 @@ class ProductDetails extends Component {
         const { product } = this.props
         let productID = ""
         if (window.location.pathname !== undefined) {
-            if (window.location.pathname !== "/") {
-            //     console.log("hello",window.location.pathname)
+            if (this.props.quickViewIndicator !== true && window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products") {
                 let length = window.location.pathname.split("/").length
                 productID = window.location.pathname.split("/")[length - 1]
             }
@@ -137,9 +136,7 @@ class ProductDetails extends Component {
                 productID = product.ProductID
             }
         }
-        console.log(this.state.isProductSet,product.ProductID,productID,window.location.pathname.split("/"))
-        if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && this.state.isProductSet === false) {
-            console.log(this.state.isProductSet,product.ProductID)
+        if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && this.state.isProductSet === false && product.ProductVariation !== undefined) {
             product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
                 variation.ProductVariationValue === "-" &&
                     this.setState({
@@ -268,10 +265,10 @@ class ProductDetails extends Component {
     }
 
     render() {
-        console.log(this.props)
         const {
             product,
             layout,
+            quickViewIndicator,
         } = this.props;
         const { quantity } = this.state;
         let prices;
@@ -286,7 +283,8 @@ class ProductDetails extends Component {
 
         prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
         let merchant = product.ReturnVal !== undefined && product.ReturnVal !== "0" && product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
-        let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
+        // let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
+        let variation =  ""
 
 
         if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined && this.state.count === 0) {
@@ -305,7 +303,7 @@ class ProductDetails extends Component {
             return (
                 <div className="product__content">
                     {
-                        window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products" ?
+                        this.props.QuickViewIndicator !== true && window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products" ?
                             this.state.isProductSet === true &&
                             <ProductGallery
                                 layout={layout}
@@ -316,7 +314,7 @@ class ProductDetails extends Component {
                                 product={product}
                             />
                             :
-                            <Link to={url.product(product)}>{console.log("here:")}
+                            <Link to={url.product(product)}>
                                 <div className="product-card__image product-image">
                                     <div className="product-image__body">
                                         {
@@ -334,7 +332,6 @@ class ProductDetails extends Component {
                                 </div>
                             </Link>
                     }
-                    {console.log(this.state.isTimerEnd,this.state.isProductSet,this.props)}
                     {
                         this.state.isTimerEnd === true && this.state.isProductSet === true ?
                             <div>
@@ -347,7 +344,6 @@ class ProductDetails extends Component {
                                         <Typography className="col-12 product__name" >
                                             Merchant Shop:  <Link to={url.cartMerchant(product.MerchantID)}>{product.ShopName}</Link>
                                         </Typography>
-                                        {console.log("productproductproductproductproduct", product)}
 
                                         {/* <div className="col-1"> */}
                                         {/* <a data-tip data-event='click focus'>
@@ -602,7 +598,7 @@ class ProductDetails extends Component {
         }
 
         return (
-            window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products" ?
+            this.props.QuickViewIndicator !== true && window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products" ?
                 <div className="block" >
                     <Card elevation={2}
                         style={{ backgroundColor: "white", padding: "20px" }}
