@@ -699,7 +699,6 @@ class BlockListingDetails extends Component {
                                                             :
                                                             unSelectedLayout(data)
 
-
                                                         }
                                                         {/* <FiberManualRecordOutlinedIcon
                                                             onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}

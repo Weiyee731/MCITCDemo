@@ -317,7 +317,7 @@ class AccountPageOrders extends Component {
                 }
                 let TrackingList = (
                   <tr key={order.OrderID} >
-                    <td>  <Link to={pageItem} >{`#${order.OrderID}`}</Link> </td>
+                    <td>  <Link to={pageItem} >{`#${order.OrderName}`}</Link> </td>
                     <td><Link to={pageItem} >{order.CreatedDate}</Link> </td>
                     <td><Link to={pageItem} >{order.TrackingStatus}</Link> </td>
                     <td><Link to={pageItem} >{totalQuantity + " items ," + " RM " + totalOverall}</Link> </td>
