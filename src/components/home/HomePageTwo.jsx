@@ -143,6 +143,7 @@ function HomePageTwo(props) {
         /> */}
 
         {/* <BlockFeatures layout="boxed" /> */}
+   
         <BlockProductsCarousel
           title="New Arrivals"
           {...props}

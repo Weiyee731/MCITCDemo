@@ -197,9 +197,8 @@ function AccountPageOrderDetails(props) {
       let detailsListing = []
 
       orderDetail.OrderProductDetail !== undefined && JSON.parse(orderDetail.OrderProductDetail).map((x) => {
-
         let image = ""
-        if (x.ProductImages !== undefined && x.ProductImages !== null) {
+        if (x.ProductImages !== undefined && x.ProductImages !== null && x.ProductImages !== "[]") {
           image = JSON.parse(x.ProductImages)[0].ProductMediaUrl
         }
         let data = {

@@ -557,9 +557,9 @@ class BlockListingDetails extends Component {
             return (
                 <>
                     <FiberManualRecordOutlinedIcon
-                        onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                        onClick={() => { window.location.href = "./shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                     />
-                    <label className="sub-label" onClick={() => { window.location.href = "/shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
+                    <label className="sub-label" onClick={() => { window.location.href = "./shop/ProductListing/type:Category&typevalue:" + data.ProductCategoryID; this.setState({ isCheckDataBind: false }) }}
                     >{data.ProductCategory}
                     </label>
                 </>
