@@ -119,6 +119,7 @@ class Product extends Component {
           title="Recommended Product"
           layout="grid-4"
           rows={1}
+          QuickViewIndicator={true}
           currentData={this.state}
           highlightColor={highlightColor}
           baseColor={baseColor}

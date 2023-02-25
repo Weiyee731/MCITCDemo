@@ -196,14 +196,15 @@ export default class BlockProductsCarousel extends Component {
       groups,
       loading,
       products,
-      props
+      props,
+      QuickViewIndicator,
     } = this.props;
-
     const columns = this.productsColumns().map((column, index) => {
       const products = column.map((product) => (
         // <div key={product.id} className="block-products-carousel__cell">
+        
         <SwiperSlide key={product.ProductID}>
-          <ProductCard {...props} product={product} currentData={this.props.currentData} highlightColor={this.props.highlightColor} baseColor={this.props.baseColor} />
+          <ProductCard {...props} product={product} quickViewIndicator={QuickViewIndicator} currentData={this.props.currentData} highlightColor={this.props.highlightColor} baseColor={this.props.baseColor} />
         </SwiperSlide>
         // </div>
       ));
