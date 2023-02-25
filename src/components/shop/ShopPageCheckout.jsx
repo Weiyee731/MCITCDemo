@@ -151,7 +151,7 @@ class PageCheckout extends Component {
     let listing = this.data.data
 
     let discount = []
-    isArrayNotEmpty(listing) && listing.map((data) => {
+    listing !== undefined && isArrayNotEmpty(listing) && listing.map((data) => {
       if (data.product !== undefined && data.product.ProductPromotion !== undefined) {
         JSON.parse(data.product.ProductPromotion).map((x) => {
           if (x.ProductVariationDetailID === data.product.ProductVariationDetailID)
@@ -234,8 +234,8 @@ class PageCheckout extends Component {
 
     // deliveryFee: [{ "ShippingCost": 0 }],
 
-
-    if (address.UserAddressBookID === 0) {
+    if (address.UserAddressBookID === 0) {      
+      this.data["address"] = address;
       this.setState({ deliveryFee: [{ "ShippingCost": 0 }] })
     } else {
       let PRODUCTID = this.data.data.map((item) => { return item.product.ProductID })
@@ -391,6 +391,7 @@ class PageCheckout extends Component {
                     onCreateBilling={this.handleCreateBilling}
                   />
                 )}
+
                 {this.state.activeStep === 2 && (
                   <CheckoutPayment
                     checkout={this.data}

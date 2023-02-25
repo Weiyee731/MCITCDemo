@@ -166,8 +166,7 @@ export default function CheckoutPayment({
         var n = Math.floor(Math.random() * 11);
         var k = Math.floor(Math.random() * 1000000);
         var m = String.fromCharCode(n) + k;
-
-        console.log("SHIPPING IN OB", deliveryFee)
+        
         {/* this.setState({ applyPromo: applyPromo, promoError: promoError, isVoucherApply: verify, totalApplyPromo: totalAfterPromo, totalDeduction: deduction, isShippingPromo: isShippingPromo }) */ }
         let totalPrice = deliveryFee[0].ShippingCost == null ? parseFloat(total).toFixed(2) : parseFloat(total + deliveryFee[0].ShippingCost).toFixed(2)
         // let totalPrice = isVoucherApply ? parseFloat(totalApplyPromo).toFixed(2) : parseFloat(total).toFixed(2)
@@ -366,7 +365,7 @@ export default function CheckoutPayment({
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-                <CheckoutDelivery onApplyShipping={onApplyShipping} deliveryOptions={DELIVERY_OPTIONS} />
+                <CheckoutDelivery onApplyShipping={onApplyShipping} deliveryOptions={DELIVERY_OPTIONS} address={address} />
 
                 <CheckoutPaymentMethods sx={{ my: 3 }}
                     onSelectPaymentTypes={handlePaymentTypes}

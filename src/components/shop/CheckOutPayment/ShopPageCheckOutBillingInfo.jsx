@@ -12,7 +12,8 @@ CheckoutBillingInfo.propTypes = {
 };
 
 export default function CheckoutBillingInfo({ billing, onBackStep, shipping, isPendingPayment }) {
-    const { UserAddressBookID, UserAddressName, UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = billing;
+
+    const { UserAddressLine1, UserAddressLine2, UserCity, UserPoscode, UserState, UserContactNo, isDefaultAddress } = billing;
     const isDefault = isDefaultAddress === 1
     const fullAddress = UserAddressLine1 + " " + UserAddressLine2 + ", " + UserCity + ", " + UserState
 

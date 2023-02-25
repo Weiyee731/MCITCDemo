@@ -16,6 +16,7 @@ import {
 // components
 // import Iconify from '../../../../../components/iconify';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import UncheckCircleIcon from '@mui/icons-material/RadioButtonUnchecked';
 
 
 // ----------------------------------------------------------------------
@@ -25,7 +26,7 @@ CheckoutDelivery.propTypes = {
   deliveryOptions: PropTypes.array,
 };
 
-export default function CheckoutDelivery({ deliveryOptions, onApplyShipping, ...other }) {
+export default function CheckoutDelivery({ deliveryOptions, onApplyShipping, address, ...other }) {
   return (
     <Card {...other}>
       <CardHeader title="Delivery options" />
@@ -35,32 +36,33 @@ export default function CheckoutDelivery({ deliveryOptions, onApplyShipping, ...
           name="delivery"
           control={control}
           render={({ field }) => ( */}
-            <RadioGroup
-              onChange={(event) => {
-                const { value } = event.target;
-                // field.onChange(Number(value));
-                onApplyShipping(Number(value));
-              }}
-              defaultValue={deliveryOptions[0].value}
-            >
-              <Box
-                gap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                {deliveryOptions.map((option) => (
-                  <DeliveryOption
-                    key={option.value}
-                    option={option}
-                    // isSelected={field.value === option.value}
-                  />
-                ))}
-              </Box>
-            </RadioGroup>
-          {/* )}
+        <RadioGroup
+          onChange={(event) => {
+            const { value } = event.target;
+            // field.onChange(Number(value));
+            onApplyShipping(Number(value));
+          }}
+          defaultValue={deliveryOptions[0].value}
+        >
+          <Box
+            gap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(2, 1fr)',
+            }}
+          >
+            {deliveryOptions.map((option) => (
+              <DeliveryOption
+                key={option.value}
+                option={option}
+                checked={address.UserAddressBookID === 0 ? 0 : 1}
+              // isSelected={field.value === option.value}
+              />
+            ))}
+          </Box>
+        </RadioGroup>
+        {/* )}
         /> */}
       </CardContent>
     </Card>
@@ -74,7 +76,7 @@ DeliveryOption.propTypes = {
   isSelected: PropTypes.bool,
 };
 
-function DeliveryOption({ option, isSelected }) {
+function DeliveryOption({ option, isSelected, checked }) {
   const { value, title, description } = option;
 
   return (
@@ -92,7 +94,7 @@ function DeliveryOption({ option, isSelected }) {
     >
       <FormControlLabel
         value={value}
-        control={<Radio checkedIcon={<CheckCircleIcon/>} />}
+        control={<Radio checkedIcon={checked ? <CheckCircleIcon /> : <UncheckCircleIcon />} />}
         label={
           <Box sx={{ ml: 1 }}>
             <Typography variant="subtitle2">{title}</Typography>

@@ -169,16 +169,16 @@ function AccountPageOrderDetails(props) {
           CountryID: orderDetail.CountryID,
           NAS_ODA: orderDetail.NAS_ODA,
           PostOffice: orderDetail.PostOffice,
-          UserAddressBookID: orderDetail.UserAddressID,
-          UserAddressLine1: orderDetail.UserAddressLine1,
-          UserAddressLine2: orderDetail.UserAddressLine2,
-          UserAddressName: orderDetail.UserAddressName,
-          UserCity: orderDetail.UserCity,
+          UserAddressBookID: orderDetail.UserAddressID !== undefined ? orderDetail.UserAddressID : 0,
+          UserAddressLine1: orderDetail.UserAddressLine1 !== null ? orderDetail.UserAddressLine1 : "Pickup Directly from our store",
+          UserAddressLine2: orderDetail.UserAddressLine2 !== null ? orderDetail.UserAddressLine2 : "",
+          UserAddressName: orderDetail.UserAddressName !== null ? orderDetail.UserAddressName : "Self-pickup",
+          UserCity: orderDetail.UserCity !== null ? orderDetail.UserCity : "",
           UserContactNo: orderDetail.UserContactNo,
           UserEmail: orderDetail.UserEmailAddress,
           UserID: orderDetail.UserID,
           UserPoscode: orderDetail.UserPoscode,
-          UserState: orderDetail.UserState,
+          UserState: orderDetail.UserState !== null ? orderDetail.UserState : "",
 
         },
         orderID: orderDetail.OrderID,
@@ -230,11 +230,10 @@ function AccountPageOrderDetails(props) {
       listing.subtotal = subtotalPrice
       listing.discount = parseFloat(orderDetail.PromoDiscount / 100 * subtotalPrice) + sum(detailsListing.map((item) => item.totalDiscountPrice))
       listing.total = orderDetail.totalAmount
-      listing.shipping[0] = { ShippingCost: orderDetail.OrderShippingFeeAmount !== null ? orderDetail.OrderShippingFeeAmount : 0 }
+      listing.shipping[0] = { ShippingCost: orderDetail.OrderShippingFeeAmount !== undefined && orderDetail.OrderShippingFeeAmount !== null ? orderDetail.OrderShippingFeeAmount : 0 }
       listing.data = detailsListing
       setPaymentOrderDetail(listing)
     }
-
   }
 
 

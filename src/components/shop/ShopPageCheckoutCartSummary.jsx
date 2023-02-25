@@ -123,7 +123,7 @@ export default function CheckoutSummary({
             isPendingPayment === true ?
               <>
                 {
-                  promoCode !== undefined ?
+                  promoCode !== undefined && promoCode !== null ?
                     <Typography style={{ color: "green" }}>Promo Code Apply: {promoCode}</Typography>
                     :
                     <Typography>No Promo Code is used</Typography>
@@ -148,17 +148,17 @@ export default function CheckoutSummary({
                       </Button>
                     </InputAdornment>
                   ),
-                  style: { color: promoCode !== undefined && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) ? validPromoData[0].isValidCode === false ? "red" : "green" : "black" }
+                  style: { color: promoCode !== undefined && promoCode !== null && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) ? validPromoData[0].isValidCode === false ? "red" : "green" : "black" }
                 }}
               />
           }
 
           {
-            promoCode !== undefined && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) && validPromoData[0].isValidCode === false &&
+            promoCode !== undefined && promoCode !== null && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) && validPromoData[0].isValidCode === false &&
             <FormHelperText style={{ color: "red" }}>   Invalid Promo Code </FormHelperText>
           }
           {
-            promoCode !== undefined && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) && validPromoData[0].PromoCodeID !== undefined &&
+            promoCode !== undefined && promoCode !== null && promoCode.length > 0 && validPromoData !== undefined && isArrayNotEmpty(validPromoData) && validPromoData[0].PromoCodeID !== undefined &&
             <FormHelperText style={{ color: "green" }}> Promo Code is Used</FormHelperText>
           }
         </Stack>
