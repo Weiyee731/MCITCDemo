@@ -1293,6 +1293,9 @@ export class GitEpic {
   addProductWishlist = action$ =>
     action$.pipe(filter(action => action.type === GitAction.AddProductWishlist), map(action => {
       return dispatch => {
+        console.log('hahaha', url +
+        "Product_AddProductWishlist?USERID=" + action.payload.userID +
+        "&PRODUCTID=" + action.payload.productID)
         try {
           return fetch(url +
             "Product_AddProductWishlist?USERID=" + action.payload.userID +
@@ -1314,52 +1317,12 @@ export class GitEpic {
       }
     }));
 
-  // addProductWishlist = (action$) =>
-  //   action$.ofType(GitAction.AddProductWishlist).switchMap(async ({ payload }) => {
-  //     try {
-  //       const response = await fetch(
-  //         url +
-  //         "Product_AddProductWishlist?USERID=" +
-  //         payload.userID +
-  //         "&PRODUCTID=" +
-  //         payload.productID
-  //       );
-  //       let json = await response.json();
-  //       json = JSON.parse(json);
-  //       if (json[0].ReturnVal === 1) {
-  //         toast.success("Product " + payload.productName + " is added to wishlist!");
-  //       }
-  //       try {
-  //         const response = await fetch(
-  //           url +
-  //           "Product_ItemListInWishlistByUserID?USERID=" +
-  //           payload.userID
-  //         );
-  //         let json = await response.json();
-  //         json = JSON.parse(json);
-  //         return {
-  //           type: GitAction.AddedProductWishlist,
-  //           payload: json,
-  //         };
-  //       } catch (error) {
-  //         alert("viewProductWishlist: " + error)
-  //         return {
-  //           type: GitAction.ViewedProductWishlist,
-  //           payload: [],
-  //         };
-  //       }
-  //     } catch (error) {
-  //       alert("addProductWishlist: " + error)
-  //       return {
-  //         type: GitAction.AddedProductWishlist,
-  //         payload: [],
-  //       };
-  //     }
-  //   });
 
   deleteProductWishlist = action$ =>
     action$.pipe(filter(action => action.type === GitAction.DeleteProductWishlist), map(action => {
       return dispatch => {
+        console.log(url +
+          "Product_DeleteProductWishlist?USERWISHLISTID=" + action.payload.userWishlistID)
         try {
           return fetch(url +
             "Product_DeleteProductWishlist?USERWISHLISTID=" + action.payload.userWishlistID)

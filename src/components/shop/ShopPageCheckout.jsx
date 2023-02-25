@@ -232,8 +232,6 @@ class PageCheckout extends Component {
 
   handleCreateBilling = (address) => {
 
-    // console.log("sasasasa", address)
-
     // deliveryFee: [{ "ShippingCost": 0 }],
 
 
@@ -295,8 +293,6 @@ class PageCheckout extends Component {
       { title: "Checkout", url: "" },
     ];
 
-
-    console.log("dsdsdsad", this.props)
     // const handleGetAddressId = (value) => {
     //   if (value.length !== 0)
     //     this.setState({ address: value })
@@ -353,7 +349,7 @@ class PageCheckout extends Component {
                 <CheckoutSteps activeStep={this.state.activeStep} steps={this.STEPS} />
               </Grid>
             </Grid>
-            {console.log("dsadas", this.state)}
+
 
             {this.completed ? (
               <div>hi</div>

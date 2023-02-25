@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect } from "react";
 // @mui
-import { Table, TableBody, TableContainer, Stack, Typography, CardHeader } from '@mui/material';
+import { Table, TableBody, TableContainer, Stack, Typography, CardHeader, Grid } from '@mui/material';
 // components
 import TableHeadCustom from '../table/TableHeadCustom';
 //
@@ -72,38 +72,31 @@ export default function CheckoutCartProductList({
   }, [products])
 
   return (
+<>
+  
+    
+     {isProductSet && isArrayNotEmpty(productFiltered) && productFiltered.map((listing) => (
+    <Grid item container spacing={2} >
+        <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'row', alignItems:'center',marginLeft:'4%'}}>
+          <StoreIcon /> <Typography variant='subtitle2' style={{fontWeight:'bold', marginLeft:'2%'}}>{listing.MerchantShopName}</Typography>
+        </Grid>
 
-    <TableContainer sx={{ overflow: 'unset' }}>
-      {
-        isProductSet && isArrayNotEmpty(productFiltered) && productFiltered.map((listing) => {
-          return (
-            <>
-              <div className="row" style={{ paddingLeft: "30px", paddingTop: "10px" }}>
-                <Typography variant="body2" style={{ fontWeight: "bold", }}> <StoreIcon /> {listing.MerchantShopName}</Typography>
-              </div>
-              <Table sx={{ minWidth: 720 }}>
-                <TableHeadCustom headLabel={TABLE_HEAD} />
-                {
+        <Grid item xs={12} style={{margin:'2%'}}>
+        {
                   listing.cartList !== undefined && isArrayNotEmpty(listing.cartList) && listing.cartList.map((row) => {
                     return (
-                      <TableBody>
-                        <CheckoutCartProduct
-                          key={row.id}
-                          row={row}
-                          onDelete={() => onDelete(row.id)}
-                          onDecrease={() => onDecreaseQuantity(row.id)}
-                          onIncrease={() => onIncreaseQuantity(row.id)}
-                        />
-                      </TableBody>
-                    )
-                  })
-                }
-              </Table>
-            </>
-          )
-        })
-      }
+          <CheckoutCartProduct
+            key={row.id}
+            row={row}
+            onDelete={() => onDelete(row.id)}
+            onDecrease={() => onDecreaseQuantity(row.id)}
+            onIncrease={() => onIncreaseQuantity(row.id)}
+          />
+                    )})}
+        </Grid>
+    </Grid>
+      ))}
 
-    </TableContainer>
+    </>
   );
 }

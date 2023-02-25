@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Stack, Divider, TableRow, TableCell, Typography } from '@mui/material';
+import { Box, Stack, Divider, TableRow, TableCell, Typography, Grid } from '@mui/material';
 // utils
 // import { fCurrency } from '../../../../../utils/formatNumber';
 import Currency from '../shared/Currency';
@@ -21,9 +21,10 @@ CheckoutCartProduct.propTypes = {
 export default function CheckoutCartProduct({ row, onDelete, onDecrease, onIncrease }) {
   const { name, size, price, variation, product, quantity, available } = row;
 
+  console.log('ss', product)
+
   let promotionPrice = 0
 
-  console.log("Dsdadasdassda", row)
   if (row.product !== undefined && row.product.ProductPromotion !== undefined) {
     JSON.parse(row.product.ProductPromotion).map((x) => {
       if (x.ProductVariationDetailID === row.product.ProductVariationDetailID)
@@ -31,56 +32,59 @@ export default function CheckoutCartProduct({ row, onDelete, onDecrease, onIncre
     })
   }
   return (
-    <TableRow>
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Image
-          alt="product image"
-          src={product.ProductImage}
-          sx={{ width: 64, height: 64, borderRadius: 1.5, mr: 2 }}
-        />
+ 
+    <Grid item container spacing={3} style={{paddingBottom:'2%', borderBottom:'1px solid #EEEBEB', marginBottom:'4%'}}>
+      <Grid item xs={4} sm={4} lg={4} style={{display:'flex', flexDirection:"row", justifyContent:'center',alignItems:'center'}}>
+          <Image
+              alt="product image"
+              src={product.ProductImage}
+              sx={{ width: 84, height: 84, borderRadius: 1.5, mr: 2 }}
+            />
+      </Grid>
 
-        <Stack spacing={0.5}>
-          <Typography noWrap variant="subtitle2" sx={{ maxWidth: 240 }}>
-            {name}
-          </Typography>
+      <Grid item xs={8} sm={8} lg={8} style={{marginTop:'auto', marginBottom:'auto'}} >
+        <Grid item container spacing={2}>
+        <Grid item xs={12} sm={4} lg={4} style={{marginTop:'auto', marginBottom:'auto'}}>
+              <Typography  variant="body1">
+                {product.ProductName}
+              </Typography>
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ typography: 'body2', color: 'text.secondary' }}
-          >
-            variation: <Label sx={{ ml: 0.5 }}> {product.ProductVariationValue} </Label>
-            {/* <Divider orientation="vertical" sx={{ mx: 1, height: 16 }} /> */}
-            {/* <ColorPreview colors={colors} /> */}
-          </Stack>
-        </Stack>
-      </TableCell>
-      {console.log("dsdadas99999", row)}
-      <TableCell>
-        {promotionPrice !== 0 ?
-          <>
-            <span className="product-card__new-price">
-              <Currency value={promotionPrice} currency={"RM"} />
-            </span>
-            <span className="product-card__old-price">
-              <Currency value={price} currency={"RM"} />
-            </span>
-          </>
-          :
-          <>
-            <span className="product-card__new-price">
-              <Currency value={price} currency={"RM"} />
-            </span>
-          </>
-        }
-        {/* <Currency value={price}></Currency> */}
-      </TableCell>
-      {/* <TableCell>{fCurrency(price)}</TableCell> */}
-      <TableCell>
-        {quantity}
-      </TableCell>
+              <Grid item container spacing={2} style={{display:'flex', flexDirection:'row'}}>
+                <Grid item xs={'auto'}>
+                  <Typography variant="caption">
+                    Variation: 
+                  </Typography>
+                </Grid>
 
-      <TableCell align="right">{<Currency value={promotionPrice !== 0 ? promotionPrice * quantity : price * quantity}></Currency>}</TableCell>
-    </TableRow>
+                <Grid item xs={'auto'} >
+                  <Typography variant="caption" sx={{ fontWeight:"bold"}}>
+                    {product.ProductVariationValue}
+                  </Typography>
+                </Grid>
+              
+              </Grid>
+           </Grid>
+
+            
+            <Grid item xs={12} sm={3} lg={3} style={{marginTop:'auto', marginBottom:'auto'}}>
+            <Typography variant='subtitle2'>RM {Number(product.ProductPrice).toFixed(2)}</Typography>
+            </Grid>
+
+            <Grid item xs={6} sm={2} lg={2} style={{ marginTop:"auto", marginBottom:'auto'}}>
+              <Typography variant='subtitle2' >x {product.ProductQuantity}</Typography>
+            </Grid>
+
+            <Grid item xs={6} sm={3} lg={3} style={{ marginTop:'auto', marginBottom:'auto'}}>
+              <Typography variant='subtitle2' style={{fontWeight:'bold'}}>RM {(Number(price) * product.ProductQuantity).toFixed(2)}</Typography>
+            </Grid>
+
+        </Grid>
+           
+      </Grid>
+
+      <Divider variant="middle" />
+
+    </Grid>
+    
   );
 }

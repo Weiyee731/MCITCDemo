@@ -32,7 +32,7 @@ class Product extends Component {
 
   componentDidMount() {
     const { product } = this.props
-    window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
+    // window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
     let productID = ""
     if (window.location.pathname !== undefined) {
       let length = window.location.pathname.split("/").length
@@ -96,6 +96,7 @@ class Product extends Component {
       }, 2000)
 
     return (
+ 
       <div className="block" >
         <ProductDetails product={product} />
         {
@@ -118,6 +119,7 @@ class Product extends Component {
           title="Recommended Product"
           layout="grid-4"
           rows={1}
+          QuickViewIndicator={true}
           currentData={this.state}
           highlightColor={highlightColor}
           baseColor={baseColor}

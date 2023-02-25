@@ -82,25 +82,39 @@ class HeaderProductDetails extends Component {
   }
 
   handleWishlist = (product) => {
-    let found = false
+
     if (this.props.wishlist !== undefined) {
-      this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-        found = true
-        const deletewishlist = {
-          userID: localStorage.getItem("id"),
-          userWishlistID: x.UserWishlistID,
-          productName: product.ProductName
-        }
-        this.props.CallDeleteProductWishlist(deletewishlist)
+      let selectedProductID = product.ProductID
+
+    let allWishListProd = this.props.wishlist.map((x)=>(x.ProductID))
+
+   if( allWishListProd.findIndex((index) => (index === selectedProductID)) !== -1)
+    {
+      this.props.CallDeleteProductWishlist({
+        userID: localStorage.getItem("id"),
+        userWishlistID: this.props.wishlist.filter((f)=>(f.ProductID === selectedProductID)).map((x)=>(x.UserWishlistID)),
+        productName: product.ProductName
       })
-      if (found === false) {
-        const addwishlist = {
-          userID: window.localStorage.getItem("id"),
-          productID: product.ProductID,
-          productName: product.ProductName
-        }
-        this.props.CallAddProductWishlist(addwishlist)
-      }
+      toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
+          setTimeout(() => {
+            window.location.reload(true);
+      }, 3000)
+     
+    }
+
+    else{
+      this.props.CallAddProductWishlist({
+        userID: window.localStorage.getItem("id"),
+        productID: product.ProductID,
+        productName: product.ProductName
+        })
+        toast.success("Successfully Added Wishlist, you can continue enjoy your shopping")
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 3000)
+        
+    }
+
     }
     else
       this.login()
@@ -170,9 +184,12 @@ class HeaderProductDetails extends Component {
                       alt={product.ProductName}
                     />
                   </div>
+
+         
                   <div className="search__body" style={{ margin: "0 16px", width: "70%" }}>
                     <Typography variant="body1" className="product__name" style={{ fontWeight: "700" }}>{product.ProductName}</Typography>
-                    <Typography variant="h6" className="product__prices">RM {product.ProductPrice}</Typography>
+
+                    <Typography variant="h6" className="product__prices">RM {product.ProductPrice !== null ? product.ProductPrice : 0 }</Typography>
                   </div>
                   <div className="nav-panel__indicators">
                     <div className="form-group product__add-to-cart" >

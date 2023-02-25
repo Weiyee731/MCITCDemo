@@ -110,8 +110,6 @@ class ProductGallery extends Component {
       (module) => module.createGallery
     );
 
-    // console.log(this.createGallery)
-
     // this is necessary to reset the transition state, because sometimes
     // react-slick does not trigger an afterChange event after a beforeChange event
     setTimeout(() => {
@@ -295,7 +293,7 @@ class ProductGallery extends Component {
     const highlightColor = this.props !== undefined && this.props.highlightColor
 
     const featured = () => {
-      console.log("image", JSON.parse(this.props.product.ProductPromotion)[0])
+     
       let promotionEnabled = false;
       let promotionDiscount = 0;
       if (this.props.product.ProductPromotion && JSON.parse(this.props.product.ProductPromotion).length > 0) {

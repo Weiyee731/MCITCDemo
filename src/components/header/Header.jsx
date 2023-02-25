@@ -25,12 +25,11 @@ import { Cart20Svg, Cross10Svg } from "../../svg";
 import { mobileMenuOpen } from '../../store/mobile-menu';
 import HeaderProductDetails from "./HeaderProductDetails";
 
-
-
 import { Drawer } from '@mui/material';
 import { Button } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import PageCart_side from "../shop/ShopPageCart_side";
+
 function Header(props) {
   const { layout } = props;
   const [show, setShow] = useState(false);
@@ -49,7 +48,7 @@ function Header(props) {
     }
   }, [])
 
-  const showFrom = 510;
+  const showFrom = 600;
   const classes = classNames('totop', {
     'totop--show': show,
   });
@@ -71,7 +70,9 @@ function Header(props) {
   const onScroll = () => {
     let pathLength = window.location.pathname.split("/").length
     let currentLocation = '/' + window.location.pathname.split("/")[pathLength - 3] + '/' + window.location.pathname.split("/")[pathLength - 2] + '/'
-    const newState = window.pageYOffset >= showFrom;
+
+    const newState = window.pageYOffset >= showFrom; // this is the reason that cause the page to reload when scrolling
+
     if (currentLocation === "/shop/products/") {
       setisproductPage(true)
       if (!isproductPage) {
@@ -109,8 +110,7 @@ function Header(props) {
   if (layout === "default") {
     bannerSection = (
       <>
-        {
-          show === false ?
+   
             <div className="site-header__middle container">
               <div>
                 <Link to="/">
@@ -158,14 +158,18 @@ function Header(props) {
                 <IndicatorAccount />
               </div>
             </div>
-            :
-            <div>
-              <div className="container" onClick={onClick}>
-                <HeaderProductDetails productDetails={currentProductDetails} />
-              </div>
-            </div>
 
+    {/* Lis moves the show state here, where this will show on the top and preventing uneccessary reload */}
+
+        {
+          show === true &&
+             <div>
+               <div className="container" onClick={onClick}>
+                 <HeaderProductDetails productDetails={currentProductDetails} />
+               </div>
+             </div>
         }
+     
         {
           <div >
             <Drawer

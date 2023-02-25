@@ -37,6 +37,7 @@ function ProductCard(props) {
   const {
     product,
     layout,
+    QuickViewIndicator,
   } = props;
 
   const containerClasses = classNames("product-card", {
@@ -61,41 +62,48 @@ function ProductCard(props) {
   let wishlistView;
   let PromoTag;
 
+  useEffect(() => {
+    console.log('value changed')
+  }, [props.addwishlist]);
+
   const login = () => {
     // this.props.history.push("/EmporiaDev/login");
     setloginPopOut(true)
   }
 
   const handleWishlist = (product) => {
-    let found = false
+   
+    let selectedProductID = product.ProductID
 
-    if (props.wishlist !== undefined) {
-      props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-        found = true
-        props.CallDeleteProductWishlist({
-          userID: localStorage.getItem("id"),
-          userWishlistID: x.UserWishlistID,
-          productName: product.ProductName
-        })
-        toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 3000)
+    let allWishListProd = props.wishlist.map((x)=>(x.ProductID))
+
+   if( allWishListProd.findIndex((index) => (index === selectedProductID)) !== -1)
+    {
+      props.CallDeleteProductWishlist({
+        userID: localStorage.getItem("id"),
+        userWishlistID: props.wishlist.filter((f)=>(f.ProductID === selectedProductID)).map((x)=>(x.UserWishlistID)),
+        productName: product.ProductName
       })
+      toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
+          setTimeout(() => {
+            window.location.reload(true);
+      }, 3000)
+     
+    }
 
-      if (found === false) {
-        props.CallAddProductWishlist({
-          userID: window.localStorage.getItem("id"),
-          productID: product.ProductID,
-          productName: product.ProductName
+    else{
+      props.CallAddProductWishlist({
+        userID: window.localStorage.getItem("id"),
+        productID: product.ProductID,
+        productName: product.ProductName
         })
         toast.success("Successfully Added Wishlist, you can continue enjoy your shopping")
         setTimeout(() => {
           window.location.reload(true);
         }, 3000)
-      }
-    } else
-      login()
+        
+    }
+
   }
 
   image = (
@@ -248,7 +256,7 @@ function ProductCard(props) {
             <Link to={url.product(product)}>{product.ProductName}</Link>
           </div>
           <div className="product-card__rating">
-            <Rating value={product.ProductRating !== null ? product.ProductRating : 0} />
+            <Rating value={product.ProductRating !== null   ? product.ProductRating : 0} />
             <div className="product-card__rating-legend">{product.ProductRating !== null ? parseFloat(product.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
           </div>
           {
@@ -299,6 +307,7 @@ function ProductCard(props) {
       </Card>
     )
   }
+
   const getpopOutState = (loginPopOut) => {
     setloginPopOut(loginPopOut)
   }
@@ -317,13 +326,12 @@ function ProductCard(props) {
         :
         ProductCardlayout()
       }
-
       <Modal isOpen={isQuickViewOpen} toggle={() => setQuickView(!isQuickViewOpen)} centered size="xl">
         <div className="quickview">
           <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
             <Cross20Svg />
           </button>
-          <ProductDetails product={product} getpopOutDetailsCard={getpopOutDetailsCard} />
+          <ProductDetails product={product} quickViewIndicator={props.quickViewIndicator} getpopOutDetailsCard={getpopOutDetailsCard} />
         </div>
       </Modal>
       {loginPopOut !== undefined && loginPopOut !== false &&
