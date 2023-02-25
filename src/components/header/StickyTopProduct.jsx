@@ -54,7 +54,7 @@ export default function StickyTopProduct() {
                     {/* <button type="button" className="totop__button" onClick={onClick}>
                         <ArrowRoundedUp13x8Svg />
                     </button> */}
-                    <div className="site-header__middle container" onClick={onClick}>
+                    <div className="site-header__middle container" onClick={() => onClick}>
                         <div>
                             {/* <div className="site-header__logo"> */}
                             <Link to="/">

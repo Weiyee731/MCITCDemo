@@ -96,7 +96,7 @@ class ProductDetails extends Component {
 
     componentDidMount() {
         const { product } = this.props
-        window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
+        // window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
         let productID = ""
         if (window.location.pathname !== undefined) {
             if (window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products") {
@@ -137,9 +137,9 @@ class ProductDetails extends Component {
                 productID = product.ProductID
             }
         }
-        console.log(this.state.isProductSet,product.ProductID,productID,window.location.pathname.split("/"))
+
         if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && this.state.isProductSet === false) {
-            console.log(this.state.isProductSet,product.ProductID)
+         
             product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
                 variation.ProductVariationValue === "-" &&
                     this.setState({
@@ -210,32 +210,41 @@ class ProductDetails extends Component {
     }
 
     handleWishlist = (product) => {
-        let found = false
-        if (this.props.wishlist !== undefined) {
-            this.props.wishlist.filter(x => x.ProductID === product.ProductID).map((x) => {
-                found = true
-                this.props.CallDeleteProductWishlist({
-                    userID: localStorage.getItem("id"),
-                    userWishlistID: x.UserWishlistID,
-                    productName: product.ProductName
-                })
-            })
-            if (found === false) {
-                // this.props.CallAddProductWishlist({
-                const data = {
-                    userID: window.localStorage.getItem("id"),
-                    productID: product.ProductID,
-                    productName: product.ProductName
-                }
-                this.props.CallAddProductWishlist(data)
-                // })
-            }
+        let selectedProductID = product.ProductID
+
+        let allWishListProd = this.props.wishlist.map((x)=>(x.ProductID))
+    
+       if( allWishListProd.findIndex((index) => (index === selectedProductID)) !== -1)
+        {
+          this.props.CallDeleteProductWishlist({
+            userID: localStorage.getItem("id"),
+            userWishlistID: this.props.wishlist.filter((f)=>(f.ProductID === selectedProductID)).map((x)=>(x.UserWishlistID)),
+            productName: product.ProductName
+          })
+          toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
+              setTimeout(() => {
+                window.location.reload(true);
+          }, 3000)
+         
         }
-        else
-            this.login()
+    
+        else{
+          this.props.CallAddProductWishlist({
+            userID: window.localStorage.getItem("id"),
+            productID: product.ProductID,
+            productName: product.ProductName
+            })
+            toast.success("Successfully Added Wishlist, you can continue enjoy your shopping")
+            setTimeout(() => {
+              window.location.reload(true);
+            }, 3000)
+            
+        }
     }
 
-    wishlisting(product) {
+    wishlisting(product) {  
+
+       
         return (
             typeof this.props.wishlist !== undefined && this.props.wishlist.length > 0 ?
                 this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
@@ -268,7 +277,7 @@ class ProductDetails extends Component {
     }
 
     render() {
-        console.log(this.props)
+
         const {
             product,
             layout,
@@ -302,6 +311,7 @@ class ProductDetails extends Component {
         }
 
         const LayoutListing = () => {
+
             return (
                 <div className="product__content">
                     {
@@ -316,9 +326,10 @@ class ProductDetails extends Component {
                                 product={product}
                             />
                             :
-                            <Link to={url.product(product)}>{console.log("here:")}
+                            <Link to={url.product(product)}>
                                 <div className="product-card__image product-image">
                                     <div className="product-image__body">
+                                    
                                         {
                                             this.state.isTimerEnd === true && this.state.isProductSet === true ?
                                                 <img
@@ -334,7 +345,7 @@ class ProductDetails extends Component {
                                 </div>
                             </Link>
                     }
-                    {console.log(this.state.isTimerEnd,this.state.isProductSet,this.props)}
+                
                     {
                         this.state.isTimerEnd === true && this.state.isProductSet === true ?
                             <div>
@@ -347,7 +358,6 @@ class ProductDetails extends Component {
                                         <Typography className="col-12 product__name" >
                                             Merchant Shop:  <Link to={url.cartMerchant(product.MerchantID)}>{product.ShopName}</Link>
                                         </Typography>
-                                        {console.log("productproductproductproductproduct", product)}
 
                                         {/* <div className="col-1"> */}
                                         {/* <a data-tip data-event='click focus'>

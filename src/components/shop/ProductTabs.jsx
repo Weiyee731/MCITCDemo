@@ -31,7 +31,6 @@ class ProductTabs extends Component {
     const baseColor = this.props.currentTab !== undefined && this.props.currentTab.baseColor
     const highlightColor = this.props.currentTab !== undefined && this.props.currentTab.highlightColor
 
-
     const classes = classNames("product-tabs", {
       "product-tabs--layout--sidebar": withSidebar,
     });
