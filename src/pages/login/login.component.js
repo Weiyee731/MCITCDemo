@@ -39,6 +39,7 @@ import jwt_decode from "jwt-decode";
 // import SocialLogin from "./socialLogin"
 import { FBLogin } from "./FBLogin"
 import { CustomGoogleLogin } from "./GoogleLogin"
+import { BindGoogleFBDialog } from "./BindGoogleFB_dialog"
 
 import styled from 'styled-components';
 
@@ -50,6 +51,7 @@ function mapStateToProps(state) {
     emailVerification: state.counterReducer["emailVerification"],
     verifyOTP: state.counterReducer["verifyOTP"],
     updatePassword: state.counterReducer["updatePassword"],
+    bindGoogleFB: state.counterReducer["bindGoogleFB"],
   };
 }
 
@@ -62,6 +64,7 @@ function mapDispatchToProps(dispatch) {
     CallSendOTP: (credentials) => dispatch(GitAction.CallSendOTP(credentials)),
     CallUpdatePassword: (credentials) => dispatch(GitAction.CallUpdatePassword(credentials)),
     ClearCallOTPVerification: () => dispatch(GitAction.ClearCallOTPVerification()),
+    CallVerifyBindGoogleFB: (credentials) => dispatch(GitAction.CallVerifyBindGoogleFB(credentials)),
   };
 }
 
@@ -111,6 +114,10 @@ const initialState = {
 
   loginPopOut: false,
   signupPopOut: false,
+
+  googleResponse: {},
+  loginWithGoogleFB: false,
+  openBindGoogleFB: false,
 }
 
 const StyledDiv = styled.div`
@@ -131,23 +138,20 @@ class LoginComponent extends Component {
     // this.resetPassword = this.resetPassword.bind(this);
     this.verifyEmail = this.verifyEmail.bind(this);
     // this.responseFacebook = this.responseFacebook.bind(this);
-    // this.responseGoogle = this.responseGoogle.bind(this);
   }
 
   OnSubmitLogin(e, platform) {
-
-    console.log("ee", e)
     switch (platform) {
       case 'MyEmporia':
         {
-          console.log("e", e)
           e.preventDefault();
           this.props.loginUser(this.state);
         }
       case 'Google':
         {
           this.props.CallCheckUserExists({ Email: e.email, Value: "forgetPassword" })
-          // e['TYPE'] = 2;
+          e['TYPE'] = 2;
+          this.setState({ googleResponse: e, loginWithGoogleFB: true })
           // this.props.CallLoginGoogleFB(e);
         }
       case 'Facebook':
@@ -217,11 +221,48 @@ class LoginComponent extends Component {
     return ciphertext
   }
 
+  handleCallCheckUserExists = () => {
+    if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true && this.state.isReturn === false) {
+      if (this.props.emailVerification[0].UserID !== undefined) {
+        this.setState({ resetUserID: this.props.emailVerification[0].UserID, isEmailVerify: true, verifyEmail: false, isReturn: true })
+      }
+      else {
+        toast.warning("This email was not registered")
+        this.setState({ isReturn: true })
+      }
+      this.props.CallResetCheckUserExists()
+    }
+    else if (this.props.emailVerification.length > 0 && this.props.emailVerification[0].ReturnVal !== 0) {
+      if (this.props.emailVerification[0].GoogleToken !== null) {
+        if (this.props.emailVerification[0].GoogleToken === this.state.googleResponse.id) {
+          this.props.CallLoginGoogleFB(this.state.googleResponse);
+        } else {
+          console.log("this user have account in server but binded differet google account")
+        }
+      } else {
+        console.log("this user have account in server but havent bind to google, prompt dialog ask want to bind google account?")
+        this.openCloseBindGoogleFBDialog(true)
+        // let obj = {
+        //   UserID: this.props.emailVerification[0].UserID,
+        //   UserEmailAddress: this.props.emailVerification[0].UserEmailAddress,
+        //   TYPE: 2,
+        // }
+        // this.setState({ openBindGoogleFB: true })
+        // this.props.CallVerifyBindGoogleFB(obj)
+      }
+    } else if (this.props.emailVerification.length > 0 && this.props.emailVerification[0].ReturnVal === 0 && this.state.loginWithGoogleFB === true) {
+      console.log("this user is not registered")
+      this.setState({ loginWithGoogleFB: false })
+      this.props.CallLoginGoogleFB(this.state.googleResponse);
+    }
+  }
+
   componentDidMount() {
     this.setState({ loginPopOut: this.props.loginPopOut })
   }
 
   componentDidUpdate(prevProps) {
+    console.log("bindGoogleFB", this.props.bindGoogleFB)
     if (prevProps.loginPopOut !== this.props.loginPopOut) {
       this.setState({ loginPopOut: this.props.loginPopOut })
     }
@@ -233,17 +274,9 @@ class LoginComponent extends Component {
         toast.error("The username and password does not match.")
       }
     }
-    console.log("emailVerification", this.props.emailVerification)
-    if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true && this.state.isReturn === false) {
-      console.log("emailVerificationaaaa", this.props.emailVerification)
-      if (this.props.emailVerification[0].UserID !== undefined) {
-        this.setState({ resetUserID: this.props.emailVerification[0].UserID, isEmailVerify: true, verifyEmail: false, isReturn: true })
-      }
-      else {
-        toast.warning("This email was not registered")
-        this.setState({ isReturn: true })
-      }
-      this.props.CallResetCheckUserExists()
+
+    if (prevProps.emailVerification !== this.props.emailVerification) {
+      this.handleCallCheckUserExists();
     }
 
     if (prevProps.updatePassword !== this.props.updatePassword) {
@@ -389,10 +422,6 @@ class LoginComponent extends Component {
     console.log(response);
   }
 
-  responseGoogle = (response) => {
-    console.log(response);
-  }
-
   // resetPassword(e) {
   //   e.preventDefault()
 
@@ -417,6 +446,9 @@ class LoginComponent extends Component {
     this.setState({ loginPopOut: loginPopOut, signupPopOut: signupPopOut })
   }
 
+  openCloseBindGoogleFBDialog = (bool) => {
+    this.setState({ openBindGoogleFB: bool })
+  }
 
   render() {
 
@@ -501,33 +533,11 @@ class LoginComponent extends Component {
                       </button>
                     </div>
 
-                    {/* <Link onClick={() => this.setState({ loginPopOut: false, signupPopOut: true })}>
-                      Sign Up
-
-                    </Link> */}
-
-                    {/* <label onClick={() =>
-                          <>
-                            {this.props.history.push("/EmporiaDev/signup")}
-                          </>
-                        }>
-                          Sign Up
-                        </label>
-                        <a href="/signup"><b>Sign Up</b></a>
-                      </p>
-                    </div>
-                    <div className="col-6">
-                      <p className="forgot-password text-right">
-                        <label onClick={() => { this.setState({ isForgetPassword: true }) }}><b>Forgot password?</b></label>
-                      </p>
-                    </div>
-                  </div> */}
-
                   </div>
                   <Divider className="pt-4 pb-4">OR</Divider>
                   <div className="text-center w-100 xx-large">
                     <CustomGoogleLogin clickLogin={this.OnSubmitLogin} setProfile={this.setProfile} />
-                    <FBLogin />
+                    {/* <FBLogin /> */}
                   </div>
                   <div>
                     <div>
@@ -652,12 +662,6 @@ class LoginComponent extends Component {
                             ""
                           )}
 
-                          {/* <div className="text-center mb-5">
-                      <Button className="btn btn-primary" size="large" color="primary" variant="contained" type="submit" onClick={() => this.verifyEmail()}>
-                        Send OTP
-                      </Button>
-                    </div> */}
-
                         </>
                       )
                   }
@@ -671,7 +675,6 @@ class LoginComponent extends Component {
         <Modal
           className="modal-dialog-centered"
           isOpen={this.state.signupPopOut}
-          // isOpen={true}
           toggle={() => this.modalClose()}>
           <ModalBody>
             <CloseIcon
@@ -681,10 +684,8 @@ class LoginComponent extends Component {
             <SignupComponent getSignUp={this.getSignUp}></SignupComponent>
           </ModalBody>
         </Modal>
+        <BindGoogleFBDialog open={this.state.openBindGoogleFB} onClose={this.openCloseBindGoogleFBDialog} modalClose={this.modalClose} emailVerification={this.props.emailVerification}/>
       </>
-
-
-
 
     );
   }

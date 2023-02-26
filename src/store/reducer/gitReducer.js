@@ -87,6 +87,7 @@ const INITIAL_STATE = {
   creditCardOrder: [],
   postcodes: [],
   promoCode: [],
+  bindGoogleFB: [],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -127,6 +128,14 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         currentUser: action.payload,
+      });
+
+    case GitAction.VerifyBindGoogleFB:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.BindGoogleFBVerified:
+      return Object.assign({}, state, {
+        loading: false,
+        bindGoogleFB: action.payload,
       });
 
     case GitAction.Logout:

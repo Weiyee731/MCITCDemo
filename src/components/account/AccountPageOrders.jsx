@@ -250,9 +250,6 @@ class AccountPageOrders extends Component {
     const { page } = this.state;
     let ordersList;
 
-
-    console.log("allmerchantordersallmerchantorders", this.props.allmerchantorders)
-
     let orderDetailListing = (listing) => (
       <>
         {
@@ -389,8 +386,6 @@ class AccountPageOrders extends Component {
           </div>
         </div>
         <div id={"footer" + index} className="card-footer">
-          {console.log("orders", orders)}
-
           {
             orders.length > 0 && orders[0].OrderID > 0 ?
               <Pagination
