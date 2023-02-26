@@ -27,7 +27,16 @@ export const BindGoogleFBDialog = (props) => {
     <div>
       {
         openOTP ?
+        <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={() => onClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+         <DialogTitle>{"Hello! It looks like we already have an account associated with this gmail acount."}</DialogTitle>
           <OTPPage emailVerification={emailVerification}/>
+          </Dialog>
           :
           <Dialog
             open={open}
@@ -56,6 +65,7 @@ export const BindGoogleFBDialog = (props) => {
 function OTPPage({ emailVerification }) {
   console.log("emailVerification",emailVerification)
   const [OTP, setOTP] = useState("");
+  
   const handleChange = (otp) => {
     if (otp !== null) {
       this.setState({ otp });
@@ -79,13 +89,13 @@ function OTPPage({ emailVerification }) {
         <div className="col-6">
           <p className=" font">
             Enter the code we sent to your email{" "}
-            {this.props.currentUser.length > 0 &&
+            {/* {this.props.currentUser.length > 0 &&
               this.props.currentUser[0].UserEmailAddress !== undefined &&
               this.props.currentUser[0].UserEmailAddress !== null
               ? this.censorEmail(
                 this.props.currentUser[0].UserEmailAddress
               )
-              : "-"}
+              : "-"} */}
           </p>
         </div>
       </div>
