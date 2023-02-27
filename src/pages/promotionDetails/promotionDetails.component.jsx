@@ -458,8 +458,8 @@ class PromotionDetailsComponent extends Component {
       );
       setTimeout(
         function () {
-          // this.props.history.push("/EmporiaDev/viewProductPromotion");
-          this.props.history.push("/EmporiaDev/viewProductPromotion");
+          // this.props.history.push("/viewProductPromotion");
+          this.props.history.push("/viewProductPromotion");
           window.location.reload(false);
         }.bind(this),
         500

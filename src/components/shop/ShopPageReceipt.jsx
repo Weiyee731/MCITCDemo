@@ -159,14 +159,11 @@ class ShopPageReceipt extends Component {
                                 <label >Page will be automatically redirected to the main page or click button below</label>
                             </div>
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <button onClick={() =>
-                                    <>
-                                        {window.location.href = "//"}
-                                        {window.reload(false)}
-                                    </>
-                                } className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
-                                    Continue Shopping
-                                </button>
+                                <Link to="/">
+                                    <button className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
+                                        Continue Shopping
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -213,14 +210,11 @@ class ShopPageReceipt extends Component {
                                 <label >Page will be automatically redirected to the main page or click button below</label>
                             </div>
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <button onClick={() =>
-                                    <>
-                                        {window.location.href = "//"}
-                                        {window.reload(false)}
-                                    </>
-                                } className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
-                                    Continue Shopping
-                                </button>
+                                <Link to="/">
+                                    <button className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
+                                        Continue Shopping
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -283,14 +277,11 @@ class ShopPageReceipt extends Component {
                                 <label >Page will be automatically redirected to the main page or click button below</label>
                             </div>
                             <div style={{ textAlign: "center", margin: 2 }}>
-                                <button onClick={() =>
-                                    <>
-                                        {window.location.href = "//"}
-                                        {window.reload(false)}
-                                    </>
-                                } className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
-                                    Continue Shopping
-                                </button>
+                                <Link to="/">
+                                    <button className="btn btn-primary mt-2 mt-md-3 mt-lg-4" style={{ backgroundColor: "forestgreen", borderWidth: 0 }}>
+                                        Continue Shopping
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -149,3 +149,22 @@ $local-product-margin: 5px;
         width: calc(100% - #{$local-product-margin * 2});
     }
 }
+
+
+@media (min-width: 500px) and (max-width: 800px){
+    .block-products__list-item {
+        width: calc(50% - #{$local-product-margin * 2});
+    }
+    .products__list-item {
+        width: calc(50% - #{$local-product-margin * 2});
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1200px){
+    .block-products__list-item {
+        width: calc(33% - #{$local-product-margin * 2});
+    }
+    .products__list-item {
+        width: calc(33% - #{$local-product-margin * 2});
+    }
+}

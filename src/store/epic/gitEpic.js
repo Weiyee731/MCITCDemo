@@ -4,7 +4,8 @@ import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 import axios from "axios";
 const { filter, map, switchMap } = require('rxjs/operators');
-const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/";
+const url = "https://cms.myemporia.my/eCommerceCMS/api/emporia/";
+// const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/";
 const platformType = "MyEmporia";
 // const url = "http://localhost/EmporiaTest/eCommerceCMSApi/api/myemporia/"
 export class GitEpic {
@@ -83,7 +84,7 @@ export class GitEpic {
             "&PROJECTID=" +
             action.payload.PROJECTID +
             "&USEREMAIL=" +
-            action.payload.USEREMAIL 
+            action.payload.USEREMAIL
           )
             .then(response => response.json())
             .then(json => {
@@ -1320,8 +1321,8 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.AddProductWishlist), map(action => {
       return dispatch => {
         console.log('hahaha', url +
-        "Product_AddProductWishlist?USERID=" + action.payload.userID +
-        "&PRODUCTID=" + action.payload.productID)
+          "Product_AddProductWishlist?USERID=" + action.payload.userID +
+          "&PRODUCTID=" + action.payload.productID)
         try {
           return fetch(url +
             "Product_AddProductWishlist?USERID=" + action.payload.userID +

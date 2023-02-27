@@ -67,7 +67,7 @@ function ProductCard(props) {
   }, [props.addwishlist]);
 
   const login = () => {
-    // this.props.history.push("/EmporiaDev/login");
+    // this.props.history.push("/login");
     setloginPopOut(true)
   }
 
