@@ -91,7 +91,7 @@ function SitePageHowToBuy() {
                                     </div>
                                     <br /><br />
                                 </ul>
-                                Have other queries? Tell us more using the <u style={{color:"blue", cursor: "pointer"}}>Chat bot</u>
+                                {/* Have other queries? Tell us more using the <u style={{color:"blue", cursor: "pointer"}}>Chat bot</u> */}
                             </Typography>
                         </div>
                     </div>

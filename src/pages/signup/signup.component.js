@@ -260,6 +260,7 @@ const SignUp = (props) => {
         : {};
     if (existData.length > 0) {
         var checkDuplicate = existData.map((d, i) => {
+
             if (d.ReturnVal === 1) {
                 return (
                     <p style={{ color: "#e31e10", margin: "0px 0px 0px 10px" }}>
@@ -274,7 +275,7 @@ const SignUp = (props) => {
         if (verifyEmail === true && props.emailVerification.length === 0) {
             submitForm(userDetail);
         }
-        else if (props.emailVerification.length > 0 && props.emailVerification[0].UserID !== 0) {
+        else if (props.emailVerification.length > 0 && props.emailVerification[0].UserID !== undefined) {
             toast.info("Email already exists, please try again")
             setEmailVefication()
             const timeOutId = setTimeout(1000);
@@ -385,8 +386,11 @@ const SignUp = (props) => {
                     className="mx-auto"
                 ></img>
             </div>
+            {console.log("registerUser122222", props.emailVerification)}
+
             {
-                props.registerUser.length > 0 && props.registerUser[0].UserID > 0 ?
+                // props.registerUser.length > 0 && props.registerUser[0].UserID > 0 ?
+                props.emailVerification !== undefined && props.emailVerification.length > 0 && props.emailVerification[0].UserID === undefined ?
                     handleOTP()
                     :
                     <div className="container mt-5" style={{ width: "100%" }}>
@@ -497,7 +501,7 @@ const SignUp = (props) => {
                                         </p>
                                     </div>
                                     <div className="SignUpForm-Submit mt-3" style={{ fontSize: "14px" }}>
-                                        Already have an account? 
+                                        Already have an account?
                                         <StyledDiv onClick={() => props.getSignUp(true, false)}>
                                             Login
                                         </StyledDiv>

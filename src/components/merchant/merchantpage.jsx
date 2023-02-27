@@ -142,7 +142,7 @@ function MerchantPage(props) {
                                                         {merchantDetails.ShopName}
                                                     </Typography>
                                                 </div>
-                                                <div className='mt-4'>
+                                                <div className='mt-3' style={{ paddingTop: width >= 2560 ? "25px" : "0px" }}>
                                                     <div className="col-lg-8 col-md-8 col-sm-12">
                                                         <Box>
                                                             <div className='row'>
@@ -155,7 +155,7 @@ function MerchantPage(props) {
                                                         </Box>
                                                     </div>
                                                 </div>
-                                                <div className='row  '>
+                                                <div className='row'>
                                                     <div className="col-lg-8 col-md-8 col-sm-12">
                                                         <Typography className='m-2'>Description: {merchantDetails.ShopDescription !== null ? merchantDetails.ShopDescription : "No Description"}</Typography>
                                                         <Typography className='m-2'>Products : {merchantDetails.MerchantTotalProduct !== null ? merchantDetails.MerchantTotalProduct : 0}</Typography>
@@ -168,11 +168,11 @@ function MerchantPage(props) {
 
                                     </div>
                                     {/* className={width >= 768 && width <= 1440 ? 'col-12' : width > 1440 && 'col-8'} */}
-                                    <div className={width >= 768 && width <= 1440 ? 'col-12 social-links-web' : width > 1440 && 'col-4 social-links-web'} style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                                    {/* <div className={width >= 768 && width <= 1440 ? 'col-12 social-links-web' : width > 1440 && 'col-4 social-links-web'} style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                                         <div className="topbar__item">
                                             <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </CardContent>
                         </div>
@@ -199,16 +199,16 @@ function MerchantPage(props) {
                                 </Typography>
                             </div>
                         </div>
-                        <div className='col-12 social-media-phone' style={{ display: "flex", justifyContent: "flex-end" }}>
+                        {/* <div className='col-12 social-media-phone' style={{ display: "flex", justifyContent: "flex-end" }}>
                             <div className="topbar__item">
                                 <MerchantSocialLinks className="footer-newsletter__social-links" shape="circle"></MerchantSocialLinks>
                             </div>
-                        </div>
-                        <div>
+                        </div> */}
+                        <div style={{ padding: "10px" }}>
                             <CardContent>
                                 <div className='row merchant-profile-card-content-phone' style={{ position: "relative" }}>
                                     <div className="col-lg-8 col-md-8 col-sm-12 merchant-description-phone">
-                                        <div className='mt-2 col-12'>
+                                        <div className='mt-2 col-12 '>
                                             <Box>
                                                 <div className='row'>
                                                     <div className='' style={{ display: "flex" }}>
