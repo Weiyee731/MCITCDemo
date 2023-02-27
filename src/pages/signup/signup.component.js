@@ -332,6 +332,8 @@ const SignUp = (props) => {
 
     const submitOTP = (data) => {
         if (props.registerUser.length > 0 && props.registerUser[0].UserID !== null) {
+            data['TOKEN'] = '-';
+            data['TYPE'] = 2;
             props.CallSignupOTP(data);
         }
     };
