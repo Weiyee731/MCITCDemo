@@ -6,6 +6,7 @@ import axios from "axios";
 const { filter, map, switchMap } = require('rxjs/operators');
 const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/";
 const platformType = "MyEmporia";
+const PROJECTID = 2;
 // const url = "http://localhost/EmporiaTest/eCommerceCMSApi/api/myemporia/"
 export class GitEpic {
   User_Login = action$ =>
@@ -75,13 +76,22 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.VerifyBindGoogleFB), map(action => {
       return dispatch => {
         try {
+          console.log(url +
+            "User_VerifyGoogleFB_WithOTP?USERID=" +
+            action.payload.USERID +
+            "&TYPE=" +
+            action.payload.TYPE +
+            "&PROJECTID=" +
+            PROJECTID +
+            "&USEREMAIL=" +
+            action.payload.USEREMAIL )
           return fetch(url +
             "User_VerifyGoogleFB_WithOTP?USERID=" +
             action.payload.USERID +
             "&TYPE=" +
             action.payload.TYPE +
             "&PROJECTID=" +
-            action.payload.PROJECTID +
+            PROJECTID +
             "&USEREMAIL=" +
             action.payload.USEREMAIL 
           )
