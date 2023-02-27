@@ -21,6 +21,9 @@ export class GitAction {
   static LoginGoogleFB = "LOGIN-GOOGLE-FB";
   static UserGoogleFBLoggedIn = "SUCCESSFULLY-LOGIN-GOOGLE-FB";
 
+  static VerifyBindGoogleFB = "VERIFY-BIND-GOOGLE-FB";
+  static BindGoogleFBVerified = "BIND-GOOGLE-FB-VERIFIED";
+
   //Logout
   static Logout = "LOGOUT";
   static UserLoggedOut = "SUCCESSFULLY-LOGOUT";
@@ -124,10 +127,17 @@ export class GitAction {
       payload: credentials,
     };
   }
-  
+
   static CallLoginGoogleFB(credentials) {
     return {
       type: GitAction.LoginGoogleFB,
+      payload: credentials,
+    };
+  }
+
+  static CallVerifyBindGoogleFB(credentials) {
+    return {
+      type: GitAction.VerifyBindGoogleFB,
       payload: credentials,
     };
   }
@@ -1190,7 +1200,6 @@ export class GitAction {
   }
 
   static CallGetFPXResponseList() {
-    console.log("CallGetFPXResponseList")
     return {
       type: GitAction.getFPXResponseList,
     };

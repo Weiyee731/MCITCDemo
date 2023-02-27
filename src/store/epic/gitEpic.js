@@ -35,18 +35,11 @@ export class GitEpic {
       }
     }));
 
+
   User_Login_GoogleFB = action$ =>
     action$.pipe(filter(action => action.type === GitAction.LoginGoogleFB), map(action => {
       return dispatch => {
         try {
-          console.log(url +
-            "User_Login_GoogleFB?USEREMAIL=" +
-            action.payload.email +
-            "&PROJECTID=2" +
-            "&TOKEN=" +
-            action.payload.id +
-            "&TYPE=" +
-            action.payload.TYPE)
           return fetch(url +
             "User_Login_GoogleFB?USEREMAIL=" +
             action.payload.email +
@@ -54,7 +47,12 @@ export class GitEpic {
             "&TOKEN=" +
             action.payload.id +
             "&TYPE=" +
-            action.payload.TYPE)
+            action.payload.TYPE +
+            "&FIRSTNAME=" +
+            action.payload.family_name +
+            "&LASTNAME=" +
+            action.payload.given_name
+          )
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
@@ -68,6 +66,38 @@ export class GitEpic {
         } catch (error) {
           toast.error("Error Code: User_Login. Please check on URL")
           return dispatch({ type: GitAction.UserGoogleFBLoggedIn, payload: [] });
+        }
+      }
+    }));
+
+
+  User_VerifyGoogleFB_WithOTP = action$ =>
+    action$.pipe(filter(action => action.type === GitAction.VerifyBindGoogleFB), map(action => {
+      return dispatch => {
+        try {
+          return fetch(url +
+            "User_VerifyGoogleFB_WithOTP?USERID=" +
+            action.payload.USERID +
+            "&TYPE=" +
+            action.payload.TYPE +
+            "&PROJECTID=" +
+            action.payload.PROJECTID +
+            "&USEREMAIL=" +
+            action.payload.USEREMAIL 
+          )
+            .then(response => response.json())
+            .then(json => {
+              json = JSON.parse(json)
+              if (json[0].ReturnVal === 1) {
+                return dispatch({ type: GitAction.BindGoogleFBVerified, payload: JSON.parse(json[0].ReturnData) });
+              } else {
+                //toast.error(json[0].ReturnMsg)
+                return dispatch({ type: GitAction.BindGoogleFBVerified, payload: [] });
+              }
+            });
+        } catch (error) {
+          toast.error("Error Code: User_VerifyGoogleFB_WithOTP. Please check on URL")
+          return dispatch({ type: GitAction.BindGoogleFBVerified, payload: [] });
         }
       }
     }));
@@ -155,10 +185,6 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.CheckUser), map(action => {
       return dispatch => {
         try {
-          console.log(url +
-            "User_CheckDuplicate?email=" +
-            action.payload.Email +
-            "&ProjectID=2")
           return fetch(url +
             "User_CheckDuplicate?email=" +
             action.payload.Email +
@@ -1407,8 +1433,8 @@ export class GitEpic {
         }
       }
     }));
-  
-    General_ViewState = action$ =>
+
+  General_ViewState = action$ =>
     action$.pipe(filter(action => action.type === GitAction.GetState), map(action => {
       return dispatch => {
         try {
@@ -1786,14 +1812,6 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.GetProductListing), map(action => {
       return dispatch => {
         try {
-          console.log("getProductsListing2", url +
-            "Product_ItemListByType?Type=" + action.payload.type +
-            "&TypeValue=" + action.payload.typeValue +
-            "&USERID=" + action.payload.userId +
-            "&PROJECTID=2" +
-            "&PRODUCTPERPAGE=" + action.payload.productPage +
-            "&PAGE=" + action.payload.page +
-            "&PLATFORMTYPE=" + platformType)
           return fetch(url +
             "Product_ItemListByType?Type=" + action.payload.type +
             "&TypeValue=" + action.payload.typeValue +
@@ -1805,9 +1823,7 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
-              console.log("getProductsListing1", json)
               if (json[0].ReturnVal === 1) {
-                console.log("getProductsListing", json)
                 return dispatch({ type: GitAction.GotProductListing, payload: JSON.parse(json[0].ReturnData) });
               } else {
                 //toast.error(json[0].ReturnMsg)

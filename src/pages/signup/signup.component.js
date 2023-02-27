@@ -45,7 +45,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 const SignUp = (props) => {
-    console.log("props", props);
     const [signupPopOut, setsignupPopOut] = useState(props.signupPopOut)
     const [currentForm, setCurrentForm] = useState(1);
     const [otp, setOtp] = useState('');
@@ -272,7 +271,7 @@ const SignUp = (props) => {
     }
 
     useEffect(() => {
-        if (verifyEmail === true && props.emailVerification.length === 0) {
+        if (verifyEmail === true && props.emailVerification.length > 0 && props.emailVerification[0].ReturnVal === 0) {
             submitForm(userDetail);
         }
         else if (props.emailVerification.length > 0 && props.emailVerification[0].UserID !== undefined) {
@@ -320,7 +319,6 @@ const SignUp = (props) => {
     // console.log(props.emailVerification !== [] && props.emailVerification[0])
 
     const handleChange = (newValue) => {
-        console.log("newValue", newValue)
         if (newValue !== undefined && newValue !== "") {
             setOtp(newValue)
         }

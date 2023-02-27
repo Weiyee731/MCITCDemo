@@ -20,7 +20,6 @@ export const CustomGoogleLogin = (props) => {
     });
 
     const handleSuccess = (codeResponse) => {
-        console.log("codeResponse", codeResponse)
         setisLogin(true);
 
         axios
@@ -31,7 +30,7 @@ export const CustomGoogleLogin = (props) => {
                 }
             })
             .then((res) => {
-                console.log("res", res.data);
+                setisLogin(false);
                 props.clickLogin(res.data, "Google");
             })
             .catch((err) => console.log(err));
@@ -47,20 +46,6 @@ export const CustomGoogleLogin = (props) => {
         <>
             {
                 islogin ? (
-                    // <Button
-                    //     fullWidth
-                    //     variant="contained"
-                    //     style={{
-                    //         backgroundColor: '#DB4437',
-                    //         color: '#fff',
-                    //         '&:hover': {
-                    //             backgroundColor: '#EA4335',
-                    //         },
-                    //     }}
-                    //     onClick={logOut}
-                    // >
-                    //     <GoogleIcon /> Sign out of Google
-                    // </Button>
                     <LoadingButton
                         loading
                         loadingPosition="start"
@@ -81,7 +66,6 @@ export const CustomGoogleLogin = (props) => {
                             backgroundColor: '#1a73e8',
                             color: '#fff',
                             fontSize: '16px',
-                            // padding: '12px 24px',
                             border: 'none',
                             borderRadius: '4px',
                             width: '100%'
@@ -90,10 +74,7 @@ export const CustomGoogleLogin = (props) => {
                 )
             }
         </>
-
-
     )
-
 }
 
 
