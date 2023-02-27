@@ -221,6 +221,18 @@ class LoginComponent extends Component {
     return ciphertext
   }
 
+  callVerifyOTP = () => {
+    console.log("callApiF")
+    console.log("call", this.props)
+    let obj = {
+      USERID: this.props.emailVerification[0].UserID,
+      USEREMAIL: this.props.emailVerification[0].UserEmailAddress,
+      TYPE: 2,
+    }
+    this.setState({ openBindGoogleFB: true })
+    this.props.CallVerifyBindGoogleFB(obj)
+  }
+
   handleCallCheckUserExists = () => {
     if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true && this.state.isReturn === false) {
       if (this.props.emailVerification[0].UserID !== undefined) {
@@ -242,13 +254,7 @@ class LoginComponent extends Component {
       } else {
         console.log("this user have account in server but havent bind to google, prompt dialog ask want to bind google account?")
         this.openCloseBindGoogleFBDialog(true)
-        // let obj = {
-        //   UserID: this.props.emailVerification[0].UserID,
-        //   UserEmailAddress: this.props.emailVerification[0].UserEmailAddress,
-        //   TYPE: 2,
-        // }
-        // this.setState({ openBindGoogleFB: true })
-        // this.props.CallVerifyBindGoogleFB(obj)
+
       }
     } else if (this.props.emailVerification.length > 0 && this.props.emailVerification[0].ReturnVal === 0 && this.state.loginWithGoogleFB === true) {
       console.log("this user is not registered")
@@ -695,7 +701,7 @@ class LoginComponent extends Component {
             <SignupComponent getSignUp={this.getSignUp}></SignupComponent>
           </ModalBody>
         </Modal>
-        <BindGoogleFBDialog open={this.state.openBindGoogleFB} onClose={this.openCloseBindGoogleFBDialog} modalClose={this.modalClose} emailVerification={this.props.emailVerification} />
+        <BindGoogleFBDialog open={this.state.openBindGoogleFB} onClose={this.openCloseBindGoogleFBDialog} modalClose={this.modalClose} emailVerification={this.props.emailVerification} callUploadApi={this.callVerifyOTP} />
       </>
 
     );

@@ -20,22 +20,34 @@ const Transition = React.forwardRef(function Transition(
 });
 
 export const BindGoogleFBDialog = (props) => {
-  const { open, onClose, modalClose,emailVerification } = props;
+  const { open, onClose, modalClose, emailVerification, callUploadApi } = props;
   const [openOTP, setopenOTP] = useState(false);
+
+  const bindGoogleFB = () => {
+    setopenOTP(true);
+    callUploadApi();
+  }
 
   return (
     <div>
       {
         openOTP ?
-        <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={() => onClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-         <DialogTitle>{"Hello! It looks like we already have an account associated with this gmail acount."}</DialogTitle>
-          <OTPPage emailVerification={emailVerification}/>
+          <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={() => onClose}
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle>{"Please check your email for verification code!"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                <OTPPage emailVerification={emailVerification} callUploadApi={callUploadApi} />
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions className='d-flex justify-content-between'>
+              <Button fullWidth onClick={() => onClose(false)}>Submit</Button>
+            </DialogActions>
           </Dialog>
           :
           <Dialog
@@ -53,7 +65,7 @@ export const BindGoogleFBDialog = (props) => {
             </DialogContent>
             <DialogActions className='d-flex justify-content-between'>
               <Button onClick={() => onClose(false)}>Login with Emporia Account</Button>
-              <Button onClick={() => { setopenOTP(true) }}>Bind with Google</Button>
+              <Button onClick={() => { bindGoogleFB() }}>Bind with Google</Button>
             </DialogActions>
           </Dialog>
       }
@@ -63,59 +75,55 @@ export const BindGoogleFBDialog = (props) => {
 }
 
 function OTPPage({ emailVerification }) {
-  console.log("emailVerification",emailVerification)
+  // console.log("emailVerification", emailVerification)
   const [OTP, setOTP] = useState("");
-  
   const handleChange = (otp) => {
     if (otp !== null) {
-      this.setState({ otp });
+      setOTP(otp)
     }
     if (otp.length === 6) {
-
-      this.props.CallUpdateContact({
-        USERID: this.state.USERID,
-        UPDATETYPE: this.state.UPDATETYPE,
-        otp: otp,
-        UpdatedValue: this.state.UpdatedValue,
-      }); //submit otp
-      this.setState({ startCountDown: false });
-      this.stopTimer(60);
+      // this.props.CallSignupOTP()
     }
   };
 
+
   return (
     <div>
-      <div className="row contactrowStyle">
+      {/* <div className="row contactrowStyle">
         <div className="col-6">
           <p className=" font">
             Enter the code we sent to your email{" "}
-            {/* {this.props.currentUser.length > 0 &&
+            {this.props.currentUser.length > 0 &&
               this.props.currentUser[0].UserEmailAddress !== undefined &&
               this.props.currentUser[0].UserEmailAddress !== null
               ? this.censorEmail(
                 this.props.currentUser[0].UserEmailAddress
               )
-              : "-"} */}
+              : "-"}
           </p>
         </div>
-      </div>
+      </div> */}
       <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={OTP} onChange={handleChange} />
-      <div className="row contactrowStyle">
-        <div className="col-6 font otp">
-          {/* <OtpInput
-                            value={this.state.otp}
-                            onChange={this.handleChange}
-                            numInputs={6}
-                            separator={<span>-</span>}
-                            inputStyle={inputstyle}
-                          /> */}
-        </div>
-        {/* <div className="col-4 d-flex align-items-center font">
-                          {this.state.startCountDown === true
-                            ? this.state.counter + " seconds is remaining"
-                            : ""}
-                        </div> */}
+      <div>
+        remain: {useCountdown()}
       </div>
     </div>
   )
 }
+
+function useCountdown() {
+  const [countDown, setCountDown] = useState(60);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountDown(countDown - 1);
+    }, 1000);
+
+    if (countDown === 0) {
+      clearInterval(interval)
+    }
+    return () => clearInterval(interval);
+  }, [countDown]);
+
+  return countDown;
+};
