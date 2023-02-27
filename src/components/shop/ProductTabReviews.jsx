@@ -67,7 +67,7 @@ class ProductTabReviews extends Component {
   }
 
   login() {
-    this.props.history.push("/EmporiaDev/login");
+    this.props.history.push("/login");
   }
 
   onSubmitReviewReply() {

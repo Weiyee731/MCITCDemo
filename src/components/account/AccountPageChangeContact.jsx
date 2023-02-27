@@ -297,7 +297,7 @@ class PageChangeContact extends Component {
       this.stopTimer(60);
     }
     // if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-    //   this.props.history.push("/EmporiaDev/account/profile");
+    //   this.props.history.push("/account/profile");
     //   window.location.reload(false);
     // } else {
     // }

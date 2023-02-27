@@ -777,7 +777,7 @@ class MerchantDetailsComponent extends Component {
     if (this.props.currentUser.length > 0) {
       this.props.CallClearCurrentUser()
       setTimeout(() => {
-        this.props.history.push("/EmporiaDev/viewMerchants");
+        this.props.history.push("/viewMerchants");
         window.location.reload(false);
       }, 3000);
     }
