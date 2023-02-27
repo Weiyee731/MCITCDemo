@@ -32,23 +32,7 @@ export const BindGoogleFBDialog = (props) => {
     <div>
       {
         openOTP ?
-          <Dialog
-            open={open}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={() => onClose}
-            aria-describedby="alert-dialog-slide-description"
-          >
-            <DialogTitle>{"Please check your email for verification code!"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                <OTPPage emailVerification={emailVerification} callUploadApi={callUploadApi} />
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions className='d-flex justify-content-between'>
-              <Button fullWidth onClick={() => onClose(false)}>Submit</Button>
-            </DialogActions>
-          </Dialog>
+          <OTPPage email={emailVerification[0].UserEmailAddress?emailVerification[0].UserEmailAddress:""} CallOTP_Verification={callUploadApi} open={open} onClose={onClose} />
           :
           <Dialog
             open={open}
@@ -74,40 +58,54 @@ export const BindGoogleFBDialog = (props) => {
   );
 }
 
-function OTPPage({ emailVerification }) {
-  // console.log("emailVerification", emailVerification)
+function OTPPage({ email, CallOTP_Verification, onClose, open }) {
+  console.log("email", email)
   const [OTP, setOTP] = useState("");
   const handleChange = (otp) => {
     if (otp !== null) {
       setOTP(otp)
     }
     if (otp.length === 6) {
+      CallOTP_Verification()
       // this.props.CallSignupOTP()
     }
   };
 
+  const censorEmail = (email) => {
+    if (email !== null && email.length > 5) {
+      var arr = email.split("@");
+      return censorWord(arr[0]) + "@" + arr[1];
+    } else return "No email was found";
+  };
+
+  const censorWord = (str) => {
+    return str[0] + "*".repeat(str.length - 2) + str.slice(-1);
+  };
 
   return (
-    <div>
-      {/* <div className="row contactrowStyle">
-        <div className="col-6">
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={() => onClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogTitle>{"Please check your email for verification code!"}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-slide-description">
           <p className=" font">
-            Enter the code we sent to your email{" "}
-            {this.props.currentUser.length > 0 &&
-              this.props.currentUser[0].UserEmailAddress !== undefined &&
-              this.props.currentUser[0].UserEmailAddress !== null
-              ? this.censorEmail(
-                this.props.currentUser[0].UserEmailAddress
-              )
-              : "-"}
+            {"Enter the code we sent to your email", censorEmail(email)}
           </p>
-        </div>
-      </div> */}
-      <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={OTP} onChange={handleChange} />
-      <div>
-        remain: {useCountdown()}
-      </div>
-    </div>
+          <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={OTP} onChange={handleChange} />
+          <div>
+            remain: {useCountdown()}
+          </div>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions className='d-flex justify-content-between'>
+        <Button fullWidth >Submit</Button>
+      </DialogActions>
+    </Dialog >
   )
 }
 
