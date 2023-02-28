@@ -271,10 +271,11 @@ const SignUp = (props) => {
     }
 
     useEffect(() => {
+        console.log(props.emailVerification)
         if (verifyEmail === true && props.emailVerification.length > 0 && props.emailVerification[0].ReturnVal === 0) {
             submitForm(userDetail);
         }
-        else if (props.emailVerification.length > 0 && props.emailVerification[0].UserID !== undefined) {
+        else if (verifyEmail && props.emailVerification.length > 0 && props.emailVerification[0].UserID !== undefined) {
             toast.info("Email already exists, please try again")
             setEmailVefication()
             const timeOutId = setTimeout(1000);
@@ -332,6 +333,8 @@ const SignUp = (props) => {
 
     const submitOTP = (data) => {
         if (props.registerUser.length > 0 && props.registerUser[0].UserID !== null) {
+            data['TOKEN'] = '-';
+            data['TYPE'] = 2;
             props.CallSignupOTP(data);
         }
     };

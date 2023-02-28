@@ -98,10 +98,11 @@ class ProductDetails extends Component {
         const { product } = this.props
         // window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
         let productID = ""
+        let pathnameLength = window.location.pathname.split("/").length
         if (window.location.pathname !== undefined) {
-            if ( this.props.quickViewIndicator !== true && window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products") {
-                let length = window.location.pathname.split("/").length
-                productID = window.location.pathname.split("/")[length - 1]
+            if (this.props.quickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products") {
+
+                productID = window.location.pathname.split("/")[pathnameLength - 1]
             }
             else {
                 productID = product.ProductID
@@ -127,10 +128,10 @@ class ProductDetails extends Component {
     componentDidUpdate(props) {
         const { product } = this.props
         let productID = ""
+        let pathnameLength = window.location.pathname.split("/").length
         if (window.location.pathname !== undefined) {
-            if (this.props.quickViewIndicator !== true && window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products") {
-                let length = window.location.pathname.split("/").length
-                productID = window.location.pathname.split("/")[length - 1]
+            if (this.props.quickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products") {
+                productID = window.location.pathname.split("/")[pathnameLength - 1]
             }
             else {
                 productID = product.ProductID
@@ -202,46 +203,45 @@ class ProductDetails extends Component {
         // browserhistory.push("/login");
         // window.location.reload(false);
         // this.props.history.push({pathname: "/login", loginPopOut: true});
-        // this.props.getpopOutDetailsCard(false,true)
         this.setState({ loginPopOut: true })
+        this.props.getpopOutDetailsCard(false,true)
     }
 
     handleWishlist = (product) => {
         let selectedProductID = product.ProductID
 
-        let allWishListProd = this.props.wishlist.map((x)=>(x.ProductID))
-    
-       if( allWishListProd.findIndex((index) => (index === selectedProductID)) !== -1)
-        {
-          this.props.CallDeleteProductWishlist({
-            userID: localStorage.getItem("id"),
-            userWishlistID: this.props.wishlist.filter((f)=>(f.ProductID === selectedProductID)).map((x)=>(x.UserWishlistID)),
-            productName: product.ProductName
-          })
-          toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
-              setTimeout(() => {
+        let allWishListProd = this.props.wishlist.map((x) => (x.ProductID))
+
+        if (allWishListProd.findIndex((index) => (index === selectedProductID)) !== -1) {
+            this.props.CallDeleteProductWishlist({
+                userID: localStorage.getItem("id"),
+                userWishlistID: this.props.wishlist.filter((f) => (f.ProductID === selectedProductID)).map((x) => (x.UserWishlistID)),
+                productName: product.ProductName
+            })
+            toast.success("Successfully Deleted Wishlist, you can continue enjoy your shopping")
+            setTimeout(() => {
                 window.location.reload(true);
-          }, 3000)
-         
+            }, 3000)
+
         }
-    
-        else{
-          this.props.CallAddProductWishlist({
-            userID: window.localStorage.getItem("id"),
-            productID: product.ProductID,
-            productName: product.ProductName
+
+        else {
+            this.props.CallAddProductWishlist({
+                userID: window.localStorage.getItem("id"),
+                productID: product.ProductID,
+                productName: product.ProductName
             })
             toast.success("Successfully Added Wishlist, you can continue enjoy your shopping")
             setTimeout(() => {
-              window.location.reload(true);
+                window.location.reload(true);
             }, 3000)
-            
+
         }
     }
 
-    wishlisting(product) {  
+    wishlisting(product) {
 
-       
+
         return (
             typeof this.props.wishlist !== undefined && this.props.wishlist.length > 0 ?
                 this.props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
@@ -293,7 +293,7 @@ class ProductDetails extends Component {
         prices = <Currency value={this.state.productPrice !== null && this.state.productPrice !== undefined ? this.state.productPrice : 0} currency={"RM"} />;
         let merchant = product.ReturnVal !== undefined && product.ReturnVal !== "0" && product.MerchantDetail !== null ? JSON.parse(product.MerchantDetail)[0] : ""
         // let variation = product.ProductVariation !== null ? JSON.parse(product.ProductVariation)[0] : ""
-        let variation =  ""
+        let variation = ""
 
 
         if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined && this.state.count === 0) {
@@ -309,11 +309,11 @@ class ProductDetails extends Component {
         }
 
         const LayoutListing = () => {
-
+            let pathnameLength = window.location.pathname.split("/").length
             return (
                 <div className="product__content">
                     {
-                        this.props.QuickViewIndicator !== true && window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products" ?
+                        this.props.QuickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products" ?
                             this.state.isProductSet === true &&
                             <ProductGallery
                                 layout={layout}
@@ -327,7 +327,7 @@ class ProductDetails extends Component {
                             <Link to={url.product(product)}>
                                 <div className="product-card__image product-image">
                                     <div className="product-image__body">
-                                    
+
                                         {
                                             this.state.isTimerEnd === true && this.state.isProductSet === true ?
                                                 <img
@@ -608,8 +608,9 @@ class ProductDetails extends Component {
             )
         }
 
+        let pathnameLength = window.location.pathname.split("/").length
         return (
-            this.props.QuickViewIndicator !== true && window.location.pathname.split("/")[2] === "shop" && window.location.pathname.split("/")[3] === "products" ?
+            this.props.QuickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products" ?
                 <div className="block" >
                     <Card elevation={2}
                         style={{ backgroundColor: "white", padding: "20px" }}
@@ -623,7 +624,12 @@ class ProductDetails extends Component {
                 </div >
                 :
                 <>
-                    {LayoutListing()}
+                {/* {this.state.loginPopOut !== undefined && this.state.loginPopOut !== false ?
+                    <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
+                : */}
+                { LayoutListing()}
+                {/* } */}
+                    
                 </>
         );
     }

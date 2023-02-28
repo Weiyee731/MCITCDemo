@@ -228,9 +228,9 @@ export default function CheckoutCartCheckOutButton({
                             <div>
 
                                 {/* //live */}
-                                {/* <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
+                                <form id="payment_form2" action="https://www.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
 
-                                <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post">
+                                    {/* <form id="payment_form2" action="https://uat.mepsfpx.com.my/FPXMain/seller2DReceiver.jsp" method="post"> */}
                                     <input type="hidden" value={fpx_information.fpx_msgType} id="fpx_msgType" name="fpx_msgType"></input>
                                     <input type="hidden" value={fpx_information.fpx_msgToken} id="fpx_msgToken" name="fpx_msgToken"></input>
                                     <input type="hidden" value={fpx_information.fpx_sellerExId} id="fpx_sellerExId" name="fpx_sellerExId"></input>
@@ -268,8 +268,8 @@ export default function CheckoutCartCheckOutButton({
                         <React.Fragment>
                             <div>
                                 {/*live*/}
-                                {/* <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post"> */}
-                                <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post">
+                                <form id="payment_form" action="https://secureacceptance.cybersource.com/pay" method="post">
+                                    {/* <form id="payment_form" action="https://testsecureacceptance.cybersource.com/pay" method="post"> */}
                                     <input type="hidden" id="access_key" name="access_key" value={paymentData.access_key}></input>
                                     <input type="hidden" id="profile_id" name="profile_id" value={paymentData.profile_id}></input>
                                     <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={paymentData.transaction_uuid}></input>

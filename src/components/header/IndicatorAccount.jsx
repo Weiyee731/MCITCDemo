@@ -223,10 +223,9 @@ class IndicatorAccount extends Component {
         )}
       </div>
     );
-
     return (
       <>
-        {localStorage.getItem("isLogin") !== "false" ? (
+        {localStorage.getItem("isLogin") !== "false" && localStorage.getItem("isLogin") !== null? (
           <Indicator url="/account" dropdown={dropdown} icon={<Person20Svg />} />
         ) : (
           <>

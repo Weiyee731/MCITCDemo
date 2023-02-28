@@ -191,6 +191,8 @@ class AccountPagePassword extends Component {
       if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your password has been updated");
         this.props.history.push("/account/profile")
+        // this.props.history.push("/account/profile");
+        // window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
       }

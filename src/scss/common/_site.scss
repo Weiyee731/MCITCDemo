@@ -8,6 +8,7 @@
     min-height: 100%;
     display: flex;
     flex-direction: column;
+    width: 100vw; // temporary fix for for page shaking
 }
 .site__header {
     // flex-shrink: 0;

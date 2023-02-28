@@ -65,6 +65,7 @@ function mapDispatchToProps(dispatch) {
     CallUpdatePassword: (credentials) => dispatch(GitAction.CallUpdatePassword(credentials)),
     ClearCallOTPVerification: () => dispatch(GitAction.ClearCallOTPVerification()),
     CallVerifyBindGoogleFB: (credentials) => dispatch(GitAction.CallVerifyBindGoogleFB(credentials)),
+    CallSignupOTP: (credentials) => dispatch(GitAction.CallSignupOTP(credentials)),
   };
 }
 
@@ -221,6 +222,31 @@ class LoginComponent extends Component {
     return ciphertext
   }
 
+  callVerifyOTP = () => {
+    console.log("callApiF")
+    console.log("call", this.props)
+    let obj = {
+      USERID: this.props.emailVerification[0].UserID,
+      USEREMAIL: this.props.emailVerification[0].UserEmailAddress,
+      TYPE: 2,
+    }
+    this.setState({ openBindGoogleFB: true })
+    this.props.CallVerifyBindGoogleFB(obj)
+  }
+
+  CallOTP_Verification = (OTP) => {
+    console.log("emailVerification",this.props.emailVerification)
+    let obj = {
+      OTP: OTP,
+      UserID: this.props.emailVerification[0].UserID,
+      Email: this.props.emailVerification[0].UserEmailAddress,
+      TYPE: 2,
+      TOKEN: this.state.googleResponse.id
+    }
+    console.log("obj", obj)
+    this.props.CallSignupOTP(obj)
+  }
+
   handleCallCheckUserExists = () => {
     if (this.props.emailVerification.length > 0 && this.state.verifyEmail === true && this.state.isReturn === false) {
       if (this.props.emailVerification[0].UserID !== undefined) {
@@ -233,22 +259,17 @@ class LoginComponent extends Component {
       this.props.CallResetCheckUserExists()
     }
     else if (this.props.emailVerification.length > 0 && this.props.emailVerification[0].ReturnVal !== 0) {
-      if (this.props.emailVerification[0].GoogleToken !== null) {
+      if (this.props.emailVerification[0].GoogleToken !== null && this.props.emailVerification[0].GoogleToken !== '-') {
         if (this.props.emailVerification[0].GoogleToken === this.state.googleResponse.id) {
           this.props.CallLoginGoogleFB(this.state.googleResponse);
         } else {
+          console.log("this.props.emailVerification[0].GoogleToken", this.props.emailVerification[0].GoogleToken)
+          console.log(" this.state.googleResponse.id", this.state.googleResponse.id)
           console.log("this user have account in server but binded differet google account")
         }
       } else {
         console.log("this user have account in server but havent bind to google, prompt dialog ask want to bind google account?")
         this.openCloseBindGoogleFBDialog(true)
-        // let obj = {
-        //   UserID: this.props.emailVerification[0].UserID,
-        //   UserEmailAddress: this.props.emailVerification[0].UserEmailAddress,
-        //   TYPE: 2,
-        // }
-        // this.setState({ openBindGoogleFB: true })
-        // this.props.CallVerifyBindGoogleFB(obj)
       }
     } else if (this.props.emailVerification.length > 0 && this.props.emailVerification[0].ReturnVal === 0 && this.state.loginWithGoogleFB === true) {
       console.log("this user is not registered")
@@ -695,7 +716,7 @@ class LoginComponent extends Component {
             <SignupComponent getSignUp={this.getSignUp}></SignupComponent>
           </ModalBody>
         </Modal>
-        <BindGoogleFBDialog open={this.state.openBindGoogleFB} onClose={this.openCloseBindGoogleFBDialog} modalClose={this.modalClose} emailVerification={this.props.emailVerification} />
+        <BindGoogleFBDialog open={this.state.openBindGoogleFB} onClose={this.openCloseBindGoogleFBDialog} modalClose={this.modalClose} emailVerification={this.props.emailVerification} callSendOTP={this.callVerifyOTP} CallOTP_Verification={this.CallOTP_Verification} />
       </>
 
     );

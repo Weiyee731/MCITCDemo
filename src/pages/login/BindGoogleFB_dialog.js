@@ -8,7 +8,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { MuiOtpInput } from 'mui-one-time-password-input'
+import { MuiOtpInput } from 'mui-one-time-password-input';
+import  OTPPage  from '../../components/OTPwithTimer/OTPwithTimer';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -20,23 +21,19 @@ const Transition = React.forwardRef(function Transition(
 });
 
 export const BindGoogleFBDialog = (props) => {
-  const { open, onClose, modalClose,emailVerification } = props;
+  const { open, onClose, modalClose, emailVerification, callSendOTP, CallOTP_Verification } = props;
   const [openOTP, setopenOTP] = useState(false);
+
+  const bindGoogleFB = () => {
+    setopenOTP(true);
+    callSendOTP();
+  }
 
   return (
     <div>
       {
         openOTP ?
-        <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={() => onClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-         <DialogTitle>{"Hello! It looks like we already have an account associated with this gmail acount."}</DialogTitle>
-          <OTPPage emailVerification={emailVerification}/>
-          </Dialog>
+          <OTPPage email={emailVerification[0].UserEmailAddress ? emailVerification[0].UserEmailAddress : ""} CallOTP_Verification={CallOTP_Verification} open={open} onClose={onClose} />
           :
           <Dialog
             open={open}
@@ -53,69 +50,10 @@ export const BindGoogleFBDialog = (props) => {
             </DialogContent>
             <DialogActions className='d-flex justify-content-between'>
               <Button onClick={() => onClose(false)}>Login with Emporia Account</Button>
-              <Button onClick={() => { setopenOTP(true) }}>Bind with Google</Button>
+              <Button onClick={() => { bindGoogleFB() }}>Bind with Google</Button>
             </DialogActions>
           </Dialog>
       }
-
     </div>
   );
-}
-
-function OTPPage({ emailVerification }) {
-  console.log("emailVerification",emailVerification)
-  const [OTP, setOTP] = useState("");
-  
-  const handleChange = (otp) => {
-    if (otp !== null) {
-      this.setState({ otp });
-    }
-    if (otp.length === 6) {
-
-      this.props.CallUpdateContact({
-        USERID: this.state.USERID,
-        UPDATETYPE: this.state.UPDATETYPE,
-        otp: otp,
-        UpdatedValue: this.state.UpdatedValue,
-      }); //submit otp
-      this.setState({ startCountDown: false });
-      this.stopTimer(60);
-    }
-  };
-
-  return (
-    <div>
-      <div className="row contactrowStyle">
-        <div className="col-6">
-          <p className=" font">
-            Enter the code we sent to your email{" "}
-            {/* {this.props.currentUser.length > 0 &&
-              this.props.currentUser[0].UserEmailAddress !== undefined &&
-              this.props.currentUser[0].UserEmailAddress !== null
-              ? this.censorEmail(
-                this.props.currentUser[0].UserEmailAddress
-              )
-              : "-"} */}
-          </p>
-        </div>
-      </div>
-      <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={OTP} onChange={handleChange} />
-      <div className="row contactrowStyle">
-        <div className="col-6 font otp">
-          {/* <OtpInput
-                            value={this.state.otp}
-                            onChange={this.handleChange}
-                            numInputs={6}
-                            separator={<span>-</span>}
-                            inputStyle={inputstyle}
-                          /> */}
-        </div>
-        {/* <div className="col-4 d-flex align-items-center font">
-                          {this.state.startCountDown === true
-                            ? this.state.counter + " seconds is remaining"
-                            : ""}
-                        </div> */}
-      </div>
-    </div>
-  )
 }
