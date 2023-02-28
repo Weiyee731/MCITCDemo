@@ -203,8 +203,8 @@ class ProductDetails extends Component {
         // browserhistory.push("/login");
         // window.location.reload(false);
         // this.props.history.push({pathname: "/login", loginPopOut: true});
-        // this.props.getpopOutDetailsCard(false,true)
         this.setState({ loginPopOut: true })
+        this.props.getpopOutDetailsCard(false,true)
     }
 
     handleWishlist = (product) => {
@@ -624,7 +624,12 @@ class ProductDetails extends Component {
                 </div >
                 :
                 <>
-                    {LayoutListing()}
+                {/* {this.state.loginPopOut !== undefined && this.state.loginPopOut !== false ?
+                    <LoginComponent loginPopOut={this.state.loginPopOut} getpopOutState={this.getpopOutState} />
+                : */}
+                { LayoutListing()}
+                {/* } */}
+                    
                 </>
         );
     }
