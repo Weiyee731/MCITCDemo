@@ -28,7 +28,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import PageChangeContact from "./AccountPageChangeContact.jsx";
 import LoginComponent from "../../pages/login/login.component";
-// import { browserHistory } from "react-router";
+
 
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 
@@ -36,6 +36,7 @@ function mapStateToProps(state) {
   return {
     currentUser: state.counterReducer["currentUser"],
     countrylist: state.counterReducer["countries"],
+    updatedCurrentUser: state.counterReducer["updatedCurrentUser"],
   };
 }
 
@@ -124,15 +125,41 @@ class AccountPageProfile extends Component {
       }
     } else {
       this.props.history.push("/EmporiaDev/login")
-      // this.props.history.push("/EmporiaDev/login");
-      // window.location.reload(false);
     }
 
   }
 
-  componentDidUpdate(prevProps) {
+  getDate = (d) => {
+
+      const dob_Date = d && Number(d.replace(/\D/g, ""))
+      
+      const convertDate = new Date(dob_Date)
+
+      return moment(convertDate).format('YYYY-MM-DD')
+  }
+
+  setCurrentUser_Details = (userDetails) => {
+    this.setState({
+      USERFIRSTNAME: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? userDetails.FirstName : "-",
+      USERLASTNAME: userDetails.LastName !== undefined && userDetails.LastName !== null ? userDetails.LastName : "-",
+      USERCONTACTNO: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
+      USERDATEBIRTH: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? this.getDate(userDetails.UserDOB) : moment(new Date).format("YYYYMMDD"),
+      USEREMAIL: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
+      USERGENDER: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? userDetails.UserGender : "-",
+      validfirstName: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? true : false,
+      validlastName: userDetails.LastName !== undefined && userDetails.LastName !== null ? true : false,
+      validDOB: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? true : false,
+      validGender: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? true : false,
+      validContact: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? true : false,
+      validEmail: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? true : false,
+      preview: userDetails.UserProfileImage !== undefined && userDetails.UserProfileImage !== null ? userDetails.UserProfileImage : "-"
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
 
     if (prevProps.currentUser !== this.props.currentUser) {
+        this.setCurrentUser_Details(this.props.currentUser[0])
       if (this.props.currentUser.length > 0 && this.props.currentUser[0].ReturnMsg === "Image had uploaded" && this.state.showBoxForImage === true)
         this.modalClose()
     }
@@ -142,23 +169,11 @@ class AccountPageProfile extends Component {
       if (this.props.currentUser !== {} && this.props.currentUser !== null) {
         let userDetails = this.props.currentUser[0];
         if (userDetails !== undefined) {
-          this.setState({
-            USERFIRSTNAME: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? userDetails.FirstName : "-",
-            USERLASTNAME: userDetails.LastName !== undefined && userDetails.LastName !== null ? userDetails.LastName : "-",
-            USERCONTACTNO: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
-            USERDATEBIRTH: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
-            USEREMAIL: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
-            USERGENDER: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? userDetails.UserGender : "-",
-            validfirstName: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? true : false,
-            validlastName: userDetails.LastName !== undefined && userDetails.LastName !== null ? true : false,
-            validDOB: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? true : false,
-            validGender: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? true : false,
-            validContact: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? true : false,
-            validEmail: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? true : false,
-          })
+          this.setCurrentUser_Details(this.props.currentUser[0])
         }
       }
     }
+
   }
 
   componentWillUnmount() {
@@ -172,31 +187,41 @@ class AccountPageProfile extends Component {
   onFileUpload = () => {
     const formData = new FormData();
 
-    let imageName = new Date().valueOf();
-    let fileExt = this.state.imageFile.map((imagedetails) =>
-      imagedetails.name.split('.').pop());
+    let fileExt = this.state.imageFile.length > 0 ? this.state.imageFile.map((imagedetails) =>
+        imagedetails.name.split('.').pop()): null;
+    let imageName = new Date().valueOf() ;
+    let targetFolder = "userProfile" ;
+    let upload = this.state.imageFile[0]
 
-    let FullImageName = JSON.stringify(imageName) + "." + fileExt;
-    formData.append("imageFile", this.state.imageFile[0]);
-    formData.append("imageName", imageName);
+    console.log('files', fileExt, imageName, targetFolder, upload)
 
-    let file = {
-      USERID: window.localStorage.getItem("id"),
-      USERPROFILEIMAGE: FullImageName,
-      TYPE: "PROFILEIMAGE",
-    };
+    formData.append("ID", this.state.USERID);
+    formData.append("targetFolder", targetFolder);
+    formData.append("projectDomain", localStorage.getItem("projectDomain"));
+    formData.append("upload[]", upload );
+    formData.append("imageName[]", imageName);
+
+    let uploadImageURL = 'https://CMS.myemporia.my/eCommerceCMSImage/uploadImages.php'
+
+    const fileData = {
+      USERID: this.state.USERID,
+      TYPE:'PROFILEIMAGE',
+      USERPROFILEIMAGE: imageName+ "." + fileExt
+    }
+
     axios
       .post(
-        "https://myemporia.my/emporiaimage/uploaduserprofilepicture.php",
+        uploadImageURL,
         formData,
         {}
       )
       .then((res) => {
         if (res.status === 200) {
-          this.props.CallUpdateProfileImage(file);
-          this.props.CallUserProfile(this.state);
+          console.log('update profile image')
+          this.props.CallUpdateProfileImage(fileData);
         }
       });
+
   };
   ///////////////////////////DELETE PHOTO SELECTED////////////////////////////////
   removeFile() {
@@ -302,9 +327,11 @@ class AccountPageProfile extends Component {
   handleChangeforDOB = (e) => {
     const { value } = e.target;
 
+    console.log('date', moment(e.target.value).format("YYYY-MM-DD"))
+
     if (value !== null) {
       this.setState({
-        USERDATEBIRTH: moment(value).format("YYYYMMDD"),
+        USERDATEBIRTH: value, 
         validDOB: true,
       });
 
@@ -317,17 +344,8 @@ class AccountPageProfile extends Component {
 
   /////////////////CALL API TO UPDATE PROFILE INFO///////////////////////////////////////////
   updateProfile() {
-    // if (
-    // //   !isStringNullOrEmpty(this.state.Name) &&
-    // //   isContactValid(this.state.ContactNo) &&
-    // //   isEmailValid(this.state.email) &&
-    // //   !isStringNullOrEmpty(this.state.USERADDRESSLINE1) &&
-    // //   !isStringNullOrEmpty(this.state.USERADDRESSLINE2) &&
-    // //   !isStringNullOrEmpty(this.state.USERSTATE) &&
-    // //   !isStringNullOrEmpty(this.state.USERCITY) &&
-    // //   !isStringNullOrEmpty(this.state.USERCOUNTRYID)
-    // // )
-    this.props.CallUpdateUserProfile({
+
+    const updatedData = {
       USERID: this.state.USERID,
       USERFIRSTNAME: this.state.USERFIRSTNAME === "" ? "-" : this.state.USERFIRSTNAME,
       USERLASTNAME: this.state.USERLASTNAME === "" ? "-" : this.state.USERLASTNAME,
@@ -340,35 +358,37 @@ class AccountPageProfile extends Component {
       USERROLEID: "0",
       LISTPERPAGE: "999",
       PAGE: "1"
-    });
-
-    this.props.CallUserProfile(this.state);
-    if (this.props.currentUser !== {} && this.props.currentUser !== null) {
-      let userDetails = this.props.currentUser[0];
-      if (userDetails !== undefined) {
-        this.setState({
-          USERFIRSTNAME: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? userDetails.FirstName : "-",
-          USERLASTNAME: userDetails.LastName !== undefined && userDetails.LastName !== null ? userDetails.LastName : "-",
-          USERCONTACTNO: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
-          USERDATEBIRTH: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
-          USEREMAIL: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
-          USERGENDER: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? userDetails.UserGender : "-",
-          validfirstName: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? true : false,
-          validlastName: userDetails.LastName !== undefined && userDetails.LastName !== null ? true : false,
-          validDOB: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? true : false,
-          validGender: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? true : false,
-          validContact: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? true : false,
-          validEmail: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? true : false,
-        })
-      }
     }
+
+    this.props.CallUpdateUserProfile(updatedData);
+
+    // this.props.CallUserProfile(this.state);
+    // if (this.props.currentUser !== {} && this.props.currentUser !== null) {
+    //   let userDetails = this.props.currentUser[0];
+    //   if (userDetails !== undefined) {
+    //     this.setState({
+    //       USERFIRSTNAME: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? userDetails.FirstName : "-",
+    //       USERLASTNAME: userDetails.LastName !== undefined && userDetails.LastName !== null ? userDetails.LastName : "-",
+    //       USERCONTACTNO: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
+    //       USERDATEBIRTH: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? userDetails.UserDOB : moment(new Date).format("YYYYMMDD"),
+    //       USEREMAIL: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? userDetails.UserEmailAddress : "-",
+    //       USERGENDER: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? userDetails.UserGender : "-",
+    //       validfirstName: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? true : false,
+    //       validlastName: userDetails.LastName !== undefined && userDetails.LastName !== null ? true : false,
+    //       validDOB: userDetails.UserDOB !== undefined && userDetails.UserDOB !== null ? true : false,
+    //       validGender: userDetails.UserGender !== undefined && userDetails.UserGender !== null ? true : false,
+    //       validContact: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? true : false,
+    //       validEmail: userDetails.UserEmailAddress !== undefined && userDetails.UserEmailAddress !== null ? true : false,
+    //     })
+    //   }
+    // }
 
   }
 
 
   render() {
-    console.log(this.state.width)
-    const imgurl = "https://myemporia.my/emporiaimage/userprofile/"
+
+    console.log('data', this.props.currentUser)
 
     const getUploadParams = () => {
       return { url: "http://pmappapi.com/Memo/uploads/uploads/" };
@@ -388,9 +408,6 @@ class AccountPageProfile extends Component {
     const censorWord = (str) => {
       return str[0] + "*".repeat(str.length - 2) + str.slice(-1);
     };
-    //    const censorMail =  (str)=> {
-    //     return str[0] + "*".repeat(str.length - 2) + str.slice(-4);
-    //  }
 
     const censorEmail = (email) => {
       if (email !== null && email.length > 5) {
@@ -398,6 +415,8 @@ class AccountPageProfile extends Component {
         return censorWord(arr[0]) + "@" + arr[1];
       } else return "No email was found";
     };
+
+   
 
     return (
 
@@ -447,7 +466,7 @@ class AccountPageProfile extends Component {
                                 variant="outlined"
                                 size="small"
                                 id="userfirstname"
-                                defaultValue={row.FirstName}
+                                value={this.state.USERFIRSTNAME}
                                 onChange={this.handleChangeforFirstName.bind(this)}
                               />
                             </div>
@@ -475,7 +494,8 @@ class AccountPageProfile extends Component {
                                 size="small"
                                 id="userdob"
                                 type="date"
-                                value={moment(row.USERDATEBIRTH).format('YYYY-MM-DD')}
+                                // value={moment(row.UserDOB).format('YYYY-MM-DD')}
+                                value={this.state.USERDATEBIRTH}
                                 onChange={this.handleChangeforDOB.bind(this)}
                               />
                             </div>
@@ -483,7 +503,8 @@ class AccountPageProfile extends Component {
 
                           <div className="row">
                             <div className="col-3 rowStyle">Gender</div>
-                            <div className="col-8">{console.log("this.state.USERGENDER", row.FirstName, row.UserGender, this.state.USERGENDER)}
+                            <div className="col-8">
+                         
                               <FormControl component="fieldset">
                                 <RadioGroup
                                   aria-label="USERGENDER"
@@ -516,7 +537,8 @@ class AccountPageProfile extends Component {
                           <div className="row">
                             <div className="col-3 rowStyle">Contact Number</div>
                             <div className="col-8 font">
-                              <>{console.log(row.UserContactNo)}
+                              <>
+               
                                 {row.UserContactNo !== null && row.UserContactNo !== undefined && row.UserContactNo !== "-" ? censorContact(row.UserContactNo) : "-"}
                                 <Link to={{ pathname: "/account/changeContact" }}>
                                   <div className="change-contact-mail" >Change Contact</div>
@@ -542,17 +564,12 @@ class AccountPageProfile extends Component {
                     <div onClick={() => this.modalOpen()} className="imagecontainer">
                       <img
                         className="profilePic"
-                        src={this.props.currentUser !== undefined &&
-                          this.props.currentUser.length > 0 &&
-                          this.props.currentUser[0].UserProfileImage !== null &&
-                          this.props.currentUser[0].UserProfileImage !== undefined
-                          ? imgurl + this.props.currentUser[0].UserProfileImage : "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg"}
-
+                        src={this.state.preview !== null && this.state.preview !== undefined ? this.state.preview: 'https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'}
                         alt="Profile"
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src =
-                            "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg";
+                            "https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg";
                         }}
                       />
                       <div className="overlay">Edit</div>
@@ -676,7 +693,7 @@ class AccountPageProfile extends Component {
                           <div className="col-6">
                             <button style={{ float: "left" }}
                               className="btn btn-primary button-font"
-                              onClick={this.onFileUpload}
+                              onClick={()=> this.onFileUpload()}
                             >
                               Upload Image
                             </button>
@@ -726,17 +743,12 @@ class AccountPageProfile extends Component {
                     <div onClick={() => this.modalOpen()} className="imagecontainer">
                       <img
                         className="profilePic"
-                        src={this.props.currentUser !== undefined &&
-                          this.props.currentUser.length > 0 &&
-                          this.props.currentUser[0].UserProfileImage !== null &&
-                          this.props.currentUser[0].UserProfileImage !== undefined
-                          ? imgurl + this.props.currentUser[0].UserProfileImage : "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg"}
-
+                        src={this.state.preview !== null && this.state.preview !== undefined ? this.state.preview: 'https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'}
                         alt="Profile"
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src =
-                            "https://img-cdn.tid.al/o/4858a4b2723b7d0c7d05584ff57701f7b0c54ce3.jpg";
+                            "https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg";
                         }}
                       />
                       <div className="overlay">Edit</div>

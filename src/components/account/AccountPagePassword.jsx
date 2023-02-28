@@ -54,8 +54,6 @@ function mapDispatchToProps(dispatch) {
     CallClearOrder: () => dispatch(GitAction.CallClearOrder()),
     CallUserProfile: (propsData) =>
       dispatch(GitAction.CallUserProfile(propsData)),
-    CallUpdateProfileSpecificField: (propsData) =>
-      dispatch(GitAction.CallUpdateProfileSpecificField(propsData)),
     CallVerifyPassword: (credentials) =>
       dispatch(GitAction.CallVerifyPassword(credentials)),
     CallUpdatePassword: (credentials) =>
@@ -190,11 +188,9 @@ class AccountPagePassword extends Component {
       this.checkPassword()
 
     if (prevProps.updatePassword !== this.props.updatePassword) {
-      if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg === "The Password was Wrong") {
+      if (this.props.updatePassword && this.props.updatePassword[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your password has been updated");
         this.props.history.push("/account/profile")
-        // this.props.history.push("/EmporiaDev/account/profile");
-        // window.location.reload(false);
       } else {
         toast.warn("The OTP key are incorrect. Please try again");
       }
@@ -269,6 +265,13 @@ class AccountPagePassword extends Component {
     if (otp !== null) {
       this.setState({ otp });
     }
+    const passData = {
+      USERID: this.state.USERID,
+      UPDATETYPE: this.state.UPDATETYPE,
+      otp: otp,
+      UpdatedValue: this.state.UpdatedValue
+    }
+
     if (otp.length === 6) {
       this.props.CallUpdatePassword({
         USERID: this.state.USERID,
@@ -332,17 +335,18 @@ class AccountPagePassword extends Component {
   };
 
   submitOTP = (e) => {
-    this.props.CallUpdateProfileSpecificField(this.state);
+    // this.props.CallUpdateProfileSpecificField(this.state);
     if (this.state.counter <= 0) {
       this.setState({ startCountDown: false });
       this.stopTimer(60);
     }
-    // if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-    //   this.props.history.push(".account/profile");
-    //   window.location.reload(false);
-    // } else {
-    // }
-    // toast.error// remain in page
+    if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
+      this.props.history.push(".account/profile");
+      window.location.reload(false);
+    } else {
+      toast.error('Invalid OTP. Please re-enter.')
+    }
+
   };
 
   runTimer() {
@@ -511,9 +515,6 @@ class AccountPagePassword extends Component {
                         error={this.state.passwordErr}
                         type={this.state.hidden ? "password" : "text"}
                         value={this.state.UpdatedValue}
-                        // onChange={({ target }) => {
-                        //   this.setState({ UpdatedValue: target.value });
-                        // }}
                         onChange={this.handleChangeforPassword.bind(this)}
                         InputProps={{
                           endAdornment: (

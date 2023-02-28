@@ -63,7 +63,6 @@ function ProductCard(props) {
   let PromoTag;
 
   useEffect(() => {
-    console.log('value changed')
   }, [props.addwishlist]);
 
   const login = () => {

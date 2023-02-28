@@ -11,6 +11,11 @@ export class GitEpic {
   User_Login = action$ =>
     action$.pipe(filter(action => action.type === GitAction.Login), map(action => {
       return dispatch => {
+        console.log(url + "User_Login?username=" +
+        action.payload.username +
+        "&password=" +
+        action.payload.password +
+        "&ProjectDomainName=myemporia")
         try {
           return fetch(url +
             "User_Login?username=" +
@@ -296,6 +301,17 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.UpdateEmail), map(action => {
       return dispatch => {
         try {
+          console.log(
+            url +
+            "User_UpdateProfileSpecificField?USERID=" +
+            action.payload.USERID +
+            "&TYPE=" +
+            action.payload.UPDATETYPE +
+            "&OTP=" +
+            action.payload.otp +
+            "&UPDATEDFIELD=" +
+            action.payload.UpdatedValue
+          )
           return fetch(url +
             "User_UpdateProfileSpecificField?USERID=" +
             action.payload.USERID +
@@ -338,12 +354,13 @@ export class GitEpic {
             .then(response => response.json())
             .then(json => {
               json = JSON.parse(json)
-              if (json[0].ReturnMsg === "") {
-                return dispatch({ type: GitAction.UpdatedPassword, payload: JSON.parse(json[0].ReturnData) });
-              } else {
-                //toast.error(json[0].ReturnMsg)
-                return dispatch({ type: GitAction.UpdatedPassword, payload: [] });
-              }
+              console.log('json', json)
+              // if (json[0].ReturnMsg === "") {
+                return dispatch({ type: GitAction.UpdatedPassword, payload: json});
+              // } else {
+              //   //toast.error(json[0].ReturnMsg)
+              //   return dispatch({ type: GitAction.UpdatedPassword, payload: [] });
+              // }
             });
         } catch (error) {
           toast.error("Error Code: updatePassword. Please check on URL")
@@ -379,6 +396,14 @@ export class GitEpic {
   getUserProfile = action$ =>
     action$.pipe(filter(action => action.type === GitAction.GetUserProfile), map(action => {
       return dispatch => {
+        console.log(url +
+        "User_ProfileListByType?TYPE=" + action.payload.TYPE +
+        "&TYPEVALUE=" + action.payload.TYPEVALUE +
+        "&USERID=" + action.payload.USERID +
+        "&UserRoleID=" + action.payload.USERROLEID +
+        "&LISTPERPAGE=" + action.payload.LISTPERPAGE +
+        "&PAGE=" + action.payload.PAGE +
+        "&PROJECTID=2")
         try {
           return fetch(url +
             "User_ProfileListByType?TYPE=" + action.payload.TYPE +
@@ -435,63 +460,7 @@ export class GitEpic {
       }
     }));
 
-  // updateUserProfile = (action$) =>
-  //   action$.ofType(GitAction.EditUserProfile).switchMap(async ({ payload }) => {
-  //     try {
-
-  //       const response = await fetch(
-  //         url +
-  //         "User_UpdateProfile?USERID=" +
-  //         payload.USERID +
-  //         "&FIRSTNAME=" +
-  //         payload.USERFIRSTNAME +
-  //         "&LASTNAME=" +
-  //         payload.USERLASTNAME +
-  //         "&USERCONTACTNO=" +
-  //         payload.USERCONTACTNO +
-  //         "&USERDOB=" +
-  //         payload.USERDATEBIRTH +
-  //         "&USEREMAIL=" +
-  //         payload.USEREMAIL +
-  //         "&USERGENDER=" +
-  //         payload.USERGENDER
-  //       );
-  //       let json = await response.json();
-  //       if (JSON.parse(json)[0].ReturnVal === 1) {
-  //         toast.success("User Profile is updated successfully");
-  //       }
-  //       try {
-  //         const response_1 = await fetch(
-  //           url +
-  //           "User_ProfileListByType?TYPE=" + payload.TYPE +
-  //           "&TYPEVALUE=" + payload.TYPEVALUE +
-  //           "&USERID=" + payload.USERID +
-  //           "&UserRoleID=" + payload.USERROLEID +
-  //           "&LISTPERPAGE=" + payload.LISTPERPAGE +
-  //           "&PAGE=" + payload.PAGE
-  //         );
-  //         let json_1 = await response_1.json();
-  //         json_1 = JSON.parse(json_1);
-  //         return {
-  //           type: GitAction.EditedUserProfile,
-  //           payload: json_1,
-  //         };
-  //       } catch (error) {
-  //         alert('getUserProfile: ' + error);
-  //         return {
-  //           type: GitAction.EditedUserProfile,
-  //           payload: [],
-  //         };
-  //       }
-  //     } catch (error) {
-  //       alert('updateUserProfile: ' + error);
-  //       return {
-  //         type: GitAction.EditedUserProfile,
-  //         payload: [],
-  //       };
-  //     }
-  //   });
-
+  
   UpdateUserProfileStatus = action$ =>
     action$.pipe(filter(action => action.type === GitAction.UpdateUserStatus), map(action => {
       return dispatch => {
@@ -549,6 +518,10 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.UpdateProfileImage), map(action => {
       return dispatch => {
         try {
+          console.log(url +
+            "User_UserUpdatePhoto?USERID=" + action.payload.USERID +
+            "&TYPE=" + action.payload.TYPE +
+            "&USERPROFILEIMAGE=" + action.payload.USERPROFILEIMAGE)
           return fetch(url +
             "User_UserUpdatePhoto?USERID=" + action.payload.USERID +
             "&TYPE=" + action.payload.TYPE +
@@ -1319,9 +1292,7 @@ export class GitEpic {
   addProductWishlist = action$ =>
     action$.pipe(filter(action => action.type === GitAction.AddProductWishlist), map(action => {
       return dispatch => {
-        console.log('hahaha', url +
-        "Product_AddProductWishlist?USERID=" + action.payload.userID +
-        "&PRODUCTID=" + action.payload.productID)
+
         try {
           return fetch(url +
             "Product_AddProductWishlist?USERID=" + action.payload.userID +

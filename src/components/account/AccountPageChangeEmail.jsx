@@ -54,8 +54,6 @@ function mapDispatchToProps(dispatch) {
     CallClearOrder: () => dispatch(GitAction.CallClearOrder()),
     CallUserProfile: (propsData) =>
       dispatch(GitAction.CallUserProfile(propsData)),
-    CallUpdateProfileSpecificField: (propsData) =>
-      dispatch(GitAction.CallUpdateProfileSpecificField(propsData)),
     CallVerifyPassword: (credentials) =>
       dispatch(GitAction.CallVerifyPassword(credentials)),
     CallCheckUserExists: (credentials) =>
@@ -166,7 +164,7 @@ class PageChangeEmail extends Component {
     if (prevProps.emailUpdated !== this.props.emailUpdated) {
       if (this.props.emailUpdated && this.props.emailUpdated[0].ReturnMsg !== "The OTP was Wrong") {
         toast.success("Your email  has been updated");
-        // this.props.history.push("/account/profile")
+        this.props.history.push("/account/profile")
         // this.props.history.push("/account/profile");
         // window.location.reload(false);
       } else {
@@ -249,7 +247,6 @@ class PageChangeEmail extends Component {
         UpdatedValue: this.state.UpdatedValue,
       });
 
-
       this.setState({ startCountDown: false });
       this.stopTimer(60);
 
@@ -315,20 +312,6 @@ class PageChangeEmail extends Component {
     this.setState({ isEmailSet: true })
     // setEmailVefication(true)
   }
-
-  submitOTP = (e) => {
-    this.props.CallUpdateProfileSpecificField(this.state);
-    if (this.state.counter <= 0) {
-      this.setState({ startCountDown: false });
-      this.stopTimer(60);
-    }
-    if (this.props.currentUser[0].ReturnMsg === "The OTP was Wrong") {
-      this.props.history.push("/account/profile")
-      // this.props.history.push("/account/profile");
-      // window.location.reload(false);
-    } else {
-    }
-  };
 
   runTimer() {
     this.setState({ validEmail: false });

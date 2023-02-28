@@ -5,6 +5,8 @@ const INITIAL_STATE = {
   gitData: {},
   loading: true,
   currentUser: {},
+  updatedCurrentUser:{},
+  currentUserProfile:{},
   registerUser: {},
   otp: {},
   banner: [],
@@ -198,7 +200,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.EditedUserProfile:
       return Object.assign({}, state, {
         loading: false,
-        currentUser: action.payload,
+        updatedCurrentUser: action.payload,
       });
 
     case GitAction.UpdateUserStatus:
@@ -224,7 +226,7 @@ export function counterReducer(state = INITIAL_STATE, action) {
     case GitAction.UpdatedProfileImage:
       return Object.assign({}, state, {
         loading: false,
-        currentUser: action.payload,
+        currentUserProfile: action.payload,
       });
 
     case GitAction.ClearCurrentUser:
