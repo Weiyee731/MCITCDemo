@@ -235,7 +235,7 @@ class LoginComponent extends Component {
   }
 
   CallOTP_Verification = (OTP) => {
-    console.log("emailVerification",this.props.emailVerification)
+    console.log("emailVerification", this.props.emailVerification)
     let obj = {
       OTP: OTP,
       UserID: this.props.emailVerification[0].UserID,
@@ -678,13 +678,13 @@ class LoginComponent extends Component {
                           {this.state.enableOTP ? (
                             <div className="row my-4">
                               <div className="row contactrowStyle">
-                                <p className=" font">
+                                <p className="m-4 font">
                                   Enter the code we sent to your email{" "}
                                   {this.state.resetEmail.length > 0 && this.censorEmail(this.state.resetEmail)}
                                 </p>
                               </div>
                               <div className="row contactrowStyle">
-                                <div className="font otp">
+                                <div className="container font otp">
                                   <MuiOtpInput id="OTP" label="OTP" variant="outlined" className="w-100" length={6} value={this.state.otp} onChange={this.handleChange} />
 
                                 </div>
