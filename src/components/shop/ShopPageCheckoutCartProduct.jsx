@@ -20,9 +20,6 @@ CheckoutCartProduct.propTypes = {
 
 export default function CheckoutCartProduct({ row, onDelete, onDecrease, onIncrease }) {
   const { name, size, price, variation, product, quantity, available } = row;
-
-  console.log('ss', product)
-
   let promotionPrice = 0
 
   if (row.product !== undefined && row.product.ProductPromotion !== undefined) {

@@ -223,8 +223,6 @@ class LoginComponent extends Component {
   }
 
   callVerifyOTP = () => {
-    console.log("callApiF")
-    console.log("call", this.props)
     let obj = {
       USERID: this.props.emailVerification[0].UserID,
       USEREMAIL: this.props.emailVerification[0].UserEmailAddress,
@@ -235,7 +233,6 @@ class LoginComponent extends Component {
   }
 
   CallOTP_Verification = (OTP) => {
-    console.log("emailVerification", this.props.emailVerification)
     let obj = {
       OTP: OTP,
       UserID: this.props.emailVerification[0].UserID,
@@ -243,7 +240,6 @@ class LoginComponent extends Component {
       TYPE: 2,
       TOKEN: this.state.googleResponse.id
     }
-    console.log("obj", obj)
     this.props.CallSignupOTP(obj)
   }
 
@@ -263,16 +259,11 @@ class LoginComponent extends Component {
         if (this.props.emailVerification[0].GoogleToken === this.state.googleResponse.id) {
           this.props.CallLoginGoogleFB(this.state.googleResponse);
         } else {
-          console.log("this.props.emailVerification[0].GoogleToken", this.props.emailVerification[0].GoogleToken)
-          console.log(" this.state.googleResponse.id", this.state.googleResponse.id)
-          console.log("this user have account in server but binded differet google account")
         }
       } else {
-        console.log("this user have account in server but havent bind to google, prompt dialog ask want to bind google account?")
         this.openCloseBindGoogleFBDialog(true)
       }
     } else if (this.props.emailVerification.length > 0 && this.props.emailVerification[0].ReturnVal === 0 && this.state.loginWithGoogleFB === true) {
-      console.log("this user is not registered")
       this.setState({ loginWithGoogleFB: false })
       this.props.CallLoginGoogleFB(this.state.googleResponse);
     }
@@ -283,7 +274,6 @@ class LoginComponent extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("bindGoogleFB", this.props.bindGoogleFB)
     if (prevProps.loginPopOut !== this.props.loginPopOut) {
       this.setState({ loginPopOut: this.props.loginPopOut })
     }

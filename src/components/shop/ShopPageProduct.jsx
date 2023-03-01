@@ -59,42 +59,6 @@ function ShopPageProduct(props) {
 
   }, [productId]);
 
-  // Load review.
-  // useEffect(() => {
-  //   let canceled = false;
-  //   props.CallProductReviewByProductID({ ProductID: productId, ParentProductReviewID: 0 })
-
-  //   // props.CallProductDetail({ productId: productId, userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id") })
-  //   return () => {
-  //     canceled = true;
-  //   };
-
-  // }, [productId], [props.reviews]);
-
-  // Load related products.
-  // useEffect(() => {
-  //   let canceled = false;
-  //   console.log("HAHAHA 222")
-
-  //   return () => {
-  //     canceled = true;
-  //   };
-  // }, [productId, setRelatedProducts]);
-
-  // // Load latest products.
-  // useEffect(() => {
-  //   let canceled = false;
-  //   console.log("HAHAHA 333")
-
-  //   if (layout !== "sidebar") {
-  //     setLatestProducts([]);
-  //   }
-
-  //   return () => {
-  //     canceled = true;
-  //   };
-  // }, [layout]);
-
   let content;
   let breadcrumb;
 

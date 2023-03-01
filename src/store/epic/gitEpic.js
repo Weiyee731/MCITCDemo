@@ -4,8 +4,8 @@ import { GitAction } from "../action/gitAction";
 import { toast } from "react-toastify";
 import axios from "axios";
 const { filter, map, switchMap } = require('rxjs/operators');
-// const url = "https://cms.myemporia.my/eCommerceCMS/api/emporia/";
-const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/";
+const url = "https://cms.myemporia.my/eCommerceCMS/api/emporia/";
+// const url = "https://cms.myemporia.my/eCommerceCMS_DEV/api/emporia/";
 const platformType = "MyEmporia";
 const PROJECTID = 2;
 // const url = "http://localhost/EmporiaTest/eCommerceCMSApi/api/myemporia/"
@@ -13,11 +13,6 @@ export class GitEpic {
   User_Login = action$ =>
     action$.pipe(filter(action => action.type === GitAction.Login), map(action => {
       return dispatch => {
-        console.log(url + "User_Login?username=" +
-        action.payload.username +
-        "&password=" +
-        action.payload.password +
-        "&ProjectDomainName=myemporia")
         try {
           return fetch(url +
             "User_Login?username=" +
@@ -82,15 +77,6 @@ export class GitEpic {
     action$.pipe(filter(action => action.type === GitAction.VerifyBindGoogleFB), map(action => {
       return dispatch => {
         try {
-          console.log(url +
-            "User_VerifyGoogleFB_WithOTP?USERID=" +
-            action.payload.USERID +
-            "&TYPE=" +
-            action.payload.TYPE +
-            "&PROJECTID=" +
-            PROJECTID +
-            "&USEREMAIL=" +
-            action.payload.USEREMAIL)
           return fetch(url +
             "User_VerifyGoogleFB_WithOTP?USERID=" +
             action.payload.USERID +
@@ -317,17 +303,6 @@ updateEmail = action$ =>
   action$.pipe(filter(action => action.type === GitAction.UpdateEmail), map(action => {
     return dispatch => {
       try {
-          console.log(
-            url +
-            "User_UpdateProfileSpecificField?USERID=" +
-            action.payload.USERID +
-            "&TYPE=" +
-            action.payload.UPDATETYPE +
-            "&OTP=" +
-            action.payload.otp +
-            "&UPDATEDFIELD=" +
-            action.payload.UpdatedValue
-          )
         return fetch(url +
           "User_UpdateProfileSpecificField?USERID=" +
           action.payload.USERID +
@@ -370,7 +345,6 @@ updatePassword = action$ =>
           .then(response => response.json())
           .then(json => {
             json = JSON.parse(json)
-            console.log('json', json)
               // if (json[0].ReturnMsg === "") {
               return dispatch({ type: GitAction.UpdatedPassword, payload: json});
             // } else {
@@ -412,14 +386,6 @@ getUserPage = action$ =>
 getUserProfile = action$ =>
   action$.pipe(filter(action => action.type === GitAction.GetUserProfile), map(action => {
     return dispatch => {
-        console.log(url +
-        "User_ProfileListByType?TYPE=" + action.payload.TYPE +
-        "&TYPEVALUE=" + action.payload.TYPEVALUE +
-        "&USERID=" + action.payload.USERID +
-        "&UserRoleID=" + action.payload.USERROLEID +
-        "&LISTPERPAGE=" + action.payload.LISTPERPAGE +
-        "&PAGE=" + action.payload.PAGE +
-        "&PROJECTID=2")
       try {
         return fetch(url +
           "User_ProfileListByType?TYPE=" + action.payload.TYPE +
@@ -590,10 +556,6 @@ updateProfileImage = action$ =>
   action$.pipe(filter(action => action.type === GitAction.UpdateProfileImage), map(action => {
     return dispatch => {
       try {
-          console.log(url +
-            "User_UserUpdatePhoto?USERID=" + action.payload.USERID +
-            "&TYPE=" + action.payload.TYPE +
-            "&USERPROFILEIMAGE=" + action.payload.USERPROFILEIMAGE)
         return fetch(url +
           "User_UserUpdatePhoto?USERID=" + action.payload.USERID +
           "&TYPE=" + action.payload.TYPE +
@@ -1390,8 +1352,6 @@ viewProductWishlist = action$ =>
 deleteProductWishlist = action$ =>
   action$.pipe(filter(action => action.type === GitAction.DeleteProductWishlist), map(action => {
     return dispatch => {
-      console.log(url +
-        "Product_DeleteProductWishlist?USERWISHLISTID=" + action.payload.userWishlistID)
       try {
         return fetch(url +
           "Product_DeleteProductWishlist?USERWISHLISTID=" + action.payload.userWishlistID)

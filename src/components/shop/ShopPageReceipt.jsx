@@ -411,7 +411,6 @@ class ShopPageReceipt extends Component {
                         return (this.errorPage())
 
                 case "card":
-                    // console.log("dadadas", this.props)
                     if (isArrayNotEmpty(this.props.orderstatusdata) && this.props.orderstatusdata[0].Transactionuuid !== undefined) {
                         if (this.props.orderstatusdata[0].TrackingStatusID === 2)
                             return (this.successPage(this.props.orderstatusdata[0]))

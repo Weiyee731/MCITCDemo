@@ -102,16 +102,6 @@ export default function CheckoutCart({
           Continue Shopping
         </Button>
       </Grid>
-      {
-        console.log("sadsadsa subtotal11", subtotal)
-
-      }
-      {
-        console.log("sadsadsa discount11", discount)
-      }
-      {
-        console.log("sadsadsa total11", total)}
-
       <Grid item xs={12} md={4}>
         <CheckoutSummary
           enableDiscount
@@ -127,7 +117,6 @@ export default function CheckoutCart({
           shipping={null}
           hideShipping={true}
         />
-        {console.log("Dsadsada", checkout)}
         <Button
           fullWidth
           size="large"

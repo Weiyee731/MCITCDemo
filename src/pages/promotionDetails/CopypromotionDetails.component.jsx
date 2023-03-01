@@ -1110,18 +1110,7 @@ class PromotionDetailsComponent extends Component {
   };
 
   render() {
-
-
     const { data, data2 } = this.props;
-
-    console.log("CHECK DATA", this.props.data)
-
-    console.log("CHECK DATA2", data)
-
-
-    data.PromotionDetail !== null && JSON.parse(data.PromotionDetail).map((X) => {
-      console.log("THIS IS", X)
-    })
 
     let allProductsData = this.props.allproducts
       ? Object.keys(this.props.allproducts).map((key) => {

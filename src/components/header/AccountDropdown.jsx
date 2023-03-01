@@ -9,8 +9,6 @@ const AccountDropdown = (props) => {
     localStorage.setItem("management", true);
   };
 
-  console.log("account dropdown")
-
   return (
     <div className="account-menu">
       {localStorage.getItem("isLogin") !== "false" && (

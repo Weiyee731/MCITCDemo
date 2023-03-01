@@ -271,7 +271,6 @@ const SignUp = (props) => {
     }
 
     useEffect(() => {
-        console.log(props.emailVerification)
         if (verifyEmail === true && props.emailVerification.length > 0 && props.emailVerification[0].ReturnVal === 0) {
             submitForm(userDetail);
         }
@@ -387,8 +386,6 @@ const SignUp = (props) => {
                     className="mx-auto"
                 ></img>
             </div>
-            {console.log("registerUser122222", props.emailVerification)}
-
             {
                 // props.registerUser.length > 0 && props.registerUser[0].UserID > 0 ?
                 props.emailVerification !== undefined && props.emailVerification.length > 0 && props.emailVerification[0].UserID === undefined ?

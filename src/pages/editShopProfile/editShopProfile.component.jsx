@@ -144,17 +144,14 @@ class EditShopProfile extends Component {
         page: 1
       })
       if (this.props.merchant !== null) {
-        console.log(this.props.merchant[0])
         let shopDetails = this.props.merchant[0];
         if (shopDetails !== undefined) {
           this.setDetails(shopDetails)
         }
       }
-      console.log("CHECKING PROPS", this.props)
       let ratingCount = []
       if (this.props.productsListing !== null && this.props.productsListing.length > 0) {
         JSON.parse(this.props.productsListing).map((X) => {
-          console.log("CHECKING PROPS2", X)
           ratingCount.push(X.ProductRating)
         })
       }
@@ -275,10 +272,6 @@ class EditShopProfile extends Component {
   };
 
   handleChange(data, e) {
-    // var { value } = e.target;
-    // value = value.replace(/ /g,"%20");
-    console.log("data", data)
-    console.log("data", e.target.value)
     if (data === "SHOPPOSCODE") {
       this.setState({
         SHOPPOSCODE: e.target.value,
@@ -347,12 +340,9 @@ class EditShopProfile extends Component {
     };
 
     const handleChangeStatus = ({ meta }, status) => {
-      console.log(status, meta);
     };
 
     const handleSubmit = (files, allFiles) => {
-      console.log("CHECK ", allFiles)
-      console.log("CHECK ", this.state)
       allFiles.forEach((f) => f.remove());
     };
     return (
@@ -391,9 +381,6 @@ class EditShopProfile extends Component {
               <div className="col-12 col-md-12 col-lg-4 border-line-right">
                 <div className="row">
                   <div onClick={() => this.modalOpen()} className="imagecontainer">
-                    {
-                      console.log("CHECK SHOP", merchantDetails)
-                    }
                     <img
                       className="profilePic"
                       src={merchantDetails.ShopImage && merchantDetails.ShopImage.length ? imgurl + merchantDetails.ShopImage : Logo}
@@ -420,10 +407,7 @@ class EditShopProfile extends Component {
                   </div>
                 </div>
                 {links}
-
               </div>
-              {console.log("currentUser", this.props)}
-              {console.log("currentUser", this.state)}
 
               <div className="container col-12 col-md-12 col-lg-8">
                 {this.props.merchant && this.props.merchant.length > 0 && this.props.merchant[0] !== null &&

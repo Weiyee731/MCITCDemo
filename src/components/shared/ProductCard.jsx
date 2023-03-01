@@ -312,7 +312,6 @@ function ProductCard(props) {
   }
 
   const getpopOutDetailsCard = (cardPopOut, loginPopOut) => {
-    console.log(loginPopOut)
     setloginPopOut(loginPopOut)
     setQuickView(cardPopOut)
   }

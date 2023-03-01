@@ -9,8 +9,6 @@ export default function quickviewReducer(state = initialState, action) {
   let newState = state;
 
   if (action.type === QUICKVIEW_OPEN) {
-    console.log("QUICKVIEW_OPEN state=>", state)
-    console.log("QUICKVIEW_OPEN action=>", action)
     // newState = {
     //   ...state,
     //   open: true,

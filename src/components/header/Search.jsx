@@ -145,7 +145,6 @@ function Search(props) {
           setSuggestedProducts(prevArray => [...prevArray, ...filteredCategory.slice(0, 5)]);
           setHasSuggestions(filteredCategory.length > 0);
           setSuggestionsOpen(true);
-          console.log("filteredCategory",filteredCategory)
         }
 
         if (canceled) {
