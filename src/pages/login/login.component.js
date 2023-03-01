@@ -312,8 +312,8 @@ class LoginComponent extends Component {
     }
 
     if (prevProps.updatePassword !== this.props.updatePassword) {
-      if (this.props.updatePassword && isArrayNotEmpty(this.props.updatePassword) && this.props.updatePassword[0].UserID !== undefined) {
-        toast.success("Your password has been updated, try to login with new password");
+      if (this.props.updatePassword && isArrayNotEmpty(this.props.updatePassword)) {
+        toast.success(this.props.updatePassword[0].ReturnMsg);
         setTimeout(() => {
           window.location.reload(true)
         }, 5000)
