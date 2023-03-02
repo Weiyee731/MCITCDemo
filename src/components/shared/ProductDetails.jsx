@@ -95,12 +95,12 @@ class ProductDetails extends Component {
     }
 
     componentDidMount() {
-        const { product } = this.props
+        const { product, quickViewIndicator } = this.props
         // window.scrollTo(0, 0) // Temporary fixing randomly show when page loads
         let productID = ""
         let pathnameLength = window.location.pathname.split("/").length
         if (window.location.pathname !== undefined) {
-            if (this.props.quickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products") {
+            if (quickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products") {
 
                 productID = window.location.pathname.split("/")[pathnameLength - 1]
             }
@@ -108,7 +108,6 @@ class ProductDetails extends Component {
                 productID = product.ProductID
             }
         }
-
         if (product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && product.ProductVariation !== undefined) {
             product.ProductVariation !== null && JSON.parse(product.ProductVariation).map((variation) => {
                 variation.ProductVariationValue === "-" &&
@@ -126,11 +125,11 @@ class ProductDetails extends Component {
     }
 
     componentDidUpdate(props) {
-        const { product } = this.props
+        const { product, quickViewIndicator } = this.props
         let productID = ""
         let pathnameLength = window.location.pathname.split("/").length
         if (window.location.pathname !== undefined) {
-            if (this.props.quickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products") {
+            if (quickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products") {
                 productID = window.location.pathname.split("/")[pathnameLength - 1]
             }
             else {
@@ -147,6 +146,9 @@ class ProductDetails extends Component {
                         productVariationType: variation.ProductVariation,
                     })
             })
+            this.setState({ productPrice: product.ProductPrice, isProductSet: true })
+        }
+        if (quickViewIndicator === true && product !== undefined && productID !== "" && product.ProductID === parseInt(productID) && this.state.isProductSet === false) {
             this.setState({ productPrice: product.ProductPrice, isProductSet: true })
         }
     }
@@ -313,7 +315,7 @@ class ProductDetails extends Component {
             return (
                 <div className="product__content">
                     {
-                        this.props.QuickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products" ?
+                        quickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products" ?
                             this.state.isProductSet === true &&
                             <ProductGallery
                                 layout={layout}
@@ -610,7 +612,7 @@ class ProductDetails extends Component {
 
         let pathnameLength = window.location.pathname.split("/").length
         return (
-            this.props.QuickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products" ?
+            quickViewIndicator !== true && window.location.pathname.split("/")[pathnameLength - 3] === "shop" && window.location.pathname.split("/")[pathnameLength - 2] === "products" ?
                 <div className="block" >
                     <Card elevation={2}
                         style={{ backgroundColor: "white", padding: "20px" }}

@@ -265,8 +265,6 @@ export default class BlockProductsCarousel extends Component {
                     prevEl: ".swiper-button-prev",
                     nextEl: ".swiper-button-next",
                   }}
-                // onSwiper={(swiper) => console.log(swiper)}
-                // onSlideChange={() => console.log('slide change')}
                 >
                   {columns}
                   <div className="btnBox swiper-button-prev"></div>

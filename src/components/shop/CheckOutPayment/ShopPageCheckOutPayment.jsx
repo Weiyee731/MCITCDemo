@@ -339,29 +339,6 @@ export default function CheckoutPayment({
         setBankID(bankid)
     }
 
-    // const checkPaymentCompletion = () => {
-    //     if (PaymentType === 1) {
-    //         if (BankID === 0) {return false}
-    //         else {return true}
-    //     } else {
-    //         if (BankID === 0) { return true }
-    //         else { return false }
-    //     }
-    // }
-
-
-
-    // const handleGetPostcode = (value) => {
-    //     console.log("handleGetPostcode", value)
-    //     if (!isNaN(value))
-    //         this.setState({ shipping: value, isShipping: true })
-    // }
-
-
-    // const fee = DeliveryFee({ handleGetPostcode: handleGetPostcode, address: address, data: data })
-    // console.log("fee", fee)
-
-
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} md={8}>

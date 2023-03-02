@@ -116,12 +116,9 @@ export default function CheckoutCartCheckOutButton({
             dispatch(GitAction.CallUpdateAccountOrder(object))
         else
             dispatch(GitAction.CallAddOrder(object))
-        // console.log("objectobject", object)
-        // dispatch(GitAction.CallAddOrder(object));
     }
 
     const onSubmitCreditCard = (Ind, transactionUUID) => {
-        console.log("sdsadsadsa")
         let ProductID = ""
         let UserCartID = []
         let ProductQuantity = []
@@ -175,8 +172,6 @@ export default function CheckoutCartCheckOutButton({
             bill_to_address_city: paymentData.bill_to_address_city,
             bill_to_address_country: paymentData.bill_to_address_country
         }
-
-        console.log("dasda", object)
         // dispatch(GitAction.CallAddOrderCreditCard({
         //     UserID: window.localStorage.getItem("id"),
         //     ProductID: ProductID,
@@ -212,11 +207,7 @@ export default function CheckoutCartCheckOutButton({
             dispatch(GitAction.CallUpdateAccountOrderCreditCard(object))
         else
             dispatch(GitAction.CallAddOrderCreditCard(object));
-
     }
-
-
-    console.log("paymentDatapaymentData", paymentData)
 
     return (
         <div className="checkout">

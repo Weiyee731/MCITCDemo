@@ -198,8 +198,6 @@ class AccountPageProfile extends Component {
     let targetFolder = "userProfile" ;
     let upload = this.state.imageFile[0]
 
-    console.log('files', fileExt, imageName, targetFolder, upload)
-
     formData.append("ID", this.state.USERID);
     formData.append("targetFolder", targetFolder);
     formData.append("projectDomain", localStorage.getItem("projectDomain"));
@@ -222,7 +220,6 @@ class AccountPageProfile extends Component {
       )
       .then((res) => {
         if (res.status === 200) {
-          console.log('update profile image')
           this.props.CallUpdateProfileImage(fileData);
         }
       });
@@ -332,8 +329,6 @@ class AccountPageProfile extends Component {
   handleChangeforDOB = (e) => {
     const { value } = e.target;
 
-    console.log('date', moment(e.target.value).format("YYYY-MM-DD"))
-
     if (value !== null) {
       this.setState({
         USERDATEBIRTH: value, 
@@ -392,8 +387,6 @@ class AccountPageProfile extends Component {
 
 
   render() {
-
-    console.log('data', this.props.currentUser)
 
     const getUploadParams = () => {
       return { url: "http://pmappapi.com/Memo/uploads/uploads/" };

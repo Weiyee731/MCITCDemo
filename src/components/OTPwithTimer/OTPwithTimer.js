@@ -23,11 +23,9 @@ export default function OTPPage({ email, CallOTP_Verification, onClose, open }) 
     const [OTP, setOTP] = useState("");
     const handleChange = (otp) => {
         if (otp !== null) {
-            console.log("otp", otp)
             setOTP(otp)
         }
         if (otp.length === 6) {
-            console.log(OTP)
             CallOTP_Verification(OTP)
             // this.props.CallSignupOTP()
         }
@@ -37,7 +35,6 @@ export default function OTPPage({ email, CallOTP_Verification, onClose, open }) 
         const pasteData = event.clipboardData.getData('text/plain');
         const newOTP = pasteData.replace(/\D/g, '').slice(0, 6);
         setOTP(newOTP);
-        console.log("newOTP", newOTP)
         if (newOTP.length === 6) {
             CallOTP_Verification(newOTP)
         }
