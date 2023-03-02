@@ -46,7 +46,7 @@ export default function AccountLayout(props) {
     { title: "My Account", url: "" },
   ];
 
-  const links = [
+  const data_Link = [
     // { title: "Dashboard", url: "dashboard" },
     { title: "My Profile", url: "profile", icons: <AccountCircleOutlinedIcon className="titleicon" /> },
     { title: "My Address", url: "addresses", icons: <LocationOnOutlinedIcon className="titleicon" /> },
@@ -55,62 +55,60 @@ export default function AccountLayout(props) {
     { title: "Change Password", url: "password", icons: <PasswordIcon className="titleicon" /> },
     // { title: "My Shop", url: "editShopProfile", icons: <StorefrontOutlinedIcon className="titleicon" /> },
     // { title: "Logout", url: "login", icons: <ExitToAppOutlinedIcon className="titleicon" /> },
-  ].map((link) => {
-    const url = `${match.url}/${link.url}`;
-    const isActive = matchPath(location.pathname, { path: url, exact: true });
-    const classes = classNames("account-nav__item", {
-      "account-nav__item--active": isActive,
-    });
-    // if (localStorage.getItem("roleid") !== "16") {
-    //   if (link.title === "My Shop")
-    //    { return "" }
-    //   else {
-    //     return (
-    //       <li
-    //         key={link.url}
-    //         className={classes}
-    //       >
-    //         <Link to={link.url}>{link.title}</Link>
-    //       </li>
-    //     )
-    //   }
-    // } else {
-    //   return (
-    //     <li
-    //       key={link.url}
-    //       className={classes}
-    //     >
-    //       <Link to={link.url}>{link.title}</Link>
-    //     </li>
-    //   )
-    // }
-    if (localStorage.getItem("roleid") <= 15) {
-      if (link.title === "Dashboard") {
-        return (
-          <li
-            key={link.url}
-            className={classes}
-          // onClick={localStorage.setItem("management", true)}
-          >
-            <Link to={"/dashboard"}>{link.title}</Link>
-          </li>
-        );
-      } else {
-        return (
-          <li key={link.url} className={classes}>
-            <Link to={url}>{link.icons}{link.title}</Link>
-          </li>
-        );
-      }
-    } else {
-      return (
-        <li key={link.url} className={classes}>
-          <Link to={url}>{link.icons}{link.title}</Link>
-        </li>
-      );
-    }
-  });
+  ]
 
+  const render_Link = () => {
+
+    let data = ""
+    if (localStorage.getItem("isGoogle_Login") !== 'false' || localStorage.getItem("isFB_Login") !== 'false'){
+      data = data_Link.filter(f => f.url !== 'password')
+    }
+
+    else{
+      data = data_Link
+    }
+
+    return (
+      <div>
+
+{data.map((link) => {
+        const url = `${match.url}/${link.url}`;
+        const isActive = matchPath(location.pathname, { path: url, exact: true });
+        const classes = classNames("account-nav__item", {
+          "account-nav__item--active": isActive,
+        });
+       
+        if (localStorage.getItem("roleid") <= 15) {
+          if (link.title === "Dashboard") {
+            return (
+              <li
+                key={link.url}
+                className={classes}
+              >
+                <Link to={"/dashboard"}>{link.title}</Link>
+              </li>
+            );
+          } else {
+            return (
+              <li key={link.url} className={classes}>
+                <Link to={url}>{link.icons}{link.title}</Link>
+              </li>
+            );
+          }
+        } else {
+          return (
+            <li key={link.url} className={classes}>
+              <Link to={url}>{link.icons}{link.title}</Link>
+            </li>
+          );
+        }
+      })}
+      </div>
+    )
+      
+    }
+  
+  
   return (
     <React.Fragment>
       <PageHeader header="My Account" breadcrumb={breadcrumb} />
@@ -124,7 +122,7 @@ export default function AccountLayout(props) {
               >
                 <h4 className="account-nav__title">Navigation</h4>
                 <ul>
-                  {links}
+                  {render_Link()}
                 </ul>
               </div>
             </div>
@@ -190,11 +188,15 @@ export default function AccountLayout(props) {
                   path={`${match.path}/changeEmail`}
                   component={AccountPageChangeEmail}
                 />
+
+
                 <Route
                   exact
                   path={`${match.path}/password`}
                   component={AccountPagePassword}
                 />
+                
+        
                 {/* <Route
                   path={`${match.path}/editShopProfile`}
                   component={EditShopProfile} /> */}

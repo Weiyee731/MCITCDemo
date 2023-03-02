@@ -101,6 +101,7 @@ class AccountPageProfile extends Component {
 
     window.addEventListener("resize", this.updateDimensions);
 
+
     if (this.state.USERID !== undefined && this.state.USERID !== null && this.state.TYPEVALUE !== undefined) {
       this.props.CallUserProfile(this.state);
       this.props.CallCountry();
@@ -162,6 +163,8 @@ class AccountPageProfile extends Component {
 
     if (prevProps.currentUser !== this.props.currentUser) {
         this.setCurrentUser_Details(this.props.currentUser[0])
+        localStorage.setItem('isGoogle_Login', this.props.currentUser[0].isGoogleUserInd === 0 ? false : true)
+        localStorage.setItem('isFB_Login', this.props.currentUser[0].isFBUserInd === 0 ? false : true)
       if (this.props.currentUser.length > 0 && this.props.currentUser[0].ReturnMsg === "Image had uploaded" && this.state.showBoxForImage === true)
         this.modalClose()
     }
@@ -542,7 +545,7 @@ class AccountPageProfile extends Component {
                               <>
                
                                 {row.UserContactNo !== null && row.UserContactNo !== undefined && row.UserContactNo !== "-" ? censorContact(row.UserContactNo) : "-"}
-                                <Link to={{ pathname: "/account/changeContact" }}>
+                                <Link to={{ pathname: "/account/changeContact" }} disabled>
                                   <div className="change-contact-mail" >Change Contact</div>
                                 </Link>
                               </>
@@ -553,9 +556,12 @@ class AccountPageProfile extends Component {
                             <div className="col-8 font">
                               <>
                                 {row.UserEmailAddress !== null && row.UserEmailAddress !== undefined ? censorEmail(row.UserEmailAddress) : "-"}
-                                <Link to="/account/changeEmail">
-                                  <div className="change-contact-mail" onClick={() => this.setState({ editEmail: true })}>Change Email</div>
-                                </Link>
+
+                                { row.isGoogleUserInd === 0 &&
+                                  <Link to="/account/changeEmail">
+                                    <div className="change-contact-mail" onClick={() => this.setState({ editEmail: true })}>Change Email</div>
+                                  </Link>
+                                }
                               </>
                             </div>
                           </div>

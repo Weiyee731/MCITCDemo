@@ -351,84 +351,7 @@ class PageChangeContact extends Component {
             <Helmet>
               <title>{`ChangeContact — ${theme.name}`}</title>
             </Helmet>
-            {this.state.confirmPasswordPage ? (
-              <div className="checkout block" style={{ width: "100%" }}>
-                <div className="container" style={{ width: "100%" }}>
-                  {" "}
-                  <h5
-                    style={{
-                      textAlign: "left",
-                    }}
-                  >
-                    Change Contact
-                  </h5>
-                  <div className="font font-subtitle">
-                    Please key in the password for account verification purpose.
-                  </div>
-                  <Divider variant="fullWidth" className="dividerbottom" />
-                  {/* <form
-                    onSubmit={this.OnSubmitChangeContact}
-                    className="container block"
-                  > */}
-                  <div className="row contactrowStyle">
-                    <div className="col-6 font">Password</div>
-                    <div className="col-6 ">
-                      <TextField
-                        id="password"
-                        size="small"
-                        className="font"
-                        variant="outlined"
-                        error={this.state.passwordErr}
-                        type={this.state.hidden ? "password" : "text"}
-                        value={this.state.password}
-                        onChange={({ target }) => {
-                          this.setState({ password: target.value });
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={this.toggleShow}
-                              >
-                                {this.state.hidden ? (
-                                  <VisibilityOff />
-                                ) : (
-                                  <Visibility />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                      {this.state.passwordErr && (
-                        <FormHelperText style={{ color: "red" }}>
-                          Invalid password
-                        </FormHelperText>
-                      )}
-                    </div>
-                    <div className="tooltip_1 d-flex align-items-center">
-                      <HelpOutlineIcon />
-                      <div className="tooltiptext ">
-                        Password is required to verify you are the owner of
-                        this account
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "left" }}>
-                    <button
-                      variant="contained"
-                      className="btn btn-primary "
-                      onClick={() => this.submitpassword()}
-                    >
-                      <DoneIcon className="saveicon" />
-                      Next
-                    </button>
-                  </div>
-                  {/* </form> */}
-                </div>
-              </div>
-            ) : (
+          
               <div className="checkout block" style={{ width: "100%" }}>
                 <div className="container" style={{ width: "100%" }}>
                   <div className="row contactrowStyle">
@@ -524,7 +447,7 @@ class PageChangeContact extends Component {
                   </div> */}
                 </div>
               </div>
-            )}
+            {/* )} */}
           </React.Fragment>
         </CardContent>
       </Card>
