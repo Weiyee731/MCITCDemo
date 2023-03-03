@@ -75,6 +75,7 @@ class AccountPageAddresses extends Component {
       onDefault: false,
       changeDefaultAddress: false,
       addressIdClicked: " ",
+      selected_DefaultAddress: "",
       addAddress: false,
       editAddress: false,
       deleteAddress: false,
@@ -128,11 +129,13 @@ class AccountPageAddresses extends Component {
     let defaultID = "";
     let gotDefault = false;
 
+    this.setState({selected_DefaultAddress: data})
+
     this.props.addresses.filter((x) => x.isDefaultAddress === 1).map((address) => {
       defaultID = address.UserAddressBookID
       gotDefault = true
     })
-
+    
     if (gotDefault === true) {
       if (defaultID !== data) {
         this.props.CallUpdateDefaultAddress({
@@ -150,6 +153,7 @@ class AccountPageAddresses extends Component {
         USERID: window.localStorage.getItem("id")
       })
     }
+
   };
 
   handleCallbackfromAdd = (childData) => {
@@ -234,6 +238,7 @@ class AccountPageAddresses extends Component {
                               <CardActionArea
                                 onClick={() =>
                                   this.onChangeDefault(address.UserAddressBookID)
+                                  // console.log('clicked card')
                                 }
                               >
                                 <CardContent>
