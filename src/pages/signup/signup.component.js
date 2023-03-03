@@ -139,7 +139,7 @@ const SignUp = (props) => {
 
     const submitForm = (userDetail) => {
         props.CallSignup(userDetail);
-        toast.info("Thank you for registering, you can now login")
+        // toast.info("Thank you for registering, you can now login")
         // setSubmitRegisterForm(true);
     };
 
