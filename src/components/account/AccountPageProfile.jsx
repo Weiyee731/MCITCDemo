@@ -162,9 +162,10 @@ class AccountPageProfile extends Component {
   componentDidUpdate(prevProps, prevState) {
 
     if (prevProps.currentUser !== this.props.currentUser) {
+      localStorage.setItem('isGoogle_Login', this.props.currentUser[0].isGoogleUserInd === 0 ? false : true)
+      localStorage.setItem('isFB_Login', this.props.currentUser[0].isFBUserInd === 0 ? false : true)
         this.setCurrentUser_Details(this.props.currentUser[0])
-        localStorage.setItem('isGoogle_Login', this.props.currentUser[0].isGoogleUserInd === 0 ? false : true)
-        localStorage.setItem('isFB_Login', this.props.currentUser[0].isFBUserInd === 0 ? false : true)
+       
       if (this.props.currentUser.length > 0 && this.props.currentUser[0].ReturnMsg === "Image had uploaded" && this.state.showBoxForImage === true)
         this.modalClose()
     }
