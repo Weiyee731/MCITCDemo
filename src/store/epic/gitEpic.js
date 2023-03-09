@@ -429,7 +429,7 @@ updateUserProfile = action$ =>
           .then(json => {
             json = JSON.parse(json)
             if (json[0].ReturnVal === 1) {
-              return dispatch({ type: GitAction.EditedUserProfile, payload: JSON.parse(json[0].ReturnData) });
+              return dispatch({ type: GitAction.EditedUserProfile, payload: json });
             } else {
               //toast.error(json[0].ReturnMsg)
               return dispatch({ type: GitAction.EditedUserProfile, payload: [] });

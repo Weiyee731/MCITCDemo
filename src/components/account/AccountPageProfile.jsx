@@ -28,6 +28,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import PageChangeContact from "./AccountPageChangeContact.jsx";
 import LoginComponent from "../../pages/login/login.component";
+import { toast } from "react-toastify";
 
 
 import { isContactValid, isEmailValid, isStringNullOrEmpty } from "../../Utilities/UtilRepo"
@@ -107,8 +108,10 @@ class AccountPageProfile extends Component {
       this.props.CallCountry();
       if (this.props.currentUser !== {} && this.props.currentUser !== null) {
         let userDetails = this.props.currentUser[0];
+        console.log(userDetails)
         if (userDetails !== undefined) {
           this.setState({
+            UserProfileImage: userDetails.UserProfileImage !== undefined && userDetails.UserProfileImage !== null ? userDetails.UserProfileImage : "https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
             USERFIRSTNAME: userDetails.FirstName !== undefined && userDetails.FirstName !== null ? userDetails.FirstName : "-",
             USERLASTNAME: userDetails.LastName !== undefined && userDetails.LastName !== null ? userDetails.LastName : "-",
             USERCONTACTNO: userDetails.UserContactNo !== undefined && userDetails.UserContactNo !== null ? userDetails.UserContactNo : "-",
@@ -134,11 +137,11 @@ class AccountPageProfile extends Component {
 
   getDate = (d) => {
 
-      const dob_Date = d && Number(d.replace(/\D/g, ""))
-      
-      const convertDate = new Date(dob_Date)
+    const dob_Date = d && Number(d.replace(/\D/g, ""))
 
-      return moment(convertDate).format('YYYY-MM-DD')
+    const convertDate = new Date(dob_Date)
+
+    return moment(convertDate).format('YYYY-MM-DD')
   }
 
   setCurrentUser_Details = (userDetails) => {
@@ -164,8 +167,8 @@ class AccountPageProfile extends Component {
     if (prevProps.currentUser !== this.props.currentUser) {
       localStorage.setItem('isGoogle_Login', this.props.currentUser[0].isGoogleUserInd === 0 ? false : true)
       localStorage.setItem('isFB_Login', this.props.currentUser[0].isFBUserInd === 0 ? false : true)
-        this.setCurrentUser_Details(this.props.currentUser[0])
-       
+      this.setCurrentUser_Details(this.props.currentUser[0])
+
       if (this.props.currentUser.length > 0 && this.props.currentUser[0].ReturnMsg === "Image had uploaded" && this.state.showBoxForImage === true)
         this.modalClose()
     }
@@ -179,6 +182,14 @@ class AccountPageProfile extends Component {
         }
       }
     }
+
+    if (this.props.updatedCurrentUser.length > 0 && prevProps.updatedCurrentUser !== this.props.updatedCurrentUser && this.props.updatedCurrentUser[0].ReturnVal === 1){
+      toast.success(this.props.updatedCurrentUser[0].ReturnMsg)
+      setTimeout(() => {
+        window.location.reload(true);
+  }, 1000)
+    }
+    
 
   }
 
@@ -194,23 +205,23 @@ class AccountPageProfile extends Component {
     const formData = new FormData();
 
     let fileExt = this.state.imageFile.length > 0 ? this.state.imageFile.map((imagedetails) =>
-        imagedetails.name.split('.').pop()): null;
-    let imageName = new Date().valueOf() ;
-    let targetFolder = "userProfile" ;
+      imagedetails.name.split('.').pop()) : null;
+    let imageName = new Date().valueOf();
+    let targetFolder = "userProfile";
     let upload = this.state.imageFile[0]
 
     formData.append("ID", this.state.USERID);
     formData.append("targetFolder", targetFolder);
     formData.append("projectDomain", localStorage.getItem("projectDomain"));
-    formData.append("upload[]", upload );
+    formData.append("upload[]", upload);
     formData.append("imageName[]", imageName);
 
     let uploadImageURL = 'https://CMS.myemporia.my/eCommerceCMSImage/uploadImages.php'
 
     const fileData = {
       USERID: this.state.USERID,
-      TYPE:'PROFILEIMAGE',
-      USERPROFILEIMAGE: imageName+ "." + fileExt
+      TYPE: 'PROFILEIMAGE',
+      USERPROFILEIMAGE: imageName + "." + fileExt
     }
 
     axios
@@ -332,7 +343,7 @@ class AccountPageProfile extends Component {
 
     if (value !== null) {
       this.setState({
-        USERDATEBIRTH: value, 
+        USERDATEBIRTH: value,
         validDOB: true,
       });
 
@@ -388,7 +399,6 @@ class AccountPageProfile extends Component {
 
 
   render() {
-
     const getUploadParams = () => {
       return { url: "http://pmappapi.com/Memo/uploads/uploads/" };
     };
@@ -415,7 +425,7 @@ class AccountPageProfile extends Component {
       } else return "No email was found";
     };
 
-   
+
 
     return (
 
@@ -503,7 +513,7 @@ class AccountPageProfile extends Component {
                           <div className="row">
                             <div className="col-3 rowStyle">Gender</div>
                             <div className="col-8">
-                         
+
                               <FormControl component="fieldset">
                                 <RadioGroup
                                   aria-label="USERGENDER"
@@ -537,7 +547,7 @@ class AccountPageProfile extends Component {
                             <div className="col-3 rowStyle">Contact Number</div>
                             <div className="col-8 font">
                               <>
-               
+
                                 {row.UserContactNo !== null && row.UserContactNo !== undefined && row.UserContactNo !== "-" ? censorContact(row.UserContactNo) : "-"}
                                 <Link to={{ pathname: "/account/changeContact" }} disabled>
                                   <div className="change-contact-mail" >Change Contact</div>
@@ -551,7 +561,7 @@ class AccountPageProfile extends Component {
                               <>
                                 {row.UserEmailAddress !== null && row.UserEmailAddress !== undefined ? censorEmail(row.UserEmailAddress) : "-"}
 
-                                { row.isGoogleUserInd === 0 &&
+                                {row.isGoogleUserInd === 0 &&
                                   <Link to="/account/changeEmail">
                                     <div className="change-contact-mail" onClick={() => this.setState({ editEmail: true })}>Change Email</div>
                                   </Link>
@@ -566,7 +576,7 @@ class AccountPageProfile extends Component {
                     <div onClick={() => this.modalOpen()} className="imagecontainer">
                       <img
                         className="profilePic"
-                        src={this.state.preview !== null && this.state.preview !== undefined ? this.state.preview: 'https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'}
+                        src={this.state.preview !== null && this.state.preview !== undefined ? this.state.preview : 'https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'}
                         alt="Profile"
                         onError={(e) => {
                           e.target.onerror = null;
@@ -695,7 +705,7 @@ class AccountPageProfile extends Component {
                           <div className="col-6">
                             <button style={{ float: "left" }}
                               className="btn btn-primary button-font"
-                              onClick={()=> this.onFileUpload()}
+                              onClick={() => this.onFileUpload()}
                             >
                               Upload Image
                             </button>
@@ -741,11 +751,11 @@ class AccountPageProfile extends Component {
                   </div>
                 </div>
                 <div className="row">
-                <div className="col-12 border-line-left">
+                  <div className="col-12 border-line-left">
                     <div onClick={() => this.modalOpen()} className="imagecontainer">
                       <img
                         className="profilePic"
-                        src={this.state.preview !== null && this.state.preview !== undefined ? this.state.preview: 'https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'}
+                        src={this.state.preview !== null && this.state.preview !== undefined ? this.state.preview : 'https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'}
                         alt="Profile"
                         onError={(e) => {
                           e.target.onerror = null;
@@ -763,69 +773,69 @@ class AccountPageProfile extends Component {
                         <div className="container">
                           <div className="row" >
                             <div className="mobileRowStyle vertical-align">First Name</div>
-                              <TextField
-                                className="font"
-                                variant="outlined"
-                                size="small"
-                                id="userfirstname"
-                                defaultValue={row.FirstName}
-                                onChange={this.handleChangeforFirstName.bind(this)}
-                              />
+                            <TextField
+                              className="font"
+                              variant="outlined"
+                              size="small"
+                              id="userfirstname"
+                              defaultValue={row.FirstName}
+                              onChange={this.handleChangeforFirstName.bind(this)}
+                            />
                           </div>
                           <div className="row">
                             <div className="mobileRowStyle vertical-align">Last Name</div>
-                              <TextField
-                                className="font"
-                                variant="outlined"
-                                size="small"
-                                id="userlastname"
-                                defaultValue={row.LastName}
-                                onChange={this.handleChangeforLastName.bind(this)}
-                              />
+                            <TextField
+                              className="font"
+                              variant="outlined"
+                              size="small"
+                              id="userlastname"
+                              defaultValue={row.LastName}
+                              onChange={this.handleChangeforLastName.bind(this)}
+                            />
                           </div>
 
                           <div className="row">
                             <div className="mobileRowStyle vertical-align">Date of Birth</div>
-                              <TextField
-                                className="font"
-                                variant="outlined"
-                                size="small"
-                                id="userdob"
-                                type="date"
-                                value={moment(row.USERDATEBIRTH).format('YYYY-MM-DD')}
-                                onChange={this.handleChangeforDOB.bind(this)}
-                              />
+                            <TextField
+                              className="font"
+                              variant="outlined"
+                              size="small"
+                              id="userdob"
+                              type="date"
+                              value={moment(row.USERDATEBIRTH).format('YYYY-MM-DD')}
+                              onChange={this.handleChangeforDOB.bind(this)}
+                            />
                           </div>
 
                           <div className="mt-3 mb-3">
                             <div className="mobileRowStyle">Gender</div>
-                              <FormControl component="fieldset">
-                                <RadioGroup
-                                  aria-label="USERGENDER"
-                                  name="USERGENDER"
-                                  defaultValue={row.UserGender}
-                                  onChange={this.handleChangeforGender}
-                                >
-                                  <FormControlLabel
-                                    className=" MuiTypography-body1 "
-                                    value="Male"
-                                    control={<Radio />}
-                                    label="Male"
-                                  />
-                                  <FormControlLabel
-                                    className=" MuiTypography-body1"
-                                    value="Female"
-                                    control={<Radio />}
-                                    label="Female"
-                                  />
-                                  <FormControlLabel
-                                    className=" MuiTypography-body1"
-                                    value="RatherNotToSay"
-                                    control={<Radio />}
-                                    label="Rather Not To Say"
-                                  />
-                                </RadioGroup>
-                              </FormControl>
+                            <FormControl component="fieldset">
+                              <RadioGroup
+                                aria-label="USERGENDER"
+                                name="USERGENDER"
+                                defaultValue={row.UserGender}
+                                onChange={this.handleChangeforGender}
+                              >
+                                <FormControlLabel
+                                  className=" MuiTypography-body1 "
+                                  value="Male"
+                                  control={<Radio />}
+                                  label="Male"
+                                />
+                                <FormControlLabel
+                                  className=" MuiTypography-body1"
+                                  value="Female"
+                                  control={<Radio />}
+                                  label="Female"
+                                />
+                                <FormControlLabel
+                                  className=" MuiTypography-body1"
+                                  value="RatherNotToSay"
+                                  control={<Radio />}
+                                  label="Rather Not To Say"
+                                />
+                              </RadioGroup>
+                            </FormControl>
                           </div>
                           <div className="row">
                             <div className="mobileRowStyle">Contact Number</div>
@@ -836,7 +846,7 @@ class AccountPageProfile extends Component {
                                   <div className="change-contact-mail" >Change Contact</div>
                                 </Link>
                               </>
-                              </div>
+                            </div>
                           </div>
                           <div className="row">
                             <div className="mobileRowStyle">Email Address</div>
