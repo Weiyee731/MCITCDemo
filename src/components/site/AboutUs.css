@@ -1,0 +1,170 @@
+
+hr {
+    width: 250px;
+    margin-left: 0 !important;
+    height: 2px;
+    border: none;
+    margin: 30px auto;
+    /* background: #498056; */
+}
+
+
+p {
+    color:#6c757d;
+    font-size: medium;
+}
+
+.why-us-title {
+    color:#59595b;
+}
+
+.why-us-content {
+    padding-bottom: 3.5vw;
+    padding-top: 3.5vw;
+}
+
+.why-us-descp {
+    margin-left: 1vw;
+}
+
+/* .what-we-do {
+    border: 2px solid #2b535e8c;
+    border-radius: 1vw;
+} */
+
+/* animation */
+.w3-spin {
+    animation: w3-spin 2s infinite linear
+}
+
+@keyframes w3-spin {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(359deg)
+    }
+}
+
+.w3-animate-fading {
+    animation: fading 10s infinite
+}
+
+@keyframes fading {
+    0% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+.w3-animate-opacity {
+    animation: opac 5s
+}
+
+@keyframes opac {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.w3-animate-top {
+    position: relative;
+    animation: animatetop 1.5s
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+.w3-animate-left {
+    position: relative;
+    animation: animateleft 1s
+}
+
+@keyframes animateleft {
+    from {
+        left: -300px;
+        opacity: 0
+    }
+
+    to {
+        left: 0;
+        opacity: 1
+    }
+}
+
+.w3-animate-right {
+    position: relative;
+    animation: animateright 1s
+}
+
+@keyframes animateright {
+    from {
+        right: -300px;
+        opacity: 0
+    }
+
+    to {
+        right: 0;
+        opacity: 1
+    }
+}
+
+.w3-animate-bottom {
+    position: relative;
+    animation: animatebottom 0.4s
+}
+
+@keyframes animatebottom {
+    from {
+        bottom: -300px;
+        opacity: 0
+    }
+
+    to {
+        bottom: 0;
+        opacity: 1
+    }
+}
+
+.w3-animate-zoom {
+    animation: animatezoom 0.6s
+}
+
+@keyframes animatezoom {
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
+}
+
+.w3-animate-input {
+    transition: width 0.4s ease-in-out
+}
+
+.w3-animate-input:focus {
+    width: 100% !important
+}
