@@ -92,7 +92,6 @@ function SitePageAboutUs() {
       setAnimation3("w3-animate-right")
     }
     if (window.pageYOffset === 600) {
-      console.log(window.pageYOffset)
       setAnimation4("w3-animate-bottom")
     }
     if (window.pageYOffset === 900) {
