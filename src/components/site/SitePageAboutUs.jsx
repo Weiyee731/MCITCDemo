@@ -18,17 +18,18 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import bag from "./bag.gif";
 import { Card } from "react-bootstrap";
 import { borderRadius } from "@mui/system";
-import aboutUsImage from "./aboutUsImage.jpeg";
+import aboutUsImage from "./aboutUsImage.jpg";
 import commitment from "./commitment.jpg";
 import whoWeAre from "./whoWeAre.jpg";
 import products from "./products.jpg";
 import PageHeader from "../shared/PageHeader";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper';
 import PropTypes from "prop-types";
 import "./AboutUs.css";
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/swiper.min.css'
+import 'swiper/css/autoplay'
 import { Typography } from "@mui/material";
 import bestPrice from "./bestPrice.png";
 import choice from "./choice.png";
@@ -72,60 +73,31 @@ function SitePageAboutUs() {
   const [Animation2, setAnimation2] = useState()
   const [Animation3, setAnimation3] = useState()
   const [Animation4, setAnimation4] = useState()
+  const [Animation5, setAnimation5] = useState()
+  const [Animation6, setAnimation6] = useState()
 
-  // useEffect(() => {
-  //   window.addEventListener('resize', setWidth(window.innerWidth))
-
-  //   return () => {
-  //     window.removeEventListener('resize', setWidth(window.innerWidth))
-  //   }
-  // }, [width])
   const breadcrumb = [
     { title: 'Home', url: '' },
     { title: 'About Us', url: '' },
   ];
 
-  // const columns = this.productsColumns().map((column, index) => {
-  //   const products = column.map((product) => (
-  //     // <div key={product.id} className="block-products-carousel__cell">
-
-  //     <SwiperSlide key={product.ProductID}>
-  //       {/* <ProductCard {...props} product={product} quickViewIndicator={QuickViewIndicator} currentData={this.props.currentData} highlightColor={this.props.highlightColor} baseColor={this.props.baseColor} /> */}
-  //     </SwiperSlide>
-  //     // </div>
-  //   ));
-
-  //   return (
-  //     <Card elevation={2} key={index} className="block-products-carousel__column">
-  //       {products}
-  //     </Card>
-  //   );
-  // });
   const onScroll = () => {
 
 
-    if (window.pageYOffset === 300) {
+    if (window.pageYOffset === 100) {
       setAnimation1("w3-animate-right")
     }
-    if (window.pageYOffset === 600) {
+    if (window.pageYOffset === 300) {
       setAnimation2("w3-animate-left")
       setAnimation3("w3-animate-right")
     }
-    if (window.pageYOffset === 800) {
-      setAnimation4("w3-animate-opacity")
+    if (window.pageYOffset === 600) {
+      console.log(window.pageYOffset)
+      setAnimation4("w3-animate-bottom")
     }
-
-    if (window.pageYOffset < 200) {
-      setAnimation1()
-      setAnimation2()
-      setAnimation3()
-      setAnimation4()
-    }
-    if (window.pageYOffset > 900) {
-      setAnimation1()
-      setAnimation2()
-      setAnimation3()
-      setAnimation4()
+    if (window.pageYOffset === 900) {
+      setAnimation5("w3-animate-left")
+      setAnimation6("w3-animate-right")
     }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -136,7 +108,6 @@ function SitePageAboutUs() {
 
   return (
     <React.Fragment>
-      {console.log(window.pageYOffset)}
       <div className="block about-us">
         <Helmet>
           <title>{`About Us — ${theme.name}`}</title>
@@ -150,13 +121,13 @@ function SitePageAboutUs() {
             alt=""
           />{" "}
           <div className="about-us__title_container">
-            <h1 className="about-us__title container w3-animate-left" style={{ animationDelay: "0.5s", animationDuration: "2s" }}>About Us</h1>
+            <h1 className="about-us__title container w3-animate-top" >About Us</h1>
           </div>
         </div>
         <div className="container mt-4">
           <div id="content">
             <div className="container heading mt-3">
-              <div className={Animation1} style={{ textAlign: "justify" }}>
+              <div className="w3-animate-right" style={{ textAlign: "justify" }}>
                 <h2>MyEmporia</h2>
                 <p>Founded in 2020, MyEmporia is an online platform that provided
                   a variety of services in Kuching, Sarawak, Malaysia. Our platform services are not
@@ -214,7 +185,7 @@ function SitePageAboutUs() {
                     <img alt="" src={process} width="10%" height="10%" />
                     <div className="why-us-descp">
                       <Typography variant="h6" className="why-us-title">Simplify Booking Process</Typography>
-                      <p>Feel the simplicity and transparent booking and shopping process</p>
+                      <p>Feel the simplicity of booking and shopping process</p>
                     </div>
                   </div>
                   <div className="d-flex flex-direction-column why-us-content">
@@ -255,16 +226,16 @@ function SitePageAboutUs() {
         <div>
         </div>
         <div className="container mt-4">
-          <div id="content" className="mt-4">
+          <div id="content" className="mt-4" style={{ marginRight: "0.5vw" }}>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <h2 style={{ color: "#2b535e" }}>What We Provide</h2>
             </div>
             <div className="d-flex align-items-center" style={{ flexDirection: "column" }}>
               <div className="row">
-                <div className="col-12 col-lg-5" style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div className={`col-12 col-lg-5 ${Animation5}`} style={{ display: "flex", justifyContent: "center" }}>
                   <img alt="" src={shopOnline} width="60%"></img>
                 </div>
-                <div className="col-12 col-lg-7">
+                <div className={`col-12 col-lg-7 ${Animation6}`}>
                   <div className="m-4">
                     <Typography variant="h6">Virtual Shopping</Typography>
                     <p>Shop through multifunctional online shop website. Give you a professional team accompany you to transform online.</p>
@@ -279,98 +250,73 @@ function SitePageAboutUs() {
                   </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-12 col-lg-5" style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <img alt="" src={hotelBooking} width="60%"></img>
+              <div className={Animation6}>
+                <div className="row" style={{ display: "flex", flexDirection: "row-reverse" }}>
+                  <div className={`col-12 col-lg-5 ${Animation6}`} style={{ display: "flex", justifyContent: "center" }}>
+                    <img alt="" src={hotelBooking} width="60%"></img>
+                  </div>
+
+                  <div className={`col-12 col-lg-7 ${Animation5}`}>
+                    <div className="m-4">
+                      <Typography variant="h6">Hotel Booking</Typography>
+                      <p>Make hotel booking with unlimited promotion and wide selection of choice. Get the latest and first hand promotion to book with lowest price.</p>
+                      <button
+                        type="button"
+                        onClick={() => this.props.history.push("/")}
+                        className="btn btn-primary product-card__addtocart"
+                        style={{ borderRadius: "5px", zIndex: "999" }}
+                      >
+                        Book Hotel
+                      </button>
+                    </div>
+                  </div>
+
                 </div>
-                <div className="col-12 col-lg-7">
+              </div>
+              <div className="row">
+                <div className={`col-12 col-lg-5 ${Animation5}`} style={{ display: "flex", justifyContent: "center" }}>
+                  <img alt="" src={startBusiness} width="60%"></img>
+                </div>
+                <div className={`col-12 col-lg-7 ${Animation6}`}>
                   <div className="m-4">
-                    <Typography variant="h6">Hotel Booking</Typography>
-                    <p>Make hotel booking with unlimited promotion and wide selection of choice. Get the latest and first hand promotion to book with lowest price.</p>
+                    <Typography variant="h6">Manage Your Business</Typography>
+                    <p>Allows you to easily manage your hotel business and sell products online with advanced features. Get start your business easily online.</p>
                     <button
                       type="button"
                       onClick={() => this.props.history.push("/")}
                       className="btn btn-primary product-card__addtocart"
                       style={{ borderRadius: "5px", zIndex: "999" }}
                     >
-                      Book Hotel
+                      Register
                     </button>
-                  </div>
-                </div>
-                
-              </div>
-              <div className="row">
-                <div className="col-12 col-lg-5" style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <img alt="" src={startBusiness} width="60%"></img>
-                </div>
-                <div className="col-12 col-lg-7">
-                  <div className="m-4">
-                  <Typography variant="h6">Manage Your Business</Typography>
-                <p>Allows you to easily manage your hotel business and sell products online with advanced features. Get start your business easily online.</p>
-                <button
-                  type="button"
-                  onClick={() => this.props.history.push("/")}
-                  className="btn btn-primary product-card__addtocart"
-                  style={{ borderRadius: "5px", zIndex: "999" }}
-                >
-                  Register
-                </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* <div
-          className="mt-5 d-flex justify-content-center"
-          style={{ backgroundColor: "#d1e8e3" }}
-        >
-          <div className="container mt-5 mb-5">
-            <div className="row justify-content-center">
-              <div className="col-12 col-xl-10">
-                <div className="d-flex justify-content-center">
-                  <h2 className="about-us__team-title">What We Provide</h2>
-                </div>
-                <div className="about-us__body">
-                  <div className="about-us__team">
-                    <img src={bag} width="200" height="200" />
-
-                    <div className="about-us__teammates teammates">
-                      <StroykaSlick {...slickSettings}>
-                        <div className="teammates__item teammate">
-                          <div className="teammate__name">Virtual Shopping</div>
-                          <div className="teammate__avatar">
-                            <LocalMallIcon />
-                          </div>
-                          <div className="teammate__position text-muted">
-                            Not even to put your feet on land
-                          </div>
-                        </div>
-                        <div className="teammates__item teammate">
-                          <div className="teammate__name">Hotel Booking</div>
-                          <div className="teammate__avatar">
-                            <DriveEtaIcon />
-                          </div>
-                          <div className="teammate__position text-muted">
-                            Reach your room
-                          </div>
-                        </div>
-                        <div className="teammates__item teammate">
-                          <div className="teammate__name">Manage Your Business</div>
-                          <div className="teammate__avatar">
-                            <AccountBalanceWalletIcon />
-                          </div>
-
-                          <div className="teammate__position text-muted">
-                            Left your huge and heavy wallet behind
-                          </div>
-                        </div>
-                      </StroykaSlick>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* <div className="container mt-4">
+          <div id="content" className="d-flex justify-content-center">
+            <h2>Our Partners</h2>
+          </div>
+          <div>
+            <Swiper
+              modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+              autoplay={{
+                delay: 2500,
+              }}
+              spaceBetween={50}
+              slidesPerView={2}
+              navigation={{
+                prevEl: ".swiper-button-prev",
+                nextEl: ".swiper-button-next",
+              }}
+            >
+              <SwiperSlide style={{marginLeft: "55px"}}>Slide 1</SwiperSlide>
+              <SwiperSlide><img alt="" src={}></img></SwiperSlide>
+              <div className="btnBox swiper-button-prev"></div>
+              <div className="btnBox swiper-button-next"></div>
+            </Swiper>
           </div>
         </div> */}
       </div>

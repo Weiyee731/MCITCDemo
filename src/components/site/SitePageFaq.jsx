@@ -18,7 +18,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import aboutUsImage from "./aboutUsImage.jpeg";
+import aboutUsImage from "./aboutUsImage.jpg";
 import Search from '../header/Search';
 // import { createMuiTheme } from "@material-ui/core"
 import { ThemeProvider,createTheme } from '@mui/material/styles';

@@ -14,6 +14,10 @@ p {
     font-size: medium;
 }
 
+.opacity {
+    opacity:0;
+}
+
 .why-us-title {
     color:#59595b;
 }
@@ -66,7 +70,7 @@ p {
 }
 
 .w3-animate-opacity {
-    animation: opac 5s
+    animation: opac 3s
 }
 
 @keyframes opac {
@@ -81,7 +85,7 @@ p {
 
 .w3-animate-top {
     position: relative;
-    animation: animatetop 1.5s
+    animation: animatetop 2s;
 }
 
 @keyframes animatetop {
@@ -98,7 +102,7 @@ p {
 
 .w3-animate-left {
     position: relative;
-    animation: animateleft 1s
+    animation: animateleft 2s
 }
 
 @keyframes animateleft {
@@ -115,7 +119,7 @@ p {
 
 .w3-animate-right {
     position: relative;
-    animation: animateright 1s
+    animation: animateright 2s
 }
 
 @keyframes animateright {
@@ -132,7 +136,7 @@ p {
 
 .w3-animate-bottom {
     position: relative;
-    animation: animatebottom 0.4s
+    animation: animatebottom 2s
 }
 
 @keyframes animatebottom {
