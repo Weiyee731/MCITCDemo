@@ -243,9 +243,18 @@ class BlockSlideShow extends Component {
     });
 
     const slides = isArrayNotEmpty(this.state.slides) && this.state.slides.map((slide, index) => {
-      const image = (withDepartments ? slide.image_classic : slide.image_full)[
-        direction
-      ];
+     
+      let image = ""
+
+      if (sessionStorage.getItem("saleType") === 'Hotel'){
+          image = ['https://thewaterfrontkuching.com/v3/wp-content/uploads/2019/02/web_VIN8938-1-Zapatos-Lounge.jpg']
+      }
+      else{
+        image = (withDepartments ? slide.image_classic : slide.image_full)[
+          direction
+        ];
+      }
+      
 
       return (
 
@@ -268,6 +277,7 @@ class BlockSlideShow extends Component {
             // }}
             src={image}
             width={"100%"}
+            alt="banner"
             height={"auto"}
           />
           <div

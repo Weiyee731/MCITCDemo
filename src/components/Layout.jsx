@@ -216,6 +216,8 @@ const productLayouts = [
 
 function Layout(props) {
   const { match, headerLayout, homeComponent } = props;
+
+  const choice = ['Hardware', 'Hotel']
   return (
     <React.Fragment>
       <Helmet></Helmet>
@@ -225,7 +227,7 @@ function Layout(props) {
       <Router basename={"/"}>
         <div className="site">
           <header className="site__header d-lg-none">
-            <MobileHeader />
+            <MobileHeader saleType={choice}/>
           </header>
           <header className="site__header d-lg-block d-none">
 

@@ -8,13 +8,9 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // application
-import AsyncAction from "./AsyncAction";
-import { cartAddItem } from "../../store/cart";
-import { quickviewOpen } from "../../store/quickview";
-
 import Currency from "./Currency";
 import Rating from "./Rating";
-import { Wishlist16Svg, Quickview16Svg, } from "../../svg";
+import { Wishlist16Svg} from "../../svg";
 import { url } from "../../services/utils";
 import Logo from "../../assets/Emporia.png"
 import { GitAction } from "../../store/action/gitAction";
@@ -22,22 +18,20 @@ import { GitAction } from "../../store/action/gitAction";
 // application
 import { Modal } from 'reactstrap';
 import { Cross20Svg } from '../../svg';
-import { browserHistory } from "react-router";
-import { Card, Typography, } from "@mui/material";
-import ProductDetails from './ProductDetails'
+import { Card} from "@mui/material";
+import HotelDetail from "./HotelDetail";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Chip from '@mui/material/Chip';
 import LoginComponent from "../../pages/login/login.component";
 import { toast } from "react-toastify";
-import { fontSize } from "@mui/system";
 
-function ProductCard(props) {
+
+function HotelCard(props) {
   const {
     product,
-    layout,
-    QuickViewIndicator,
+    layout
   } = props;
 
   const containerClasses = classNames("product-card", {
@@ -65,10 +59,6 @@ function ProductCard(props) {
   useEffect(() => {
   }, [props.addwishlist]);
 
-  const login = () => {
-    // this.props.history.push("/login");
-    setloginPopOut(true)
-  }
 
   const handleWishlist = (product) => {
    
@@ -105,14 +95,16 @@ function ProductCard(props) {
 
   }
 
+
   image = (
     <div className="product-card__image product-image">
       <div className="product-image__body">
         <img
           className="product-image__img"
-          src={product.ProductImage !== null ? product.ProductImage : Logo}
+          src={product.HotelImage !== null ? product.HotelImage : Logo}
           onError={(e) => { e.target.onerror = null; e.target.src = Logo }}
-          alt={product.ProductName}
+          alt={product.HotelName}
+          style={{width:"200px", height:"200px"}}
         />
       </div>
     </div>
@@ -126,7 +118,7 @@ function ProductCard(props) {
           <Currency value={JSON.parse(product.ProductPromotion)[0].PromotionPrice} currency={"RM"} />
         </span>{" "}
         <span className="product-card__old-price">
-          <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0}  currency={"RM"} />
+          <Currency value={product.StartPrice !== null && product.StartPrice !== undefined ? parseFloat(product.StartPrice) : 0}  currency={"RM"} />
         </span>
       </div>
     );
@@ -135,7 +127,7 @@ function ProductCard(props) {
   } else {
     price = (
       <div className="product-card__prices">
-        <Currency value={product.ProductPrice !== null && product.ProductPrice !== undefined ? parseFloat(product.ProductPrice) : 0} currency={"RM"} />
+        <Currency value={product.StartPrice !== null && product.StartPrice !== undefined ? parseFloat(product.StartPrice) : 0} currency={"RM"} />
       </div>
     );
 
@@ -143,45 +135,31 @@ function ProductCard(props) {
   }
 
 
-  if (product.attributes && product.attributes.length) {
-    features = (
-      <ul className="product-card__features-list">
-        {product.attributes
-          .filter((x) => x.Model)
-          .map((attribute, index) => (
-            <li key={index}>{`${attribute.ProductName}: ${attribute.values
-              .map((x) => x.ProductName)
-              .join(", ")}`}</li>
-          ))}
-      </ul>
-    );
-  }
-
-  wishlistView =
-    (
-      props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
-        props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-          props.wishlist.filter(x => x.ProductID === product.ProductID).map((x, ind) => {
-            return (
-              <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
-                className={classNames('btn btn-light btn-sm btn-svg-icon')}
-              ><Wishlist16Svg fill="red" />
-              </button>
-            )
-          }) :
-          (
-            <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
-              className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
-            ><Wishlist16Svg />
-            </button>
-          ) :
-        (
-          <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
-            className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
-          ><Wishlist16Svg />
-          </button>
-        )
-    );
+//   wishlistView =
+//     (
+//       props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
+//         props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
+//           props.wishlist.filter(x => x.ProductID === product.ProductID).map((x, ind) => {
+//             return (
+//               <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
+//                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
+//               ><Wishlist16Svg fill="red" />
+//               </button>
+//             )
+//           }) :
+//           (
+//             <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
+//               className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
+//             ><Wishlist16Svg />
+//             </button>
+//           ) :
+//         (
+//           <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
+//             className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
+//           ><Wishlist16Svg />
+//           </button>
+//         )
+//     );
 
   const ProductCardlayout = () => {
 
@@ -189,12 +167,6 @@ function ProductCard(props) {
       setQuickView(true)
       setProduct(product)
     }
-
-    const colourList = [
-      { id: 1, color: "red" },
-      { id: 2, color: "primary" },
-    ]
-
   
     return (
       <Card elevation={2}>
@@ -220,24 +192,28 @@ function ProductCard(props) {
 
         <div className="product-card__info">
           <div className="product-card__name">
-            <Link to={url.product(product)}>{product.ProductName}</Link>
+            <Link to={url.product(product)}>{product.HotelName}</Link>
           </div>
           <div className="product-card__rating">
-            <Rating value={product.ProductRating !== null   ? product.ProductRating : 0} />
-            <div className="product-card__rating-legend">{product.ProductRating !== null ? parseFloat(product.ProductRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
+            <Rating value={product.HotelRating !== null   ? product.HotelRating : 0} />
+            <div className="product-card__rating-legend">{product.HotelRating !== null ? parseFloat(product.HotelRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
           </div>
+
           {
-            product.ProductSold !== "0" && product.ProductSold !== null &&
-            <div
-              className="product-card__rating-legend mt-1"
-              style={{
-                marginLeft: '0px'
-              }}
-            >
-              {`(${product.ProductSold} Sold)`}
-            </div>
+            product.HotelState !== null ?
+              <div style={{ textAlign: "left", paddingRight: "10px" }}>
+                <label style={{ color: "#2b535e" }}>
+                  {product.HotelState}
+                </label>
+              </div>
+              :
+              <div style={{ textAlign: "left", paddingRight: "10px" }}>
+                <label style={{ color: "#2b535e" }}>
+                  -
+                </label>
+              </div>
           }
-          {features}
+       
         </div>
 
         <div className="product-card__actions">
@@ -254,22 +230,9 @@ function ProductCard(props) {
             }}
           >
             <label style={{ fontSize: "20px" }}>{price}</label>
-            {wishlistView}
+            {/* {wishlistView} */}
           </div>
-          {
-            product.ShopState !== null ?
-              <div style={{ textAlign: "right", paddingRight: "10px" }}>
-                <label style={{ color: "#2b535e" }}>
-                  {product.ShopState}
-                </label>
-              </div>
-              :
-              <div style={{ textAlign: "right", paddingRight: "10px" }}>
-                <label style={{ color: "#2b535e" }}>
-                  -
-                </label>
-              </div>
-          }
+         
         </div>
       </Card>
     )
@@ -298,7 +261,7 @@ function ProductCard(props) {
           <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
             <Cross20Svg />
           </button>
-          <ProductDetails product={product} quickViewIndicator={props.quickViewIndicator} getpopOutDetailsCard={getpopOutDetailsCard} />
+          <HotelDetail product={product} quickViewIndicator={props.quickViewIndicator} getpopOutDetailsCard={getpopOutDetailsCard} />
         </div>
       </Modal>
       {loginPopOut !== undefined && loginPopOut !== false &&
@@ -310,7 +273,7 @@ function ProductCard(props) {
 
 }
 
-ProductCard.propTypes = {
+HotelCard.propTypes = {
   /**
    * product object
    */
@@ -334,7 +297,7 @@ const mapStateToProps = (state) => ({
   addwishlist: state.counterReducer.addwishlist,
   wishlist: state.counterReducer.wishlist,
   productcart: state.counterReducer["productcart"],
-  wishlist: state.counterReducer["wishlist"],
+ 
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -347,4 +310,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductCard);
+export default connect(mapStateToProps, mapDispatchToProps)(HotelCard);

@@ -7,6 +7,7 @@ import { GitAction } from "../../store/action/gitAction";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { url } from "../../services/utils";
+import  Typography from "@mui/material/Typography";
 
 
 // application
@@ -61,12 +62,14 @@ class BlockMainCategories extends Component {
     const categoryGrid = {
       paddingTop: "10px",
       textAlign: "center",
-      cursor: "pointer"
+      cursor: "pointer",
+      width: '80%',
+      overflow:'auto',
     }
 
 
     return (
-      <div className="container mb-5">
+      <div className="container mb-5" >
         <BlockHeader
           title="Categories"
           showAll={"shop/AllProductCategory"}
@@ -78,22 +81,31 @@ class BlockMainCategories extends Component {
         />
         {/* <h3 className="block-header__title mb-3">Categories</h3> */}
         {/* <div style={categoryStyle} className="row mb-4"> */}
-        <div style={categoryStyle}>
-          {this.props.productCategories.map((data, index) => {
-            // {this.state.categoriesDummy.map((data, index) => {
-            return (
-              // <div key={index} style={categoryGrid} className="col-2 col-xs-2 p-3"
-              <div key={index} style={categoryGrid} className="col-2p-3">
-                <div>
-                  <Link to={url.productByCategory(data)}> <img src={data.ProductCategoryImage} alt={data.ProductCategory} width="50%" height="50%" /></Link>
+
+      
+        <div style={{display:'flex', flexDirection:'row', width:'99%', overflow:'auto', justifyContent:'center', alignItems:'center'}} >
+        {this.props.productCategories.map((data, index) => (
+              <div key={index}>
+                <div style={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                  <Link to={url.productByCategory(data)} > 
+                  <img src={data.ProductCategoryImage} 
+                  alt={data.ProductCategory} 
+                  width="80px" 
+                  height="80px" 
+                  onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src="https://icons.veryicon.com/png/o/miscellaneous/fu-jia-intranet/product-29.png";
+                  }}
+                  />
+                  </Link>
 
                   <br />
-                  <label style={{ fontSize: "13px" }}>{data.ProductCategory}</label>
+                  <Typography variant="caption" style={{textAlign:'center'}}>{data.ProductCategory}</Typography>
                 </div>
               </div>
-            )
-          })}
+          ))}
         </div>
+        
       </div>
     );
   }

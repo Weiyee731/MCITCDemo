@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 // application
 import Topbar from '../header/Topbar';
 import Indicator from '../header/Indicator';
+import Button from '@mui/material/Button';
 import IndicatorAccount from "../header/IndicatorAccount";
 import {
     Menu18x14Svg,
@@ -23,6 +24,7 @@ import { Cart20Svg  } from '../../svg';
 import PageCart_side from "../shop/ShopPageCart_side";
 import { Drawer } from '@mui/material';
 import IndicatorCart from '../../components/header/IndicatorCart'
+import { ThirtyFpsSelect } from '@mui/icons-material';
 
 class MobileHeader extends Component {
     constructor(props) {
@@ -31,6 +33,7 @@ class MobileHeader extends Component {
         this.state = {
             searchOpen: false,
             openCart: false,
+            type: sessionStorage.getItem('saleType'),
         };
         this.searchInput = React.createRef();
     }
@@ -51,8 +54,15 @@ class MobileHeader extends Component {
         this.setState(() => ({ searchOpen: false }));
     };
 
+    setPageSale_Type = (type) => {
+        sessionStorage.setItem("saleType", type);
+        this.setState({type: type})
+
+        window.location.reload(false)
+    }
+
     render() {
-        const { openMobileMenu, wishlist, cart, productcart } = this.props;
+        const { wishlist,  productcart } = this.props;
         const { searchOpen, openCart } = this.state;
         const searchClasses = classNames('mobile-header__search', {
             'mobile-header__search--open': searchOpen,
@@ -64,17 +74,20 @@ class MobileHeader extends Component {
                     <Topbar/>
                     <div className="container">
                         <div className="mobile-header__body">
-                            <button type="button" className="mobile-header__menu-button" onClick={openMobileMenu}>
+                            {/* <button type="button" className="mobile-header__menu-button" onClick={openMobileMenu}> */}
                                 {/* <Menu18x14Svg /> */}
-                            </button>
-                            <Link to="/" className="mobile-header__logo"><LogoSmallSvg /></Link>
+                            {/* </button> */}
+                          
+                            <Link to="/" className="mobile-header__logo" ><LogoSmallSvg /></Link>
                             <Search
                                 context="header"
                                 className={searchClasses}
                                 inputRef={this.searchInput}
                                 onClose={this.handleCloseSearch}
                             />
-                            <div className="mobile-header__indicators">
+                           
+                            <div className="mobile-header__indicators">                              
+
                                 <Indicator
                                     className="indicator--mobile indicator--mobile-search d-md-none"
                                     onClick={this.handleOpenSearch}
@@ -90,13 +103,17 @@ class MobileHeader extends Component {
                                     />
                                 }
 
-                                <Indicator 
-                                    value={productcart !== undefined ? productcart.length : 0}
-                                    onClick={() => {
-                                        this.setState({openCart:true})
-                                      }} 
-                                    icon={<Cart20Svg/>}
-                                />
+
+                                {
+                                    sessionStorage.getItem('saleType') !== 'Hotel' &&
+                                            <Indicator 
+                                                value={productcart !== undefined ? productcart.length : 0}
+                                                onClick={() => {
+                                                    this.setState({openCart:true})
+                                                }} 
+                                                icon={<Cart20Svg/>}
+                                            />
+                                }
 
                                 {
                                     localStorage.getItem('isLogin') === 'true' &&
@@ -126,6 +143,13 @@ class MobileHeader extends Component {
 
                             </div>
                         </div>
+
+                        <div style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItems:'center'}}>
+                            {this.props.saleType.map((x) =>(
+                                <Button style={{backgroundColor:'transparent', color: this.state.type === x? '#288825' : 'black', textTransform:'none'}} onClick={() => this.setPageSale_Type(x)}>{x}</Button>
+                            ))}
+                        </div>
+                       
                     </div>
                 </div>
             </div>

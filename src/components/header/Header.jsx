@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import NavPanel from "./NavPanel";
 import Search from "./Search";
 import Topbar from "./Topbar";
+import IconButton from "@mui/material/IconButton";
 import StickyTopProduct from "./StickyTopProduct";
 import { LogoSvg } from "../../svg";
 import { Heart20Svg } from "../../svg";
@@ -20,6 +21,7 @@ import IndicatorAccount from "./IndicatorAccount";
 import Logo from "../../assets/Emporia.png";
 
 import { Cart20Svg, Cross10Svg } from "../../svg";
+import BookIcon from '@mui/icons-material/Book';
 
 // import { wishlistListItem } from "../../store/wishlist";
 import { mobileMenuOpen } from '../../store/mobile-menu';
@@ -36,6 +38,7 @@ function Header(props) {
   const [isproductPage, setisproductPage] = useState(false);
   const [openloginPopOut, setopenloginPopOut] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+
 
   useEffect(() => {
     if (localStorage.getItem("isLogin") === "true" && localStorage.getItem("id") !== undefined) {
@@ -129,7 +132,12 @@ function Header(props) {
               <div className="site-header__search" style={{ margin: "0 16px" }}>
                 <Search context="header" style={{ borderRadius: "10px" }} />
               </div>
+
+        
               <div className="nav-panel__indicators">
+
+            { sessionStorage.getItem("saleType") !== 'Hotel'?
+            <>
                 {
                   localStorage.getItem("isLogin") === 'true' &&
                   <Indicator url="/shop/wishlist"
@@ -139,10 +147,8 @@ function Header(props) {
                     icon={<Heart20Svg />} />
                 }
                 {
-                  localStorage.getItem("isLogin") === "false" ?
+                  localStorage.getItem("isLogin") === "false"?
                     <Indicator
-                      // url="/login"
-                      // loginPopOut={loginPopOut}
                       value={0}
                       icon={<Cart20Svg />}
                       onClick={() => {
@@ -155,8 +161,19 @@ function Header(props) {
                         setCartOpen(true)
                       }} />
                 }
+
+                </>
+                :
+                <div style={{margin:'auto'}}>
+                  <IconButton>
+                    <BookIcon style={{color:"#1C1C1E"}}/>
+                  </IconButton>
+                </div>
+              
+              }
                 <IndicatorAccount />
               </div>
+            {/* } */}
             </div>
 
     {/* Lis moves the show state here, where this will show on the top and preventing uneccessary reload */}

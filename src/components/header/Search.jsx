@@ -16,6 +16,7 @@ import { Cross20Svg, Search20Svg } from '../../svg';
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 import { useDispatch, useSelector } from 'react-redux';
+import { Button } from '@mui/material';
 
 function mapStateToProps(state) {
   return {
@@ -70,6 +71,7 @@ function Search(props) {
   const [hasSuggestions, setHasSuggestions] = useState(false);
   const [suggestedProducts, setSuggestedProducts] = useState([]);
   const [query, setQuery] = useState('');
+  const [type, setType] = useState("");
   // const [category] = useState('[all]');
   const wrapper = useRef(null);
   const close = useCallback(() => {
@@ -79,6 +81,13 @@ function Search(props) {
 
     setSuggestionsOpen(false);
   }, [onClose]);
+
+  const setPageSale_Type = (type) => {
+    sessionStorage.setItem("saleType", type);
+    setType(type)
+
+    window.location.reload(false)
+}
 
   // Close suggestions when the location has been changed.
   useEffect(() => close(), [close, location]);
@@ -199,8 +208,8 @@ function Search(props) {
   let searchquery = query.toLowerCase().length > 0 ? query.toLowerCase() : 0
   return (
     <div className={rootClasses} ref={wrapper} onBlur={handleBlur}>
+      <div className='col' style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
       <div className="search__body">
-
         <div className="search__form" action="">
           <input
             ref={inputRef}
@@ -229,6 +238,9 @@ function Search(props) {
         <Suggestions className="search__suggestions" context={context} products={suggestedProducts} closeSuggestion={close}
         //  linktoGo={"/shop/ProductListing/type:Keyword&typevalue:" + suggestedProducts.data.ProductCategory}
         />
+      </div>
+          <Button style={{marginLeft:"4%", backgroundColor:'transparent', color:sessionStorage.getItem("saleType") === 'Hardware' ? '#288825' : 'black', textTransform:'none'}} onClick={() => setPageSale_Type('Hardware')}>Hardware</Button>
+          <Button style={{marginLeft:"4%", backgroundColor:'transparent',  color:sessionStorage.getItem("saleType") === 'Hotel' ? '#288825' : 'black', textTransform:'none'}} onClick={() => setPageSale_Type('Hotel')}>Hotel</Button>
       </div>
     </div >
   );
