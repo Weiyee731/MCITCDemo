@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import Currency from "./Currency";
 import Rating from "./Rating";
 import { Wishlist16Svg} from "../../svg";
+import Grid from "@mui/material/Grid";
 import { url } from "../../services/utils";
 import Logo from "../../assets/Emporia.png"
 import { GitAction } from "../../store/action/gitAction";
@@ -18,7 +19,7 @@ import { GitAction } from "../../store/action/gitAction";
 // application
 import { Modal } from 'reactstrap';
 import { Cross20Svg } from '../../svg';
-import { Card} from "@mui/material";
+import { Card, Typography} from "@mui/material";
 import HotelDetail from "./HotelDetail";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -126,40 +127,20 @@ function HotelCard(props) {
     PromoTag = [{ id: 1, tag: JSON.parse(product.ProductPromotion)[0].ProductDiscount, color: "#d23f57" }]
   } else {
     price = (
-      <div className="product-card__prices">
+      <Grid item container spacing={1}>
+      <Grid item xs={12} sm={12}>
+          <Typography variant="caption">Start From</Typography>
+      </Grid>
+      <Grid item xs={12} sm={12}>
         <Currency value={product.StartPrice !== null && product.StartPrice !== undefined ? parseFloat(product.StartPrice) : 0} currency={"RM"} />
-      </div>
+      </Grid>
+      </Grid>
     );
 
     PromoTag = []
   }
 
 
-//   wishlistView =
-//     (
-//       props.wishlist.length > 0 && props.wishlist[0].ReturnVal !== '0' ?
-//         props.wishlist.filter(x => x.ProductID === product.ProductID).length > 0 ?
-//           props.wishlist.filter(x => x.ProductID === product.ProductID).map((x, ind) => {
-//             return (
-//               <button type="button" key={ind} onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
-//                 className={classNames('btn btn-light btn-sm btn-svg-icon')}
-//               ><Wishlist16Svg fill="red" />
-//               </button>
-//             )
-//           }) :
-//           (
-//             <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
-//               className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
-//             ><Wishlist16Svg />
-//             </button>
-//           ) :
-//         (
-//           <button type="button" onClick={() => window.localStorage.getItem("id") && window.localStorage.getItem("isLogin") === "true" ? handleWishlist(product) : login()}
-//             className={classNames("btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist")}
-//           ><Wishlist16Svg />
-//           </button>
-//         )
-//     );
 
   const ProductCardlayout = () => {
 
@@ -196,7 +177,7 @@ function HotelCard(props) {
           </div>
           <div className="product-card__rating">
             <Rating value={product.HotelRating !== null   ? product.HotelRating : 0} />
-            <div className="product-card__rating-legend">{product.HotelRating !== null ? parseFloat(product.HotelRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div>
+            {/* <div className="product-card__rating-legend">{product.HotelRating !== null ? parseFloat(product.HotelRating).toFixed(1) + "/5.0" : "0.0/5.0"}</div> */}
           </div>
 
           {
@@ -230,7 +211,7 @@ function HotelCard(props) {
             }}
           >
             <label style={{ fontSize: "20px" }}>{price}</label>
-            {/* {wishlistView} */}
+            
           </div>
          
         </div>

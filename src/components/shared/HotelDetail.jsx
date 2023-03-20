@@ -21,16 +21,25 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Typography, Card, } from "@mui/material";
 import Chip from '@mui/material/Chip';
-import { FacebookIcon, TelegramIcon, TwitterIcon, WhatsappIcon, FacebookShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton, } from "react-share";
-import LoginComponent from "../../pages/login/login.component";
-
+import Button from "@mui/material/Button";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import TextField from "@mui/material/TextField";
+import HotelSearchForm from "../blocks/HotelSearchForm";
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import {CardActionArea, CardActions } from '@mui/material';
 
 class HotelDetails extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-          
+          selectedButtonValue: 'Info',
+          buttonValue: ['Info', 'Photos', 'Reviews'],
+          ratingCategories: [{cat:'Rooms', rate:4.0}, {cat:'Cleanliness', rate:4.0}, {cat:'Services', rate:4.0}, {cat:'Value for Money', rate:4.0}, {cat:'Comfort', rate:4.5}, {cat:'Facilities', rate:4.0}, {cat:'Food', rate:4.3}]
+
         };
 
     }
@@ -47,15 +56,199 @@ class HotelDetails extends Component {
        
     }
 
+    handleChange = (newValue) => {
+        this.setState({selectedButtonValue:newValue});
+      };
+
+
+
+    render_Button = () => {
+        return(
+            <Grid item xs={12} sm={12} > 
+                <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:"center"}}>
+                    <Grid item xs="auto" sm="auto">
+                    {this.state.buttonValue.map((x)=>(
+                        <Button 
+                            size="small" 
+                            sx={{textTransform: "none", color: x === this.state.selectedButtonValue ? 'green' : 'black'}}
+                            onClick={() => this.handleChange(x)}
+                            >
+                            {x}
+                        </Button>
+                    ))}
+                    </Grid>
+                    {this.render_SelectedTabInfo(this.state.selectedButtonValue)}
+                </Grid>
+            </Grid>
+        )
+    }
+
+    render_SelectedTabInfo = (selectedAction) => {
+
+        const dummyImages_Data = ['https://pix10.agoda.net/hotelImages/104/10435/10435_16100615590047498393.jpg?ca=6&ce=1&s=1024x768', 'https://www.hiltonhotels.com/assets/img/Hotel%20Images/Hilton/K/KUCHITW/rooms-suites/carousel/twin-executive-room-550x444px.jpg', 'https://ak-d.tripcdn.com/images/220b0g0000007z1i358C6_R_960_660_R5_D.jpg','https://www.hilton.com/im/en/KUCHITW/3072226/kuchi-matang-terrace.jpg?impolicy=crop&cw=3849&ch=3000&gravity=NorthWest&xposition=323&yposition=0&rw=548&rh=427','https://images.trvl-media.com/lodging/1000000/20000/18900/18804/86f92e29.jpg?impolicy=fcrop&w=670&h=385&p=1&q=medium','https://media-cdn.tripadvisor.com/media/photo-s/07/44/91/9f/hilton-kuching.jpg'];
+
+        return(
+            <Grid item container spacing={2} >
+
+            {selectedAction === 'Info' &&
+            <>
+                <Grid item xs={12} sm={12}>
+                    <Typography variant="caption" sx={{fontWeight:'bold'}}>Location</Typography>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                    <iframe 
+                    title="map"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.344848976278!2d110.34832935023209!3d1.5572031988588428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31fba7ebc2b14ff3%3A0xa043c1d7a5661ca5!2sHilton%20Kuching!5e0!3m2!1sms!2smy!4v1679109529572!5m2!1sms!2smy" 
+                    width="100%" 
+                    height="270" 
+                    allowfullscreen="true" 
+                    style={{borderRadius:'2%', border:'none'}}
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={12}>
+                    <Typography variant="caption" sx={{fontWeight:'bold'}}>Description</Typography>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                    <Typography>Boasting an enviable location on the waterfront with views of the Sarawak River, Hilton Kuching is a luxury chain hotel that features several bars and restaurants and a 25-metre outdoor swimming pool. The various rooms and suites offer a television, en-suite facilities and Internet access. One king-size or two single beds are provided while an extra bed can be added. Some rooms have floor-to-ceiling windows with lovely views of the river. Several meeting rooms are available for business use and Hilton Kuching also features a fitness centre. The reception offers a full concierge service and a tour desk where sightseeing trips can be arranged. On-site dining options include Waterfront Café, which serves Malaysian dishes like Pansoh Manuk, and SteakHouse, a must for meat-lovers. Senso Bar offers a chilled vibe alongside caviar, cocktails and Champagne. A five-minute boat-trip across the river is the 19th-century Fort Margherita, built to protect against pirates. Bako National Park, a 45-minute bus ride, is a haven for monkeys.</Typography>
+                </Grid>
+
+               
+            </>
+        }
+
+        {selectedAction === 'Photos' &&
+        
+            <Grid item container style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
+            {dummyImages_Data.map((x)=>(
+                <Grid item xs={12} sm={3} style={{width:'400px' , height:'200px', backgroundImage: `url(${x})`, backgroundSize: 'cover', margin:'0.5%'}}/>
+                
+                    ))}
+            </Grid>
+        
+        }
+        
+        {selectedAction === 'Reviews' &&
+        
+        <Grid item container style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
+            <Grid item xs={12} sm={12}>
+                <Typography variant="caption">Rating Overview</Typography>
+            </Grid>
+            
+            <Grid item xs={12} sm={3}>
+                {this.state.ratingCategories.map((x)=>(
+            <Grid item container spacing={4} >
+                <Grid item xs={12} sm={6}>
+                    <Typography>{x.cat}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Rating value={x.rate   ? x.rate : 0} />
+                </Grid>
+            </Grid>
+               
+                ))}
+            </Grid>
+
+            <Grid item xs={12} sm={9}>
+                <Card sx={{ maxWidth: 345 }}>
+                <CardActionArea>
+                    <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                        Lizards are a widespread group of squamate reptiles, with over 6,000
+                        species, ranging across all continents except Antarctica
+                    </Typography>
+                    </CardContent>
+                </CardActionArea>
+                <CardActions style={{marginLeft:'3%'}}>
+                   <Typography sx={{color:'#476E56'}}>Ali</Typography>
+                </CardActions>
+                </Card>
+            </Grid>
+
+        </Grid>
+    
+        }
+                <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                    <Button color="primary" style={{marginTop:'auto'}}>
+                        View Details
+                    </Button>
+                </Grid>
+
+            </Grid>
+        )
+    }
+
+
     render() {
 
         const {product} = this.props
 
+        console.log('product', product)
+
         return(
             <Grid item container spacing={3}>
-                <Grid item xs={12} sm={6}>
-                    <img src={product.HotelImage} alt={product.HotelName} style={{width:"70%"}}/>
+                <Grid item xs={12} sm={4} >
+                    <img src={product.HotelImage} alt={product.HotelName} style={{width:"100%", borderRadius:"4%"}}/>
                 </Grid>
+                <Grid item xs={12} sm={4} >
+                <Grid item container style={{display:'flex', flexDirection:'row', alignItems:"center", marginTop:'1.5%'}}>
+                        <Grid>
+                            <Typography variant="h6" sx={{letterSpacing:'2px'}}>{product.HotelName}</Typography>  
+                        </Grid>
+                        <Grid style={{marginLeft:'2%'}}>
+                            {/* <Wishlist16Svg/> */}
+                        </Grid>
+                    </Grid>
+                    
+                    <Typography sx={{marginTop:'2%'}}>5 Stars Hotel</Typography>
+                    <Typography sx={{marginTop:'2%'}}>Jalan Tunku Abdul Rahman, 93100, Kuching, Malaysia</Typography>
+                    <Grid item container style={{display:'flex', flexDirection:'row', alignItems:"center", marginTop:'1.5%'}}>
+                        <Grid>
+                            {/* <Chip label={product.HotelRating.toFixed(1)} variant="filled"/> */}
+                            <Rating value={product.HotelRating !== null   ? product.HotelRating : 0} />
+                        </Grid>
+                        <Grid style={{marginLeft:'2%'}}>
+                            <Typography variant="caption">800 reviews</Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item container style={{display:'flex', flexDirection:'row', alignItems:"center", marginTop:'1.5%'}}>
+                        <Grid item xs={12} sm={10} style={{backgroundColor:"#ffffe6", padding:'2%'}}>
+                                <EmojiEventsOutlinedIcon style={{color:"#ffa31a", marginRight:"4%"}} size="small"/>
+                                <Typography variant="caption" >Popular choice</Typography>
+                        </Grid>
+                    </Grid>
+                               
+                </Grid>
+                <Grid item container xs={12} sm={4} style={{backgroundColor:'rgb(188, 218, 199,0.5)', marginTop:'1%', borderRadius:'4%'}}>
+                    <Grid item xs={12} sm={12} style={{padding:'2%'}}>
+                        <Grid item container style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItems:'center', padding:'2%'}}>
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant="subtitle2">Start from</Typography>
+                                <Typography style={{color:"black"}} variant="h5">RM {product.StartPrice.toFixed(2)}</Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={6} 
+                                style={{backgroundColor:"#476E56",padding:'2%', borderRadius:'4%', display:'flex', flexDirection
+                                        :'row', justifyContent:'center'}}>
+                                <Typography style={{textAlign:'center', color:'white', margin:'auto'}}>View Room</Typography>
+                                <ChevronRightIcon style={{marginLeft:"2%", color:'white'}}/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} sm={12} style={{padding:'2%'}}>
+                        <Typography variant="caption">Hotel Policy</Typography>
+                        <Typography style={{color:'#476E56'}}>Check In 3pm - Check Out 12 pm</Typography>
+
+                        <Typography variant="caption">Contact</Typography>
+                        <Typography style={{color:'#476E56'}}>Jalan Tunku Abdul Rahman, 93100, Kuching, Malaysia
+                        Telephone: +60 82223888 | Fax: +60 82428984</Typography>
+                    </Grid>
+                   
+                </Grid>
+
+{/* design referred from Trivago */}
+               {this.render_Button()}
             </Grid>
         )
     }

@@ -238,8 +238,7 @@ function HomePageTwo(props) {
               {...props}
               products={dummyHotel_Data.length > 0 ? dummyHotel_Data : null}
             />
-            
-            {console.log('aaa', props.products)}
+
           </>
           
 

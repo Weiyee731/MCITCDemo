@@ -71,7 +71,7 @@ function Search(props) {
   const [hasSuggestions, setHasSuggestions] = useState(false);
   const [suggestedProducts, setSuggestedProducts] = useState([]);
   const [query, setQuery] = useState('');
-  const [type, setType] = useState("");
+  const [type, setType] = useState("Hardware");
   // const [category] = useState('[all]');
   const wrapper = useRef(null);
   const close = useCallback(() => {
@@ -239,7 +239,7 @@ function Search(props) {
         //  linktoGo={"/shop/ProductListing/type:Keyword&typevalue:" + suggestedProducts.data.ProductCategory}
         />
       </div>
-          <Button style={{marginLeft:"4%", backgroundColor:'transparent', color:sessionStorage.getItem("saleType") === 'Hardware' ? '#288825' : 'black', textTransform:'none'}} onClick={() => setPageSale_Type('Hardware')}>Hardware</Button>
+          <Button style={{marginLeft:"4%", backgroundColor:'transparent', color:sessionStorage.getItem("saleType")  === 'Hardware' ? '#288825' : 'black', textTransform:'none'}} onClick={() => setPageSale_Type('Hardware')}>Hardware</Button>
           <Button style={{marginLeft:"4%", backgroundColor:'transparent',  color:sessionStorage.getItem("saleType") === 'Hotel' ? '#288825' : 'black', textTransform:'none'}} onClick={() => setPageSale_Type('Hotel')}>Hotel</Button>
       </div>
     </div >
