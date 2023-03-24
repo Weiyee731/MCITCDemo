@@ -64,37 +64,10 @@ class HotelSearchForm extends Component {
     /**
      * Styles
      */
-    const categoryStyle = {
-      backgroundColor: "#fff",
-      display: "flex",
-      justifyContent: 'center',
-      padding: "5px",
-      alignItems: "center",
-      flexDirection: "row",
-      overflowX: 'auto', 
-      width:'100%', 
-      
-    }
-
-    const categoryGrid = {
-      paddingTop: "10px",
-      textAlign: "center",
-      cursor: "pointer",
-      width: "120px",
-      marginBottom: "10px"
-    }
-
-    const divStyle = {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-   
-    }
-
 
     return (
-        <Grid item container style={{ display:'flex', flexDirection:'row', justifyContent:'center'}} spacing={2} >
-          <Grid item container xs={12} sm={8} spacing={2} style={{padding:'3%', backgroundColor:'white', margin:'3%'}}>
+        <Grid item container style={{ display:'flex', flexDirection:'row', justifyContent:'center', backgroundColor:'white', marginLeft:'3%', marginRight:'3%',padding:'2%'}} spacing={2} >
+          {/* <Grid item container spacing={2} style={{padding:'3%', backgroundColor:'white', marginLeft:'4%', marginRight:'4%', marginTop:"4%"}}> */}
             <Grid item xs={12} sm={12}>
                 <TextField id="outlined-basic" 
                     label="Destination or Property" 
@@ -160,7 +133,7 @@ class HotelSearchForm extends Component {
                 <Button variant="contained" fullWidth sx={{ backgroundColor: "#288825" }}> Search</Button>
             </Grid>
         </Grid>
-        </Grid>
+        {/* </Grid> */}
       </Grid>
     );
   }

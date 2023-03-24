@@ -58,6 +58,7 @@ import SitePageShippingDelivery from "./site/sitePageShippingDelivery";
 import BlockListingDetails from "./blocks/BlockListingDetails";
 import BlockAllProductCategory from "./blocks/BlockAllProductCategory";
 import MerchantPage from "./merchant/merchantpage";
+// import HotelPageRoomList from "./shop/HotelPageRoomList";
 
 // data stubs
 import SideBarMenu from "../components/navigationsidebar/SideBarMenu";
@@ -69,6 +70,8 @@ import ViewProductGeneralInfo from "../pages/viewProduct/viewProductGeneralInfo.
 import DashboardComponent from "../pages/dashboard/dashboard.component";
 import userProfile from "../pages/userProfile/userProfile.component";
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
+import HotelPageRoomList from "./shop/HotelPageRoomList";
+import HomePageTwo from "./home/HomePageTwo";
 
 
 
@@ -302,9 +305,24 @@ function Layout(props) {
                       </>
                     )}
                   />
+
+                  {/* <Route
+                    exact
+                    path="/shop/HotelPageRoomList/:hotelId"
+                    render={(props) => (
+                      <>
+                        <HotelPageRoomList
+                          {...props}
+                          layout="standard"
+                          hotelId={props.match.params.hotelId}
+                        />
+                      </>
+                    )}
+                  /> */}
                   {productLayouts}
                   {/* <Route exact path="/shop/cart" component={PageCart} /> */}
                   <Route exact path="/shop/sidecart" component={PageCart_side} />
+                  <Route exact path="/home/HomePageTwo" component={HomePageTwo} />
                   {/* <Route exact path="/shop/ShopPageReceipt" component={ShopPageReceipt} /> */}
 
                   <Route

@@ -6,17 +6,17 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { url } from "../../services/utils";
+import { url } from "../../../services/utils";
 
 // application
 import Grid from "@mui/material/Grid";
-import InputNumber from "./InputNumber";
-import ProductGallery from "./ProductGallery";
-import Rating from "./Rating";
+import InputNumber from "../InputNumber";
+import ProductGallery from "../ProductGallery";
+import Rating from "../Rating";
 import { HashLink } from "react-router-hash-link";
-import { GitAction } from "../../store/action/gitAction";
-import Logo from "../../assets/Emporia.png"
-import ProductSkeleton from "./ProductSkeleton";
+import { GitAction } from "../../../store/action/gitAction";
+import Logo from "../../../assets/Emporia.png"
+import ProductSkeleton from "../ProductSkeleton";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Typography, Card, } from "@mui/material";
@@ -26,7 +26,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TextField from "@mui/material/TextField";
-import HotelSearchForm from "../blocks/HotelSearchForm";
+import HotelSearchForm from "../../blocks/HotelSearchForm";
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import {CardActionArea, CardActions } from '@mui/material';
@@ -38,7 +38,29 @@ class HotelDetails extends Component {
         this.state = {
           selectedButtonValue: 'Info',
           buttonValue: ['Info', 'Photos', 'Reviews'],
-          ratingCategories: [{cat:'Rooms', rate:4.0}, {cat:'Cleanliness', rate:4.0}, {cat:'Services', rate:4.0}, {cat:'Value for Money', rate:4.0}, {cat:'Comfort', rate:4.5}, {cat:'Facilities', rate:4.0}, {cat:'Food', rate:4.3}]
+          ratingCategories: [{cat:'Rooms', rate:4.0}, {cat:'Cleanliness', rate:4.0}, {cat:'Services', rate:4.0}, {cat:'Value for Money', rate:4.0}, {cat:'Comfort', rate:4.5}, {cat:'Facilities', rate:4.0}, {cat:'Food', rate:4.3}],
+          dummyDataComment:[
+            {
+                commentID:0,
+                comment:'The hotel was comfortable and nice', //limit 50 words.
+                Username: 'Jenny',
+            },
+            {
+                commentID:1,
+                comment:'The bathroom is so spacious', //limit 50 words.
+                Username: 'Ahmed',
+            },
+            {
+                commentID:2,
+                comment:'Fantastic. Will come again next time.', //limit 50 words.
+                Username: 'Mikaela',
+            },
+            {
+                commentID:3,
+                comment:'Overall is good. But may improves the services on check in and check out which time consuming', //limit 50 words.
+                Username: 'Mikaela',
+            },
+        ]
 
         };
 
@@ -66,7 +88,7 @@ class HotelDetails extends Component {
         return(
             <Grid item xs={12} sm={12} > 
                 <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:"center"}}>
-                    <Grid item xs="auto" sm="auto">
+                    <Grid item xs={12} sm={12} style={{borderBottom:"1px solid #CCD3CE", display:'flex', flexDirection:'row', justifyContent:'center', alignItem:'center'}}>
                     {this.state.buttonValue.map((x)=>(
                         <Button 
                             size="small" 
@@ -137,13 +159,13 @@ class HotelDetails extends Component {
                 <Typography variant="caption">Rating Overview</Typography>
             </Grid>
             
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={3} style={{padding:"3%", marginLeft:"auto"}} >
                 {this.state.ratingCategories.map((x)=>(
-            <Grid item container spacing={4} >
-                <Grid item xs={12} sm={6}>
+            <Grid item container spacing={4} style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                <Grid item xs={6} sm={6}>
                     <Typography>{x.cat}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={6} sm={6}>
                     <Rating value={x.rate   ? x.rate : 0} />
                 </Grid>
             </Grid>
@@ -152,29 +174,32 @@ class HotelDetails extends Component {
             </Grid>
 
             <Grid item xs={12} sm={9}>
-                <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                    <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        Lizards are a widespread group of squamate reptiles, with over 6,000
-                        species, ranging across all continents except Antarctica
-                    </Typography>
-                    </CardContent>
-                </CardActionArea>
-                <CardActions style={{marginLeft:'3%'}}>
-                   <Typography sx={{color:'#476E56'}}>Ali</Typography>
-                </CardActions>
-                </Card>
+                <Grid item container spacing={2}>
+                    {/* will display max 3 comments, to view more comment, click View Detail button */}
+                    {this.state.dummyDataComment.slice(0,3).map((comment)=>(
+                    <Grid item xs={12} sm={4}>
+                        <Card sx={{ maxWidth: 345, height:150, overflow:'auto' }}>
+                            <CardActionArea>
+                                <CardContent style={{height:100, overflowY:'scroll'}}>
+                                <Typography variant="body2" color="text.secondary">
+                                   {comment.comment}
+                                </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                            <CardActions style={{marginLeft:'3%'}}>
+                                <Typography sx={{color:'#476E56'}}>{comment.Username}</Typography>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                    ))}
+                </Grid>
+                
             </Grid>
 
         </Grid>
     
         }
-                <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
-                    <Button color="primary" style={{marginTop:'auto'}}>
-                        View Details
-                    </Button>
-                </Grid>
+              
 
             </Grid>
         )
@@ -185,10 +210,8 @@ class HotelDetails extends Component {
 
         const {product} = this.props
 
-        console.log('product', product)
-
         return(
-            <Grid item container spacing={3}>
+            <Grid item container spacing={3} style={{marginLeft:'2%', marginRight:'2%'}}>
                 <Grid item xs={12} sm={4} >
                     <img src={product.HotelImage} alt={product.HotelName} style={{width:"100%", borderRadius:"4%"}}/>
                 </Grid>

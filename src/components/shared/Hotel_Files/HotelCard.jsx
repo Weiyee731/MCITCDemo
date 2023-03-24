@@ -8,25 +8,27 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // application
-import Currency from "./Currency";
-import Rating from "./Rating";
-import { Wishlist16Svg} from "../../svg";
+import Currency from "../Currency";
+import Rating from "../Rating";
+import { Wishlist16Svg} from "../../../svg";
 import Grid from "@mui/material/Grid";
-import { url } from "../../services/utils";
-import Logo from "../../assets/Emporia.png"
-import { GitAction } from "../../store/action/gitAction";
+import { url } from "../../../services/utils";
+import Logo from "../../../assets/Emporia.png"
+import { GitAction } from "../../../store/action/gitAction";
 
 // application
 import { Modal } from 'reactstrap';
-import { Cross20Svg } from '../../svg';
+import { Cross20Svg } from '../../../svg';
 import { Card, Typography} from "@mui/material";
 import HotelDetail from "./HotelDetail";
+import {Button}from "@mui/material";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Chip from '@mui/material/Chip';
-import LoginComponent from "../../pages/login/login.component";
+import LoginComponent from "../../../pages/login/login.component";
 import { toast } from "react-toastify";
+
 
 
 function HotelCard(props) {
@@ -243,6 +245,11 @@ function HotelCard(props) {
             <Cross20Svg />
           </button>
           <HotelDetail product={product} quickViewIndicator={props.quickViewIndicator} getpopOutDetailsCard={getpopOutDetailsCard} />
+          <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'4%'}}>
+              <Button color="primary" style={{marginTop:'auto'}}>
+                  View Details
+              </Button>
+          </Grid>
         </div>
       </Modal>
       {loginPopOut !== undefined && loginPopOut !== false &&

@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 // application
 import BlockHeader from "../shared/BlockHeader";
 import ProductCard from "../shared/ProductCard";
-import HotelCard from "../shared/HotelCard";
+import HotelCard from "../shared/Hotel_Files/HotelCard";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Card, } from "@mui/material";
 

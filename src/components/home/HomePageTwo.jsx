@@ -19,7 +19,9 @@ import BlockMoreButton from '../blocks/BlockMoreButton';
 import BlockProductsCarousel from "../blocks/BlockProductsCarousel";
 import BlockTopBrands from "../blocks/BlockTopBrands";
 import HotelSearchForm from '../blocks/HotelSearchForm';
+import HotelFilter from '../blocks/HotelFilter';
 import BlockHotelSuggestion from '../blocks/BlockHotelSuggestion';
+import { Grid } from '@mui/material';
 
 // data stubs
 import theme from '../../data/theme';
@@ -230,18 +232,29 @@ function HomePageTwo(props) {
         <BlockSlideShow />
 
         { sessionStorage.getItem('saleType') === 'Hotel' ? 
-          <>
-            <HotelSearchForm /> 
+          <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'center', marginBottom:'2%'}}>
+           
+            <Grid item xs={12} sm={10}>
+                <HotelSearchForm /> 
+            </Grid>
 
-            <BlockHotelSuggestion
-              title = "Accomodation Recommendation"
-              {...props}
-              products={dummyHotel_Data.length > 0 ? dummyHotel_Data : null}
-            />
-
-          </>
+            <Grid item xs={12} sm={9} >
+              <Grid item container spacing={2}>
+                        {/* <Grid item xs={12} sm={3} style={{borderRadius:'2%', backgroundColor:'white'}} elevation={2}>
+                            <HotelFilter/>
+                        </Grid> */}
+                        <Grid item xs={12} sm={12}>
+                          <BlockHotelSuggestion
+                              title = "Accomodation Recommendation"
+                              {...props}
+                              products={dummyHotel_Data.length > 0 ? dummyHotel_Data : null}
+                            />
+                        </Grid>
+              </Grid>
+            </Grid>
           
-
+            </Grid>
+          
 
           :
           <>
@@ -254,21 +267,8 @@ function HomePageTwo(props) {
               // rows={2}
               products={postsToShow.length === 0 ? props.products.length > 0 && props.products[0].ReturnVal !== '0' ? props.products : [] : postsToShow}
             />
-          </>
-        }
 
-        {/* <BlockMerchant
-          title="Top Merchants"
-          // title="Best Sellers"
-          layout="grid-4"
-          rows={1}
-          merchants={props.merchant}
-        // onGroupClick={testing}
-        /> */}
-
-        {/* <BlockFeatures layout="boxed" /> */}
-   
-        <BlockProducts
+<BlockProducts
           {...props}
           title="Featured Products"
           layout='large-first'
@@ -292,6 +292,21 @@ function HomePageTwo(props) {
             </div>
 
         }
+          </>
+        }
+
+        {/* <BlockMerchant
+          title="Top Merchants"
+          // title="Best Sellers"
+          layout="grid-4"
+          rows={1}
+          merchants={props.merchant}
+        // onGroupClick={testing}
+        /> */}
+
+        {/* <BlockFeatures layout="boxed" /> */}
+   
+     
         {/* {
           typeof props.products.ReturnVal !== 'undefined' && props.products.ReturnVal !== 1 ? "" :
             (
