@@ -271,7 +271,7 @@ function ShopPageProduct(props) {
 
                     <HotelDetail product={data[0]} />
                     <HotelAmenities/>
-                    <HotelRooms/>
+                    <HotelRooms />
                   </Grid>
                   
                 </Grid>
