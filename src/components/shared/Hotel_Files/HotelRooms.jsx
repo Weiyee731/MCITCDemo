@@ -11,7 +11,7 @@ import { url } from "../../../services/utils";
 
 // application
 import {Grid, Typography, Stack, Checkbox, Button, IconButton} from '@mui/material';
-import { Cross20Svg } from "../../../svg";
+import CloseIcon from '@mui/icons-material/Close';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import PersonIcon from '@mui/icons-material/Person';
 import _ from "lodash";
@@ -191,12 +191,15 @@ function HotelRooms(props) {
 )}
 
       <Modal isOpen={openModal} toggle={() => setOpenModal(!openModal)} centered size="xl">
-          <div className="quickview">
-            <button className="quickview__close" type="button" onClick={() => setOpenModal(!openModal)}>
-              <Cross20Svg />
-            </button>
+          <Grid item container style={{padding:'2%'}}>
+            <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'row', justifyContent:'flex-end'}}>
+              <IconButton onClick={() => setOpenModal(!openModal)}>
+                <CloseIcon fontSize="normal"/>
+              </IconButton>
+            </Grid>
+          
             <HotelModal/>
-          </div>
+          </Grid>
         </Modal>
         </Grid>
        

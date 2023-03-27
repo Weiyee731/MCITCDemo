@@ -16,7 +16,9 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import PersonIcon from '@mui/icons-material/Person';
 import _ from "lodash";
-
+import CloseIcon from '@mui/icons-material/Close';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 function HotelModal(props) {
     // const {
@@ -69,12 +71,25 @@ function HotelModal(props) {
         <Grid item xs={12} sm={8} >
             <Grid item container spacing={2}>
                 <Grid item xs={12} sm={12}>
-                 <img src={'https://cf.bstatic.com/images/hotel/max1024x768/374/37434884.jpg'} alt="" style={{width:'100%', height:"100%"}}/>
+                    <Grid item container spacing={0} style={{display:'flex', flexDirection:'row', alignItems:'center', backgroundImage:`url(${showImage})`, height:'400px', width:'100%', backgroundSize:'cover'}}>
+                        <Grid item xs={6} sm={6} sx={{display:'flex', flexDirection:'row',justifyContent:'flex-start'}}>
+                        <IconButton sx={{position:'relative', zIndex:99, marginTop:'auto', marginBottom:'auto', backgroundColor:'rgb(242, 242, 242,0.7)', marginLeft:'2%'}}>
+                            <ChevronLeftIcon fontSize="small"/>
+                        </IconButton>
+                        </Grid>
+                      
+                        <Grid item xs={6} sm={6} sx={{display:'flex', flexDirection:'row',justifyContent:'flex-end'}}>
+                         <IconButton sx={{position:'relative', zIndex:99, marginTop:'auto', marginBottom:'auto', backgroundColor:'rgb(242, 242, 242,0.7)', marginRight:'2%'}}>
+                            <ChevronRightIcon fontSize="small"/>
+                        </IconButton>
+                        </Grid>
+                    </Grid>
+                
                 </Grid>
                 <Grid item xs={12} sm={12}>
                 <Grid item container spacing={1}>
                         {RoomImages.map((fac)=>(
-                            <Grid item xs={12} sm={3}>
+                            <Grid item xs={3} sm={3} onClick={() => setShowImage(fac.ImageURL)}>
                                 <img src={fac.ImageURL} alt="" style={{width:'100%', height:"100%"}}/>
                             </Grid>
                     ))}
@@ -85,7 +100,7 @@ function HotelModal(props) {
         </Grid>
     
         
-        <Grid item xs={12} sm={4} style={{height:"400px", overflowY:"auto"}}>
+        <Grid item xs={12} sm={4} >
             <Typography variant="h5">Standard Suite</Typography>
             <Grid item container spacing={2} style={{marginTop:'2%'}}>
                 <Grid item xs={12} sm={12}>
@@ -101,25 +116,53 @@ function HotelModal(props) {
                 ))}
                   </Grid> 
                 </Grid>
+                <Grid item xs={12} sm={12}>
+                    <Typography variant="h6">Capacity</Typography>
+                  
+                  <Stack direction="row" spacing={2} style={{alignItems:'center'}}>
+                  <Typography>Queen Bed</Typography>
+                  
+                  <Stack direction="row" spacing={2} style={{alignItems:'center'}}>
+                    {_.times(2, (i) => (
+                            <PersonIcon key={i} style={{color:"#ffa31a"}} fontSize="small"/>
+                          ))}
+                    </Stack>
+                   
+                  </Stack>
+                 
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <Typography variant="h6">Meals</Typography>
+                    <Stack direction="row" spacing={1}>
+                        <CloseIcon fontSize="small" style={{color:'red'}}/>
+                        <Typography variant="body2" style={{marginTop:'1px'}}>No breakfast added</Typography>
+                    </Stack>
+                   
+                    <Stack direction="row" spacing={2} style={{alignItems:'center', marginTop:'2%'}}>
+                        <Button variant="contained" color="primary" size="small">Add breakfast</Button>
+                        <Typography variant="subtitle1" style={{marginTop:'auto', marginBottom:'auto'}}>RM 15.90</Typography>
+                    </Stack>
+                </Grid>
                 
                 <Grid item xs={12} sm={12} >
                     <Typography variant="h6">Rates</Typography>
                     <Typography variant="caption">
                         Starts from
                     </Typography>
-                    <Stack direction='row' spacing={1} style={{padding:'3%', borderRadius:'2%', backgroundColor:'rgb(255, 153, 0, 0.5)', alignItems:'center'}}>
+                    <Stack direction='row' spacing={1} style={{padding:'3%', borderRadius:'2%', backgroundColor:'rgb(255, 153, 0, 0.5)', alignItems:'center', justifyContent:'center'}}>
                         <Typography variant="h6">RM</Typography>
                         <Typography variant="h4">380</Typography>
-                        <Typography variant="caption" style={{fontWeight:'bold'}}>
+                        <Typography variant="caption">
                         per night
                         </Typography>
                     </Stack>
                    
                 </Grid>
+                <Grid item xs={12} sm={12} style={{marginTop:'4%'}}>
+                   <Button variant="contained" color="success" fullWidth>Book Now</Button>
+                   
+                </Grid>
             </Grid>
-        </Grid>
-        <Grid item xs={12} sm={12} style={{height:'40px'}}>
-        
         </Grid>
       
       </Grid>
