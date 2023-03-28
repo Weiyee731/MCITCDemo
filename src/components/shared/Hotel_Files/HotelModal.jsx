@@ -57,13 +57,34 @@ function HotelModal(props) {
       ];
 
     const [showImage, setShowImage] = useState(RoomImages[0].ImageURL)
+    const [index, setIndex] = useState(0)
 
-    const change_ShowImage = (img) => {
+    const change_ShowImage = (action) => {
+        
+       const idx = index + 1
 
+        switch(action){
+          case 'prev':
+            setIndex(index - 1 )
+            setShowImage(RoomImages[index - 1].ImageURL)
+            break;
+          case 'next':
+           
+            setIndex(index + 1 )
+            if(idx < RoomImages.length){
+              setShowImage(RoomImages[index + 1].ImageURL)
+            }
+            
+            break;
+          default:
+            break;
+        }
     }
     
     
-    const Videos = ['']
+    // const Videos = ['']
+
+    console.log('showImage', showImage)
 
     return (
 
@@ -73,24 +94,31 @@ function HotelModal(props) {
                 <Grid item xs={12} sm={12}>
                     <Grid item container spacing={0} style={{display:'flex', flexDirection:'row', alignItems:'center', backgroundImage:`url(${showImage})`, height:'400px', width:'100%', backgroundSize:'cover'}}>
                         <Grid item xs={6} sm={6} sx={{display:'flex', flexDirection:'row',justifyContent:'flex-start'}}>
-                        <IconButton sx={{position:'relative', zIndex:99, marginTop:'auto', marginBottom:'auto', backgroundColor:'rgb(242, 242, 242,0.7)', marginLeft:'2%'}}>
+
+                      {
+                        index !== 0 &&
+                        <IconButton sx={{position:'relative', zIndex:99, marginTop:'auto', marginBottom:'auto', backgroundColor:'rgb(242, 242, 242,0.7)', marginLeft:'2%'}} onClick={()=> change_ShowImage('prev')}>
                             <ChevronLeftIcon fontSize="small"/>
                         </IconButton>
+                      }
                         </Grid>
                       
                         <Grid item xs={6} sm={6} sx={{display:'flex', flexDirection:'row',justifyContent:'flex-end'}}>
-                         <IconButton sx={{position:'relative', zIndex:99, marginTop:'auto', marginBottom:'auto', backgroundColor:'rgb(242, 242, 242,0.7)', marginRight:'2%'}}>
+                      
+                      {index !== RoomImages.length - 1 &&
+                         <IconButton sx={{position:'relative', zIndex:99, marginTop:'auto', marginBottom:'auto', backgroundColor:'rgb(242, 242, 242,0.7)', marginRight:'2%'}} onClick={()=> change_ShowImage('next')}>
                             <ChevronRightIcon fontSize="small"/>
                         </IconButton>
+                      }
                         </Grid>
                     </Grid>
                 
                 </Grid>
                 <Grid item xs={12} sm={12}>
                 <Grid item container spacing={1}>
-                        {RoomImages.map((fac)=>(
-                            <Grid item xs={3} sm={3} onClick={() => setShowImage(fac.ImageURL)}>
-                                <img src={fac.ImageURL} alt="" style={{width:'100%', height:"100%"}}/>
+                        {RoomImages.map((fac, i)=>(
+                            <Grid item xs={3} sm={3} onClick={() => [setShowImage(fac.ImageURL), setIndex(i)]} >
+                                <img src={fac.ImageURL} alt="" style={{width:'100%', height:"100%", border: index === i ? '4px solid green': 'none', opacity:index === i ? '50%': '100%'}}/>
                             </Grid>
                     ))}
                 </Grid>
