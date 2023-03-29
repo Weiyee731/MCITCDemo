@@ -263,10 +263,10 @@ function ShopPageProduct(props) {
       return(
         dummyHotel_Data.length > 0 ?
               <Grid item container spacing={1} style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-                <Grid item container xs={12} sm={10} style={{padding:'4%'}} >
-                  <Grid item xs={12} sm={3}>
+                <Grid item container xs={12} sm={10} style={{padding:'4%', justifyContent:'center'}} >
+                  {/* <Grid item xs={12} sm={3}>
                     <HotelFilter/>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={9}>
 
                     <HotelDetail product={data[0]} />

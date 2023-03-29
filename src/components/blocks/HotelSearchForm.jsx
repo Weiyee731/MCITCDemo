@@ -51,6 +51,8 @@ const Initiate_State = {
     // {ProductCategoryID: 8, ProductCategory: "LifeStyle", ProductCategoryImage: "https://www.highwycombepharmacy.com.au/assets/blog/_680x460_crop_center-center_75_none/What-is-Diabetes-and-4-Steps-to-Avoid-It.jpg?v=1626242407"}, 
   ]
 }
+
+
 class HotelSearchForm extends Component {
   constructor(props) {
     super(props)
@@ -64,6 +66,8 @@ class HotelSearchForm extends Component {
     /**
      * Styles
      */
+
+    const MyLink = (data) => <Link to={url.search(data)} />
 
     return (
         <Grid item container style={{ display:'flex', flexDirection:'row', justifyContent:'center', backgroundColor:'white', marginLeft:'3%', marginRight:'3%',padding:'2%'}} spacing={2} >
@@ -130,7 +134,7 @@ class HotelSearchForm extends Component {
                     />
             </Grid>
             <Grid item xs={12} sm={2} >
-                <Button variant="contained" fullWidth sx={{ backgroundColor: "#288825" }}> Search</Button>
+                <Button variant="contained" fullWidth sx={{ backgroundColor: "#288825" }} component={Link} to={url.search('Kuching')}> Search</Button>
             </Grid>
         </Grid>
         {/* </Grid> */}

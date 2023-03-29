@@ -72,6 +72,7 @@ import userProfile from "../pages/userProfile/userProfile.component";
 import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDeliverableTransaction.component";
 import HotelPageRoomList from "./shop/HotelPageRoomList";
 import HomePageTwo from "./home/HomePageTwo";
+import Hotel_Listing from "./shared/Hotel_Files/Hotel_Listing";
 
 
 
@@ -301,6 +302,20 @@ function Layout(props) {
                           {...props}
                           layout="standard"
                           productId={props.match.params.productId}
+                        />
+                      </>
+                    )}
+                  />
+
+                  <Route
+                    exact
+                    path="/shared/Hotel_Files/:searchValue"
+                    render={(props) => (
+                      <>
+                        <Hotel_Listing
+                          {...props}
+                          layout="standard"
+                          searchValue={props.match.params.searchValue}
                         />
                       </>
                     )}

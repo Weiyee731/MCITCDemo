@@ -246,9 +246,8 @@ function HotelCard(props) {
           </button>
           <HotelDetail product={product} quickViewIndicator={props.quickViewIndicator} getpopOutDetailsCard={getpopOutDetailsCard} />
           <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'4%'}}>
-              <Button color="primary" style={{marginTop:'auto'}}>
-                  View Details
-              </Button>
+          <Link to={url.product(product)} style={{color:'#0B9AF0'}}>View Details</Link>
+          
           </Grid>
         </div>
       </Modal>

@@ -140,8 +140,8 @@ function HotelFilter(props) {
   
     return (
 
-      <Grid item container spacing={2} style={{backgroundColor:"white", padding:'2%'}} elevation={2}>
-        <Grid item xs={12} sm={12}>
+      <Grid item container style={{backgroundColor:"white", padding:'4%'}} elevation={2}>
+        <Grid item xs={12} sm={12} style={{padding:'2%'}}>
             <Autocomplete
               multiple
               id="multiple-tags"
