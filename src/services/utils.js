@@ -17,6 +17,7 @@ export const url = {
 
   product: (product) => product.ProductID !== null && product.ProductID !== undefined ? `/shop/products/${product.ProductID}`: `/shop/products/${product.HotelID}`,
   search: (searchValue) => searchValue !== null && searchValue !== undefined ? `/shared/Hotel_Files/${searchValue}`: `/shared/Hotel_Files/`,
+  hotel: (hotel) => hotel !== null && hotel !== undefined ? `/shared/Hotel_Files/HotelBooking_1/${hotel}`: `/shared/Hotel_Files/HotelBooking_1`,
 
   productcateogory: (category) => category.ProductName !== null ? `/shop/ProductCategory/${category.ProductName}` : `/shop/ProductCategory/`,
   productByCategory: (product) => product.ProductCategoryID !== null ? `/shop/ProductListing/type:Category&typevalue:${product.ProductCategoryID}` : `/shop/ProductListing/`,

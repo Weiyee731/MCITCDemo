@@ -1,5 +1,5 @@
 // react
-import React, {useEffect, useState } from "react";
+import React, {useEffect } from "react";
 import { connect } from "react-redux";
 import { GitAction } from "../../../store/action/gitAction";
 
@@ -8,81 +8,28 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { url } from "../../../services/utils";
 
-
 // application
-import {Grid, Typography, Stack, Checkbox, Button, IconButton,Card} from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import PersonIcon from '@mui/icons-material/Person';
-import _ from "lodash";
-import CloseIcon from '@mui/icons-material/Close';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import HotelFilter from "../../blocks/HotelFilter";
-import Divider from '@mui/material/Divider';
+import {Grid, Typography, Stack, Divider, Checkbox, FormControlLabel, TextField, Autocomplete, IconButton} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 
-function Hotel_Listing(props) {
+
+function HotelBooking_1(props) {
     // const {
     //   product,
     //   layout
     // } = props;
 
-    const dummyHotel_Data = [
-        {
-          HotelID: 0,
-          HotelImage: 'https://media-cdn.tripadvisor.com/media/photo-s/12/a9/df/17/hilton-night-view-from.jpg',
-          HotelName:'Hilton',
-          StartPrice: 180.00,
-          HotelRating: 4.0,
-          HotelState: 'Kuching',
-          ProductPromotion: null,
-          ReviewCount: 145,
-        
-        },
-        {
-          HotelID: 1,
-          HotelImage: 'https://pix10.agoda.net/hotelImages/44583/-1/8742bb65e5a6b3f370d3e94212bb8a76.jpg?ca=23&ce=0&s=1024x768',
-          HotelName:'Grand Magherita',
-          StartPrice: 185.00,
-          HotelRating: 4.1,
-          HotelState: 'Kota Samarahan',
-          ProductPromotion: null,
-          ReviewCount: 205,
-        },
-        {
-          HotelID: 2,
-          HotelImage: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/124344871.jpg?k=82daced0f7392440064c6ec25622e0d0154f02c62a2c885d96103c320273befe&o=&hp=1',
-          HotelName:'Tune Hotel',
-          StartPrice: 90.00,
-          HotelRating: 3.9,
-          HotelState: 'Kota Samarahan',
-          ProductPromotion: null,
-          ReviewCount: 125,
-        }, 
-        {
-          HotelID: 3,
-          HotelImage: 'https://borneo.com.au/wp-content/uploads/2020/08/Pullman-Kuching-Hotel.jpg',
-          HotelName:'Pullman',
-          StartPrice: 240.00,
-          HotelRating: 4.2,
-          HotelState: 'Kuching',
-          ProductPromotion: null,
-          ReviewCount: 166,
-        },
-        {
-          HotelID: 4,
-          HotelImage: 'https://ak-d.tripcdn.com/images/220u1d000001ede0c1F72_R_960_660_R5_D.jpg',
-          HotelName:'Waterfront Hotel',
-          StartPrice: 245.00,
-          HotelRating: 4.5,
-          HotelState: 'Kuching',
-          ProductPromotion: null,
-          ReviewCount: 195,
-        }
-      ]
+    const steps = [
+        'Accomodaton Selection',
+        'Your Info',
+        'Final Step',
+      ];
+      
 
-      const dummyHotelRoom_data = [
+    const dummyHotelRoom_data = [
         { RoomID:0,
           RoomName: 'Standard Suite',
           Price:280.00,
@@ -174,7 +121,7 @@ function Hotel_Listing(props) {
             ],
           Capacity:2,
           },
-
+  
           { RoomID:1,
             RoomName: 'Executive King Suite',
             Price: 380.00,
@@ -332,117 +279,103 @@ function Hotel_Listing(props) {
           Capacity:2,
           }
       ]
-      
-    const searchResult = () => {
-        
-        let data = []
-        data = dummyHotel_Data.filter((x)=> x.HotelState === props.searchValue || x.HotelName === props.searchValue)
-
-        return (
-
-            data.map((x)=>(
-            <Card style={{marginBottom:'2%'}}>
-                <Grid item container spacing={2} style={{padding:"4%", display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                    <Grid item xs={12} sm={4} >
-                        <img src={x.HotelImage} alt="" style={{width:'100%', height:'200px'}}/>
-                    </Grid>
-                    <Grid item xs={12} sm={8} >
-                        <Grid item container spacing={2}>
-                            <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                                <div>
-                                    <Typography variant="h5">{x.HotelName}</Typography>
-                                    <Stack direction="row" spacing={1} style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-                                    <Typography variant="body1">{x.HotelState}</Typography>
-                                    <Button color="primary" size="small" style={{textTransform:'none'}}>Show Map</Button>
-                                    </Stack>
-                                </div>
-                                <div>
-                                    <Stack direction='row' spacing={2}>
-                                            <Typography style={{marginLeft:'4%'}} variant="body2">{x.ReviewCount} Reviews</Typography>
-                                            <Grid item xs={8} sm={8} style={{backgroundColor:'rgb(40,136,37)', borderRadius:'8px', display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                                                <Typography style={{color:'white'}} variant="subtitle2">{x.HotelRating.toFixed(1)}</Typography>
-                                            </Grid>
-                                    </Stack>
-                                </div>
-                            </Grid>
-
-                            <Grid item xs={12} sm={12}>
-                            {dummyHotelRoom_data.filter(fil=> fil.HotelID === x.HotelID).map((y) =>(
-                                <Grid item container spacing={2}>
-                                    <Grid item xs={12} sm={6}>
-                                        <Typography style={{fontWeight:"bold"}} variant="subtitle1">{y.RoomName}</Typography>
-                                        {y.Bed.map((b)=>(
-                                            <Typography variant="body1">{b.BedCat_Name}</Typography>
-                                        ))}
-                                    <Stack direction='row' spacing={2}>
-                                        {y.FreeCancellation_Stat === true && 
-                                        <div>
-                                            <Typography>Free Cancellation</Typography>
-                                        </div>
-                                    
-                                        }
-                                        {y.Advance_Pay === true && 
-                                        <div>
-                                            <Typography> - No Prepayment Needed</Typography>
-                                        </div>
-                                        }
-                                    </Stack>
-
-                                        <Typography variant="subtitle2" sx={{fontWeight:'bold', color:'rgb(40,136,37)', textDecoration:'underline'}}>{y.AvailableRoom_Qty} room available now</Typography>   
-
-                                    </Grid>
-
-                                    <Grid item xs={12} sm={6} >
-                                        <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'flex-end', alignItems:'flex-end'}}>
-                                            <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'column', justifyContent:'flex-start', alignItems:'flex-end'}}>
-                                                <Typography style={{fontWeight:"bold"}} variant="h5">MYR {y.Price}</Typography>
-                                                <Typography variant="body1">+ MYR {y.Price * 0.06} Taxes and charges</Typography>
-                                                <Typography variant="body1">1 Night {y.Capacity} Adult</Typography>
-                                            </Grid>
-                                            <Grid item xs={12} sm={8} >
-                                                <Button variant="contained" color="primary" component={Link} fullWidth to={url.product(x)} sx={{textTransform:'none'}} >Select Hotel</Button>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-
-                                </Grid>
-                            ))}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Card>
-            ))
-        )   
-        
-    }
-    
+  
     return (
 
-      <Grid item container spacing={2} style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItem:'center', padding:"4%"}}>
-            <Grid item xs={12} sm={9}>
-                <Grid item container spacing={4}>
-                    <Grid item xs={12} sm={3}>
-                        <HotelFilter/>
-                    </Grid>
-                   
-                    <Grid item xs={12} sm={9} >
-                        {searchResult()}
-                    </Grid>
+      <Grid item container style={{backgroundColor:"white", padding:'4%'}} elevation={2}>
+        <Grid item xs={12} sm={12} style={{paddingLeft:'8%', paddingRight:'4%'}}>
+            <Stepper activeStep={1} alternativeLabel>
+                {steps.map((label) => (
+                <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                </Step>
+                ))}
+            </Stepper>
+        </Grid>
+   
+        <Grid item xs={12} sm={12} style={{margin:'2%', paddingLeft:'8%', paddingRight:'4%'}}>
+                <Grid item container spacing={2}>
+                        <Grid item xs={12} sm={4}>
+                            <Grid item container spacing={1} style={{padding:"5%", border:'1px solid #E6E3DD', borderRadius:'2%'}}>
+                                <Grid item xs={12} sm={12}>
+                                    <Typography variant="h7" >Your booking summary</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={12}>
+                                <Stack direction="row" spacing={2} style={{display:"flex", flexDirection:'row', justifyContent:'space-between'}}>
+                                    <div>
+                                        <Typography variant="body2">Check In</Typography>
+                                        <Typography variant="subtitle1" style={{fontWeight:"bold"}}>Wednesday, 19 April 2023</Typography>
+                                    </div>
+                                    <div>
+                                        <Typography variant="body2">Check Out</Typography>
+                                        <Typography variant="subtitle1" style={{fontWeight:"bold"}}>Thursday, 20 April 2023</Typography>
+                                    </div>
+                                </Stack>
+                                </Grid>
+                           
+                                <Grid item xs={12} sm={12}>
+                                    <Typography variant="body2">Stay Duration</Typography>
+                                    <Typography variant="subtitle1" style={{fontWeight:"bold"}}>1 Night</Typography>
+                                </Grid>
+                               
+                               <Grid item xs={12} sm={12}>
+                                    <Typography variant="body2">You selected</Typography>
+                                    <Typography variant="subtitle1" style={{fontWeight:"bold", marginBottom:"4%"}}>Deluxe King Room</Typography>
+                                    <Link style={{textDecoration:"underline", color: 'blue'}}>Change Room</Link>
+                               </Grid>
+
+                               <Grid item xs={12} sm={12}>
+                                    <Typography variant="h7" >Purchase Summary</Typography>
+                                    <Stack direction="row" spacing={2} style={{display:"flex", flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                                        <Typography>Deluxe King Room</Typography>
+                                        <Typography variant="h6" style={{fontWeight:'bold'}}>MYR 380.00</Typography>
+                                    </Stack>
+                                    <Typography variant="subtitle2" style={{marginTop:"2%"}}>
+                                    A tourism tax of RM 10 per room per night applies to all foreign guests. This tax isn't included in the room rate and must be paid upon check-in. Guests who are Malaysian nationals or permanent residents of Malaysia (hold a MyPR card) are exempted.
+                                    </Typography>
+
+                                    <Typography variant="body2" style={{marginTop:"3%"}}>Excluded charges</Typography>
+                                    <Stack direction="row" spacing={2} style={{display:"flex", flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                                        <Typography>VAT</Typography>
+                                        <Typography variant="subtitle1" style={{fontWeight:'bold'}}>MYR 8.86</Typography>
+                                    </Stack>
+
+                               </Grid>
+
+                               <Grid item xs={12} sm={12} style={{border:'1px solid #E6E3DD', padding:'2%'}}>
+                                    <Typography variant="h7">How much it cost to cancel?</Typography>
+                                    <Typography style={{color:'green'}}>Free cancellation until 23:59 on 18 Apr</Typography>
+                                    <Stack direction="row" style={{display:"flex", flexDirection:'row', justifyContent:"space-between"}}>
+                                        <Typography >From 00:00 on 18 Apr </Typography>
+                                        <Typography >MYR 153</Typography>
+                                    </Stack>
+                                    
+                               </Grid>
+                            </Grid>
+                            
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Grid item container spacing={1} style={{padding:"5%", border:'1px solid #E6E3DD', borderRadius:'9px'}}>
+                                <Grid item xs={12} sm={12}>
+                                    <Typography variant="h7" >Details</Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                 </Grid>
-            </Grid>
-    </Grid>
-     
+        </Grid>
+        
+        </Grid>
+      
     );
   
   
   }
   
-  Hotel_Listing.propTypes = {
+  HotelBooking_1.propTypes = {
     /**
      * product object
      */
-
+    product: PropTypes.object.isRequired,
     /**
      * product card layout
      * one of ['grid-sm', 'grid-nl', 'grid-lg', 'list', 'horizontal']
@@ -469,4 +402,4 @@ function Hotel_Listing(props) {
   };
   
   
-  export default connect(mapStateToProps, mapDispatchToProps)(Hotel_Listing);
+  export default connect(mapStateToProps, mapDispatchToProps)(HotelBooking_1);

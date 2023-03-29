@@ -29,6 +29,7 @@ function HotelRooms(props) {
       { RoomID:0,
         RoomName: 'Standard Suite',
         Price:280.00,
+        HotelID:0,
         Bed:[{BedCategoryID:0, BedCat_Name:"Queen Bed"}],
         RoomImages:[
           {ImageID:0, ImageURL:'https://cf.bstatic.com/images/hotel/max1024x768/374/37434884.jpg'},
@@ -64,10 +65,116 @@ function HotelRooms(props) {
       ],
       Capacity:2,
       },
+       
+      { RoomID:1,
+          RoomName: 'Deluxe Junior Suite',
+          Price: 380.00,
+          HotelID:2,
+          Bed:[{BedCategoryID:1, BedCat_Name:"King Bed"}],
+          RoomImages:[
+            {ImageID:4, ImageURL:'https://www.greatsmallhotels.com/photos/66156_the-ranee-boutique-suites_.jpg'},
+            {ImageID:5, ImageURL:'https://www.greatsmallhotels.com/photos/66157_the-ranee-boutique-suites_.jpg'},
+            {ImageID:6, ImageURL:'https://www.greatsmallhotels.com/photos/66158_the-ranee-boutique-suites_.jpg'},
+            {ImageID:7, ImageURL:'https://www.greatsmallhotels.com/photos/66159_the-ranee-boutique-suites_.jpg'},
+          ],
+          FreeCancellation_Stat: true,
+          Advance_Pay: true,
+          Breakfast_Included: false,
+          AvailableRoom_Qty: 2,
+          Facilities:[
+            {
+              AmenityID:0,
+              AmenityName:'Bath/ Shower',
+            },
+            {
+              AmenityID:1,
+              AmenityName: 'Hairdryer',
+            },
+            {
+              AmenityID:2,
+              AmenityName:'Fan',
+            },
+            {
+              AmenityID:3,
+              AmenityName:'Towel',
+            },
+            {
+              AmenityID:4,
+              AmenityName:'Refrigerator',
+            },
+            {
+              AmenityID:5,
+              AmenityName:'Wardrobe',
+            },
+            {
+              AmenityID:6,
+              AmenityName:'Bathtub',
+            },
+            {
+              AmenityID:7,
+              AmenityName:'Coffee Maker',
+            },
+          ],
+        Capacity:2,
+        },
+
+        { RoomID:1,
+          RoomName: 'Executive King Suite',
+          Price: 380.00,
+          HotelID:4,
+          Bed:[{BedCategoryID:1, BedCat_Name:"King Bed"}],
+          RoomImages:[
+            {ImageID:4, ImageURL:'https://www.greatsmallhotels.com/photos/66156_the-ranee-boutique-suites_.jpg'},
+            {ImageID:5, ImageURL:'https://www.greatsmallhotels.com/photos/66157_the-ranee-boutique-suites_.jpg'},
+            {ImageID:6, ImageURL:'https://www.greatsmallhotels.com/photos/66158_the-ranee-boutique-suites_.jpg'},
+            {ImageID:7, ImageURL:'https://www.greatsmallhotels.com/photos/66159_the-ranee-boutique-suites_.jpg'},
+          ],
+          FreeCancellation_Stat: true,
+          Advance_Pay: true,
+          Breakfast_Included: false,
+          AvailableRoom_Qty: 2,
+          Facilities:[
+            {
+              AmenityID:0,
+              AmenityName:'Bath/ Shower',
+            },
+            {
+              AmenityID:1,
+              AmenityName: 'Hairdryer',
+            },
+            {
+              AmenityID:2,
+              AmenityName:'Fan',
+            },
+            {
+              AmenityID:3,
+              AmenityName:'Towel',
+            },
+            {
+              AmenityID:4,
+              AmenityName:'Refrigerator',
+            },
+            {
+              AmenityID:5,
+              AmenityName:'Wardrobe',
+            },
+            {
+              AmenityID:6,
+              AmenityName:'Bathtub',
+            },
+            {
+              AmenityID:7,
+              AmenityName:'Coffee Maker',
+            },
+          ],
+        Capacity:2,
+        },
+
 
       { RoomID:1,
-        RoomName: 'Deluxe Suite',
+        RoomName: 'Deluxe King Suite',
         Price: 380.00,
+        HotelID:1,
         Bed:[{BedCategoryID:1, BedCat_Name:"King Bed"}],
         RoomImages:[
           {ImageID:4, ImageURL:'https://www.greatsmallhotels.com/photos/66156_the-ranee-boutique-suites_.jpg'},
@@ -114,9 +221,60 @@ function HotelRooms(props) {
           },
         ],
       Capacity:2,
-      }
+      },
+       
+      { RoomID:1,
+          RoomName: 'Deluxe Queen Suite',
+          Price: 380.00,
+          HotelID:3,
+          Bed:[{BedCategoryID:1, BedCat_Name:"King Bed"}],
+          RoomImages:[
+            {ImageID:4, ImageURL:'https://www.greatsmallhotels.com/photos/66156_the-ranee-boutique-suites_.jpg'},
+            {ImageID:5, ImageURL:'https://www.greatsmallhotels.com/photos/66157_the-ranee-boutique-suites_.jpg'},
+            {ImageID:6, ImageURL:'https://www.greatsmallhotels.com/photos/66158_the-ranee-boutique-suites_.jpg'},
+            {ImageID:7, ImageURL:'https://www.greatsmallhotels.com/photos/66159_the-ranee-boutique-suites_.jpg'},
+          ],
+          FreeCancellation_Stat: true,
+          Advance_Pay: true,
+          Breakfast_Included: false,
+          AvailableRoom_Qty: 2,
+          Facilities:[
+            {
+              AmenityID:0,
+              AmenityName:'Bath/ Shower',
+            },
+            {
+              AmenityID:1,
+              AmenityName: 'Hairdryer',
+            },
+            {
+              AmenityID:2,
+              AmenityName:'Fan',
+            },
+            {
+              AmenityID:3,
+              AmenityName:'Towel',
+            },
+            {
+              AmenityID:4,
+              AmenityName:'Refrigerator',
+            },
+            {
+              AmenityID:5,
+              AmenityName:'Wardrobe',
+            },
+            {
+              AmenityID:6,
+              AmenityName:'Bathtub',
+            },
+            {
+              AmenityID:7,
+              AmenityName:'Coffee Maker',
+            },
+          ],
+        Capacity:2,
+        }
     ]
-
    
     return (
 
@@ -185,7 +343,7 @@ function HotelRooms(props) {
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={2}>
-                  <Button variant="contained" color="primary" size="small">Reserve</Button>
+                  <Button variant="contained" color="primary" size="small" component={Link} to={url.hotel(room.RoomID)} >Reserve</Button>
               </Grid>
             </Grid>
 )}

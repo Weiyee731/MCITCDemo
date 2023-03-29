@@ -73,6 +73,7 @@ import ViewDeliverableComponent from "../pages/viewDeliverableTransaction/viewDe
 import HotelPageRoomList from "./shop/HotelPageRoomList";
 import HomePageTwo from "./home/HomePageTwo";
 import Hotel_Listing from "./shared/Hotel_Files/Hotel_Listing";
+import HotelBooking_1 from "./shared/Hotel_Files/HotelBooking_1";
 
 
 
@@ -316,6 +317,20 @@ function Layout(props) {
                           {...props}
                           layout="standard"
                           searchValue={props.match.params.searchValue}
+                        />
+                      </>
+                    )}
+                  />
+
+                <Route
+                    exact
+                    path="/shared/Hotel_Files/HotelBooking_1/:hotel"
+                    render={(props) => (
+                      <>
+                        <HotelBooking_1
+                          {...props}
+                          layout="standard"
+                          hotel={props.match.params.hotel}
                         />
                       </>
                     )}
