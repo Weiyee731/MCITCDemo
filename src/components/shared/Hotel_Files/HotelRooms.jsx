@@ -17,6 +17,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import _ from "lodash";
 import { Modal } from 'reactstrap';
 import HotelModal from "./HotelModal";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 function HotelRooms(props) {
     // const {
@@ -317,7 +319,7 @@ function HotelRooms(props) {
                       </Stack>
                     </Grid>
                    
-                    <Grid item xs={6} sm={3}>
+                    <Grid item xs={6} sm={2}>
                       <Stack direction ="row" spacing={2}>
                         <RestaurantIcon fontSize="small" style={{color:"#ffa31a"}}/>
                         <Typography variant="caption">{room.Breakfast_Included === true ? 'Breakfast included' : 'No breakfast included'}</Typography>
@@ -326,24 +328,30 @@ function HotelRooms(props) {
 
                     <Grid item xs={6} sm={2}>
                       <Stack direction='row' spacing={1}>
-                          <Typography variant="h5" color="#288825">MYR {room.Price}</Typography>
+                          <Typography variant="h6" color="#288825">MYR {room.Price}</Typography>
                       </Stack>
                     </Grid>
 
-                    <Grid item xs={6} sm={2} >
-                      <Stack direction='row' spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
+                    <Grid item xs={6} sm={3} >
+                      {/* <Stack direction='row' spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
                           <div>+</div>
                           <div style={{minHeight:'20px', minWidth:'20px'}}>0</div>
                           <div>-</div>
-                      </Stack>
+                      </Stack> */}
+                          <Stack direction="row" spacing={3} style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
+                              {/* <Typography variant="h7">Guest</Typography> */}
+                                  <IconButton color="success"><AddCircleIcon/></IconButton>
+                                  <Typography variant="subtitle1">5</Typography>
+                                  <IconButton ><RemoveCircleIcon/></IconButton>
+                          </Stack>
                     </Grid>
                 </Grid>
               </Grid>
-              <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'flex-end', marginRight:"3%"}}>
+              {/* <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'flex-end'}}> */}
                 <Grid item xs={12} sm={2} >
                     <Button variant="contained" color="primary" size="small" component={Link} to={url.hotel(room.RoomID)} fullWidth>Reserve</Button>
                 </Grid>
-              </Grid>
+              {/* </Grid> */}
             
               </>
 )} 

@@ -211,7 +211,7 @@ class HotelDetails extends Component {
         const {product} = this.props
 
         return(
-            <Grid item container style={{margin:"auto"}}>
+            <Grid item container spacing={2} style={{margin:"auto", display:'flex', flexDirection:'row', justifyContent:'center', alignContent:'center'}}>
                 <Grid item xs={12} sm={4} style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
                     <img src={product.HotelImage} alt={product.HotelName} style={{width:"100%", borderRadius:"4%"}}/>
                 </Grid>

@@ -19,7 +19,7 @@ import { GitAction } from "../../../store/action/gitAction";
 // application
 import { Modal } from 'reactstrap';
 import { Cross20Svg } from '../../../svg';
-import { Card, Typography} from "@mui/material";
+import { Card, Typography, IconButton} from "@mui/material";
 import HotelDetail from "./HotelDetail";
 import {Button}from "@mui/material";
 import Skeleton from 'react-loading-skeleton'
@@ -241,9 +241,15 @@ function HotelCard(props) {
       }
       <Modal isOpen={isQuickViewOpen} toggle={() => setQuickView(!isQuickViewOpen)} centered size="xl">
         <div className="quickview">
-          <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)}>
-            <Cross20Svg />
-          </button>
+            {/* <button className="quickview__close" type="button" onClick={() => setQuickView(!isQuickViewOpen)} >
+              <Cross20Svg />
+            </button> */}
+            <div style={{display:"flex", flexDirection:"row", justifyContent:'flex-end'}}>
+              <IconButton onClick={() => setQuickView(!isQuickViewOpen)} >
+              <Cross20Svg />
+              </IconButton>
+            </div>
+           
           <HotelDetail product={product} quickViewIndicator={props.quickViewIndicator} getpopOutDetailsCard={getpopOutDetailsCard} />
           <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'4%'}}>
           <Link to={url.product(product)} style={{color:'#0B9AF0'}}>View Details</Link>
