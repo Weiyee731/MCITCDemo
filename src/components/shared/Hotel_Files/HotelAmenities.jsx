@@ -61,16 +61,16 @@ function HotelAmenities(props) {
    
     return (
 
-   
-      <Grid item container spacing={2} style={{ margin:'3%'}} elevation={2}>
-        <Grid item xs={12} sm={12}>
+      <Grid item container spacing={1} elevation={2} >
+        <Grid item xs={12} sm={12} style={{marginLeft:'3%', marginRight:'3%'}}>
             <Typography variant="caption" style={{fontWeight:'bold'}}>Amenities</Typography>
         </Grid>
-        <Grid item xs={12} sm={12} style={{backgroundColor:'white', padding:"2%", margin:'1.5%'}}>
-            <Grid item container spacing={2} >
+        <Grid item xs={12} sm={12} style={{marginLeft:'3%', marginRight:'3%'}} >
+            <Grid item container spacing={0} style={{backgroundColor:'white', padding:'2%', marginTop:'auto'}}>
+                <Grid item xs={12} sm={12}></Grid>
             {Amenities_List.map((a)=>(
-                <Grid item xs={12} sm={4}>
-                    <Stack direction='row' spacing={2}>
+                <Grid item xs={6} sm={4}>
+                    <Stack direction='row' spacing={1}>
                         <Check sx={{color:"#ffa31a"}}/> 
                         <Typography variant="subtitle2">{a.AmenitiesName}</Typography>
                     </Stack>
@@ -78,10 +78,7 @@ function HotelAmenities(props) {
             ))}
             </Grid>
         </Grid>
-       
-       
       </Grid>
-     
       
     );
   

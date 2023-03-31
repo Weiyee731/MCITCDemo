@@ -19,7 +19,7 @@ import Logo from "../../../assets/Emporia.png"
 import ProductSkeleton from "../ProductSkeleton";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { Typography, Card, } from "@mui/material";
+import { Typography, Card, Stack} from "@mui/material";
 import Chip from '@mui/material/Chip';
 import Button from "@mui/material/Button";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -86,8 +86,7 @@ class HotelDetails extends Component {
 
     render_Button = () => {
         return(
-            <Grid item xs={12} sm={12} > 
-                <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:"center"}}>
+                <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:"center", margin:'2%'}}>
                     <Grid item xs={12} sm={12} style={{borderBottom:"1px solid #CCD3CE", display:'flex', flexDirection:'row', justifyContent:'center', alignItem:'center'}}>
                     {this.state.buttonValue.map((x)=>(
                         <Button 
@@ -99,9 +98,10 @@ class HotelDetails extends Component {
                         </Button>
                     ))}
                     </Grid>
-                    {this.render_SelectedTabInfo(this.state.selectedButtonValue)}
+                    <Grid item xs={12} sm={12}>
+                     {this.render_SelectedTabInfo(this.state.selectedButtonValue)}
+                    </Grid> 
                 </Grid>
-            </Grid>
         )
     }
 
@@ -110,19 +110,19 @@ class HotelDetails extends Component {
         const dummyImages_Data = ['https://pix10.agoda.net/hotelImages/104/10435/10435_16100615590047498393.jpg?ca=6&ce=1&s=1024x768', 'https://www.hiltonhotels.com/assets/img/Hotel%20Images/Hilton/K/KUCHITW/rooms-suites/carousel/twin-executive-room-550x444px.jpg', 'https://ak-d.tripcdn.com/images/220b0g0000007z1i358C6_R_960_660_R5_D.jpg','https://www.hilton.com/im/en/KUCHITW/3072226/kuchi-matang-terrace.jpg?impolicy=crop&cw=3849&ch=3000&gravity=NorthWest&xposition=323&yposition=0&rw=548&rh=427','https://images.trvl-media.com/lodging/1000000/20000/18900/18804/86f92e29.jpg?impolicy=fcrop&w=670&h=385&p=1&q=medium','https://media-cdn.tripadvisor.com/media/photo-s/07/44/91/9f/hilton-kuching.jpg'];
 
         return(
-            <Grid item container spacing={2} >
+            <Grid item container spacing={1} >
 
             {selectedAction === 'Info' &&
             <>
                 <Grid item xs={12} sm={12}>
                     <Typography variant="caption" sx={{fontWeight:'bold'}}>Location</Typography>
                 </Grid>
-                <Grid item xs={12} sm={12}>
+                <Grid item xs={12} sm={12} style={{display:'flex', direction:"row", justifyContent:'center', margin:'2%' }}>
                     <iframe 
                     title="map"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.344848976278!2d110.34832935023209!3d1.5572031988588428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31fba7ebc2b14ff3%3A0xa043c1d7a5661ca5!2sHilton%20Kuching!5e0!3m2!1sms!2smy!4v1679109529572!5m2!1sms!2smy" 
                     width="100%" 
-                    height="270" 
+                    height="250" 
                     allowfullscreen="true" 
                     style={{borderRadius:'2%', border:'none'}}
                     loading="lazy" 
@@ -145,7 +145,7 @@ class HotelDetails extends Component {
         
             <Grid item container style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
             {dummyImages_Data.map((x)=>(
-                <Grid item xs={12} sm={3} style={{width:'400px' , height:'200px', backgroundImage: `url(${x})`, backgroundSize: 'cover', margin:'0.5%'}}/>
+                <Grid item xs={12} sm={3} style={{width:'300px' , height:'200px', backgroundImage: `url(${x})`, backgroundSize: 'cover', margin:'0.5%'}}/>
                 
                     ))}
             </Grid>
@@ -211,11 +211,11 @@ class HotelDetails extends Component {
         const {product} = this.props
 
         return(
-            <Grid item container spacing={3} style={{marginLeft:'2%', marginRight:'2%'}}>
-                <Grid item xs={12} sm={4} >
+            <Grid item container style={{margin:"auto"}}>
+                <Grid item xs={12} sm={4} style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
                     <img src={product.HotelImage} alt={product.HotelName} style={{width:"100%", borderRadius:"4%"}}/>
                 </Grid>
-                <Grid item xs={12} sm={4} >
+                <Grid item xs={12} sm={4} style={{margin:'2%'}}>
                 <Grid item container style={{display:'flex', flexDirection:'row', alignItems:"center", marginTop:'1.5%'}}>
                         <Grid>
                             <Typography variant="h6" sx={{letterSpacing:'2px'}}>{product.HotelName}</Typography>  
@@ -229,45 +229,38 @@ class HotelDetails extends Component {
                     <Typography sx={{marginTop:'2%'}}>Jalan Tunku Abdul Rahman, 93100, Kuching, Malaysia</Typography>
                     <Grid item container style={{display:'flex', flexDirection:'row', alignItems:"center", marginTop:'1.5%'}}>
                         <Grid>
-                            {/* <Chip label={product.HotelRating.toFixed(1)} variant="filled"/> */}
                             <Rating value={product.HotelRating !== null   ? product.HotelRating : 0} />
                         </Grid>
                         <Grid style={{marginLeft:'2%'}}>
                             <Typography variant="caption">800 reviews</Typography>
                         </Grid>
                     </Grid>
-                    <Grid item container style={{display:'flex', flexDirection:'row', alignItems:"center", marginTop:'1.5%'}}>
-                        <Grid item xs={12} sm={10} style={{backgroundColor:"#ffffe6", padding:'2%'}}>
-                                <EmojiEventsOutlinedIcon style={{color:"#ffa31a", marginRight:"4%"}} size="small"/>
+     
+                   
+                        <Grid item xs={12} sm={12} style={{padding:'2%',backgroundColor:"#ffffe6", }}>
+                        <Stack direction="row" spacing={2}>
+                        <EmojiEventsOutlinedIcon style={{color:"#ffa31a", marginRight:"4%"}} size="small"/>
                                 <Typography variant="caption" >Popular choice</Typography>
-                        </Grid>
+                        </Stack>
                     </Grid>
-                               
                 </Grid>
-                <Grid item container xs={12} sm={4} style={{backgroundColor:'rgb(188, 218, 199,0.5)', marginTop:'1%', borderRadius:'4%'}}>
-                    <Grid item xs={12} sm={12} style={{padding:'2%'}}>
-                        <Grid item container style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItems:'center', padding:'2%'}}>
-                            <Grid item xs={12} sm={6}>
+                <Grid item container xs={12} sm={4} style={{margin:'2%', borderRadius:'4%'}}>
+                    <Stack direction="column" spacing={2} style={{padding:'2%', backgroundColor:'rgb(188, 218, 199,0.5)', borderRadius:'2%'}}>
+                        <Grid item xs={12} sm={12} >
+                            <Stack direction="row" spacing={1}>
                                 <Typography variant="subtitle2">Start from</Typography>
                                 <Typography style={{color:"black"}} variant="h5">RM {product.StartPrice.toFixed(2)}</Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6} 
-                                style={{backgroundColor:"#476E56",padding:'2%', borderRadius:'4%', display:'flex', flexDirection
-                                        :'row', justifyContent:'center'}}>
-                                <Typography style={{textAlign:'center', color:'white', margin:'auto'}}>View Room</Typography>
-                                <ChevronRightIcon style={{marginLeft:"2%", color:'white'}}/>
-                            </Grid>
+                            </Stack>
                         </Grid>
-                    </Grid>
-                    <Grid item xs={12} sm={12} style={{padding:'2%'}}>
-                        <Typography variant="caption">Hotel Policy</Typography>
-                        <Typography style={{color:'#476E56'}}>Check In 3pm - Check Out 12 pm</Typography>
+                        <Grid item xs={12} sm={12} style={{padding:'2%'}}>
+                            <Typography variant="caption">Hotel Policy</Typography>
+                            <Typography style={{color:'#476E56'}}>Check In 3pm - Check Out 12 pm</Typography>
 
-                        <Typography variant="caption">Contact</Typography>
-                        <Typography style={{color:'#476E56'}}>Jalan Tunku Abdul Rahman, 93100, Kuching, Malaysia
-                        Telephone: +60 82223888 | Fax: +60 82428984</Typography>
-                    </Grid>
-                   
+                            <Typography variant="caption">Contact</Typography>
+                            <Typography style={{color:'#476E56'}}>Jalan Tunku Abdul Rahman, 93100, Kuching, Malaysia
+                            Telephone: +60 82223888 | Fax: +60 82428984</Typography>
+                        </Grid>
+                    </Stack>
                 </Grid>
 
 {/* design referred from Trivago */}

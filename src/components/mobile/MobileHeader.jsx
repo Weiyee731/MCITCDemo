@@ -22,7 +22,7 @@ import { mobileMenuOpen } from '../../store/mobile-menu';
 import Search from '../header/Search';
 import { Cart20Svg  } from '../../svg';
 import PageCart_side from "../shop/ShopPageCart_side";
-import { Drawer } from '@mui/material';
+import { Drawer, Stack } from '@mui/material';
 import IndicatorCart from '../../components/header/IndicatorCart'
 import { ThirtyFpsSelect } from '@mui/icons-material';
 
@@ -58,7 +58,7 @@ class MobileHeader extends Component {
         sessionStorage.setItem("saleType", type);
         this.setState({type: type})
 
-        window.location.reload(false)
+        window.location.href = "/home/HomePageTwo";
     }
 
     render() {
@@ -69,7 +69,7 @@ class MobileHeader extends Component {
         });
 
         return (
-            <div className="mobile-header">
+            <div className="mobile-header" style={{marginBottom:'2%'}}>
                 <div className="mobile-header__panel">
                     <Topbar/>
                     <div className="container">
@@ -77,8 +77,16 @@ class MobileHeader extends Component {
                             {/* <button type="button" className="mobile-header__menu-button" onClick={openMobileMenu}> */}
                                 {/* <Menu18x14Svg /> */}
                             {/* </button> */}
-                          
+                          <Stack direction="row" spacing={2}>
                             <Link to="/" className="mobile-header__logo" ><LogoSmallSvg /></Link>
+
+                            <div style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItems:'center'}}>
+                                {this.props.saleType.map((x) =>(
+                                    <Button style={{backgroundColor:'transparent', color: this.state.type === x? '#288825' : 'black', textTransform:'none'}} onClick={() => this.setPageSale_Type(x)}>{x}</Button>
+                                ))}
+                            </div>
+                          </Stack>
+                           
                             <Search
                                 context="header"
                                 className={searchClasses}
@@ -144,12 +152,7 @@ class MobileHeader extends Component {
                             </div>
                         </div>
 
-                        <div style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItems:'center'}}>
-                            {this.props.saleType.map((x) =>(
-                                <Button style={{backgroundColor:'transparent', color: this.state.type === x? '#288825' : 'black', textTransform:'none'}} onClick={() => this.setPageSale_Type(x)}>{x}</Button>
-                            ))}
-                        </div>
-                       
+                      
                     </div>
                 </div>
             </div>

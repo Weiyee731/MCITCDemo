@@ -26,8 +26,8 @@ import WidgetProducts from "../widgets/WidgetProducts";
 import categories from "../../data/shopWidgetCategories";
 import theme from "../../data/theme";
 import { connect } from "react-redux";
+import { Stack } from "@mui/material";
 import HotelDetail from "../shared/Hotel_Files/HotelDetail";
-import HotelFilter from "../blocks/HotelFilter";
 import Grid from "@mui/material/Grid";
 import HotelSearchForm from "../blocks/HotelSearchForm";
 import HotelAmenities from "../shared/Hotel_Files/HotelAmenities";
@@ -38,6 +38,7 @@ function mapStateToProps(state) {
     loading: state.counterReducer["loading"],
     product: state.counterReducer["productsByID"],
     reviews: state.counterReducer["reviews"],
+    products: state.counterReducer["products"],
   };
 }
 
@@ -53,6 +54,7 @@ function ShopPageProduct(props) {
   const { productId, layout, sidebarPosition } = props;
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [latestProducts, setLatestProducts] = useState([]);
+  const [page, setPage] = useState(1);
 
   const [sticky, setSticky] = useState(true);
 
@@ -149,6 +151,14 @@ function ShopPageProduct(props) {
   useEffect(() => {
     console.log("hello");
     window.addEventListener("scroll", isSticky);
+    props.CallAllProducts({
+      type: "Merchant",
+      typeValue: 0,
+      userId: 0,
+      productPage: 20,
+      page: page,
+    })
+    props.CallProductDetail({ productId: productId, userId: localStorage.getItem("isLogin") === false ? 0 : localStorage.getItem("id") })
     return () => {
       window.removeEventListener("scroll", isSticky);
     };
@@ -167,6 +177,8 @@ function ShopPageProduct(props) {
   let breadcrumb;
 
   let product = props.product[0]
+
+  console.log('pppppp', product)
 
   if (!props.loading && product !== undefined) {
     breadcrumb = [
@@ -238,10 +250,9 @@ function ShopPageProduct(props) {
 
     let session = sessionStorage.getItem('saleType')
 
-
     if (session === 'Hardware'){
       return(
-        props.product.length > 0 ?
+       props.product.length > 0 ?
         <div>
         <Helmet>
           <title>{`${product.ProductName} — ${theme.name}`}</title>
@@ -252,9 +263,8 @@ function ShopPageProduct(props) {
         {content}
       </div>
       :
-        // <SitePageNotFound/>
-        props.history.push('/home/HomePageTwo')
-        //supposed go back to mainpage
+        <SitePageNotFound/>
+     
       )
     }
 
@@ -262,18 +272,15 @@ function ShopPageProduct(props) {
       let data = dummyHotel_Data.filter(x => x.HotelID === Number(productId))
       return(
         dummyHotel_Data.length > 0 ?
-              <Grid item container spacing={1} style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+              <Grid item container spacing={1} style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
                 <Grid item container xs={12} sm={10} style={{padding:'4%', justifyContent:'center'}} >
-                  {/* <Grid item xs={12} sm={3}>
-                    <HotelFilter/>
-                  </Grid> */}
                   <Grid item xs={12} sm={9}>
-
-                    <HotelDetail product={data[0]} />
-                    <HotelAmenities/>
-                    <HotelRooms />
+                    <Stack direction="column" spacing={1}>
+                      <HotelDetail product={data[0]} />
+                      <HotelAmenities/>
+                      <HotelRooms />
+                    </Stack>
                   </Grid>
-                  
                 </Grid>
               </Grid>
         :
@@ -284,14 +291,15 @@ function ShopPageProduct(props) {
 
   return (
     <React.Fragment>
-      {console.log('ssss', props.loading)}
+ 
       {props.loading === true ? <BlockLoader />
         :
        <>
-
+{sessionStorage.getItem('saleType') === 'hotel' &&
         <Grid item container style={{position: sticky ? 'fixed' : 'relative', zIndex:  sticky ? 99 : 0, backgroundColor: 'white'}} >
           <HotelSearchForm />
         </Grid>
+}
 
         <Grid style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
           <Grid item xs={12} sm={12}>

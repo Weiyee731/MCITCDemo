@@ -278,36 +278,32 @@ function HotelRooms(props) {
    
     return (
 
-      <Grid item container spacing={2} style={{ marginLeft:'3%', marginRight:'3%'}} elevation={2}>
+      <Grid item container rowSpacing={2} style={{ marginLeft:'3%', marginTop:'1%', display:'flex', flexDirection:'row', alignItems:'center'}} elevation={2}>
         <Grid item xs={12} sm={12}>
             <Typography variant="caption" style={{fontWeight:'bold'}}>Select Your Room</Typography>
         </Grid>
-        <Grid item xs={12} sm={12} style={{backgroundColor:'white', padding:"2%", margin:'1.5%'}}>
-
-
-{dummyHotelRoom_data.map((room)=>
-            <Grid item container 
-              spacing={2} style={{ paddingTop:'2%', paddingBottom:'2%', display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', backgroundColor:'white'}}
-              elevation={2}>
+     
+ {dummyHotelRoom_data.map((room)=>
+     <>
               <Grid item xs={12} sm={10} >
-                <Grid item container spacing={1} style={{ display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                <Grid item container spacing={2} style={{ display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
                   <Grid item xs={12} sm={3} style={{paddingLeft:'2%',paddingRight:'2%'}} >
                         <div style={{fontSize:15, marginTop:'1%'}}>{room.RoomName}</div>
                     
-                        <Grid item container >
+                        <Grid item container style={{display:"flex", flexDirection:"row", justifyContent:'center'}}>
                           <Grid item xs={12} sm={12}>
                             <img src={room.RoomImages[0].ImageURL} alt={room.RoomImages[0].ImageID} style={{width:'100%', height:'auto'}}/>
                           </Grid>
-                          <Grid item xs={12} sm={6}>
+                          <Grid item xs={6} sm={6}>
                             <img src={room.RoomImages[1].ImageURL} alt={room.RoomImages[1].ImageID} style={{width:'100%', height:'auto'}}/>
                           </Grid>
-                          <Grid item xs={12} sm={6}>
+                          <Grid item xs={6} sm={6}>
                             <img src={room.RoomImages[2].ImageURL} alt={room.RoomImages[2].ImageID} style={{width:'100%', height:'auto'}}/>
                           </Grid>
                         </Grid>
                      
                     </Grid>
-                    <Grid item xs={3} sm={2}>
+                    <Grid item xs={6} sm={2} >
                       <div>
                       <button style={{border:'none', backgroundColor:'transparent', padding:0}} onClick={() => setOpenModal(!openModal)}><Typography color="primary" sx={{textDecoration:"underline"}}>View room</Typography></button>
                       </div>
@@ -320,21 +316,22 @@ function HotelRooms(props) {
                           ))}
                       </Stack>
                     </Grid>
-                    <Grid item xs={9} sm={2}>
-                      <Stack direction='row' spacing={1}>
-                          <Typography variant="caption">RM</Typography>
-                          <Typography variant="h5" color="#288825">{room.Price}</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
+                   
+                    <Grid item xs={6} sm={3}>
                       <Stack direction ="row" spacing={2}>
                         <RestaurantIcon fontSize="small" style={{color:"#ffa31a"}}/>
                         <Typography variant="caption">{room.Breakfast_Included === true ? 'Breakfast included' : 'No breakfast included'}</Typography>
                       </Stack>
-                      
                     </Grid>
-                    <Grid item xs={12} sm={2} >
-                      <Stack direction='row' spacing={2}>
+
+                    <Grid item xs={6} sm={2}>
+                      <Stack direction='row' spacing={1}>
+                          <Typography variant="h5" color="#288825">MYR {room.Price}</Typography>
+                      </Stack>
+                    </Grid>
+
+                    <Grid item xs={6} sm={2} >
+                      <Stack direction='row' spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
                           <div>+</div>
                           <div style={{minHeight:'20px', minWidth:'20px'}}>0</div>
                           <div>-</div>
@@ -342,11 +339,14 @@ function HotelRooms(props) {
                     </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={2}>
-                  <Button variant="contained" color="primary" size="small" component={Link} to={url.hotel(room.RoomID)} >Reserve</Button>
+              <Grid item container spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'flex-end', marginRight:"3%"}}>
+                <Grid item xs={12} sm={2} >
+                    <Button variant="contained" color="primary" size="small" component={Link} to={url.hotel(room.RoomID)} fullWidth>Reserve</Button>
+                </Grid>
               </Grid>
-            </Grid>
-)}
+            
+              </>
+)} 
 
       <Modal isOpen={openModal} toggle={() => setOpenModal(!openModal)} centered size="xl">
           <Grid item container style={{padding:'2%'}}>
@@ -359,7 +359,7 @@ function HotelRooms(props) {
             <HotelModal/>
           </Grid>
         </Modal>
-        </Grid>
+      
        
       </Grid>
      

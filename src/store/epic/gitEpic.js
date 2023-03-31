@@ -1785,6 +1785,14 @@ deleteCreditCard = action$ =>
 getAllProducts = action$ =>
   action$.pipe(filter(action => action.type === GitAction.GetProduct), map(action => {
     return dispatch => {
+      console.log(url +
+        "Product_ItemListByType?Type=" + action.payload.type +
+        "&TypeValue=" + action.payload.typeValue +
+        "&USERID=" + action.payload.userId +
+        "&PROJECTID=2" +
+        "&PRODUCTPERPAGE=" + action.payload.productPage +
+        "&PAGE=" + action.payload.page +
+        "&PLATFORMTYPE=" + platformType)
       try {
         return fetch(url +
           "Product_ItemListByType?Type=" + action.payload.type +

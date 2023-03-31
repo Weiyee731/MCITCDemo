@@ -8,20 +8,10 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { url } from "../../../services/utils";
 
-
 // application
 import {Grid, Typography, Stack, Checkbox, Button, IconButton,Card} from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import PersonIcon from '@mui/icons-material/Person';
 import _ from "lodash";
-import CloseIcon from '@mui/icons-material/Close';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import HotelFilter from "../../blocks/HotelFilter";
-import Divider from '@mui/material/Divider';
-
 function Hotel_Listing(props) {
     // const {
     //   product,
@@ -339,7 +329,6 @@ function Hotel_Listing(props) {
         data = dummyHotel_Data.filter((x)=> x.HotelState === props.searchValue || x.HotelName === props.searchValue)
 
         return (
-
             data.map((x)=>(
             <Card style={{marginBottom:'2%'}}>
                 <Grid item container spacing={2} style={{padding:"4%", display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
@@ -418,7 +407,8 @@ function Hotel_Listing(props) {
     }
     
     return (
-
+      <React.Fragment>
+         <div className="block--margin-top">
       <Grid item container spacing={2} style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItem:'center', padding:"4%"}}>
             <Grid item xs={12} sm={9}>
                 <Grid item container spacing={4}>
@@ -431,8 +421,9 @@ function Hotel_Listing(props) {
                     </Grid>
                 </Grid>
             </Grid>
-    </Grid>
-     
+      </Grid>
+      </div>
+      </React.Fragment>
     );
   
   

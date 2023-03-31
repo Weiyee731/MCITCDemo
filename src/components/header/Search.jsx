@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-
+import {useHistory} from 'react-router-dom';
 // third-party
 import classNames from 'classnames';
 // import { browserHistory } from "react-router";
@@ -72,6 +72,7 @@ function Search(props) {
   const [suggestedProducts, setSuggestedProducts] = useState([]);
   const [query, setQuery] = useState('');
   const [type, setType] = useState("Hardware");
+
   // const [category] = useState('[all]');
   const wrapper = useRef(null);
   const close = useCallback(() => {
@@ -85,8 +86,9 @@ function Search(props) {
   const setPageSale_Type = (type) => {
     sessionStorage.setItem("saleType", type);
     setType(type)
-
-    window.location.reload(false)
+  
+    // window.location.reload(false)
+    window.location.href = "/home/HomePageTwo";
 }
 
   // Close suggestions when the location has been changed.

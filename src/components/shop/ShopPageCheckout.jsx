@@ -91,6 +91,7 @@ class PageCheckout extends Component {
 
     this.STEPS = ['Cart', 'Billing & address', 'Payment'];
     this.data = this.props.location.state;
+    console.log('aaa', this.data)
     this.completed = this.state.activeStep === this.STEPS.length;
   }
 

@@ -231,7 +231,7 @@ function Layout(props) {
       <MobileMenu /> */}
       <Router basename={"/"}>
         <div className="site">
-          <header className="site__header d-lg-none">
+          <header className="site__header d-lg-none" style={{paddingBottom:"6%" }}>
             <MobileHeader saleType={choice}/>
           </header>
           <header className="site__header d-lg-block d-none">
@@ -239,7 +239,7 @@ function Layout(props) {
             <Header layout={headerLayout} location={props.location.pathname} />
           </header>
 
-          <div className="site__body" style={{ backgroundColor: "#f5f5f5" }}>
+          <div className="site__body" style={{ backgroundColor: "#f5f5f5"}}>
             <Switch>
               <Route exact path={`${match.path}`} component={homeComponent} />
               <Redirect exact from="/shop" to="/shop/catalog" />
