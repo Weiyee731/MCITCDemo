@@ -215,7 +215,7 @@ class HotelDetails extends Component {
                 <Grid item xs={12} sm={4} style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
                     <img src={product.HotelImage} alt={product.HotelName} style={{width:"100%", borderRadius:"4%"}}/>
                 </Grid>
-                <Grid item xs={12} sm={4} style={{margin:'2%'}}>
+                <Grid item xs={12} sm={4} >
                 <Grid item container style={{display:'flex', flexDirection:'row', alignItems:"center", marginTop:'1.5%'}}>
                         <Grid>
                             <Typography variant="h6" sx={{letterSpacing:'2px'}}>{product.HotelName}</Typography>  
@@ -244,7 +244,7 @@ class HotelDetails extends Component {
                         </Stack>
                     </Grid>
                 </Grid>
-                <Grid item container xs={12} sm={4} style={{margin:'2%', borderRadius:'4%'}}>
+                <Grid item container xs={12} sm={4} style={{ borderRadius:'4%'}}>
                     <Stack direction="column" spacing={2} style={{padding:'2%', backgroundColor:'rgb(188, 218, 199,0.5)', borderRadius:'2%'}}>
                         <Grid item xs={12} sm={12} >
                             <Stack direction="row" spacing={1}>
