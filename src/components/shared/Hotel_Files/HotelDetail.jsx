@@ -30,6 +30,7 @@ import HotelSearchForm from "../../blocks/HotelSearchForm";
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import {CardActionArea, CardActions } from '@mui/material';
+import { Wishlist16Svg } from "../../../svg";
 
 class HotelDetails extends Component {
     constructor(props) {
@@ -216,14 +217,16 @@ class HotelDetails extends Component {
                     <img src={product.HotelImage} alt={product.HotelName} style={{width:"100%", borderRadius:"4%"}}/>
                 </Grid>
                 <Grid item xs={12} sm={4} >
-                <Grid item container style={{display:'flex', flexDirection:'row', alignItems:"center", marginTop:'1.5%'}}>
-                        <Grid>
-                            <Typography variant="h6" sx={{letterSpacing:'2px'}}>{product.HotelName}</Typography>  
-                        </Grid>
-                        <Grid style={{marginLeft:'2%'}}>
-                            {/* <Wishlist16Svg/> */}
-                        </Grid>
-                    </Grid>
+                <Grid item xs={12} sm={12} >
+                    <Stack direction="row" spacing={2} style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center', margin:"auto"}}>
+                        <div>
+                            <Typography variant="h6" sx={{letterSpacing:'2px'}} >{product.HotelName}</Typography>  
+                        </div>
+                        <div>
+                            <Wishlist16Svg/>
+                        </div>
+                    </Stack>
+                </Grid>
                     
                     <Typography sx={{marginTop:'2%'}}>5 Stars Hotel</Typography>
                     <Typography sx={{marginTop:'2%'}}>Jalan Tunku Abdul Rahman, 93100, Kuching, Malaysia</Typography>
@@ -249,7 +252,7 @@ class HotelDetails extends Component {
                         <Grid item xs={12} sm={12} >
                             <Stack direction="row" spacing={1}>
                                 <Typography variant="subtitle2">Start from</Typography>
-                                <Typography style={{color:"black"}} variant="h5">RM {product.StartPrice.toFixed(2)}</Typography>
+                                <Typography style={{color:"black"}} variant="h5">MYR {product.StartPrice.toFixed(2)}</Typography>
                             </Stack>
                         </Grid>
                         <Grid item xs={12} sm={12} style={{padding:'2%'}}>

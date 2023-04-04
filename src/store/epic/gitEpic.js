@@ -3264,6 +3264,27 @@ BankList_View = action$ =>
     }
   }));
 
+// =============================== Hotel =========================================
+ViewRoom_TypeList = action$ =>
+  action$.pipe(filter(action => action.type === GitAction.ViewRoomType_List), map(action => {
+    return dispatch => {
+      try {
+        return fetch(url + "Accommodation_General_ViewRoomType")
+          .then(response => response.json())
+          .then(json => {
+            json = JSON.parse(json)
+            if (json[0].ReturnVal === 1) {
+              return dispatch({ type: GitAction.ViewedRoomType_List, payload: JSON.parse(json[0].ReturnData) });
+            } else {
+              return dispatch({ type: GitAction.ViewedRoomType_List, payload: [] });
+            }
+          });
+      } catch (error) {
+        toast.error("Error Code: ViewedRoomType_List. Please check on URL")
+        return dispatch({ type: GitAction.ViewedRoomType_List, payload: [] });
+      }
+    }
+  }));
 
 // =============================== Postcode ======================================
 

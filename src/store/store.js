@@ -114,6 +114,8 @@ const rootEpic = combineEpics(
   gitEpic.BankList_View,
   //====================== POSTCODES ====================//
   gitEpic.ViewPostcodesList,
+  // ===================== HOTEL ======================//
+  gitEpic.ViewRoom_TypeList,
 );
 
 const epicMiddleware = createEpicMiddleware();

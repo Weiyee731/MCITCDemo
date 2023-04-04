@@ -37,6 +37,7 @@ import PageCheckout from "./shop/ShopPageCheckout";
 // import ShopPageCheckOut from "./shop/CheckOut";
 import PageCompare from "./shop/ShopPageCompare";
 import PageWishlist from "./shop/ShopPageWishlist";
+import Hotel_WishList from "./shared/Hotel_Files/Hotel_WishList";
 import ShopPageCategory from "./shop/ShopPageCategory";
 import ShopPageOrderSuccess from "./shop/ShopPageOrderSuccess";
 import ShopPageProduct from "./shop/ShopPageProduct";
@@ -383,6 +384,7 @@ function Layout(props) {
                     component={ShopPageOrderSuccess}
                   />
                   <Route exact path="/shop/wishlist" component={PageWishlist} />
+                  <Route exact path="/Hotel_Files/hotel_wishlist" component={Hotel_WishList} />
                   <Route exact path="/shop/compare" component={PageCompare} />
                   <Route
                     exact

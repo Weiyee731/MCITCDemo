@@ -81,6 +81,9 @@ export class GitAction {
   static UpdateShopDetail = "UPDATE-SHOP-DETAIL";
   static UpdatedShopDetail = "UPDATED-SHOP-DETAIL";
 
+  static ViewRoomType_List = "VIEWROOMTYPE_LIST";
+  static ViewedRoomType_List = "VIEWEDROOMTYPE_LIST";
+
   static CallCheckUserExists(credentials) {
     return {
       type: GitAction.CheckUser,
@@ -104,6 +107,12 @@ export class GitAction {
   static CallAllUsers() {
     return {
       type: GitAction.GetUser,
+    };
+  }
+
+  static CallAllRoomType() {
+    return {
+      type: GitAction.ViewRoomType_List,
     };
   }
 

@@ -13,6 +13,7 @@ import appstore from "../../assets/appstore.png";
 import Logo from "../../assets/Emporia.png";
 import { Link } from "react-router-dom";
 import { Typography } from '@mui/material';
+import {Divider} from "@mui/material";
 // data stubs
 // import theme from "../../data/theme";
 
@@ -86,11 +87,15 @@ export default function Footer() {
               <FooterNewsletter />
             </div>
           </div>
-          <hr width="100%" />
+
+          <div className="col-12 col-md-12 col-lg-12" style={{marginTop:"2%", marginBottom:'2%', borderBottom:"1px solid #ECECEC"}} />
+
+          <div className="col-12 col-md-12 col-lg-12" >
+              <Typography variant="caption" align="center" display="block">© 2022 MyEmporia Sdn. Bhd. (1422486-P)</Typography>
+          </div>
+   
           <div className="row">
-            <div className="col-12 col-md-4 col-lg-4">
-              <Typography variant='caption'>© 2022 MyEmporia Sdn. Bhd. (1422486-P)</Typography>
-            </div>
+           
             <div className="col-12 col-md-3 col-lg-3">
               <LogisticsFooter />
             </div>

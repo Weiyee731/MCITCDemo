@@ -18,10 +18,11 @@ import { Heart20Svg } from "../../svg";
 import Indicator from "./Indicator";
 import IndicatorCart from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
+import IndicatorB_Mark from "./IndicatorB_Mark";
 import Logo from "../../assets/Emporia.png";
 
 import { Cart20Svg, Cross10Svg } from "../../svg";
-import BookIcon from '@mui/icons-material/Book';
+// import BookIcon from '@mui/icons-material/Book';
 
 // import { wishlistListItem } from "../../store/wishlist";
 import { mobileMenuOpen } from '../../store/mobile-menu';
@@ -38,6 +39,40 @@ function Header(props) {
   const [isproductPage, setisproductPage] = useState(false);
   const [openloginPopOut, setopenloginPopOut] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+
+  const bookmark_Hotel = [
+    {
+      HotelID: 0,
+      HotelImage: 'https://media-cdn.tripadvisor.com/media/photo-s/12/a9/df/17/hilton-night-view-from.jpg',
+      HotelName:'Hilton',
+      StartPrice: 180.00,
+      HotelRating: 4.0,
+      HotelState: 'Kuching',
+      ProductPromotion: null,
+      DellInd: 0,
+    },
+    {
+      HotelID: 1,
+      HotelImage: 'https://pix10.agoda.net/hotelImages/44583/-1/8742bb65e5a6b3f370d3e94212bb8a76.jpg?ca=23&ce=0&s=1024x768',
+      HotelName:'Grand Magherita',
+      StartPrice: 185.00,
+      HotelRating: 4.1,
+      HotelState: 'Kota Samarahan',
+      ProductPromotion: null,
+      DellInd: 0,
+    },
+    {
+      HotelID: 2,
+      HotelImage: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/124344871.jpg?k=82daced0f7392440064c6ec25622e0d0154f02c62a2c885d96103c320273befe&o=&hp=1',
+      HotelName:'Tune Hotel',
+      StartPrice: 90.00,
+      HotelRating: 3.9,
+      HotelState: 'Kuching',
+      ProductPromotion: null,
+      DellInd: 0
+    }, 
+   
+  ]
 
 
   useEffect(() => {
@@ -165,9 +200,14 @@ function Header(props) {
                 </>
                 :
                 <div style={{margin:'auto'}}>
-                  <IconButton>
-                    <BookIcon style={{color:"#1C1C1E"}}/>
-                  </IconButton>
+                    {
+                      localStorage.getItem("isLogin") === 'true' &&
+                      <Indicator url="/Hotel_Files/hotel_wishlist"
+                        value={bookmark_Hotel !== undefined ?
+                          bookmark_Hotel.filter((x) => x.DellInd === 0).length :
+                          0}
+                        icon={<Heart20Svg />} />
+                    }
                 </div>
               
               }

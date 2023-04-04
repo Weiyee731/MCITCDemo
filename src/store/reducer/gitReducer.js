@@ -90,6 +90,7 @@ const INITIAL_STATE = {
   postcodes: [],
   promoCode: [],
   bindGoogleFB: [],
+  roomTypeList:[],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -1355,6 +1356,15 @@ export function counterReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         loading: false,
         productOrders: action.payload,
+      });
+
+    // ===================== HOTEL =========================//
+    case GitAction.ViewRoomType_List:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ViewedRoomType_List:
+      return Object.assign({}, state, {
+        loading: false,
+        roomTypeList: action.payload,
       });
 
     case GitAction.SendSalesOrder:
