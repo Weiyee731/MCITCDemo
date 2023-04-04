@@ -85,7 +85,9 @@ function HotelFilter(props) {
   
    
     useEffect(() => {
-    }, [props.addwishlist]);
+      props.CallAllRoomType()
+      // setRoomType_List(props.roomTypeList)
+    }, []);
 
 
    const render_Filter = (datas) => {
@@ -94,6 +96,7 @@ function HotelFilter(props) {
     
       datas.map((data)=>(
       <Grid item container spacing={2}>
+
         <Grid item xs={12} sm={12}>
           <Typography style={{fontWeight:'bold',color:'#476E56'}}>{data.FilterName}</Typography>
           </Grid>
@@ -186,13 +189,12 @@ function HotelFilter(props) {
   
   
   const mapStateToProps = (state) => ({
- 
-   
+    roomTypeList: state.counterReducer.roomTypeList,
   });
   
   const mapDispatchToProps = (dispatch) => {
     return {
-     
+      CallAllRoomType: (prodData) => dispatch(GitAction.CallAllRoomType()),
     }
   };
   
