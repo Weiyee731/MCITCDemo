@@ -149,7 +149,6 @@ function ShopPageProduct(props) {
   ]
  
   useEffect(() => {
-    console.log("hello");
     window.addEventListener("scroll", isSticky);
     props.CallAllProducts({
       type: "Merchant",
@@ -246,6 +245,8 @@ function ShopPageProduct(props) {
   }
 
 
+
+
   const render_Details = () => {
 
     let session = sessionStorage.getItem('saleType')
@@ -272,7 +273,13 @@ function ShopPageProduct(props) {
       let data = dummyHotel_Data.filter(x => x.HotelID === Number(productId))
       return(
         dummyHotel_Data.length > 0 ?
+        <>
+        <Grid item container style={{position: sticky ? 'fixed' : 'relative', zIndex:  sticky ? 99 : 0, backgroundColor: 'white'}} >
+        <HotelSearchForm />
+      </Grid>
               <Grid item container spacing={1} style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
+                 
+
                 <Grid item container xs={12} sm={10} style={{padding:'4%', justifyContent:'center'}} >
                   <Grid item xs={12} sm={9}>
                     <Stack direction="column" spacing={1}>
@@ -283,6 +290,7 @@ function ShopPageProduct(props) {
                   </Grid>
                 </Grid>
               </Grid>
+              </>
         :
         <SitePageNotFound/>
       )

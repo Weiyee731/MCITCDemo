@@ -212,6 +212,7 @@ class HotelDetails extends Component {
         const {product} = this.props
 
         return(
+            
             <Grid item container spacing={2} style={{margin:"auto", display:'flex', flexDirection:'row', justifyContent:'center', alignContent:'center'}}>
                 <Grid item xs={12} sm={4} style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
                     <img src={product.HotelImage} alt={product.HotelName} style={{width:"100%", borderRadius:"4%"}}/>
@@ -249,18 +250,16 @@ class HotelDetails extends Component {
                 </Grid>
                 <Grid item container xs={12} sm={4} style={{ borderRadius:'4%'}}>
                     <Stack direction="column" spacing={2} style={{padding:'2%', backgroundColor:'rgb(188, 218, 199,0.5)', borderRadius:'2%'}}>
-                        <Grid item xs={12} sm={12} >
-                            <Stack direction="row" spacing={1}>
-                                <Typography variant="subtitle2">Start from</Typography>
-                                <Typography style={{color:"black"}} variant="h5">MYR {product.StartPrice.toFixed(2)}</Typography>
-                            </Stack>
-                        </Grid>
                         <Grid item xs={12} sm={12} style={{padding:'2%'}}>
-                            <Typography variant="caption">Hotel Policy</Typography>
-                            <Typography style={{color:'#476E56'}}>Check In 3pm - Check Out 12 pm</Typography>
+                            <Typography variant="subtitle1">Start from</Typography>
+                            <Typography style={{color:"black"}} variant="h5">MYR {product.StartPrice.toFixed(2)}</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={12} style={{paddingLeft:'2%'}}>
+                            <Typography variant="caption" sx={{color:'black'}}>Hotel Policy</Typography>
+                            <Typography style={{color:'#476E56'}} variant="subtitle2">Check In 3pm - Check Out 12 pm</Typography>
 
-                            <Typography variant="caption">Contact</Typography>
-                            <Typography style={{color:'#476E56'}}>Jalan Tunku Abdul Rahman, 93100, Kuching, Malaysia
+                            <Typography variant="caption" sx={{color:'black'}}>Contact</Typography>
+                            <Typography style={{color:'#476E56'}} variant="subtitle2">Jalan Tunku Abdul Rahman, 93100, Kuching, Malaysia
                             Telephone: +60 82223888 | Fax: +60 82428984</Typography>
                         </Grid>
                     </Stack>

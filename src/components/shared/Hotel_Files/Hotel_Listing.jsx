@@ -12,12 +12,16 @@ import { url } from "../../../services/utils";
 import {Grid, Typography, Stack, Checkbox, Button, IconButton,Card} from '@mui/material';
 import _ from "lodash";
 import HotelFilter from "../../blocks/HotelFilter";
+import HotelSearchForm from "../../blocks/HotelSearchForm";
 function Hotel_Listing(props) {
     // const {
     //   product,
     //   layout
     // } = props;
 
+    const [sticky, setSticky] = useState(true);
+
+  
     const dummyHotel_Data = [
         {
           HotelID: 0,
@@ -322,6 +326,21 @@ function Hotel_Listing(props) {
           Capacity:2,
           }
       ]
+
+    useEffect(() => {
+      window.addEventListener("scroll", isSticky);
+      return () => {
+        window.removeEventListener("scroll", isSticky);
+      };
+    }, []);
+
+    const isSticky = () => {
+      /* Method that will fix header after a specific scrollable */
+      const scrollTop = window.scrollY;
+      const stickyClass = scrollTop >= 250 ? true : false;
+      setSticky(stickyClass);
+      
+    };
       
     const searchResult = () => {
         
@@ -409,7 +428,11 @@ function Hotel_Listing(props) {
     return (
       <React.Fragment>
          <div className="block--margin-top">
-      <Grid item container spacing={2} style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItem:'center', padding:"4%"}}>
+         <Grid item container style={{position: sticky ? 'fixed' : 'relative', zIndex:  sticky ? 99 : 0, backgroundColor: 'white'}} >
+          <HotelSearchForm />
+        </Grid>
+      <Grid item container spacing={2} style={{display:'flex', flexDirection:"row", justifyContent:'center', alignItem:'center', padding:"2%"}}>
+      
             <Grid item xs={12} sm={9}>
                 <Grid item container spacing={4}>
                     <Grid item xs={12} sm={3}>
