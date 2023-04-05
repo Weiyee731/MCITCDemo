@@ -10,139 +10,47 @@ import { url } from "../../services/utils";
 import "./styles/BlockTopBrands.css";
 
 // application
-import {Grid, Typography, Checkbox, FormControlLabel, TextField, InputAdornment, IconButton, Stack, Box} from '@mui/material';
+import {Grid, Typography, Checkbox, FormControlLabel, TextField, InputAdornment, IconButton, Stack, Box, Button} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-
-
 function HotelFilter(props) {
-    // const {
-    //   product,
-    //   layout
-    // } = props;
 
-    const [RoomType, setRoomType_List] = useState('');
-    const [searchRoomType, setSearchRoomType] = React.useState('');
-    const [checked, setChecked] = React.useState('');
+    //collapse -- will improve the code later 
+    const [collapseRoom, setCollapseRoom] = React.useState(true);
+    const [collapseProperty, setPropertyCollapse] = React.useState(true);
+    const [collapseBed, setCollapseBed] = React.useState(true);
+    const [selectedCollapse_Feature, setSelectedCollapse_Feature] = React.useState([]);
 
-    const filterFeature = [
-      { FilterID:0, 
-        FilterName:'Budget Per Night' , 
-        FilterType: 'Price',
-        FilterTypeID: 0,
-        FilterVariants:
-        [
-          {FilterVariantID:0, VariantType:[{VariantTypeValue:0}, {VariantTypeValue:100}]},
-          {FilterVariantID:1, VariantType:[{VariantTypeValue:100}, {VariantTypeValue:200}]},
-          {FilterVariantID:2, VariantType:[{VariantTypeValue:200}, {VariantTypeValue:400}]},
-          {FilterVariantID:3, VariantType:[{VariantTypeValue:400}, {VariantTypeValue:600}]},
-          {FilterVariantID:4, VariantType:[{VariantTypeValue:800}, {VariantTypeValue:null}]},
-        ],
-      },
-      { FilterID:1, 
-        FilterName:'Cancellation Policy', 
-        FilterType: 'Regular',
-        FilterTypeID: 2,
-        FilterVariants:
-        [
-          {FilterVariantID:5, VariantType:[{VariantTypeValue:'No prepayment'}]},
-          {FilterVariantID:6, VariantType:[{VariantTypeValue:'Free Cancellation'}]},
-        ],
-      },
-      { FilterID:2, 
-        FilterName:'Property Rating', 
-        FilterType: 'Regular',
-        FilterTypeID: 2,
-        FilterVariants:
-        [
-          {FilterVariantID:7, VariantType:[{VariantTypeValue:'5 Star'}]},
-          {FilterVariantID:8, VariantType:[{VariantTypeValue:'4 Star'}]},
-          {FilterVariantID:9, VariantType:[{VariantTypeValue:'3 Star'}]},
-          {FilterVariantID:10, VariantType:[{VariantTypeValue:'2 Star'}]},
-          {FilterVariantID:11, VariantType:[{VariantTypeValue:'1 Star'}]},
-          {FilterVariantID:12, VariantType:[{VariantTypeValue:'Unrated'}]}
-        ],
-      },
-      { FilterID:3, 
-        FilterName:'Meals', 
-        FilterType: 'Regular',
-        FilterTypeID: 2,
-        FilterVariants:
-        [
-          {FilterVariantID:13, VariantType:[{VariantTypeValue:'Kitchen Provided'}]},
-          {FilterVariantID:14, VariantType:[{VariantTypeValue:'Breakfast Included'}]},
-        ],
-      },
-      { FilterID:4, 
-        FilterName:'Room Facilities', 
-        FilterType: 'Regular',
-        FilterTypeID: 2,
-        FilterVariants:
-        [
-          {FilterVariantID:15, VariantType:[{VariantTypeValue:'Balcony'}]},
-          {FilterVariantID:16, VariantType:[{VariantTypeValue:'Bathtub'}]},
-          {FilterVariantID:17, VariantType:[{VariantTypeValue:'Private Bathroom'}]},
-        ],
-      },
-      
-  ]
-  
-   
+    //checkbox
+    const [checked, setChecked] = React.useState(false);
+
+    // call data & set them to state
     useEffect(() => {
       props.CallAllRoomType();
       props.CallAllPropertyType();
       props.CallAllBedType();
-      props.CallFeature_List({ISROOM:0})
-      setRoomType_List(props.roomTypeList)
+      props.CallFeature_List({ISROOM:0});
+
     }, []);
 
+   const showAll_data = (collapseType, title) => {
 
-   const render_Filter = (datas) => {
+    const handleClickButton = () => {
+      if(collapseType === 'room'){
+        setCollapseRoom(!collapseRoom);
+      }
+      else if(collapseType === 'property'){
+        setPropertyCollapse(!collapseProperty);
+      }
+      else if(collapseType === 'bed'){
+        setCollapseBed(!collapseBed);
+      }
+    };
+    
 
     return(
-    
-      datas.map((data)=>(
-      <Grid item container spacing={2}>
-
-        <Grid item xs={12} sm={12}>
-          <Typography style={{fontWeight:'bold',color:'#476E56'}}>{data.FilterName}</Typography>
-          </Grid>
-      
-          {data.FilterTypeID === 0? 
-            data.FilterVariants.map((y)=>(
-              
-            <Grid item xs={12} sm={12}>
-                <FormControlLabel
-                label={<Typography>MYR {y.VariantType[0].VariantTypeValue} 
-                {y.VariantType[1].VariantTypeValue !== null ? ' - ' + y.VariantType[1].VariantTypeValue : ' + '}
-                </Typography>}
-                control={<Checkbox checked={false} 
-                // onChange={handleChange2} 
-                />}
-                />
-                
-            </Grid>
-            
-            ))
-           
-            : 
-
-            data.FilterVariants.map((y)=>(
-              
-            <Grid item xs={12} sm={12}>
-              {y.VariantType.map((v)=>(
-              <FormControlLabel
-              label={<Typography>{v.VariantTypeValue}</Typography>}
-              control={<Checkbox checked={false} 
-              // onChange={handleChange2} 
-              />}
-              />
-              ))}
-          </Grid>
-            ))}
-           
-           </Grid>
-      )))
+      <Button color="primary" style={{textTransform:'none'}} onClick={()=>handleClickButton()}>{title}</Button>
+    )
 
    }
 
@@ -156,108 +64,200 @@ function HotelFilter(props) {
           // onChange={handleChange2} 
           />}
         />
+        
       </Box>
     )
 };
 
-console.log('feature', props.featureList)
-
+ 
    const renderRoomType = (data) => {
+    let datas = ""
+    let title = ""
+    switch(collapseRoom){
+      case true:
+        datas = data.slice(0,5);
+        title = 'Show All ' + data.length
+        break;
+      case false:
+        datas = data
+        title = 'Show Less'
+        break;
+      default:
+        break;
+    }
     return(
-        <Grid item xs={12} sm={12} style={{height:'300px', overflowY:'auto'}} >
+        <Grid item xs={12} sm={12} style={{borderBottom:'1px solid #ECECEC', padding:'3%'}}>
                <FormControlLabel
-               label={<Typography variant="subtitle2" fontWeight="bold">Room Type ({data.length})</Typography>}
+               label={<Typography variant="subtitle2" fontWeight="bold">Room Type </Typography>}
                control={
                  <Checkbox
                    checked={checked[0] && checked[1]}
-                   indeterminate={true}
+                   indeterminate={false}
                   //  onChange={handleChange1}
                  />
                }
              />
-            {data.map((x)=>(
-              <>
+             
+            {datas.map((x) => (
+             <>
              {RoomType_children(x.RoomType, x.RoomTypeID)}
              </>
              ))}
+             {data.length > 5 && showAll_data('room', title)}  
         </Grid>
         
     )
    }
 
    const renderPropertyType = (data) => {
+    let datas = ""
+    let title = ""
+    switch(collapseProperty){
+      case true:
+        datas = data.slice(0,5);
+        title = 'Show All ' + data.length
+        break;
+      case false:
+        datas = data
+        title = 'Show Less'
+        break;
+      default:
+        break;
+    }
         return(
-            <Grid item xs={12} sm={12} style={{height:'300px', overflowY:'auto'}} >
+            <Grid item xs={12} sm={12} style={{borderBottom:'1px solid #ECECEC', padding:'3%'}}>
               <FormControlLabel
-              label={<Typography variant="subtitle2" fontWeight="bold">Property Type ({data.length})</Typography>}
+              label={<Typography variant="subtitle2" fontWeight="bold">Property Type</Typography>}
               control={
                 <Checkbox
                   checked={checked[0] && checked[1]}
-                  indeterminate={true}
+                  indeterminate={false}
                 //  onChange={handleChange1}
                 />
               }
             />
-          {data.map((x)=>(
-                  <>
+          {datas.map((x)=>(
+          <>
           {RoomType_children(x.PropertyType, x.PropertyTypeID)}
           </>
           ))}
-              
+          {data.length > 5 && showAll_data('property', title)}    
         </Grid>
     )
    }
 
 
    const renderBedType = (data) => {
-    
+    let datas = ""
+    let title = ""
+    switch(collapseBed){
+      case true:
+        datas = data.slice(0,5);
+        title = 'Show All ' + data.length
+        break;
+      case false:
+        datas = data
+        title = 'Show Less'
+        break;
+      default:
+        break;
+    }
     return(
-        <Grid item xs={12} sm={12} style={{height:'300px', overflowY:'auto'}} >
+        <Grid item xs={12} sm={12} style={{borderBottom:'1px solid #ECECEC', padding:'3%'}} >
           <FormControlLabel
-          label={<Typography variant="subtitle2" fontWeight="bold">Bed Type ({data.length})</Typography>}
+          label={<Typography variant="subtitle2" fontWeight="bold">Bed Type</Typography>}
           control={
             <Checkbox
               checked={checked[0] && checked[1]}
-              indeterminate={true}
+              indeterminate={false}
             //  onChange={handleChange1}
             />
           }
         />
-      {data.map((x)=>(
-              <>
-      {RoomType_children(x.BedType, x.BedID)}
+      {datas.map((x)=>(
+      <>
+        {RoomType_children(x.BedType, x.BedID)}
       </>
       ))}
-          
+        {data.length > 5 && showAll_data('bed', title)}  
     </Grid>
 )
 }
+
+
+const handleExpand_Feature = (id) => {
+  let checkExistence = selectedCollapse_Feature.indexOf(id);
+  if(checkExistence === -1){
+    setSelectedCollapse_Feature([...selectedCollapse_Feature, id])
+  }
+  else{
+    setSelectedCollapse_Feature(selectedCollapse_Feature.filter(item => item !== id))
+  }
+
+}
+
+
+const renderFeatures = (data) => {
+  let datas = data
+  let title = selectedCollapse_Feature.indexOf(data.FeatureTypeID) !== -1 ? "Show More" : "Show Less"
+
+  let f_listing = (list) =>{
+    let listData = list
+    if(selectedCollapse_Feature.indexOf(listData[0].ParentFeatureTypeID) !== -1){
+      return listData
+    }
+    else{
+      return listData.slice(0,5)
+    }
+    
+  }
+
+  return(
+    <Grid item xs={12} sm={12} >
+    
+      {datas.map((dat)=>(
+        <Grid item xs={12} sm={12} style={{borderBottom:'1px solid #ECECEC', padding:'3%'}} >
+          <FormControlLabel
+          label={<Typography variant="subtitle2" fontWeight="bold">{dat.FeatureType}</Typography>}
+          control={
+            <Checkbox
+              checked={checked[0] && checked[1]}
+              indeterminate={false}
+              size="small"
+            //  onChange={handleChange1}
+            />
+          }
+        />
+      
+      
+      {f_listing(JSON.parse(dat.FeatureListing)).map((feature, idx)=>(
+        <>
+        {RoomType_children(feature.FeatureType, feature.FeatureTypeID)}
+        </> 
+        ))}
+        {JSON.parse(dat.FeatureListing).length > 5 && <Button color="primary" sx={{textTransform:'none'}} onClick={()=>handleExpand_Feature(dat.FeatureTypeID)}>{selectedCollapse_Feature.indexOf(dat.FeatureTypeID) !== -1 ? 'Show Less' : 'Show All ' + JSON.parse(dat.FeatureListing).length} </Button>}
+      </Grid>
+       ))}
+     
+    </Grid>
+  )
+}
    
   
-    return (
-
-      <Grid item container style={{backgroundColor:"white", padding:'4%'}} elevation={2}>
-
-        {renderRoomType(props.roomTypeList)}
-        {renderPropertyType(props.propertyTypeList)}
-        {renderBedType(props.bedTypeList)}
-
-      </Grid>
-      
-    );
+  return (
+    <Grid item container style={{backgroundColor:"white", padding:'4%'}} elevation={2}>
+      {renderRoomType(props.roomTypeList)}
+      {renderPropertyType(props.propertyTypeList)}
+      {renderBedType(props.bedTypeList)}
+      {renderFeatures(props.featureList)}
+    </Grid>
+  );
   
   
   }
   
   HotelFilter.propTypes = {
-    /**
-     * product object
-     */
     product: PropTypes.object.isRequired,
-    /**
-     * product card layout
-     * one of ['grid-sm', 'grid-nl', 'grid-lg', 'list', 'horizontal']
-     */
     layout: PropTypes.oneOf([
       "grid-sm",
       "grid-nl",
