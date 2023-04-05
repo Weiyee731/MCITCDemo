@@ -84,6 +84,18 @@ export class GitAction {
   static ViewRoomType_List = "VIEWROOMTYPE_LIST";
   static ViewedRoomType_List = "VIEWEDROOMTYPE_LIST";
 
+  static ViewPropertyType_List = "VIEWPROPERTYTYPE_LIST";
+  static ViewedPropertyType_List = "VIEWEDPROPERTYTYPE_LIST";
+
+  static ViewBedType_List = "VIEWBEDTYPE_LIST";
+  static ViewedBedType_List = "VIEWEDBEDTYPE_LIST";
+
+  static ViewLocation_List = "VIEWLOCATION_LIST";
+  static ViewedLocation_List = "VIEWEDLOCATION_LIST";
+
+  static ViewFeature_List = "VIEWFEATURE_LIST";
+  static ViewedFeature_List = "VIEWEDFEATURE_LIST";
+
   static CallCheckUserExists(credentials) {
     return {
       type: GitAction.CheckUser,
@@ -113,6 +125,31 @@ export class GitAction {
   static CallAllRoomType() {
     return {
       type: GitAction.ViewRoomType_List,
+    };
+  }
+
+  static CallAllPropertyType() {
+    return {
+      type: GitAction.ViewPropertyType_List,
+    };
+  }
+
+  static CallAllBedType() {
+    return {
+      type: GitAction.ViewBedType_List,
+    };
+  }
+
+  static CallAll_Location() {
+    return {
+      type: GitAction.ViewLocation_List,
+    };
+  }
+
+  static CallFeature_List(credentials) {
+    return {
+      type: GitAction.ViewFeature_List,
+      payload: credentials,
     };
   }
 

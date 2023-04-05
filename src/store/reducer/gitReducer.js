@@ -91,6 +91,10 @@ const INITIAL_STATE = {
   promoCode: [],
   bindGoogleFB: [],
   roomTypeList:[],
+  propertyTypeList:[],
+  bedTypeList:[],
+  locationList:[],
+  featureList:[],
 };
 
 export function counterReducer(state = INITIAL_STATE, action) {
@@ -1366,6 +1370,40 @@ export function counterReducer(state = INITIAL_STATE, action) {
         loading: false,
         roomTypeList: action.payload,
       });
+
+    case GitAction.ViewPropertyType_List:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ViewedPropertyType_List:
+      return Object.assign({}, state, {
+        loading: false,
+        propertyTypeList: action.payload,
+      });
+
+    case GitAction.ViewBedType_List:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ViewedBedType_List:
+      return Object.assign({}, state, {
+        loading: false,
+        bedTypeList: action.payload,
+      });
+
+    case GitAction.ViewLocation_List:
+      return Object.assign({}, state, { loading: true });
+    case GitAction.ViewedLocation_List:
+      return Object.assign({}, state, {
+        loading: false,
+        locationList: action.payload,
+      });
+
+      case GitAction.ViewFeature_List:
+        return Object.assign({}, state, { loading: true });
+      case GitAction.ViewedFeature_List:
+        return Object.assign({}, state, {
+          loading: false,
+          featureList: action.payload,
+        });
+
+    // -----------------------------------------------------------------//
 
     case GitAction.SendSalesOrder:
       return Object.assign({}, state, { loading: true });

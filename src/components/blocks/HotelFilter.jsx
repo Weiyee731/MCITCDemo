@@ -1,5 +1,5 @@
 // react
-import React, {useEffect } from "react";
+import React, {useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { GitAction } from "../../store/action/gitAction";
 
@@ -10,7 +10,7 @@ import { url } from "../../services/utils";
 import "./styles/BlockTopBrands.css";
 
 // application
-import {Grid, Typography, Checkbox, FormControlLabel, TextField, Autocomplete, IconButton} from '@mui/material';
+import {Grid, Typography, Checkbox, FormControlLabel, TextField, InputAdornment, IconButton, Stack, Box} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 
@@ -20,6 +20,10 @@ function HotelFilter(props) {
     //   product,
     //   layout
     // } = props;
+
+    const [RoomType, setRoomType_List] = useState('');
+    const [searchRoomType, setSearchRoomType] = React.useState('');
+    const [checked, setChecked] = React.useState('');
 
     const filterFeature = [
       { FilterID:0, 
@@ -85,8 +89,11 @@ function HotelFilter(props) {
   
    
     useEffect(() => {
-      props.CallAllRoomType()
-      // setRoomType_List(props.roomTypeList)
+      props.CallAllRoomType();
+      props.CallAllPropertyType();
+      props.CallAllBedType();
+      props.CallFeature_List({ISROOM:0})
+      setRoomType_List(props.roomTypeList)
     }, []);
 
 
@@ -114,7 +121,6 @@ function HotelFilter(props) {
                 />}
                 />
                 
-           
             </Grid>
             
             ))
@@ -139,28 +145,102 @@ function HotelFilter(props) {
       )))
 
    }
+
+   const RoomType_children = (label, label_id) => {
+
+    return(
+      <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
+        <FormControlLabel
+          label={label}
+          control={<Checkbox checked={checked[0]} 
+          // onChange={handleChange2} 
+          />}
+        />
+      </Box>
+    )
+};
+
+console.log('feature', props.featureList)
+
+   const renderRoomType = (data) => {
+    return(
+        <Grid item xs={12} sm={12} style={{height:'300px', overflowY:'auto'}} >
+               <FormControlLabel
+               label={<Typography variant="subtitle2" fontWeight="bold">Room Type ({data.length})</Typography>}
+               control={
+                 <Checkbox
+                   checked={checked[0] && checked[1]}
+                   indeterminate={true}
+                  //  onChange={handleChange1}
+                 />
+               }
+             />
+            {data.map((x)=>(
+              <>
+             {RoomType_children(x.RoomType, x.RoomTypeID)}
+             </>
+             ))}
+        </Grid>
+        
+    )
+   }
+
+   const renderPropertyType = (data) => {
+        return(
+            <Grid item xs={12} sm={12} style={{height:'300px', overflowY:'auto'}} >
+              <FormControlLabel
+              label={<Typography variant="subtitle2" fontWeight="bold">Property Type ({data.length})</Typography>}
+              control={
+                <Checkbox
+                  checked={checked[0] && checked[1]}
+                  indeterminate={true}
+                //  onChange={handleChange1}
+                />
+              }
+            />
+          {data.map((x)=>(
+                  <>
+          {RoomType_children(x.PropertyType, x.PropertyTypeID)}
+          </>
+          ))}
+              
+        </Grid>
+    )
+   }
+
+
+   const renderBedType = (data) => {
+    
+    return(
+        <Grid item xs={12} sm={12} style={{height:'300px', overflowY:'auto'}} >
+          <FormControlLabel
+          label={<Typography variant="subtitle2" fontWeight="bold">Bed Type ({data.length})</Typography>}
+          control={
+            <Checkbox
+              checked={checked[0] && checked[1]}
+              indeterminate={true}
+            //  onChange={handleChange1}
+            />
+          }
+        />
+      {data.map((x)=>(
+              <>
+      {RoomType_children(x.BedType, x.BedID)}
+      </>
+      ))}
+          
+    </Grid>
+)
+}
    
   
     return (
 
       <Grid item container style={{backgroundColor:"white", padding:'4%'}} elevation={2}>
-        <Grid item xs={12} sm={12} style={{padding:'2%'}}>
-            <Autocomplete
-              multiple
-              id="multiple-tags"
-              options={filterFeature}
-              getOptionLabel={(option) => option.FilterName}
-              renderInput={(params) => (
-                <TextField {...params} label="Filter" placeholder="Filter Type"    
-                InputProps={{
-                  startAdornment: <IconButton><SearchIcon/></IconButton>,
-                }}/>
-              )}
-              fullWidth
-            />
-        </Grid>
-     
-        {render_Filter(filterFeature)}
+
+        {renderRoomType(props.roomTypeList)}
+        {renderPropertyType(props.propertyTypeList)}
+        {renderBedType(props.bedTypeList)}
 
       </Grid>
       
@@ -190,11 +270,17 @@ function HotelFilter(props) {
   
   const mapStateToProps = (state) => ({
     roomTypeList: state.counterReducer.roomTypeList,
+    propertyTypeList: state.counterReducer.propertyTypeList,
+    bedTypeList: state.counterReducer.bedTypeList,
+    featureList: state.counterReducer.featureList,
   });
   
   const mapDispatchToProps = (dispatch) => {
     return {
       CallAllRoomType: (prodData) => dispatch(GitAction.CallAllRoomType()),
+      CallAllPropertyType: (prodData) => dispatch(GitAction.CallAllPropertyType()),
+      CallAllBedType: (prodData) => dispatch(GitAction.CallAllBedType()),
+      CallFeature_List: (prodData) => dispatch(GitAction.CallFeature_List(prodData)),
     }
   };
   

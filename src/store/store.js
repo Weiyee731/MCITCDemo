@@ -116,6 +116,10 @@ const rootEpic = combineEpics(
   gitEpic.ViewPostcodesList,
   // ===================== HOTEL ======================//
   gitEpic.ViewRoom_TypeList,
+  gitEpic.ViewProperty_TypeList,
+  gitEpic.ViewBed_TypeList,
+  gitEpic.ViewLocation_List,
+  gitEpic.ViewFeatures_List,
 );
 
 const epicMiddleware = createEpicMiddleware();

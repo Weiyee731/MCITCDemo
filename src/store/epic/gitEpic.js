@@ -3286,6 +3286,93 @@ ViewRoom_TypeList = action$ =>
     }
   }));
 
+  ViewProperty_TypeList = action$ =>
+  action$.pipe(filter(action => action.type === GitAction.ViewPropertyType_List), map(action => {
+    return dispatch => {
+      try {
+        return fetch(url + "Accommodation_General_ViewPropertyType")
+          .then(response => response.json())
+          .then(json => {
+            json = JSON.parse(json)
+            if (json[0].ReturnVal === 1) {
+              return dispatch({ type: GitAction.ViewedPropertyType_List, payload: JSON.parse(json[0].ReturnData) });
+            } else {
+              return dispatch({ type: GitAction.ViewedPropertyType_List, payload: [] });
+            }
+          });
+      } catch (error) {
+        toast.error("Error Code: ViewedPropertyType_List. Please check on URL")
+        return dispatch({ type: GitAction.ViewedPropertyType_List, payload: [] });
+      }
+    }
+  }));
+
+  ViewBed_TypeList = action$ =>
+  action$.pipe(filter(action => action.type === GitAction.ViewBedType_List), map(action => {
+    return dispatch => {
+      try {
+        console.log(url + "Accommodation_General_ViewBedType")
+        return fetch(url + "Accommodation_General_ViewBedType")
+          .then(response => response.json())
+          .then(json => {
+            json = JSON.parse(json)
+            if (json[0].ReturnVal === 1) {
+              return dispatch({ type: GitAction.ViewedBedType_List, payload: JSON.parse(json[0].ReturnData) });
+            } else {
+              return dispatch({ type: GitAction.ViewedBedType_List, payload: [] });
+            }
+          });
+      } catch (error) {
+        toast.error("Error Code: ViewedBedType_List. Please check on URL")
+        return dispatch({ type: GitAction.ViewedBedType_List, payload: [] });
+      }
+    }
+  }));
+
+  ViewLocation_List = action$ =>
+  action$.pipe(filter(action => action.type === GitAction.ViewLocation_List), map(action => {
+    return dispatch => {
+      try {
+        return fetch(url + "Accommodation_General_ViewLocationType")
+          .then(response => response.json())
+          .then(json => {
+            json = JSON.parse(json)
+            if (json[0].ReturnVal === 1) {
+              return dispatch({ type: GitAction.ViewedLocation_List, payload: JSON.parse(json[0].ReturnData) });
+            } else {
+              return dispatch({ type: GitAction.ViewedLocation_List, payload: [] });
+            }
+          });
+      } catch (error) {
+        toast.error("Error Code: ViewedLocation_List. Please check on URL")
+        return dispatch({ type: GitAction.ViewedLocation_List, payload: [] });
+      }
+    }
+  }));
+
+  ViewFeatures_List = action$ =>
+  action$.pipe(filter(action => action.type === GitAction.ViewFeature_List), map(action => {
+    return dispatch => {
+      try {
+ 
+        return fetch(url + "Accommodation_General_ViewFeature?ISROOM=" + action.payload.ISROOM)
+          .then(response => response.json())
+          .then(json => {
+            json = JSON.parse(json)
+            if (json[0].ReturnVal === 1) {
+              return dispatch({ type: GitAction.ViewedFeature_List, payload: JSON.parse(json[0].ReturnData) });
+            } else {
+              return dispatch({ type: GitAction.ViewedFeature_List, payload: [] });
+            }
+          });
+      } catch (error) {
+        toast.error("Error Code: ViewedFeature_List. Please check on URL")
+        return dispatch({ type: GitAction.ViewedFeature_List, payload: [] });
+      }
+    }
+  }));
+
+
 // =============================== Postcode ======================================
 
 ViewPostcodesList = action$ =>
