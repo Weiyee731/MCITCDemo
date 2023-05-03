@@ -33,11 +33,11 @@ function SitePagePolicy() {
                             <div className="document__subtitle">
                                 PLEASE READ THIS PRIVACY POLICY CAREFULLY.
                                 BY CLICKING OR CHECKING “SIGN UP”, “I AGREE
-                                TO MYEMPORIA’S PRIVACY POLICY”, “I AGREE AND CONSENT
+                                TO MCITC’S PRIVACY POLICY”, “I AGREE AND CONSENT
                                 TO THE COLLECTION, USE, DISCLOSURE, STORAGE, TRANSFER
                                 AND/OR PROCESSING OF MY PERSONAL DATA FOR THE PURPOSE
-                                STATED IN, AND UNDER THE TERMS OF, MYEMPORIA’S PRIVACY POLICY”
-                                OR SIMILAR STATEMENTS AVAILABLE AT THE MYEMPORIA REGISTRATION
+                                STATED IN, AND UNDER THE TERMS OF, MCITC’S PRIVACY POLICY”
+                                OR SIMILAR STATEMENTS AVAILABLE AT THE MCITC REGISTRATION
                                 PAGE OR IN THE COURSE OF PROVIDING YOU WITH THE SERVICES
                                 OR ACCESS TO THE PLATFORM, YOU ACKNOWLEDGE THAT YOU HAVE
                                 READ AND UNDERSTOOD THE TERMS OF THIS PRIVACY POLICY AND
@@ -51,8 +51,8 @@ function SitePagePolicy() {
                                 <h5>1. Introduction to this Privacy Policy</h5>
                                 <h6>
                                     <p>
-                                        1.1. MYEMPORIA and its affiliates (collectively or individually, "MYEMPORIA", "we" or "us" take your privacy seriously. Depending on your location, the MYEMPORIA entity controlling your personal data will be MyEmporia SDN. BHD. and/or as follows,
-                                        Malaysia: MyEmporia SDN. BHD. Suite 3, 2nd Floor, Sublot 25, Tabuan Commercial Centre, Jalan Canna 93350, Kuching Sarawak.
+                                        1.1. MCITC and its affiliates (collectively or individually, "MCITC", "we" or "us" take your privacy seriously. Depending on your location, the MCITC entity controlling your personal data will be MCITC SDN. BHD. and/or as follows,
+                                        Malaysia: MCITC SDN. BHD. Suite 3, 2nd Floor, Sublot 25, Tabuan Commercial Centre, Jalan Canna 93350, Kuching Sarawak.
                                         Where applicable, this Privacy Policy should be read in conjunction with the Country-Specific Riders for your jurisdiction as set out in Section 13 below.
                                     </p>
                                     <p>
@@ -71,7 +71,7 @@ function SitePagePolicy() {
                                         1.6. This Privacy Policy applies in conjunction with other notices, contractual clauses and consent clauses that apply in relation to the collection, storage, use, disclosure and/or processing of your personal data by us and is not intended to override them unless we state expressly otherwise.
                                     </p>
                                     <p>
-                                        1.7. All of these terms apply to MyEmporia's users, whether buyers or sellers, unless stated specifically to apply only to buyers or only to sellers.
+                                        1.7. All of these terms apply to MCITC's users, whether buyers or sellers, unless stated specifically to apply only to buyers or only to sellers.
                                     </p>
                                 </h6>
                                 <h5>2. The Personal Data We Collect From You</h5>
@@ -132,7 +132,7 @@ function SitePagePolicy() {
                                         2.4. We may collect personal data from you, third parties (including but not limited to agents, vendors, contractors, partners and any others who provide services to us, who collect your personal information and/or perform functions on our behalf, or with whom we collaborate, including but not limited to payment service providers, government sources of data, financial providers, credit bureaus, delivery, marketing and other service partners), our affiliates, or such data may be collected automatically when you use the Platform or the Services, as set out in this section. See also section 10 below on the collection of computer data.
                                     </p>
                                     <p>
-                                        2.5. Where we collect personal data from third parties and/or our affiliates, we will only collect your personal data, where permitted by law, for or in connection with the purposes for which those third parties or our affiliates are engaged, for the purposes of our collaboration with the third parties or affiliates, or for the requirement to carry out verification or due diligence checks. During the course of your use of the Platform and our provision of the Services, you agree that you have provided your consent (whether to us, the third party or our affiliates) to the transfer of your personal data from third parties and/or our affiliates to MyEmporia for the purposes set out in this Privacy Policy or any other terms.
+                                        2.5. Where we collect personal data from third parties and/or our affiliates, we will only collect your personal data, where permitted by law, for or in connection with the purposes for which those third parties or our affiliates are engaged, for the purposes of our collaboration with the third parties or affiliates, or for the requirement to carry out verification or due diligence checks. During the course of your use of the Platform and our provision of the Services, you agree that you have provided your consent (whether to us, the third party or our affiliates) to the transfer of your personal data from third parties and/or our affiliates to MCITC for the purposes set out in this Privacy Policy or any other terms.
                                     </p>
                                     <p>
                                         2.6. You must only submit personal data which is accurate and not misleading and you must keep it up to date and inform us of any changes to the personal data you have provided to us. We shall have the right to request for documentation and carry out the necessary checks to verify the personal data provided by you as part of our user verification processes or as required under law.
@@ -144,7 +144,7 @@ function SitePagePolicy() {
                                         2.8. If you provide personal data of any third party to us, you represent and warrant that you have obtained the necessary consent, license and permissions from that third party to share and transfer his/her personal data to us, and for us to collect, store, use and disclose that data in accordance with this Privacy Policy.
                                     </p>
                                     <p>
-                                        2.9. If you sign up to be a user on our Platform using your social media account or link your MyEmporia account to your social media account or use certain other MyEmporia social media features, we may access personal data about you which you have voluntarily provided to your social media provider in accordance with the provider's policies and we will manage your personal data in accordance with this Privacy Policy.
+                                        2.9. If you sign up to be a user on our Platform using your social media account or link your MCITC account to your social media account or use certain other MCITC social media features, we may access personal data about you which you have voluntarily provided to your social media provider in accordance with the provider's policies and we will manage your personal data in accordance with this Privacy Policy.
                                     </p>
                                 </h6>
 
@@ -333,11 +333,11 @@ function SitePagePolicy() {
                                 </h6>
                                 <h5>9. Minors</h5>
                                 <h6>
-                                    <p>9.1. MyEmporia does not sell products to minors (which is to be determined based on the applicable law), nor does it intend to provide any of the Services or the use of the Platform to minors. We do not knowingly collect any personal data relating to minors.
+                                    <p>9.1. MCITC does not sell products to minors (which is to be determined based on the applicable law), nor does it intend to provide any of the Services or the use of the Platform to minors. We do not knowingly collect any personal data relating to minors.
                                     </p>
                                     <p>9.2. You hereby confirm and warrant that you are above the age of minority and you are capable of understanding and accepting the terms of this Privacy Policy. If you are a minor, you may use our Platform only with the involvement of a parent or legal guardian.
                                     </p>
-                                    <p>9.3. As a parent or legal guardian, please do not allow minors under your care to submit personal data to MyEmporia. In the event that such personal data of a minor is disclosed to MyEmporia, you hereby consent to the processing of the minor’s personal data and accept and agree to be bound by this Privacy Policy and take responsibility for his or her actions.
+                                    <p>9.3. As a parent or legal guardian, please do not allow minors under your care to submit personal data to MCITC. In the event that such personal data of a minor is disclosed to MCITC, you hereby consent to the processing of the minor’s personal data and accept and agree to be bound by this Privacy Policy and take responsibility for his or her actions.
                                     </p>
                                     <p>9.4. We will not be responsible for any unauthorised use of the Services on the Platform by yourself, users who act on your behalf or any unauthorised users. It is your responsibility to make your own informed decisions about the use of the Services on the Platform and take necessary steps to prevent any misuse of the Services on the Platform.
                                     </p>

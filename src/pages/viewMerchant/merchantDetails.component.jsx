@@ -33,7 +33,7 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import "../../scss/inventory/inventory-merchant-details.scss";
 import Collapse from "@mui/material/Collapse";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 
 import { browserHistory } from "react-router";
 

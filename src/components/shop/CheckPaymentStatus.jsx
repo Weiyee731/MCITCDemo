@@ -294,9 +294,9 @@ class CheckPaymentStatus extends Component {
     var m = String.fromCharCode(n) + k;
 
     let totalPrice = this.state.totalPrice
-    let lastname = localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia"
-    let firstname = localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia"
-    let email = localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com"
+    let lastname = localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "MCITC"
+    let firstname = localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "MCITC"
+    let email = localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "MCITC.gmail.com"
     let addressLine1 = "SELFCOLECT"
     let city = "SELFCOLECT"
     let state = "SELFCOLECT"
@@ -337,7 +337,7 @@ class CheckPaymentStatus extends Component {
 
         this.setState({
           isSetDetail: true,
-          fpx_buyerName: localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "Emporia",
+          fpx_buyerName: localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "MCITC",
           fpx_buyerEmail: "weiyee731@gmail.com",
           fpx_txnAmount: totalPrice
         })
@@ -576,7 +576,7 @@ class CheckPaymentStatus extends Component {
           <div className="container">
             <div className="card mt-3">
               <div className="card-body">
-                <h5 className="card-title">MyEmporia</h5>
+                <h5 className="card-title">MCITC</h5>
                 <h6 className="card-title">Check FPX status</h6>
                 {this.renderPaymentsList()}
               </div>

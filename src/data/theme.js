@@ -1,14 +1,14 @@
 export default {
-  name: "MyEmporia - Biggest Shopping Store in Asia",
-  fullName: "MyEmporia - Biggest Shopping Store in Asia",
+  name: "MCITC - Biggest Shopping Store in Asia",
+  fullName: "MCITC - Biggest Shopping Store in Asia",
   url:
     "https://www.propsocial.my/developments/malaysia-china-international-trade-centre-9730",
   author: {
     name: "Kos",
-    facebook: "https://www.facebook.com/myemporia.my",
+    facebook: "https://www.facebook.com/triviix.co",
     // twitter: "./",
     // youtube: "./",
-    instagram: "https://www.instagram.com/myemporia/",
+    instagram: "https://www.instagram.com/triviix/",
     // rss: "./",
   },
   contacts: {

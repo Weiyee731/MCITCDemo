@@ -13,7 +13,7 @@ import InputNumber from '../shared/InputNumber';
 import PageHeader from '../shared/PageHeader';
 import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import PageCheckout from "./ShopPageCheckout";
 import { Button } from "@mui/material";
 
@@ -269,7 +269,7 @@ class ShopPageCart_side extends Component {
             image = (
                 <div className="product-image" key={i}>
                     <Link to={url.product(item.product)} className="product-image__body" onClick={() => { this.props.setCartOpen(false) }}>
-                        <img className="product-image__img" src={item.product.ProductImage !== null && item.product.ProductImage !== undefined && item.product.ProductImage.length > 0 ? item.product.ProductImage : Logo} alt="Emporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                        <img className="product-image__img" src={item.product.ProductImage !== null && item.product.ProductImage !== undefined && item.product.ProductImage.length > 0 ? item.product.ProductImage : Logo} alt="MCITC" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                     </Link>
                 </div>
             );

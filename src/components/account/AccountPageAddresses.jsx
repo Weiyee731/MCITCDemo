@@ -18,7 +18,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";

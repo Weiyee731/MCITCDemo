@@ -30,7 +30,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 
 import './editShopProfile.scss';
 

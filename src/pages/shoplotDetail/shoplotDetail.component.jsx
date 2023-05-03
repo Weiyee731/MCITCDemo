@@ -11,10 +11,10 @@ import "../../app/App.scss";
 // import GoogleMaps from "../../components/googleMaps/googleMaps";
 import { Show360 } from "../../components/360/360";
 import CloseIcon from "@mui/icons-material/Close";
-// import image from "../../assets/Emporia.png";
+// import image from "../../assets/logo.png";
 import Dropzone from "react-dropzone";
 import axios from "axios";
-import Logo from "../../assets/Emporia.png"
+import Logo from "../../assets/logo.png"
 import { toast } from "react-toastify";
 function mapStateToProps(state) {
   return {

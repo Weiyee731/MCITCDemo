@@ -129,11 +129,10 @@ function SitePageContactUs() {
                         <Typography variant='subtitle1'>OPENING HOURS</Typography>
                         <Typography variant='subtitle2'>Monday to Saturday: 10.00am - 06.00pm</Typography>
                         <Typography variant='subtitle1' className="mt-3">EMAIL US:</Typography>
-                        <Typography variant='subtitle2'>helpdesk.myemporia@gmail.com</Typography>
+                        <Typography variant='subtitle2'>helpdesk.mcitc@gmail.com</Typography>
                         <Typography variant='subtitle1' className="mt-3">MAILING ADDRESS:</Typography>
-                        <Typography variant='subtitle2'>SUITE 3, 2ND FLOOR, SUBLOT 25,</Typography>
-                        <Typography variant='subtitle2'>TABUAN COMMERCIAL CENTRE, JALAN CANNA</Typography>
-                        <Typography variant='subtitle2'>93350, KUCHING SARAWAK</Typography>
+                        <Typography variant='subtitle2'>JALAN BAKO, SUNGAI BIAWAK, </Typography>
+                        <Typography variant='subtitle2'>93450, KUCHING SARAWAK</Typography>
                       </p>
                     </div>
                   </div>

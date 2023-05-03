@@ -49,7 +49,7 @@ export const BindGoogleFBDialog = (props) => {
               </DialogContentText>
             </DialogContent>
             <DialogActions className='d-flex justify-content-between'>
-              <Button onClick={() => onClose(false)}>Login with Emporia Account</Button>
+              <Button onClick={() => onClose(false)}>Login with MCITC Account</Button>
               <Button onClick={() => { bindGoogleFB() }}>Bind with Google</Button>
             </DialogActions>
           </Dialog>

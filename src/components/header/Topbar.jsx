@@ -46,9 +46,9 @@ function Topbar() {
     },
   ];
 
-  const registerURL = window.location.hostname === "localhost" ? "http://localhost:3002/cms.myemporia.my/register/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("id") : "https://cms.myemporia.my/register/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("id");
+  const registerURL = window.location.hostname === "localhost" ? "http://localhost:3002/cms.mcitc.my/register/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("id") : "https://cms.mcitc.my/register/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("id");
 
-  const loginURL = window.location.hostname === "localhost" ? "http://localhost:3002/cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("password") : "https://cms.myemporia.my/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("password");
+  const loginURL = window.location.hostname === "localhost" ? "http://localhost:3002/cms.mcitc.my/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("password") : "https://cms.mcitc.my/" + localStorage.getItem("username_encrypt") + "/" + localStorage.getItem("password");
   return (
     <div className="site-header__topbar topbar">
       <div className="topbar__container container">

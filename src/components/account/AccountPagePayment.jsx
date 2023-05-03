@@ -97,7 +97,7 @@ const initialState = {
     fpx_buyerId: "",
     fpx_makerName: "",
     fpx_buyerIban: "",
-    fpx_productDesc: "Emporia Hardware",
+    fpx_productDesc: "MCITC Hardware",
     fpx_version: "6.0",
     bankingdata: "",
 
@@ -351,7 +351,7 @@ class AccountPagePayment extends Component {
                 </thead>
                 {
                     this.state.merchantList.length > 0 && this.state.merchantList.map((shop, i) => {
-                        let MerchantShopName = shop.MerchantShopName != null ? shop.MerchantShopName : "MyEmporia"
+                        let MerchantShopName = shop.MerchantShopName != null ? shop.MerchantShopName : "MCITC"
                         return (
                             <>
                                 <div style={{ textAlign: "left", fontSize: "13px", fontWeight: "bold" }}>{"Order " + parseInt(i + 1) + " : " + MerchantShopName}</div>
@@ -425,9 +425,9 @@ class AccountPagePayment extends Component {
         var m = String.fromCharCode(n) + k;
 
         let totalPrice = parseFloat(this.state.total).toFixed(2)
-        let lastname = this.props.addressID === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia" : this.state.Userdetails.addressName
-        let firstname = this.props.addressID === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia" : this.state.Userdetails.addressName
-        let email = this.props.addressID === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com" : this.state.Userdetails.email
+        let lastname = this.props.addressID === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "MCITC" : this.state.Userdetails.addressName
+        let firstname = this.props.addressID === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "MCITC" : this.state.Userdetails.addressName
+        let email = this.props.addressID === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "MCITC.gmail.com" : this.state.Userdetails.email
         let addressLine1 = this.props.addressID === 0 ? "SELFCOLECT" : this.state.Userdetails.addressLine1
         let city = this.props.addressID === 0 ? "SELFCOLECT" : this.state.Userdetails.city
         let state = this.props.addressID === 0 ? "SELFCOLECT" : this.state.Userdetails.state
@@ -470,7 +470,7 @@ class AccountPagePayment extends Component {
 
                 this.setState({
                     isSetDetail: true,
-                    fpx_buyerName: localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "Emporia",
+                    fpx_buyerName: localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "MCITC",
                     fpx_buyerEmail: "weiyee731@gmail.com",
                     fpx_txnAmount: totalPrice
                 })
@@ -747,7 +747,7 @@ class AccountPagePayment extends Component {
                     <div className="container">
                         <div className="card mt-3">
                             <div className="card-body">
-                                <h5 className="card-title">MyEmporia</h5>
+                                <h5 className="card-title">MCITC</h5>
                                 {
                                     this.props.data.UserAddresID !== 0 && this.state.Userdetails.length > 0 ?
                                         <div style={{ textAlign: "left" }}>

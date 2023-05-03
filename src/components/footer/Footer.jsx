@@ -10,7 +10,7 @@ import LogisticsFooter from "./LogisticsFooter";
 import ToTop from "./ToTop";
 import googleplaystore from "../../assets/googleplay.png";
 import appstore from "../../assets/appstore.png";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import { Typography } from '@mui/material';
 // data stubs
@@ -18,7 +18,7 @@ import { Typography } from '@mui/material';
 
 export default function Footer() {
   const informationLinks = [
-    { title: "About MyEmporia", url: "/site/about-us" },
+    { title: "About MCITC", url: "/site/about-us" },
     // { title: "Afﬁliate Program", url: "/site/affiliate" },
     // { title: "Careers", url: "/site/careers" },
     { title: "Terms & Conditions", url: "/site/terms" },
@@ -57,11 +57,11 @@ export default function Footer() {
                   }}
                 />
               </Link>
-              <Typography variant="body1" className="footer-links__list">MyEmporia is a virtual shopping mall where you can get your goods with QUALITY GUARANTEE and 99.99% Satisfaction Guarantee.</Typography>
+              <Typography variant="body1" className="footer-links__list">MCITC is a virtual shopping mall where you can get your goods with QUALITY GUARANTEE and 99.99% Satisfaction Guarantee.</Typography>
             </div>
             <div className="col-12 col-md-3 col-lg-2">
               {/* <FooterContacts /> */}
-              <FooterLinks title="MYEMPORIA" items={informationLinks} />
+              <FooterLinks title="MCITC" items={informationLinks} />
             </div>
             <div className="col-12 col-md-3 col-lg-2">
               <FooterLinks title="INFORMATION" items={otherInformationLinks} />
@@ -89,7 +89,7 @@ export default function Footer() {
           <hr width="100%" />
           <div className="row">
             <div className="col-12 col-md-4 col-lg-4">
-              <Typography variant='caption'>© 2022 MyEmporia Sdn. Bhd. (1422486-P)</Typography>
+              <Typography variant='caption'>© 2022 MCITC Sdn. Bhd. (1422486-P)</Typography>
             </div>
             <div className="col-12 col-md-3 col-lg-3">
               <LogisticsFooter />

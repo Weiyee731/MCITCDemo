@@ -13,7 +13,7 @@ import Currency from "../shared/Currency";
 import Indicator from "./Indicator";
 import { Cart20Svg, Cross10Svg } from "../../svg";
 import { url } from "../../services/utils";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import { Button } from "@mui/material";
 import { GitAction } from "../../store/action/gitAction";
 

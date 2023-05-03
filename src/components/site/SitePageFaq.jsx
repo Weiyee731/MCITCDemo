@@ -143,14 +143,14 @@ function SitePageFaq() {
                                                     <ul>
                                                         <li>Ensure parcel does not exceed 30 calendar days from the date that the Express has accepted the shipment.</li>
                                                         <li>Provide supporting documents such as pick up receipt or manifest as proof of shipment.</li>
-                                                        <li>Send the supporting documnts to MyEmporia Customer Service</li>
+                                                        <li>Send the supporting documnts to MCITC Customer Service</li>
                                                     </ul>
                                                     <br />
                                                     ii) <u>Damaged parcel claims process</u>
                                                     <ul>
                                                         <li>Must raise the claim within 5 calendar days from the date of parcel received.</li>
                                                         <li>Provide supporting document (Order details page) as a proof and image of damaged parcel.</li>
-                                                        <li>Send the supporting documents to MyEmporia Customer Service</li>
+                                                        <li>Send the supporting documents to MCITC Customer Service</li>
                                                     </ul>
                                                 </Typography>
                                             </AccordionDetails>
@@ -201,10 +201,10 @@ function SitePageFaq() {
                                         </AccordionSummary>
                                         <AccordionDetails style={detailStyle}>
                                             <Typography>
-                                                MyEmporia will deliver your parcels within 3 working days adter the parcel is shipped by the seller.
+                                                MCITC will deliver your parcels within 3 working days adter the parcel is shipped by the seller.
                                                 Please allow some time for the tracking status to be updated throught Express website
                                                 <br />
-                                                You may check with MyEmporia Customer Service for redelivery if your parcel experienced failed delivery.
+                                                You may check with MCITC Customer Service for redelivery if your parcel experienced failed delivery.
                                             </Typography>
                                         </AccordionDetails>
                                     </Accordion>
@@ -308,7 +308,7 @@ function SitePageFaq() {
                                                         <li> 5) Received a faulty product (e.g. malfunction, does not work as intended)</li>
                                                     </ul>
 
-                                                    Send the supporting documents to MyEmporia Customer Service
+                                                    Send the supporting documents to MCITC Customer Service
                                                 </Typography>
                                             </AccordionDetails>
                                         </Accordion>

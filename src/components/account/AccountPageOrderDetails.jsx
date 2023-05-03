@@ -12,7 +12,7 @@ import { withRouter } from "react-router-dom";
 
 // data stubs
 import theme from "../../data/theme";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import StoreIcon from '@mui/icons-material/Store';
 // import { browserHistory } from "react-router";
 

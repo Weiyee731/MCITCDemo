@@ -16,7 +16,7 @@ import Currency from "./Currency";
 import Rating from "./Rating";
 import { Wishlist16Svg, Quickview16Svg, } from "../../svg";
 import { url } from "../../services/utils";
-import Logo from "../../assets/Emporia.png"
+import Logo from "../../assets/logo.png"
 import { GitAction } from "../../store/action/gitAction";
 
 // application

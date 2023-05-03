@@ -5,7 +5,7 @@ import DropdownMenu from "../navigationsidebar/DropdownMenu";
 import SimpleMenu from "../navigationsidebar/SimpleMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 import userImage from "../../assets/user.jpg";
-import logo from "../../assets/Emporia.png";
+import logo from "../../assets/logo.png";
 import { Sidebar, Menu } from "react-pro-sidebar";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";

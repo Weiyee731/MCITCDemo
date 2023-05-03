@@ -29,7 +29,7 @@
 // import FormControlLabel from "@mui/material/FormControlLabel";
 // import Switch from "@mui/material/Switch";
 // import DeleteIcon from "@mui/icons-material/Delete";
-// import Logo from "../../assets/Emporia.png";
+// import Logo from "../../assets/logo.png";
 // import SearchBox from "../../components/SearchBox/SearchBox";
 // import { toast } from "react-toastify";
 // import { connectableObservableDescriptor } from "rxjs/observable/ConnectableObservable";

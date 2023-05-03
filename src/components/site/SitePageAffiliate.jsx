@@ -20,7 +20,7 @@ function SitePageAffiliate() {
   return (
     <React.Fragment>
       <Helmet>
-        <title>{`Emporia Affiliate Program — ${theme.name}`}</title>
+        <title>{`MCITC Affiliate Program — ${theme.name}`}</title>
       </Helmet>
       <PageHeader breadcrumb={breadcrumb} />
 
@@ -28,14 +28,14 @@ function SitePageAffiliate() {
         <div className="container">
           <div className="document">
             <div className="document__header">
-              <h1 className="document__title">MyEmporia Affiliate Program</h1>
+              <h1 className="document__title">MCITC Affiliate Program</h1>
               <div className="document__subtitle">
                 Join us to earn extra income.
               </div>
             </div>
             <div className="document__content typography">
               <p>
-              MyEmporia offer everyone a fair way to legitimate your app or
+              MCITC offer everyone a fair way to legitimate your app or
                 website through affiliate program.
               </p>
 

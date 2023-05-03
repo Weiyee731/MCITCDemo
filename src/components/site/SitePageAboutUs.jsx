@@ -11,7 +11,7 @@ import StroykaSlick from "../shared/StroykaSlick";
 // data stubs
 import theme from "../../data/theme";
 import bg from "../../assets/bg.jpg";
-// import logo from "../../assets/Emporia.png";
+// import logo from "../../assets/logo.png";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import DriveEtaIcon from "@mui/icons-material/DriveEta";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -127,8 +127,8 @@ function SitePageAboutUs() {
           <div id="content">
             <div className="container heading mt-3">
               <div className="w3-animate-right" style={{ textAlign: "justify" }}>
-                <h2>MyEmporia</h2>
-                <p>Founded in 2020, MyEmporia is an online platform that provided
+                <h2>MCITC</h2>
+                <p>Founded in 2020, MCITC is an online platform that provided
                   a variety of services in Kuching, Sarawak, Malaysia. Our platform services are not
                   only helping users to shop online but also helping sellers to start their
                   E-business. We had provided a platform for buyers to purchase products online
@@ -170,7 +170,7 @@ function SitePageAboutUs() {
         <div className="container">
           <div id="content" className="mt-4">
             <div className={Animation4}>
-              <h2 style={{ color: "#2b535e" }}>Why MyEmporia?</h2>
+              <h2 style={{ color: "#2b535e" }}>Why MCITC?</h2>
               <div className="row">
                 <div className="col-12 col-lg-6">
                   <div className="d-flex flex-direction-row why-us-content">
@@ -249,7 +249,7 @@ function SitePageAboutUs() {
                   </div>
                 </div>
               </div>
-              <div className={Animation6}>
+              {/* <div className={Animation6}>
                 <div className="row" style={{ display: "flex", flexDirection: "row-reverse" }}>
                   <div className={`col-12 col-lg-5 ${Animation6}`} style={{ display: "flex", justifyContent: "center" }}>
                     <img alt="" src={hotelBooking} width="60%"></img>
@@ -271,8 +271,31 @@ function SitePageAboutUs() {
                   </div>
 
                 </div>
-              </div>
-              <div className="row">
+              </div> */}
+               <div className={Animation5}>
+                <div className="row" style={{ display: "flex", flexDirection: "row-reverse" }}>
+                  <div className={`col-12 col-lg-5 ${Animation5}`} style={{ display: "flex", justifyContent: "center" }}>
+                    <img alt="" src={startBusiness} width="60%"></img>
+                  </div>
+
+                  <div className={`col-12 col-lg-7 ${Animation5}`}>
+                    <div className="m-4">
+                    <Typography variant="h6">Manage Your Business</Typography>
+                    <p>Allows you to easily manage your hotel business and sell products online with advanced features. Get start your business easily online.</p>
+                    <button
+                        type="button"
+                        onClick={() => this.props.history.push("/")}
+                        className="btn btn-primary product-card__addtocart"
+                        style={{ borderRadius: "5px", zIndex: "999" }}
+                      >
+                       Register
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </div> 
+              {/* <div className="row">
                 <div className={`col-12 col-lg-5 ${Animation5}`} style={{ display: "flex", justifyContent: "center" }}>
                   <img alt="" src={startBusiness} width="60%"></img>
                 </div>
@@ -290,7 +313,7 @@ function SitePageAboutUs() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

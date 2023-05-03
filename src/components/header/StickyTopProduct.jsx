@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 // third-party
 import classNames from 'classnames';
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import { Heart20Svg } from "../../svg";

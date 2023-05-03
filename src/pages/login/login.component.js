@@ -6,7 +6,7 @@ import { browserHistory } from "react-router";
 import { GitAction } from "../../store/action/gitAction";
 
 // Application
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 
 // Third-party
 import TextField from "@mui/material/TextField";
@@ -143,7 +143,7 @@ class LoginComponent extends Component {
 
   OnSubmitLogin(e, platform) {
     switch (platform) {
-      case 'MyEmporia':
+      case 'MCITC':
         {
           e.preventDefault();
           this.props.loginUser(this.state);
@@ -218,7 +218,7 @@ class LoginComponent extends Component {
   }
 
   encryptData(data) {
-    var ciphertext = CryptoJS.AES.encrypt(data, 'myemporia@123').toString().replace(/\+/g, 'p1L2u3S').replace(/\//g, 's1L2a3S4h').replace(/=/g, 'e1Q2u3A4l');
+    var ciphertext = CryptoJS.AES.encrypt(data, 'MCITC@123').toString().replace(/\+/g, 'p1L2u3S').replace(/\//g, 's1L2a3S4h').replace(/=/g, 'e1Q2u3A4l');
     return ciphertext
   }
 
@@ -490,11 +490,11 @@ class LoginComponent extends Component {
               onClick={() => this.modalClose()}
               data-dismiss="modal" />
             <div>
-              <form onSubmit={(e) => this.OnSubmitLogin(e, "MyEmporia")} className="container block block--margin-top">
+              <form onSubmit={(e) => this.OnSubmitLogin(e, "MCITC")} className="container block block--margin-top">
                 <div className="text-center  mt-3">
                   <img
                     src={Logo}
-                    alt="MyEmporia"
+                    alt="MCITC"
                     height="120px"
                     width="auto"
                     className="mx-auto"
@@ -564,7 +564,7 @@ class LoginComponent extends Component {
                   <div>
                     <div>
                       <div className="text-center" style={{ fontSize: "13px", paddingTop: "10px" }}>
-                        New to MyEmporia?
+                        New to MCITC?
                         <StyledDiv onClick={() => this.setState({ loginPopOut: false, signupPopOut: true })}>
                           Sign Up
                         </StyledDiv>

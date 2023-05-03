@@ -17,7 +17,7 @@ import { Wishlist16Svg } from "../../svg";
 import { HashLink } from "react-router-hash-link";
 import ProductTabs from "../shop/ProductTabs";
 import { GitAction } from "../../store/action/gitAction";
-import Logo from "../../assets/Emporia.png"
+import Logo from "../../assets/logo.png"
 import BlockProductsCarousel from '../blocks/BlockProductsCarousel';
 import { toast } from "react-toastify";
 import LoadingPanel from "./loadingPanel";
@@ -371,9 +371,9 @@ class ProductDetails extends Component {
                                                         <FacebookShareButton
                                                             className="fadeIn"
                                                             openShareDialogOnClick
-                                                            url={"https://myemporia.my/shop/products/" + product.ProductID}
-                                                            quote="Check this out at MyEmporia, Get it now!"
-                                                            hashtag={"#MyEmporia"}>
+                                                            url={"https://mcitc.my/shop/products/" + product.ProductID}
+                                                            quote="Check this out at MCITC, Get it now!"
+                                                            hashtag={"#MCITC"}>
                                                             <FacebookIcon size={35} round={true} />
                                                         </FacebookShareButton>
                                                     </li>
@@ -381,8 +381,8 @@ class ProductDetails extends Component {
                                                         <TelegramShareButton
                                                             className="fadeIn"
                                                             openShareDialogOnClick
-                                                            title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
-                                                            url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                                                            title={'Check this out at MCITC, Get it now!' + product.ProductName}
+                                                            url={"https://mcitc.my/shop/products/" + product.ProductID} >
                                                             <TelegramIcon size={35} round={true} />
                                                         </TelegramShareButton>
                                                     </li>
@@ -390,7 +390,7 @@ class ProductDetails extends Component {
                                                         <TwitterShareButton
                                                             className="fadeIn"
                                                             openShareDialogOnClick
-                                                            url={"https://myemporia.my/shop/products/" + product.ProductID} >
+                                                            url={"https://mcitc.my/shop/products/" + product.ProductID} >
                                                             <TwitterIcon size={35} round={true} />
                                                         </TwitterShareButton>
                                                     </li>
@@ -398,9 +398,9 @@ class ProductDetails extends Component {
                                                         <WhatsappShareButton
                                                             className="fadeIn"
                                                             openShareDialogOnClick
-                                                            title={'Check this out at MyEmporia, Get it now!' + product.ProductName}
+                                                            title={'Check this out at MCITC, Get it now!' + product.ProductName}
                                                             separator={"/n "}
-                                                            url={"https://myemporia.my/shop/products/" + product.ProductID}>
+                                                            url={"https://mcitc.my/shop/products/" + product.ProductID}>
                                                             <WhatsappIcon size={35} round={true} />
                                                         </WhatsappShareButton>
                                                     </li>
@@ -479,7 +479,7 @@ class ProductDetails extends Component {
                                                                     <img
                                                                         className="product__seller-info-image"
                                                                         src={merchantDetails.ShopImage !== null ? merchantDetails.ShopImage : Logo}
-                                                                        alt="MyEmporia"
+                                                                        alt="MCITC"
                                                                         onError={(e) => {
                                                                             e.target.onerror = null; e.target.src = Logo
                                                                         }}

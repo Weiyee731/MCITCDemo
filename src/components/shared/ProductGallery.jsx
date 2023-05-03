@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import languages from "../../i18n";
 import StroykaSlick from "./StroykaSlick";
 import { ZoomIn24Svg } from "../../svg";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'

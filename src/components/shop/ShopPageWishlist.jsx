@@ -17,7 +17,7 @@ import { Cross12Svg } from '../../svg';
 import { url } from '../../services/utils';
 import { wishlistRemoveItem } from '../../store/wishlist';
 import { GitAction } from "../../store/action/gitAction";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import { isStringNullOrEmpty } from "../../Utilities/UtilRepo"
 import { toast } from "react-toastify";
 
@@ -99,7 +99,7 @@ function ShopPageWishlist(props) {
                     image = (
                         <div className="product-image">
                             <Link to={url.product(item)} className="product-image__body">
-                                <img className="product-image__img" src={item.ProductImage !== null ? item.ProductImage : Logo} alt="MyEmporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                                <img className="product-image__img" src={item.ProductImage !== null ? item.ProductImage : Logo} alt="MCITC" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                             </Link>
                         </div>
                     );
@@ -107,7 +107,7 @@ function ShopPageWishlist(props) {
                     image = (
                         <div className="product-image">
                             <Link to={url.product(item)} className="product-image__body">
-                                <img className="product-image__img" src={Logo} alt="MyEmporia" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
+                                <img className="product-image__img" src={Logo} alt="MCITC" onError={(e) => { e.target.onerror = null; e.target.src = Logo }} />
                             </Link>
                         </div>
                     );

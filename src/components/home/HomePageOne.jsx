@@ -115,7 +115,7 @@ function HomePageOne(props) {
   return (
     <React.Fragment>
       <Helmet>
-        <title>{`Emporia — Convinience hardware store near you`}</title>
+        <title>{`MCITC — Convinience hardware store near you`}</title>
       </Helmet>
       {useMemo(
         () => (

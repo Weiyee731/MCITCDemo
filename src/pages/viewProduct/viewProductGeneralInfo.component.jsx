@@ -17,7 +17,7 @@
 // import Rating from "../../components/shared/Rating";
 // import { url } from '../../services/utils';
 // import USER from "../../assets/user.jpg";
-// import Logo from "../../assets/Emporia.png";
+// import Logo from "../../assets/logo.png";
 // import LoadingPanel from "../../components/shared/loadingPanel";
 // import InputNumber from '../../components/shared/InputNumber';
 // import { minHeight } from "@mui/system";

@@ -24,7 +24,7 @@ import { MuiOtpInput } from 'mui-one-time-password-input'
 import styled from 'styled-components';
 
 // Application
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 
 function mapStateToProps(state) {
     return {
@@ -380,7 +380,7 @@ const SignUp = (props) => {
             <div className="text-center mt-3">
                 <img
                     src={Logo}
-                    alt="MyEmporia"
+                    alt="MCITC"
                     height="120px"
                     width="auto"
                     className="mx-auto"
@@ -393,7 +393,7 @@ const SignUp = (props) => {
                     :
                     <div className="container mt-5" style={{ width: "100%" }}>
                         <div className="text-center">
-                            <h4>Create a new MyEmporia's account</h4>
+                            <h4>Create a new MCITC's account</h4>
                         </div>
                         <div className="justify-content-center">
                             <Col lg="12" md="12">
@@ -494,7 +494,7 @@ const SignUp = (props) => {
 
                                     <div>
                                         <p className="text-center mt-3" style={{ fontSize: "13px", paddingTop: "10px" }}>
-                                            By sigining up, you agree to MyEmporia's <br />
+                                            By sigining up, you agree to MCITC's <br />
                                             <a href="./site/terms">Terms & Condition</a> and <a href="./site/policy">Privacy Policy</a>
                                         </p>
                                     </div>

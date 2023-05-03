@@ -98,7 +98,7 @@ const productLayouts = [
 //           <nav className="navbar navbar-expand-lg navbar-light fixed-top">
 //             <div className="container">
 //               <Link className="navbar-brand" to={"/login"}>
-//                 MyEmporia
+//                 MCITC
 //               </Link>
 //               <div
 //                 className="collapse navbar-collapse"

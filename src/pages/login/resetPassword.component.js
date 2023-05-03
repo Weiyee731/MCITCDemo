@@ -11,7 +11,7 @@
 // import { toast } from "react-toastify";
 
 // // Application
-// import Logo from "../../assets/Emporia.png";
+// import Logo from "../../assets/logo.png";
 
 // function mapStateToProps(state) {
 //   return {
@@ -180,7 +180,7 @@
 //       <div className="text-center">
 //         <img
 //           src={Logo}
-//           alt="MyEmporia"
+//           alt="MCITC"
 //           height="250px"
 //           width="auto"
 //           className="mx-auto"

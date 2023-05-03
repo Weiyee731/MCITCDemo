@@ -6,7 +6,7 @@ import { GitAction } from "../../store/action/gitAction";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Logo from "../../assets/Emporia.png"
+import Logo from "../../assets/logo.png"
 import { Wishlist16Svg } from "../../svg";
 import { Link, withRouter } from "react-router-dom";
 

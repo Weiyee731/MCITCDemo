@@ -210,7 +210,7 @@ function Search(props) {
             value={query}
             className="search__input"
             name="search"
-            placeholder="Search in MyEmporia"
+            placeholder="Search in MCITC"
             aria-label="Site search"
             type="text"
             autoComplete="off"

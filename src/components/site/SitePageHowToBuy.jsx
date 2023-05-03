@@ -64,7 +64,7 @@ function SitePageHowToBuy() {
                             </div>
                             <br />
                             <Typography variant='subtitle1'>
-                                Welcome to MyEmporia. Here we strive to provide buyers the best deals in town to bring more value for the price you pay. Have a look at below to know how to buy on Emporia.
+                                Welcome to MCITC. Here we strive to provide buyers the best deals in town to bring more value for the price you pay. Have a look at below to know how to buy on MCITC.
                                 <br /><br />
                                 <u> <b> Add To Cart </b> </u>
                                 <br />

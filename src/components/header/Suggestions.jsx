@@ -5,7 +5,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 
 // application
 import AsyncAction from '../shared/AsyncAction';

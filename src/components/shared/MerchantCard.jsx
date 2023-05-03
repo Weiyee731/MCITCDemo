@@ -17,7 +17,7 @@ import { compareAddItem } from "../../store/compare";
 import { quickviewOpen } from "../../store/quickview";
 import { url } from "../../services/utils";
 import { mobileMenuOpen } from '../../store/mobile-menu';
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 
 import { Modal } from 'reactstrap';
 import Product from './Product';

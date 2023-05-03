@@ -100,7 +100,7 @@ export default function CheckoutPayment({
         fpx_buyerId: "",
         fpx_makerName: "",
         fpx_buyerIban: "",
-        fpx_productDesc: "Emporia Hardware",
+        fpx_productDesc: "MCITC Hardware",
         fpx_version: "6.0",
 
         fpx_checkSum: 0,
@@ -170,9 +170,9 @@ export default function CheckoutPayment({
         {/* this.setState({ applyPromo: applyPromo, promoError: promoError, isVoucherApply: verify, totalApplyPromo: totalAfterPromo, totalDeduction: deduction, isShippingPromo: isShippingPromo }) */ }
         let totalPrice = deliveryFee[0].ShippingCost == null ? parseFloat(total).toFixed(2) : parseFloat(total + deliveryFee[0].ShippingCost).toFixed(2)
         // let totalPrice = isVoucherApply ? parseFloat(totalApplyPromo).toFixed(2) : parseFloat(total).toFixed(2)
-        let lastname = address.UserAddressBookID === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "Emporia" : address.UserAddressName
-        let firstname = address.UserAddressBookID === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "Emporia" : address.UserAddressName
-        let email = address.UserAddressBookID === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "Emporia.gmail.com" : address.UserEmail
+        let lastname = address.UserAddressBookID === 0 ? localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") : "MCITC" : address.UserAddressName
+        let firstname = address.UserAddressBookID === 0 ? localStorage.getItem("firstname") != null && localStorage.getItem("firstname") !== undefined && localStorage.getItem("firstname") != "-" ? localStorage.getItem("firstname") : "MCITC" : address.UserAddressName
+        let email = address.UserAddressBookID === 0 ? localStorage.getItem("email") != null && localStorage.getItem("email") !== undefined && localStorage.getItem("email") != "-" ? localStorage.getItem("email") : "MCITC.gmail.com" : address.UserEmail
         let addressLine1 = address.UserAddressBookID === 0 ? "SELFCOLECT" : address.UserAddressLine1
         let city = address.UserAddressBookID === 0 ? "SELFCOLECT" : address.UserCity
         let state = address.UserAddressBookID === 0 ? "SELFCOLECT" : address.UserState
@@ -209,7 +209,7 @@ export default function CheckoutPayment({
                 setDetails(true)
                 setfpx_information({
                     ...fpx_information,
-                    fpx_buyerName: localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "Emporia",
+                    fpx_buyerName: localStorage.getItem("lastname") != null && localStorage.getItem("lastname") !== undefined && localStorage.getItem("lastname") != "-" ? localStorage.getItem("lastname") + " " + localStorage.getItem("firstname") : "MCITC",
                     fpx_buyerEmail: "weiyee731@gmail.com",
                     fpx_txnAmount: totalPrice
                 })

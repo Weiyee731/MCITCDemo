@@ -17,7 +17,7 @@ import { Heart20Svg } from "../../svg";
 import Indicator from "./Indicator";
 import IndicatorCart from "./IndicatorCart";
 import IndicatorAccount from "./IndicatorAccount";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 
 import { Cart20Svg, Cross10Svg } from "../../svg";
 

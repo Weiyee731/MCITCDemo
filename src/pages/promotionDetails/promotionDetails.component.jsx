@@ -18,7 +18,7 @@ import Paper from "@mui/material/Paper";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import Input from "@mui/material/Input";
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TableHead from "@mui/material/TableHead";
 import SearchBox from "../../components/SearchBox/SearchBox";

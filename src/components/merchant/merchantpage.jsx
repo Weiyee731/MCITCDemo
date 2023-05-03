@@ -21,7 +21,7 @@ import LoadingPanel from "../shared/loadingPanel";
 import Rating from '@mui/material/Rating';
 
 // data stubs
-import Logo from "../../assets/Emporia.png";
+import Logo from "../../assets/logo.png";
 import shopCover from "../../assets/shopCover.png";
 import "./merchantpage.css";
 import MerchantSocialLinks from './MerchantSocialLinks';
